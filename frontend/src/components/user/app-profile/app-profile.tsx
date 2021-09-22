@@ -1,5 +1,6 @@
 import { Component, Prop, h } from '@stencil/core';
 import { MatchResults } from '@stencil/router';
+import { globals } from '../../../core/global.store';
 
 @Component({
   tag: 'app-profile',
@@ -17,6 +18,12 @@ export class AppProfile {
   }
 
   render() {
-    return <div class="app-profile"></div>;
+    return (
+      <div class="app-profile">
+        <p>isLoggedIn: {globals.globalStore.state.isLoggedIn.toString()}</p>
+        <p>Email: {globals.globalStore.state.email}</p>
+        <p>Token: {globals.globalStore.state.token}</p>
+      </div>
+    );
   }
 }

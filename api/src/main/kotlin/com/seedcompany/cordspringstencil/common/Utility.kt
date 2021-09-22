@@ -3,6 +3,7 @@ package com.seedcompany.cordspringstencil.common
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Component
 import java.io.File
 import java.util.regex.Pattern
@@ -17,6 +18,7 @@ class Utility(
     val writerDS: DataSource,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(writerDS)
+    val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
 
     //language=SQL
     val getUserIdFromSessionIdQuery = """

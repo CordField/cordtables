@@ -1,5 +1,6 @@
 import { Component, Host, h, Event, EventEmitter, Prop } from '@stencil/core';
 import { injectHistory, RouterHistory } from '@stencil/router';
+import { globals } from '../../../core/global.store';
 import { MenuClickedEvent } from '../types';
 
 @Component({
@@ -12,6 +13,11 @@ export class CfHeaderMenu {
 
   @Event() menuClicked: EventEmitter<MenuClickedEvent>;
 
+  clickedHome = () => {
+    this.menuClicked.emit({ type: 'MenuClicked' });
+    this.history.push(`/`);
+  };
+
   clickedProfile = () => {
     this.menuClicked.emit({ type: 'MenuClicked' });
     this.history.push(`/profile`);
@@ -22,17 +28,52 @@ export class CfHeaderMenu {
     this.history.push(`/register`);
   };
 
+  clickedLogin = () => {
+    this.menuClicked.emit({ type: 'MenuClicked' });
+    this.history.push(`/login`);
+  };
+
+  clickedLogout = () => {
+    globals.globalStore.state.isLoggedIn = false;
+    globals.globalStore.state.token = null;
+    globals.globalStore.state.email = null;
+    localStorage.clear();
+    this.menuClicked.emit({ type: 'MenuClicked' });
+    this.history.push(`/`);
+  };
+
   render() {
     return (
       <Host>
         <slot></slot>
         <div id="header-menu">
-          <button class="menu-item" onClick={this.clickedProfile}>
-            Profile page
+          <button class="menu-item" onClick={this.clickedHome}>
+            Home
           </button>
-          <button class="menu-item" onClick={this.clickedRegister}>
-            Register
-          </button>
+
+          {globals.globalStore.state.isLoggedIn && (
+            <button class="menu-item" onClick={this.clickedProfile}>
+              Profile page
+            </button>
+          )}
+
+          {!globals.globalStore.state.isLoggedIn && (
+            <button class="menu-item" onClick={this.clickedLogin}>
+              Login
+            </button>
+          )}
+
+          {!globals.globalStore.state.isLoggedIn && (
+            <button class="menu-item" onClick={this.clickedRegister}>
+              Register
+            </button>
+          )}
+
+          {globals.globalStore.state.isLoggedIn && (
+            <button class="menu-item" onClick={this.clickedLogout}>
+              Logout
+            </button>
+          )}
         </div>
       </Host>
     );

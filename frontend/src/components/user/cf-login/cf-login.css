@@ -1,0 +1,7 @@
+:host {
+  display: block;
+  padding: 5px;
+}
+.form-input-item {
+  margin-bottom: 20px;
+}

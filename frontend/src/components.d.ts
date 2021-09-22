@@ -21,6 +21,9 @@ export namespace Components {
     interface CfHeaderMenu {
         "history": RouterHistory;
     }
+    interface CfLogin {
+        "history": RouterHistory;
+    }
     interface CfRegister {
         "history": RouterHistory;
     }
@@ -56,6 +59,12 @@ declare global {
         prototype: HTMLCfHeaderMenuElement;
         new (): HTMLCfHeaderMenuElement;
     };
+    interface HTMLCfLoginElement extends Components.CfLogin, HTMLStencilElement {
+    }
+    var HTMLCfLoginElement: {
+        prototype: HTMLCfLoginElement;
+        new (): HTMLCfLoginElement;
+    };
     interface HTMLCfRegisterElement extends Components.CfRegister, HTMLStencilElement {
     }
     var HTMLCfRegisterElement: {
@@ -68,6 +77,7 @@ declare global {
         "app-root": HTMLAppRootElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
+        "cf-login": HTMLCfLoginElement;
         "cf-register": HTMLCfRegisterElement;
     }
 }
@@ -86,6 +96,9 @@ declare namespace LocalJSX {
         "history"?: RouterHistory;
         "onMenuClicked"?: (event: CustomEvent<MenuClickedEvent>) => void;
     }
+    interface CfLogin {
+        "history"?: RouterHistory;
+    }
     interface CfRegister {
         "history"?: RouterHistory;
     }
@@ -95,6 +108,7 @@ declare namespace LocalJSX {
         "app-root": AppRoot;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
+        "cf-login": CfLogin;
         "cf-register": CfRegister;
     }
 }
@@ -107,6 +121,7 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
+            "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
         }
     }

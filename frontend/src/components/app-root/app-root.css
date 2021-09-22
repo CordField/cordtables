@@ -1,3 +1,11 @@
+#root-wrap-outer {
+  width: 100%;
+}
+#root-wrap-inner {
+  width: 100%;
+  overflow-x: auto;
+}
+
 header {
   background: #64b145;
   color: white;

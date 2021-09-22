@@ -1,7 +1,6 @@
 package com.seedcompany.cordspringstencil.components.user
 
 import com.seedcompany.cordspringstencil.common.ErrorType
-import com.seedcompany.cordspringstencil.common.GenericResponse
 import com.seedcompany.cordspringstencil.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
@@ -30,8 +29,6 @@ class Register (
     val ds: DataSource,
 ){
 
-    val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
-
     @PostMapping("user/register")
     @ResponseBody
     fun registerHandler(@RequestBody req: RegisterRequest):RegisterReturn{
@@ -40,7 +37,7 @@ class Register (
         if (req.password == null || req.password.length < 8) return RegisterReturn(ErrorType.PasswordTooShort)
         if (req.password.length > 32) return RegisterReturn(ErrorType.PasswordTooLong)
 
-        val pash = encoder.encode(req.password)
+        val pash = util.encoder.encode(req.password)
         val token = util.createToken()
 
         val result = registerDB(req.email, pash, token)

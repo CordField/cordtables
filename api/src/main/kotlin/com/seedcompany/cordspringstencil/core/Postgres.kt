@@ -29,7 +29,6 @@ class BootstrapDB(
 //  val r: ResourcePatternResolver,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
-    val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
 
     init {
 
@@ -58,21 +57,24 @@ class BootstrapDB(
 
             // user
             runSqlFile("./src/main/kotlin/com/seedcompany/cordspringstencil/components/user/register.sql")
+            runSqlFile("./src/main/kotlin/com/seedcompany/cordspringstencil/components/user/login.sql")
 
             // bootstrap
-            val pash = encoder.encode(appConfig.cordAdminPassword)
+            val pash = util.encoder.encode(appConfig.cordAdminPassword)
 
             var errorType = ErrorType.UnknownError
 
             this.ds.connection.use { conn ->
-                val statement = conn.prepareCall("call bootstrap(?, ?);")
+                val statement = conn.prepareCall("call bootstrap(?, ?, ?);")
                 statement.setString(1, "devops@tsco.org")
                 statement.setString(2, pash)
+                statement.setString(3, errorType.name)
+                statement.registerOutParameter(3, java.sql.Types.VARCHAR)
 
                 statement.execute()
 
                 try {
-                    errorType = ErrorType.valueOf(statement.getString(6))
+                    errorType = ErrorType.valueOf(statement.getString(3))
                 } catch (ex: IllegalArgumentException) {
                     errorType = ErrorType.UnknownError
                 }

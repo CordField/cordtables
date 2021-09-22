@@ -1,24 +1,24 @@
-import { Component, Host, h, State, Prop } from '@stencil/core';
-import { injectHistory, RouterHistory } from '@stencil/router';
+import { Component, Host, h, Prop, State } from '@stencil/core';
+import { RouterHistory } from '@stencil/router';
 import { ErrorType, GenericResponse } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 
-class RegisterRequest {
+class LoginRequest {
   email: string;
   password: string;
 }
 
-class RegisterResponse extends GenericResponse {
+class LoginResponse extends GenericResponse {
   token: string;
 }
 
 @Component({
-  tag: 'cf-register',
-  styleUrl: 'cf-register.css',
+  tag: 'cf-login',
+  styleUrl: 'cf-login.css',
   shadow: true,
 })
-export class CfRegister {
+export class CfLogin {
   @Prop() history: RouterHistory;
 
   @State() email: string;
@@ -36,7 +36,7 @@ export class CfRegister {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<RegisterRequest, RegisterResponse>('user/register', { email: this.email, password: this.password });
+    const result = await fetchAs<LoginRequest, LoginResponse>('user/Login', { email: this.email, password: this.password });
 
     console.log(result);
 
@@ -47,7 +47,7 @@ export class CfRegister {
 
       this.history.push('/');
     } else {
-      console.error('Register failed');
+      console.error('Login failed');
     }
   };
 
@@ -55,7 +55,7 @@ export class CfRegister {
     return (
       <Host>
         <slot></slot>
-        <h1>Register</h1>
+        <h1>Login</h1>
 
         <form>
           <div id="email-holder" class="form-input-item">
@@ -71,11 +71,9 @@ export class CfRegister {
             </div>
             <input type="password" id="password" name="password" onInput={event => this.passwordChange(event)} />
           </div>
-          <input id="register-button" type="submit" value="Register" onClick={this.clickSubmit} />
+          <input id="Login-button" type="submit" value="Login" onClick={this.clickSubmit} />
         </form>
       </Host>
     );
   }
 }
-
-injectHistory(CfRegister);

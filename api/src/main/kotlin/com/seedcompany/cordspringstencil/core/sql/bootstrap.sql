@@ -1,6 +1,7 @@
 CREATE OR REPLACE PROCEDURE bootstrap(
   IN p_email VARCHAR(255),
-  IN p_password VARCHAR(50)
+  IN p_password VARCHAR(50),
+  inout error_type varchar(32)
 )
 LANGUAGE PLPGSQL
 AS $$
