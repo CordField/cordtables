@@ -14,6 +14,7 @@ export namespace Components {
         "match": MatchResults;
     }
     interface AppRoot {
+        "history": RouterHistory;
     }
     interface CfHeader {
         "history": RouterHistory;
@@ -26,6 +27,17 @@ export namespace Components {
     }
     interface CfRegister {
         "history": RouterHistory;
+    }
+    interface GlobalRoleColumnGrants {
+    }
+    interface GlobalRoleMemberships {
+    }
+    interface GlobalRoleTablePermissions {
+    }
+    interface GlobalRoles {
+    }
+    interface TableRoot {
+        "match": MatchResults;
     }
 }
 declare global {
@@ -71,6 +83,36 @@ declare global {
         prototype: HTMLCfRegisterElement;
         new (): HTMLCfRegisterElement;
     };
+    interface HTMLGlobalRoleColumnGrantsElement extends Components.GlobalRoleColumnGrants, HTMLStencilElement {
+    }
+    var HTMLGlobalRoleColumnGrantsElement: {
+        prototype: HTMLGlobalRoleColumnGrantsElement;
+        new (): HTMLGlobalRoleColumnGrantsElement;
+    };
+    interface HTMLGlobalRoleMembershipsElement extends Components.GlobalRoleMemberships, HTMLStencilElement {
+    }
+    var HTMLGlobalRoleMembershipsElement: {
+        prototype: HTMLGlobalRoleMembershipsElement;
+        new (): HTMLGlobalRoleMembershipsElement;
+    };
+    interface HTMLGlobalRoleTablePermissionsElement extends Components.GlobalRoleTablePermissions, HTMLStencilElement {
+    }
+    var HTMLGlobalRoleTablePermissionsElement: {
+        prototype: HTMLGlobalRoleTablePermissionsElement;
+        new (): HTMLGlobalRoleTablePermissionsElement;
+    };
+    interface HTMLGlobalRolesElement extends Components.GlobalRoles, HTMLStencilElement {
+    }
+    var HTMLGlobalRolesElement: {
+        prototype: HTMLGlobalRolesElement;
+        new (): HTMLGlobalRolesElement;
+    };
+    interface HTMLTableRootElement extends Components.TableRoot, HTMLStencilElement {
+    }
+    var HTMLTableRootElement: {
+        prototype: HTMLTableRootElement;
+        new (): HTMLTableRootElement;
+    };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
@@ -79,6 +121,11 @@ declare global {
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-register": HTMLCfRegisterElement;
+        "global-role-column-grants": HTMLGlobalRoleColumnGrantsElement;
+        "global-role-memberships": HTMLGlobalRoleMembershipsElement;
+        "global-role-table-permissions": HTMLGlobalRoleTablePermissionsElement;
+        "global-roles": HTMLGlobalRolesElement;
+        "table-root": HTMLTableRootElement;
     }
 }
 declare namespace LocalJSX {
@@ -88,6 +135,7 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface AppRoot {
+        "history"?: RouterHistory;
     }
     interface CfHeader {
         "history"?: RouterHistory;
@@ -102,6 +150,17 @@ declare namespace LocalJSX {
     interface CfRegister {
         "history"?: RouterHistory;
     }
+    interface GlobalRoleColumnGrants {
+    }
+    interface GlobalRoleMemberships {
+    }
+    interface GlobalRoleTablePermissions {
+    }
+    interface GlobalRoles {
+    }
+    interface TableRoot {
+        "match"?: MatchResults;
+    }
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-profile": AppProfile;
@@ -110,6 +169,11 @@ declare namespace LocalJSX {
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-register": CfRegister;
+        "global-role-column-grants": GlobalRoleColumnGrants;
+        "global-role-memberships": GlobalRoleMemberships;
+        "global-role-table-permissions": GlobalRoleTablePermissions;
+        "global-roles": GlobalRoles;
+        "table-root": TableRoot;
     }
 }
 export { LocalJSX as JSX };
@@ -123,6 +187,11 @@ declare module "@stencil/core" {
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
+            "global-role-column-grants": LocalJSX.GlobalRoleColumnGrants & JSXBase.HTMLAttributes<HTMLGlobalRoleColumnGrantsElement>;
+            "global-role-memberships": LocalJSX.GlobalRoleMemberships & JSXBase.HTMLAttributes<HTMLGlobalRoleMembershipsElement>;
+            "global-role-table-permissions": LocalJSX.GlobalRoleTablePermissions & JSXBase.HTMLAttributes<HTMLGlobalRoleTablePermissionsElement>;
+            "global-roles": LocalJSX.GlobalRoles & JSXBase.HTMLAttributes<HTMLGlobalRolesElement>;
+            "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
     }
 }

@@ -21,3 +21,13 @@ h1 {
   color: #fff;
   padding: 0 12px;
 }
+
+#nav-menu {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+#table-label {
+  margin-right: 10px;
+}
