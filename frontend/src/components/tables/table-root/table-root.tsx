@@ -10,10 +10,6 @@ import { MatchResults } from '@stencil/router';
 export class TableRoot {
   @Prop() match: MatchResults;
 
-  componentDidLoad() {
-    console.log(this.match.params.table);
-  }
-
   render() {
     return (
       <Host>

@@ -12,8 +12,9 @@ export class AppRoot {
 
   @State() path: string;
 
+  @State() showSelect = false;
+
   selectChange(event) {
-    console.log(event.target.value);
     const table = event.target.value;
     if (table === '-') {
       this.history.push(`/`);
@@ -25,11 +26,21 @@ export class AppRoot {
   componentDidLoad() {
     this.history.listen(() => {
       this.path = window.location.pathname;
+      this.updateSelect();
     });
   }
 
   componentWillRender() {
     this.path = window.location.pathname;
+    this.updateSelect();
+  }
+
+  updateSelect() {
+    if (this.path === '/' || this.path.includes('table')) {
+      this.showSelect = true;
+    } else {
+      this.showSelect = false;
+    }
   }
 
   render() {
@@ -40,7 +51,7 @@ export class AppRoot {
           <div>
             {!globals.globalStore.state.isLoggedIn && <div>Please login or register</div>}
 
-            {globals.globalStore.state.isLoggedIn && (
+            {globals.globalStore.state.isLoggedIn && this.showSelect && (
               <div>
                 <div id="nav-menu">
                   <div id="table-label">
