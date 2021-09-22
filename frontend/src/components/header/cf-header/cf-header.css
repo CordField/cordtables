@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #64b145;
+  padding: 10px;
+}
+#title {
+  cursor: pointer;
+}
+#cord {
+  font-size: 25px;
+  font-weight: 900;
+  font-family: sans-serif;
+  margin: 0px;
+  padding-left: 10px;
+  color: white;
+}
+#field {
+  font-size: 25px;
+  font-weight: 300;
+  font-family: sans-serif;
+  margin: 0px;
+  padding: 0px;
+  color: white;
+}
+#dot-org {
+  color: white;
+}
+#menu-button {
+  color: white;
+  cursor: pointer;
+}

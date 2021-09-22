@@ -1,0 +1,15 @@
+{
+  "name": "Cord Field",
+  "short_name": "Cord Field",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "assets/favicon_io/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "background_color": "#64B145",
+  "theme_color": "#FFFFFF"
+}

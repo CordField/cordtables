@@ -1,0 +1,4 @@
+export DB_DOMAIN=localhost
+export DB_DATABASE=cordfield
+export DB_USERNAME=postgres
+export DB_PASSWORD=asdfasdf
