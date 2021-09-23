@@ -13,7 +13,7 @@ phases:
       - echo Build started on `date`
       - dockerd &
       - cd frontend
-      - printf 'SERVER_URL="https://cordfield.org"' > .env
+      - printf 'SERVER_URL=$SERVER_URL' > .env
       - yarn
       - yarn build
       - cd ..
