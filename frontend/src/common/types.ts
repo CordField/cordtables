@@ -9,7 +9,15 @@ export enum ErrorType {
   PasswordTooLong = 'PasswordTooLong',
   DuplicateEmail = 'DuplicateEmail',
 }
-
+export interface globalRole {
+  id: number;
+  createdAt: string;
+  createdBy: number;
+  modifiedAt: string;
+  modifiedBy: number;
+  name: string;
+  org: number;
+}
 export class GenericResponse {
-  public error: any;
+  public error: ErrorType;
 }
