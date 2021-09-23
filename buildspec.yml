@@ -24,11 +24,11 @@ phases:
       # - ./gradlew bootjar
       - ./gradlew bootjar
       - cd ..
-      - cp api/build/libs/cordfield-1.jar infra/server/cordfield.jar
-      - cp -r api/build/resources/main/static/* infra/server/static
+      - cp api/build/libs/cordfield-1.jar infra/dev/cf-server/cordfield.jar
+      - cp -r api/build/resources/main/static/* infra/dev/cf-server/static
 
       - echo Building the Docker image...
-      - cd infra/server
+      - cd infra/dev/cf-server
       - docker build -f Dockerfile -t $REPOSITORY_URI:latest . --progress plain
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:

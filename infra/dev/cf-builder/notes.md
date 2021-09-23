@@ -4,6 +4,8 @@ docker tag cf-builder:4 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-builder:
 docker tag cf-builder:latest 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-builder:latest
 docker push 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-builder:latest
 
+# commands to create the builder box
+
 curl -s "https://get.sdkman.io" | bash
 
 apt-get -y update
@@ -60,3 +62,10 @@ echo \
 
 apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io -y
+
+https://gradle.org/next-steps/?version=7.2&format=bin
+curl -L https://services.gradle.org/distributions/gradle-7.2-bin.zip -o gradle-7.2-bin.zip
+
+unzip gradle-7.2-bin.zip
+
+docker commit {contaienr_name} cf-builder:latest
