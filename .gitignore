@@ -1,1 +1,2 @@
-infra/dev/cf-server/static
+infra/dev/cf-server/static/*
+!infra/dev/cf-server/static/0
