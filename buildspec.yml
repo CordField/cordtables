@@ -1,0 +1,43 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 140251415856.dkr.ecr.us-east-2.amazonaws.com
+      - REPOSITORY_URI=140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-server
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo Build started on `date`
+      - dockerd &
+      - cd frontend
+      - printf 'SERVER_URL="https://cordfield.org"' > .env
+      - yarn
+      - yarn build
+      - cd ..
+      - rm -rf api/src/main/resources/static/*
+      - cp -r frontend/www/ api/src/main/resources/static
+      - cd api
+      # - ./gradlew test
+      # - ./gradlew bootjar
+      - gradle bootjar
+      - cd ..
+      - cp api/build/libs/cordfield-1.jar infra/server/cordfield.jar
+      - cp -r api/build/resources/main/static/* infra/server/static
+
+      - echo Building the Docker image...
+      - cd infra/server
+      - docker build -f Dockerfile -t $REPOSITORY_URI:latest . --progress plain
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - printf '[{"name":"cf-server","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+
+artifacts:
+  files: imagedefinitions.json
