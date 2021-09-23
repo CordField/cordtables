@@ -11,21 +11,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 
 @SpringBootApplication
-@ConfigurationPropertiesScan
-@EnableScheduling
+//@ConfigurationPropertiesScan
+//@EnableScheduling
 class CordSpringStencilApplication
 
 fun main(args: Array<String>) {
     runApplication<CordSpringStencilApplication>(*args)
 }
 
-@Configuration
-@EnableWebMvc
-class WebConfig : WebMvcConfigurer {
-    override fun addCorsMappings(registry: CorsRegistry) {
-        registry.addMapping("/**")
-            .allowedOrigins("*")
-            .allowedHeaders("*")
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD")
-    }
-}
+//@Configuration
+//@EnableWebMvc
+//class WebConfig : WebMvcConfigurer {
+//    override fun addCorsMappings(registry: CorsRegistry) {
+//        registry.addMapping("/**")
+//            .allowedOrigins("*")
+//            .allowedHeaders("*")
+//            .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD")
+//    }
+//}
