@@ -3,6 +3,7 @@ export async function fetchAs<REQ, RES>(path: string, data: REQ) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      'Accept': 'application/json;charset=utf-8',
     },
     body: JSON.stringify(data),
   });
