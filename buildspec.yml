@@ -22,7 +22,7 @@ phases:
       - cd api
       # - ./gradlew test
       # - ./gradlew bootjar
-      - gradle bootjar
+      - ./gradlew bootjar
       - cd ..
       - cp api/build/libs/cordfield-1.jar infra/server/cordfield.jar
       - cp -r api/build/resources/main/static/* infra/server/static
