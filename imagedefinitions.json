@@ -1,0 +1,6 @@
+[
+  {
+    "name": "cf-server",
+    "imageUri": "140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-server:latest"
+  }
+]
