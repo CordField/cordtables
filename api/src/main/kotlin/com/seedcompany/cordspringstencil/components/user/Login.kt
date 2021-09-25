@@ -33,7 +33,8 @@ class Login (
 
     val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
 
-    @PostMapping("user/login")
+    @PostMapping(path=["user/login"], consumes = ["application/json"], produces = ["application/json"])
+
     @ResponseBody
     fun LoginHandler(@RequestBody req: LoginRequest):LoginReturn{
 
