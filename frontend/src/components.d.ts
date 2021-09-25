@@ -28,6 +28,11 @@ export namespace Components {
     interface CfRegister {
         "history": RouterHistory;
     }
+    interface GenericTable {
+        "columns": Array<any>;
+        "name": String;
+        "values": Array<any>;
+    }
     interface GlobalRoleColumnGrants {
     }
     interface GlobalRoleMemberships {
@@ -83,6 +88,12 @@ declare global {
         prototype: HTMLCfRegisterElement;
         new (): HTMLCfRegisterElement;
     };
+    interface HTMLGenericTableElement extends Components.GenericTable, HTMLStencilElement {
+    }
+    var HTMLGenericTableElement: {
+        prototype: HTMLGenericTableElement;
+        new (): HTMLGenericTableElement;
+    };
     interface HTMLGlobalRoleColumnGrantsElement extends Components.GlobalRoleColumnGrants, HTMLStencilElement {
     }
     var HTMLGlobalRoleColumnGrantsElement: {
@@ -121,6 +132,7 @@ declare global {
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-register": HTMLCfRegisterElement;
+        "generic-table": HTMLGenericTableElement;
         "global-role-column-grants": HTMLGlobalRoleColumnGrantsElement;
         "global-role-memberships": HTMLGlobalRoleMembershipsElement;
         "global-role-table-permissions": HTMLGlobalRoleTablePermissionsElement;
@@ -150,6 +162,11 @@ declare namespace LocalJSX {
     interface CfRegister {
         "history"?: RouterHistory;
     }
+    interface GenericTable {
+        "columns"?: Array<any>;
+        "name"?: String;
+        "values"?: Array<any>;
+    }
     interface GlobalRoleColumnGrants {
     }
     interface GlobalRoleMemberships {
@@ -169,6 +186,7 @@ declare namespace LocalJSX {
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-register": CfRegister;
+        "generic-table": GenericTable;
         "global-role-column-grants": GlobalRoleColumnGrants;
         "global-role-memberships": GlobalRoleMemberships;
         "global-role-table-permissions": GlobalRoleTablePermissions;
@@ -187,6 +205,7 @@ declare module "@stencil/core" {
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
+            "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "global-role-column-grants": LocalJSX.GlobalRoleColumnGrants & JSXBase.HTMLAttributes<HTMLGlobalRoleColumnGrantsElement>;
             "global-role-memberships": LocalJSX.GlobalRoleMemberships & JSXBase.HTMLAttributes<HTMLGlobalRoleMembershipsElement>;
             "global-role-table-permissions": LocalJSX.GlobalRoleTablePermissions & JSXBase.HTMLAttributes<HTMLGlobalRoleTablePermissionsElement>;

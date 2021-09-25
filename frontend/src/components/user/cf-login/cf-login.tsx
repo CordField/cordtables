@@ -36,9 +36,9 @@ export class CfLogin {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<LoginRequest, LoginResponse>('user/Login', { email: this.email, password: this.password });
+    const result = await fetchAs<LoginRequest, LoginResponse>('user/login', { email: this.email, password: this.password });
 
-    console.log(result);
+    console.log('Result: ', result);
 
     if (result.error === ErrorType.NoError) {
       globals.globalStore.state.token = result.token;
