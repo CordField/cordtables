@@ -5,4 +5,4 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = "cord-spring-stencil"
+rootProject.name = "cordfield"

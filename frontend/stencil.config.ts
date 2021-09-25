@@ -1,5 +1,5 @@
 import { Config } from '@stencil/core';
-
+import dotenvPlugin from 'rollup-plugin-dotenv';
 // https://stenciljs.com/docs/config
 
 export const config: Config = {
@@ -18,4 +18,5 @@ export const config: Config = {
       baseUrl: 'http://localhost:3333/',
     },
   ],
+  plugins: [dotenvPlugin()],
 };

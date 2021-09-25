@@ -85,7 +85,6 @@ class BootstrapDB(
 
                 statement.close()
             }
-
         }
 
     }
