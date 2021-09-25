@@ -26,14 +26,11 @@ export class genericTable {
               </tr>
             </thead>
             <tbody>
-            {this.columns.map(()=>
-              <tr>
-                {this.values.map((values)=>
+                {this.values.map((values, index)=>
+                
+                  <tr key={id}
                       <td>{values.name}</td>
-                  )}
-              </tr>    
-            )}
-                  
+                  )}  
             </tbody>
           </table>
         </div>
