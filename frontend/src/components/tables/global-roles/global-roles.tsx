@@ -6,7 +6,7 @@ class GlobalRolesRequest {
   // tableName: string;
 }
 class GlobalRolesResponse extends GenericResponse {
-  globalRoles: globalRole[];
+  data: globalRole[];
 }
 
 @Component({
@@ -15,43 +15,16 @@ class GlobalRolesResponse extends GenericResponse {
   shadow: true,
 })
 export class GlobalRoles {
+  @State()
   globalRoles: globalRole[] = [];
   componentWillLoad() {
-    fetchAs<GlobalRolesRequest, GlobalRolesResponse>('globalRoles/read', {}).finally(() => {
+    fetchAs<GlobalRolesRequest, GlobalRolesResponse>('globalroles/read', {}).then(res => {
       // set global state with data
       // globals.globalStore.state.globalRolesData = JSON.stringify(res.globalRoles);
       // this.globalRoles = res.globalRoles;
-      // some weird cors error
+      // some weird cors error\
+      this.globalRoles = res.data;
     });
-    this.globalRoles = [
-      {
-        id: 1,
-        createdAt: '24th Sep',
-        createdBy: 0,
-        modifiedAt: '25th Sep',
-        modifiedBy: 0,
-        name: 'Admin',
-        org: 1,
-      },
-      {
-        id: 2,
-        createdAt: '24th Sep',
-        createdBy: 0,
-        modifiedAt: '25th Sep',
-        modifiedBy: 0,
-        name: 'Project Manager',
-        org: 1,
-      },
-      {
-        id: 3,
-        createdAt: '24th Sep',
-        createdBy: 0,
-        modifiedAt: '25th Sep',
-        modifiedBy: 0,
-        name: 'Team Lead',
-        org: 1,
-      },
-    ];
   }
   render() {
     return (
