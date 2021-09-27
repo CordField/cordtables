@@ -1,25 +1,29 @@
-import { Component, Host, h } from '@stencil/core';
+import { Component, Host, h, Listen, State} from '@stencil/core';
 
 
 const tableColumns = [
-  {
-    name: "firstColumn"
-  },
-  {
-    address: "secondColumn"
-  }
+    "Id",
+    "Address",
+    "Name",
+    "Country",
 ];
 
 const tableValues = [
   {
-    name1: "firstValue",
-    address1: "address"
+    id: 1,
+    address: "firstValue",
+    name: "",
+    country: "USA"
   },
   {
-    name2: "secondValue",
-    address2: "address2"
+    id: 2,
+    address: "secondValue",
+    name: "test",
+    country: "Brazil"
   }
 ];
+
+let rowId = 0;
 
 
 @Component({
@@ -29,12 +33,42 @@ const tableValues = [
 })
 
 export class GlobalRoleColumnGrants {
+  @State() isOpen: boolean;
+
+  @Listen('rowClicked')
+  handleClick(event){
+    if(event && event.detail){
+      rowId = event.detail;
+      this.isOpen = !this.isOpen;
+    }
+  }
+
+  @Listen('modalClosed')
+  handleModalClose(event){
+    if(event && event.detail){
+      this.isOpen = !this.isOpen;
+      console.log('boolean: ', event.detail)
+    }
+  }
+
   render() {
     return (
       <Host>
+         <create-update-modal
+         isOpen={this.isOpen}
+         >
+          
+          </create-update-modal>
         <slot></slot>
-        <generic-table name="Test" columns={tableColumns} values={tableValues}></generic-table>
+        <generic-table 
+          name="Test" 
+          columns={tableColumns} 
+          values={tableValues}>
+        
+        </generic-table>
+       
       </Host>
+      
     );
   }
 }
