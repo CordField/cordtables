@@ -3,17 +3,13 @@ package com.seedcompany.cordspringstencil.components.user
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import javax.management.relation.Role
+import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.reflect.jvm.internal.impl.load.java.JavaClassFinder
 
-//data class RolesRequest()
 data class GlobalRole(
     val id: Int,
     val createdAt: String,
@@ -24,10 +20,9 @@ data class GlobalRole(
     val org: Int
 )
 
-data class RolesResponse(
-    val error: ErrorType?  = null,
-    val data: MutableList<GlobalRole>
-//    val token: String? = null,
+data class ReadGlobalRolesResponse(
+    val error: ErrorType,
+    val data: MutableList<GlobalRole>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333"])
@@ -41,69 +36,34 @@ class Read(
 ) {
     @PostMapping("globalroles/read")
     @ResponseBody
-    fun ReadHandler(): RolesResponse {
-
-//        if (req.email == null || !util.isEmailValid(req.email)) return LoginReturn(ErrorType.InvalidEmail)
-//        if (req.password == null || req.password.length < 8) return LoginReturn(ErrorType.PasswordTooShort)
-//        if (req.password.length > 32) return LoginReturn(ErrorType.PasswordTooLong)
-
-//        var response = RolesResponse(ErrorType.UnknownError)
-        var token: String? = null
-        var errorType = ErrorType.UnknownError
+    fun ReadHandler(): ReadGlobalRolesResponse {
+        //mutableList as we need to add each global role as an element to it
         var data: MutableList<GlobalRole> = mutableListOf()
 
 
         this.ds.connection.use { conn ->
-            val pashStatement = conn.prepareCall(
+            val listStatement = conn.prepareCall(
                 "select id, created_at, created_by,modified_at,modified_by, name, org from public.global_roles;"
             )
-//            pashStatement.setString(1, req.email)
+            try {
+                val listStatementResult = listStatement.executeQuery()
+                while (listStatementResult.next()) {
 
-            val getPashResult = pashStatement.executeQuery()
-//            var pash: String? = null
-            while (getPashResult.next()) {
-//                pash = getPashResult.getString("password")
-
-                val id = getPashResult.getInt("id")
-                val name = getPashResult.getString("name")
-                val createdBy = getPashResult.getInt("created_by")
-                val modifiedBy = getPashResult.getInt("modified_by")
-                val org = getPashResult.getInt("org")
-                val createdAt = getPashResult.getString("created_at")
-                val modifiedAt = getPashResult.getString("modified_at")
-                data.add(GlobalRole(id,createdAt,createdBy,modifiedAt,modifiedBy,name,org))
+                    val id = listStatementResult.getInt("id")
+                    val name = listStatementResult.getString("name")
+                    val createdBy = listStatementResult.getInt("created_by")
+                    val modifiedBy = listStatementResult.getInt("modified_by")
+                    val org = listStatementResult.getInt("org")
+                    val createdAt = listStatementResult.getString("created_at")
+                    val modifiedAt = listStatementResult.getString("modified_at")
+                    data.add(GlobalRole(id, createdAt, createdBy, modifiedAt, modifiedBy, name, org))
+                }
+            }
+            catch(e:SQLException){
+                println("error while listing ${e.message}")
+                return ReadGlobalRolesResponse(ErrorType.SQLReadError, null)
             }
         }
-        var response = RolesResponse(null,data)
-        return response
+        return ReadGlobalRolesResponse(ErrorType.NoError,data)
     }
-
-//    fun loginDB(email: String, token: String): ErrorType {
-//
-//        var errorType = ErrorType.UnknownError
-//
-//        this.ds.connection.use { conn ->
-//            val statement = conn.prepareCall("call Login(?, ?, ?);")
-//            statement.setString(1, email)
-//            statement.setString(2, token)
-//            statement.setString(3, errorType.name)
-//            statement.registerOutParameter(3, java.sql.Types.VARCHAR)
-//
-//            statement.execute()
-//
-//            try {
-//                errorType = ErrorType.valueOf(statement.getString(3))
-//            } catch (ex: IllegalArgumentException) {
-//                errorType = ErrorType.UnknownError
-//            }
-//
-//            if (errorType != ErrorType.NoError) {
-//                println("Login query failed")
-//            }
-//
-//            statement.close()
-//        }
-//
-//        return errorType
-//    }
 }

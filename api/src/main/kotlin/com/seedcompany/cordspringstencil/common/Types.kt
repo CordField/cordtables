@@ -13,6 +13,9 @@ enum class ErrorType {
     PasswordTooShort,
     PasswordTooLong,
     DuplicateEmail,
+    UserNotFound,
+    SQLInsertError,
+    SQLReadError
 }
 
 data class GenericResponse (
