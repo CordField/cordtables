@@ -5,6 +5,7 @@ import com.seedcompany.cordspringstencil.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
@@ -20,6 +21,7 @@ data class LoginReturn(
     val token: String? = null,
 )
 
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org"])
 @Controller()
 class Login (
     @Autowired
@@ -31,7 +33,8 @@ class Login (
 
     val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
 
-    @PostMapping("user/Login")
+    @PostMapping(path=["user/login"], consumes = ["application/json"], produces = ["application/json"])
+
     @ResponseBody
     fun LoginHandler(@RequestBody req: LoginRequest):LoginReturn{
 

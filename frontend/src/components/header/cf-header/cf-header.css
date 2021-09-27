@@ -6,7 +6,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: #64b145;
-  padding: 10px;
+  padding: 5px;
 }
 #title {
   cursor: pointer;
@@ -33,4 +33,10 @@
 #menu-button {
   color: white;
   cursor: pointer;
+}
+#version-info {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: small;
 }

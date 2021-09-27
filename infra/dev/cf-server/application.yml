@@ -5,10 +5,10 @@ server:
   port: 8080
 spring:
   datasource:
-    jdbcUrl: jdbc:postgresql://cf-db-3.cluster-cm9tuab6kncs.us-east-2.rds.amazonaws.com:5432/${DB_DATABASE}
+    jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:5432/${DB_DATABASE}
     driverClassName: software.aws.rds.jdbc.postgresql.Driver
-    username: postgres
-    password: TgHGHcAwSyzTYKcuwdFv
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     ssl: false
   hikari:
     connection-timeout: 20000 #maximum number of milliseconds that a client will wait for a connection
