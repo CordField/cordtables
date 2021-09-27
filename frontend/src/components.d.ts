@@ -38,6 +38,7 @@ export namespace Components {
         "values": Array<any>;
     }
     interface GlobalRoleColumnGrants {
+        "history": RouterHistory;
     }
     interface GlobalRoleMemberships {
     }
@@ -185,6 +186,7 @@ declare namespace LocalJSX {
         "values"?: Array<any>;
     }
     interface GlobalRoleColumnGrants {
+        "history"?: RouterHistory;
     }
     interface GlobalRoleMemberships {
     }

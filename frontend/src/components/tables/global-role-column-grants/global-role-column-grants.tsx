@@ -1,5 +1,12 @@
-import { Component, Host, h, Listen, State} from '@stencil/core';
+import { Component, Host, h, Listen, State, Prop} from '@stencil/core';
+import { RouterHistory } from '@stencil/router';
+import { GenericResponse } from '../../../common/types';
+import { fetchAs } from '../../../common/utility';
 
+class readAllResponse extends GenericResponse {
+  id: number;
+  email: string;
+}
 
 const tableColumns = [
     "Id",
@@ -33,10 +40,16 @@ let rowId = 0;
 })
 
 export class GlobalRoleColumnGrants {
+  @Prop() history: RouterHistory;
+
+  @State() email: string;
+  @State() password: string;
   @State() isOpen: boolean;
 
   @Listen('rowClicked')
-  handleClick(event){
+  async handleClick(event){
+    const result = await fetchAs<{}, readAllResponse>('table/global-role-column-grants', { });
+    console.log("Result: ", result);
     if(event && event.detail){
       rowId = event.detail;
       this.isOpen = !this.isOpen;
