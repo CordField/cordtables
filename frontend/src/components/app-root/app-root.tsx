@@ -96,7 +96,7 @@ export class AppRoot {
         </div>
         <footer>
           <div id="version-info">
-            <div>version: pre-alpha</div>
+            <div>pre-alpha</div>
             <div>low bandwidth</div>
             <div>rapid application development</div>
           </div>

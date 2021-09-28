@@ -6,8 +6,6 @@ import org.springframework.core.io.Resource
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import java.io.File
-import java.io.InputStream
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -17,12 +15,6 @@ class IndexController(
 
     @Autowired
     var appConfig: AppConfig,
-
-//  @Autowired
-//  var logger: Logger,
-
-//  @Autowired
-//  var serverId: Long,
 ) {
     private var index: String? = null
 
@@ -61,35 +53,25 @@ class IndexController(
     fun frontendRoute(request: HttpServletRequest, response: HttpServletResponse?): String? {
 
         try {
-//      // get path
-//      val path = request.servletPath
-//      val tokens = path.split("/").toTypedArray()
-//      val noun = tokens[1]
-//
-//      // replace meta data
-//      var oldText: String
-//      var newText: String
-//      val newIndex1 = index
-//
-//      // title
-//      oldText = "<title>Crowd Altar</title>"
-//      newText = "<title>Hi Mom</title>"
-//      val newIndex2 = newIndex1!!.replace(oldText.toRegex(), newText)
-//
-//      // title
-//      val oldText2 = "Conversation on Crowd Altar"
-//      val newText2 = "Rewriter wuz here"
-//      val newIndex3 = newIndex2.replace(oldText2.toRegex(), newText2)
-//
-//      // description
-//      oldText = "Discussion Without Distraction"
-//      newText = "DWD"
-//      val newIndex4 = newIndex3.replace(oldText.toRegex(), newText)
-//
-//      // url
-//      oldText = "content=\"https://crowdaltar.com\""
-//      newText = "asdfasdfasdf"
-//      return newIndex4.replace(oldText.toRegex(), newText)
+            // get path
+            val path = request.servletPath
+            val tokens = path.split("/").toTypedArray()
+            val noun = tokens[1]
+
+            // title
+            val oldTitle = "<title>Cord Field</title>"
+            val newTitle = "<title>Cord Field.org</title>"
+            index = index?.replace(oldTitle.toRegex(), newTitle)
+
+            // description
+            val oldDescription = "Bible Translation Project Management"
+            val newDescription = "Bible Translation Rapid Application Development Environment"
+            index = index?.replace(oldDescription.toRegex(), newDescription)
+
+            // url
+//            val oldUrl = "content=\"https://dev.cordfield.org\""
+//            val newUrl = "content=\"https://dev.cordfield.org/home\""
+//            return index?.replace(oldUrl.toRegex(), newUrl)
 
         } catch (ex: Exception) {
             println(ex.toString())
