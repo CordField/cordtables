@@ -7,6 +7,6 @@ import { Component, h } from '@stencil/core';
 })
 export class AppHome {
   render() {
-    return <div id="app-home">Home</div>;
+    return <div id="app-home"></div>;
   }
 }

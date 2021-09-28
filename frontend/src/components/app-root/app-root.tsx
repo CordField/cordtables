@@ -55,7 +55,7 @@ export class AppRoot {
               <div>
                 <div id="nav-menu">
                   <div id="table-label">
-                    <label htmlFor="tables">Table</label>
+                    <label htmlFor="tables">Page</label>
                   </div>
 
                   <div>
@@ -94,6 +94,13 @@ export class AppRoot {
             </stencil-router>
           </main>
         </div>
+        <footer>
+          <div id="version-info">
+            <div>version: pre-alpha</div>
+            <div>low bandwidth</div>
+            <div>rapid application development</div>
+          </div>
+        </footer>
       </div>
     );
   }
