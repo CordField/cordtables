@@ -7,11 +7,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.ClassPathResource
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.queryForObject
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Component
+import org.springframework.util.FileCopyUtils
 import java.io.File
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.UncheckedIOException
 import javax.sql.DataSource
 
 @Component("BootstrapDB")
@@ -25,8 +30,6 @@ class BootstrapDB(
     @Autowired
     val util: Utility,
 
-//  @Autowired
-//  val r: ResourcePatternResolver,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
@@ -51,13 +54,13 @@ class BootstrapDB(
             println("version 1 not found. creating schema.")
 
             // schema
-            runSqlFile("./src/main/kotlin/com/seedcompany/cordspringstencil/core/sql/sys_schema.sql")
-            runSqlFile("./src/main/kotlin/com/seedcompany/cordspringstencil/core/sql/sc_schema.sql")
-            runSqlFile("./src/main/kotlin/com/seedcompany/cordspringstencil/core/sql/bootstrap.sql")
+            runSqlFile("sql/sys_schema.sql")
+            runSqlFile("sql/sc_schema.sql")
+            runSqlFile("sql/bootstrap.sql")
 
             // user
-            runSqlFile("./src/main/kotlin/com/seedcompany/cordspringstencil/components/user/register.sql")
-            runSqlFile("./src/main/kotlin/com/seedcompany/cordspringstencil/components/user/login.sql")
+            runSqlFile("sql/user/register.sql")
+            runSqlFile("sql/user/login.sql")
 
             // bootstrap
             val pash = util.encoder.encode(appConfig.cordAdminPassword)
@@ -89,11 +92,24 @@ class BootstrapDB(
 
     }
 
+    fun asString(resource: ClassPathResource): String? {
+        try {
+            InputStreamReader(resource.inputStream, Charsets.UTF_8).use { reader ->
+                return FileCopyUtils.copyToString(
+                    reader
+                )
+            }
+        } catch (e: IOException) {
+            throw UncheckedIOException(e)
+        }
+    }
+
     fun runSqlFile(fileName: String) {
-        val sql = File(fileName).readText()
-        if (sql != null) {
+
+        val sql = asString(ClassPathResource(fileName))
+        if (sql !== null) {
             jdbcTemplate.execute(sql)
-            println("$fileName successfully ran")
+            println("$fileName successfully run")
         }
     }
 }
