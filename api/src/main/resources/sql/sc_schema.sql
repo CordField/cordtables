@@ -223,6 +223,41 @@ create table if not exists sc.language_goals (
 	-- todo
 );
 
+create table if not exists sc.languages_ex(
+	id serial primary key,
+	lang_name varchar(32),
+	lang_code varchar(16) NOT NULL,
+	location text,
+	first_lang_population int NULL,
+	population int,
+	egids_level int,
+	egids_value int,
+	least_reached_progress_jps_scale int,
+	least_reached_value int,
+	partner_interest int,
+	partner_interest_description text,
+	partner_interest_source text,
+	multi_lang_leverage int,
+	multi_lang_leverage_description text,
+	multi_lang_leverage_source text,
+	community_interest int,
+	community_interest_description text,
+	community_interest_source text,
+	community_interest_value int,
+	community_interest_scripture_description text,
+	community_interest_scripture_source text,
+	lwc_scripture_access int,
+	lwc_scripture_description text,
+	lwc_scripture_source text,
+	access_to_begin int,
+	access_to_begin_description text,
+	access_to_begin_source text,
+	suggested_strategies text,
+	comments text,
+	prioritization int,
+	progress_bible int
+);
+
 -- USER TABLES --------------------------------------------------------------
 
 create table if not exists sc.known_languages_by_person (

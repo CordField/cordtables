@@ -38,12 +38,6 @@ export class CfHeader {
             <span id="dot-org">.org</span>
           </div>
 
-          <div id="version-info">
-            <div>pre-alpha version</div>
-            <div>low bandwidth</div>
-            <div>rapid application development</div>
-          </div>
-
           <div id="menu-button">
             <ion-icon name="menu-outline" size="large" onClick={this.toggleMenu}></ion-icon>
           </div>

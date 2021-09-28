@@ -1,6 +1,7 @@
 echo 'BUILDING' && \
 cd frontend && \
-export SERVER_URL="https://cordfield.org" && \
+# export SERVER_URL="https://cordfield.org/" && \
+export SERVER_URL="http://localhost:8080/" && \
 yarn && \
 yarn build && \
 cd .. && \
@@ -18,5 +19,5 @@ cd infra/dev/cf-server && \
 docker build -f Dockerfile -t cf-server:latest . --progress plain && \
 
 echo 'PUSHING' && \
-docker tag cf-server:latest 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-server:latest && \
-docker push 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-server:latest;
+docker tag cf-server:latest 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-server:latest;# && \
+# docker push 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-server:latest;

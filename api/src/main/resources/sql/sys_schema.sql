@@ -107,7 +107,6 @@ create table if not exists public.global_roles (
 
 DO $$ BEGIN
     create type public.table_name as enum (
-		'public.language_ex',
 		'public.education_by_person',
 		'public.education_entries',
 		'public.global_role_column_grants',
@@ -141,6 +140,7 @@ DO $$ BEGIN
 		'sc.partners',
 		'sc.language_goal_definitions',
 		'sc.languages',
+		'sc.languages_ex',
 		'sc.language_locations',
 		'sc.language_goals',
 		'sc.known_languages_by_person',
@@ -169,7 +169,6 @@ DO $$ BEGIN
 	WHEN duplicate_object THEN null;
 END; $$;
 
-
 DO $$ BEGIN
     create type public.table_permission as enum (
 		'Create',
@@ -182,7 +181,7 @@ END; $$;
 create table if not exists public.global_role_column_grants(
 	id serial primary key,
 	access_level access_level not null,
-	column_name varchar(32) not null,
+	column_name varchar(64) not null,
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null default 1,
 	global_role int not null,
@@ -355,41 +354,6 @@ create table if not exists public.posts (
 	-- foreign key (chat_id) references public.chats(id)
 );
 
-create table if not exists public.language_ex(
-	id serial primary key,
-	lang_name varchar(32),
-	lang_code varchar(16) NOT NULL,
-	location text,
-	first_lang_population int NULL,
-	population int,
-	egids_level int,
-	egids_value int,
-	least_reached_progress_jps_scale int,
-	least_reached_value int,
-	partner_interest int,
-	partner_interest_description text,
-	partner_interest_source text,
-	multi_lang_leverage int,
-	multi_lang_leverage_description text,
-	multi_lang_leverage_source text,
-	community_interest int,
-	community_interest_description text,
-	community_interest_source text,
-	community_interest_value int,
-	community_interest_scripture_descript text,
-	community_interest_scripture_source text,
-	lwc_scripture_access int,
-	lwc_scripture_description text,
-	lwc_scripture_source text,
-	access_to_begin int,
-	access_to_begin_description text,
-	access_to_begin_source text,
-	suggested_strategies text,
-	comments text,
-	prioritization int,
-	progress_bible int
-);
-
 create table if not exists sil.table_of_languages (
   id serial primary key,
   sil_ethnologue_legacy varchar(32),
@@ -402,8 +366,6 @@ create table if not exists sil.table_of_languages (
 	provisional_code varchar(32)
 	-- foreign key(chat_id) references public.chats(id)
 );
-
-
 
 -- fkey for a bunch of stuff
 DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_roles_created_by_fk') THEN
