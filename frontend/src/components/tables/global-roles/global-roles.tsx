@@ -3,18 +3,36 @@ import { ErrorType, GenericResponse, globalRole } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 
-class CreateGlobalRolesRequest {
-  // tableName: string;
+class CreateGlobalRoleRequest {
   name: string;
   org: number;
   email: string;
 }
-class ReadGlobalRolesResponse extends GenericResponse {
-  data: globalRole[];
+class CreateGlobalRoleResponse extends GenericResponse {
+  data: globalRole;
 }
 
-class CreateGlobalRolesResponse extends GenericResponse {
+class UpdateGlobalRoleRequest {
+  name: string;
+  email: string;
+  org: number;
+  id: number;
+}
+
+class UpdateGlobalRoleResponse extends GenericResponse {
   data: globalRole;
+}
+
+class DeleteGlobalRoleRequest {
+  id: number;
+}
+
+class DeleteGlobalRoleResponse extends GenericResponse {
+  id: number;
+}
+
+class ReadGlobalRolesResponse extends GenericResponse {
+  data: globalRole[];
 }
 
 @Component({
@@ -26,10 +44,10 @@ export class GlobalRoles {
   @State() globalRoles: globalRole[] = [];
   @State() name: string;
   @State() org: number;
-  @State() error: string;
   @State() updatedOrg: number;
   @State() updatedName: string;
-  @State() idToUpdateOrDelete: number;
+  @State() error: string;
+  @State() success: string;
 
   nameChange(event) {
     this.name = event.target.value;
@@ -48,14 +66,24 @@ export class GlobalRoles {
       name: this.updatedName,
       org: this.updatedOrg,
       email: globals.globalStore.state.email,
+      id,
     });
+    if (result.error === ErrorType.NoError) {
+      this.updatedName = '';
+      this.updatedOrg = null;
+      this.globalRoles = this.globalRoles.map(globalRole => (globalRole.id === result.data.id ? result.data : globalRole));
+      this.success = `Row with id ${result.data.id} updated successfully!`;
+    } else {
+      console.error('Failed to update row');
+      this.error = result.error;
+    }
   };
-  handleDelete = async id => {};
-  handleSubmit = async (event: MouseEvent) => {
+  // handleDelete = async id => {};
+
+  handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    // can return the new row instead to avoid page refresh
-    const result = await fetchAs<CreateGlobalRolesRequest, CreateGlobalRolesResponse>('globalroles/create', {
+    const result = await fetchAs<CreateGlobalRoleRequest, CreateGlobalRoleResponse>('globalroles/create', {
       name: this.name,
       org: this.org,
       email: globals.globalStore.state.email,
@@ -67,6 +95,7 @@ export class GlobalRoles {
       this.name = '';
       this.org = null;
       this.globalRoles = this.globalRoles.concat(result.data);
+      this.success = `New Row with id ${result.data.id} inserted successfully`;
     } else {
       console.error('Failed to create global role');
       this.error = result.error;
@@ -75,10 +104,6 @@ export class GlobalRoles {
 
   componentWillLoad() {
     fetchAs<null, ReadGlobalRolesResponse>('globalroles/read', null).then(res => {
-      // set global state with data
-      // globals.globalStore.state.globalRolesData = JSON.stringify(res.globalRoles);
-      // this.globalRoles = res.globalRoles;
-      // some weird cors error
       this.globalRoles = res.data;
     });
   }
@@ -105,9 +130,7 @@ export class GlobalRoles {
               </div>
               <input type="number" value={this.org} onInput={event => this.orgChange(event)} />
             </div>
-            <button id="Create-Button" value="Create" onClick={this.handleSubmit}>
-              Submit
-            </button>
+            <button onClick={this.handleInsert}>Submit</button>
           </form>
           <table>
             <thead>
@@ -132,14 +155,26 @@ export class GlobalRoles {
                     <td>{globalRole.createdBy}</td>
                     <td>{globalRole.modifiedAt}</td>
                     <td>{globalRole.modifiedBy}</td>
-                    <td contentEditable onChange={() => this.updateNameChange(globalRole.id)}>
+                    <td
+                      contentEditable
+                      onChange={() => this.updateNameChange(globalRole.id)}
+                      // onKeyPress={this.disableNewlines}
+                      // onPaste={this.pasteAsPlainText}
+                      // onFocus={this.highlightAll}
+                    >
                       {globalRole.name}
                     </td>
-                    <td contentEditable onChange={() => this.updateOrgChange(globalRole.id)}>
+                    <td
+                      contentEditable
+                      onChange={() => this.updateOrgChange(globalRole.id)}
+                      // onKeyPress={this.disableNewlines}
+                      // onPaste={this.pasteAsPlainText}
+                      // onFocus={this.highlightAll}
+                    >
                       {globalRole.org}
                     </td>
                     <button onClick={() => this.handleUpdate(globalRole.id)}>Update</button>
-                    <button onClick={() => this.handleDelete(globalRole.id)}>Delete</button>
+                    {/* <button onClick={() => this.handleDelete(globalRole.id)}>Delete</button> */}
                   </tr>
                 );
               })}
@@ -150,3 +185,216 @@ export class GlobalRoles {
     );
   }
 }
+
+// import ReactDOM from 'react-dom'
+// import ContentEditable from 'react-contenteditable'
+// import { Table, Button } from 'semantic-ui-react'
+// import './styles.css'
+
+// class App extends Component {
+//   initialState = {
+//     store: [
+//       { id: 1, item: 'silver', price: 15.41 },
+//       { id: 2, item: 'gold', price: 1284.3 },
+//       { id: 3, item: 'platinum', price: 834.9 },
+//     ],
+//     row: {
+//       item: '',
+//       price: '',
+//     },
+//   }
+
+//   state = this.initialState
+//   firstEditable = React.createRef()
+
+//   addRow = () => {
+//     const { store, row } = this.state
+//     const trimSpaces = string => {
+//       return string
+//         .replace(/&nbsp;/g, '')
+//         .replace(/&amp;/g, '&')
+//         .replace(/&gt;/g, '>')
+//         .replace(/&lt;/g, '<')
+//     }
+//     const trimmedRow = {
+//       ...row,
+//       item: trimSpacenames(row.item),
+//     }
+
+//     row.id = store.length + 1
+
+//     this.setState({
+//       store: [...store, trimmedRow],
+//       row: this.initialState.row,
+//     })
+
+//     this.firstEditable.current.focus()
+//   }
+
+//   deleteRow = id => {
+//     const { store } = this.state
+
+//     this.setState({
+//       store: store.filter(item => id !== item.id),
+//     })
+//   }
+
+//   disableNewlines = event => {
+//     const keyCode = event.keyCode || event.which
+
+//     if (keyCode === 13) {
+//       event.returnValue = false
+//       if (event.preventDefault) event.preventDefault()
+//     }
+//   }
+
+//   validateNumber = event => {
+//     const keyCode = event.keyCode || event.which
+//     const string = String.fromCharCode(keyCode)
+//     const regex = /[0-9,]|\./
+
+//     if (!regex.test(string)) {
+//       event.returnValue = false
+//       if (event.preventDefault) event.preventDefault()
+//     }
+//   }
+
+//   pasteAsPlainText = event => {
+//     event.preventDefault()
+
+//     const text = event.clipboardData.getData('text/plain')
+//     document.execCommand('insertHTML', false, text)
+//   }
+
+//   highlightAll = () => {
+//     setTimeout(() => {
+//       document.execCommand('selectAll', false, null)
+//     }, 0)
+//   }
+
+//   handleContentEditable = event => {
+//     const { row } = this.state
+//     const {
+//       currentTarget: {
+//         dataset: { column },
+//       },
+//       target: { value },
+//     } = event
+
+//     this.setState({ row: { ...row, [column]: value } })
+//   }
+
+//   handleContentEditableUpdate = event => {
+//     const { store } = this.state
+
+//     const {
+//       currentTarget: {
+//         dataset: { row, column },
+//       },
+//       target: { value },
+//     } = event
+
+//     let updatedRow = store.filter((item, i) => parseInt(i) === parseInt(row))[0]
+//     updatedRow[column] = value
+
+//     this.setState({
+//       store: store.map((item, i) => (item[column] === row ? updatedRow : item)),
+//     })
+//   }
+
+//   render() {
+//     const {
+//       store,
+//       row: { item, price },
+//     } = this.state
+
+//     return (
+//       <div className="App">
+//         <h1>React Contenteditable</h1>
+
+//         <Table celled>
+//           <Table.Header>
+//             <Table.Row>
+//               <Table.HeaderCell>Item</Table.HeaderCell>
+//               <Table.HeaderCell>Price</Table.HeaderCell>
+//               <Table.HeaderCell>Action</Table.HeaderCell>
+//             </Table.Row>
+//           </Table.Header>
+//           <Table.Body>
+//             {store.map((row, i) => {
+//               return (
+//                 <Table.Row key={row.id}>
+//                   <Table.Cell className="narrow">
+//                     <ContentEditable
+//                       html={row.item}
+//                       data-column="item"
+//                       data-row={i}
+//                       className="content-editable"
+//                       onKeyPress={this.disableNewlines}
+//                       onPaste={this.pasteAsPlainText}
+//                       onFocus={this.highlightAll}
+//                       onChange={this.handleContentEditableUpdate}
+//                     />
+//                   </Table.Cell>
+//                   <Table.Cell className="narrow">
+//                     <ContentEditable
+//                       html={row.price.toString()}
+//                       data-column="price"
+//                       data-row={i}
+//                       className="content-editable"
+//                       onKeyPress={this.validateNumber}
+//                       onPaste={this.pasteAsPlainText}
+//                       onFocus={this.highlightAll}
+//                       onChange={this.handleContentEditableUpdate}
+//                     />
+//                   </Table.Cell>
+//                   <Table.Cell className="narrow">
+//                     <Button
+//                       onClick={() => {
+//                         this.deleteRow(row.id)
+//                       }}
+//                     >
+//                       Delete
+//                     </Button>
+//                   </Table.Cell>
+//                 </Table.Row>
+//               )
+//             })}
+//             <Table.Row>
+//               <Table.Cell className="narrow">
+//                 <ContentEditable
+//                   html={item}
+//                   data-column="item"
+//                   className="content-editable"
+//                   innerRef={this.firstEditable}
+//                   onKeyPress={this.disableNewlines}
+//                   onPaste={this.pasteAsPlainText}
+//                   onFocus={this.highlightAll}
+//                   onChange={this.handleContentEditable}
+//                 />
+//               </Table.Cell>
+//               <Table.Cell className="narrow">
+//                 <ContentEditable
+//                   html={price}
+//                   data-column="price"
+//                   className="content-editable"
+//                   onKeyPress={this.validateNumber}
+//                   onPaste={this.pasteAsPlainText}
+//                   onFocus={this.highlightAll}
+//                   onChange={this.handleContentEditable}
+//                 />
+//               </Table.Cell>
+//               <Table.Cell className="narrow">
+//                 <Button disabled={!item || !price} onClick={this.addRow}>
+//                   Add
+//                 </Button>
+//               </Table.Cell>
+//             </Table.Row>
+//           </Table.Body>
+//         </Table>
+//       </div>
+//     )
+//   }
+// }
+
+// ReactDOM.render(<App />, document.getElementById('root'))

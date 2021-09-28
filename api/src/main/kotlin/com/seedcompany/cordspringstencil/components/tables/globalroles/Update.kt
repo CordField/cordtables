@@ -2,10 +2,7 @@ package com.seedcompany.cordspringstencil.components.tables.globalroles
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
-import com.seedcompany.cordspringstencil.components.user.CreateGlobalRoleRequest
-import com.seedcompany.cordspringstencil.components.user.CreateGlobalRoleResponse
 import com.seedcompany.cordspringstencil.components.user.GlobalRole
-import com.seedcompany.cordspringstencil.components.user.ReadGlobalRolesResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -13,35 +10,42 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
+import java.sql.Time
+import java.sql.Timestamp
 import javax.sql.DataSource
+import kotlin.reflect.full.memberProperties
+import kotlin.collections.mutableListOf as mutableListOf
+import java.time.Instant
 
 data class UpdateGlobalRoleResponse(
     val error: ErrorType,
     val globalRole: GlobalRole?
 )
+
 data class UpdateGlobalRoleRequest(
     val name: String?,
     val org: String?,
     val email: String,
+    val id: Int
 )
 
 @CrossOrigin(origins = ["http://localhost:3333"])
 @Controller()
-class Create(
+class Update(
     @Autowired
     val util: Utility,
 
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("globalroles/create")
+    @PostMapping("globalroles/update")
     @ResponseBody
-    fun CreateHandler(@RequestBody req: CreateGlobalRoleRequest): CreateGlobalRoleResponse {
+    fun UpdateHandler(@RequestBody req: UpdateGlobalRoleRequest): UpdateGlobalRoleResponse {
 
         println("req: $req")
-        var errorType = ErrorType.UnknownError
-        var insertedGlobalRole: GlobalRole? = null
+        var updatedGlobalRole: GlobalRole? = null
         var userId = 0
+
 
         this.ds.connection.use { conn ->
             try {
@@ -51,46 +55,59 @@ class Create(
                 if (getUserIdResult.next()) {
                     userId = getUserIdResult.getInt("person")
                     println("userId: $userId")
-                }
-                else {
+                } else {
                     throw SQLException("User not found")
                 }
-            }
-            catch(e:SQLException){
+            } catch (e: SQLException) {
                 println(e.message)
-                errorType = ErrorType.UserNotFound
-                return CreateGlobalRoleResponse(errorType, null)
+                return UpdateGlobalRoleResponse(ErrorType.UserNotFound, null)
             }
             try {
-                val insertStatement = conn.prepareCall(
-                    "insert into public.global_roles(name, org, created_by, modified_by) values(?,?,?, ?) returning *"
-                )
-                insertStatement.setString(1, req.name)
-                insertStatement.setInt(2, req.org!!.toInt())
-                insertStatement.setInt(3, userId)
-                insertStatement.setInt(4, userId)
-
-
-                val insertStatementResult = insertStatement.executeQuery()
-
-                if (insertStatementResult.next()) {
-                    val id = insertStatement.getInt("id")
-                    val name = insertStatement.getString("name")
-                    val createdBy = insertStatement.getInt("created_by")
-                    val modifiedBy = insertStatement.getInt("modified_by")
-                    val org = insertStatement.getInt("org")
-                    val createdAt = insertStatement.getString("created_at")
-                    val modifiedAt = insertStatement.getString("modified_at")
-                    insertedGlobalRole = GlobalRole(id,createdAt,createdBy,modifiedAt,modifiedBy,name,org)
-                    println("newly inserted id: $id")
+                var reqValues: MutableList<Any> = mutableListOf()
+                var updateSql = "update public.global_roles set"
+                for (prop in UpdateGlobalRoleRequest::class.memberProperties) {
+                    val propValue = prop.get(req)
+                    println("$propValue ${prop.name}")
+                    if (propValue != null && prop.name != "id" && prop.name != "email") {
+                        updateSql = "$updateSql ${prop.name} = ?,"
+                        reqValues.add(propValue)
+                    }
                 }
-            }
-            catch (e:SQLException){
+                updateSql = "$updateSql modified_by = ?, modified_at = ? where id = ? returning *"
+                println(updateSql)
+                val updateStatement = conn.prepareCall(
+                    updateSql
+                )
+                var counter = 1
+                reqValues.forEach { value ->
+                    when (value) {
+                        is Int -> updateStatement.setInt(counter, value)
+                        is String -> updateStatement.setString(counter, value)
+                    }
+                    counter += 1
+                }
+//                modified_by, modified_at, id
+                updateStatement.setInt(counter, userId)
+                updateStatement.setTimestamp(counter+1,  Timestamp(Instant.now().toEpochMilli()))
+                updateStatement.setInt(counter+2, req.id)
+                val updateStatementResult = updateStatement.executeQuery()
+//
+                if (updateStatementResult.next()) {
+                    val id = updateStatementResult.getInt("id")
+                    val name = updateStatementResult.getString("name")
+                    val createdBy = updateStatementResult.getInt("created_by")
+                    val modifiedBy = updateStatementResult.getInt("modified_by")
+                    val org = updateStatementResult.getInt("org")
+                    val createdAt = updateStatementResult.getString("created_at")
+                    val modifiedAt = updateStatementResult.getString("modified_at")
+                    updatedGlobalRole = GlobalRole(id, createdAt, createdBy, modifiedAt, modifiedBy, name, org)
+                    println("updated row's id: $id")
+                }
+            } catch (e: SQLException) {
                 println(e.message)
-                errorType = ErrorType.SQLInsertError
-                return CreateGlobalRoleResponse(errorType, null)
+                return UpdateGlobalRoleResponse(ErrorType.SQLUpdateError, null)
             }
         }
-        return CreateGlobalRoleResponse(ErrorType.NoError,insertedGlobalRole)
+        return UpdateGlobalRoleResponse(ErrorType.NoError, updatedGlobalRole)
     }
 }

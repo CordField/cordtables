@@ -14,7 +14,7 @@ import javax.sql.DataSource
 
 data class CreateGlobalRoleResponse(
     val error: ErrorType,
-    val globalRole: GlobalRole?
+    val data: GlobalRole?
 )
 data class CreateGlobalRoleRequest(
     val name: String,
@@ -64,7 +64,7 @@ class Create(
                     "insert into public.global_roles(name, org, created_by, modified_by) values(?,?,?, ?) returning *"
                 )
                 insertStatement.setString(1, req.name)
-                insertStatement.setInt(2, req.org!!.toInt())
+                insertStatement.setInt(2, req.org.toInt())
                 insertStatement.setInt(3, userId)
                 insertStatement.setInt(4, userId)
 
@@ -72,18 +72,18 @@ class Create(
                 val insertStatementResult = insertStatement.executeQuery()
 
                 if (insertStatementResult.next()) {
-                    val id = insertStatement.getInt("id")
-                    val name = insertStatement.getString("name")
-                    val createdBy = insertStatement.getInt("created_by")
-                    val modifiedBy = insertStatement.getInt("modified_by")
-                    val org = insertStatement.getInt("org")
-                    val createdAt = insertStatement.getString("created_at")
-                    val modifiedAt = insertStatement.getString("modified_at")
+                    val id = insertStatementResult.getInt("id")
+                    val name = insertStatementResult.getString("name")
+                    val createdBy = insertStatementResult.getInt("created_by")
+                    val modifiedBy = insertStatementResult.getInt("modified_by")
+                    val org = insertStatementResult.getInt("org")
+                    val createdAt = insertStatementResult.getString("created_at")
+                    val modifiedAt = insertStatementResult.getString("modified_at")
                     insertedGlobalRole = GlobalRole(id,createdAt,createdBy,modifiedAt,modifiedBy,name,org)
                     println("newly inserted id: $id")
                 }
             }
-            catch (e:SQLException){
+            catch (e:SQLException ){
                 println(e.message)
                 errorType = ErrorType.SQLInsertError
                 return CreateGlobalRoleResponse(errorType, null)

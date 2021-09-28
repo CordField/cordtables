@@ -15,7 +15,8 @@ enum class ErrorType {
     DuplicateEmail,
     UserNotFound,
     SQLInsertError,
-    SQLReadError
+    SQLReadError,
+    SQLUpdateError
 }
 
 data class GenericResponse (
