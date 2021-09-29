@@ -597,6 +597,7 @@ create table if not exists public.group_row_access(
   foreign key (modified_by) references public.people(id)
 );
 
+
 -- PROJECTS ------------------------------------------------------------------
 
 create table if not exists public.projects (
