@@ -20,7 +20,7 @@ class CordSpringStencilApplicationTests(
 
     @Container
     private val container: BrowserWebDriverContainer<*> = BrowserWebDriverContainer<Nothing>()
-        .withCapabilities(ChromeOptions())
+        .withCapabilities(ChromeOptions().addArguments("no-sandbox").addArguments("headless"))
 
     companion object {
         @Container
