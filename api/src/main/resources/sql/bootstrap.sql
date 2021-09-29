@@ -6,9 +6,9 @@ CREATE OR REPLACE PROCEDURE bootstrap(
 LANGUAGE PLPGSQL
 AS $$
 DECLARE
-  vPeopleCount int;
-  vPersonId int;
-  vOrgId int;
+  vPeopleCount int; -- if this is a fresh db or not
+  vPersonId int; -- the new root person id, some tables set defaults to 1
+  vOrgId int; -- the default org for tables that set defaults to 1
   vAdminRoleId int;
   vAdminGroupId int;
 BEGIN
