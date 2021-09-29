@@ -21,7 +21,7 @@ data class LoginReturn(
     val token: String? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
 @Controller()
 class Login (
     @Autowired
