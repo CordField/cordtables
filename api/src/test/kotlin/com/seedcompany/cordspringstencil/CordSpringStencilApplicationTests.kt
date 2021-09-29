@@ -45,21 +45,17 @@ class CordSpringStencilApplicationTests(
         }
     }
 
-    @Test
-    fun `doesThisWork`() {
-
-        container.webDriver["http://host.docker.internal:$port/"]
-
-        Thread.sleep(5000)
-
-        val messageElement = container.webDriver.findElementByTagName("app-root")
-
-        println("app-root: ${messageElement.toString()}")
-
-        assert(true)
-
-//    Assertions.assertEquals("Integration Test with Selenium", messageElement.text)
-    }
+//    @Test
+//    fun `doesThisWork`() {
+//
+//        container.webDriver["http://host.docker.internal:$port/"]
+//
+//        val messageElement = container.webDriver.findElementByTagName("app-root")
+//
+//        println("app-root: ${messageElement.toString()}")
+//
+//        assert(true)
+//    }
 
     @Test
     fun contextLoads() {
