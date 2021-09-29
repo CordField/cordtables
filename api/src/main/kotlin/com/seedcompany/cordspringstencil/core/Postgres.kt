@@ -83,7 +83,7 @@ class BootstrapDB(
                 }
 
                 if (errorType != ErrorType.NoError) {
-                    println("register query failed")
+                    println("bootstrap query failed")
                 }
 
                 statement.close()

@@ -10,6 +10,7 @@ DECLARE
   vPersonId int;
   vOrgId int;
   vAdminRoleId int;
+  vAdminGroupId int;
 BEGIN
   select count(id)
   from public.people
@@ -135,6 +136,29 @@ BEGIN
     insert into public.global_role_column_grants("access_level", "column_name", "global_role", "table_name") values ('Write', 'prioritization', vAdminRoleId, 'sc.languages_ex');
     insert into public.global_role_column_grants("access_level", "column_name", "global_role", "table_name") values ('Write', 'progress_bible', vAdminRoleId, 'sc.languages_ex');
 
+    -- groups
+    insert into public.groups("name", "created_by", "modified_by")
+    values ('Administrators', vPersonId, vPersonId)
+    returning id
+    into vAdminGroupId;
+
+    -- fake data for now
+    insert into sc.languages_ex("lang_name", "lang_code", "location", "created_by", "modified_by") values ('Spanglish', '$UP_BRU', 'Texarkana', 1, 1);
+    insert into sc.languages_ex("lang_name", "lang_code", "location", "created_by", "modified_by") values ('Pigin Spanglish', '$UP_BRU2', 'Shreveport', 1, 1);
+    insert into sc.languages_ex("lang_name", "lang_code", "location", "created_by", "modified_by") values ('Old Spanglish', '$UP_BRU3', 'Boston', 1, 1);
+    insert into sc.languages_ex("lang_name", "lang_code", "location", "created_by", "modified_by") values ('Slanglish', '$UP_BRU4', 'New Delhi', 1, 1);
+    insert into sc.languages_ex("lang_name", "lang_code", "location", "created_by", "modified_by") values ('Twig 1', '$UP_BR5', 'Yugoslavia', 1, 1);
+    insert into sc.languages_ex("lang_name", "lang_code", "location", "created_by", "modified_by") values ('Jive', '$UP_BRU6', 'Tokyo', 1, 1);
+
+    -- group row access
+    insert into public.group_row_access("group_id", "table_name", "row", "created_by", "modified_by") values (vAdminGroupId, 'sc.languages_ex', 1, vPersonId, vPersonId);
+    insert into public.group_row_access("group_id", "table_name", "row", "created_by", "modified_by") values (vAdminGroupId, 'sc.languages_ex', 2, vPersonId, vPersonId);
+    insert into public.group_row_access("group_id", "table_name", "row", "created_by", "modified_by") values (vAdminGroupId, 'sc.languages_ex', 3, vPersonId, vPersonId);
+    insert into public.group_row_access("group_id", "table_name", "row", "created_by", "modified_by") values (vAdminGroupId, 'sc.languages_ex', 4, vPersonId, vPersonId);
+    insert into public.group_row_access("group_id", "table_name", "row", "created_by", "modified_by") values (vAdminGroupId, 'sc.languages_ex', 5, vPersonId, vPersonId);
+    insert into public.group_row_access("group_id", "table_name", "row", "created_by", "modified_by") values (vAdminGroupId, 'sc.languages_ex', 6, vPersonId, vPersonId);
+
+    error_type := 'NoError';
   end if;
 
 END; $$;

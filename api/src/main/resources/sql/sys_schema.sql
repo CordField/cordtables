@@ -573,7 +573,7 @@ create table if not exists public.users(
 
 create table if not exists public.groups(
   id serial primary key,
-  name int not null,
+  name varchar(64) not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null,
   modified_at timestamp not null default CURRENT_TIMESTAMP,

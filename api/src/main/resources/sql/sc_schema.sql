@@ -255,7 +255,13 @@ create table if not exists sc.languages_ex(
 	suggested_strategies text,
 	comments text,
 	prioritization int,
-	progress_bible int
+	progress_bible int,
+		created_at timestamp not null default CURRENT_TIMESTAMP,
+  	created_by int not null,
+  	modified_at timestamp not null default CURRENT_TIMESTAMP,
+    modified_by int not null,
+  	foreign key (created_by) references public.people(id),
+    foreign key (modified_by) references public.people(id)
 );
 
 -- USER TABLES --------------------------------------------------------------
