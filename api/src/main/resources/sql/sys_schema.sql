@@ -597,6 +597,20 @@ create table if not exists public.group_row_access(
   foreign key (modified_by) references public.people(id)
 );
 
+create table if not exists public.group_memberships(
+  id serial primary key,
+  group_id int not null,
+  person int not null,
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null,
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null,
+  foreign key (group_id) references public.groups(id),
+  foreign key (person) references public.people(id),
+  foreign key (created_by) references public.people(id),
+  foreign key (modified_by) references public.people(id)
+);
+
 
 -- PROJECTS ------------------------------------------------------------------
 

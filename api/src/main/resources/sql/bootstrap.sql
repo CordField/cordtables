@@ -158,6 +158,9 @@ BEGIN
     insert into public.group_row_access("group_id", "table_name", "row", "created_by", "modified_by") values (vAdminGroupId, 'sc.languages_ex', 5, vPersonId, vPersonId);
     insert into public.group_row_access("group_id", "table_name", "row", "created_by", "modified_by") values (vAdminGroupId, 'sc.languages_ex', 6, vPersonId, vPersonId);
 
+    -- group memberships
+    insert into public.group_memberships("group_id", "person", "created_by", "modified_by") values (1, vPersonId, vPersonId, vPersonId);
+
     error_type := 'NoError';
   end if;
 
