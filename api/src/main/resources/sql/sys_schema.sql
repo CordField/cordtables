@@ -585,14 +585,14 @@ create table if not exists public.groups(
 
 create table if not exists public.group_row_access(
   id serial primary key,
-  group int not null,
+  group_id int not null,
   table_name table_name not null,
   row int not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null,
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null,
-  foreign key (group) references public.groups(id),
+  foreign key (group_id) references public.groups(id),
   foreign key (created_by) references public.people(id),
   foreign key (modified_by) references public.people(id)
 );
