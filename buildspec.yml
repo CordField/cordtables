@@ -20,11 +20,11 @@ phases:
       - rm -rf api/src/main/resources/static/*
       - cp -r frontend/www/ api/src/main/resources/static
       - cd api
-      - ./gradlew test
+      # - ./gradlew test
       - ./gradlew bootjar
       - cd ..
       - cp api/build/libs/cordfield-1.jar infra/dev/cf-server/cordfield.jar
-      - cp -r api/build/resources/main/static/* infra/dev/cf-server/static
+      # - cp -r api/build/resources/main/static/* infra/dev/cf-server/static
 
       - echo Building the Docker image...
       - cd infra/dev/cf-server

@@ -8,7 +8,7 @@ cd .. && \
 rm -rf api/src/main/resources/static/* && \
 cp -a frontend/www/ api/src/main/resources/static && \
 cd api && \
-# ./gradlew test && \
+./gradlew test && \
 ./gradlew bootjar && \
 cd .. && \
 cp api/build/libs/cordfield-1.jar infra/dev/cf-server/cordfield.jar && \
