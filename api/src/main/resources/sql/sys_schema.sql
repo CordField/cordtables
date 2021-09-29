@@ -569,6 +569,34 @@ create table if not exists public.users(
 	foreign key (owning_org) references public.organizations(id)
 );
 
+-- GROUPS --------------------------------------------------------------------
+
+create table if not exists public.groups(
+  id serial primary key,
+  name int not null,
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null,
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null,
+  unique (name),
+  foreign key (created_by) references public.people(id),
+  foreign key (modified_by) references public.people(id)
+);
+
+create table if not exists public.group_row_access(
+  id serial primary key,
+  group int not null,
+  table_name table_name not null,
+  row int not null,
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null,
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null,
+  foreign key (group) references public.groups(id),
+  foreign key (created_by) references public.people(id),
+  foreign key (modified_by) references public.people(id)
+);
+
 -- PROJECTS ------------------------------------------------------------------
 
 create table if not exists public.projects (
