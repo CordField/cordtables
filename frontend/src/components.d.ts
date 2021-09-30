@@ -17,7 +17,9 @@ export namespace Components {
         "history": RouterHistory;
     }
     interface CfCell {
+        "isEditable": boolean;
         "propKey": keyof any;
+        "updateFn": (value: any) => void;
         "value": any;
     }
     interface CfGroups {
@@ -158,7 +160,9 @@ declare namespace LocalJSX {
         "history"?: RouterHistory;
     }
     interface CfCell {
+        "isEditable"?: boolean;
         "propKey"?: keyof any;
+        "updateFn"?: (value: any) => void;
         "value"?: any;
     }
     interface CfGroups {

@@ -2,7 +2,6 @@ import { Component, Host, h, State } from '@stencil/core';
 import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
-import { idService } from '../../../core/id.service';
 class GroupsListRequest {
   token: string;
 }
@@ -43,6 +42,8 @@ export class CfGroups {
 
   newRowName: string;
 
+  editableKeys = ['name'];
+
   async connectedCallback() {
     this.getList();
   }
@@ -70,6 +71,10 @@ export class CfGroups {
     }
   };
 
+  updateName = (value: string) => {
+    console.log('updating name', value);
+  };
+
   render() {
     return (
       <Host>
@@ -84,7 +89,13 @@ export class CfGroups {
               <tr>
                 {Object.keys(item).map(key => (
                   <td>
-                    <cf-cell key={key} propKey={key} value={item[key]}></cf-cell>
+                    <cf-cell
+                      key={key}
+                      propKey={key}
+                      value={item[key]}
+                      isEditable={this.editableKeys.includes(key)}
+                      updateFn={this.editableKeys.includes(key) ? this.updateName : null}
+                    ></cf-cell>
                   </td>
                 ))}
               </tr>
