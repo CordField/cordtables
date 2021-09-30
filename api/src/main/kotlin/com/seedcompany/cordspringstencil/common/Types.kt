@@ -5,6 +5,7 @@ class Types {
 
 enum class ErrorType {
     NoError,
+    AdminOnly,
     UnknownError,
     BadCredentials,
     TokenNotFound,
@@ -13,6 +14,11 @@ enum class ErrorType {
     PasswordTooShort,
     PasswordTooLong,
     DuplicateEmail,
+    InputMissingName,
+    NameTooShort,
+    NameTooLong,
+    NameAlreadyExists,
+    MissingId,
 }
 
 data class GenericResponse (
