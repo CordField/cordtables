@@ -5,6 +5,7 @@ class Types {
 
 enum class ErrorType {
     NoError,
+    AdminOnly,
     UnknownError,
     BadCredentials,
     TokenNotFound,
