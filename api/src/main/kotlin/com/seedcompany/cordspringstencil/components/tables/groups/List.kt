@@ -51,7 +51,7 @@ class List(
         this.ds.connection.use { conn ->
             //language=SQL
             val statement = conn.prepareStatement("""
-                select * from groups;
+                select * from groups order by id asc;
             """.trimIndent())
 
             val result = statement.executeQuery()

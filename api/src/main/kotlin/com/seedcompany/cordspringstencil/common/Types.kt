@@ -18,6 +18,7 @@ enum class ErrorType {
     NameTooShort,
     NameTooLong,
     NameAlreadyExists,
+    MissingId,
 }
 
 data class GenericResponse (

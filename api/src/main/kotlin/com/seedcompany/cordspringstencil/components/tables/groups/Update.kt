@@ -10,18 +10,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class GroupCreateRequest(
+data class GroupUpdateRequest(
     val token: String? = null,
+    val id: Int? = null,
     val name: String? = null,
 )
 
-data class GroupCreateReturn(
+data class GroupUpdateResponse(
     val error: ErrorType,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
 @Controller
-class Create(
+class Update(
     @Autowired
     val util: Utility,
 
@@ -29,9 +30,9 @@ class Create(
     val ds: DataSource,
 ) {
 
-    @PostMapping("groups/create")
+    @PostMapping("groups/update")
     @ResponseBody
-    fun createHandler(@RequestBody req: GroupUpdateRequest): GroupUpdateResponse {
+    fun updateHandler(@RequestBody req: GroupUpdateRequest): GroupUpdateResponse {
 
         if (req.token == null) return GroupUpdateResponse(ErrorType.TokenNotFound)
         if (!util.isAdmin(req.token)) return GroupUpdateResponse(ErrorType.AdminOnly)
@@ -39,6 +40,8 @@ class Create(
         if (req.name == null) return GroupUpdateResponse(ErrorType.InputMissingName)
         if (req.name.isEmpty()) return GroupUpdateResponse(ErrorType.NameTooShort)
         if (req.name.length > 64) return GroupUpdateResponse(ErrorType.NameTooLong)
+
+        if (req.id == null) return GroupUpdateResponse(ErrorType.MissingId)
 
         this.ds.connection.use { conn ->
 
@@ -63,31 +66,27 @@ class Create(
                     //language=SQL
                     val statement = conn.prepareStatement(
                         """
-                        insert into public.groups(name, created_by, modified_by) 
-                            values(?, 
-                                (
+                        update public.groups
+                        set 
+                          name = ?, 
+                          modified_by = (
                                   select person 
                                   from public.tokens 
                                   where token = ?
-                                ),
-                                (
-                                  select person 
-                                  from public.tokens 
-                                  where token = ?
-                                )
-                        );
+                                ), 
+                          modified_at = CURRENT_TIMESTAMP
+                        where id = ?;
                         """.trimIndent()
-                                )
+                    )
 
                     statement.setString(1, req.name)
                     statement.setString(2, req.token)
-                    statement.setString(3, req.token)
+                    statement.setInt(3, req.id)
 
                     statement.execute()
 
                 }
             }
-
 
         }
 

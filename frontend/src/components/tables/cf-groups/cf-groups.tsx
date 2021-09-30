@@ -29,6 +29,16 @@ class GroupCreateResponse {
   error: ErrorType;
 }
 
+class GroupUpdateRequest {
+  token: string;
+  name: string;
+  id: number;
+}
+
+class GroupUpdateResponse {
+  error: ErrorType;
+}
+
 @Component({
   tag: 'cf-groups',
   styleUrl: 'cf-groups.css',
@@ -71,8 +81,14 @@ export class CfGroups {
     }
   };
 
-  updateName = (value: string) => {
-    console.log('updating name', value);
+  updateName = async (id: number, value: string): Promise<boolean> => {
+    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, name: value, id });
+
+    if (this.createResponse.error == ErrorType.NoError) {
+      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('groups/list', { token: globals.globalStore.state.token });
+      return true;
+    } else {
+    }
   };
 
   render() {
@@ -91,6 +107,7 @@ export class CfGroups {
                   <td>
                     <cf-cell
                       key={key}
+                      rowId={item.id}
                       propKey={key}
                       value={item[key]}
                       isEditable={this.editableKeys.includes(key)}

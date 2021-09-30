@@ -19,7 +19,8 @@ export namespace Components {
     interface CfCell {
         "isEditable": boolean;
         "propKey": keyof any;
-        "updateFn": (value: any) => void;
+        "rowId": number;
+        "updateFn": (id: number, value: any) => Promise<boolean>;
         "value": any;
     }
     interface CfGroups {
@@ -162,7 +163,8 @@ declare namespace LocalJSX {
     interface CfCell {
         "isEditable"?: boolean;
         "propKey"?: keyof any;
-        "updateFn"?: (value: any) => void;
+        "rowId"?: number;
+        "updateFn"?: (id: number, value: any) => Promise<boolean>;
         "value"?: any;
     }
     interface CfGroups {

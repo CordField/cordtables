@@ -6,10 +6,11 @@ import { Component, Host, h, Prop, State } from '@stencil/core';
   shadow: true,
 })
 export class CfCell {
+  @Prop() rowId: number;
   @Prop() propKey: keyof any;
   @Prop() value: any;
   @Prop() isEditable: boolean;
-  @Prop() updateFn: (value: any) => void;
+  @Prop() updateFn: (id: number, value: any) => Promise<boolean>;
   @State() showEdit = false;
   @State() newValue: any;
 
@@ -19,8 +20,16 @@ export class CfCell {
     if (this.isEditable) this.showEdit = !this.showEdit;
   };
 
-  updateValue = event => {
-    this.updateFn(event.target.value);
+  updateValue = async event => {
+    this.newValue = event.target.value;
+  };
+
+  submit = async () => {
+    const result = await this.updateFn(this.rowId, this.newValue);
+    if (result) {
+      this.showEdit = false;
+    } else {
+    }
   };
 
   render() {
@@ -29,18 +38,26 @@ export class CfCell {
         <slot></slot>
         <span class={this.isEditable ? 'editable' : ''}>
           {!this.showEdit && (
-            <span>
-              <span>{this.value}</span>
-              {this.isEditable && <button onClick={this.clickEdit}>edit</button>}
+            <span id="value-view">
+              <span class="value">{this.value}</span>
+              {this.isEditable && (
+                <span class="edit-buttons" onClick={this.clickEdit}>
+                  <ion-icon name="create-outline"></ion-icon>
+                </span>
+              )}
             </span>
           )}
           {this.showEdit && (
-            <span>
+            <span id="value-edit">
               <input type="text" id="value-input" name="value-input" defaultValue={this.value} onInput={event => this.updateValue(event)}>
                 {this.value}
               </input>
-              <button>Save</button>
-              <button onClick={this.clickEdit}>Cancel</button>
+              <span id="save-icon" class="edit-buttons" onClick={this.submit}>
+                <ion-icon name="checkmark-outline"></ion-icon>
+              </span>
+              <span id="cancel-icon" class="edit-buttons" onClick={this.clickEdit}>
+                <ion-icon name="close-outline"></ion-icon>
+              </span>
             </span>
           )}
         </span>

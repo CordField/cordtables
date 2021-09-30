@@ -4,5 +4,27 @@
 }
 
 .editable {
-  background-color: lightcoral;
+  /* background-color: lightcoral; */
+}
+
+#value-view {
+  display: flex;
+  justify-content: space-between;
+}
+
+#value-edit {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-buttons {
+  margin-left: 15px;
+}
+
+#save-icon {
+  color: green;
+}
+
+#cancel-icon {
+  color: red;
 }
