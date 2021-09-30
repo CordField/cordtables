@@ -12,13 +12,17 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 
+data class InsertableGlobalRoleFields(
+    val name: String ,
+    val org: Int
+)
+
 data class CreateGlobalRoleResponse(
     val error: ErrorType,
     val data: GlobalRole?
 )
 data class CreateGlobalRoleRequest(
-    val name: String,
-    val org: String,
+    val insertedFields: InsertableGlobalRoleFields,
     val email: String,
 )
 
@@ -63,8 +67,8 @@ class Create(
                 val insertStatement = conn.prepareCall(
                     "insert into public.global_roles(name, org, created_by, modified_by) values(?,?,?, ?) returning *"
                 )
-                insertStatement.setString(1, req.name)
-                insertStatement.setInt(2, req.org.toInt())
+                insertStatement.setString(1, req.insertedFields.name)
+                insertStatement.setInt(2, req.insertedFields.org)
                 insertStatement.setInt(3, userId)
                 insertStatement.setInt(4, userId)
 

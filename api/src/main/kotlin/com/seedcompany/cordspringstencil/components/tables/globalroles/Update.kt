@@ -19,12 +19,16 @@ import java.time.Instant
 
 data class UpdateGlobalRoleResponse(
     val error: ErrorType,
-    val globalRole: GlobalRole?
+    val data: GlobalRole?
+)
+
+data class UpdatableGlobalRoleFields(
+    val name: String? ,
+    val org: Int?
 )
 
 data class UpdateGlobalRoleRequest(
-    val name: String?,
-    val org: String?,
+    val updatedFields: UpdatableGlobalRoleFields,
     val email: String,
     val id: Int
 )
@@ -65,10 +69,10 @@ class Update(
             try {
                 var reqValues: MutableList<Any> = mutableListOf()
                 var updateSql = "update public.global_roles set"
-                for (prop in UpdateGlobalRoleRequest::class.memberProperties) {
-                    val propValue = prop.get(req)
+                for (prop in UpdatableGlobalRoleFields::class.memberProperties) {
+                    val propValue = prop.get(req.updatedFields)
                     println("$propValue ${prop.name}")
-                    if (propValue != null && prop.name != "id" && prop.name != "email") {
+                    if (propValue != null) {
                         updateSql = "$updateSql ${prop.name} = ?,"
                         reqValues.add(propValue)
                     }

@@ -1,9 +1,9 @@
-package com.seedcompany.cordspringstencil.components.tables.`language-ex`
+package com.seedcompany.cordspringstencil.components.tables.languageex
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
-import org.apache.commons.codec.language.bm.Lang
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -57,6 +57,7 @@ data class ReadLanguageExResponse(
 
 @CrossOrigin(origins = ["http://localhost:3333"])
 @Controller()
+@Qualifier("LanguageExRead")
 class Read(
     @Autowired
     val util: Utility,
