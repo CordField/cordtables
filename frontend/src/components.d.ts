@@ -36,6 +36,8 @@ export namespace Components {
     }
     interface GlobalRoles {
     }
+    interface LanguagesEx {
+    }
     interface TableRoot {
         "match": MatchResults;
     }
@@ -107,6 +109,12 @@ declare global {
         prototype: HTMLGlobalRolesElement;
         new (): HTMLGlobalRolesElement;
     };
+    interface HTMLLanguagesExElement extends Components.LanguagesEx, HTMLStencilElement {
+    }
+    var HTMLLanguagesExElement: {
+        prototype: HTMLLanguagesExElement;
+        new (): HTMLLanguagesExElement;
+    };
     interface HTMLTableRootElement extends Components.TableRoot, HTMLStencilElement {
     }
     var HTMLTableRootElement: {
@@ -125,6 +133,7 @@ declare global {
         "global-role-memberships": HTMLGlobalRoleMembershipsElement;
         "global-role-table-permissions": HTMLGlobalRoleTablePermissionsElement;
         "global-roles": HTMLGlobalRolesElement;
+        "languages-ex": HTMLLanguagesExElement;
         "table-root": HTMLTableRootElement;
     }
 }
@@ -158,6 +167,8 @@ declare namespace LocalJSX {
     }
     interface GlobalRoles {
     }
+    interface LanguagesEx {
+    }
     interface TableRoot {
         "match"?: MatchResults;
     }
@@ -173,6 +184,7 @@ declare namespace LocalJSX {
         "global-role-memberships": GlobalRoleMemberships;
         "global-role-table-permissions": GlobalRoleTablePermissions;
         "global-roles": GlobalRoles;
+        "languages-ex": LanguagesEx;
         "table-root": TableRoot;
     }
 }
@@ -191,6 +203,7 @@ declare module "@stencil/core" {
             "global-role-memberships": LocalJSX.GlobalRoleMemberships & JSXBase.HTMLAttributes<HTMLGlobalRoleMembershipsElement>;
             "global-role-table-permissions": LocalJSX.GlobalRoleTablePermissions & JSXBase.HTMLAttributes<HTMLGlobalRoleTablePermissionsElement>;
             "global-roles": LocalJSX.GlobalRoles & JSXBase.HTMLAttributes<HTMLGlobalRolesElement>;
+            "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
     }

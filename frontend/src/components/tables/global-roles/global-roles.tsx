@@ -3,19 +3,27 @@ import { ErrorType, GenericResponse, globalRole } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 
+// class InsertableGlobalRoleFields {
+//   name: string;
+//   org: number;
+// }
+type MutableGlobalRoleFields = Omit<globalRole, 'id' | 'createdBy' | 'modifiedBy' | 'modifiedAt' | 'createdAt'>;
 class CreateGlobalRoleRequest {
-  name: string;
-  org: number;
+  insertedFields: MutableGlobalRoleFields;
   email: string;
 }
 class CreateGlobalRoleResponse extends GenericResponse {
   data: globalRole;
 }
 
+// class UpdatableGlobalRoleFields {
+//   name: string;
+//   org: number;
+// }
+
 class UpdateGlobalRoleRequest {
-  name: string;
   email: string;
-  org: number;
+  updatedFields: MutableGlobalRoleFields;
   id: number;
 }
 
@@ -28,7 +36,7 @@ class DeleteGlobalRoleRequest {
 }
 
 class DeleteGlobalRoleResponse extends GenericResponse {
-  id: number;
+  data: { id: number };
 }
 
 class ReadGlobalRolesResponse extends GenericResponse {
@@ -41,59 +49,61 @@ class ReadGlobalRolesResponse extends GenericResponse {
   shadow: true,
 })
 export class GlobalRoles {
+  defaultFields = { name: '', org: null };
   @State() globalRoles: globalRole[] = [];
-  @State() name: string;
-  @State() org: number;
-  @State() updatedOrg: number;
-  @State() updatedName: string;
+  @State() insertedFields: MutableGlobalRoleFields = this.defaultFields;
+  @State() updatedFields: MutableGlobalRoleFields = this.defaultFields;
   @State() error: string;
   @State() success: string;
+  insertFieldChange(event, fieldName) {
+    this.insertedFields[fieldName] = event.target.value;
+  }
 
-  nameChange(event) {
-    this.name = event.target.value;
-  }
-  updateNameChange(event) {
-    this.updatedName = event.target.value;
-  }
-  orgChange(event) {
-    this.org = event.target.value;
-  }
-  updateOrgChange(event) {
-    this.updatedOrg = event.target.value;
+  updateFieldChange(event, columnName) {
+    console.log(this.updatedFields[columnName], event.currentTarget.textContent);
+    this.updatedFields[columnName] = event.currentTarget.textContent;
   }
   handleUpdate = async id => {
+    console.log(this.updatedFields);
     const result = await fetchAs<UpdateGlobalRoleRequest, UpdateGlobalRoleResponse>('globalroles/update', {
-      name: this.updatedName,
-      org: this.updatedOrg,
+      updatedFields: this.updatedFields,
       email: globals.globalStore.state.email,
       id,
     });
     if (result.error === ErrorType.NoError) {
-      this.updatedName = '';
-      this.updatedOrg = null;
+      this.updatedFields = this.defaultFields;
       this.globalRoles = this.globalRoles.map(globalRole => (globalRole.id === result.data.id ? result.data : globalRole));
       this.success = `Row with id ${result.data.id} updated successfully!`;
     } else {
       console.error('Failed to update row');
       this.error = result.error;
+      this.globalRoles = this.globalRoles.map(globalRole => (globalRole.id === result.data?.id ? result.data : globalRole));
     }
   };
-  // handleDelete = async id => {};
+  handleDelete = async id => {
+    const result = await fetchAs<DeleteGlobalRoleRequest, DeleteGlobalRoleResponse>('globalroles/delete', {
+      id,
+    });
+    if (result.error === ErrorType.NoError) {
+      this.success = `Row with id ${result.data.id} deleted successfully!`;
+      this.globalRoles = this.globalRoles.filter(globalRole => globalRole.id !== result.data.id);
+    } else {
+      this.error = result.error;
+    }
+  };
 
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
     const result = await fetchAs<CreateGlobalRoleRequest, CreateGlobalRoleResponse>('globalroles/create', {
-      name: this.name,
-      org: this.org,
+      insertedFields: this.insertedFields,
       email: globals.globalStore.state.email,
     });
 
     console.log(result);
 
     if (result.error === ErrorType.NoError) {
-      this.name = '';
-      this.org = null;
+      this.insertedFields = this.defaultFields;
       this.globalRoles = this.globalRoles.concat(result.data);
       this.success = `New Row with id ${result.data.id} inserted successfully`;
     } else {
@@ -116,20 +126,21 @@ export class GlobalRoles {
         </header>
         {/* add flexbox to main -> create and update form should be to the side */}
         <main>
-          <form>
-            <div id="name-holder" class="form-input-item">
-              <div>
-                <label htmlFor="name">Name</label>
-              </div>
-              <input type="text" value={this.name} onInput={event => this.nameChange(event)} />
+          <form class="form insert-form">
+            <div class="form-row">
+              <label htmlFor="name" class="label insert-form__label">
+                Name
+              </label>
+              <input type="text" value={this.insertedFields.name} onInput={event => this.insertFieldChange(event, 'name')} class="input insert-form__input" />
             </div>
 
-            <div id="org-holder" class="form-input-item">
-              <div>
-                <label htmlFor="org">Org</label>
-              </div>
-              <input type="number" value={this.org} onInput={event => this.orgChange(event)} />
+            <div class="form form-row">
+              <label htmlFor="org" class="label insert-form__label">
+                Org
+              </label>
+              <input type="number" value={this.insertedFields.org} onInput={event => this.insertFieldChange(event, 'org')} class="insert-form__input" />
             </div>
+
             <button onClick={this.handleInsert}>Submit</button>
           </form>
           <table>
@@ -157,7 +168,7 @@ export class GlobalRoles {
                     <td>{globalRole.modifiedBy}</td>
                     <td
                       contentEditable
-                      onChange={() => this.updateNameChange(globalRole.id)}
+                      onInput={event => this.updateFieldChange(event, 'name')}
                       // onKeyPress={this.disableNewlines}
                       // onPaste={this.pasteAsPlainText}
                       // onFocus={this.highlightAll}
@@ -166,7 +177,7 @@ export class GlobalRoles {
                     </td>
                     <td
                       contentEditable
-                      onChange={() => this.updateOrgChange(globalRole.id)}
+                      onInput={event => this.updateFieldChange(event, 'org')}
                       // onKeyPress={this.disableNewlines}
                       // onPaste={this.pasteAsPlainText}
                       // onFocus={this.highlightAll}
@@ -174,7 +185,7 @@ export class GlobalRoles {
                       {globalRole.org}
                     </td>
                     <button onClick={() => this.handleUpdate(globalRole.id)}>Update</button>
-                    {/* <button onClick={() => this.handleDelete(globalRole.id)}>Delete</button> */}
+                    <button onClick={() => this.handleDelete(globalRole.id)}>Delete</button>
                   </tr>
                 );
               })}
