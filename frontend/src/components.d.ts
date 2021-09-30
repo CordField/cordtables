@@ -16,6 +16,10 @@ export namespace Components {
     interface AppRoot {
         "history": RouterHistory;
     }
+    interface CfCell {
+        "propKey": keyof any;
+        "value": any;
+    }
     interface CfGroups {
     }
     interface CfHeader {
@@ -60,6 +64,12 @@ declare global {
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
+    };
+    interface HTMLCfCellElement extends Components.CfCell, HTMLStencilElement {
+    }
+    var HTMLCfCellElement: {
+        prototype: HTMLCfCellElement;
+        new (): HTMLCfCellElement;
     };
     interface HTMLCfGroupsElement extends Components.CfGroups, HTMLStencilElement {
     }
@@ -125,6 +135,7 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "cf-cell": HTMLCfCellElement;
         "cf-groups": HTMLCfGroupsElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
@@ -145,6 +156,10 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
         "history"?: RouterHistory;
+    }
+    interface CfCell {
+        "propKey"?: keyof any;
+        "value"?: any;
     }
     interface CfGroups {
     }
@@ -176,6 +191,7 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "cf-cell": CfCell;
         "cf-groups": CfGroups;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
@@ -195,6 +211,7 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "cf-cell": LocalJSX.CfCell & JSXBase.HTMLAttributes<HTMLCfCellElement>;
             "cf-groups": LocalJSX.CfGroups & JSXBase.HTMLAttributes<HTMLCfGroupsElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;

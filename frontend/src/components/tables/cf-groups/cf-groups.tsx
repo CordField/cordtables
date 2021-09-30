@@ -1,7 +1,8 @@
 import { Component, Host, h, State } from '@stencil/core';
+import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
-
+import { idService } from '../../../core/id.service';
 class GroupsListRequest {
   token: string;
 }
@@ -16,8 +17,17 @@ class GroupsRow {
 }
 
 class GroupsListResponse {
-  error: String;
+  error: ErrorType;
   groups: Array<GroupsRow>;
+}
+
+class GroupCreateRequest {
+  token: string;
+  name: string;
+}
+
+class GroupCreateResponse {
+  error: ErrorType;
 }
 
 @Component({
@@ -26,12 +36,39 @@ class GroupsListResponse {
   shadow: true,
 })
 export class CfGroups {
-  @State() response: GroupsListResponse;
+  @State() listResponse: GroupsListResponse;
+  @State() showNewForm = false;
 
-  async componentDidLoad() {
-    this.response = await fetchAs<GroupsListRequest, GroupsListResponse>('groups/list', { token: globals.globalStore.state.token });
-    console.log(this.response);
+  createResponse: GroupCreateResponse;
+
+  newRowName: string;
+
+  async connectedCallback() {
+    this.getList();
   }
+
+  async getList() {
+    this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('groups/list', { token: globals.globalStore.state.token });
+  }
+
+  toggleNewForm = () => {
+    this.showNewForm = !this.showNewForm;
+  };
+
+  inputName(event) {
+    this.newRowName = event.target.value;
+  }
+
+  submit = async () => {
+    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('groups/create', { token: globals.globalStore.state.token, name: this.newRowName });
+
+    if (this.createResponse.error == ErrorType.NoError) {
+      this.showNewForm = false;
+      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('groups/list', { token: globals.globalStore.state.token });
+    } else {
+      console.warn('Error creating group');
+    }
+  };
 
   render() {
     return (
@@ -39,21 +76,52 @@ export class CfGroups {
         <slot></slot>
         <h3>Groups</h3>
         <table>
-          <tr>{this.response && this.response.groups && this.response.groups.length > 0 && Object.keys(this.response.groups[0]).map(key => <th>{key}</th>)}</tr>
+          <tr>{this.listResponse && this.listResponse.groups && this.listResponse.groups.length > 0 && Object.keys(this.listResponse.groups[0]).map(key => <th>{key}</th>)}</tr>
 
-          {this.response &&
-            this.response.groups &&
-            this.response.groups.map(item => (
+          {this.listResponse &&
+            this.listResponse.groups &&
+            this.listResponse.groups.map(item => (
               <tr>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
-                <td>{item.createdAt}</td>
-                <td>{item.createdBy}</td>
-                <td>{item.modifiedAt}</td>
-                <td>{item.modifiedBy}</td>
+                {Object.keys(item).map(key => (
+                  <td>
+                    <cf-cell key={key} propKey={key} value={item[key]}></cf-cell>
+                  </td>
+                ))}
               </tr>
             ))}
+
+          {this.showNewForm && (
+            <tr>
+              <td class="disabled">&nbsp;</td>
+              <td>
+                <input type="text" id="name-input" name="name" onInput={event => this.inputName(event)}></input>
+              </td>
+              <td class="disabled">&nbsp;</td>
+              <td class="disabled">&nbsp;</td>
+              <td class="disabled">&nbsp;</td>
+              <td class="disabled">&nbsp;</td>
+            </tr>
+          )}
         </table>
+
+        <div id="button-group">
+          {!this.showNewForm && (
+            <button id="new-button" onClick={this.toggleNewForm}>
+              Create New Group
+            </button>
+          )}
+
+          {this.showNewForm && (
+            <div>
+              <button id="cancel-button" onClick={this.toggleNewForm}>
+                Cancel
+              </button>
+              <button id="submit-button" onClick={this.submit}>
+                Submit
+              </button>
+            </div>
+          )}
+        </div>
       </Host>
     );
   }
