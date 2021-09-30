@@ -75,6 +75,9 @@ export class AppRoot {
                       <option selected={this.path === '/table/global-role-memberships'} value="global-role-memberships">
                         Global Role Memberships
                       </option>
+                      <option selected={this.path === '/table/groups'} value="groups">
+                        Groups
+                      </option>
                     </select>
                   </div>
                 </div>
