@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.groupmemberships
+package com.seedcompany.cordspringstencil.components.tables.grouprowaccess
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class GroupRowAccessDeleteRequest(
+data class GroupMembershipDeleteRequest(
     val token: String? = null,
     val id: Int? = null,
 )
 
-data class GroupRowAccessDeleteResponse(
+data class GroupMembershipDeleteResponse(
     val error: ErrorType,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
-@Controller("GroupRowAccessDelete")
+@Controller("GroupMembershipsDelete")
 class Delete(
     @Autowired
     val util: Utility,
@@ -29,21 +29,21 @@ class Delete(
     val ds: DataSource,
 ) {
 
-    @PostMapping("grouprowaccess/delete")
+    @PostMapping("groupmemberships/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: GroupRowAccessDeleteRequest): GroupRowAccessDeleteResponse {
+    fun deleteHandler(@RequestBody req: GroupMembershipDeleteRequest): GroupMembershipDeleteResponse {
 
-        if (req.token == null) return GroupRowAccessDeleteResponse(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return GroupRowAccessDeleteResponse(ErrorType.AdminOnly)
+        if (req.token == null) return GroupMembershipDeleteResponse(ErrorType.TokenNotFound)
+        if (!util.isAdmin(req.token)) return GroupMembershipDeleteResponse(ErrorType.AdminOnly)
 
-        if (req.id == null) return GroupRowAccessDeleteResponse(ErrorType.MissingId)
+        if (req.id == null) return GroupMembershipDeleteResponse(ErrorType.MissingId)
 
         this.ds.connection.use { conn ->
 
             //language=SQL
             val deleteStatement = conn.prepareStatement(
                 """
-                delete from public.group_row_access where id = ?;
+                delete from public.group_memberships where id = ?;
             """.trimIndent()
             )
 
@@ -52,7 +52,7 @@ class Delete(
             deleteStatement.execute()
         }
 
-        return GroupRowAccessDeleteResponse(ErrorType.NoError)
+        return GroupMembershipDeleteResponse(ErrorType.NoError)
     }
 
 }

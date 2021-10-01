@@ -20,7 +20,8 @@ export class TableRoot {
         {this.match.params.table === 'global-role-memberships' && <global-role-memberships></global-role-memberships>}
         {this.match.params.table === 'groups' && (
           <div>
-            <cf-groups></cf-groups>
+            <groups-table></groups-table>
+            <groups-row-access></groups-row-access>
             <group-memberships></group-memberships>
           </div>
         )}

@@ -49,8 +49,8 @@ class GroupDeleteResponse {
 }
 
 @Component({
-  tag: 'cf-groups',
-  styleUrl: 'cf-groups.css',
+  tag: 'groups-table',
+  styleUrl: 'groups-table.css',
   shadow: true,
 })
 export class CfGroups {

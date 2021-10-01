@@ -30,8 +30,6 @@ export namespace Components {
         "updateFn": (id: number, value: any) => Promise<boolean>;
         "value": any;
     }
-    interface CfGroups {
-    }
     interface CfHeader {
         "history": RouterHistory;
     }
@@ -54,7 +52,9 @@ export namespace Components {
     }
     interface GroupMemberships {
     }
-    interface GroupsPage {
+    interface GroupsRowAccess {
+    }
+    interface GroupsTable {
     }
     interface TableRoot {
         "match": MatchResults;
@@ -90,12 +90,6 @@ declare global {
     var HTMLCfCellElement: {
         prototype: HTMLCfCellElement;
         new (): HTMLCfCellElement;
-    };
-    interface HTMLCfGroupsElement extends Components.CfGroups, HTMLStencilElement {
-    }
-    var HTMLCfGroupsElement: {
-        prototype: HTMLCfGroupsElement;
-        new (): HTMLCfGroupsElement;
     };
     interface HTMLCfHeaderElement extends Components.CfHeader, HTMLStencilElement {
     }
@@ -151,11 +145,17 @@ declare global {
         prototype: HTMLGroupMembershipsElement;
         new (): HTMLGroupMembershipsElement;
     };
-    interface HTMLGroupsPageElement extends Components.GroupsPage, HTMLStencilElement {
+    interface HTMLGroupsRowAccessElement extends Components.GroupsRowAccess, HTMLStencilElement {
     }
-    var HTMLGroupsPageElement: {
-        prototype: HTMLGroupsPageElement;
-        new (): HTMLGroupsPageElement;
+    var HTMLGroupsRowAccessElement: {
+        prototype: HTMLGroupsRowAccessElement;
+        new (): HTMLGroupsRowAccessElement;
+    };
+    interface HTMLGroupsTableElement extends Components.GroupsTable, HTMLStencilElement {
+    }
+    var HTMLGroupsTableElement: {
+        prototype: HTMLGroupsTableElement;
+        new (): HTMLGroupsTableElement;
     };
     interface HTMLTableRootElement extends Components.TableRoot, HTMLStencilElement {
     }
@@ -169,7 +169,6 @@ declare global {
         "app-root": HTMLAppRootElement;
         "cf-action": HTMLCfActionElement;
         "cf-cell": HTMLCfCellElement;
-        "cf-groups": HTMLCfGroupsElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
@@ -179,7 +178,8 @@ declare global {
         "global-role-table-permissions": HTMLGlobalRoleTablePermissionsElement;
         "global-roles": HTMLGlobalRolesElement;
         "group-memberships": HTMLGroupMembershipsElement;
-        "groups-page": HTMLGroupsPageElement;
+        "groups-row-access": HTMLGroupsRowAccessElement;
+        "groups-table": HTMLGroupsTableElement;
         "table-root": HTMLTableRootElement;
     }
 }
@@ -205,8 +205,6 @@ declare namespace LocalJSX {
         "updateFn"?: (id: number, value: any) => Promise<boolean>;
         "value"?: any;
     }
-    interface CfGroups {
-    }
     interface CfHeader {
         "history"?: RouterHistory;
     }
@@ -230,7 +228,9 @@ declare namespace LocalJSX {
     }
     interface GroupMemberships {
     }
-    interface GroupsPage {
+    interface GroupsRowAccess {
+    }
+    interface GroupsTable {
     }
     interface TableRoot {
         "match"?: MatchResults;
@@ -241,7 +241,6 @@ declare namespace LocalJSX {
         "app-root": AppRoot;
         "cf-action": CfAction;
         "cf-cell": CfCell;
-        "cf-groups": CfGroups;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
@@ -251,7 +250,8 @@ declare namespace LocalJSX {
         "global-role-table-permissions": GlobalRoleTablePermissions;
         "global-roles": GlobalRoles;
         "group-memberships": GroupMemberships;
-        "groups-page": GroupsPage;
+        "groups-row-access": GroupsRowAccess;
+        "groups-table": GroupsTable;
         "table-root": TableRoot;
     }
 }
@@ -264,7 +264,6 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "cf-action": LocalJSX.CfAction & JSXBase.HTMLAttributes<HTMLCfActionElement>;
             "cf-cell": LocalJSX.CfCell & JSXBase.HTMLAttributes<HTMLCfCellElement>;
-            "cf-groups": LocalJSX.CfGroups & JSXBase.HTMLAttributes<HTMLCfGroupsElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
@@ -274,7 +273,8 @@ declare module "@stencil/core" {
             "global-role-table-permissions": LocalJSX.GlobalRoleTablePermissions & JSXBase.HTMLAttributes<HTMLGlobalRoleTablePermissionsElement>;
             "global-roles": LocalJSX.GlobalRoles & JSXBase.HTMLAttributes<HTMLGlobalRolesElement>;
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
-            "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
+            "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
+            "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
     }

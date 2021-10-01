@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.groupmemberships
+package com.seedcompany.cordspringstencil.components.tables.grouprowaccess
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
@@ -11,28 +11,27 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 import kotlin.collections.List
 
-data class GroupRowAccessRow(
+data class GroupMembershipsRow(
     val id: Int,
     val group: Int,
-    val tableName: String,
-    val row: Int,
+    val person: Int,
     val createdAt: String,
     val createdBy: Int,
     val modifiedAt: String,
     val modifiedBy: Int,
 )
 
-data class GroupRowAccessListRequest(
+data class GroupMembershipsListRequest(
     val token: String? = null,
 )
 
-data class GroupRowAccessListReturn(
+data class GroupMembershipsListReturn(
     val error: ErrorType,
-    val groupRowAccessList: List<out GroupRowAccessRow>?,
+    val groupMemberships: List<out GroupMembershipsRow>?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
-@Controller("GroupRowAccessList")
+@Controller("GroupMembershipsList")
 class List(
     @Autowired
     val util: Utility,
@@ -41,30 +40,29 @@ class List(
     val ds: DataSource,
 ) {
 
-    @PostMapping("grouprowaccess/list")
+    @PostMapping("groupmemberships/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: GroupRowAccessListRequest): GroupRowAccessListReturn {
+    fun listHandler(@RequestBody req: GroupMembershipsListRequest): GroupMembershipsListReturn {
 
-        if (req.token == null) return GroupRowAccessListReturn(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return GroupRowAccessListReturn(ErrorType.AdminOnly, null)
+        if (req.token == null) return GroupMembershipsListReturn(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return GroupMembershipsListReturn(ErrorType.AdminOnly, null)
 
-        val items = mutableListOf<GroupRowAccessRow>()
+        val items = mutableListOf<GroupMembershipsRow>()
 
         this.ds.connection.use { conn ->
             //language=SQL
             val statement = conn.prepareStatement("""
-                select * from public.group_row_access order by id asc;
+                select * from group_memberships order by id asc;
             """.trimIndent())
 
             val result = statement.executeQuery()
 
             while (result.next()){
                 items.add(
-                    GroupRowAccessRow(
+                    GroupMembershipsRow(
                         id = result.getInt("id"),
                         group = result.getInt("group_id"),
-                        tableName = result.getString("table_name"),
-                        row = result.getInt("row"),
+                        person = result.getInt("person"),
                         createdAt = result.getString("created_at"),
                         createdBy = result.getInt("created_by"),
                         modifiedAt = result.getString("modified_at"),
@@ -74,7 +72,7 @@ class List(
             }
         }
 
-        return GroupRowAccessListReturn(ErrorType.NoError, items)
+        return GroupMembershipsListReturn(ErrorType.NoError, items)
     }
 
 }

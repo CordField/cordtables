@@ -2,12 +2,11 @@ import { Component, Host, h, State } from '@stencil/core';
 import { ActionType, ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
-
-class GroupMembershipsListRequest {
+class GroupRowAccessListRequest {
   token: string;
 }
 
-class GroupMembershipsRow {
+class GroupRowAccessRow {
   id: number;
   group: number;
   person: number;
@@ -17,54 +16,46 @@ class GroupMembershipsRow {
   modifiedBy: number;
 }
 
-class GroupMembershipsListResponse {
+class GroupRowAccessListResponse {
   error: ErrorType;
-  groupMemberships: Array<GroupMembershipsRow>;
+  groupRowAccessList: Array<GroupRowAccessRow>;
 }
 
-class GroupCreateRequest {
+class GroupRowAccessCreateRequest {
   token: string;
   group: number;
-  person: number;
+  tableName: string;
+  row: number;
 }
 
-class GroupCreateResponse {
+class GroupRowAccessCreateResponse {
   error: ErrorType;
 }
 
-class GroupUpdateRequest {
-  token: string;
-  name: string;
-  id: number;
-}
-
-class GroupUpdateResponse {
-  error: ErrorType;
-}
-
-class GroupDeleteRequest {
+class GroupRowAccessDeleteRequest {
   token: string;
   id: number;
 }
 
-class GroupDeleteResponse {
+class GroupRowAccessDeleteResponse {
   error: ErrorType;
 }
 
 @Component({
-  tag: 'group-memberships',
-  styleUrl: 'group-memberships.css',
+  tag: 'groups-row-access',
+  styleUrl: 'groups-row-access.css',
   shadow: true,
 })
-export class GroupMemberships {
-  @State() listResponse: GroupMembershipsListResponse;
+export class GroupsRowAccess {
+  @State() listResponse: GroupRowAccessListResponse;
   @State() showNewForm = false;
 
-  createResponse: GroupCreateResponse;
-  deleteResponse: GroupDeleteResponse;
+  createResponse: GroupRowAccessCreateResponse;
+  deleteResponse: GroupRowAccessDeleteResponse;
 
   newRowGroup: number;
-  newRowPerson: number;
+  newRowTableName: string;
+  newRowRow: number;
 
   editableKeys = [];
 
@@ -73,7 +64,7 @@ export class GroupMemberships {
   }
 
   async getList() {
-    this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('groupmemberships/list', { token: globals.globalStore.state.token });
+    this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('grouprowaccess/list', { token: globals.globalStore.state.token });
   }
 
   toggleNewForm = () => {
@@ -84,40 +75,35 @@ export class GroupMemberships {
     this.newRowGroup = +event.target.value;
   }
 
-  inputPerson(event) {
-    this.newRowPerson = +event.target.value;
+  inputTableName(event) {
+    this.newRowTableName = event.target.value;
+  }
+
+  inputRow(event) {
+    this.newRowRow = +event.target.value;
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('groupmemberships/create', {
+    this.createResponse = await fetchAs<GroupRowAccessCreateRequest, GroupRowAccessCreateResponse>('grouprowaccess/create', {
       token: globals.globalStore.state.token,
       group: this.newRowGroup,
-      person: this.newRowPerson,
+      tableName: this.newRowTableName,
+      row: this.newRowRow,
     });
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('groupmemberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('grouprowaccess/list', { token: globals.globalStore.state.token });
     } else {
       console.warn('Error creating group');
     }
   };
 
-  updateName = async (id: number, value: string): Promise<boolean> => {
-    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groupmemberships/update', { token: globals.globalStore.state.token, name: value, id });
-
-    if (this.createResponse.error == ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('groupmemberships/list', { token: globals.globalStore.state.token });
-      return true;
-    } else {
-    }
-  };
-
   clickRemoveRowIcon = async (value: number): Promise<boolean> => {
-    this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groupmemberships/delete', { token: globals.globalStore.state.token, id: value });
+    this.deleteResponse = await fetchAs<GroupRowAccessDeleteRequest, GroupRowAccessDeleteResponse>('grouprowaccess/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('groupmemberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('grouprowaccess/list', { token: globals.globalStore.state.token });
       return true;
     } else {
       return false;
@@ -128,19 +114,19 @@ export class GroupMemberships {
     return (
       <Host>
         <slot></slot>
-        <h3>Group Memberships</h3>
+        <h3>Group Row Access</h3>
         <table>
           <tr>
             {this.listResponse &&
-              this.listResponse.groupMemberships &&
-              this.listResponse.groupMemberships.length > 0 &&
-              Object.keys(this.listResponse.groupMemberships[0]).map(key => <th>{key}</th>)}
+              this.listResponse.groupRowAccessList &&
+              this.listResponse.groupRowAccessList.length > 0 &&
+              Object.keys(this.listResponse.groupRowAccessList[0]).map(key => <th>{key}</th>)}
             <th>ACTIONS</th>
           </tr>
 
           {this.listResponse &&
-            this.listResponse.groupMemberships &&
-            this.listResponse.groupMemberships.map(item => (
+            this.listResponse.groupRowAccessList &&
+            this.listResponse.groupRowAccessList.map(item => (
               <tr>
                 {Object.keys(item).map(key => (
                   <td>
@@ -150,7 +136,7 @@ export class GroupMemberships {
                       propKey={key}
                       value={item[key]}
                       isEditable={this.editableKeys.includes(key)}
-                      updateFn={this.editableKeys.includes(key) ? this.updateName : null}
+                      updateFn={this.editableKeys.includes(key) ? null : null}
                     ></cf-cell>
                   </td>
                 ))}
@@ -167,7 +153,10 @@ export class GroupMemberships {
                 <input type="text" id="group-input" name="group" onInput={event => this.inputGroup(event)}></input>
               </td>
               <td>
-                <input type="text" id="group-input" name="group" onInput={event => this.inputPerson(event)}></input>
+                <input type="text" id="table-name-input" name="tableName" onInput={event => this.inputTableName(event)}></input>
+              </td>
+              <td>
+                <input type="text" id="row-input" name="row" onInput={event => this.inputRow(event)}></input>
               </td>
               <td class="disabled">&nbsp;</td>
               <td class="disabled">&nbsp;</td>
