@@ -55,7 +55,7 @@ data class ReadLanguageExResponse(
     val data: MutableList<LanguageEx>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
 @Controller("LanguageExRead")
 class Read(
     @Autowired
