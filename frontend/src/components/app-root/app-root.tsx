@@ -77,6 +77,7 @@ export class AppRoot {
                       </option>
                       <option selected={this.path === '/table/languages-ex'} value="languages-ex">
                         Languages-Ex
+                      </option>
                       <option selected={this.path === '/table/groups'} value="groups">
                         Groups
                       </option>

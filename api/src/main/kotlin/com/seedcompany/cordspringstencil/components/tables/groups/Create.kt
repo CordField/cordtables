@@ -20,7 +20,7 @@ data class GroupCreateReturn(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
-@Controller
+@Controller("GroupCreate")
 class Create(
     @Autowired
     val util: Utility,

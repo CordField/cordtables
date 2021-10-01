@@ -18,7 +18,7 @@ enum class ErrorType {
     SQLInsertError,
     SQLReadError,
     SQLUpdateError,
-    SQLDeleteError
+    SQLDeleteError,
     InputMissingName,
     NameTooShort,
     NameTooLong,
