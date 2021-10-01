@@ -56,6 +56,8 @@ export namespace Components {
     }
     interface GroupsTable {
     }
+    interface LanguagesEx {
+    }
     interface TableRoot {
         "match": MatchResults;
     }
@@ -157,6 +159,12 @@ declare global {
         prototype: HTMLGroupsTableElement;
         new (): HTMLGroupsTableElement;
     };
+    interface HTMLLanguagesExElement extends Components.LanguagesEx, HTMLStencilElement {
+    }
+    var HTMLLanguagesExElement: {
+        prototype: HTMLLanguagesExElement;
+        new (): HTMLLanguagesExElement;
+    };
     interface HTMLTableRootElement extends Components.TableRoot, HTMLStencilElement {
     }
     var HTMLTableRootElement: {
@@ -180,6 +188,7 @@ declare global {
         "group-memberships": HTMLGroupMembershipsElement;
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
+        "languages-ex": HTMLLanguagesExElement;
         "table-root": HTMLTableRootElement;
     }
 }
@@ -232,6 +241,8 @@ declare namespace LocalJSX {
     }
     interface GroupsTable {
     }
+    interface LanguagesEx {
+    }
     interface TableRoot {
         "match"?: MatchResults;
     }
@@ -252,6 +263,7 @@ declare namespace LocalJSX {
         "group-memberships": GroupMemberships;
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
+        "languages-ex": LanguagesEx;
         "table-root": TableRoot;
     }
 }
@@ -275,6 +287,7 @@ declare module "@stencil/core" {
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
+            "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
     }
