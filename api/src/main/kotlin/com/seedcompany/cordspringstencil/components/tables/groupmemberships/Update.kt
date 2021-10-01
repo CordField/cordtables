@@ -29,6 +29,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
+// we don't need update on group_memberships. just delete a row if it is no longer needed.
 
 //    @PostMapping("groupmemberships/update")
 //    @ResponseBody

@@ -180,7 +180,7 @@ export class GroupMemberships {
         <div id="button-group">
           {!this.showNewForm && (
             <button id="new-button" onClick={this.toggleNewForm}>
-              Create New Group
+              Create New Group Membership
             </button>
           )}
 
