@@ -41,7 +41,7 @@ class ReadLanguageExResponse extends GenericResponse {
   styleUrl: 'languages-ex.css',
   shadow: true,
 })
-export class LanguageEx {
+export class LanguagesEx {
   defaultFields = {
     langName: null,
     langCode: null,

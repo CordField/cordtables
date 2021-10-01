@@ -56,12 +56,10 @@ data class ReadLanguageExResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333"])
-@Controller()
-@Qualifier("LanguageExRead")
+@Controller("LanguageExRead")
 class Read(
     @Autowired
     val util: Utility,
-
     @Autowired
     val ds: DataSource,
 ) {
@@ -74,7 +72,7 @@ class Read(
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall(
-                "select id, created_at, created_by,modified_at,modified_by, name, org from public.global_roles"
+                "select * from sc.languages_ex"
             )
             try {
                 val listStatementResult = listStatement.executeQuery()
