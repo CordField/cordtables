@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.groups
+package com.seedcompany.cordspringstencil.components.tables.groupmemberships
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class GroupDeleteRequest(
+data class GroupMembershipDeleteRequest(
     val token: String? = null,
     val id: Int? = null,
 )
 
-data class GroupDeleteResponse(
+data class GroupMembershipDeleteResponse(
     val error: ErrorType,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
-@Controller("GroupsDelete")
+@Controller("GroupMembershipsDelete")
 class Delete(
     @Autowired
     val util: Utility,
@@ -29,21 +29,21 @@ class Delete(
     val ds: DataSource,
 ) {
 
-    @PostMapping("groups/delete")
+    @PostMapping("groupmemberships/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: GroupDeleteRequest): GroupDeleteResponse {
+    fun deleteHandler(@RequestBody req: GroupMembershipDeleteRequest): GroupMembershipDeleteResponse {
 
-        if (req.token == null) return GroupDeleteResponse(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return GroupDeleteResponse(ErrorType.AdminOnly)
+        if (req.token == null) return GroupMembershipDeleteResponse(ErrorType.TokenNotFound)
+        if (!util.isAdmin(req.token)) return GroupMembershipDeleteResponse(ErrorType.AdminOnly)
 
-        if (req.id == null) return GroupDeleteResponse(ErrorType.MissingId)
+        if (req.id == null) return GroupMembershipDeleteResponse(ErrorType.MissingId)
 
         this.ds.connection.use { conn ->
 
             //language=SQL
             val deleteStatement = conn.prepareStatement(
                 """
-                delete from public.groups where id = ?;
+                delete from public.group_memberships where id = ?;
             """.trimIndent()
             )
 
@@ -52,7 +52,7 @@ class Delete(
             deleteStatement.execute()
         }
 
-        return GroupDeleteResponse(ErrorType.NoError)
+        return GroupMembershipDeleteResponse(ErrorType.NoError)
     }
 
 }

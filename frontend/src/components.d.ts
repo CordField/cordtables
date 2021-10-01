@@ -52,6 +52,10 @@ export namespace Components {
     }
     interface GlobalRoles {
     }
+    interface GroupMemberships {
+    }
+    interface GroupsPage {
+    }
     interface TableRoot {
         "match": MatchResults;
     }
@@ -141,6 +145,18 @@ declare global {
         prototype: HTMLGlobalRolesElement;
         new (): HTMLGlobalRolesElement;
     };
+    interface HTMLGroupMembershipsElement extends Components.GroupMemberships, HTMLStencilElement {
+    }
+    var HTMLGroupMembershipsElement: {
+        prototype: HTMLGroupMembershipsElement;
+        new (): HTMLGroupMembershipsElement;
+    };
+    interface HTMLGroupsPageElement extends Components.GroupsPage, HTMLStencilElement {
+    }
+    var HTMLGroupsPageElement: {
+        prototype: HTMLGroupsPageElement;
+        new (): HTMLGroupsPageElement;
+    };
     interface HTMLTableRootElement extends Components.TableRoot, HTMLStencilElement {
     }
     var HTMLTableRootElement: {
@@ -162,6 +178,8 @@ declare global {
         "global-role-memberships": HTMLGlobalRoleMembershipsElement;
         "global-role-table-permissions": HTMLGlobalRoleTablePermissionsElement;
         "global-roles": HTMLGlobalRolesElement;
+        "group-memberships": HTMLGroupMembershipsElement;
+        "groups-page": HTMLGroupsPageElement;
         "table-root": HTMLTableRootElement;
     }
 }
@@ -210,6 +228,10 @@ declare namespace LocalJSX {
     }
     interface GlobalRoles {
     }
+    interface GroupMemberships {
+    }
+    interface GroupsPage {
+    }
     interface TableRoot {
         "match"?: MatchResults;
     }
@@ -228,6 +250,8 @@ declare namespace LocalJSX {
         "global-role-memberships": GlobalRoleMemberships;
         "global-role-table-permissions": GlobalRoleTablePermissions;
         "global-roles": GlobalRoles;
+        "group-memberships": GroupMemberships;
+        "groups-page": GroupsPage;
         "table-root": TableRoot;
     }
 }
@@ -249,6 +273,8 @@ declare module "@stencil/core" {
             "global-role-memberships": LocalJSX.GlobalRoleMemberships & JSXBase.HTMLAttributes<HTMLGlobalRoleMembershipsElement>;
             "global-role-table-permissions": LocalJSX.GlobalRoleTablePermissions & JSXBase.HTMLAttributes<HTMLGlobalRoleTablePermissionsElement>;
             "global-roles": LocalJSX.GlobalRoles & JSXBase.HTMLAttributes<HTMLGlobalRolesElement>;
+            "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
+            "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
     }

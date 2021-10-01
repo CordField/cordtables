@@ -18,7 +18,12 @@ export class TableRoot {
         {this.match.params.table === 'global-role-column-grants' && <global-role-column-grants></global-role-column-grants>}
         {this.match.params.table === 'global-role-table-permissions' && <global-role-table-permissions></global-role-table-permissions>}
         {this.match.params.table === 'global-role-memberships' && <global-role-memberships></global-role-memberships>}
-        {this.match.params.table === 'groups' && <cf-groups></cf-groups>}
+        {this.match.params.table === 'groups' && (
+          <div>
+            <cf-groups></cf-groups>
+            <group-memberships></group-memberships>
+          </div>
+        )}
       </Host>
     );
   }

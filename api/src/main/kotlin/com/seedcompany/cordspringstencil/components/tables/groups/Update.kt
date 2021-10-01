@@ -21,7 +21,7 @@ data class GroupUpdateResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
-@Controller
+@Controller("GroupsUpdate")
 class Update(
     @Autowired
     val util: Utility,
