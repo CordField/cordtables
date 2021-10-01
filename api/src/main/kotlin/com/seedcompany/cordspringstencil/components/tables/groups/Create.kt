@@ -31,14 +31,14 @@ class Create(
 
     @PostMapping("groups/create")
     @ResponseBody
-    fun createHandler(@RequestBody req: GroupUpdateRequest): GroupUpdateResponse {
+    fun createHandler(@RequestBody req: GroupCreateRequest): GroupCreateReturn {
 
-        if (req.token == null) return GroupUpdateResponse(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return GroupUpdateResponse(ErrorType.AdminOnly)
+        if (req.token == null) return GroupCreateReturn(ErrorType.TokenNotFound)
+        if (!util.isAdmin(req.token)) return GroupCreateReturn(ErrorType.AdminOnly)
 
-        if (req.name == null) return GroupUpdateResponse(ErrorType.InputMissingName)
-        if (req.name.isEmpty()) return GroupUpdateResponse(ErrorType.NameTooShort)
-        if (req.name.length > 64) return GroupUpdateResponse(ErrorType.NameTooLong)
+        if (req.name == null) return GroupCreateReturn(ErrorType.InputMissingName)
+        if (req.name.isEmpty()) return GroupCreateReturn(ErrorType.NameTooShort)
+        if (req.name.length > 64) return GroupCreateReturn(ErrorType.NameTooLong)
 
         this.ds.connection.use { conn ->
 
@@ -57,7 +57,7 @@ class Create(
                 val nameFound = result.getBoolean(1)
 
                 if (nameFound) {
-                    return GroupUpdateResponse(ErrorType.NameAlreadyExists)
+                    return GroupCreateReturn(ErrorType.NameAlreadyExists)
                 } else {
 
                     //language=SQL
@@ -91,7 +91,7 @@ class Create(
 
         }
 
-        return GroupUpdateResponse(ErrorType.NoError)
+        return GroupCreateReturn(ErrorType.NoError)
     }
 
 }

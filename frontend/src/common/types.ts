@@ -13,3 +13,7 @@ export enum ErrorType {
 export class GenericResponse {
   public error: any;
 }
+
+export enum ActionType {
+  Delete = 'Delete',
+}

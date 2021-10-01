@@ -579,8 +579,8 @@ create table if not exists public.groups(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null,
   unique (name),
-  foreign key (created_by) references public.people(id),
-  foreign key (modified_by) references public.people(id)
+  foreign key (created_by) references public.people(id) on delete cascade,
+  foreign key (modified_by) references public.people(id) on delete cascade
 );
 
 create table if not exists public.group_row_access(
@@ -592,9 +592,9 @@ create table if not exists public.group_row_access(
   created_by int not null,
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null,
-  foreign key (group_id) references public.groups(id),
-  foreign key (created_by) references public.people(id),
-  foreign key (modified_by) references public.people(id)
+  foreign key (group_id) references public.groups(id) on delete cascade,
+  foreign key (created_by) references public.people(id) on delete cascade,
+  foreign key (modified_by) references public.people(id) on delete cascade
 );
 
 create table if not exists public.group_memberships(
@@ -605,10 +605,10 @@ create table if not exists public.group_memberships(
   created_by int not null,
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null,
-  foreign key (group_id) references public.groups(id),
-  foreign key (person) references public.people(id),
-  foreign key (created_by) references public.people(id),
-  foreign key (modified_by) references public.people(id)
+  foreign key (group_id) references public.groups(id) on delete cascade,
+  foreign key (person) references public.people(id) on delete cascade,
+  foreign key (created_by) references public.people(id) on delete cascade,
+  foreign key (modified_by) references public.people(id) on delete cascade
 );
 
 

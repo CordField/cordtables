@@ -41,3 +41,8 @@ th {
 #cancel-button {
   margin-right: 20px;
 }
+
+.remove-row-icon {
+  color: red;
+  cursor: pointer;
+}

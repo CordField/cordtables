@@ -1,5 +1,5 @@
 import { Component, Host, h, State } from '@stencil/core';
-import { ErrorType } from '../../../common/types';
+import { ActionType, ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 class GroupsListRequest {
@@ -39,6 +39,15 @@ class GroupUpdateResponse {
   error: ErrorType;
 }
 
+class GroupDeleteRequest {
+  token: string;
+  id: number;
+}
+
+class GroupDeleteResponse {
+  error: ErrorType;
+}
+
 @Component({
   tag: 'cf-groups',
   styleUrl: 'cf-groups.css',
@@ -49,6 +58,7 @@ export class CfGroups {
   @State() showNewForm = false;
 
   createResponse: GroupCreateResponse;
+  deleteResponse: GroupDeleteResponse;
 
   newRowName: string;
 
@@ -91,13 +101,27 @@ export class CfGroups {
     }
   };
 
+  clickRemoveRowIcon = async (value: number): Promise<boolean> => {
+    this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groups/delete', { token: globals.globalStore.state.token, id: value });
+
+    if (this.deleteResponse.error === ErrorType.NoError) {
+      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('groups/list', { token: globals.globalStore.state.token });
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   render() {
     return (
       <Host>
         <slot></slot>
         <h3>Groups</h3>
         <table>
-          <tr>{this.listResponse && this.listResponse.groups && this.listResponse.groups.length > 0 && Object.keys(this.listResponse.groups[0]).map(key => <th>{key}</th>)}</tr>
+          <tr>
+            {this.listResponse && this.listResponse.groups && this.listResponse.groups.length > 0 && Object.keys(this.listResponse.groups[0]).map(key => <th>{key}</th>)}
+            <th>ACTIONS</th>
+          </tr>
 
           {this.listResponse &&
             this.listResponse.groups &&
@@ -115,6 +139,9 @@ export class CfGroups {
                     ></cf-cell>
                   </td>
                 ))}
+                <td>
+                  <cf-action actionType={ActionType.Delete} value={item.id} text={'DELETE'} actionFn={this.clickRemoveRowIcon} />
+                </td>
               </tr>
             ))}
 
