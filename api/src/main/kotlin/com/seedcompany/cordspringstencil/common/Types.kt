@@ -5,6 +5,7 @@ class Types {
 
 enum class ErrorType {
     NoError,
+    AdminOnly,
     UnknownError,
     BadCredentials,
     TokenNotFound,
@@ -18,6 +19,11 @@ enum class ErrorType {
     SQLReadError,
     SQLUpdateError,
     SQLDeleteError
+    InputMissingName,
+    NameTooShort,
+    NameTooLong,
+    NameAlreadyExists,
+    MissingId,
 }
 
 data class GenericResponse (

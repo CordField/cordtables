@@ -16,6 +16,15 @@ export namespace Components {
     interface AppRoot {
         "history": RouterHistory;
     }
+    interface CfCell {
+        "isEditable": boolean;
+        "propKey": keyof any;
+        "rowId": number;
+        "updateFn": (id: number, value: any) => Promise<boolean>;
+        "value": any;
+    }
+    interface CfGroups {
+    }
     interface CfHeader {
         "history": RouterHistory;
     }
@@ -60,6 +69,18 @@ declare global {
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
+    };
+    interface HTMLCfCellElement extends Components.CfCell, HTMLStencilElement {
+    }
+    var HTMLCfCellElement: {
+        prototype: HTMLCfCellElement;
+        new (): HTMLCfCellElement;
+    };
+    interface HTMLCfGroupsElement extends Components.CfGroups, HTMLStencilElement {
+    }
+    var HTMLCfGroupsElement: {
+        prototype: HTMLCfGroupsElement;
+        new (): HTMLCfGroupsElement;
     };
     interface HTMLCfHeaderElement extends Components.CfHeader, HTMLStencilElement {
     }
@@ -125,6 +146,8 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "cf-cell": HTMLCfCellElement;
+        "cf-groups": HTMLCfGroupsElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
@@ -145,6 +168,15 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
         "history"?: RouterHistory;
+    }
+    interface CfCell {
+        "isEditable"?: boolean;
+        "propKey"?: keyof any;
+        "rowId"?: number;
+        "updateFn"?: (id: number, value: any) => Promise<boolean>;
+        "value"?: any;
+    }
+    interface CfGroups {
     }
     interface CfHeader {
         "history"?: RouterHistory;
@@ -176,6 +208,8 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "cf-cell": CfCell;
+        "cf-groups": CfGroups;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
@@ -195,6 +229,8 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "cf-cell": LocalJSX.CfCell & JSXBase.HTMLAttributes<HTMLCfCellElement>;
+            "cf-groups": LocalJSX.CfGroups & JSXBase.HTMLAttributes<HTMLCfGroupsElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;

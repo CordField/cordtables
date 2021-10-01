@@ -1,11 +1,9 @@
 package com.seedcompany.cordspringstencil.common
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Component
-import java.io.File
 import java.util.regex.Pattern
 import javax.sql.DataSource
 
@@ -15,9 +13,9 @@ class Utility(
 //    @Autowired
 //    val appConfig: AppConfig,
     @Autowired
-    val writerDS: DataSource,
+    val ds: DataSource,
 ) {
-    val jdbcTemplate: JdbcTemplate = JdbcTemplate(writerDS)
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
     val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
 
     //language=SQL
@@ -65,6 +63,40 @@ class Utility(
                     + "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|"
                     + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
         ).matcher(email).matches()
+    }
+
+    fun isAdmin(token: String): Boolean {
+
+        var isAdmin = false
+
+        this.ds.connection.use { conn ->
+            //language=SQL
+            val statement = conn.prepareCall("""
+                select exists(
+                	select id 
+                	from public.global_roles 
+                	where id in (
+                		select global_role 
+                		from public.global_role_memberships 
+                		where person = (
+                			select id 
+                			from public.tokens 
+                			where token = ?
+                        )
+                    ) 
+                	and name = 'Administrator'
+                );
+            """.trimIndent())
+
+            statement.setString(1, token);
+            val result = statement.executeQuery()
+
+            if (result.next()){
+                isAdmin = result.getBoolean(1)
+            }
+        }
+
+        return isAdmin;
     }
 
 }
