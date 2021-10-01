@@ -10,7 +10,7 @@ export async function fetchAs<REQ, RES>(path: string, data: REQ) {
 
   const json = await result.json();
 
-  // console.log(json);
+  console.log(json);
 
   return json as unknown as RES;
 }
