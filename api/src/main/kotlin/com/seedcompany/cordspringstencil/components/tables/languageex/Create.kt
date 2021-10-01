@@ -31,7 +31,7 @@ class Create(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("languages_ex/create")
+    @PostMapping("language_ex/create")
     @ResponseBody
     fun CreateHandler(@RequestBody req: CreateLanguageExRequest): CreateLanguageExResponse {
 

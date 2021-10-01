@@ -88,7 +88,7 @@ export class LanguagesEx {
   @State() success: string;
   @State() showNewForm = false;
   insertFieldChange(event, fieldName) {
-    console.log(event.target.value);
+    console.log(fieldName, event.target.value);
     this.insertedFields[fieldName] = event.target.value;
   }
   getInputCell(fieldName) {
@@ -147,6 +147,7 @@ export class LanguagesEx {
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
+    console.log(this.insertedFields);
     const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('language_ex/create', {
       insertedFields: this.insertedFields,
       email: globals.globalStore.state.email,
@@ -290,11 +291,6 @@ export class LanguagesEx {
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
-                {this.getInputCell('id')}
-                {this.getInputCell('created_at')}
-                {this.getInputCell('created_by')}
-                {this.getInputCell('modified_at')}
-                {this.getInputCell('modified_by')}
                 {this.getInputCell('lang_name')}
                 {this.getInputCell('lang_code')}
                 {this.getInputCell('location')}
