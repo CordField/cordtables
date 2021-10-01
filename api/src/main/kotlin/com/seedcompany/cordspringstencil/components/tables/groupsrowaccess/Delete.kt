@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.groupmemberships
+package com.seedcompany.cordspringstencil.components.tables.groupsrowaccess
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
@@ -20,7 +20,7 @@ data class GroupMembershipDeleteResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
-@Controller("GroupsRowAccessDelete")
+@Controller("GroupMembershipsDelete")
 class Delete(
     @Autowired
     val util: Utility,
@@ -29,7 +29,7 @@ class Delete(
     val ds: DataSource,
 ) {
 
-    @PostMapping("groupsrowaccess/delete")
+    @PostMapping("groupmemberships/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: GroupMembershipDeleteRequest): GroupMembershipDeleteResponse {
 

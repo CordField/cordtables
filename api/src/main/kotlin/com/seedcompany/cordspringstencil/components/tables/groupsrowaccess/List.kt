@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.groupmemberships
+package com.seedcompany.cordspringstencil.components.tables.groupsrowaccess
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
@@ -31,7 +31,7 @@ data class GroupMembershipsListReturn(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
-@Controller("GroupsRowAccessList")
+@Controller("GroupMembershipsList")
 class List(
     @Autowired
     val util: Utility,
@@ -40,7 +40,7 @@ class List(
     val ds: DataSource,
 ) {
 
-    @PostMapping("groupsrowaccess/list")
+    @PostMapping("groupmemberships/list")
     @ResponseBody
     fun listHandler(@RequestBody req: GroupMembershipsListRequest): GroupMembershipsListReturn {
 
