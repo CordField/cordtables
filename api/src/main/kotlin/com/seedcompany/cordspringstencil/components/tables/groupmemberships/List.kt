@@ -11,27 +11,28 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 import kotlin.collections.List
 
-data class GroupMembershipsRow(
+data class GroupRowAccessRow(
     val id: Int,
     val group: Int,
-    val person: Int,
+    val tableName: String,
+    val row: Int,
     val createdAt: String,
     val createdBy: Int,
     val modifiedAt: String,
     val modifiedBy: Int,
 )
 
-data class GroupMembershipsListRequest(
+data class GroupRowAccessListRequest(
     val token: String? = null,
 )
 
-data class GroupMembershipsListReturn(
+data class GroupRowAccessListReturn(
     val error: ErrorType,
-    val groupMemberships: List<out GroupMembershipsRow>?,
+    val groupRowAccessList: List<out GroupRowAccessRow>?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
-@Controller("GroupsRowAccessList")
+@Controller("GroupRowAccessList")
 class List(
     @Autowired
     val util: Utility,
@@ -40,29 +41,30 @@ class List(
     val ds: DataSource,
 ) {
 
-    @PostMapping("groupsrowaccess/list")
+    @PostMapping("grouprowaccess/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: GroupMembershipsListRequest): GroupMembershipsListReturn {
+    fun listHandler(@RequestBody req: GroupRowAccessListRequest): GroupRowAccessListReturn {
 
-        if (req.token == null) return GroupMembershipsListReturn(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return GroupMembershipsListReturn(ErrorType.AdminOnly, null)
+        if (req.token == null) return GroupRowAccessListReturn(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return GroupRowAccessListReturn(ErrorType.AdminOnly, null)
 
-        val items = mutableListOf<GroupMembershipsRow>()
+        val items = mutableListOf<GroupRowAccessRow>()
 
         this.ds.connection.use { conn ->
             //language=SQL
             val statement = conn.prepareStatement("""
-                select * from group_memberships order by id asc;
+                select * from public.group_row_access order by id asc;
             """.trimIndent())
 
             val result = statement.executeQuery()
 
             while (result.next()){
                 items.add(
-                    GroupMembershipsRow(
+                    GroupRowAccessRow(
                         id = result.getInt("id"),
                         group = result.getInt("group_id"),
-                        person = result.getInt("person"),
+                        tableName = result.getString("table_name"),
+                        row = result.getInt("row"),
                         createdAt = result.getString("created_at"),
                         createdBy = result.getInt("created_by"),
                         modifiedAt = result.getString("modified_at"),
@@ -72,7 +74,7 @@ class List(
             }
         }
 
-        return GroupMembershipsListReturn(ErrorType.NoError, items)
+        return GroupRowAccessListReturn(ErrorType.NoError, items)
     }
 
 }

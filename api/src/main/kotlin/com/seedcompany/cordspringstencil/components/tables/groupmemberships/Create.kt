@@ -43,16 +43,16 @@ class Create(
         this.ds.connection.use { conn ->
 
             //language=SQL
-            val checkNameStatement = conn.prepareStatement(
+            val checkRowStatement = conn.prepareStatement(
                 """
                 select exists(select id from public.group_memberships where group_id = ? and person = ?)
             """.trimIndent()
             )
 
-            checkNameStatement.setInt(1, req.group)
-            checkNameStatement.setInt(2, req.person)
+            checkRowStatement.setInt(1, req.group)
+            checkRowStatement.setInt(2, req.person)
 
-            val result = checkNameStatement.executeQuery();
+            val result = checkRowStatement.executeQuery();
 
             if (result.next()) {
                 val rowFound = result.getBoolean(1)

@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.groupsrowaccess
+package com.seedcompany.cordspringstencil.components.tables.grouprowaccess
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility

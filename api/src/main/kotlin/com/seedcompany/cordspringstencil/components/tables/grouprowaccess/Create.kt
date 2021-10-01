@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.groupsrowaccess
+package com.seedcompany.cordspringstencil.components.tables.grouprowaccess
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class GroupMembershipCreateRequest(
+data class GroupRowAccessCreateRequest(
     val token: String? = null,
     val group: Int? = null,
-    val person: Int? = null,
+    val tableName: String? = null,
+    val row: Int? = null,
 )
 
-data class GroupMembershipCreateReturn(
+data class GroupRowAccessCreateReturn(
     val error: ErrorType,
 )
 
@@ -30,42 +31,44 @@ class Create(
     val ds: DataSource,
 ) {
 
-    @PostMapping("groupsrowaccess/create")
+    @PostMapping("grouprowaccess/create")
     @ResponseBody
-    fun createHandler(@RequestBody req: GroupMembershipCreateRequest): GroupMembershipCreateReturn {
+    fun createHandler(@RequestBody req: GroupRowAccessCreateRequest): GroupRowAccessCreateReturn {
 
-        if (req.token == null) return GroupMembershipCreateReturn(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return GroupMembershipCreateReturn(ErrorType.AdminOnly)
+        if (req.token == null) return GroupRowAccessCreateReturn(ErrorType.TokenNotFound)
+        if (!util.isAdmin(req.token)) return GroupRowAccessCreateReturn(ErrorType.AdminOnly)
 
-        if (req.group == null) return GroupMembershipCreateReturn(ErrorType.InputMissingGroup)
-        if (req.person == null) return GroupMembershipCreateReturn(ErrorType.InputMissingPerson)
+        if (req.group == null) return GroupRowAccessCreateReturn(ErrorType.InputMissingGroup)
+        if (req.tableName == null || req.tableName.isEmpty()) return GroupRowAccessCreateReturn(ErrorType.InputMissingTableName)
+        if (req.row == null) return GroupRowAccessCreateReturn(ErrorType.InputMissingRow)
 
         this.ds.connection.use { conn ->
 
             //language=SQL
-            val checkNameStatement = conn.prepareStatement(
+            val checkRowStatement = conn.prepareStatement(
                 """
-                select exists(select id from public.group_memberships where group_id = ? and person = ?)
+                select exists(select id from public.group_row_access where group_id = ? and table_name = ? and row = ?)
             """.trimIndent()
             )
 
-            checkNameStatement.setInt(1, req.group)
-            checkNameStatement.setInt(2, req.person)
+            checkRowStatement.setInt(1, req.group)
+            checkRowStatement.setObject(2, req.tableName, java.sql.Types.OTHER)
+            checkRowStatement.setInt(3, req.row)
 
-            val result = checkNameStatement.executeQuery();
+            val result = checkRowStatement.executeQuery();
 
             if (result.next()) {
                 val rowFound = result.getBoolean(1)
 
                 if (rowFound) {
-                    return GroupMembershipCreateReturn(ErrorType.MembershipAlreadyExists)
+                    return GroupRowAccessCreateReturn(ErrorType.MembershipAlreadyExists)
                 } else {
 
                     //language=SQL
                     val statement = conn.prepareStatement(
                         """
-                        insert into public.group_memberships(group_id, person, created_by, modified_by) 
-                            values(?, ?,
+                        insert into public.group_row_access(group_id, table_name, row, created_by, modified_by) 
+                            values(?, ?, ?,
                                 (
                                   select person 
                                   from public.tokens 
@@ -78,12 +81,13 @@ class Create(
                                 )
                         );
                         """.trimIndent()
-                                )
+                    )
 
                     statement.setInt(1, req.group)
-                    statement.setInt(2, req.person)
-                    statement.setString(3, req.token)
+                    statement.setObject(2, req.tableName, java.sql.Types.OTHER)
+                    statement.setInt(3, req.row)
                     statement.setString(4, req.token)
+                    statement.setString(5, req.token)
 
                     statement.execute()
 
@@ -93,7 +97,7 @@ class Create(
 
         }
 
-        return GroupMembershipCreateReturn(ErrorType.NoError)
+        return GroupRowAccessCreateReturn(ErrorType.NoError)
     }
 
 }

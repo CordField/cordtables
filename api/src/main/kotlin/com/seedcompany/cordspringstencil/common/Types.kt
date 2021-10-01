@@ -17,6 +17,8 @@ enum class ErrorType {
     InputMissingName,
     InputMissingGroup,
     InputMissingPerson,
+    InputMissingTableName,
+    InputMissingRow,
     MembershipAlreadyExists,
     NameTooShort,
     NameTooLong,
