@@ -30,14 +30,14 @@ BEGIN
     into vAdminGroupId;
 
     -- organization
-    insert into public.organizations(name, sensitivity, group_id)
-    values ('Seed Company', 'Low', vAdminGroupId)
+    insert into public.organizations(name, sensitivity, created_by, modified_by, owning_person, owning_group)
+    values ('Seed Company', 'Low', vPersonId, vPersonId, vPersonId, vAdminGroupId)
     returning id
     into vOrgId;
 
     -- users
-    insert into public.users(person, owning_org, email, password)
-    values (vPersonId, vOrgId, p_email, p_password);
+    insert into public.users(person, email, password, created_by, modified_by, owning_person, owning_group)
+    values (vPersonId, p_email, p_password, vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- global roles
     insert into public.global_roles(name, created_by, modified_by, owning_person, owning_group)

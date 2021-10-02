@@ -208,6 +208,9 @@ create table public.global_role_column_grants(
 
 	unique (global_role, table_name, column_name),
 	foreign key (global_role) references public.global_roles(id),
+  foreign key (created_by) references public.people(id),
+  foreign key (modified_by) references public.people(id),
+  foreign key (owning_person) references public.people(id),
   foreign key (owning_group) references public.groups(id)
 );
 

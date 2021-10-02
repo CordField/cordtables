@@ -55,8 +55,9 @@ class BootstrapDB(
             runSqlFile("sql/schemas/public/public.admin.schema.sql")
             runSqlFile("sql/schemas/public/public.admin.history.sql")
             runSqlFile("sql/schemas/public/public.schema.sql")
-//            runSqlFile("sql/schemas/public/public.history.sql")
+            runSqlFile("sql/schemas/public/public.history.sql")
             runSqlFile("sql/schemas/sc/sc.schema.sql")
+            runSqlFile("sql/schemas/sc/sc.history.sql")
             runSqlFile("sql/version-control/bootstrap.sql")
 
             // user

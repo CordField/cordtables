@@ -234,19 +234,23 @@ create table if not exists public.education_by_person (
 
 create table if not exists public.organizations (
 	id serial primary key,
-	group_id int not null,
-	neo4j_id varchar(32),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
+
 	name varchar(255) unique not null,
+	neo4j_id varchar(32),
 	sensitivity sensitivity default 'High',
 	primary_location int,
-	foreign key (group_id) references public.groups(id),
+
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by int not null,
+	modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null,
+  owning_person int not null,
+  owning_group int not null,
+
+	foreign key (primary_location) references locations(id),
 	foreign key (created_by) references public.people(id),
   foreign key (modified_by) references public.people(id),
-	foreign key (primary_location) references locations(id)
+  foreign key (owning_group) references public.groups(id)
 );
 
 DO $$ BEGIN
@@ -330,18 +334,22 @@ create table if not exists public.people_to_org_relationship_type (
 
 create table if not exists public.users(
   id serial primary key,
+
 	person int not null,
-	owning_org int not null,
 	email varchar(255) unique not null,
 	password varchar(255) not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	foreign key (created_by) references public.people(id),
-  foreign key (modified_by) references public.people(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null,
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null,
+  owning_person int not null,
+  owning_group int not null,
+
 	foreign key (person) references public.people(id),
-	foreign key (owning_org) references public.organizations(id)
+  foreign key (created_by) references public.people(id),
+  foreign key (modified_by) references public.people(id),
+  foreign key (owning_group) references public.groups(id)
 );
 
 
