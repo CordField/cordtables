@@ -10,10 +10,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.queryForObject
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.util.FileCopyUtils
-import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.UncheckedIOException
@@ -54,13 +52,14 @@ class BootstrapDB(
             println("version 1 not found. creating schema.")
 
             // schema
-            runSqlFile("sql/sys_schema.sql")
-            runSqlFile("sql/sc_schema.sql")
-            runSqlFile("sql/bootstrap.sql")
+            runSqlFile("sql/schemas/public/public.schema.sql")
+            runSqlFile("sql/schemas/public/public.schema.history.sql")
+            runSqlFile("sql/schemas/sc/sc.schema.sql")
+            runSqlFile("sql/version-control/bootstrap.sql")
 
             // user
-            runSqlFile("sql/user/register.sql")
-            runSqlFile("sql/user/login.sql")
+            runSqlFile("sql/modules/user/register.sql")
+            runSqlFile("sql/modules/user/login.sql")
 
             // bootstrap
             val pash = util.encoder.encode(appConfig.cordAdminPassword)
