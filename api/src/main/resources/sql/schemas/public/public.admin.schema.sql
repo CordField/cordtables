@@ -103,8 +103,8 @@ create table public.people (
   created_by int,
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int,
-  owning_group int,
-  owning_person int
+  owning_person int,
+  owning_group int
 );
 
 -- GROUPS --------------------------------------------------------------------
@@ -236,8 +236,8 @@ create table public.global_role_table_permissions(
 create table public.global_role_memberships (
   id serial primary key,
   
-	global_role int,
-	person int,
+	global_role int not null,
+	person int not null,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null,
