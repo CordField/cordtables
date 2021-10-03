@@ -37,6 +37,7 @@ class CordSpringStencilApplicationTests(
             System.setProperty("DB_DOMAIN", "host.docker.internal")
             System.setProperty("DB_DATABASE", "cordfield")
             System.setProperty("DB_USERNAME", "postgres")
+            System.setProperty("DB_PORT", "5432")
             System.setProperty("DB_PASSWORD", "asdfasdf")
 
             registry.add("spring.datasource.jdbcUrl", postgreSQLContainer::getJdbcUrl)
