@@ -24,7 +24,7 @@
 
 .modal-wrapper .modal{
     background: white;
-    width: 600px;
+    width: 900px;
     height: auto;
     margin-top: 100px;
     position: absolute;
@@ -32,7 +32,23 @@
     transform: translate(-50%, 0px);
     border-radius: 4px;
     transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+}
 
+.footer{
+    border: 10px black;
+    align-items: center;
+    width: 95%;
+    padding: 10px;
+    align-content: space-between;
+    float: right;
+}
+.cancel{
+    float: right;
+}
+
+.ok{
+    margin-right: 1%;
+    float: right;
 }
 
 .is-open .modal{

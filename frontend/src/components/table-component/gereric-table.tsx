@@ -2,8 +2,6 @@ import { Prop, Component, Host, h, Event, EventEmitter } from '@stencil/core';
 
 
 function objectValues<T extends {}>(obj: T) {
-  const test = Object.keys(obj).map((objKey) => obj[objKey as keyof T]);
-  console.log(test);
   return Object.keys(obj).map((objKey) => obj[objKey as keyof T]);
 }
 
@@ -34,7 +32,6 @@ export class genericTable {
   
   
   render() {
-    console.log('Columns: ', this.columns);
     return (
       <Host>
         <slot></slot>

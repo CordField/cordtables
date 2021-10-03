@@ -13,6 +13,7 @@ enum class ErrorType {
     PasswordTooShort,
     PasswordTooLong,
     DuplicateEmail,
+    emptyReadResult,
 }
 
 data class GenericResponse (

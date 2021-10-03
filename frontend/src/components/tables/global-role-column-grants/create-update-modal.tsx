@@ -19,11 +19,20 @@ export class GlobalRoleColumnGrants {
     bubbles: true,
   }) modalClosed : EventEmitter<boolean>;
 
+@Event({
+  eventName: 'modalOkay',
+  bubbles: true,
+}) modalOkay : EventEmitter<boolean>;
+
 
 private handleClose = () => {
     this.isOpen = !this.isOpen;
     this.modalClosed.emit(!this.isOpen);
-    
+}
+
+private handleOkay = () => {
+  this.isOpen = !this.isOpen;
+  this.modalOkay.emit(!this.isOpen);
 }
 
   render() {
@@ -37,12 +46,12 @@ private handleClose = () => {
                         <span class="closeButton" onClick={this.handleClose}> X </span>
                     </div>
                 </div>
-                <div class="body">
-                    body content
+                <div class="content">
                     <slot />
                 </div>
                 <div class="footer">
-                    
+                  <button class="cancel">Cancel</button>
+                  <button class="ok" onClick={this.handleOkay}>Okay</button>
                 </div>
             </div>
         </div>

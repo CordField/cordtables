@@ -8,12 +8,13 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
 
-data class GlobalRoleColumnGrants(
+data class GlobalRoleColumnGrantsUnique(
         val id : Int? = null,
         val access_level: String? = null,
         val column_name: String? = null,
@@ -25,14 +26,18 @@ data class GlobalRoleColumnGrants(
         val table_name: String? = null,
 )
 
-data class GlobalRoleColumnGrantsReturn(
+data class GlobalRoleColumnGrantsRequest(
+        val id: Int
+)
+
+data class GlobalRoleColumnGrantsReturnUnique(
         val error : ErrorType,
-        val response: MutableList<GlobalRoleColumnGrants>?
+        val response: MutableList<GlobalRoleColumnGrantsUnique>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org"])
 @Controller()
-class readAll(
+class readOne(
         @Autowired
         val util: Utility,
 
@@ -41,12 +46,12 @@ class readAll(
 ) {
 
 
-    @PostMapping(path = ["table/global-role-column-grants"], consumes = ["application/json"], produces = ["application/json"])
+    @PostMapping(path = ["table/global-role-column-grants-read-one"], consumes = ["application/json"], produces = ["application/json"])
 
     @ResponseBody
-    fun GlobalRoleColumnGrantsHandler(): GlobalRoleColumnGrantsReturn {
+    fun GlobalRoleColumnGrantsHandler(@RequestBody req: GlobalRoleColumnGrantsRequest): GlobalRoleColumnGrantsReturnUnique {
 
-        var response: MutableList<GlobalRoleColumnGrants> = mutableListOf()
+        var response: MutableList<GlobalRoleColumnGrantsUnique> = mutableListOf()
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall("SELECT\n" +
@@ -59,7 +64,8 @@ class readAll(
                     "\tmodified_at,\n" +
                     "\tmodified_by,\n" +
                     "\ttable_name\n" +
-                    "FROM public.global_role_column_grants")
+                    "FROM public.global_role_column_grants WHERE id = ?")
+            listStatement.setInt(1, req.id)
             try {
                 val listStatementResult = listStatement.executeQuery();
                 while (listStatementResult.next()) {
@@ -72,16 +78,17 @@ class readAll(
                     val modified_at = listStatementResult.getString("modified_at");
                     val modified_by = listStatementResult.getInt("modified_by");
                     val table_name = listStatementResult.getString("table_name");
-                    response.add(GlobalRoleColumnGrants(id, access_level, column_name, created_at, created_by, global_role, modified_at, modified_by, table_name));
+                    response.add(GlobalRoleColumnGrantsUnique(id, access_level, column_name, created_at, created_by, global_role, modified_at, modified_by, table_name));
                 }
+                println(response)
             } catch (e: SQLException) {
                 println("error while getting ${e.message}")
-                return GlobalRoleColumnGrantsReturn(ErrorType.emptyReadResult, null);
+                return GlobalRoleColumnGrantsReturnUnique(ErrorType.emptyReadResult, null);
             }
 
 
 
-            return GlobalRoleColumnGrantsReturn(ErrorType.NoError, response)
+            return GlobalRoleColumnGrantsReturnUnique(ErrorType.NoError, response)
         }
     }
 }
