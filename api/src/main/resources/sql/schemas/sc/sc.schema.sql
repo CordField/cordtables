@@ -225,6 +225,7 @@ create table if not exists sc.language_goals (
 
 create table if not exists sc.languages_ex(
 	id serial primary key,
+
 	lang_name varchar(32),
 	lang_code varchar(16) NOT NULL,
 	location text,
