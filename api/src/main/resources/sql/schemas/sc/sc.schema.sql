@@ -225,6 +225,7 @@ create table if not exists sc.language_goals (
 
 create table if not exists sc.languages_ex(
 	id serial primary key,
+
 	lang_name varchar(32),
 	lang_code varchar(16) NOT NULL,
 	location text,
@@ -256,12 +257,18 @@ create table if not exists sc.languages_ex(
 	comments text,
 	prioritization int,
 	progress_bible int,
-		created_at timestamp not null default CURRENT_TIMESTAMP,
-  	created_by int not null,
-  	modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null,
-  	foreign key (created_by) references public.people(id),
-    foreign key (modified_by) references public.people(id)
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null,
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null,
+  owning_person int not null,
+  owning_group int not null,
+
+  foreign key (created_by) references public.people(id),
+  foreign key (modified_by) references public.people(id),
+	foreign key (owning_person) references public.people(id),
+  foreign key (owning_group) references public.groups(id)
 );
 
 -- USER TABLES --------------------------------------------------------------

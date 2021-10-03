@@ -1,20 +1,6 @@
 -- system schema. org specific schema should go in an org-specific file.
 
 -- ENUMS ----
-create schema if not exists public;
-
-set schema 'public';
-CREATE EXTENSION hstore;
-
-DO $$ BEGIN
-    create type public.access_level as enum (
-          'Read',
-          'Write',
-          'Admin'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
 
 -- todo
 DO $$ BEGIN
@@ -52,16 +38,6 @@ create type public.toggle_granters as enum(
 );
 
 DO $$ BEGIN
-    create type public.sensitivity as enum (
-		'Low',
-		'Medium',
-		'High'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-DO $$ BEGIN
     create type public.post_type as enum (
 		'Note',
 		'Story',
@@ -90,135 +66,6 @@ DO $$ BEGIN
 	EXCEPTION
 	WHEN duplicate_object THEN null;
 END; $$;
-
--- ROLES --------------------------------------------------------------------
-
-create table if not exists public.global_roles (
-	id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-	name varchar(255) not null,
-	org int,
-	unique (org, name)
--- foreign keys added after people and org table created
-);
-
-DO $$ BEGIN
-    create type public.table_name as enum (
-		'public.education_by_person',
-		'public.education_entries',
-		'public.global_role_column_grants',
-		'public.global_role_memberships',
-		'public.global_role_table_permissions',
-		'public.global_roles',
-		'public.locations',
-		'public.organization_grants',
-		'public.organization_memberships',
-		'public.organizations',
-		'public.people',
-		'public.people_to_org_relationship_type',
-		'public.people_to_org_relationships',
-		'public.project_member_roles',
-		'public.project_memberships',
-		'public.project_role_column_grants',
-		'public.project_roles',
-		'public.projects',
-		'public.users',
-
-		'sil.language_codes',
-		'sil.country_codes',
-		'sil.table_of_languages',
-
-		'sc.funding_account',
-		'sc.field_zone',
-		'sc.field_regions',
-		'sc.locations',
-		'sc.organizations',
-		'sc.organization_locations',
-		'sc.partners',
-		'sc.language_goal_definitions',
-		'sc.languages',
-		'sc.languages_ex',
-		'sc.language_locations',
-		'sc.language_goals',
-		'sc.known_languages_by_person',
-		'sc.people',
-		'sc.person_unavailabilities',
-		'sc.directories',
-		'sc.files',
-		'sc.file_versions',
-		'sc.projects',
-		'sc.partnerships',
-		'sc.change_to_plans',
-		'sc.periodic_reports',
-		'sc.posts',
-		'sc.budgets',
-		'sc.budget_records',
-		'sc.project_locations',
-		'sc.project_members',
-		'sc.project_member_roles',
-		'sc.language_engagements',
-		'sc.products',
-		'sc.product_scripture_references',
-		'sc.internship_engagements',
-		'sc.ceremonies'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-DO $$ BEGIN
-    create type public.table_permission as enum (
-		'Create',
-		'Delete'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-create table if not exists public.global_role_column_grants(
-	id serial primary key,
-	access_level access_level not null,
-	column_name varchar(64) not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	global_role int not null,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-	table_name public.table_name not null,
-	unique (global_role, table_name, column_name),
-    -- foreign keys added after people table created
-	foreign key (global_role) references public.global_roles(id)
-);
-
-create table if not exists public.global_role_table_permissions(
-    id serial primary key,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null default 1,
-    global_role int not null,
-    modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-    table_name varchar(32) not null,
-    table_permission table_permission not null,
-    unique (global_role, table_name, table_permission),
--- foreign keys added after people table created
-    foreign key (global_role) references public.global_roles(id)
-);
-
-create table if not exists public.global_role_memberships (
-    id serial primary key,
-	global_role int,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-	person int,
-	unique(global_role,person),
---	foreign key (created_by) references public.people(id), -- fk added later
-	foreign key (global_role) references public.global_roles(id)
-);
 
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
 
@@ -273,6 +120,9 @@ create table if not exists public.locations (
 -- foreign keys added after people table created
 );
 
+DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_people_primary_location_fk') THEN
+ALTER TABLE public.people ADD CONSTRAINT public_people_primary_location_fk foreign key (primary_location) references public.locations(id);
+END IF; END; $$;
 
 -- LANGUAGE -----------------------------------------------------------------
 
@@ -308,33 +158,7 @@ CREATE TABLE if not exists sil.language_index (
 
 -- PEOPLE ------------------------------------------------------------
 
-create table if not exists public.people (
-    id serial primary key,
-	neo4j_id varchar(32),
-    about text,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int,
-    modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int,
-    phone varchar(32),
-	picture varchar(255),
-    primary_org int,
-    private_first_name varchar(32),
-    private_last_name varchar(32),
-    public_first_name varchar(32),
-    public_last_name varchar(32),
-    primary_location int,
-    private_full_name varchar(64),
-    public_full_name varchar(64),
-    sensitivity_clearance sensitivity default 'Low',
-    time_zone varchar(32),
-    title varchar(255),
-	status varchar(32),
-    foreign key (created_by) references public.people(id),
-    foreign key (modified_by) references public.people(id),
--- foreign keys added after org table created
-    foreign key (primary_location) references public.locations(id)
-);
+
 create table if not exists public.chats (
 	id serial primary key,
 	created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -368,42 +192,6 @@ create table if not exists sil.table_of_languages (
 );
 
 -- fkey for a bunch of stuff
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_roles_created_by_fk') THEN
-ALTER TABLE public.global_roles ADD CONSTRAINT public_global_roles_created_by_fk foreign key (created_by) references public.people(id);
-END IF; END; $$;
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_roles_modified_by_fk') THEN
-ALTER TABLE public.global_roles ADD CONSTRAINT public_global_roles_modified_by_fk foreign key (modified_by) references people(id);
-END IF; END; $$;
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_role_grants_created_by_fk') THEN
-ALTER TABLE public.global_role_column_grants ADD CONSTRAINT public_global_role_grants_created_by_fk foreign key (created_by) references public.people(id);
-END IF; END; $$;
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_role_grants_modified_by_fk') THEN
-ALTER TABLE public.global_role_column_grants ADD CONSTRAINT public_global_role_grants_modified_by_fk foreign key (modified_by) references people(id);
-END IF; END; $$;
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_role_table_permissions _created_by_fk') THEN
-ALTER TABLE public.global_role_table_permissions ADD CONSTRAINT public_global_role_table_permissions_created_by_fk foreign key (created_by) references public.people(id);
-END IF; END; $$;
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_role_table_permissions_modified_by_fk') THEN
-ALTER TABLE public.global_role_table_permissions ADD CONSTRAINT public_global_role_table_permissions_modified_by_fk foreign key (modified_by) references people(id);
-END IF; END; $$;
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_role_memberships_person_fk') THEN
-ALTER TABLE public.global_role_memberships ADD CONSTRAINT public_global_role_memberships_person_fk foreign key (person) references public.people(id);
-END IF; END; $$;
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_role_memberships_created_by_fk') THEN
-ALTER TABLE public.global_role_memberships ADD CONSTRAINT public_global_role_memberships_created_by_fk foreign key (created_by) references public.people(id);
-END IF; END; $$;
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_role_memberships_modified_by_fk') THEN
-ALTER TABLE public.global_role_memberships ADD CONSTRAINT public_global_role_memberships_modified_by_fk foreign key (modified_by) references people(id);
-END IF; END; $$;
-
 DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_locations_created_by_fk') THEN
 ALTER TABLE public.locations ADD CONSTRAINT public_locations_created_by_fk foreign key (created_by) references public.people(id);
 END IF; END; $$;
@@ -446,33 +234,24 @@ create table if not exists public.education_by_person (
 
 create table if not exists public.organizations (
 	id serial primary key,
-	neo4j_id varchar(32),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
+
 	name varchar(255) unique not null,
+	neo4j_id varchar(32),
 	sensitivity sensitivity default 'High',
 	primary_location int,
+
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by int not null,
+	modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null,
+  owning_person int not null,
+  owning_group int not null,
+
+	foreign key (primary_location) references locations(id),
 	foreign key (created_by) references public.people(id),
   foreign key (modified_by) references public.people(id),
-	foreign key (primary_location) references locations(id)
+  foreign key (owning_group) references public.groups(id)
 );
-
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'public_global_roles_org_fk') THEN
-ALTER TABLE public.global_roles ADD CONSTRAINT public_global_roles_org_fk foreign key (org) references organizations(id);
-END IF; END; $$;
-
--- fkey for people
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'primary_org_fkey') THEN
-ALTER TABLE public.people ADD CONSTRAINT primary_org_fkey foreign key (primary_org) references public.organizations(id);
-END IF; END; $$;
-
--- fkey for global_roles
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'global_role_org_fkey') THEN
-ALTER TABLE global_roles ADD CONSTRAINT global_role_org_fkey foreign key (org) references public.organizations(id);
-END IF; END; $$;
 
 DO $$ BEGIN
     create type public.person_to_org_relationship_type as enum (
@@ -555,61 +334,24 @@ create table if not exists public.people_to_org_relationship_type (
 
 create table if not exists public.users(
   id serial primary key,
+
 	person int not null,
-	owning_org int not null,
 	email varchar(255) unique not null,
 	password varchar(255) not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	foreign key (created_by) references public.people(id),
-  foreign key (modified_by) references public.people(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null,
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null,
+  owning_person int not null,
+  owning_group int not null,
+
 	foreign key (person) references public.people(id),
-	foreign key (owning_org) references public.organizations(id)
+  foreign key (created_by) references public.people(id),
+  foreign key (modified_by) references public.people(id),
+  foreign key (owning_group) references public.groups(id)
 );
 
--- GROUPS --------------------------------------------------------------------
-
-create table if not exists public.groups(
-  id serial primary key,
-  name varchar(64) not null,
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  unique (name),
-  foreign key (created_by) references public.people(id) on delete cascade,
-  foreign key (modified_by) references public.people(id) on delete cascade
-);
-
-create table if not exists public.group_row_access(
-  id serial primary key,
-  group_id int not null,
-  table_name table_name not null,
-  row int not null,
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  foreign key (group_id) references public.groups(id) on delete cascade,
-  foreign key (created_by) references public.people(id) on delete cascade,
-  foreign key (modified_by) references public.people(id) on delete cascade
-);
-
-create table if not exists public.group_memberships(
-  id serial primary key,
-  group_id int not null,
-  person int not null,
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  foreign key (group_id) references public.groups(id) on delete cascade,
-  foreign key (person) references public.people(id) on delete cascade,
-  foreign key (created_by) references public.people(id) on delete cascade,
-  foreign key (modified_by) references public.people(id) on delete cascade
-);
 
 
 -- PROJECTS ------------------------------------------------------------------
