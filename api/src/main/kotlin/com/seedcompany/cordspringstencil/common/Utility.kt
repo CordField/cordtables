@@ -71,7 +71,8 @@ class Utility(
 
         this.ds.connection.use { conn ->
             //language=SQL
-            val statement = conn.prepareCall("""
+            val statement = conn.prepareCall(
+                """
                 select exists(
                 	select id 
                 	from public.global_roles 
@@ -79,24 +80,94 @@ class Utility(
                 		select global_role 
                 		from public.global_role_memberships 
                 		where person = (
-                			select id 
+                			select person
                 			from public.tokens 
                 			where token = ?
                         )
                     ) 
                 	and name = 'Administrator'
                 );
-            """.trimIndent())
+            """.trimIndent()
+            )
 
             statement.setString(1, token);
             val result = statement.executeQuery()
 
-            if (result.next()){
+            if (result.next()) {
                 isAdmin = result.getBoolean(1)
             }
         }
 
         return isAdmin;
     }
+
+    fun userHasReadPermission(token: String, tableName: String):Boolean {
+        var userHasReadPermission: Boolean = false;
+        this.ds.connection.use { conn ->
+            //language=SQL
+            val statement = conn.prepareCall(
+                """
+                select exists(
+                	select id 
+                	from public.global_roles 
+                	where id in (
+                		select global_role 
+                		from $tableName 
+                		where person = (
+                			select person
+                			from public.tokens 
+                			where token = ?
+                        )
+                    ) 
+                	and name = 'Administrator'
+                );
+            """.trimIndent()
+            )
+
+            statement.setString(1, token);
+            val result = statement.executeQuery()
+
+            if (result.next()) {
+                userHasReadPermission = result.getBoolean(1)
+            }
+        }
+        return userHasReadPermission;
+
+    }
+
+
+    fun userHasWritePermission(token: String, tableName: String):Boolean {
+        var userHasWritePermission: Boolean = false;
+        this.ds.connection.use { conn ->
+            //language=SQL
+            val statement = conn.prepareCall(
+                """
+                select exists(
+                	select id 
+                	from public.global_roles 
+                	where id in (
+                		select global_role 
+                		from $tableName 
+                		where person = (
+                			select person
+                			from public.tokens 
+                			where token = ?
+                        )
+                    ) 
+                	and name = 'Administrator'
+                );
+            """.trimIndent()
+            )
+
+            statement.setString(1, token);
+            val result = statement.executeQuery()
+
+            if (result.next()) {
+                userHasWritePermission = result.getBoolean(1)
+            }
+        }
+        return userHasWritePermission;
+    }
+
 
 }

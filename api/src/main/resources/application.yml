@@ -5,7 +5,7 @@ server:
   port: 8080
 spring:
   datasource:
-    jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:5433/${DB_DATABASE}
+    jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:5432/${DB_DATABASE}
     driverClassName: software.aws.rds.jdbc.postgresql.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}

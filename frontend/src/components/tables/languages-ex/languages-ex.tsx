@@ -37,6 +37,10 @@ class ReadLanguageExResponse extends GenericResponse {
   data: languageEx[];
 }
 
+class ReadLanguageExRequest {
+  token: string;
+}
+
 @Component({
   tag: 'languages-ex',
   styleUrl: 'languages-ex.css',
@@ -154,9 +158,9 @@ export class LanguagesEx {
     });
 
     console.log(result);
-
+    this.showNewForm = false;
+    this.insertedFields = this.defaultFields;
     if (result.error === ErrorType.NoError) {
-      this.insertedFields = this.defaultFields;
       this.languagesEx = this.languagesEx.concat(result.data);
       this.success = `New Row with id ${result.data.id} inserted successfully`;
     } else {
@@ -166,8 +170,10 @@ export class LanguagesEx {
   };
 
   componentWillLoad() {
-    fetchAs<null, ReadLanguageExResponse>('language_ex/read', null).then(res => {
-      this.languagesEx = res.data;
+    fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('language_ex/read', {
+      token: globals.globalStore.state.token,
+    }).then(res => {
+      this.languagesEx = res.data.sort((a, b) => a.id - b.id);
     });
   }
   render() {

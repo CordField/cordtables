@@ -27,7 +27,7 @@ data class CreateGlobalRoleRequest(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
 @Controller()
 class Create(
     @Autowired

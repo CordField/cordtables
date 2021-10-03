@@ -2,11 +2,13 @@ package com.seedcompany.cordspringstencil.components.tables.languageex
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
+import com.seedcompany.cordspringstencil.components.user.CreateGlobalRoleRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
@@ -54,6 +56,9 @@ data class ReadLanguageExResponse(
     val error: ErrorType,
     val data: MutableList<LanguageEx>?
 )
+data class ReadLanguageExRequest(
+    val token: String
+)
 
 @CrossOrigin(origins = ["http://localhost:3333"])
 @Controller("LanguageExRead")
@@ -65,15 +70,77 @@ class Read(
 ) {
     @PostMapping("language_ex/read")
     @ResponseBody
-    fun ReadHandler(): ReadLanguageExResponse {
+    fun ReadHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
         //mutableList as we need to add each global role as an element to it
         var data: MutableList<LanguageEx> = mutableListOf()
 
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall(
-                "select * from sc.languages_ex"
+                "with row_level_access as \n" +
+                        "(\n" +
+                        "\tselect row \n" +
+                        "    from public.group_row_access as a  \n" +
+                        "\tinner join public.group_memberships as b \n" +
+                        "\ton a.group_id = b.group_id \n" +
+                        "\tinner join public.tokens as c \n" +
+                        "\ton b.person = c.person\n" +
+                        "\twhere a.table_name = 'sc.languages_ex'\n" +
+                        "\tand c.token = ?\n" +
+                        "), \n" +
+                        "column_level_access as \n" +
+                        "(\n" +
+                        "    select  column_name \n" +
+                        "    from public.global_role_column_grants a \n" +
+                        "    inner join public.global_role_memberships b \n" +
+                        "    on a.global_role = b.global_role \n" +
+                        "    inner join public.tokens c \n" +
+                        "    on b.person = c.person \n" +
+                        "    where a.table_name = 'sc.languages_ex'\n" +
+                        "\tand c.token = ?\n" +
+                        ")\n" +
+                        "select \n" +
+                        "case when 'id' in (select column_name from column_level_access) then id else null end as id,\n" +
+                        "case when 'created_at' in (select column_name from column_level_access) then created_at else null end as created_at,\n" +
+                        "case when 'created_by' in (select column_name from column_level_access) then created_by else null end as created_by,\n" +
+                        "case when 'modified_at' in (select column_name from column_level_access) then modified_at else null end as modified_at,\n" +
+                        "case when 'modified_by' in (select column_name from column_level_access) then modified_by else null end as modified_by,\n" +
+                        "case when 'lang_name' in (select column_name from column_level_access) then lang_name else null end as lang_name,\n" +
+                        "case when 'lang_code' in (select column_name from column_level_access) then lang_code else null end as lang_code,\n" +
+                        "case when 'location' in (select column_name from column_level_access) then location else null end as location,\n" +
+                        "case when 'first_lang_population' in (select column_name from column_level_access) then first_lang_population else null end as first_lang_population,\n" +
+                        "case when 'population' in (select column_name from column_level_access) then population else null end as population,\n" +
+                        "case when 'egids_level' in (select column_name from column_level_access) then egids_level else null end as egids_level,\n" +
+                        "case when 'egids_value' in (select column_name from column_level_access) then egids_value else null end as egids_value,\n" +
+                        "case when 'least_reached_progress_jps_scale' in (select column_name from column_level_access) then least_reached_progress_jps_scale else null end as least_reached_progress_jps_scale,\n" +
+                        "case when 'least_reached_value' in (select column_name from column_level_access) then least_reached_value else null end as least_reached_value,\n" +
+                        "case when 'partner_interest' in (select column_name from column_level_access) then partner_interest else null end as partner_interest,\n" +
+                        "case when 'partner_interest_description' in (select column_name from column_level_access) then partner_interest_description else null end as partner_interest_description,\n" +
+                        "case when 'partner_interest_source' in (select column_name from column_level_access) then partner_interest_source else null end as partner_interest_source,\n" +
+                        "case when 'multi_lang_leverage' in (select column_name from column_level_access) then multi_lang_leverage else null end as multi_lang_leverage,\n" +
+                        "case when 'multi_lang_leverage_description' in (select column_name from column_level_access) then multi_lang_leverage_description else null end as multi_lang_leverage_description,\n" +
+                        "case when 'multi_lang_leverage_source' in (select column_name from column_level_access) then multi_lang_leverage_source else null end as multi_lang_leverage_source,\n" +
+                        "case when 'community_interest' in (select column_name from column_level_access) then community_interest else null end as community_interest,\n" +
+                        "case when 'community_interest_description' in (select column_name from column_level_access) then community_interest_description else null end as community_interest_description,\n" +
+                        "case when 'community_interest_source' in (select column_name from column_level_access) then community_interest_source else null end as community_interest_source,\n" +
+                        "case when 'community_interest_value' in (select column_name from column_level_access) then community_interest_value else null end as community_interest_value,\n" +
+                        "case when 'community_interest_scripture_description' in (select column_name from column_level_access) then community_interest_scripture_description else null end as community_interest_scripture_description,\n" +
+                        "case when 'community_interest_scripture_source' in (select column_name from column_level_access) then community_interest_scripture_source else null end as community_interest_scripture_source,\n" +
+                        "case when 'lwc_scripture_access' in (select column_name from column_level_access) then lwc_scripture_access else null end as lwc_scripture_access,\n" +
+                        "case when 'lwc_scripture_description' in (select column_name from column_level_access) then lwc_scripture_description else null end as lwc_scripture_description,\n" +
+                        "case when 'lwc_scripture_source' in (select column_name from column_level_access) then lwc_scripture_source else null end as lwc_scripture_source,\n" +
+                        "case when 'access_to_begin' in (select column_name from column_level_access) then access_to_begin else null end as access_to_begin,\n" +
+                        "case when 'access_to_begin_description' in (select column_name from column_level_access) then access_to_begin_description else null end as access_to_begin_description,\n" +
+                        "case when 'access_to_begin_source' in (select column_name from column_level_access) then access_to_begin_source else null end as access_to_begin_source,\n" +
+                        "case when 'suggested_strategies' in (select column_name from column_level_access) then suggested_strategies else null end as suggested_strategies,\n" +
+                        "case when 'comments' in (select column_name from column_level_access) then comments else null end as comments,\n" +
+                        "case when 'prioritization' in (select column_name from column_level_access) then prioritization else null end as prioritization,\n" +
+                        "case when 'progress_bible' in (select column_name from column_level_access) then progress_bible else null end as progress_bible\n" +
+                        "from sc.languages_ex \n" +
+                        "where id in (select row from row_level_access);"
             )
+            listStatement.setString(1, req.token)
+            listStatement.setString(2,req.token)
             try {
                 val listStatementResult = listStatement.executeQuery()
                 while (listStatementResult.next()) {
