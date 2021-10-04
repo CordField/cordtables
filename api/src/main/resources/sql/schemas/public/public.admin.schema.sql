@@ -1,4 +1,4 @@
-create schema public;
+create schema if not exists public;
 
 set schema 'public';
 CREATE EXTENSION hstore;
