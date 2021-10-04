@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.globalrolememberships
+package com.seedcompany.cordtables.components.tables.globalrolememberships
 
 class Create {
 }

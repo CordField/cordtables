@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.core
+package com.seedcompany.cordtables.core
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties

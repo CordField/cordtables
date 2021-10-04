@@ -1,7 +1,7 @@
-package com.seedcompany.cordspringstencil.components.tables.languageex
+package com.seedcompany.cordtables.components.tables.languageex
 
-import com.seedcompany.cordspringstencil.common.ErrorType
-import com.seedcompany.cordspringstencil.common.Utility
+import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Controller

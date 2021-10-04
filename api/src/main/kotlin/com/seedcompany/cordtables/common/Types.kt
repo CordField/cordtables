@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.common
+package com.seedcompany.cordtables.common
 
 class Types {
 }

@@ -1,7 +1,7 @@
-package com.seedcompany.cordspringstencil.components.tables.grouprowaccess
+package com.seedcompany.cordtables.components.tables.grouprowaccess
 
-import com.seedcompany.cordspringstencil.common.ErrorType
-import com.seedcompany.cordspringstencil.common.Utility
+import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin

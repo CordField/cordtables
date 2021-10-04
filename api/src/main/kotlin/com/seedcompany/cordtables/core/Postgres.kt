@@ -1,7 +1,7 @@
-package com.seedcompany.cordspringstencil.core
+package com.seedcompany.cordtables.core
 
-import com.seedcompany.cordspringstencil.common.ErrorType
-import com.seedcompany.cordspringstencil.common.Utility
+import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder

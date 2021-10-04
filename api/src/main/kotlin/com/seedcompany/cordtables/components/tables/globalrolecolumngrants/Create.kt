@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.globalrolecolumngrants
+package com.seedcompany.cordtables.components.tables.globalrolecolumngrants
 
 class Create {
 }

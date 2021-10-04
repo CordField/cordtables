@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil.components.tables.globalroletablepermissions
+package com.seedcompany.cordtables.components.tables.globalroletablepermissions
 
 class Create {
 }

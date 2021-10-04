@@ -1,7 +1,7 @@
-package com.seedcompany.cordspringstencil.components.user
+package com.seedcompany.cordtables.components.user
 
-import com.seedcompany.cordspringstencil.common.ErrorType
-import com.seedcompany.cordspringstencil.common.Utility
+import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Controller

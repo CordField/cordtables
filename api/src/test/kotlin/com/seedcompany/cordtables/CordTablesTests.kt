@@ -1,4 +1,4 @@
-package com.seedcompany.cordspringstencil
+package com.seedcompany.cordtables
 
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.chrome.ChromeOptions
