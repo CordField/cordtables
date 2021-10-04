@@ -7,6 +7,7 @@ enum class ErrorType {
     NoError,
     AdminOnly,
     UnknownError,
+    DoesNotHaveCreatePermission,
     BadCredentials,
     TokenNotFound,
     SessionNotFound,

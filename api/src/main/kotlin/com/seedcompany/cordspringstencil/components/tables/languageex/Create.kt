@@ -19,7 +19,7 @@ data class CreateLanguageExResponse(
 )
 data class CreateLanguageExRequest(
     val insertedFields: LanguageEx,
-    val email: String,
+    val token: String?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
@@ -35,6 +35,11 @@ class Create(
     @ResponseBody
     fun CreateHandler(@RequestBody req: CreateLanguageExRequest): CreateLanguageExResponse {
 
+        if (req.token == null) return CreateLanguageExResponse(ErrorType.TokenNotFound, null)
+//        if (!util.isAdmin(req.token)) return GroupUpdateResponse(ErrorType.AdminOnly
+        if(!util.userHasCreatePermission(req.token, "sc.languages_ex"))
+            return CreateLanguageExResponse(ErrorType.DoesNotHaveCreatePermission, null)
+
         println("req: $req")
         var errorType = ErrorType.UnknownError
         var insertedLanguageEx: LanguageEx? = null
@@ -42,8 +47,8 @@ class Create(
         val reqValues: MutableList<Any> = mutableListOf()
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.users where email = ?")
-                getUserIdStatement.setString(1, req.email)
+                val getUserIdStatement = conn.prepareCall("select person from public.tokens where token = ?")
+                getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
                     userId = getUserIdResult.getInt("person")

@@ -25,7 +25,7 @@ data class UpdateLanguageExResponse(
 
 data class UpdateLanguageExRequest(
     val updatedFields: LanguageEx,
-    val email: String,
+    val token: String,
     val id: Int
 )
 
@@ -49,8 +49,8 @@ class Update(
 
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.users where email = ?")
-                getUserIdStatement.setString(1, req.email)
+                val getUserIdStatement = conn.prepareCall("select person from public.tokens where token = ?")
+                getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
                     userId = getUserIdResult.getInt("person")

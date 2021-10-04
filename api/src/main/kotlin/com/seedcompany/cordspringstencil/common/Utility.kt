@@ -101,65 +101,34 @@ class Utility(
         return isAdmin;
     }
 
-    fun userHasReadPermission(token: String, tableName: String):Boolean {
-        var userHasReadPermission: Boolean = false;
-        this.ds.connection.use { conn ->
-            //language=SQL
-            val statement = conn.prepareCall(
-                """
-                select exists(
-                	select id 
-                	from public.global_roles 
-                	where id in (
-                		select global_role 
-                		from $tableName 
-                		where person = (
-                			select person
-                			from public.tokens 
-                			where token = ?
-                        )
-                    ) 
-                	and name = 'Administrator'
-                );
-            """.trimIndent()
-            )
-
-            statement.setString(1, token);
-            val result = statement.executeQuery()
-
-            if (result.next()) {
-                userHasReadPermission = result.getBoolean(1)
-            }
-        }
-        return userHasReadPermission;
-
-    }
-
-
-    fun userHasWritePermission(token: String, tableName: String):Boolean {
+    fun userHasCreatePermission(token: String, tableName: String):Boolean {
         var userHasWritePermission: Boolean = false;
         this.ds.connection.use { conn ->
             //language=SQL
             val statement = conn.prepareCall(
                 """
                 select exists(
-                	select id 
-                	from public.global_roles 
-                	where id in (
+                	select a.id 
+                	from public.global_roles as a 
+                    inner join public.global_role_table_permissions as b 
+                    on a.id = b.global_role 
+                	where a.id in (
                 		select global_role 
-                		from $tableName 
+                		from public.global_role_memberships
                 		where person = (
                 			select person
                 			from public.tokens 
                 			where token = ?
                         )
                     ) 
-                	and name = 'Administrator'
+                   and b.table_name = ?
+                   and b.table_permission = 'Create'
                 );
             """.trimIndent()
             )
 
             statement.setString(1, token);
+            statement.setString(2,tableName);
             val result = statement.executeQuery()
 
             if (result.next()) {
