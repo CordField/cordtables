@@ -102,7 +102,7 @@ class Utility(
     }
 
     fun userHasCreatePermission(token: String, tableName: String):Boolean {
-        var userHasWritePermission: Boolean = false;
+        var userHasCreatePermission: Boolean = false;
         this.ds.connection.use { conn ->
             //language=SQL
             val statement = conn.prepareCall(
@@ -132,10 +132,10 @@ class Utility(
             val result = statement.executeQuery()
 
             if (result.next()) {
-                userHasWritePermission = result.getBoolean(1)
+                userHasCreatePermission = result.getBoolean(1)
             }
         }
-        return userHasWritePermission;
+        return userHasCreatePermission;
     }
 
 

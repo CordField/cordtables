@@ -3,6 +3,7 @@ package com.seedcompany.cordspringstencil.components.tables.languageex
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
 import com.seedcompany.cordspringstencil.components.tables.globalroles.UpdatableGlobalRoleFields
+import com.seedcompany.cordspringstencil.components.tables.groups.GroupUpdateResponse
 import com.seedcompany.cordspringstencil.components.user.GlobalRole
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -25,7 +26,7 @@ data class UpdateLanguageExResponse(
 
 data class UpdateLanguageExRequest(
     val updatedFields: LanguageEx,
-    val token: String,
+    val token: String?,
     val id: Int
 )
 
@@ -41,7 +42,9 @@ class Update(
     @PostMapping("language_ex/update")
     @ResponseBody
     fun UpdateHandler(@RequestBody req: UpdateLanguageExRequest): UpdateLanguageExResponse {
-
+        if (req.token == null) return UpdateLanguageExResponse(ErrorType.TokenNotFound,null)
+        //temporary isAdmin check
+        if (!util.isAdmin(req.token)) return UpdateLanguageExResponse(ErrorType.AdminOnly, null)
         println("req: $req")
         var updatedLanguageEx: LanguageEx? = null
         var userId = 0

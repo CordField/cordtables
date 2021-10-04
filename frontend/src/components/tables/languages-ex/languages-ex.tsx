@@ -9,14 +9,14 @@ type MutableLanguageExFields = Omit<languageEx, 'id' | 'createdAt' | 'createdBy'
 
 class CreateLanguageExRequest {
   insertedFields: MutableLanguageExFields;
-  email: string;
+  token: string;
 }
 class CreateLanguageExResponse extends GenericResponse {
   data: languageEx;
 }
 
 class UpdateLanguageExRequest {
-  email: string;
+  token: string;
   updatedFields: MutableLanguageExFields;
   id: number;
 }
@@ -111,7 +111,8 @@ export class LanguagesEx {
         // onPaste={this.pasteAsPlainText}
         // onFocus={this.highlightAll}
       >
-        {languageEx[columnName]}
+        <p>{languageEx[columnName]}</p>
+        <ion-icon name="create-outline"></ion-icon>
       </td>
     );
   }
@@ -123,17 +124,17 @@ export class LanguagesEx {
     console.log(this.updatedFields);
     const result = await fetchAs<UpdateLanguageExRequest, UpdateLanguageExResponse>('language_ex/update', {
       updatedFields: this.updatedFields,
-      email: globals.globalStore.state.email,
+      token: globals.globalStore.state.token,
       id,
     });
     if (result.error === ErrorType.NoError) {
       this.updatedFields = this.defaultFields;
-      this.languagesEx = this.languagesEx.map(globalRole => (globalRole.id === result.data.id ? result.data : globalRole));
+      this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === result.data.id ? result.data : languageEx));
       this.success = `Row with id ${result.data.id} updated successfully!`;
     } else {
       console.error('Failed to update row');
       this.error = result.error;
-      this.languagesEx = this.languagesEx.map(globalRole => (globalRole.id === result.data?.id ? result.data : globalRole));
+      this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === result.data?.id ? result.data : languageEx));
     }
   };
   handleDelete = async id => {
@@ -154,7 +155,7 @@ export class LanguagesEx {
     console.log(this.insertedFields);
     const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('language_ex/create', {
       insertedFields: this.insertedFields,
-      email: globals.globalStore.state.email,
+      token: globals.globalStore.state.token,
     });
 
     console.log(result);

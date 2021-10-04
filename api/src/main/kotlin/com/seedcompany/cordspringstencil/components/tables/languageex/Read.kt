@@ -2,6 +2,7 @@ package com.seedcompany.cordspringstencil.components.tables.languageex
 
 import com.seedcompany.cordspringstencil.common.ErrorType
 import com.seedcompany.cordspringstencil.common.Utility
+import com.seedcompany.cordspringstencil.components.tables.groups.GroupUpdateResponse
 import com.seedcompany.cordspringstencil.components.user.CreateGlobalRoleRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -57,7 +58,7 @@ data class ReadLanguageExResponse(
     val data: MutableList<LanguageEx>?
 )
 data class ReadLanguageExRequest(
-    val token: String
+    val token: String?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333"])
@@ -73,7 +74,8 @@ class Read(
     fun ReadHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
         //mutableList as we need to add each global role as an element to it
         var data: MutableList<LanguageEx> = mutableListOf()
-
+        if (req.token == null) return ReadLanguageExResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (!util.isAdmin(req.token)) return ReadLanguageExResponse(ErrorType.AdminOnly, mutableListOf())
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall(
@@ -146,11 +148,11 @@ class Read(
                 while (listStatementResult.next()) {
 
                     val id = listStatementResult.getInt("id")
-                    val createdAt = listStatementResult.getString("created_at")
+                    val created_at = listStatementResult.getString("created_at")
 
-                    val createdBy = listStatementResult.getInt("created_by")
-                    val modifiedAt = listStatementResult.getString("modified_at")
-                    val modifiedBy = listStatementResult.getInt("modified_by")
+                    val created_by = listStatementResult.getInt("created_by")
+                    val modified_at = listStatementResult.getString("modified_at")
+                    val modified_by = listStatementResult.getInt("modified_by")
                     val lang_name = listStatementResult.getString("lang_name")
                     val lang_code = listStatementResult.getString("lang_code")
                     val location = listStatementResult.getString("location")
@@ -182,7 +184,7 @@ class Read(
                     val comments = listStatementResult.getString("comments")
                     val prioritization = listStatementResult.getInt("prioritization")
                     val progress_bible = listStatementResult.getInt("progress_bible")
-                    data.add(LanguageEx(id, createdAt, createdBy, modifiedAt, modifiedBy,lang_name,lang_code,location,first_lang_population,population,
+                    data.add(LanguageEx(id, created_at, created_by, modified_at, modified_by,lang_name,lang_code,location,first_lang_population,population,
                         egids_level,egids_value,least_reached_progress_jps_scale,least_reached_value,partner_interest,partner_interest_description,partner_interest_source,
                         multi_lang_leverage,multi_lang_leverage_description,multi_lang_leverage_source,community_interest,community_interest_description,community_interest_scripture_source,community_interest_value,community_interest_scripture_description,community_interest_source,lwc_scripture_access,lwc_scripture_description,lwc_scripture_source,access_to_begin,access_to_begin_description,
                         access_to_begin_source,suggested_strategies,comments,prioritization,progress_bible
@@ -190,7 +192,7 @@ class Read(
                 }
             } catch (e: SQLException) {
                 println("error while listing ${e.message}")
-                return ReadLanguageExResponse(ErrorType.SQLReadError, null)
+                return ReadLanguageExResponse(ErrorType.SQLReadError, mutableListOf())
             }
         }
         return ReadLanguageExResponse(ErrorType.NoError, data)
