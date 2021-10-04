@@ -14,6 +14,15 @@ enum class ErrorType {
     PasswordTooLong,
     DuplicateEmail,
     emptyReadResult,
+    UserEmailNotFound,
+    SQLInsertError,
+    UserTokenNotFound,
+}
+
+enum class access_level (val accessType: String){
+    Read("Read"),
+    Write("Write"),
+    Admin("Admin")
 }
 
 data class GenericResponse (

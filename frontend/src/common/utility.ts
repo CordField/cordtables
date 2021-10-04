@@ -8,6 +8,7 @@ export async function fetchAs<REQ, RES>(path: string, data: REQ) {
     body: JSON.stringify(data),
   });
 
+  console.log('Stringify data: ', JSON.stringify(data));
   console.log(result);
 
   const json = await result.json();

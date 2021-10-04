@@ -20,6 +20,17 @@ class readOneRequest {
   id: number
 }
 
+class create {
+  access_level?: String;
+  column_name?: String;
+  created_at?: String;
+  created_by?: number;
+  global_role?: number;
+  table_name?: String;
+  response?: Array<any>;
+  token: String
+}
+
 const tableColumns = [
     "Id",
     "Access Level",
@@ -44,6 +55,13 @@ interface readOne{
   table_name?: string;
 }
 
+/*
+enum accessLevel{
+  Write,
+  Read,
+  Admin
+}
+*/
 
 let rowId = 0;
 
@@ -74,6 +92,10 @@ export class GlobalRoleColumnGrants {
 
 
   async connectedCallback(){
+    await this.loadData();
+  }
+
+  async loadData(){
     console.log("First data one: ", this.dataOne);
     const result = await fetchAs<{}, readAllResponse>('table/global-role-column-grants', { });
     if(result && result?.response) this.dataAll = result.response;
@@ -111,14 +133,42 @@ export class GlobalRoleColumnGrants {
   }
 
   @Listen('modalOkay')
-  handleModalOkay(event){
+  async handleModalOkay(event){
     if(event && event.detail){
+      console.log("Id: ", this.readOneValues.id);
+      if (this.readOneValues.id === 0){
+        try{
+          const result = await fetchAs<create, readAllResponse>('table/global-role-column-grants-create', 
+          { 
+            access_level: this.readOneValues.access_level,
+            column_name: this.readOneValues.column_name,
+            created_by: this.readOneValues.created_by,
+            global_role: this.readOneValues.global_role,
+            table_name: this.readOneValues.table_name,
+            token: localStorage.getItem('token')
+          });
+        
+          if(result && result?.response) await this.loadData();
+        
+        }catch(error){
+          console.log('Error during row insertion: ', error);
+        }
+      }
       this.isOpen = !this.isOpen;
     }
   }
 
-  handleChange(event) {
+  handleChangeAccessLevel(event) {
     this.readOneValues.access_level = event.target.value;
+  }
+  handleChangeColumnName(event) {
+    this.readOneValues.column_name = event.target.value;
+  }
+  handleChangeGlobalRole(event) {
+    this.readOneValues.global_role = parseInt(event.target.value);
+  }
+  handleChangeTableName(event) {
+    this.readOneValues.table_name = event.target.value;
   }
 
   cleanFields(){
@@ -150,16 +200,21 @@ export class GlobalRoleColumnGrants {
            <div class="container">
             <div class="row">
               <div class="col">
-                <input type="text" placeholder="Access Level" value={this.readOneValues.access_level} onInput={(event) => this.handleChange(event)}> </input>
+                <select name="select">
+                  <option value="valor1">Valor 1</option>
+                  <option value="valor2" selected>Valor 2</option>
+                  <option value="valor3">Valor 3</option>
+                </select>
+                <input type="text" placeholder="Access Level" value={this.readOneValues.access_level} onInput={(event) => this.handleChangeAccessLevel(event)}> </input>
               </div>
               <div class="col">
-              <input type="text" placeholder="Column Name" value={this.readOneValues.column_name} > </input>
+              <input type="text" placeholder="Column Name" value={this.readOneValues.column_name} onInput={(event) => this.handleChangeColumnName(event)}> </input>
               </div>
               <div class="col">
-              <input type="text" placeholder="Global Role" value={this.readOneValues.global_role} > </input>
+              <input type="text" placeholder="Global Role" value={this.readOneValues.global_role} onInput={(event) => this.handleChangeGlobalRole(event)}> </input>
               </div>
               <div class="col">
-              <input type="text" placeholder="Table Name" value={this.readOneValues.table_name} > </input>
+              <input type="text" placeholder="Table Name" value={this.readOneValues.table_name} onInput={(event) => this.handleChangeTableName(event)}> </input>
               </div>
             </div>
           </div>
