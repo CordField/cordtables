@@ -22,7 +22,7 @@ data class CreateLanguageExRequest(
     val email: String,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordfield.org", "https://cordfield.org"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("LanguageExCreate")
 class Create(
     @Autowired
