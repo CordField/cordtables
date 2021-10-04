@@ -24,6 +24,11 @@ export class GlobalRoleColumnGrants {
   bubbles: true,
 }) modalOkay : EventEmitter<boolean>;
 
+@Event({
+  eventName: 'modalDelete',
+  bubbles: true,
+}) modalDelete : EventEmitter<boolean>;
+
 
 private handleClose = () => {
     this.isOpen = !this.isOpen;
@@ -33,6 +38,11 @@ private handleClose = () => {
 private handleOkay = () => {
   this.isOpen = !this.isOpen;
   this.modalOkay.emit(!this.isOpen);
+}
+
+private handleDelete = () => {
+  this.isOpen = !this.isOpen;
+  this.modalDelete.emit(!this.isOpen);
 }
 
   render() {
@@ -50,8 +60,8 @@ private handleOkay = () => {
                     <slot />
                 </div>
                 <div class="footer">
-                  <button class="cancel">Cancel</button>
-                  <button class="ok" onClick={this.handleOkay}>Okay</button>
+                  <button class="delete" onClick={this.handleDelete}>Delete Record</button>
+                  <button class="ok" onClick={this.handleOkay}>Save Record</button>
                 </div>
             </div>
         </div>

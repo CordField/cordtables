@@ -16,6 +16,8 @@ enum class ErrorType {
     emptyReadResult,
     UserEmailNotFound,
     SQLInsertError,
+    SQLUpdateError,
+    SQLDeleteError,
     UserTokenNotFound,
 }
 

@@ -31,6 +31,25 @@ class create {
   token: String
 }
 
+class update {
+  id: number;
+  access_level?: String;
+  column_name?: String;
+  created_at?: String;
+  created_by?: number;
+  modified_at?: String;
+  modified_by?: number;
+  global_role?: number;
+  table_name?: String;
+  response?: Array<any>;
+  token: String
+}
+
+class deleteRow {
+  id: number;
+  token: String;
+}
+
 const tableColumns = [
     "Id",
     "Access Level",
@@ -55,14 +74,6 @@ interface readOne{
   table_name?: string;
 }
 
-/*
-enum accessLevel{
-  Write,
-  Read,
-  Admin
-}
-*/
-
 let rowId = 0;
 
 @Component({
@@ -78,6 +89,7 @@ export class GlobalRoleColumnGrants {
   @State() isOpen: boolean;
   @State() dataAll: Array<object>;
   @State() dataOne: Array<readOne>;
+  @State() selectValue: string;
   @State() readOneValues : readOne = {
     'id': 0,
     'access_level' : '',
@@ -91,12 +103,11 @@ export class GlobalRoleColumnGrants {
   }
 
 
-  async connectedCallback(){
+  async componentWillLoad(){
     await this.loadData();
   }
 
   async loadData(){
-    console.log("First data one: ", this.dataOne);
     const result = await fetchAs<{}, readAllResponse>('table/global-role-column-grants', { });
     if(result && result?.response) this.dataAll = result.response;
   }
@@ -111,7 +122,7 @@ export class GlobalRoleColumnGrants {
       if(result && result?.response) {
         result.response.map((item) => {
           this.readOneValues.id = item.id;
-          this.readOneValues.access_level = item.access_level;
+          this.selectValue = item.access_level;
           this.readOneValues.column_name = item.column_name;
           this.readOneValues.created_at = item.created_at;
           this.readOneValues.created_by = item.created_by;
@@ -135,12 +146,11 @@ export class GlobalRoleColumnGrants {
   @Listen('modalOkay')
   async handleModalOkay(event){
     if(event && event.detail){
-      console.log("Id: ", this.readOneValues.id);
       if (this.readOneValues.id === 0){
         try{
-          const result = await fetchAs<create, readAllResponse>('table/global-role-column-grants-create', 
+            await fetchAs<create, readAllResponse>('table/global-role-column-grants-create', 
           { 
-            access_level: this.readOneValues.access_level,
+            access_level: this.selectValue,
             column_name: this.readOneValues.column_name,
             created_by: this.readOneValues.created_by,
             global_role: this.readOneValues.global_role,
@@ -148,10 +158,47 @@ export class GlobalRoleColumnGrants {
             token: localStorage.getItem('token')
           });
         
-          if(result && result?.response) await this.loadData();
+          await this.loadData();
         
         }catch(error){
           console.log('Error during row insertion: ', error);
+        }
+      }else{
+        try{
+          await fetchAs<update, readAllResponse>('table/global-role-column-grants-update', 
+        { 
+          id: this.readOneValues.id,
+          access_level: this.selectValue,
+          column_name: this.readOneValues.column_name,
+          global_role: this.readOneValues.global_role,
+          table_name: this.readOneValues.table_name,
+          token: localStorage.getItem('token')
+        });
+      
+        await this.loadData();
+      
+      }catch(error){
+        console.log('Error during row update: ', error);
+      }
+      }
+      this.isOpen = !this.isOpen;
+    }
+  }
+
+  @Listen('modalDelete')
+  async handleModalDelete(event){
+    if(event && event.detail){
+      if (this.readOneValues.id !== 0){
+        try{
+          await fetchAs<deleteRow, readAllResponse>('table/global-role-column-grants-delete', 
+          { 
+            id: this.readOneValues.id,
+            token: localStorage.getItem('token')
+          });
+        
+          await this.loadData();
+        }catch(error){
+          console.log('An error ocurred when trying to delete the record: ', error);
         }
       }
       this.isOpen = !this.isOpen;
@@ -159,7 +206,7 @@ export class GlobalRoleColumnGrants {
   }
 
   handleChangeAccessLevel(event) {
-    this.readOneValues.access_level = event.target.value;
+    this.selectValue = event.target.value;
   }
   handleChangeColumnName(event) {
     this.readOneValues.column_name = event.target.value;
@@ -173,7 +220,6 @@ export class GlobalRoleColumnGrants {
 
   cleanFields(){
     this.readOneValues.id = 0;
-    this.readOneValues.access_level = '';
     this.readOneValues.column_name = '';
     this.readOneValues.created_at = '';
     this.readOneValues.created_by = null;
@@ -200,12 +246,11 @@ export class GlobalRoleColumnGrants {
            <div class="container">
             <div class="row">
               <div class="col">
-                <select name="select">
-                  <option value="valor1">Valor 1</option>
-                  <option value="valor2" selected>Valor 2</option>
-                  <option value="valor3">Valor 3</option>
+                <select onInput={(event) => this.handleChangeAccessLevel(event)}>
+                  <option value="Write" selected={this.selectValue === 'Write'}>Write</option>
+                  <option value="Read" selected={this.selectValue === 'Read'}>Read</option>
+                  <option value="Admin" selected={this.selectValue === 'Admin'}>Admin</option>
                 </select>
-                <input type="text" placeholder="Access Level" value={this.readOneValues.access_level} onInput={(event) => this.handleChangeAccessLevel(event)}> </input>
               </div>
               <div class="col">
               <input type="text" placeholder="Column Name" value={this.readOneValues.column_name} onInput={(event) => this.handleChangeColumnName(event)}> </input>

@@ -178,6 +178,7 @@ declare namespace LocalJSX {
         "isOpen"?: boolean;
         "modalTitle"?: String;
         "onModalClosed"?: (event: CustomEvent<boolean>) => void;
+        "onModalDelete"?: (event: CustomEvent<boolean>) => void;
         "onModalOkay"?: (event: CustomEvent<boolean>) => void;
     }
     interface GenericTable {

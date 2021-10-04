@@ -72,7 +72,7 @@ class Create(
                 )
                 insertStatement.setString(1, req.access_level.accessType)
                 insertStatement.setString(2, req.column_name)
-                insertStatement.setInt(3, req.created_by)
+                insertStatement.setInt(3, userId)
                 insertStatement.setInt(4, req.global_role)
                 insertStatement.setString(5, req.table_name)
 
