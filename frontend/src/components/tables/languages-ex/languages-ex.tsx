@@ -87,7 +87,7 @@ export class LanguagesEx {
   };
   @State() languagesEx: languageEx[] = [];
   @State() insertedFields: MutableLanguageExFields = this.defaultFields;
-  @State() updatedFields: MutableLanguageExFields = this.defaultFields;
+  @State() updatedFields: MutableLanguageExFields = {};
   @State() error: string;
   @State() success: string;
   @State() showNewForm = false;
@@ -111,14 +111,14 @@ export class LanguagesEx {
         // onPaste={this.pasteAsPlainText}
         // onFocus={this.highlightAll}
       >
-        <p>{languageEx[columnName]}</p>
-        <ion-icon name="create-outline"></ion-icon>
+        {languageEx[columnName]}
       </td>
     );
   }
   updateFieldChange(event, columnName) {
     console.log(this.updatedFields[columnName], event.currentTarget.textContent);
     this.updatedFields[columnName] = event.currentTarget.textContent;
+    // this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === id ? { ...languageEx, ...this.updatedFields } : languageEx));
   }
   handleUpdate = async id => {
     console.log(this.updatedFields);
@@ -127,14 +127,14 @@ export class LanguagesEx {
       token: globals.globalStore.state.token,
       id,
     });
+    this.updatedFields = this.defaultFields;
     if (result.error === ErrorType.NoError) {
-      this.updatedFields = this.defaultFields;
       this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === result.data.id ? result.data : languageEx));
       this.success = `Row with id ${result.data.id} updated successfully!`;
     } else {
       console.error('Failed to update row');
       this.error = result.error;
-      this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === result.data?.id ? result.data : languageEx));
+      alert(result.error);
     }
   };
   handleDelete = async id => {
@@ -285,7 +285,6 @@ export class LanguagesEx {
                   {this.getEditableCell('comments', languageEx)}
                   {this.getEditableCell('prioritization', languageEx)}
                   {this.getEditableCell('progress_bible', languageEx)}
-
                   <button onClick={() => this.handleUpdate(languageEx.id)}>Update</button>
                   <button onClick={() => this.handleDelete(languageEx.id)}>Delete</button>
                 </tr>

@@ -67,6 +67,7 @@ class Update(
             }
             try {
                 var reqValues: MutableList<Any> = mutableListOf()
+                var columnNames: MutableList<String> = mutableListOf()
                 var updateSql = "update sc.languages_ex set"
                 for (prop in LanguageEx::class.memberProperties) {
                     val propValue = prop.get(req.updatedFields)
@@ -74,7 +75,11 @@ class Update(
                     if (propValue != null) {
                         updateSql = "$updateSql ${prop.name} = ?,"
                         reqValues.add(propValue)
+                        columnNames.add(prop.name)
                     }
+                }
+                if(!util.userHasUpdatePermission(req.token,"sc.languages_ex",columnNames)){
+                    return UpdateLanguageExResponse(ErrorType.DoesNotHaveUpdatePermission, null)
                 }
                 updateSql = "$updateSql modified_by = ?, modified_at = ? where id = ? returning *"
                 println(updateSql)

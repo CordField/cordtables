@@ -138,5 +138,82 @@ class Utility(
         return userHasCreatePermission;
     }
 
+    fun userHasDeletePermission(token: String, tableName: String):Boolean {
+        var userHasDeletePermission: Boolean = false;
+        this.ds.connection.use { conn ->
+            //language=SQL
+            val statement = conn.prepareCall(
+                """
+                select exists(
+                	select a.id 
+                	from public.global_roles as a 
+                    inner join public.global_role_table_permissions as b 
+                    on a.id = b.global_role 
+                	where a.id in (
+                		select global_role 
+                		from public.global_role_memberships
+                		where person = (
+                			select person
+                			from public.tokens 
+                			where token = ?
+                        )
+                    ) 
+                   and b.table_name = ?
+                   and b.table_permission = 'Delete'
+                );
+            """.trimIndent()
+            )
+
+            statement.setString(1, token);
+            statement.setString(2,tableName);
+            val result = statement.executeQuery()
+
+            if (result.next()) {
+                userHasDeletePermission = result.getBoolean(1)
+            }
+        }
+        return userHasDeletePermission;
+    }
+    fun userHasUpdatePermission(token:String,tableName: String, columnNames:MutableList<String>):Boolean{
+        var userHasUpdatePermission = false;
+        this.ds.connection.use { conn ->
+            var updateSql = "select count(*) from \n" +
+                    "(select column_name from public.global_role_column_grants as a \n" +
+                    "inner join public.global_roles as b  \n" +
+                    "on a.global_role = b.id \n" +
+                    "where b.id in (\n" +
+                    "\tselect global_role \n" +
+                    "    from public.global_role_memberships\n" +
+                    "\twhere person = (\n" +
+                    "\t\t\t\t\tselect person\n" +
+                    "\t\t\t\t\tfrom public.tokens \n" +
+                    "\t\t\t\t\twhere token = ?\n" +
+                    "                    )\n" +
+                    ")\n" +
+                    " and a.table_name::text = ? \n" +
+                    " and a.access_level = 'Write' \n" +
+                    " and a.column_name in (\n"
+            columnNames.forEach { columnName ->
+                updateSql = "$updateSql '$columnName',"
+            }
+            updateSql = updateSql.dropLast(1)
+            updateSql = "$updateSql ))sq"
+            //language=SQL
+            println(updateSql)
+            val statement = conn.prepareCall("$updateSql ;")
+            statement.setString(1, token);
+            statement.setString(2,tableName);
+            val result = statement.executeQuery()
+
+            if (result.next()) {
+                val countOfColumnsWithWriteAccess = result.getInt(1)
+                if(countOfColumnsWithWriteAccess == columnNames.size){
+                    userHasUpdatePermission = true
+                }
+            }
+        }
+        return userHasUpdatePermission;
+
+    }
 
 }
