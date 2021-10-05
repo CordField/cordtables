@@ -29,8 +29,8 @@ BEGIN
     insert into public.tokens ("token", "person")
     values (p_token, vPersonId);
 
-    insert into public.users("person", "owning_org", "email", "password")
-    values (vPersonId, 1, p_email, p_password);
+    insert into public.users(person, email, password, created_by, modified_by, owning_person, owning_group)
+    values (vPersonId, p_email, p_password, 1, 1, 1, 1);
 
     error_type := 'NoError';
 
