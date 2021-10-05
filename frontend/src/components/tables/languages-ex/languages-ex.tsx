@@ -9,14 +9,14 @@ type MutableLanguageExFields = Omit<languageEx, 'id' | 'createdAt' | 'createdBy'
 
 class CreateLanguageExRequest {
   insertedFields: MutableLanguageExFields;
-  email: string;
+  token: string;
 }
 class CreateLanguageExResponse extends GenericResponse {
   data: languageEx;
 }
 
 class UpdateLanguageExRequest {
-  email: string;
+  token: string;
   updatedFields: MutableLanguageExFields;
   id: number;
 }
@@ -35,6 +35,10 @@ class DeleteLanguageExResponse extends GenericResponse {
 
 class ReadLanguageExResponse extends GenericResponse {
   data: languageEx[];
+}
+
+class ReadLanguageExRequest {
+  token: string;
 }
 
 @Component({
@@ -83,7 +87,7 @@ export class LanguagesEx {
   };
   @State() languagesEx: languageEx[] = [];
   @State() insertedFields: MutableLanguageExFields = this.defaultFields;
-  @State() updatedFields: MutableLanguageExFields = this.defaultFields;
+  @State() updatedFields: MutableLanguageExFields = {};
   @State() error: string;
   @State() success: string;
   @State() showNewForm = false;
@@ -114,22 +118,23 @@ export class LanguagesEx {
   updateFieldChange(event, columnName) {
     console.log(this.updatedFields[columnName], event.currentTarget.textContent);
     this.updatedFields[columnName] = event.currentTarget.textContent;
+    // this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === id ? { ...languageEx, ...this.updatedFields } : languageEx));
   }
   handleUpdate = async id => {
     console.log(this.updatedFields);
     const result = await fetchAs<UpdateLanguageExRequest, UpdateLanguageExResponse>('language_ex/update', {
       updatedFields: this.updatedFields,
-      email: globals.globalStore.state.email,
+      token: globals.globalStore.state.token,
       id,
     });
+    this.updatedFields = this.defaultFields;
     if (result.error === ErrorType.NoError) {
-      this.updatedFields = this.defaultFields;
-      this.languagesEx = this.languagesEx.map(globalRole => (globalRole.id === result.data.id ? result.data : globalRole));
+      this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === result.data.id ? result.data : languageEx));
       this.success = `Row with id ${result.data.id} updated successfully!`;
     } else {
       console.error('Failed to update row');
       this.error = result.error;
-      this.languagesEx = this.languagesEx.map(globalRole => (globalRole.id === result.data?.id ? result.data : globalRole));
+      alert(result.error);
     }
   };
   handleDelete = async id => {
@@ -150,13 +155,13 @@ export class LanguagesEx {
     console.log(this.insertedFields);
     const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('language_ex/create', {
       insertedFields: this.insertedFields,
-      email: globals.globalStore.state.email,
+      token: globals.globalStore.state.token,
     });
 
     console.log(result);
-
+    this.showNewForm = false;
+    this.insertedFields = this.defaultFields;
     if (result.error === ErrorType.NoError) {
-      this.insertedFields = this.defaultFields;
       this.languagesEx = this.languagesEx.concat(result.data);
       this.success = `New Row with id ${result.data.id} inserted successfully`;
     } else {
@@ -166,8 +171,10 @@ export class LanguagesEx {
   };
 
   componentWillLoad() {
-    fetchAs<null, ReadLanguageExResponse>('language_ex/read', null).then(res => {
-      this.languagesEx = res.data;
+    fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('language_ex/read', {
+      token: globals.globalStore.state.token,
+    }).then(res => {
+      this.languagesEx = res.data.sort((a, b) => a.id - b.id);
     });
   }
   render() {
@@ -278,7 +285,6 @@ export class LanguagesEx {
                   {this.getEditableCell('comments', languageEx)}
                   {this.getEditableCell('prioritization', languageEx)}
                   {this.getEditableCell('progress_bible', languageEx)}
-
                   <button onClick={() => this.handleUpdate(languageEx.id)}>Update</button>
                   <button onClick={() => this.handleDelete(languageEx.id)}>Delete</button>
                 </tr>

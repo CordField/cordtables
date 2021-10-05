@@ -13,6 +13,8 @@ class GroupsRow {
   createdBy: number;
   modifiedAt: string;
   modifiedBy: number;
+  owningPerson: number;
+  owningGroup: number;
 }
 
 class GroupsListResponse {
@@ -151,6 +153,8 @@ export class CfGroups {
               <td>
                 <input type="text" id="name-input" name="name" onInput={event => this.inputName(event)}></input>
               </td>
+              <td class="disabled">&nbsp;</td>
+              <td class="disabled">&nbsp;</td>
               <td class="disabled">&nbsp;</td>
               <td class="disabled">&nbsp;</td>
               <td class="disabled">&nbsp;</td>

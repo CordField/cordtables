@@ -7,6 +7,7 @@ enum class ErrorType {
     NoError,
     AdminOnly,
     UnknownError,
+    DoesNotHaveCreatePermission,
     BadCredentials,
     TokenNotFound,
     SessionNotFound,
@@ -30,7 +31,9 @@ enum class ErrorType {
     NameAlreadyExists,
     MissingId,
     UserTokenNotFound,
-    emptyReadResult
+    emptyReadResult,
+    CannotUpdateAdminGroup,
+    DoesNotHaveUpdatePermission
 }
 enum class access_level (val accessType: String){
     Read("Read"),
