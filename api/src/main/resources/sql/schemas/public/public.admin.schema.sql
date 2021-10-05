@@ -257,3 +257,23 @@ create table public.global_role_memberships (
   foreign key (owning_person) references public.people(id),
   foreign key (owning_group) references public.groups(id)
 );
+
+-- AUTHENTICATION ------------------------------------------------------------
+
+create table if not exists public.tokens (
+	id serial primary key,
+	token varchar(64),
+	person int,
+	unique(token),
+	created_at timestamp not null default CURRENT_TIMESTAMP
+	-- foreign key (person) references people(id)
+);
+
+create table if not exists public.email_tokens (
+	id serial primary key,
+	token varchar(512),
+	email varchar(255),
+	unique(token),
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	foreign key (email) references users(email)
+);
