@@ -7,6 +7,7 @@ enum class ErrorType {
     NoError,
     AdminOnly,
     UnknownError,
+    DoesNotHaveCreatePermission,
     BadCredentials,
     TokenNotFound,
     SessionNotFound,
@@ -30,6 +31,7 @@ enum class ErrorType {
     NameAlreadyExists,
     MissingId,
     CannotUpdateAdminGroup,
+    DoesNotHaveUpdatePermission
 }
 
 data class GenericResponse (
