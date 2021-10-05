@@ -42,7 +42,17 @@ export namespace Components {
     interface CfRegister {
         "history": RouterHistory;
     }
+    interface CreateUpdateModal {
+        "isOpen": boolean;
+        "modalTitle": String;
+    }
+    interface GenericTable {
+        "columns": Array<any>;
+        "name": String;
+        "values": Array<any>;
+    }
     interface GlobalRoleColumnGrants {
+        "history": RouterHistory;
     }
     interface GlobalRoleMemberships {
     }
@@ -117,6 +127,18 @@ declare global {
         prototype: HTMLCfRegisterElement;
         new (): HTMLCfRegisterElement;
     };
+    interface HTMLCreateUpdateModalElement extends Components.CreateUpdateModal, HTMLStencilElement {
+    }
+    var HTMLCreateUpdateModalElement: {
+        prototype: HTMLCreateUpdateModalElement;
+        new (): HTMLCreateUpdateModalElement;
+    };
+    interface HTMLGenericTableElement extends Components.GenericTable, HTMLStencilElement {
+    }
+    var HTMLGenericTableElement: {
+        prototype: HTMLGenericTableElement;
+        new (): HTMLGenericTableElement;
+    };
     interface HTMLGlobalRoleColumnGrantsElement extends Components.GlobalRoleColumnGrants, HTMLStencilElement {
     }
     var HTMLGlobalRoleColumnGrantsElement: {
@@ -181,6 +203,8 @@ declare global {
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-register": HTMLCfRegisterElement;
+        "create-update-modal": HTMLCreateUpdateModalElement;
+        "generic-table": HTMLGenericTableElement;
         "global-role-column-grants": HTMLGlobalRoleColumnGrantsElement;
         "global-role-memberships": HTMLGlobalRoleMembershipsElement;
         "global-role-table-permissions": HTMLGlobalRoleTablePermissionsElement;
@@ -227,7 +251,21 @@ declare namespace LocalJSX {
     interface CfRegister {
         "history"?: RouterHistory;
     }
+    interface CreateUpdateModal {
+        "isOpen"?: boolean;
+        "modalTitle"?: String;
+        "onModalClosed"?: (event: CustomEvent<boolean>) => void;
+        "onModalDelete"?: (event: CustomEvent<boolean>) => void;
+        "onModalOkay"?: (event: CustomEvent<boolean>) => void;
+    }
+    interface GenericTable {
+        "columns"?: Array<any>;
+        "name"?: String;
+        "onRowClicked"?: (event: CustomEvent<number>) => void;
+        "values"?: Array<any>;
+    }
     interface GlobalRoleColumnGrants {
+        "history"?: RouterHistory;
     }
     interface GlobalRoleMemberships {
     }
@@ -256,6 +294,8 @@ declare namespace LocalJSX {
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-register": CfRegister;
+        "create-update-modal": CreateUpdateModal;
+        "generic-table": GenericTable;
         "global-role-column-grants": GlobalRoleColumnGrants;
         "global-role-memberships": GlobalRoleMemberships;
         "global-role-table-permissions": GlobalRoleTablePermissions;
@@ -280,6 +320,8 @@ declare module "@stencil/core" {
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
+            "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
+            "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "global-role-column-grants": LocalJSX.GlobalRoleColumnGrants & JSXBase.HTMLAttributes<HTMLGlobalRoleColumnGrantsElement>;
             "global-role-memberships": LocalJSX.GlobalRoleMemberships & JSXBase.HTMLAttributes<HTMLGlobalRoleMembershipsElement>;
             "global-role-table-permissions": LocalJSX.GlobalRoleTablePermissions & JSXBase.HTMLAttributes<HTMLGlobalRoleTablePermissionsElement>;
