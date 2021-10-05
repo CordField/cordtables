@@ -4,6 +4,7 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.access_level
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,38 +14,38 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 
-data class GlobalRoleColumnGrantsCreate(
-        val id: Int? = null,
+data class GlobalRoleColumnGrantsUpdate(
+        val id: Int,
         val access_level: access_level,
         val column_name: String? = null,
         val created_by: Int,
         val global_role: Int,
         val table_name: String? = null,
-        val token: String
+        val token: String,
 )
 
-data class CreateGlobalRoleColumnGrantsResponse(
+data class UpdateGlobalRoleColumnGrantsResponse(
         val error: ErrorType,
-        val response: GlobalRoleColumnGrantsCreate?
+        val response: GlobalRoleColumnGrantsUpdate?
 )
 
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@RestController("globalRoleColumnGrantsCreateController")
-class Create(
+@RestController("globalRoleColumnGrantsUpdateController")
+class Update(
         @Autowired
         val util: Utility,
 
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("table/global-role-column-grants-create", consumes = ["application/json"], produces = ["application/json"])
+    @PostMapping("table/global-role-column-grants-update")
     @ResponseBody
-    fun CreateHandler(@RequestBody req: GlobalRoleColumnGrantsCreate): CreateGlobalRoleColumnGrantsResponse {
+    fun UpdateHandler(@RequestBody req: GlobalRoleColumnGrantsUpdate): UpdateGlobalRoleColumnGrantsResponse {
 
         println("req: $req")
         var errorType = ErrorType.UnknownError
-        var insertedGlobalRole: GlobalRoleColumnGrantsCreate? = null
+        var insertedGlobalRole: GlobalRoleColumnGrantsUpdate? = null
         var userId = 0
 
         this.ds.connection.use { conn ->
@@ -63,18 +64,19 @@ class Create(
             catch(e:SQLException){
                 println(e.message)
                 errorType = ErrorType.UserTokenNotFound
-                return CreateGlobalRoleColumnGrantsResponse(errorType, null)
+                return UpdateGlobalRoleColumnGrantsResponse(errorType, null)
             }
             try {
                 println(req.access_level.accessType);
                 val insertStatement = conn.prepareCall(
-                        "insert into public.global_role_column_grants(access_level, column_name, created_by, global_role, table_name) values(?::access_level,?,?,?,?::table_name) returning *"
+                        "update public.global_role_column_grants set access_level = ?::access_level, column_name = ?, modified_by = ?, global_role = ?, table_name = ?::table_name where id = ? returning *"
                 )
                 insertStatement.setString(1, req.access_level.accessType)
                 insertStatement.setString(2, req.column_name)
                 insertStatement.setInt(3, userId)
                 insertStatement.setInt(4, req.global_role)
                 insertStatement.setString(5, req.table_name)
+                insertStatement.setInt(6, req.id)
 
 
                 val insertStatementResult = insertStatement.executeQuery()
@@ -82,10 +84,10 @@ class Create(
             }
             catch (e:SQLException ){
                 println(e.message)
-                errorType = ErrorType.SQLInsertError
-                return CreateGlobalRoleColumnGrantsResponse(errorType, null)
+                errorType = ErrorType.SQLUpdateError
+                return UpdateGlobalRoleColumnGrantsResponse(errorType, null)
             }
         }
-        return CreateGlobalRoleColumnGrantsResponse(ErrorType.NoError,insertedGlobalRole)
+        return UpdateGlobalRoleColumnGrantsResponse(ErrorType.NoError,insertedGlobalRole)
     }
 }
