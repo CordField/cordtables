@@ -79,7 +79,7 @@ class Utility(
                 		select global_role 
                 		from public.global_role_memberships 
                 		where person = (
-                			select id 
+                			select person 
                 			from public.tokens 
                 			where token = ?
                         )
