@@ -437,6 +437,16 @@ create table if not exists public.project_member_roles (
 	foreign key (project_role) references project_roles(id)
 );
 
+-- email tokens
+
+create table if not exists public.email_tokens (
+	id serial primary key,
+	token varchar(512),
+	email varchar(255),
+	unique(token),
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	foreign key (email) references users(email)
+);
 
 -- TICKETS ----------------------------------------------------------------------
 --

@@ -21,6 +21,9 @@ create type public.table_name as enum (
   'public.global_role_memberships',
   'public.global_role_table_permissions',
   'public.global_roles',
+  'public.groups',
+  'public.group_memberships',
+  'public.group_row_access',
   'public.locations',
   'public.organization_grants',
   'public.organization_memberships',
@@ -269,11 +272,3 @@ create table if not exists public.tokens (
 	-- foreign key (person) references people(id)
 );
 
-create table if not exists public.email_tokens (
-	id serial primary key,
-	token varchar(512),
-	email varchar(255),
-	unique(token),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	foreign key (email) references users(email)
-);

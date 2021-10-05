@@ -29,6 +29,7 @@ enum class ErrorType {
     NameTooLong,
     NameAlreadyExists,
     MissingId,
+    CannotUpdateAdminGroup,
 }
 
 data class GenericResponse (

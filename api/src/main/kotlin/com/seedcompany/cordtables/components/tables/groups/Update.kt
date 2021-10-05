@@ -36,6 +36,7 @@ class Update(
 
         if (req.token == null) return GroupUpdateResponse(ErrorType.TokenNotFound)
         if (!util.isAdmin(req.token)) return GroupUpdateResponse(ErrorType.AdminOnly)
+        if (req.id === 1) return GroupUpdateResponse(ErrorType.CannotUpdateAdminGroup)
 
         if (req.name == null) return GroupUpdateResponse(ErrorType.InputMissingName)
         if (req.name.isEmpty()) return GroupUpdateResponse(ErrorType.NameTooShort)
