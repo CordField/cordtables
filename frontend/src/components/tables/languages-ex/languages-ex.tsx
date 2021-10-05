@@ -207,11 +207,9 @@ export class LanguagesEx {
             <thead>
               {/* this will be fixed -> on a shared component, this will be passed in and use Map to preserve order */}
               <tr>
+                <th>buttons</th>
                 <th>id </th>
-                <th>created_at</th>
-                <th>created_by</th>
-                <th>modified_at</th>
-                <th>modified_by</th>
+
                 <th>lang_name </th>
                 <th>lang_code </th>
                 <th>location </th>
@@ -243,17 +241,20 @@ export class LanguagesEx {
                 <th>comments </th>
                 <th>prioritization </th>
                 <th>progress_bible</th>
+                <th>created_at</th>
+                <th>created_by</th>
+                <th>modified_at</th>
+                <th>modified_by</th>
               </tr>
             </thead>
             <tbody>
               {this.languagesEx.map(languageEx => (
                 <tr>
                   {/* can loop over these as well (using Map to preserve order) */}
+                  <button onClick={() => this.handleUpdate(languageEx.id)}>Update</button>
+                  <button onClick={() => this.handleDelete(languageEx.id)}>Delete</button>
                   <td>{languageEx.id}</td>
-                  <td>{languageEx.created_at}</td>
-                  <td>{languageEx.created_by}</td>
-                  <td>{languageEx.modified_at}</td>
-                  <td>{languageEx.modified_by}</td>
+
                   {this.getEditableCell('lang_name', languageEx)}
                   {this.getEditableCell('lang_code', languageEx)}
                   {this.getEditableCell('location', languageEx)}
@@ -285,16 +286,15 @@ export class LanguagesEx {
                   {this.getEditableCell('comments', languageEx)}
                   {this.getEditableCell('prioritization', languageEx)}
                   {this.getEditableCell('progress_bible', languageEx)}
-                  <button onClick={() => this.handleUpdate(languageEx.id)}>Update</button>
-                  <button onClick={() => this.handleDelete(languageEx.id)}>Delete</button>
+                  <td>{languageEx.created_at}</td>
+                  <td>{languageEx.created_by}</td>
+                  <td>{languageEx.modified_at}</td>
+                  <td>{languageEx.modified_by}</td>
                 </tr>
               ))}
             </tbody>
             {this.showNewForm && (
               <tr>
-                <td class="disabled">&nbsp;</td>
-                <td class="disabled">&nbsp;</td>
-                <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
                 {this.getInputCell('lang_name')}
@@ -328,6 +328,10 @@ export class LanguagesEx {
                 {this.getInputCell('comments')}
                 {this.getInputCell('prioritization')}
                 {this.getInputCell('progress_bible')}
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
               </tr>
             )}
           </table>
