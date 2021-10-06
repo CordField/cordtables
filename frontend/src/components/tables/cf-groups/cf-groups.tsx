@@ -81,7 +81,7 @@ export class CfGroups {
     }
   };
 
-  updateName = async (id: number, value: string): Promise<boolean> => {
+  updateName = async (id: number, columnName: string, value: string): Promise<boolean> => {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, name: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {

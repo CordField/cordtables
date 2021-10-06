@@ -105,38 +105,42 @@ export class LanguagesEx {
   getEditableCell(columnName: string, languageEx: languageEx) {
     return (
       <td
-        contentEditable
-        onInput={event => this.updateFieldChange(event, columnName)}
-        // onKeyPress={this.disableNewlines}
-        // onPaste={this.pasteAsPlainText}
-        // onFocus={this.highlightAll}
+      // contentEditable
+      // onInput={event => this.updateFieldChange(event, columnName)}
+      // onKeyPress={this.disableNewlines}
+      // onPaste={this.pasteAsPlainText}
+      // onFocus={this.highlightAll}
       >
-        {languageEx[columnName]}
+        {/* {languageEx[columnName]} */}
+        <cf-cell
+          key={columnName}
+          rowId={languageEx.id}
+          propKey={columnName}
+          value={languageEx[columnName]}
+          isEditable={!['id', 'modified_at', 'created_at', 'created_by', 'modified_by'].includes(columnName)}
+          updateFn={!['id', 'modified_at', 'created_at', 'created_by', 'modified_by'].includes(columnName) ? this.updateField : null}
+        ></cf-cell>
       </td>
     );
   }
-  updateFieldChange(event, columnName) {
-    console.log(this.updatedFields[columnName], event.currentTarget.textContent);
-    this.updatedFields[columnName] = event.currentTarget.textContent;
-    // this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === id ? { ...languageEx, ...this.updatedFields } : languageEx));
-  }
-  handleUpdate = async id => {
-    console.log(this.updatedFields);
-    const result = await fetchAs<UpdateLanguageExRequest, UpdateLanguageExResponse>('language_ex/update', {
-      updatedFields: this.updatedFields,
+
+  updateField = async (id: number, columnName: string, value: string): Promise<boolean> => {
+    this.updatedFields[columnName] = value;
+    const updateResponse = await fetchAs<UpdateLanguageExRequest, UpdateLanguageExResponse>('language_ex/update', {
       token: globals.globalStore.state.token,
+      updatedFields: this.updatedFields,
       id,
     });
-    this.updatedFields = this.defaultFields;
-    if (result.error === ErrorType.NoError) {
-      this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === result.data.id ? result.data : languageEx));
-      this.success = `Row with id ${result.data.id} updated successfully!`;
+
+    if (updateResponse.error == ErrorType.NoError) {
+      const result = await fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('language_ex/read', { token: globals.globalStore.state.token });
+      this.languagesEx = result.data.sort((a, b) => a.id - b.id);
+      return true;
     } else {
-      console.error('Failed to update row');
-      this.error = result.error;
-      alert(result.error);
+      alert(updateResponse.error);
     }
   };
+
   handleDelete = async id => {
     const result = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('language_ex/delete', {
       id,
@@ -285,7 +289,7 @@ export class LanguagesEx {
                   {this.getEditableCell('comments', languageEx)}
                   {this.getEditableCell('prioritization', languageEx)}
                   {this.getEditableCell('progress_bible', languageEx)}
-                  <button onClick={() => this.handleUpdate(languageEx.id)}>Update</button>
+                  {/* <button onClick={() => this.handleUpdate(languageEx.id)}>Update</button> */}
                   <button onClick={() => this.handleDelete(languageEx.id)}>Delete</button>
                 </tr>
               ))}

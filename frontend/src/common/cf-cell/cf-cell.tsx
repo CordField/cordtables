@@ -10,7 +10,8 @@ export class CfCell {
   @Prop() propKey: keyof any;
   @Prop() value: any;
   @Prop() isEditable: boolean;
-  @Prop() updateFn: (id: number, value: any) => Promise<boolean>;
+  @Prop() updateFn: (id: number, columnName: any, value: any) => Promise<boolean>;
+
   @State() showEdit = false;
   @State() newValue: any;
 
@@ -25,7 +26,7 @@ export class CfCell {
   };
 
   submit = async () => {
-    const result = await this.updateFn(this.rowId, this.newValue);
+    const result = await this.updateFn(this.rowId, this.propKey, this.newValue);
     if (result) {
       this.showEdit = false;
     } else {

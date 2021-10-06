@@ -20,7 +20,7 @@ export namespace Components {
         "isEditable": boolean;
         "propKey": keyof any;
         "rowId": number;
-        "updateFn": (id: number, value: any) => Promise<boolean>;
+        "updateFn": (id: number, columnName: any, value: any) => Promise<boolean>;
         "value": any;
     }
     interface CfGroups {
@@ -173,7 +173,7 @@ declare namespace LocalJSX {
         "isEditable"?: boolean;
         "propKey"?: keyof any;
         "rowId"?: number;
-        "updateFn"?: (id: number, value: any) => Promise<boolean>;
+        "updateFn"?: (id: number, columnName: any, value: any) => Promise<boolean>;
         "value"?: any;
     }
     interface CfGroups {
