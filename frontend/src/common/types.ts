@@ -60,3 +60,7 @@ export interface languageEx {
 export class GenericResponse {
   public error: ErrorType;
 }
+
+export enum ActionType {
+  Delete = 'Delete',
+}
