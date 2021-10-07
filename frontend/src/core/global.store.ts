@@ -5,6 +5,7 @@ export class Globals {
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
     token: localStorage.getItem('token'),
     email: localStorage.getItem('email'),
+    // globalRolesTablePermissionsData: localStorage.getItem('globalRolesTablePermissionsData'),
   });
 
   constructor() {
@@ -34,6 +35,16 @@ export class Globals {
         localStorage.removeItem('token');
       }
     });
+    // this.globalStore.onChange('globalRolesTablePermissionsData', newValue=> {
+    //  if (newValue != null) {
+    //    localStorage.setItem('globalRolesTablePermissionsData', newValue);
+    //  }  else {
+    //     localStorage.removeItem('globalRolesPermissionsData');
+    //  }
+    // });
+    
+    
+    
   }
 }
 

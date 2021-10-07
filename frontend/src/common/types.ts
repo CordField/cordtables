@@ -10,6 +10,18 @@ export enum ErrorType {
   DuplicateEmail = 'DuplicateEmail',
 }
 
+export interface globalRoleTablePermissions {
+  id: number;
+  createdAt: string;
+  createdBy: number;
+  globalRole: number;
+  modifiedAt: string;
+  modifiedBy: number;
+  tableName: string;
+  tablePermission: string;
+
+}
+
 export class GenericResponse {
-  public error: any;
+  public error: ErrorType;
 }
