@@ -226,37 +226,57 @@ create table if not exists sc.language_goals (
 create table if not exists sc.languages_ex(
 	id serial primary key,
 
-	lang_name varchar(32),
-	lang_code varchar(16) NOT NULL,
-	location text,
-	first_lang_population int NULL,
-	population int,
+	language_name varchar(32),
+	iso varchar(3),
+	prioritization int,
+	progress_bible bool,
+
+	island varchar(32),
+	province varchar(32),
+
+	first_language_population int NULL,
+	population_value int, -- calculated from first_language_population
+
 	egids_level int,
-	egids_value int,
+	egids_value int, -- calculated from egids_level
+
 	least_reached_progress_jps_scale int,
-	least_reached_value int,
-	partner_interest int,
+	least_reached_value int, -- calculated from least_reached_progress_jps_scale
+
+	partner_interest_value int,
 	partner_interest_description text,
 	partner_interest_source text,
-	multi_lang_leverage int,
-	multi_lang_leverage_description text,
-	multi_lang_leverage_source text,
-	community_interest int,
-	community_interest_description text,
-	community_interest_source text,
-	community_interest_value int,
-	community_interest_scripture_description text,
-	community_interest_scripture_source text,
-	lwc_scripture_access int,
-	lwc_scripture_description text,
-	lwc_scripture_source text,
-	access_to_begin int,
-	access_to_begin_description text,
-	access_to_begin_source text,
+
+	multiple_language_leverage_linguistic_value int,
+	multiple_language_leverage_linguistic_description text,
+	multiple_language_leverage_linguistic_source text,
+
+	multiple_language_leverage_joint_training_value int,
+  multiple_language_leverage_joint_training_description text,
+  multiple_language_leverage_joint_training_source text,
+
+	language_community_interest_in_language_development_value int,
+	language_community_interest_in_language_development_description text,
+	language_community_interest_in_language_development_source text,
+
+	language_community_interest_in_scripture_translation_value int,
+	language_community_interest_in_scripture_translation_description text,
+	language_community_interest_in_scripture_translation_source text,
+
+	access_to_scripture_in_lwc_value int,
+	access_to_scripture_in_lwc_description text,
+	access_to_scripture_in_lwc_source text,
+
+	access_to_begin_work_geographical_challenges_value int,
+	access_to_begin_work_geographical_challenges_description text,
+	access_to_begin_work_geographical_challenges_source text,
+
+	access_to_begin_work_religious_and_political_obstacles_value int,
+  access_to_begin_work_religious_and_political_obstacles_description text,
+  access_to_begin_work_religious_and_political_obstacles_source text,
+
 	suggested_strategies text,
 	comments text,
-	prioritization int,
-	progress_bible int,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null,
