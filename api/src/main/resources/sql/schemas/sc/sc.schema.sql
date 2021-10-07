@@ -223,6 +223,37 @@ create table if not exists sc.language_goals (
 	-- todo
 );
 
+create type sc.egids_scale as enum (
+		'0',
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6a',
+		'6b',
+		'7',
+		'8a',
+		'8b',
+		'9',
+		'10'
+);
+
+create type sc.least_reached_progress_scale as enum (
+		'1',
+		'2',
+		'3',
+		'4',
+		'5'
+);
+
+create type sc.partner_interest_options as enum (
+		'No Partner Interest',
+		'Some',
+		'Significant',
+		'Considerable'
+);
+
 create table if not exists sc.languages_ex(
 	id serial primary key,
 
@@ -237,10 +268,10 @@ create table if not exists sc.languages_ex(
 	first_language_population int NULL,
 	population_value int, -- calculated from first_language_population
 
-	egids_level int,
+	egids_level sc.egids_scale,
 	egids_value int, -- calculated from egids_level
 
-	least_reached_progress_jps_scale int,
+	least_reached_progress_jps_scale sc.least_reached_progress_scale,
 	least_reached_value int, -- calculated from least_reached_progress_jps_scale
 
 	partner_interest_value int,

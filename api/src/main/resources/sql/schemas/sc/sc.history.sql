@@ -15,10 +15,10 @@ create table sc.languages_ex_history (
 	first_language_population int,
 	population_value int, -- calculated from first_language_population
 
-	egids_level int,
+	egids_level sc.egids_scale,
 	egids_value int, -- calculated from egids_level
 
-	least_reached_progress_jps_scale int,
+	least_reached_progress_jps_scale sc.least_reached_progress_scale,
 	least_reached_value int, -- calculated from least_reached_progress_jps_scale
 
 	partner_interest_value int,
