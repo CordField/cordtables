@@ -57,6 +57,17 @@ export interface languageEx {
   prioritization?: number;
   progress_bible?: number;
 }
+export interface globalRoleTablePermissions {
+  id: number;
+  createdAt: string;
+  createdBy: number;
+  globalRole: number;
+  modifiedAt: string;
+  modifiedBy: number;
+  tableName: string;
+  tablePermission: string;
+}
+
 export class GenericResponse {
   public error: ErrorType;
 }
