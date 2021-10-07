@@ -2,7 +2,7 @@ create table sc.languages_ex_history (
   _history_id serial primary key,
   _history_created_at timestamp not null default CURRENT_TIMESTAMP,
 
-	id serial primary key,
+	id int,
 
 	language_name varchar(32),
 	iso varchar(3),
@@ -12,7 +12,7 @@ create table sc.languages_ex_history (
 	island varchar(32),
 	province varchar(32),
 
-	first_language_population int NULL,
+	first_language_population int,
 	population_value int, -- calculated from first_language_population
 
 	egids_level int,
@@ -161,7 +161,7 @@ create table sc.languages_ex_history (
           	new.modified_at ,
             new.modified_by ,
             new.owning_person ,
-          	new.owning_group 
+          	new.owning_group
           );
         RETURN NEW;
       end; $$;
