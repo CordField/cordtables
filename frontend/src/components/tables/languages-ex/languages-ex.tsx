@@ -27,10 +27,11 @@ class UpdateLanguageExResponse extends GenericResponse {
 
 class DeleteLanguageExRequest {
   id: number;
+  token: string;
 }
 
 class DeleteLanguageExResponse extends GenericResponse {
-  data: { id: number };
+  id: number;
 }
 
 class ReadLanguageExResponse extends GenericResponse {
@@ -141,10 +142,11 @@ export class LanguagesEx {
   handleDelete = async id => {
     const result = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('language_ex/delete', {
       id,
+      token: globals.globalStore.state.token,
     });
     if (result.error === ErrorType.NoError) {
-      this.success = `Row with id ${result.data.id} deleted successfully!`;
-      this.languagesEx = this.languagesEx.filter(globalRole => globalRole.id !== result.data.id);
+      this.success = `Row with id ${result.id} deleted successfully!`;
+      this.languagesEx = this.languagesEx.filter(globalRole => globalRole.id !== result.id);
     } else {
       this.error = result.error;
     }
@@ -208,7 +210,7 @@ export class LanguagesEx {
             <thead>
               {/* this will be fixed -> on a shared component, this will be passed in and use Map to preserve order */}
               <tr>
-                <th>buttons</th>
+                <th>*</th>
                 <th>id </th>
 
                 <th>lang_name </th>
@@ -251,7 +253,11 @@ export class LanguagesEx {
             <tbody>
               {this.languagesEx.map(languageEx => (
                 <tr>
-                  <button onClick={() => this.handleDelete(languageEx.id)}>Delete</button>
+                  <div class="button-parent">
+                    <button class="delete-button" onClick={() => this.handleDelete(languageEx.id)}>
+                      Delete
+                    </button>
+                  </div>
                   <td>{languageEx.id}</td>
                   {this.getEditableCell('lang_name', languageEx)}
                   {this.getEditableCell('lang_code', languageEx)}

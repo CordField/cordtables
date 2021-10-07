@@ -192,7 +192,8 @@ class Utility(
                     ")\n" +
                     " and a.table_name::text = ? \n" +
                     " and a.access_level = 'Write' \n" +
-                    " and a.column_name in (\n"
+                    " and a.column_name in ( ''\n"
+//            need to add a empty column above so that when no update is sent, the query doesn't give an error for an empty subquery in check
             columnNames.forEach { columnName ->
                 updateSql = "$updateSql '$columnName',"
             }
@@ -214,6 +215,39 @@ class Utility(
         }
         return userHasUpdatePermission;
 
+    }
+
+    fun getReadableTables(token: String):MutableList<String>{
+        println("token $token")
+        val tableNames = mutableListOf<String>()
+        if(isAdmin(token)){
+            this.ds.connection.use{conn->
+                val statement = conn.prepareCall("select table_schema || '.' || table_name as table_name " +
+                        "from information_schema.tables where table_schema in ('public', 'sc', 'sil') ")
+                val result = statement.executeQuery()
+                while(result.next()){
+                    tableNames.add(result.getString("table_name").replace('_','-'))
+                }
+            }
+            return tableNames;
+        }
+
+        this.ds.connection.use{ conn ->
+            val statement = conn.prepareCall("select distinct table_name \n" +
+                    "from public.global_role_column_grants as a \n" +
+                    "inner join public.global_role_memberships as b \n" +
+                    "on a.global_role = b.global_role \n" +
+                    "inner join public.tokens as c \n" +
+                    "on b.person = c.person \n" +
+                    "where c.token = ?")
+            statement.setString(1,token)
+            val result = statement.executeQuery()
+            while(result.next()){
+                tableNames.add(result.getString("table_name").replace('_','-'))
+            }
+            println("accessible tables: $tableNames")
+        }
+        return tableNames;
     }
 
 }

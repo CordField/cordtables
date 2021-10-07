@@ -25,7 +25,7 @@ export class TableRoot {
             <group-memberships></group-memberships>
           </div>
         )}
-        {this.match.params.table === 'languages-ex' && <languages-ex></languages-ex>}
+        {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
       </Host>
     );
   }
