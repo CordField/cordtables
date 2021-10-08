@@ -240,6 +240,7 @@ create type sc.egids_scale as enum (
 );
 
 create type sc.least_reached_progress_scale as enum (
+    '0',
 		'1',
 		'2',
 		'3',
@@ -318,7 +319,7 @@ create table if not exists sc.languages_ex(
 	id serial primary key,
 
 	language_name varchar(32),
-	iso varchar(3),
+	iso varchar(4),
 	prioritization decimal generated always as (
 	  population_value * 2 +
 	  egids_value * 3 +
@@ -382,7 +383,7 @@ create table if not exists sc.languages_ex(
 	begin_work_geo_challenges_description text,
 	begin_work_geo_challenges_source text,
 
-  begin_work_rel_pol_obstacles_scale sc.begin_work_rel_pol_obstacles_scale,
+  begin_work_rel_pol_obstacles_level sc.begin_work_rel_pol_obstacles_scale,
 	begin_work_rel_pol_obstacles_value decimal, -- calculated from _level
   begin_work_rel_pol_obstacles_description text,
   begin_work_rel_pol_obstacles_source text,

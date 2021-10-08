@@ -5,7 +5,7 @@ create table sc.languages_ex_history (
 	id int,
 
 	language_name varchar(32),
-	iso varchar(3),
+	iso varchar(4),
 	prioritization int,
 	progress_bible bool,
 
@@ -56,7 +56,7 @@ create table sc.languages_ex_history (
 	begin_work_geo_challenges_description text,
 	begin_work_geo_challenges_source text,
 
-  begin_work_rel_pol_obstacles_scale sc.begin_work_rel_pol_obstacles_scale,
+  begin_work_rel_pol_obstacles_level sc.begin_work_rel_pol_obstacles_scale,
 	begin_work_rel_pol_obstacles_value decimal,
   begin_work_rel_pol_obstacles_description text,
   begin_work_rel_pol_obstacles_source text,
@@ -119,7 +119,7 @@ create table sc.languages_ex_history (
             begin_work_geo_challenges_value ,
             begin_work_geo_challenges_description ,
             begin_work_geo_challenges_source ,
-            begin_work_rel_pol_obstacles_scale ,
+            begin_work_rel_pol_obstacles_level ,
             begin_work_rel_pol_obstacles_value ,
             begin_work_rel_pol_obstacles_description ,
             begin_work_rel_pol_obstacles_source ,
@@ -174,7 +174,7 @@ create table sc.languages_ex_history (
             new.begin_work_geo_challenges_value ,
             new.begin_work_geo_challenges_description ,
             new.begin_work_geo_challenges_source ,
-            new.begin_work_rel_pol_obstacles_scale ,
+            new.begin_work_rel_pol_obstacles_level ,
             new.begin_work_rel_pol_obstacles_value ,
             new.begin_work_rel_pol_obstacles_description ,
             new.begin_work_rel_pol_obstacles_source ,
