@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.user
+package com.seedcompany.cordtables.components.tables.globalroletablepermissions
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -29,8 +29,8 @@ data class ReadPermissionsResponse(
     // val token: String? = null,
 )
 
-@CrossOrigin(origins = ["http://localhostt:3333"])
-@Controller()
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@Controller("ReadTablePermissions")
 class Read (
     @Autowired
     val util: Utility,

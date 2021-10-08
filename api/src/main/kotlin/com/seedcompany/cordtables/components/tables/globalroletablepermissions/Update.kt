@@ -1,8 +1,7 @@
-package com.seedcompany.cordtables.components.tables.globalroles
+package com.seedcompany.cordtables.components.tables.globalroletablepermissions
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.user.GlobalRolesTablePermissions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -22,16 +21,20 @@ data class UpdatePermissionsResponse(
     val globalRolesTablePermissions: GlobalRolesTablePermissions?
 )
 
-data class UpdatePermissionsRequest(
+data class UpdatablePermissionsFields(
     val tableName: String,
     val globalRole: Int,
     val tablePermissions: String,
+)
+
+data class UpdatePermissionsRequest(
+    val updatedFields: UpdatablePermissionsFields,
     val email: String,
     val id: Int
 )
 
-@CrossOrigin(origins = ["http://localhost:3333"])
-@Controller()
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@Controller("UpdateTablePermissions")
 class Update(
     @Autowired
     val util: Utility,
@@ -39,12 +42,12 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("globalrolestablepermissions/updatte")
+    @PostMapping("globalrolestablepermissions/update")
     @ResponseBody
     fun UpdateHandler(@RequestBody req: UpdatePermissionsRequest): UpdatePermissionsResponse {
 
         println("req: $req")
-        var updatedGRTPermissions: GlobalRolesTablePermissions? = null
+        var updatedPermission: GlobalRolesTablePermissions? = null
         var userId = 0
 
         this.ds.connection.use { conn ->
@@ -69,18 +72,48 @@ class Update(
                 for (prop in UpdatePermissionsRequest::class.memberProperties) {
                     val propValue = prop.get(req)
                     println("$propValue $(prop.name) = ?,")
+                    if (propValue != null) {
+                        updateSQL = "$updateSQL ${prop.name} = ?,"
+                        reqValues.add(propValue)
+                    }
 
                 }
+                updateSQL = "$updateSQL modified_by = ?, modified_at = ? where id = ? returning *"
+                println(updateSQL)
+                val updateStatement = conn.prepareCall(
+                    updateSQL
+                )
+                var counter = 1
+                reqValues.forEach { value ->
+                    when (value) {
+                        is String -> updateStatement.setString(counter, value)
+                        is Int -> updateStatement.setInt(counter, value)
+                    }
+                    counter += 1
+                }
+                updateStatement.setTimestamp(counter+1, Timestamp(Instant.now().toEpochMilli()))
+                updateStatement.setInt(counter, userId)
+                updateStatement.setInt(counter+2, req.id)
+                val updateStatementResult = updateStatement.executeQuery()
 
-            }
-            catch (e:SQLException){
+                if (updateStatementResult.next()) {
+                    val id = updateStatementResult.getInt("id")
+                    val tableName = updateStatementResult.getString("table_name")
+                    val createdBy = updateStatementResult.getInt("created_by")
+                    val createdAt = updateStatementResult.getString("created_at")
+                    val modifiedAt = updateStatementResult.getString("modified_at")
+                    val modifiedBy = updateStatementResult.getInt("modified_by")
+                    val tablePermissions = updateStatementResult.getString("table_permissions")
+                    val globalRole = updateStatementResult.getInt("global_role")
+                    updatedPermission = GlobalRolesTablePermissions(id, tableName, createdBy, createdAt, modifiedBy, modifiedAt, tablePermissions, globalRole)
+                    println("updated row's id: $id")
+                }
+            } catch (e:SQLException){
                 println(e.message)
-                errorType = ErrorType.SQLInsertError
-                return CreateGRTPermissionsResponse(errorType, null)
-
+                return UpdatePermissionsResponse(ErrorType.SQLUpdateError, null)
             }
         }
-        return CreateGRTPermissionsResponse(ErrorType.NoError, newGRTPermissions)
+        return UpdatePermissionsResponse(ErrorType.NoError, updatedPermission)
 
     }
 }

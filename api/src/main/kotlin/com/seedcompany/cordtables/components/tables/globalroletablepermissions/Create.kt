@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.user
+package com.seedcompany.cordtables.components.tables.globalroletablepermissions
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -11,19 +11,24 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
+
+data class InsertableGRTPFields(
+    val tableName: String,
+    val globalRole: Int,
+    val tablePermissions: String,
+)
+
 data class CreateGRTPermissionsResponse(
     val error: ErrorType,
     val data: GlobalRolesTablePermissions?
 )
 data class CreateGRTPermissionsRequest(
-    val tableName: String,
-    val globalRole: Int,
-    val tablePermissions: String,
+    val insertedFields: InsertableGRTPFields,
     val email: String
 )
 
-@CrossOrigin(origins = ["http://localhost:3333"])
-@Controller()
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@Controller("CreateTablePermissions")
 class Create(
     @Autowired
     val util: Utility,
@@ -62,9 +67,9 @@ class Create(
                 val insertStatement = conn.prepareCall(
                     "insert into public.global_roles_table_permissions(table_name, table_permissions, global_role, created_by, modified_by) values(?,?,?,?, ?) returning *"
                 )
-                insertStatement.setString(1, req.tableName)
-                insertStatement.setString(2, req.tablePermissions)
-                insertStatement.setInt(3, req.globalRole.toInt())
+                insertStatement.setString(1, req.insertedFields.tableName)
+                insertStatement.setString(2, req.insertedFields.tablePermissions)
+                insertStatement.setInt(3, req.insertedFields.globalRole)
                 insertStatement.setInt(4, userId)
                 insertStatement.setInt(5, userId)
 
