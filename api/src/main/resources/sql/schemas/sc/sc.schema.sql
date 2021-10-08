@@ -329,48 +329,48 @@ create table if not exists sc.languages_ex(
 	population_value int, -- calculated from first_language_population
 
 	egids_level sc.egids_scale,
-	egids_value int, -- calculated from egids_level
+	egids_value decimal, -- calculated from egids_level
 
 	least_reached_progress_jps_level sc.least_reached_progress_scale,
-	least_reached_value int, -- calculated from least_reached_progress_jps_scale
+	least_reached_value decimal, -- calculated from least_reached_progress_jps_scale
 
   partner_interest_level sc.partner_interest_scale,
-	partner_interest_value int,
+	partner_interest_value decimal,
 	partner_interest_description text,
 	partner_interest_source text,
 
   multiple_languages_leverage_linguistic_level sc.multiple_languages_leverage_linguistic_scale,
-	multiple_languages_leverage_linguistic_value int,
+	multiple_languages_leverage_linguistic_value decimal,
 	multiple_languages_leverage_linguistic_description text,
 	multiple_languages_leverage_linguistic_source text,
 
   multiple_languages_leverage_joint_training_level sc.multiple_languages_leverage_joint_training_scale,
-	multiple_languages_leverage_joint_training_value int,
+	multiple_languages_leverage_joint_training_value decimal,
   multiple_languages_leverage_joint_training_description text,
   multiple_languages_leverage_joint_training_source text,
 
   language_community_interest_in_language_development_level sc.language_community_interest_in_language_development_scale,
-	language_community_interest_in_language_development_value int,
+	language_community_interest_in_language_development_value decimal,
 	language_community_interest_in_language_development_description text,
 	language_community_interest_in_language_development_source text,
 
   language_community_interest_in_scripture_translation_level sc.language_community_interest_in_scripture_translation_scale,
-	language_community_interest_in_scripture_translation_value int,
+	language_community_interest_in_scripture_translation_value decimal,
 	language_community_interest_in_scripture_translation_description text,
 	language_community_interest_in_scripture_translation_source text,
 
   access_to_scripture_in_lwc_level sc.access_to_scripture_in_lwc_scale,
-	access_to_scripture_in_lwc_value int,
+	access_to_scripture_in_lwc_value decimal,
 	access_to_scripture_in_lwc_description text,
 	access_to_scripture_in_lwc_source text,
 
   access_to_scripture_geographical_challenges_level sc.access_to_scripture_geographical_challenges_scale,
-	access_to_begin_work_geographical_challenges_value int,
+	access_to_begin_work_geographical_challenges_value decimal,
 	access_to_begin_work_geographical_challenges_description text,
 	access_to_begin_work_geographical_challenges_source text,
 
   access_to_begin_work_religious_and_political_obstacles_scale sc.access_to_begin_work_religious_and_political_obstacles_scale,
-	access_to_begin_work_religious_and_political_obstacles_value int,
+	access_to_begin_work_religious_and_political_obstacles_value decimal,
   access_to_begin_work_religious_and_political_obstacles_description text,
   access_to_begin_work_religious_and_political_obstacles_source text,
 
