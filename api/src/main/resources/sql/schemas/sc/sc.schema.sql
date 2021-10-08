@@ -247,11 +247,71 @@ create type sc.least_reached_progress_scale as enum (
 		'5'
 );
 
-create type sc.partner_interest_options as enum (
+create type sc.partner_interest_scale as enum (
 		'No Partner Interest',
 		'Some',
 		'Significant',
 		'Considerable'
+);
+
+create type sc.multiple_languages_leverage_linguistic_scale as enum (
+		'None',
+		'Some',
+		'Significant',
+		'Considerable',
+		'Large',
+		'Vast'
+);
+
+create type sc.multiple_languages_leverage_joint_training_scale as enum (
+		'None',
+		'Some',
+		'Significant',
+		'Considerable',
+		'Large',
+		'Vast'
+);
+
+create type sc.language_community_interest_in_language_development_scale as enum (
+		'No Interest',
+		'Some',
+		'Expressed Need',
+		'Significant',
+		'Considerable'
+);
+
+create type sc.language_community_interest_in_scripture_translation_scale as enum (
+		'No Interest',
+		'Some',
+		'Expressed Need',
+		'Significant',
+		'Considerable'
+);
+
+create type sc.access_to_scripture_in_lwc_scale as enum (
+		'Full Access',
+		'Vast Majority',
+		'Large Majority',
+		'Majority',
+		'Significant',
+		'Some',
+		'Few'
+);
+
+create type sc.access_to_scripture_geographical_challenges_scale as enum (
+		'None',
+		'Very Difficult',
+		'Difficult',
+		'Moderate',
+		'Easy'
+);
+
+create type sc.access_to_begin_work_religious_and_political_obstacles_scale as enum (
+		'None',
+		'Very Difficult',
+		'Difficult',
+		'Moderate',
+		'Easy'
 );
 
 create table if not exists sc.languages_ex(
@@ -271,37 +331,45 @@ create table if not exists sc.languages_ex(
 	egids_level sc.egids_scale,
 	egids_value int, -- calculated from egids_level
 
-	least_reached_progress_jps_scale sc.least_reached_progress_scale,
+	least_reached_progress_jps_level sc.least_reached_progress_scale,
 	least_reached_value int, -- calculated from least_reached_progress_jps_scale
 
+  partner_interest_level sc.partner_interest_scale,
 	partner_interest_value int,
 	partner_interest_description text,
 	partner_interest_source text,
 
-	multiple_language_leverage_linguistic_value int,
-	multiple_language_leverage_linguistic_description text,
-	multiple_language_leverage_linguistic_source text,
+  multiple_languages_leverage_linguistic_level sc.multiple_languages_leverage_linguistic_scale,
+	multiple_languages_leverage_linguistic_value int,
+	multiple_languages_leverage_linguistic_description text,
+	multiple_languages_leverage_linguistic_source text,
 
-	multiple_language_leverage_joint_training_value int,
-  multiple_language_leverage_joint_training_description text,
-  multiple_language_leverage_joint_training_source text,
+  multiple_languages_leverage_joint_training_level sc.multiple_languages_leverage_joint_training_scale,
+	multiple_languages_leverage_joint_training_value int,
+  multiple_languages_leverage_joint_training_description text,
+  multiple_languages_leverage_joint_training_source text,
 
+  language_community_interest_in_language_development_level sc.language_community_interest_in_language_development_scale,
 	language_community_interest_in_language_development_value int,
 	language_community_interest_in_language_development_description text,
 	language_community_interest_in_language_development_source text,
 
+  language_community_interest_in_scripture_translation_level sc.language_community_interest_in_scripture_translation_scale,
 	language_community_interest_in_scripture_translation_value int,
 	language_community_interest_in_scripture_translation_description text,
 	language_community_interest_in_scripture_translation_source text,
 
+  access_to_scripture_in_lwc_level sc.access_to_scripture_in_lwc_scale,
 	access_to_scripture_in_lwc_value int,
 	access_to_scripture_in_lwc_description text,
 	access_to_scripture_in_lwc_source text,
 
+  access_to_scripture_geographical_challenges_level sc.access_to_scripture_geographical_challenges_scale,
 	access_to_begin_work_geographical_challenges_value int,
 	access_to_begin_work_geographical_challenges_description text,
 	access_to_begin_work_geographical_challenges_source text,
 
+  access_to_begin_work_religious_and_political_obstacles_scale sc.access_to_begin_work_religious_and_political_obstacles_scale,
 	access_to_begin_work_religious_and_political_obstacles_value int,
   access_to_begin_work_religious_and_political_obstacles_description text,
   access_to_begin_work_religious_and_political_obstacles_source text,
