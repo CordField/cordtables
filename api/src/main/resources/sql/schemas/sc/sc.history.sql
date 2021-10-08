@@ -6,7 +6,7 @@ create table sc.languages_ex_history (
 
 	language_name varchar(32),
 	iso varchar(4),
-	prioritization int,
+	prioritization decimal,
 	progress_bible bool,
 
 	island varchar(32),
