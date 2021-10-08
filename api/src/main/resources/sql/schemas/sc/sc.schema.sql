@@ -341,7 +341,24 @@ create table if not exists sc.languages_ex(
 	population_value decimal, -- calculated from first_language_population
 
 	egids_level sc.egids_scale,
-	egids_value decimal, -- calculated from _level
+	egids_value decimal, 
+	-- generated always as (
+		-- case 
+        --     when egids_level = '0' then 1.0 
+		--     when egids_level = '1' then 1.0
+		--     when egids_level = '2' then 1.0
+		--     when egids_level = '3' then 1.0
+		--     when egids_level = '4' then 0.9
+		--     when egids_level = '5' then 0.8
+		--     when egids_level = '6a' then 0.6
+		--     when egids_level = '6b' then 0.4
+		--     when egids_level = '7' then 0.3
+		--     when egids_level = '8a' then 0.2
+		--     when egids_level = '8b' then 0.1
+		--     when egids_level = '9' then 0.0
+		--     when egids_level = '10' then 0.0 
+		-- end as egids_value
+	-- ) stored,  -- calculated from _level
 
 	least_reached_progress_jps_level sc.least_reached_progress_scale,
 	least_reached_value decimal, -- calculated from _level
