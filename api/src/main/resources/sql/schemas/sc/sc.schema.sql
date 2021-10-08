@@ -326,7 +326,7 @@ create table if not exists sc.languages_ex(
 	province varchar(32),
 
 	first_language_population int NULL,
-	population_value int, -- calculated from first_language_population
+	population_value decimal, -- calculated from first_language_population
 
 	egids_level sc.egids_scale,
 	egids_value decimal, -- calculated from egids_level
