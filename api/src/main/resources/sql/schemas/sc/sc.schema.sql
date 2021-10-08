@@ -272,7 +272,7 @@ create type sc.multiple_languages_leverage_joint_training_scale as enum (
 		'Vast'
 );
 
-create type sc.language_community_interest_in_language_development_scale as enum (
+create type sc.lang_comm_int_in_language_development_scale as enum (
 		'No Interest',
 		'Some',
 		'Expressed Need',
@@ -280,7 +280,7 @@ create type sc.language_community_interest_in_language_development_scale as enum
 		'Considerable'
 );
 
-create type sc.language_community_interest_in_scripture_translation_scale as enum (
+create type sc.lang_comm_int_in_scripture_translation_scale as enum (
 		'No Interest',
 		'Some',
 		'Expressed Need',
@@ -298,7 +298,7 @@ create type sc.access_to_scripture_in_lwc_scale as enum (
 		'Few'
 );
 
-create type sc.access_to_scripture_geographical_challenges_scale as enum (
+create type sc.begin_work_geo_challenges_scale as enum (
 		'None',
 		'Very Difficult',
 		'Difficult',
@@ -306,7 +306,7 @@ create type sc.access_to_scripture_geographical_challenges_scale as enum (
 		'Easy'
 );
 
-create type sc.access_to_begin_work_religious_and_political_obstacles_scale as enum (
+create type sc.begin_work_rel_pol_obstacles_scale as enum (
 		'None',
 		'Very Difficult',
 		'Difficult',
@@ -349,30 +349,30 @@ create table if not exists sc.languages_ex(
   multiple_languages_leverage_joint_training_description text,
   multiple_languages_leverage_joint_training_source text,
 
-  language_community_interest_in_language_development_level sc.language_community_interest_in_language_development_scale,
-	language_community_interest_in_language_development_value decimal,
-	language_community_interest_in_language_development_description text,
-	language_community_interest_in_language_development_source text,
+  lang_comm_int_in_language_development_level sc.lang_comm_int_in_language_development_scale,
+	lang_comm_int_in_language_development_value decimal,
+	lang_comm_int_in_language_development_description text,
+	lang_comm_int_in_language_development_source text,
 
-  language_community_interest_in_scripture_translation_level sc.language_community_interest_in_scripture_translation_scale,
-	language_community_interest_in_scripture_translation_value decimal,
-	language_community_interest_in_scripture_translation_description text,
-	language_community_interest_in_scripture_translation_source text,
+  lang_comm_int_in_scripture_translation_level sc.lang_comm_int_in_scripture_translation_scale,
+	lang_comm_int_in_scripture_translation_value decimal,
+	lang_comm_int_in_scripture_translation_description text,
+	lang_comm_int_in_scripture_translation_source text,
 
   access_to_scripture_in_lwc_level sc.access_to_scripture_in_lwc_scale,
 	access_to_scripture_in_lwc_value decimal,
 	access_to_scripture_in_lwc_description text,
 	access_to_scripture_in_lwc_source text,
 
-  access_to_scripture_geographical_challenges_level sc.access_to_scripture_geographical_challenges_scale,
-	access_to_begin_work_geographical_challenges_value decimal,
-	access_to_begin_work_geographical_challenges_description text,
-	access_to_begin_work_geographical_challenges_source text,
+  begin_work_geo_challenges_level sc.begin_work_geo_challenges_scale,
+	begin_work_geo_challenges_value decimal,
+	begin_work_geo_challenges_description text,
+	begin_work_geo_challenges_source text,
 
-  access_to_begin_work_religious_and_political_obstacles_scale sc.access_to_begin_work_religious_and_political_obstacles_scale,
-	access_to_begin_work_religious_and_political_obstacles_value decimal,
-  access_to_begin_work_religious_and_political_obstacles_description text,
-  access_to_begin_work_religious_and_political_obstacles_source text,
+  begin_work_rel_pol_obstacles_scale sc.begin_work_rel_pol_obstacles_scale,
+	begin_work_rel_pol_obstacles_value decimal,
+  begin_work_rel_pol_obstacles_description text,
+  begin_work_rel_pol_obstacles_source text,
 
 	suggested_strategies text,
 	comments text,

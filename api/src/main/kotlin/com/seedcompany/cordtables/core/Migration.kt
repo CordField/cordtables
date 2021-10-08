@@ -52,8 +52,7 @@ data class MasterRow(
     val comments: String,
 )
 
-data class LanguageExRow (
-    val id: String? = null,
+data class LanguageExRow(
     val language_name: String? = null,
     val iso: String? = null,
     val prioritization: String? = null,
@@ -61,51 +60,51 @@ data class LanguageExRow (
     val island: String? = null,
     val province: String? = null,
     val first_language_population: String? = null,
-    val population_value: String? = null,
+    val population_value: Float? = null,
     val egids_level: String? = null,
-    val egids_value: String? = null,
+    val egids_value: Float? = null,
     val least_reached_progress_jps_level: String? = null,
-    val least_reached_value: String? = null,
+    val least_reached_value: Float? = null,
     val partner_interest_level: String? = null,
-    val partner_interest_value: String? = null,
+    val partner_interest_value: Float? = null,
     val partner_interest_description: String? = null,
     val partner_interest_source: String? = null,
     val multiple_languages_leverage_linguistic_level: String? = null,
-    val multiple_languages_leverage_linguistic_value: String? = null,
+    val multiple_languages_leverage_linguistic_value: Float? = null,
     val multiple_languages_leverage_linguistic_description: String? = null,
     val multiple_languages_leverage_linguistic_source: String? = null,
     val multiple_languages_leverage_joint_training_level: String? = null,
-    val multiple_languages_leverage_joint_training_value: String? = null,
+    val multiple_languages_leverage_joint_training_value: Float? = null,
     val multiple_languages_leverage_joint_training_description: String? = null,
     val multiple_languages_leverage_joint_training_source: String? = null,
-    val language_community_interest_in_language_development_level: String? = null,
-    val language_community_interest_in_language_development_value: String? = null,
-    val language_community_interest_in_language_development_description: String? = null,
-    val language_community_interest_in_language_development_source: String? = null,
-    val language_community_interest_in_scripture_translation_level: String? = null,
-    val language_community_interest_in_scripture_translation_value: String? = null,
-    val language_community_interest_in_scripture_translation_description: String? = null,
-    val language_community_interest_in_scripture_translation_source: String? = null,
+    val lang_comm_int_in_language_development_level: String? = null,
+    val lang_comm_int_in_language_development_value: Float? = null,
+    val lang_comm_int_in_language_development_description: String? = null,
+    val lang_comm_int_in_language_development_source: String? = null,
+    val lang_comm_int_in_scripture_translation_level: String? = null,
+    val lang_comm_int_in_scripture_translation_value: Float? = null,
+    val lang_comm_int_in_scripture_translation_description: String? = null,
+    val lang_comm_int_in_scripture_translation_source: String? = null,
     val access_to_scripture_in_lwc_level: String? = null,
-    val access_to_scripture_in_lwc_value: String? = null,
+    val access_to_scripture_in_lwc_value: Float? = null,
     val access_to_scripture_in_lwc_description: String? = null,
     val access_to_scripture_in_lwc_source: String? = null,
-    val access_to_scripture_geographical_challenges_level: String? = null,
-    val access_to_begin_work_geographical_challenges_value: String? = null,
-    val access_to_begin_work_geographical_challenges_description: String? = null,
-    val access_to_begin_work_geographical_challenges_source: String? = null,
-    val access_to_begin_work_religious_and_political_obstacles_scale: String? = null,
-    val access_to_begin_work_religious_and_political_obstacles_value: String? = null,
-    val access_to_begin_work_religious_and_political_obstacles_description: String? = null,
-    val access_to_begin_work_religious_and_political_obstacles_source: String? = null,
+    val begin_work_geo_challenges_level: String? = null,
+    val begin_work_geo_challenges_value: Float? = null,
+    val begin_work_geo_challenges_description: String? = null,
+    val begin_work_geo_challenges_source: String? = null,
+    val begin_work_rel_pol_obstacles_scale: String? = null,
+    val begin_work_rel_pol_obstacles_value: Float? = null,
+    val begin_work_rel_pol_obstacles_description: String? = null,
+    val begin_work_rel_pol_obstacles_source: String? = null,
     val suggested_strategies: String? = null,
     val comments: String? = null,
     val created_at: String? = null,
-    val created_by: String? = null,
+    val created_by: Int = 1,
     val modified_at: String? = null,
-    val modified_by: String? = null,
+    val modified_by: Int = 1,
     val owning_person: String? = null,
-    val owning_group: String? = null,
+    val owning_group: Int = 1,
 )
 
 @Component
@@ -121,20 +120,35 @@ class Migration(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    init {
-
-        val items: List<MasterRow> = readCsvFile("./src/main/resources/local/master1.csv")
-
-        var processed: List<LanguageExRow> = items.map {
-            LanguageExRow(
-                language_name = it.language_name.substringBefore('[').trim()
-            )
-        }
-
-        writeCsvFile(processed, "./src/main/resources/local/language_ex.csv")
-
-
-    }
+//    init {
+//
+//        val items: List<MasterRow> = readCsvFile("./src/main/resources/local/master1.csv")
+//
+//        items.forEach {
+//
+//            val language_name = it.language_name.substringBefore('[').trim()
+//
+//            jdbcTemplate.update(
+//                """
+//                insert into sc.languages_ex(
+//                    language_name,
+//                    created_by,
+//                    modified_by,
+//                    owning_person,
+//                    owning_group
+//                )
+//                values (
+//                    ?,
+//                    1,
+//                    1,
+//                    1,
+//                    1
+//                );
+//            """.trimIndent(),
+//                language_name,
+//            )
+//        }
+//    }
 
 }
 
