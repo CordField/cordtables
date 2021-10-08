@@ -5,13 +5,10 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.io.ClassPathResource
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
-import org.springframework.util.FileCopyUtils
 import java.io.FileReader
 import java.io.FileWriter
-import java.io.InputStreamReader
 import javax.sql.DataSource
 
 data class MasterRow(
@@ -55,6 +52,10 @@ data class MasterRow(
     val c38: String,
 )
 
+data class LanguageExRow (
+    val language_name: String,
+)
+
 @Component
 class Migration(
     @Autowired
@@ -72,7 +73,15 @@ class Migration(
 
         val items: List<MasterRow> = readCsvFile("./src/main/resources/local/master1.csv")
 
-        println(items.get(1))
+        var processed: List<LanguageExRow> = items.map {
+            LanguageExRow(
+                language_name = it.c1
+            )
+        }
+
+        writeCsvFile(processed, "./src/main/resources/local/language_ex.csv")
+
+
     }
 
 }
