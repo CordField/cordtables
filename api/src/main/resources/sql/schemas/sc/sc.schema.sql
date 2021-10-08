@@ -319,7 +319,19 @@ create table if not exists sc.languages_ex(
 
 	language_name varchar(32),
 	iso varchar(3),
-	prioritization int,
+	prioritization decimal generated always as (
+	  population_value * 2 +
+	  egids_value * 3 +
+	  least_reached_value * 2 +
+	  partner_interest_value * 2 +
+	  multiple_languages_leverage_linguistic_value * 1 +
+	  multiple_languages_leverage_joint_training_value * 1 +
+	  lang_comm_int_in_language_development_value * 1 +
+	  lang_comm_int_in_scripture_translation_value * 1 +
+	  access_to_scripture_in_lwc_value * 1 +
+	  begin_work_geo_challenges_value * 0.5 +
+	  begin_work_rel_pol_obstacles_value * 0.5
+	) stored,
 	progress_bible bool,
 
 	island varchar(32),
@@ -329,48 +341,48 @@ create table if not exists sc.languages_ex(
 	population_value decimal, -- calculated from first_language_population
 
 	egids_level sc.egids_scale,
-	egids_value decimal, -- calculated from egids_level
+	egids_value decimal, -- calculated from _level
 
 	least_reached_progress_jps_level sc.least_reached_progress_scale,
-	least_reached_value decimal, -- calculated from least_reached_progress_jps_scale
+	least_reached_value decimal, -- calculated from _level
 
   partner_interest_level sc.partner_interest_scale,
-	partner_interest_value decimal,
+	partner_interest_value decimal, -- calculated from _level
 	partner_interest_description text,
 	partner_interest_source text,
 
   multiple_languages_leverage_linguistic_level sc.multiple_languages_leverage_linguistic_scale,
-	multiple_languages_leverage_linguistic_value decimal,
+	multiple_languages_leverage_linguistic_value decimal, -- calculated from _level
 	multiple_languages_leverage_linguistic_description text,
 	multiple_languages_leverage_linguistic_source text,
 
   multiple_languages_leverage_joint_training_level sc.multiple_languages_leverage_joint_training_scale,
-	multiple_languages_leverage_joint_training_value decimal,
+	multiple_languages_leverage_joint_training_value decimal, -- calculated from _level
   multiple_languages_leverage_joint_training_description text,
   multiple_languages_leverage_joint_training_source text,
 
   lang_comm_int_in_language_development_level sc.lang_comm_int_in_language_development_scale,
-	lang_comm_int_in_language_development_value decimal,
+	lang_comm_int_in_language_development_value decimal, -- calculated from _level
 	lang_comm_int_in_language_development_description text,
 	lang_comm_int_in_language_development_source text,
 
   lang_comm_int_in_scripture_translation_level sc.lang_comm_int_in_scripture_translation_scale,
-	lang_comm_int_in_scripture_translation_value decimal,
+	lang_comm_int_in_scripture_translation_value decimal, -- calculated from _level
 	lang_comm_int_in_scripture_translation_description text,
 	lang_comm_int_in_scripture_translation_source text,
 
   access_to_scripture_in_lwc_level sc.access_to_scripture_in_lwc_scale,
-	access_to_scripture_in_lwc_value decimal,
+	access_to_scripture_in_lwc_value decimal, -- calculated from _level
 	access_to_scripture_in_lwc_description text,
 	access_to_scripture_in_lwc_source text,
 
   begin_work_geo_challenges_level sc.begin_work_geo_challenges_scale,
-	begin_work_geo_challenges_value decimal,
+	begin_work_geo_challenges_value decimal, -- calculated from _level
 	begin_work_geo_challenges_description text,
 	begin_work_geo_challenges_source text,
 
   begin_work_rel_pol_obstacles_scale sc.begin_work_rel_pol_obstacles_scale,
-	begin_work_rel_pol_obstacles_value decimal,
+	begin_work_rel_pol_obstacles_value decimal, -- calculated from _level
   begin_work_rel_pol_obstacles_description text,
   begin_work_rel_pol_obstacles_source text,
 
