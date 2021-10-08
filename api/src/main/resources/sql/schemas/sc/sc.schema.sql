@@ -334,6 +334,7 @@ create table if not exists sc.languages_ex(
 	) stored,
 	progress_bible bool,
 
+  location_long text,
 	island varchar(32),
 	province varchar(32),
 
