@@ -19,6 +19,8 @@ data class RegisterRequest(
 data class RegisterReturn(
     val error: ErrorType,
     val token: String? = null,
+    val readableTables: MutableList<String> = mutableListOf(),
+    val isAdmin: Boolean = false
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -45,7 +47,7 @@ class Register (
 
         val result = registerDB(req.email, pash, token)
 
-        return RegisterReturn(result, token)
+        return RegisterReturn(result, token, util.getReadableTables(token), util.isAdmin(token))
     }
 
     fun registerDB(email: String, pash: String, token: String): ErrorType{

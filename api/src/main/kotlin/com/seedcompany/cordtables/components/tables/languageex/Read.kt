@@ -145,43 +145,119 @@ class Read(
                 val listStatementResult = listStatement.executeQuery()
                 while (listStatementResult.next()) {
 
-                    val id = listStatementResult.getInt("id")
-                    val created_at = listStatementResult.getString("created_at")
+                    var id:Int? = listStatementResult.getInt("id")
+                    if (listStatementResult.wasNull()) id = null
 
-                    val created_by = listStatementResult.getInt("created_by")
-                    val modified_at = listStatementResult.getString("modified_at")
-                    val modified_by = listStatementResult.getInt("modified_by")
-                    val lang_name = listStatementResult.getString("lang_name")
-                    val lang_code = listStatementResult.getString("lang_code")
-                    val location = listStatementResult.getString("location")
-                    val first_lang_population = listStatementResult.getInt("first_lang_population")
-                    val population = listStatementResult.getInt("population")
-                    val egids_level = listStatementResult.getInt("egids_level")
-                    val egids_value = listStatementResult.getInt("egids_value")
-                    val least_reached_progress_jps_scale = listStatementResult.getInt("least_reached_progress_jps_scale")
-                    val least_reached_value = listStatementResult.getInt("least_reached_value")
-                    val partner_interest = listStatementResult.getInt("partner_interest")
-                    val partner_interest_description = listStatementResult.getString("partner_interest_description")
-                    val partner_interest_source = listStatementResult.getString("partner_interest_source")
-                    val multi_lang_leverage = listStatementResult.getInt("multi_lang_leverage")
-                    val multi_lang_leverage_description = listStatementResult.getString("multi_lang_leverage_description")
-                    val multi_lang_leverage_source = listStatementResult.getString("multi_lang_leverage_source")
-                    val community_interest = listStatementResult.getInt("community_interest")
-                    val community_interest_description = listStatementResult.getString("community_interest_description")
-                    val community_interest_source = listStatementResult.getString("community_interest_source")
-                    val community_interest_value = listStatementResult.getInt("community_interest_value")
-                    val community_interest_scripture_description = listStatementResult.getString("community_interest_scripture_description")
-                    val community_interest_scripture_source = listStatementResult.getString("community_interest_scripture_source")
-                    val lwc_scripture_access = listStatementResult.getInt("lwc_scripture_access")
-                    val lwc_scripture_description = listStatementResult.getString("lwc_scripture_description")
-                    val lwc_scripture_source = listStatementResult.getString("lwc_scripture_source")
-                    val access_to_begin = listStatementResult.getInt("access_to_begin")
-                    val access_to_begin_description = listStatementResult.getString("access_to_begin_description")
-                    val access_to_begin_source = listStatementResult.getString("access_to_begin_source")
-                    val suggested_strategies = listStatementResult.getString("suggested_strategies")
-                    val comments = listStatementResult.getString("comments")
-                    val prioritization = listStatementResult.getInt("prioritization")
-                    val progress_bible = listStatementResult.getInt("progress_bible")
+                    var created_at = listStatementResult.getString("created_at")
+                    if (listStatementResult.wasNull()) created_at = null
+
+                    var created_by:Int? = listStatementResult.getInt("created_by")
+                    if (listStatementResult.wasNull()) created_by = null
+
+                    var modified_at = listStatementResult.getString("modified_at")
+                    if (listStatementResult.wasNull()) modified_at = null
+
+                    var modified_by:Int? = listStatementResult.getInt("modified_by")
+                    if (listStatementResult.wasNull()) modified_by = null
+
+                    var lang_name = listStatementResult.getString("lang_name")
+                    if (listStatementResult.wasNull()) lang_name = null
+
+                    var lang_code = listStatementResult.getString("lang_code")
+                    if (listStatementResult.wasNull()) lang_code = null
+
+                    var location = listStatementResult.getString("location")
+                    if (listStatementResult.wasNull()) location = null
+
+                    var first_lang_population:Int? = listStatementResult.getInt("first_lang_population")
+                    if (listStatementResult.wasNull()) first_lang_population = null
+
+                    var population:Int? = listStatementResult.getInt("population")
+                    if (listStatementResult.wasNull()) population = null
+
+                    var egids_level:Int? = listStatementResult.getInt("egids_level")
+                    if (listStatementResult.wasNull()) egids_level = null
+
+                    var egids_value:Int? = listStatementResult.getInt("egids_value")
+                    if (listStatementResult.wasNull()) egids_value = null
+
+                    var least_reached_progress_jps_scale:Int? = listStatementResult.getInt("least_reached_progress_jps_scale")
+                    if (listStatementResult.wasNull()) least_reached_progress_jps_scale = null
+
+                    var least_reached_value:Int? = listStatementResult.getInt("least_reached_value")
+                    if (listStatementResult.wasNull()) least_reached_value = null
+
+                    var partner_interest:Int? = listStatementResult.getInt("partner_interest")
+                    if (listStatementResult.wasNull()) partner_interest = null
+
+                    var partner_interest_description = listStatementResult.getString("partner_interest_description")
+                    if (listStatementResult.wasNull()) partner_interest_description = null
+
+                    var partner_interest_source = listStatementResult.getString("partner_interest_source")
+                    if (listStatementResult.wasNull()) partner_interest_source = null
+
+                    var multi_lang_leverage:Int? = listStatementResult.getInt("multi_lang_leverage")
+                    if (listStatementResult.wasNull()) multi_lang_leverage = null
+
+                    var multi_lang_leverage_description = listStatementResult.getString("multi_lang_leverage_description")
+                    if (listStatementResult.wasNull()) multi_lang_leverage_description = null
+
+                    var multi_lang_leverage_source = listStatementResult.getString("multi_lang_leverage_source")
+                    if (listStatementResult.wasNull()) multi_lang_leverage_source = null
+
+
+                    var community_interest:Int? = listStatementResult.getInt("community_interest")
+                    if (listStatementResult.wasNull()) community_interest = null
+
+                    var community_interest_description = listStatementResult.getString("community_interest_description")
+                    if (listStatementResult.wasNull()) community_interest_description = null
+
+                    var community_interest_source = listStatementResult.getString("community_interest_source")
+                    if (listStatementResult.wasNull()) community_interest_source = null
+
+                    var community_interest_value:Int? = listStatementResult.getInt("community_interest_value")
+                    if (listStatementResult.wasNull()) community_interest_value = null
+
+                    var community_interest_scripture_description = listStatementResult.getString("community_interest_scripture_description")
+                    if (listStatementResult.wasNull()) community_interest_scripture_description = null
+
+                    var community_interest_scripture_source = listStatementResult.getString("community_interest_scripture_source")
+                    if (listStatementResult.wasNull()) community_interest_scripture_source = null
+
+                    var lwc_scripture_access:Int? = listStatementResult.getInt("lwc_scripture_access")
+                    if (listStatementResult.wasNull()) lwc_scripture_access = null
+
+                    var lwc_scripture_description = listStatementResult.getString("lwc_scripture_description")
+                    if (listStatementResult.wasNull()) lwc_scripture_description = null
+
+                    var lwc_scripture_source = listStatementResult.getString("lwc_scripture_source")
+                    if (listStatementResult.wasNull()) lwc_scripture_source = null
+
+                    var access_to_begin:Int? = listStatementResult.getInt("access_to_begin")
+                    if (listStatementResult.wasNull()) access_to_begin = null
+
+                    var access_to_begin_description = listStatementResult.getString("access_to_begin_description")
+                    if (listStatementResult.wasNull()) access_to_begin_description = null
+
+                    var access_to_begin_source = listStatementResult.getString("access_to_begin_source")
+                    if (listStatementResult.wasNull()) access_to_begin_source = null
+
+
+                    var suggested_strategies = listStatementResult.getString("suggested_strategies")
+                    if (listStatementResult.wasNull()) suggested_strategies = null
+
+
+                    var comments = listStatementResult.getString("comments")
+                    if (listStatementResult.wasNull()) comments = null
+
+
+                    var prioritization:Int? = listStatementResult.getInt("prioritization")
+                    if (listStatementResult.wasNull()) prioritization = null
+
+
+                    var progress_bible:Int?= listStatementResult.getInt("progress_bible")
+                    if (listStatementResult.wasNull()) progress_bible = null
+
                     data.add(LanguageEx(id, created_at, created_by, modified_at, modified_by,lang_name,lang_code,location,first_lang_population,population,
                         egids_level,egids_value,least_reached_progress_jps_scale,least_reached_value,partner_interest,partner_interest_description,partner_interest_source,
                         multi_lang_leverage,multi_lang_leverage_description,multi_lang_leverage_source,community_interest,community_interest_description,community_interest_scripture_source,community_interest_value,community_interest_scripture_description,community_interest_source,lwc_scripture_access,lwc_scripture_description,lwc_scripture_source,access_to_begin,access_to_begin_description,

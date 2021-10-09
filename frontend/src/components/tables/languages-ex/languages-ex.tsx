@@ -27,10 +27,11 @@ class UpdateLanguageExResponse extends GenericResponse {
 
 class DeleteLanguageExRequest {
   id: number;
+  token: string;
 }
 
 class DeleteLanguageExResponse extends GenericResponse {
-  data: { id: number };
+  id: number;
 }
 
 class ReadLanguageExResponse extends GenericResponse {
@@ -105,45 +106,47 @@ export class LanguagesEx {
   getEditableCell(columnName: string, languageEx: languageEx) {
     return (
       <td
-        contentEditable
-        onInput={event => this.updateFieldChange(event, columnName)}
-        // onKeyPress={this.disableNewlines}
-        // onPaste={this.pasteAsPlainText}
-        // onFocus={this.highlightAll}
+      // onKeyPress={this.disableNewlines}
+      // onPaste={this.pasteAsPlainText}
+      // onFocus={this.highlightAll}
       >
-        {languageEx[columnName]}
+        <cf-cell
+          key={columnName}
+          rowId={languageEx.id}
+          propKey={columnName}
+          value={languageEx[columnName]}
+          isEditable={!['id', 'modified_at', 'created_at', 'created_by', 'modified_by'].includes(columnName)}
+          updateFn={!['id', 'modified_at', 'created_at', 'created_by', 'modified_by'].includes(columnName) ? this.handleUpdate : null}
+        ></cf-cell>
       </td>
     );
   }
-  updateFieldChange(event, columnName) {
-    console.log(this.updatedFields[columnName], event.currentTarget.textContent);
-    this.updatedFields[columnName] = event.currentTarget.textContent;
-    // this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === id ? { ...languageEx, ...this.updatedFields } : languageEx));
-  }
-  handleUpdate = async id => {
-    console.log(this.updatedFields);
-    const result = await fetchAs<UpdateLanguageExRequest, UpdateLanguageExResponse>('language_ex/update', {
-      updatedFields: this.updatedFields,
+
+  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+    this.updatedFields[columnName] = value;
+    const updateResponse = await fetchAs<UpdateLanguageExRequest, UpdateLanguageExResponse>('language_ex/update', {
       token: globals.globalStore.state.token,
+      updatedFields: this.updatedFields,
       id,
     });
-    this.updatedFields = this.defaultFields;
-    if (result.error === ErrorType.NoError) {
-      this.languagesEx = this.languagesEx.map(languageEx => (languageEx.id === result.data.id ? result.data : languageEx));
-      this.success = `Row with id ${result.data.id} updated successfully!`;
+
+    if (updateResponse.error == ErrorType.NoError) {
+      const result = await fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('language_ex/read', { token: globals.globalStore.state.token });
+      this.languagesEx = result.data.sort((a, b) => a.id - b.id);
+      return true;
     } else {
-      console.error('Failed to update row');
-      this.error = result.error;
-      alert(result.error);
+      alert(updateResponse.error);
     }
   };
+
   handleDelete = async id => {
     const result = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('language_ex/delete', {
       id,
+      token: globals.globalStore.state.token,
     });
     if (result.error === ErrorType.NoError) {
-      this.success = `Row with id ${result.data.id} deleted successfully!`;
-      this.languagesEx = this.languagesEx.filter(globalRole => globalRole.id !== result.data.id);
+      this.success = `Row with id ${result.id} deleted successfully!`;
+      this.languagesEx = this.languagesEx.filter(globalRole => globalRole.id !== result.id);
     } else {
       this.error = result.error;
     }
@@ -207,7 +210,7 @@ export class LanguagesEx {
             <thead>
               {/* this will be fixed -> on a shared component, this will be passed in and use Map to preserve order */}
               <tr>
-                <th>buttons</th>
+                <th>*</th>
                 <th>id </th>
 
                 <th>lang_name </th>
@@ -250,11 +253,12 @@ export class LanguagesEx {
             <tbody>
               {this.languagesEx.map(languageEx => (
                 <tr>
-                  {/* can loop over these as well (using Map to preserve order) */}
-                  <button onClick={() => this.handleUpdate(languageEx.id)}>Update</button>
-                  <button onClick={() => this.handleDelete(languageEx.id)}>Delete</button>
+                  <div class="button-parent">
+                    <button class="delete-button" onClick={() => this.handleDelete(languageEx.id)}>
+                      Delete
+                    </button>
+                  </div>
                   <td>{languageEx.id}</td>
-
                   {this.getEditableCell('lang_name', languageEx)}
                   {this.getEditableCell('lang_code', languageEx)}
                   {this.getEditableCell('location', languageEx)}

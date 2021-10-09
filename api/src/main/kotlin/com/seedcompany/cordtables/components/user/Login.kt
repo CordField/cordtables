@@ -19,6 +19,8 @@ data class LoginRequest(
 data class LoginReturn(
     val error: ErrorType,
     val token: String? = null,
+    val readableTables: MutableList<String> = mutableListOf(),
+    val isAdmin: Boolean = false
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -61,10 +63,9 @@ class Login (
 
                 if (matches) {
                     token = util.createToken()
-                    errorType = loginDB(req.email, token!!)
-
+                   errorType = loginDB(req.email, token!!)
                     if (errorType === ErrorType.NoError) {
-                        response = LoginReturn(errorType, token)
+                        response = LoginReturn(errorType, token,util.getReadableTables(token!!), util.isAdmin(token!!))
                     } else {
                         println("login failed")
                     }

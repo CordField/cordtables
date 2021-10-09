@@ -11,6 +11,8 @@ class LoginRequest {
 
 class LoginResponse extends GenericResponse {
   token: string;
+  readableTables: string[];
+  isAdmin: string;
 }
 
 @Component({
@@ -44,6 +46,8 @@ export class CfLogin {
       globals.globalStore.state.token = result.token;
       globals.globalStore.state.email = this.email;
       globals.globalStore.state.isLoggedIn = true;
+      globals.globalStore.state.readableTables = result.readableTables;
+      globals.globalStore.state.isAdmin = result.isAdmin;
 
       this.history.push('/');
     } else {

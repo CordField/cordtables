@@ -5,6 +5,8 @@ export class Globals {
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
     token: localStorage.getItem('token'),
     email: localStorage.getItem('email'),
+    readableTables: JSON.parse(localStorage.getItem('readableTables')),
+    isAdmin: localStorage.getItem('isAdmin'),
     // globalRolesData: localStorage.getItem('globalRolesData'),
   });
 
@@ -17,6 +19,8 @@ export class Globals {
         this.globalStore.state.email = null;
         localStorage.setItem('isLoggedIn', 'false');
         localStorage.removeItem('email');
+        localStorage.removeItem('isAdmin');
+        localStorage.removeItem('readableTables');
       }
     });
 
@@ -35,13 +39,22 @@ export class Globals {
         localStorage.removeItem('token');
       }
     });
-    // this.globalStore.onChange('globalRolesData', newValue => {
-    //   if (newValue != null) {
-    //     localStorage.setItem('globalRolesData', newValue);
-    //   } else {
-    //     localStorage.removeItem('globalRolesData');
-    //   }
-    // });
+
+    this.globalStore.onChange('readableTables', newValue => {
+      if (newValue != null) {
+        localStorage.setItem('readableTables', JSON.stringify(newValue));
+      } else {
+        localStorage.removeItem('readableTables');
+      }
+    });
+
+    this.globalStore.onChange('isAdmin', newValue => {
+      if (newValue) {
+        localStorage.setItem('isAdmin', 'true');
+      } else {
+        localStorage.setItem('isAdmin', 'false');
+      }
+    });
   }
 }
 
