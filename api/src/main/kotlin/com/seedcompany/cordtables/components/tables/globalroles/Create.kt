@@ -47,7 +47,7 @@ class Create(
 
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.users where email = ?")
+                val getUserIdStatement = conn.prepareCall("select person from common.users where email = ?")
                 getUserIdStatement.setString(1, req.email)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
@@ -65,7 +65,7 @@ class Create(
             }
             try {
                 val insertStatement = conn.prepareCall(
-                    "insert into public.global_roles(name, org, created_by, modified_by) values(?,?,?, ?) returning *"
+                    "insert into admin.global_roles(name, org, created_by, modified_by) values(?,?,?, ?) returning *"
                 )
                 insertStatement.setString(1, req.insertedFields.name)
                 insertStatement.setInt(2, req.insertedFields.org)

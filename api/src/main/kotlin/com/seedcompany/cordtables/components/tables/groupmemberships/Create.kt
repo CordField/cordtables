@@ -45,7 +45,7 @@ class Create(
             //language=SQL
             val checkRowStatement = conn.prepareStatement(
                 """
-                select exists(select id from public.group_memberships where group_id = ? and person = ?)
+                select exists(select id from admin.group_memberships where group_id = ? and person = ?)
             """.trimIndent()
             )
 
@@ -64,16 +64,16 @@ class Create(
                     //language=SQL
                     val statement = conn.prepareStatement(
                         """
-                        insert into public.group_memberships(group_id, person, created_by, modified_by) 
+                        insert into admin.group_memberships(group_id, person, created_by, modified_by) 
                             values(?, ?,
                                 (
                                   select person 
-                                  from public.tokens 
+                                  from admin.tokens 
                                   where token = ?
                                 ),
                                 (
                                   select person 
-                                  from public.tokens 
+                                  from admin.tokens 
                                   where token = ?
                                 )
                         );

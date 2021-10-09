@@ -80,10 +80,10 @@ class Read(
                 "with row_level_access as \n" +
                         "(\n" +
                         "\tselect row \n" +
-                        "    from public.group_row_access as a  \n" +
-                        "\tinner join public.group_memberships as b \n" +
+                        "    from admin.group_row_access as a  \n" +
+                        "\tinner join admin.group_memberships as b \n" +
                         "\ton a.group_id = b.group_id \n" +
-                        "\tinner join public.tokens as c \n" +
+                        "\tinner join admin.tokens as c \n" +
                         "\ton b.person = c.person\n" +
                         "\twhere a.table_name = 'sc.languages_ex'\n" +
                         "\tand c.token = ?\n" +
@@ -91,10 +91,10 @@ class Read(
                         "column_level_access as \n" +
                         "(\n" +
                         "    select  column_name \n" +
-                        "    from public.global_role_column_grants a \n" +
-                        "    inner join public.global_role_memberships b \n" +
+                        "    from admin.global_role_column_grants a \n" +
+                        "    inner join admin.global_role_memberships b \n" +
                         "    on a.global_role = b.global_role \n" +
-                        "    inner join public.tokens c \n" +
+                        "    inner join admin.tokens c \n" +
                         "    on b.person = c.person \n" +
                         "    where a.table_name = 'sc.languages_ex'\n" +
                         "\tand c.token = ?\n" +

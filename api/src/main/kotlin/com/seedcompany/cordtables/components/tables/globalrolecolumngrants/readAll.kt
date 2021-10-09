@@ -60,7 +60,7 @@ class readAll(
                     "\tmodified_at,\n" +
                     "\tmodified_by,\n" +
                     "\ttable_name\n" +
-                    "FROM public.global_role_column_grants")
+                    "FROM admin.global_role_column_grants")
             try {
                 val listStatementResult = listStatement.executeQuery();
                 while (listStatementResult.next()) {

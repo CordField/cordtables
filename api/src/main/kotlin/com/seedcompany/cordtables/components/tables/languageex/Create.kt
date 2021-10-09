@@ -46,7 +46,7 @@ class Create(
         val reqValues: MutableList<Any> = mutableListOf()
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.tokens where token = ?")
+                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
                 getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
