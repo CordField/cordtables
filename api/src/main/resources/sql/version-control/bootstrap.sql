@@ -143,12 +143,12 @@ BEGIN
     insert into public.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'progress_bible', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- fake data for now
-    insert into sc.languages_ex(lang_name, lang_code, location, created_by, modified_by, owning_person, owning_group) values ('Spanglish', '$UP_BRU', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(lang_name, lang_code, location, created_by, modified_by, owning_person, owning_group) values ('Pigin Spanglish', '$UP_BRU2', 'Shreveport', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(lang_name, lang_code, location, created_by, modified_by, owning_person, owning_group) values ('Old Spanglish', '$UP_BRU3', 'Boston', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(lang_name, lang_code, location, created_by, modified_by, owning_person, owning_group) values ('Slanglish', '$UP_BRU4', 'New Delhi', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(lang_name, lang_code, location, created_by, modified_by, owning_person, owning_group) values ('Twig vPersonId', '$UP_BR5', 'Yugoslavia', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(lang_name, lang_code, location, created_by, modified_by, owning_person, owning_group) values ('Jive', '$UP_BRU6', 'Tokyo', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Spanglish', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Old Spanglish', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Pigin Spanglish', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Hick', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Hill Billy', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Creole', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- group row access
     insert into public.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group) values (vAdminGroupId, 'sc.languages_ex', 1, vPersonId, vPersonId, vPersonId, vAdminGroupId);

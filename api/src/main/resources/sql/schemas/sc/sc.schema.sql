@@ -223,40 +223,173 @@ create table if not exists sc.language_goals (
 	-- todo
 );
 
+create type sc.egids_scale as enum (
+		'0',
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6a',
+		'6b',
+		'7',
+		'8a',
+		'8b',
+		'9',
+		'10'
+);
+
+create type sc.least_reached_progress_scale as enum (
+    '0',
+		'1',
+		'2',
+		'3',
+		'4',
+		'5'
+);
+
+create type sc.partner_interest_scale as enum (
+		'No Partner Interest',
+		'Some',
+		'Significant',
+		'Considerable'
+);
+
+create type sc.multiple_languages_leverage_linguistic_scale as enum (
+		'None',
+		'Some',
+		'Significant',
+		'Considerable',
+		'Large',
+		'Vast'
+);
+
+create type sc.multiple_languages_leverage_joint_training_scale as enum (
+		'None',
+		'Some',
+		'Significant',
+		'Considerable',
+		'Large',
+		'Vast'
+);
+
+create type sc.lang_comm_int_in_language_development_scale as enum (
+		'No Interest',
+		'Some',
+		'Expressed Need',
+		'Significant',
+		'Considerable'
+);
+
+create type sc.lang_comm_int_in_scripture_translation_scale as enum (
+		'No Interest',
+		'Some',
+		'Expressed Need',
+		'Significant',
+		'Considerable'
+);
+
+create type sc.access_to_scripture_in_lwc_scale as enum (
+		'Full Access',
+		'Vast Majority',
+		'Large Majority',
+		'Majority',
+		'Significant',
+		'Some',
+		'Few'
+);
+
+create type sc.begin_work_geo_challenges_scale as enum (
+		'None',
+		'Very Difficult',
+		'Difficult',
+		'Moderate',
+		'Easy'
+);
+
+create type sc.begin_work_rel_pol_obstacles_scale as enum (
+		'None',
+		'Very Difficult',
+		'Difficult',
+		'Moderate',
+		'Easy'
+);
+
 create table if not exists sc.languages_ex(
 	id serial primary key,
 
-	lang_name varchar(32),
-	lang_code varchar(16) NOT NULL,
-	location text,
-	first_lang_population int NULL,
-	population int,
-	egids_level int,
-	egids_value int,
-	least_reached_progress_jps_scale int,
-	least_reached_value int,
-	partner_interest int,
+	language_name varchar(32),
+	iso varchar(4),
+	prioritization decimal generated always as (
+	  population_value * 2 +
+	  egids_value * 3 +
+	  least_reached_value * 2 +
+	  partner_interest_value * 2 +
+	  multiple_languages_leverage_linguistic_value * 1 +
+	  multiple_languages_leverage_joint_training_value * 1 +
+	  lang_comm_int_in_language_development_value * 1 +
+	  lang_comm_int_in_scripture_translation_value * 1 +
+	  access_to_scripture_in_lwc_value * 1 +
+	  begin_work_geo_challenges_value * 0.5 +
+	  begin_work_rel_pol_obstacles_value * 0.5
+	) stored,
+	progress_bible bool,
+
+  location_long text,
+	island varchar(32),
+	province varchar(32),
+
+	first_language_population int NULL,
+	population_value decimal default 0, -- calculated from first_language_population
+
+	egids_level sc.egids_scale,
+	egids_value decimal default 0, -- calculated from _level
+
+	least_reached_progress_jps_level sc.least_reached_progress_scale,
+	least_reached_value decimal default 0, -- calculated from _level
+
+  partner_interest_level sc.partner_interest_scale,
+	partner_interest_value decimal default 0, -- calculated from _level
 	partner_interest_description text,
 	partner_interest_source text,
-	multi_lang_leverage int,
-	multi_lang_leverage_description text,
-	multi_lang_leverage_source text,
-	community_interest int,
-	community_interest_description text,
-	community_interest_source text,
-	community_interest_value int,
-	community_interest_scripture_description text,
-	community_interest_scripture_source text,
-	lwc_scripture_access int,
-	lwc_scripture_description text,
-	lwc_scripture_source text,
-	access_to_begin int,
-	access_to_begin_description text,
-	access_to_begin_source text,
+
+  multiple_languages_leverage_linguistic_level sc.multiple_languages_leverage_linguistic_scale,
+	multiple_languages_leverage_linguistic_value decimal default 0, -- calculated from _level
+	multiple_languages_leverage_linguistic_description text,
+	multiple_languages_leverage_linguistic_source text,
+
+  multiple_languages_leverage_joint_training_level sc.multiple_languages_leverage_joint_training_scale,
+	multiple_languages_leverage_joint_training_value decimal default 0, -- calculated from _level
+  multiple_languages_leverage_joint_training_description text,
+  multiple_languages_leverage_joint_training_source text,
+
+  lang_comm_int_in_language_development_level sc.lang_comm_int_in_language_development_scale,
+	lang_comm_int_in_language_development_value decimal default 0, -- calculated from _level
+	lang_comm_int_in_language_development_description text,
+	lang_comm_int_in_language_development_source text,
+
+  lang_comm_int_in_scripture_translation_level sc.lang_comm_int_in_scripture_translation_scale,
+	lang_comm_int_in_scripture_translation_value decimal default 0, -- calculated from _level
+	lang_comm_int_in_scripture_translation_description text,
+	lang_comm_int_in_scripture_translation_source text,
+
+  access_to_scripture_in_lwc_level sc.access_to_scripture_in_lwc_scale,
+	access_to_scripture_in_lwc_value decimal default 0, -- calculated from _level
+	access_to_scripture_in_lwc_description text,
+	access_to_scripture_in_lwc_source text,
+
+  begin_work_geo_challenges_level sc.begin_work_geo_challenges_scale,
+	begin_work_geo_challenges_value decimal default 0, -- calculated from _level
+	begin_work_geo_challenges_description text,
+	begin_work_geo_challenges_source text,
+
+  begin_work_rel_pol_obstacles_level sc.begin_work_rel_pol_obstacles_scale,
+	begin_work_rel_pol_obstacles_value decimal default 0, -- calculated from _level
+  begin_work_rel_pol_obstacles_description text,
+  begin_work_rel_pol_obstacles_source text,
+
 	suggested_strategies text,
 	comments text,
-	prioritization int,
-	progress_bible int,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null,
