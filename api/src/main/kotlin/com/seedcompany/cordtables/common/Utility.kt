@@ -223,7 +223,7 @@ class Utility(
         if(isAdmin(token)){
             this.ds.connection.use{conn->
                 val statement = conn.prepareCall("select table_schema || '.' || table_name as table_name " +
-                        "from information_schema.tables where table_schema in ('public', 'sc', 'sil') ")
+                        "from information_schema.tables where table_schema in ('admin', 'common', 'sc', 'sil') order by table_name asc")
                 val result = statement.executeQuery()
                 while(result.next()){
                     tableNames.add(result.getString("table_name").replace('_','-'))
@@ -239,7 +239,7 @@ class Utility(
                     "on a.global_role = b.global_role \n" +
                     "inner join admin.tokens as c \n" +
                     "on b.person = c.person \n" +
-                    "where c.token = ?")
+                    "where c.token = ? order by table_name asc")
             statement.setString(1,token)
             val result = statement.executeQuery()
             while(result.next()){
