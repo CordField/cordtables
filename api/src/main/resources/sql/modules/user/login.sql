@@ -15,7 +15,7 @@ BEGIN
     WHERE email = p_email;
 
     if vPersonId is not null then
-      insert into public.tokens ("token", "person")
+      insert into admin.tokens ("token", "person")
       values (p_token, vPersonId);
 
       error_type = 'NoError';
