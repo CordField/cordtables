@@ -64,7 +64,7 @@ class Migration(
     val util: Utility,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
-
+//
 //    init {
 //
 //        val items: List<MasterRow> = readCsvFile("./src/main/resources/local/master1.csv")
