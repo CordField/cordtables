@@ -14,11 +14,11 @@ export class TableRoot {
     return (
       <Host>
         <slot></slot>
-        {this.match.params.table === 'global-roles' && <global-roles></global-roles>}
-        {this.match.params.table === 'global-role-column-grants' && <global-role-column-grants></global-role-column-grants>}
-        {this.match.params.table === 'global-role-table-permissions' && <global-role-table-permissions></global-role-table-permissions>}
-        {this.match.params.table === 'global-role-memberships' && <global-role-memberships></global-role-memberships>}
-        {this.match.params.table === 'groups' && (
+        {this.match.params.table === 'admin-global-roles' && <global-roles></global-roles>}
+        {this.match.params.table === 'admin-global-role-column-grants' && <global-role-column-grants></global-role-column-grants>}
+        {this.match.params.table === 'admin-global-role-table-permissions' && <global-role-table-permissions></global-role-table-permissions>}
+        {this.match.params.table === 'admin-global-role-memberships' && <global-role-memberships></global-role-memberships>}
+        {this.match.params.table === 'admin-groups' && (
           <div>
             <groups-table></groups-table>
             <groups-row-access></groups-row-access>
