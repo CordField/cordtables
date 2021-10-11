@@ -1,0 +1,6 @@
+
+# aws ecr commands
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 140251415856.dkr.ecr.us-east-2.amazonaws.com
+docker build -t cf-redirect .
+docker tag cf-redirect:latest 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-redirect:latest
+docker push 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-redirect:latest
