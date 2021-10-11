@@ -12,43 +12,62 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
+
+
 data class LanguageEx(
     val id:Int?,
+    val language_name:String?,
+    val iso:String?,
+    val prioritization:Double?,
+    val progress_bible:Boolean?,
+    val island:String?,
+    val province:String?,
+    val first_language_population:Int?,
+    val population_value:Double?,
+    val egids_level:String?,
+    val egids_value:Double?,
+    val least_reached_progress_jps_level:String?,
+    val least_reached_value:Double?,
+    val partner_interest_level:String?,
+    val partner_interest_value:Double?,
+    val partner_interest_description:String?,
+    val partner_interest_source:String?,
+    val multiple_languages_leverage_linguistic_level:String?,
+    val multiple_languages_leverage_linguistic_value:Double?,
+    val multiple_languages_leverage_linguistic_description:String?,
+    val multiple_languages_leverage_linguistic_source:String?,
+    val multiple_languages_leverage_joint_training_level:String?,
+    val multiple_languages_leverage_joint_training_value:Double?,
+    val multiple_languages_leverage_joint_training_description:String?,
+    val multiple_languages_leverage_joint_training_source:String?,
+    val lang_comm_int_in_language_development_level:String?,
+    val lang_comm_int_in_language_development_value:Double?,
+    val lang_comm_int_in_language_development_description:String?,
+    val lang_comm_int_in_language_development_source:String?,
+    val lang_comm_int_in_scripture_translation_level:String?,
+    val lang_comm_int_in_scripture_translation_value:Double?,
+    val lang_comm_int_in_scripture_translation_description:String?,
+    val lang_comm_int_in_scripture_translation_source:String?,
+    val access_to_scripture_in_lwc_level:String?,
+    val access_to_scripture_in_lwc_value:Double?,
+    val access_to_scripture_in_lwc_description:String?,
+    val access_to_scripture_in_lwc_source:String?,
+    val begin_work_geo_challenges_level:String?,
+    val begin_work_geo_challenges_value:Double?,
+    val begin_work_geo_challenges_description:String?,
+    val begin_work_geo_challenges_source:String?,
+    val begin_work_rel_pol_obstacles_level:String?,
+    val begin_work_rel_pol_obstacles_value:Double?,
+    val begin_work_rel_pol_obstacles_description:String?,
+    val begin_work_rel_pol_obstacles_source:String?,
+    val suggested_strategies:String?,
+    val comments:String?,
     val created_at:String?,
     val created_by:Int?,
     val modified_at:String?,
     val modified_by:Int?,
-    val lang_name:String?,
-    val lang_code:String?,
-    val location:String?,
-    val first_lang_population:Int?,
-    val population:Int?,
-    val egids_level:Int?,
-    val egids_value:Int?,
-    val least_reached_progress_jps_scale:Int?,
-    val least_reached_value:Int?,
-    val partner_interest:Int?,
-    val partner_interest_description:String?,
-    val partner_interest_source:String?,
-    val multi_lang_leverage:Int?,
-    val multi_lang_leverage_description:String?,
-    val multi_lang_leverage_source:String?,
-    val community_interest:Int?,
-    val community_interest_description:String?,
-    val community_interest_source:String?,
-    val community_interest_value:Int?,
-    val community_interest_scripture_description:String?,
-    val community_interest_scripture_source:String?,
-    val lwc_scripture_access:Int?,
-    val lwc_scripture_description:String?,
-    val lwc_scripture_source:String?,
-    val access_to_begin:Int?,
-    val access_to_begin_description:String?,
-    val access_to_begin_source:String?,
-    val suggested_strategies:String?,
-    val comments:String?,
-    val prioritization:Int?,
-    val progress_bible:Int?
+    val owning_person:Int?,
+    val owning_group:Int?
 )
 
 data class ReadLanguageExResponse(
@@ -70,10 +89,8 @@ class Read(
     @PostMapping("language_ex/read")
     @ResponseBody
     fun ReadHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
-        //mutableList as we need to add each global role as an element to it
         var data: MutableList<LanguageEx> = mutableListOf()
         if (req.token == null) return ReadLanguageExResponse(ErrorType.TokenNotFound, mutableListOf())
-        if (!util.isAdmin(req.token)) return ReadLanguageExResponse(ErrorType.AdminOnly, mutableListOf())
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall(
@@ -100,169 +117,390 @@ class Read(
                         "\tand c.token = ?\n" +
                         ")\n" +
                         "select \n" +
-                        "case when 'id' in (select column_name from column_level_access) then id else null end as id,\n" +
-                        "case when 'created_at' in (select column_name from column_level_access) then created_at else null end as created_at,\n" +
-                        "case when 'created_by' in (select column_name from column_level_access) then created_by else null end as created_by,\n" +
-                        "case when 'modified_at' in (select column_name from column_level_access) then modified_at else null end as modified_at,\n" +
-                        "case when 'modified_by' in (select column_name from column_level_access) then modified_by else null end as modified_by,\n" +
-                        "case when 'lang_name' in (select column_name from column_level_access) then lang_name else null end as lang_name,\n" +
-                        "case when 'lang_code' in (select column_name from column_level_access) then lang_code else null end as lang_code,\n" +
-                        "case when 'location' in (select column_name from column_level_access) then location else null end as location,\n" +
-                        "case when 'first_lang_population' in (select column_name from column_level_access) then first_lang_population else null end as first_lang_population,\n" +
-                        "case when 'population' in (select column_name from column_level_access) then population else null end as population,\n" +
-                        "case when 'egids_level' in (select column_name from column_level_access) then egids_level else null end as egids_level,\n" +
-                        "case when 'egids_value' in (select column_name from column_level_access) then egids_value else null end as egids_value,\n" +
-                        "case when 'least_reached_progress_jps_scale' in (select column_name from column_level_access) then least_reached_progress_jps_scale else null end as least_reached_progress_jps_scale,\n" +
-                        "case when 'least_reached_value' in (select column_name from column_level_access) then least_reached_value else null end as least_reached_value,\n" +
-                        "case when 'partner_interest' in (select column_name from column_level_access) then partner_interest else null end as partner_interest,\n" +
-                        "case when 'partner_interest_description' in (select column_name from column_level_access) then partner_interest_description else null end as partner_interest_description,\n" +
-                        "case when 'partner_interest_source' in (select column_name from column_level_access) then partner_interest_source else null end as partner_interest_source,\n" +
-                        "case when 'multi_lang_leverage' in (select column_name from column_level_access) then multi_lang_leverage else null end as multi_lang_leverage,\n" +
-                        "case when 'multi_lang_leverage_description' in (select column_name from column_level_access) then multi_lang_leverage_description else null end as multi_lang_leverage_description,\n" +
-                        "case when 'multi_lang_leverage_source' in (select column_name from column_level_access) then multi_lang_leverage_source else null end as multi_lang_leverage_source,\n" +
-                        "case when 'community_interest' in (select column_name from column_level_access) then community_interest else null end as community_interest,\n" +
-                        "case when 'community_interest_description' in (select column_name from column_level_access) then community_interest_description else null end as community_interest_description,\n" +
-                        "case when 'community_interest_source' in (select column_name from column_level_access) then community_interest_source else null end as community_interest_source,\n" +
-                        "case when 'community_interest_value' in (select column_name from column_level_access) then community_interest_value else null end as community_interest_value,\n" +
-                        "case when 'community_interest_scripture_description' in (select column_name from column_level_access) then community_interest_scripture_description else null end as community_interest_scripture_description,\n" +
-                        "case when 'community_interest_scripture_source' in (select column_name from column_level_access) then community_interest_scripture_source else null end as community_interest_scripture_source,\n" +
-                        "case when 'lwc_scripture_access' in (select column_name from column_level_access) then lwc_scripture_access else null end as lwc_scripture_access,\n" +
-                        "case when 'lwc_scripture_description' in (select column_name from column_level_access) then lwc_scripture_description else null end as lwc_scripture_description,\n" +
-                        "case when 'lwc_scripture_source' in (select column_name from column_level_access) then lwc_scripture_source else null end as lwc_scripture_source,\n" +
-                        "case when 'access_to_begin' in (select column_name from column_level_access) then access_to_begin else null end as access_to_begin,\n" +
-                        "case when 'access_to_begin_description' in (select column_name from column_level_access) then access_to_begin_description else null end as access_to_begin_description,\n" +
-                        "case when 'access_to_begin_source' in (select column_name from column_level_access) then access_to_begin_source else null end as access_to_begin_source,\n" +
-                        "case when 'suggested_strategies' in (select column_name from column_level_access) then suggested_strategies else null end as suggested_strategies,\n" +
-                        "case when 'comments' in (select column_name from column_level_access) then comments else null end as comments,\n" +
-                        "case when 'prioritization' in (select column_name from column_level_access) then prioritization else null end as prioritization,\n" +
-                        "case when 'progress_bible' in (select column_name from column_level_access) then progress_bible else null end as progress_bible\n" +
+                     "case when 'id' in (select column_name from column_level_access) then id \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then id \n" +
+                        "else null \n" +
+                        "end as id,\n" +
+                        "case when 'language_name' in (select column_name from column_level_access) then language_name \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then language_name \n" +
+                        "else null \n" +
+                        "end as language_name,\n" +
+                        "case when 'iso' in (select column_name from column_level_access) then iso \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then iso \n" +
+                        "else null \n" +
+                        "end as iso,\n" +
+                        "case when 'prioritization' in (select column_name from column_level_access) then prioritization \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then prioritization \n" +
+                        "else null \n" +
+                        "end as prioritization,\n" +
+                        "case when 'progress_bible' in (select column_name from column_level_access) then progress_bible \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then progress_bible \n" +
+                        "else null \n" +
+                        "end as progress_bible,\n" +
+                        "case when 'island' in (select column_name from column_level_access) then island \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then island \n" +
+                        "else null \n" +
+                        "end as island,\n" +
+                        "case when 'province' in (select column_name from column_level_access) then province \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then province \n" +
+                        "else null \n" +
+                        "end as province,\n" +
+                        "case when 'first_language_population' in (select column_name from column_level_access) then first_language_population \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then first_language_population \n" +
+                        "else null \n" +
+                        "end as first_language_population,\n" +
+                        "case when 'population_value' in (select column_name from column_level_access) then population_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then population_value \n" +
+                        "else null \n" +
+                        "end as population_value,\n" +
+                        "case when 'egids_level' in (select column_name from column_level_access) then egids_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then egids_level \n" +
+                        "else null \n" +
+                        "end as egids_level,\n" +
+                        "case when 'egids_value' in (select column_name from column_level_access) then egids_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then egids_value \n" +
+                        "else null \n" +
+                        "end as egids_value,\n" +
+                        "case when 'least_reached_progress_jps_level' in (select column_name from column_level_access) then least_reached_progress_jps_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then least_reached_progress_jps_level \n" +
+                        "else null \n" +
+                        "end as least_reached_progress_jps_level,\n" +
+                        "case when 'least_reached_value' in (select column_name from column_level_access) then least_reached_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then least_reached_value \n" +
+                        "else null \n" +
+                        "end as least_reached_value,\n" +
+                        "case when 'partner_interest_level' in (select column_name from column_level_access) then partner_interest_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then partner_interest_level \n" +
+                        "else null \n" +
+                        "end as partner_interest_level,\n" +
+                        "case when 'partner_interest_value' in (select column_name from column_level_access) then partner_interest_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then partner_interest_value \n" +
+                        "else null \n" +
+                        "end as partner_interest_value,\n" +
+                        "case when 'partner_interest_description' in (select column_name from column_level_access) then partner_interest_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then partner_interest_description \n" +
+                        "else null \n" +
+                        "end as partner_interest_description,\n" +
+                        "case when 'partner_interest_source' in (select column_name from column_level_access) then partner_interest_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then partner_interest_source \n" +
+                        "else null \n" +
+                        "end as partner_interest_source,\n" +
+                        "case when 'multiple_languages_leverage_linguistic_level' in (select column_name from column_level_access) then multiple_languages_leverage_linguistic_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_linguistic_level \n" +
+                        "else null \n" +
+                        "end as multiple_languages_leverage_linguistic_level,\n" +
+                        "case when 'multiple_languages_leverage_linguistic_value' in (select column_name from column_level_access) then multiple_languages_leverage_linguistic_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_linguistic_value \n" +
+                        "else null \n" +
+                        "end as multiple_languages_leverage_linguistic_value,\n" +
+                        "case when 'multiple_languages_leverage_linguistic_description' in (select column_name from column_level_access) then multiple_languages_leverage_linguistic_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_linguistic_description \n" +
+                        "else null \n" +
+                        "end as multiple_languages_leverage_linguistic_description,\n" +
+                        "case when 'multiple_languages_leverage_linguistic_source' in (select column_name from column_level_access) then multiple_languages_leverage_linguistic_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_linguistic_source \n" +
+                        "else null \n" +
+                        "end as multiple_languages_leverage_linguistic_source,\n" +
+                        "case when 'multiple_languages_leverage_joint_training_level' in (select column_name from column_level_access) then multiple_languages_leverage_joint_training_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_joint_training_level \n" +
+                        "else null \n" +
+                        "end as multiple_languages_leverage_joint_training_level,\n" +
+                        "case when 'multiple_languages_leverage_joint_training_value' in (select column_name from column_level_access) then multiple_languages_leverage_joint_training_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_joint_training_value \n" +
+                        "else null \n" +
+                        "end as multiple_languages_leverage_joint_training_value,\n" +
+                        "case when 'multiple_languages_leverage_joint_training_description' in (select column_name from column_level_access) then multiple_languages_leverage_joint_training_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_joint_training_description \n" +
+                        "else null \n" +
+                        "end as multiple_languages_leverage_joint_training_description,\n" +
+                        "case when 'multiple_languages_leverage_joint_training_source' in (select column_name from column_level_access) then multiple_languages_leverage_joint_training_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_joint_training_source \n" +
+                        "else null \n" +
+                        "end as multiple_languages_leverage_joint_training_source,\n" +
+                        "case when 'lang_comm_int_in_language_development_level' in (select column_name from column_level_access) then lang_comm_int_in_language_development_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_language_development_level \n" +
+                        "else null \n" +
+                        "end as lang_comm_int_in_language_development_level,\n" +
+                        "case when 'lang_comm_int_in_language_development_value' in (select column_name from column_level_access) then lang_comm_int_in_language_development_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_language_development_value \n" +
+                        "else null \n" +
+                        "end as lang_comm_int_in_language_development_value,\n" +
+                        "case when 'lang_comm_int_in_language_development_description' in (select column_name from column_level_access) then lang_comm_int_in_language_development_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_language_development_description \n" +
+                        "else null \n" +
+                        "end as lang_comm_int_in_language_development_description,\n" +
+                        "case when 'lang_comm_int_in_language_development_source' in (select column_name from column_level_access) then lang_comm_int_in_language_development_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_language_development_source \n" +
+                        "else null \n" +
+                        "end as lang_comm_int_in_language_development_source,\n" +
+                        "case when 'lang_comm_int_in_scripture_translation_level' in (select column_name from column_level_access) then lang_comm_int_in_scripture_translation_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_scripture_translation_level \n" +
+                        "else null \n" +
+                        "end as lang_comm_int_in_scripture_translation_level,\n" +
+                        "case when 'lang_comm_int_in_scripture_translation_value' in (select column_name from column_level_access) then lang_comm_int_in_scripture_translation_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_scripture_translation_value \n" +
+                        "else null \n" +
+                        "end as lang_comm_int_in_scripture_translation_value,\n" +
+                        "case when 'lang_comm_int_in_scripture_translation_description' in (select column_name from column_level_access) then lang_comm_int_in_scripture_translation_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_scripture_translation_description \n" +
+                        "else null \n" +
+                        "end as lang_comm_int_in_scripture_translation_description,\n" +
+                        "case when 'lang_comm_int_in_scripture_translation_source' in (select column_name from column_level_access) then lang_comm_int_in_scripture_translation_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_scripture_translation_source \n" +
+                        "else null \n" +
+                        "end as lang_comm_int_in_scripture_translation_source,\n" +
+                        "case when 'access_to_scripture_in_lwc_level' in (select column_name from column_level_access) then access_to_scripture_in_lwc_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then access_to_scripture_in_lwc_level \n" +
+                        "else null \n" +
+                        "end as access_to_scripture_in_lwc_level,\n" +
+                        "case when 'access_to_scripture_in_lwc_value' in (select column_name from column_level_access) then access_to_scripture_in_lwc_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then access_to_scripture_in_lwc_value \n" +
+                        "else null \n" +
+                        "end as access_to_scripture_in_lwc_value,\n" +
+                        "case when 'access_to_scripture_in_lwc_description' in (select column_name from column_level_access) then access_to_scripture_in_lwc_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then access_to_scripture_in_lwc_description \n" +
+                        "else null \n" +
+                        "end as access_to_scripture_in_lwc_description,\n" +
+                        "case when 'access_to_scripture_in_lwc_source' in (select column_name from column_level_access) then access_to_scripture_in_lwc_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then access_to_scripture_in_lwc_source \n" +
+                        "else null \n" +
+                        "end as access_to_scripture_in_lwc_source,\n" +
+                        "case when 'begin_work_geo_challenges_level' in (select column_name from column_level_access) then begin_work_geo_challenges_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_geo_challenges_level \n" +
+                        "else null \n" +
+                        "end as begin_work_geo_challenges_level,\n" +
+                        "case when 'begin_work_geo_challenges_value' in (select column_name from column_level_access) then begin_work_geo_challenges_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_geo_challenges_value \n" +
+                        "else null \n" +
+                        "end as begin_work_geo_challenges_value,\n" +
+                        "case when 'begin_work_geo_challenges_description' in (select column_name from column_level_access) then begin_work_geo_challenges_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_geo_challenges_description \n" +
+                        "else null \n" +
+                        "end as begin_work_geo_challenges_description,\n" +
+                        "case when 'begin_work_geo_challenges_source' in (select column_name from column_level_access) then begin_work_geo_challenges_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_geo_challenges_source \n" +
+                        "else null \n" +
+                        "end as begin_work_geo_challenges_source,\n" +
+                        "case when 'begin_work_rel_pol_obstacles_level' in (select column_name from column_level_access) then begin_work_rel_pol_obstacles_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_rel_pol_obstacles_level \n" +
+                        "else null \n" +
+                        "end as begin_work_rel_pol_obstacles_level,\n" +
+                        "case when 'begin_work_rel_pol_obstacles_value' in (select column_name from column_level_access) then begin_work_rel_pol_obstacles_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_rel_pol_obstacles_value \n" +
+                        "else null \n" +
+                        "end as begin_work_rel_pol_obstacles_value,\n" +
+                        "case when 'begin_work_rel_pol_obstacles_description' in (select column_name from column_level_access) then begin_work_rel_pol_obstacles_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_rel_pol_obstacles_description \n" +
+                        "else null \n" +
+                        "end as begin_work_rel_pol_obstacles_description,\n" +
+                        "case when 'begin_work_rel_pol_obstacles_source' in (select column_name from column_level_access) then begin_work_rel_pol_obstacles_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_rel_pol_obstacles_source \n" +
+                        "else null \n" +
+                        "end as begin_work_rel_pol_obstacles_source,\n" +
+                        "case when 'suggested_strategies' in (select column_name from column_level_access) then suggested_strategies \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then suggested_strategies \n" +
+                        "else null \n" +
+                        "end as suggested_strategies,\n" +
+                        "case when 'comments' in (select column_name from column_level_access) then comments \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then comments \n" +
+                        "else null \n" +
+                        "end as comments,\n" +
+                        "case when 'created_at' in (select column_name from column_level_access) then created_at \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then created_at \n" +
+                        "else null \n" +
+                        "end as created_at,\n" +
+                        "case when 'created_by' in (select column_name from column_level_access) then created_by \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then created_by \n" +
+                        "else null \n" +
+                        "end as created_by,\n" +
+                        "case when 'modified_at' in (select column_name from column_level_access) then modified_at \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then modified_at \n" +
+                        "else null \n" +
+                        "end as modified_at,\n" +
+                        "case when 'modified_by' in (select column_name from column_level_access) then modified_by \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then modified_by \n" +
+                        "else null \n" +
+                        "end as modified_by,\n" +
+                        "case when 'owning_person' in (select column_name from column_level_access) then owning_person \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then owning_person \n" +
+                        "else null \n" +
+                        "end as owning_person,\n" +
+                        "case when 'owning_group' in (select column_name from column_level_access) then owning_group \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then owning_group \n" +
+                        "else null \n" +
+                        "end as owning_group\n"+
                         "from sc.languages_ex \n" +
                         "where id in (select row from row_level_access);"
             )
-            listStatement.setString(1, req.token)
-            listStatement.setString(2,req.token)
+
+            for (i in 1..55) {
+                listStatement.setString(i, req.token)
+            }
+//
             try {
                 val listStatementResult = listStatement.executeQuery()
                 while (listStatementResult.next()) {
 
                     var id:Int? = listStatementResult.getInt("id")
-                    if (listStatementResult.wasNull()) id = null
-
-                    var created_at = listStatementResult.getString("created_at")
-                    if (listStatementResult.wasNull()) created_at = null
-
+                    if(listStatementResult.wasNull()) id = null
+                    var language_name:String? = listStatementResult.getString("language_name")
+                    if(listStatementResult.wasNull()) language_name = null
+                    var iso:String? = listStatementResult.getString("iso")
+                    if(listStatementResult.wasNull()) iso = null
+                    var prioritization:Double? = listStatementResult.getDouble("prioritization")
+                    if(listStatementResult.wasNull()) prioritization = null
+                    var progress_bible:Boolean? = listStatementResult.getBoolean("progress_bible")
+                    if(listStatementResult.wasNull()) progress_bible = null
+                    var island:String? = listStatementResult.getString("island")
+                    if(listStatementResult.wasNull()) island = null
+                    var province:String? = listStatementResult.getString("province")
+                    if(listStatementResult.wasNull()) province = null
+                    var first_language_population:Int? = listStatementResult.getInt("first_language_population")
+                    if(listStatementResult.wasNull()) first_language_population = null
+                    var population_value:Double? = listStatementResult.getDouble("population_value")
+                    if(listStatementResult.wasNull()) population_value = null
+                    var egids_level:String? = listStatementResult.getString("egids_level")
+                    if(listStatementResult.wasNull()) egids_level = null
+                    var egids_value:Double? = listStatementResult.getDouble("egids_value")
+                    if(listStatementResult.wasNull()) egids_value = null
+                    var least_reached_progress_jps_level:String? = listStatementResult.getString("least_reached_progress_jps_level")
+                    if(listStatementResult.wasNull()) least_reached_progress_jps_level = null
+                    var least_reached_value:Double? = listStatementResult.getDouble("least_reached_value")
+                    if(listStatementResult.wasNull()) least_reached_value = null
+                    var partner_interest_level:String? = listStatementResult.getString("partner_interest_level")
+                    if(listStatementResult.wasNull()) partner_interest_level = null
+                    var partner_interest_value:Double? = listStatementResult.getDouble("partner_interest_value")
+                    if(listStatementResult.wasNull()) partner_interest_value = null
+                    var partner_interest_description:String? = listStatementResult.getString("partner_interest_description")
+                    if(listStatementResult.wasNull()) partner_interest_description = null
+                    var partner_interest_source:String? = listStatementResult.getString("partner_interest_source")
+                    if(listStatementResult.wasNull()) partner_interest_source = null
+                    var multiple_languages_leverage_linguistic_level:String? = listStatementResult.getString("multiple_languages_leverage_linguistic_level")
+                    if(listStatementResult.wasNull()) multiple_languages_leverage_linguistic_level = null
+                    var multiple_languages_leverage_linguistic_value:Double? = listStatementResult.getDouble("multiple_languages_leverage_linguistic_value")
+                    if(listStatementResult.wasNull()) multiple_languages_leverage_linguistic_value = null
+                    var multiple_languages_leverage_linguistic_description:String? = listStatementResult.getString("multiple_languages_leverage_linguistic_description")
+                    if(listStatementResult.wasNull()) multiple_languages_leverage_linguistic_description = null
+                    var multiple_languages_leverage_linguistic_source:String? = listStatementResult.getString("multiple_languages_leverage_linguistic_source")
+                    if(listStatementResult.wasNull()) multiple_languages_leverage_linguistic_source = null
+                    var multiple_languages_leverage_joint_training_level:String? = listStatementResult.getString("multiple_languages_leverage_joint_training_level")
+                    if(listStatementResult.wasNull()) multiple_languages_leverage_joint_training_level = null
+                    var multiple_languages_leverage_joint_training_value:Double? = listStatementResult.getDouble("multiple_languages_leverage_joint_training_value")
+                    if(listStatementResult.wasNull()) multiple_languages_leverage_joint_training_value = null
+                    var multiple_languages_leverage_joint_training_description:String? = listStatementResult.getString("multiple_languages_leverage_joint_training_description")
+                    if(listStatementResult.wasNull()) multiple_languages_leverage_joint_training_description = null
+                    var multiple_languages_leverage_joint_training_source:String? = listStatementResult.getString("multiple_languages_leverage_joint_training_source")
+                    if(listStatementResult.wasNull()) multiple_languages_leverage_joint_training_source = null
+                    var lang_comm_int_in_language_development_level:String? = listStatementResult.getString("lang_comm_int_in_language_development_level")
+                    if(listStatementResult.wasNull()) lang_comm_int_in_language_development_level = null
+                    var lang_comm_int_in_language_development_value:Double? = listStatementResult.getDouble("lang_comm_int_in_language_development_value")
+                    if(listStatementResult.wasNull()) lang_comm_int_in_language_development_value = null
+                    var lang_comm_int_in_language_development_description:String? = listStatementResult.getString("lang_comm_int_in_language_development_description")
+                    if(listStatementResult.wasNull()) lang_comm_int_in_language_development_description = null
+                    var lang_comm_int_in_language_development_source:String? = listStatementResult.getString("lang_comm_int_in_language_development_source")
+                    if(listStatementResult.wasNull()) lang_comm_int_in_language_development_source = null
+                    var lang_comm_int_in_scripture_translation_level:String? = listStatementResult.getString("lang_comm_int_in_scripture_translation_level")
+                    if(listStatementResult.wasNull()) lang_comm_int_in_scripture_translation_level = null
+                    var lang_comm_int_in_scripture_translation_value:Double? = listStatementResult.getDouble("lang_comm_int_in_scripture_translation_value")
+                    if(listStatementResult.wasNull()) lang_comm_int_in_scripture_translation_value = null
+                    var lang_comm_int_in_scripture_translation_description:String? = listStatementResult.getString("lang_comm_int_in_scripture_translation_description")
+                    if(listStatementResult.wasNull()) lang_comm_int_in_scripture_translation_description = null
+                    var lang_comm_int_in_scripture_translation_source:String? = listStatementResult.getString("lang_comm_int_in_scripture_translation_source")
+                    if(listStatementResult.wasNull()) lang_comm_int_in_scripture_translation_source = null
+                    var access_to_scripture_in_lwc_level:String? = listStatementResult.getString("access_to_scripture_in_lwc_level")
+                    if(listStatementResult.wasNull()) access_to_scripture_in_lwc_level = null
+                    var access_to_scripture_in_lwc_value:Double? = listStatementResult.getDouble("access_to_scripture_in_lwc_value")
+                    if(listStatementResult.wasNull()) access_to_scripture_in_lwc_value = null
+                    var access_to_scripture_in_lwc_description:String? = listStatementResult.getString("access_to_scripture_in_lwc_description")
+                    if(listStatementResult.wasNull()) access_to_scripture_in_lwc_description = null
+                    var access_to_scripture_in_lwc_source:String? = listStatementResult.getString("access_to_scripture_in_lwc_source")
+                    if(listStatementResult.wasNull()) access_to_scripture_in_lwc_source = null
+                    var begin_work_geo_challenges_level:String? = listStatementResult.getString("begin_work_geo_challenges_level")
+                    if(listStatementResult.wasNull()) begin_work_geo_challenges_level = null
+                    var begin_work_geo_challenges_value:Double? = listStatementResult.getDouble("begin_work_geo_challenges_value")
+                    if(listStatementResult.wasNull()) begin_work_geo_challenges_value = null
+                    var begin_work_geo_challenges_description:String? = listStatementResult.getString("begin_work_geo_challenges_description")
+                    if(listStatementResult.wasNull()) begin_work_geo_challenges_description = null
+                    var begin_work_geo_challenges_source:String? = listStatementResult.getString("begin_work_geo_challenges_source")
+                    if(listStatementResult.wasNull()) begin_work_geo_challenges_source = null
+                    var begin_work_rel_pol_obstacles_level:String? = listStatementResult.getString("begin_work_rel_pol_obstacles_level")
+                    if(listStatementResult.wasNull()) begin_work_rel_pol_obstacles_level = null
+                    var begin_work_rel_pol_obstacles_value:Double? = listStatementResult.getDouble("begin_work_rel_pol_obstacles_value")
+                    if(listStatementResult.wasNull()) begin_work_rel_pol_obstacles_value = null
+                    var begin_work_rel_pol_obstacles_description:String? = listStatementResult.getString("begin_work_rel_pol_obstacles_description")
+                    if(listStatementResult.wasNull()) begin_work_rel_pol_obstacles_description = null
+                    var begin_work_rel_pol_obstacles_source:String? = listStatementResult.getString("begin_work_rel_pol_obstacles_source")
+                    if(listStatementResult.wasNull()) begin_work_rel_pol_obstacles_source = null
+                    var suggested_strategies:String? = listStatementResult.getString("suggested_strategies")
+                    if(listStatementResult.wasNull()) suggested_strategies = null
+                    var comments:String? = listStatementResult.getString("comments")
+                    if(listStatementResult.wasNull()) comments = null
+                    var created_at:String? = listStatementResult.getString("created_at")
+                    if(listStatementResult.wasNull()) created_at = null
                     var created_by:Int? = listStatementResult.getInt("created_by")
-                    if (listStatementResult.wasNull()) created_by = null
-
-                    var modified_at = listStatementResult.getString("modified_at")
-                    if (listStatementResult.wasNull()) modified_at = null
-
+                    if(listStatementResult.wasNull()) created_by = null
+                    var modified_at:String? = listStatementResult.getString("modified_at")
+                    if(listStatementResult.wasNull()) modified_at = null
                     var modified_by:Int? = listStatementResult.getInt("modified_by")
-                    if (listStatementResult.wasNull()) modified_by = null
+                    if(listStatementResult.wasNull()) modified_by = null
+                    var owning_person:Int? = listStatementResult.getInt("owning_person")
+                    if(listStatementResult.wasNull()) owning_person = null
+                    var owning_group:Int? = listStatementResult.getInt("owning_group")
+                    if(listStatementResult.wasNull()) owning_group = null
 
-                    var lang_name = listStatementResult.getString("lang_name")
-                    if (listStatementResult.wasNull()) lang_name = null
-
-                    var lang_code = listStatementResult.getString("lang_code")
-                    if (listStatementResult.wasNull()) lang_code = null
-
-                    var location = listStatementResult.getString("location")
-                    if (listStatementResult.wasNull()) location = null
-
-                    var first_lang_population:Int? = listStatementResult.getInt("first_lang_population")
-                    if (listStatementResult.wasNull()) first_lang_population = null
-
-                    var population:Int? = listStatementResult.getInt("population")
-                    if (listStatementResult.wasNull()) population = null
-
-                    var egids_level:Int? = listStatementResult.getInt("egids_level")
-                    if (listStatementResult.wasNull()) egids_level = null
-
-                    var egids_value:Int? = listStatementResult.getInt("egids_value")
-                    if (listStatementResult.wasNull()) egids_value = null
-
-                    var least_reached_progress_jps_scale:Int? = listStatementResult.getInt("least_reached_progress_jps_scale")
-                    if (listStatementResult.wasNull()) least_reached_progress_jps_scale = null
-
-                    var least_reached_value:Int? = listStatementResult.getInt("least_reached_value")
-                    if (listStatementResult.wasNull()) least_reached_value = null
-
-                    var partner_interest:Int? = listStatementResult.getInt("partner_interest")
-                    if (listStatementResult.wasNull()) partner_interest = null
-
-                    var partner_interest_description = listStatementResult.getString("partner_interest_description")
-                    if (listStatementResult.wasNull()) partner_interest_description = null
-
-                    var partner_interest_source = listStatementResult.getString("partner_interest_source")
-                    if (listStatementResult.wasNull()) partner_interest_source = null
-
-                    var multi_lang_leverage:Int? = listStatementResult.getInt("multi_lang_leverage")
-                    if (listStatementResult.wasNull()) multi_lang_leverage = null
-
-                    var multi_lang_leverage_description = listStatementResult.getString("multi_lang_leverage_description")
-                    if (listStatementResult.wasNull()) multi_lang_leverage_description = null
-
-                    var multi_lang_leverage_source = listStatementResult.getString("multi_lang_leverage_source")
-                    if (listStatementResult.wasNull()) multi_lang_leverage_source = null
-
-
-                    var community_interest:Int? = listStatementResult.getInt("community_interest")
-                    if (listStatementResult.wasNull()) community_interest = null
-
-                    var community_interest_description = listStatementResult.getString("community_interest_description")
-                    if (listStatementResult.wasNull()) community_interest_description = null
-
-                    var community_interest_source = listStatementResult.getString("community_interest_source")
-                    if (listStatementResult.wasNull()) community_interest_source = null
-
-                    var community_interest_value:Int? = listStatementResult.getInt("community_interest_value")
-                    if (listStatementResult.wasNull()) community_interest_value = null
-
-                    var community_interest_scripture_description = listStatementResult.getString("community_interest_scripture_description")
-                    if (listStatementResult.wasNull()) community_interest_scripture_description = null
-
-                    var community_interest_scripture_source = listStatementResult.getString("community_interest_scripture_source")
-                    if (listStatementResult.wasNull()) community_interest_scripture_source = null
-
-                    var lwc_scripture_access:Int? = listStatementResult.getInt("lwc_scripture_access")
-                    if (listStatementResult.wasNull()) lwc_scripture_access = null
-
-                    var lwc_scripture_description = listStatementResult.getString("lwc_scripture_description")
-                    if (listStatementResult.wasNull()) lwc_scripture_description = null
-
-                    var lwc_scripture_source = listStatementResult.getString("lwc_scripture_source")
-                    if (listStatementResult.wasNull()) lwc_scripture_source = null
-
-                    var access_to_begin:Int? = listStatementResult.getInt("access_to_begin")
-                    if (listStatementResult.wasNull()) access_to_begin = null
-
-                    var access_to_begin_description = listStatementResult.getString("access_to_begin_description")
-                    if (listStatementResult.wasNull()) access_to_begin_description = null
-
-                    var access_to_begin_source = listStatementResult.getString("access_to_begin_source")
-                    if (listStatementResult.wasNull()) access_to_begin_source = null
-
-
-                    var suggested_strategies = listStatementResult.getString("suggested_strategies")
-                    if (listStatementResult.wasNull()) suggested_strategies = null
-
-
-                    var comments = listStatementResult.getString("comments")
-                    if (listStatementResult.wasNull()) comments = null
-
-
-                    var prioritization:Int? = listStatementResult.getInt("prioritization")
-                    if (listStatementResult.wasNull()) prioritization = null
-
-
-                    var progress_bible:Int?= listStatementResult.getInt("progress_bible")
-                    if (listStatementResult.wasNull()) progress_bible = null
-
-                    data.add(LanguageEx(id, created_at, created_by, modified_at, modified_by,lang_name,lang_code,location,first_lang_population,population,
-                        egids_level,egids_value,least_reached_progress_jps_scale,least_reached_value,partner_interest,partner_interest_description,partner_interest_source,
-                        multi_lang_leverage,multi_lang_leverage_description,multi_lang_leverage_source,community_interest,community_interest_description,community_interest_scripture_source,community_interest_value,community_interest_scripture_description,community_interest_source,lwc_scripture_access,lwc_scripture_description,lwc_scripture_source,access_to_begin,access_to_begin_description,
-                        access_to_begin_source,suggested_strategies,comments,prioritization,progress_bible
-                    ))
+                    data.add(LanguageEx(id,
+                        language_name,
+                        iso,
+                        prioritization,
+                        progress_bible,
+                        island,
+                        province,
+                        first_language_population,
+                        population_value,
+                        egids_level,
+                        egids_value,
+                        least_reached_progress_jps_level,
+                        least_reached_value,
+                        partner_interest_level,
+                        partner_interest_value,
+                        partner_interest_description,
+                        partner_interest_source,
+                        multiple_languages_leverage_linguistic_level,
+                        multiple_languages_leverage_linguistic_value,
+                        multiple_languages_leverage_linguistic_description,
+                        multiple_languages_leverage_linguistic_source,
+                        multiple_languages_leverage_joint_training_level,
+                        multiple_languages_leverage_joint_training_value,
+                        multiple_languages_leverage_joint_training_description,
+                        multiple_languages_leverage_joint_training_source,
+                        lang_comm_int_in_language_development_level,
+                        lang_comm_int_in_language_development_value,
+                        lang_comm_int_in_language_development_description,
+                        lang_comm_int_in_language_development_source,
+                        lang_comm_int_in_scripture_translation_level,
+                        lang_comm_int_in_scripture_translation_value,
+                        lang_comm_int_in_scripture_translation_description,
+                        lang_comm_int_in_scripture_translation_source,
+                        access_to_scripture_in_lwc_level,
+                        access_to_scripture_in_lwc_value,
+                        access_to_scripture_in_lwc_description,
+                        access_to_scripture_in_lwc_source,
+                        begin_work_geo_challenges_level,
+                        begin_work_geo_challenges_value,
+                        begin_work_geo_challenges_description,
+                        begin_work_geo_challenges_source,
+                        begin_work_rel_pol_obstacles_level,
+                        begin_work_rel_pol_obstacles_value,
+                        begin_work_rel_pol_obstacles_description,
+                        begin_work_rel_pol_obstacles_source,
+                        suggested_strategies,
+                        comments,
+                        created_at,
+                        created_by,
+                        modified_at,
+                        modified_by,
+                        owning_person,
+                        owning_group))
                 }
             } catch (e: SQLException) {
                 println("error while listing ${e.message}")
