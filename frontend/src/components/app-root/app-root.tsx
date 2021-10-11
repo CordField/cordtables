@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Host, Prop, State } from '@stencil/core';
 import { injectHistory, RouterHistory } from '@stencil/router';
 import { globals } from '../../core/global.store';
 
@@ -63,24 +63,11 @@ export class AppRoot {
                       <option selected={this.path === '/'} value="-">
                         -
                       </option>
-                      <option selected={this.path === '/table/global-roles'} value="global-roles">
-                        Global Roles
-                      </option>
-                      <option selected={this.path === '/table/global-role-column-grants'} value="global-role-column-grants">
-                        Global Role Column Grants
-                      </option>
-                      <option selected={this.path === '/table/global-role-table-permissions'} value="global-role-table-permissions">
-                        Global Role Table Permissions
-                      </option>
-                      <option selected={this.path === '/table/global-role-memberships'} value="global-role-memberships">
-                        Global Role Memberships
-                      </option>
-                      <option selected={this.path === '/table/languages-ex'} value="languages-ex">
-                        Languages-Ex
-                      </option>
-                      <option selected={this.path === '/table/groups'} value="groups">
-                        Groups
-                      </option>
+                      {globals.globalStore.state.readableTables.map(table => (
+                        <option selected={this.path === `/table/${table.split('.').join('-')}`} value={table.split('.').join('-')}>
+                          {table}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

@@ -34,8 +34,8 @@ export class CfHeader {
         <div id="header">
           <div id="title" onClick={this.clickTitle}>
             <span id="cord">CORD</span>
-            <span id="field">FIELD</span>
-            <span id="dot-org">.org</span>
+            <span id="field">TABLES</span>
+            <span id="dot-org"></span>
           </div>
 
           <div id="menu-button">

@@ -1,0 +1,48 @@
+:host {
+  display: block;
+  padding: 10px;
+  width: 100%;
+}
+
+table {
+  /* border: 2px solid black; */
+}
+
+th,
+td {
+  padding: 5px 10px 5px 10px;
+  /* border: 1px solid gray; */
+}
+
+tr:nth-child(odd) {
+  background-color: #7abbf1;
+}
+
+tr:first-child {
+  background-color: #1872ef;
+}
+
+th {
+  color: white;
+  font-weight: normal;
+}
+
+#new-button {
+}
+
+.disabled {
+  background-color: lightgray;
+}
+
+#button-group {
+  margin-top: 20px;
+}
+
+#cancel-button {
+  margin-right: 20px;
+}
+
+.remove-row-icon {
+  color: red;
+  cursor: pointer;
+}

@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
+import { ActionType } from "./common/types";
 import { MenuClickedEvent } from "./components/header/types";
 export namespace Components {
     interface AppHome {
@@ -16,14 +17,18 @@ export namespace Components {
     interface AppRoot {
         "history": RouterHistory;
     }
+    interface CfAction {
+        "actionFn": (value: any) => Promise<boolean>;
+        "actionType": ActionType;
+        "text": any;
+        "value": any;
+    }
     interface CfCell {
         "isEditable": boolean;
         "propKey": keyof any;
         "rowId": number;
-        "updateFn": (id: number, value: any) => Promise<boolean>;
+        "updateFn": (id: number, columnName: any, value: any) => Promise<boolean>;
         "value": any;
-    }
-    interface CfGroups {
     }
     interface CfHeader {
         "history": RouterHistory;
@@ -37,13 +42,29 @@ export namespace Components {
     interface CfRegister {
         "history": RouterHistory;
     }
+    interface CreateUpdateModal {
+        "isOpen": boolean;
+        "modalTitle": String;
+    }
+    interface GenericTable {
+        "columns": Array<any>;
+        "name": String;
+        "values": Array<any>;
+    }
     interface GlobalRoleColumnGrants {
+        "history": RouterHistory;
     }
     interface GlobalRoleMemberships {
     }
     interface GlobalRoleTablePermissions {
     }
     interface GlobalRoles {
+    }
+    interface GroupMemberships {
+    }
+    interface GroupsRowAccess {
+    }
+    interface GroupsTable {
     }
     interface LanguagesEx {
     }
@@ -70,17 +91,17 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLCfActionElement extends Components.CfAction, HTMLStencilElement {
+    }
+    var HTMLCfActionElement: {
+        prototype: HTMLCfActionElement;
+        new (): HTMLCfActionElement;
+    };
     interface HTMLCfCellElement extends Components.CfCell, HTMLStencilElement {
     }
     var HTMLCfCellElement: {
         prototype: HTMLCfCellElement;
         new (): HTMLCfCellElement;
-    };
-    interface HTMLCfGroupsElement extends Components.CfGroups, HTMLStencilElement {
-    }
-    var HTMLCfGroupsElement: {
-        prototype: HTMLCfGroupsElement;
-        new (): HTMLCfGroupsElement;
     };
     interface HTMLCfHeaderElement extends Components.CfHeader, HTMLStencilElement {
     }
@@ -106,6 +127,18 @@ declare global {
         prototype: HTMLCfRegisterElement;
         new (): HTMLCfRegisterElement;
     };
+    interface HTMLCreateUpdateModalElement extends Components.CreateUpdateModal, HTMLStencilElement {
+    }
+    var HTMLCreateUpdateModalElement: {
+        prototype: HTMLCreateUpdateModalElement;
+        new (): HTMLCreateUpdateModalElement;
+    };
+    interface HTMLGenericTableElement extends Components.GenericTable, HTMLStencilElement {
+    }
+    var HTMLGenericTableElement: {
+        prototype: HTMLGenericTableElement;
+        new (): HTMLGenericTableElement;
+    };
     interface HTMLGlobalRoleColumnGrantsElement extends Components.GlobalRoleColumnGrants, HTMLStencilElement {
     }
     var HTMLGlobalRoleColumnGrantsElement: {
@@ -130,6 +163,24 @@ declare global {
         prototype: HTMLGlobalRolesElement;
         new (): HTMLGlobalRolesElement;
     };
+    interface HTMLGroupMembershipsElement extends Components.GroupMemberships, HTMLStencilElement {
+    }
+    var HTMLGroupMembershipsElement: {
+        prototype: HTMLGroupMembershipsElement;
+        new (): HTMLGroupMembershipsElement;
+    };
+    interface HTMLGroupsRowAccessElement extends Components.GroupsRowAccess, HTMLStencilElement {
+    }
+    var HTMLGroupsRowAccessElement: {
+        prototype: HTMLGroupsRowAccessElement;
+        new (): HTMLGroupsRowAccessElement;
+    };
+    interface HTMLGroupsTableElement extends Components.GroupsTable, HTMLStencilElement {
+    }
+    var HTMLGroupsTableElement: {
+        prototype: HTMLGroupsTableElement;
+        new (): HTMLGroupsTableElement;
+    };
     interface HTMLLanguagesExElement extends Components.LanguagesEx, HTMLStencilElement {
     }
     var HTMLLanguagesExElement: {
@@ -146,16 +197,21 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "cf-action": HTMLCfActionElement;
         "cf-cell": HTMLCfCellElement;
-        "cf-groups": HTMLCfGroupsElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-register": HTMLCfRegisterElement;
+        "create-update-modal": HTMLCreateUpdateModalElement;
+        "generic-table": HTMLGenericTableElement;
         "global-role-column-grants": HTMLGlobalRoleColumnGrantsElement;
         "global-role-memberships": HTMLGlobalRoleMembershipsElement;
         "global-role-table-permissions": HTMLGlobalRoleTablePermissionsElement;
         "global-roles": HTMLGlobalRolesElement;
+        "group-memberships": HTMLGroupMembershipsElement;
+        "groups-row-access": HTMLGroupsRowAccessElement;
+        "groups-table": HTMLGroupsTableElement;
         "languages-ex": HTMLLanguagesExElement;
         "table-root": HTMLTableRootElement;
     }
@@ -169,14 +225,18 @@ declare namespace LocalJSX {
     interface AppRoot {
         "history"?: RouterHistory;
     }
+    interface CfAction {
+        "actionFn"?: (value: any) => Promise<boolean>;
+        "actionType"?: ActionType;
+        "text"?: any;
+        "value"?: any;
+    }
     interface CfCell {
         "isEditable"?: boolean;
         "propKey"?: keyof any;
         "rowId"?: number;
-        "updateFn"?: (id: number, value: any) => Promise<boolean>;
+        "updateFn"?: (id: number, columnName: any, value: any) => Promise<boolean>;
         "value"?: any;
-    }
-    interface CfGroups {
     }
     interface CfHeader {
         "history"?: RouterHistory;
@@ -191,13 +251,33 @@ declare namespace LocalJSX {
     interface CfRegister {
         "history"?: RouterHistory;
     }
+    interface CreateUpdateModal {
+        "isOpen"?: boolean;
+        "modalTitle"?: String;
+        "onModalClosed"?: (event: CustomEvent<boolean>) => void;
+        "onModalDelete"?: (event: CustomEvent<boolean>) => void;
+        "onModalOkay"?: (event: CustomEvent<boolean>) => void;
+    }
+    interface GenericTable {
+        "columns"?: Array<any>;
+        "name"?: String;
+        "onRowClicked"?: (event: CustomEvent<number>) => void;
+        "values"?: Array<any>;
+    }
     interface GlobalRoleColumnGrants {
+        "history"?: RouterHistory;
     }
     interface GlobalRoleMemberships {
     }
     interface GlobalRoleTablePermissions {
     }
     interface GlobalRoles {
+    }
+    interface GroupMemberships {
+    }
+    interface GroupsRowAccess {
+    }
+    interface GroupsTable {
     }
     interface LanguagesEx {
     }
@@ -208,16 +288,21 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "cf-action": CfAction;
         "cf-cell": CfCell;
-        "cf-groups": CfGroups;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-register": CfRegister;
+        "create-update-modal": CreateUpdateModal;
+        "generic-table": GenericTable;
         "global-role-column-grants": GlobalRoleColumnGrants;
         "global-role-memberships": GlobalRoleMemberships;
         "global-role-table-permissions": GlobalRoleTablePermissions;
         "global-roles": GlobalRoles;
+        "group-memberships": GroupMemberships;
+        "groups-row-access": GroupsRowAccess;
+        "groups-table": GroupsTable;
         "languages-ex": LanguagesEx;
         "table-root": TableRoot;
     }
@@ -229,16 +314,21 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "cf-action": LocalJSX.CfAction & JSXBase.HTMLAttributes<HTMLCfActionElement>;
             "cf-cell": LocalJSX.CfCell & JSXBase.HTMLAttributes<HTMLCfCellElement>;
-            "cf-groups": LocalJSX.CfGroups & JSXBase.HTMLAttributes<HTMLCfGroupsElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
+            "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
+            "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "global-role-column-grants": LocalJSX.GlobalRoleColumnGrants & JSXBase.HTMLAttributes<HTMLGlobalRoleColumnGrantsElement>;
             "global-role-memberships": LocalJSX.GlobalRoleMemberships & JSXBase.HTMLAttributes<HTMLGlobalRoleMembershipsElement>;
             "global-role-table-permissions": LocalJSX.GlobalRoleTablePermissions & JSXBase.HTMLAttributes<HTMLGlobalRoleTablePermissionsElement>;
             "global-roles": LocalJSX.GlobalRoles & JSXBase.HTMLAttributes<HTMLGlobalRolesElement>;
+            "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
+            "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
+            "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
             "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
