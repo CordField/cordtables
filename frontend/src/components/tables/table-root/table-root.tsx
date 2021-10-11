@@ -14,15 +14,23 @@ export class TableRoot {
     return (
       <Host>
         <slot></slot>
-        {this.match.params.table === 'global-roles' && <global-roles></global-roles>}
-        {this.match.params.table === 'global-role-column-grants' && <global-role-column-grants></global-role-column-grants>}
-        {this.match.params.table === 'global-role-table-permissions' && <global-role-table-permissions></global-role-table-permissions>}
-        {this.match.params.table === 'global-role-memberships' && <global-role-memberships></global-role-memberships>}
-        {this.match.params.table === 'groups' && (
+        {(this.match.params.table === 'admin-global-roles' ||
+          this.match.params.table === 'admin-global-role-column-grants' ||
+          this.match.params.table === 'admin-global-role-memberships' ||
+          this.match.params.table === 'admin-global-role-table-permissions') && (
+          <div>
+            <global-roles></global-roles>
+            <global-role-memberships></global-role-memberships>
+            <global-role-table-permissions></global-role-table-permissions>
+            <global-role-column-grants></global-role-column-grants>
+          </div>
+        )}
+
+        {(this.match.params.table === 'admin-groups' || this.match.params.table === 'admin-group-memberships' || this.match.params.table === 'admin-group-row-access') && (
           <div>
             <groups-table></groups-table>
-            <groups-row-access></groups-row-access>
             <group-memberships></group-memberships>
+            <groups-row-access></groups-row-access>
           </div>
         )}
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}

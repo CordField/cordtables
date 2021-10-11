@@ -49,7 +49,7 @@ class Update(
             //language=SQL
             val checkNameStatement = conn.prepareStatement(
                 """
-                select exists(select id from public.groups where name = ?)
+                select exists(select id from admin.groups where name = ?)
             """.trimIndent()
             )
 
@@ -67,12 +67,12 @@ class Update(
                     //language=SQL
                     val statement = conn.prepareStatement(
                         """
-                        update public.groups
+                        update admin.groups
                         set 
                           name = ?, 
                           modified_by = (
                                   select person 
-                                  from public.tokens 
+                                  from admin.tokens 
                                   where token = ?
                                 ), 
                           modified_at = CURRENT_TIMESTAMP

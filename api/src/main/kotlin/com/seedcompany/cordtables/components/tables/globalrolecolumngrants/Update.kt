@@ -50,7 +50,7 @@ class Update(
 
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.tokens where token = ?")
+                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
                 getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
@@ -69,7 +69,7 @@ class Update(
             try {
                 println(req.access_level.accessType);
                 val insertStatement = conn.prepareCall(
-                        "update public.global_role_column_grants set access_level = ?::access_level, column_name = ?, modified_by = ?, global_role = ?, table_name = ?::table_name where id = ? returning *"
+                        "update admin.global_role_column_grants set access_level = ?::access_level, column_name = ?, modified_by = ?, global_role = ?, table_name = ?::table_name where id = ? returning *"
                 )
                 insertStatement.setString(1, req.access_level.accessType)
                 insertStatement.setString(2, req.column_name)

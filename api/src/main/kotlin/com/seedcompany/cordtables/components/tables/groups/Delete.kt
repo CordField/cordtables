@@ -43,7 +43,7 @@ class Delete(
             //language=SQL
             val deleteStatement = conn.prepareStatement(
                 """
-                delete from public.groups where id = ?;
+                delete from admin.groups where id = ?;
             """.trimIndent()
             )
 

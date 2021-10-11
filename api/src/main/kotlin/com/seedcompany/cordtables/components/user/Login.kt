@@ -49,7 +49,7 @@ class Login (
         var errorType = ErrorType.UnknownError
 
         this.ds.connection.use { conn ->
-            val pashStatement = conn.prepareCall("select password from users where email = ?;")
+            val pashStatement = conn.prepareCall("select password from common.users where email = ?;")
             pashStatement.setString(1, req.email)
 
             val getPashResult = pashStatement.executeQuery()
@@ -85,7 +85,7 @@ class Login (
         var errorType = ErrorType.UnknownError
 
         this.ds.connection.use{conn ->
-            val statement = conn.prepareCall("call Login(?, ?, ?);")
+            val statement = conn.prepareCall("call common.login(?, ?, ?);")
             statement.setString(1, email)
             statement.setString(2, token)
             statement.setString(3, errorType.name)

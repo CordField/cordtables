@@ -44,7 +44,7 @@ class Delete(
 
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.tokens where token = ?")
+                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
                 getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
@@ -62,7 +62,7 @@ class Delete(
             }
             try {
                 val insertStatement = conn.prepareCall(
-                        "delete from public.global_role_column_grants where id = ?"
+                        "delete from admin.global_role_column_grants where id = ?"
                 )
 
                 insertStatement.setInt(1, req.id)

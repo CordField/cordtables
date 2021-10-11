@@ -15,21 +15,21 @@ DECLARE
 BEGIN
   -- check to see if the email exists, if not continue
   SELECT email
-  FROM public.users
+  FROM common.users
   INTO vEmail
   WHERE users.email = p_email;
 
   if vEmail is null then
 
-    insert into public.people("sensitivity_clearance")
+    insert into admin.people("sensitivity_clearance")
     values ('Low')
     returning id
     into vPersonId;
 
-    insert into public.tokens ("token", "person")
+    insert into admin.tokens ("token", "person")
     values (p_token, vPersonId);
 
-    insert into public.users(person, email, password, created_by, modified_by, owning_person, owning_group)
+    insert into common.users(person, email, password, created_by, modified_by, owning_person, owning_group)
     values (vPersonId, p_email, p_password, 1, 1, 1, 1);
 
     error_type := 'NoError';

@@ -49,7 +49,7 @@ class Create(
 
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.tokens where token = ?")
+                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
                 getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
@@ -68,7 +68,7 @@ class Create(
             try {
                 println(req.access_level.accessType);
                 val insertStatement = conn.prepareCall(
-                        "insert into public.global_role_column_grants(access_level, column_name, created_by, global_role, table_name) values(?::access_level,?,?,?,?::table_name) returning *"
+                        "insert into admin.global_role_column_grants(access_level, column_name, created_by, global_role, table_name) values(?::access_level,?,?,?,?::table_name) returning *"
                 )
                 insertStatement.setString(1, req.access_level.accessType)
                 insertStatement.setString(2, req.column_name)
