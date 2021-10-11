@@ -27,7 +27,7 @@ data class CreateLanguageExRequest(
 class Create(
     @Autowired
     val util: Utility,
-     val languageExUtil: Util,
+     val languageExUtil: LanguageExUtil,
 
     @Autowired
     val ds: DataSource,
