@@ -2,6 +2,10 @@ package com.seedcompany.cordtables.components.tables.languageex
 
 
 class Util {
+
+
+    val nonMutableColumns:List<String> = listOf("id", "modified_at", "created_at", "created_by", "modified_by", "egids_value","least_reached_value", "partner_interest_value", "multiple_languages_leverage_linguistic_value", "multiple_languages_leverage_joint_training_value", "lang_comm_int_in_language_development_value", "lang_comm_int_in_scripture_translation_value", "access_to_scripture_in_lwc_value", "begin_work_geo_challenges_value", "begin_work_rel_pol_obstacles_value", "prioritization")
+
     fun getEgidsValue(egidsLevel: String): Double {
         return when (egidsLevel) {
             "0" -> 1.0
@@ -68,7 +72,7 @@ class Util {
     }
 
     fun getLangCommIntInLanguageDevelopmentValue(langCommIntInLanguageDevelopmentLevel: String): Double {
-        return when(langCommIntInLanguageDevelopmentLevel){
+        return when (langCommIntInLanguageDevelopmentLevel) {
             "No Interest" -> 0.00
             "Some" -> 0.25
             "Expressed Need" -> 0.50
@@ -79,7 +83,7 @@ class Util {
     }
 
     fun getLangCommIntInScriptureTranslationValue(langCommIntInScriptureTranslationLevel: String): Double {
-        return when(langCommIntInScriptureTranslationLevel){
+        return when (langCommIntInScriptureTranslationLevel) {
             "No Interest" -> 0.00
             "Some" -> 0.25
             "Expressed Need" -> 0.50
@@ -90,7 +94,7 @@ class Util {
     }
 
     fun getAccessToScriptureInLwcValue(accessToScriptureInLwcLevel: String): Double {
-        return when(accessToScriptureInLwcLevel){
+        return when (accessToScriptureInLwcLevel) {
             "Full Access" -> 0.00
             "Vast Majority" -> 0.16
             "Large Majority" -> 0.33
@@ -103,7 +107,7 @@ class Util {
     }
 
     fun getBeginWorkGeoChallengesValue(beginWorkGeoChallengesLevel: String): Double {
-        return when(beginWorkGeoChallengesLevel){
+        return when (beginWorkGeoChallengesLevel) {
             "None" -> -0.50
             "Very Difficult" -> 0.00
             "Difficult" -> 0.33
@@ -114,7 +118,7 @@ class Util {
     }
 
     fun getBeginWorkRelPolObstaclesValue(beginWorkRelPolObstaclesLevel: String): Double {
-        return when(beginWorkRelPolObstaclesLevel){
+        return when (beginWorkRelPolObstaclesLevel) {
             "None" -> 0.00
             "Very Difficult" -> 0.25
             "Difficult" -> 0.50
@@ -123,6 +127,5 @@ class Util {
             else -> 1.00
         }
     }
-
 
 }

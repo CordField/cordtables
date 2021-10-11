@@ -89,10 +89,8 @@ class Read(
     @PostMapping("language_ex/read")
     @ResponseBody
     fun ReadHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
-        //mutableList as we need to add each global role as an element to it
         var data: MutableList<LanguageEx> = mutableListOf()
         if (req.token == null) return ReadLanguageExResponse(ErrorType.TokenNotFound, mutableListOf())
-        if (!util.isAdmin(req.token)) return ReadLanguageExResponse(ErrorType.AdminOnly, mutableListOf())
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall(
