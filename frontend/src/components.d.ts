@@ -30,6 +30,8 @@ export namespace Components {
         "updateFn": (id: number, columnName: any, value: any) => Promise<boolean>;
         "value": any;
     }
+    interface CfGroups {
+    }
     interface CfHeader {
         "history": RouterHistory;
     }
@@ -102,6 +104,12 @@ declare global {
     var HTMLCfCellElement: {
         prototype: HTMLCfCellElement;
         new (): HTMLCfCellElement;
+    };
+    interface HTMLCfGroupsElement extends Components.CfGroups, HTMLStencilElement {
+    }
+    var HTMLCfGroupsElement: {
+        prototype: HTMLCfGroupsElement;
+        new (): HTMLCfGroupsElement;
     };
     interface HTMLCfHeaderElement extends Components.CfHeader, HTMLStencilElement {
     }
@@ -199,6 +207,7 @@ declare global {
         "app-root": HTMLAppRootElement;
         "cf-action": HTMLCfActionElement;
         "cf-cell": HTMLCfCellElement;
+        "cf-groups": HTMLCfGroupsElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
@@ -237,6 +246,8 @@ declare namespace LocalJSX {
         "rowId"?: number;
         "updateFn"?: (id: number, columnName: any, value: any) => Promise<boolean>;
         "value"?: any;
+    }
+    interface CfGroups {
     }
     interface CfHeader {
         "history"?: RouterHistory;
@@ -290,6 +301,7 @@ declare namespace LocalJSX {
         "app-root": AppRoot;
         "cf-action": CfAction;
         "cf-cell": CfCell;
+        "cf-groups": CfGroups;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
@@ -316,6 +328,7 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "cf-action": LocalJSX.CfAction & JSXBase.HTMLAttributes<HTMLCfActionElement>;
             "cf-cell": LocalJSX.CfCell & JSXBase.HTMLAttributes<HTMLCfCellElement>;
+            "cf-groups": LocalJSX.CfGroups & JSXBase.HTMLAttributes<HTMLCfGroupsElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
