@@ -77,42 +77,42 @@ class Create(
                             reqValues.add(languageExUtil.getEgidsValue(propValue as String))
                         }
                         if(prop.name == "least_reached_progress_jps_level"){
-                            insertStatementKeys = "$insertStatementKeys least_reached_value"
+                            insertStatementKeys = "$insertStatementKeys least_reached_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getLeastReachedValue(propValue as String))
                         }
                         if(prop.name == "multiple_languages_leverage_linguistic_level"){
-                            insertStatementKeys = "$insertStatementKeys multiple_languages_leverage_linguistic_value"
+                            insertStatementKeys = "$insertStatementKeys multiple_languages_leverage_linguistic_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getMultipleLanguagesLeverageLinguisticValue(propValue as String))
                         }
                         if(prop.name == "multiple_languages_leverage_joint_training_level"){
-                            insertStatementKeys = "$insertStatementKeys multiple_languages_leverage_joint_training_value"
+                            insertStatementKeys = "$insertStatementKeys multiple_languages_leverage_joint_training_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getMultipleLanguagesLeverageJointTrainingValue(propValue as String))
                         }
                         if(prop.name == "lang_comm_int_in_language_development_level"){
-                            insertStatementKeys = "$insertStatementKeys lang_comm_int_in_language_development_value"
+                            insertStatementKeys = "$insertStatementKeys lang_comm_int_in_language_development_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getLangCommIntInLanguageDevelopmentValue(propValue as String))
                         }
                         if(prop.name == "lang_comm_int_in_scripture_translation_level"){
-                            insertStatementKeys = "$insertStatementKeys lang_comm_int_in_scripture_translation_value"
+                            insertStatementKeys = "$insertStatementKeys lang_comm_int_in_scripture_translation_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getLangCommIntInScriptureTranslationValue(propValue as String))
                         }
                         if(prop.name == "access_to_scripture_in_lwc_level"){
-                            insertStatementKeys = "$insertStatementKeys access_to_scripture_in_lwc_value"
+                            insertStatementKeys = "$insertStatementKeys access_to_scripture_in_lwc_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getAccessToScriptureInLwcValue(propValue as String))
                         }
                         if(prop.name == "begin_work_geo_challenges_level"){
-                            insertStatementKeys = "$insertStatementKeys begin_work_geo_challenges_value"
+                            insertStatementKeys = "$insertStatementKeys begin_work_geo_challenges_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getBeginWorkGeoChallengesValue(propValue as String))
                         }
                         if(prop.name == "begin_work_rel_pol_obstacles_level"){
-                            insertStatementKeys = "$insertStatementKeys begin_work_rel_pol_obstacles_value"
+                            insertStatementKeys = "$insertStatementKeys begin_work_rel_pol_obstacles_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getBeginWorkRelPolObstaclesValue(propValue as String))
                         }
