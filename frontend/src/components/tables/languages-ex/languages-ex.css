@@ -5,6 +5,11 @@
   height: 100%;
 }
 
+#table-wrap {
+  max-height: 200px;
+  overflow: auto;
+}
+
 table {
   /* border: 2px solid black; */
 }
