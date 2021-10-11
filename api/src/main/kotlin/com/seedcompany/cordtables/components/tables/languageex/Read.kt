@@ -56,7 +56,7 @@ data class LanguageEx(
     val begin_work_geo_challenges_value:Double?,
     val begin_work_geo_challenges_description:String?,
     val begin_work_geo_challenges_source:String?,
-    val begin_work_rel_pol_obstacles_scale:String?,
+    val begin_work_rel_pol_obstacles_level:String?,
     val begin_work_rel_pol_obstacles_value:Double?,
     val begin_work_rel_pol_obstacles_description:String?,
     val begin_work_rel_pol_obstacles_source:String?,
@@ -105,7 +105,7 @@ class Read(
                         "\tinner join admin.tokens as c \n" +
                         "\ton b.person = c.person\n" +
                         "\twhere a.table_name = 'sc.languages_ex'\n" +
-                        "\tand c.token = :token\n" +
+                        "\tand c.token = ?\n" +
                         "), \n" +
                         "column_level_access as \n" +
                         "(\n" +
@@ -116,225 +116,228 @@ class Read(
                         "    inner join admin.tokens c \n" +
                         "    on b.person = c.person \n" +
                         "    where a.table_name = 'sc.languages_ex'\n" +
-                        "\tand c.token = :token\n" +
+                        "\tand c.token = ?\n" +
                         ")\n" +
                         "select \n" +
-                        "case when 'id' in (select column_name from column_level_access) then id \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then id \n" +
+                     "case when 'id' in (select column_name from column_level_access) then id \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then id \n" +
                         "else null \n" +
-                        "end as id\n" +
+                        "end as id,\n" +
                         "case when 'language_name' in (select column_name from column_level_access) then language_name \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then language_name \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then language_name \n" +
                         "else null \n" +
-                        "end as language_name\n" +
+                        "end as language_name,\n" +
                         "case when 'iso' in (select column_name from column_level_access) then iso \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then iso \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then iso \n" +
                         "else null \n" +
-                        "end as iso\n" +
+                        "end as iso,\n" +
                         "case when 'prioritization' in (select column_name from column_level_access) then prioritization \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then prioritization \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then prioritization \n" +
                         "else null \n" +
-                        "end as prioritization\n" +
+                        "end as prioritization,\n" +
                         "case when 'progress_bible' in (select column_name from column_level_access) then progress_bible \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then progress_bible \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then progress_bible \n" +
                         "else null \n" +
-                        "end as progress_bible\n" +
+                        "end as progress_bible,\n" +
                         "case when 'island' in (select column_name from column_level_access) then island \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then island \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then island \n" +
                         "else null \n" +
-                        "end as island\n" +
+                        "end as island,\n" +
                         "case when 'province' in (select column_name from column_level_access) then province \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then province \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then province \n" +
                         "else null \n" +
-                        "end as province\n" +
+                        "end as province,\n" +
                         "case when 'first_language_population' in (select column_name from column_level_access) then first_language_population \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then first_language_population \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then first_language_population \n" +
                         "else null \n" +
-                        "end as first_language_population\n" +
+                        "end as first_language_population,\n" +
                         "case when 'population_value' in (select column_name from column_level_access) then population_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then population_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then population_value \n" +
                         "else null \n" +
-                        "end as population_value\n" +
+                        "end as population_value,\n" +
                         "case when 'egids_level' in (select column_name from column_level_access) then egids_level \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then egids_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then egids_level \n" +
                         "else null \n" +
-                        "end as egids_level\n" +
+                        "end as egids_level,\n" +
                         "case when 'egids_value' in (select column_name from column_level_access) then egids_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then egids_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then egids_value \n" +
                         "else null \n" +
-                        "end as egids_value\n" +
+                        "end as egids_value,\n" +
                         "case when 'least_reached_progress_jps_level' in (select column_name from column_level_access) then least_reached_progress_jps_level \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then least_reached_progress_jps_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then least_reached_progress_jps_level \n" +
                         "else null \n" +
-                        "end as least_reached_progress_jps_level\n" +
+                        "end as least_reached_progress_jps_level,\n" +
                         "case when 'least_reached_value' in (select column_name from column_level_access) then least_reached_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then least_reached_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then least_reached_value \n" +
                         "else null \n" +
-                        "end as least_reached_value\n" +
+                        "end as least_reached_value,\n" +
                         "case when 'partner_interest_level' in (select column_name from column_level_access) then partner_interest_level \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then partner_interest_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then partner_interest_level \n" +
                         "else null \n" +
-                        "end as partner_interest_level\n" +
+                        "end as partner_interest_level,\n" +
                         "case when 'partner_interest_value' in (select column_name from column_level_access) then partner_interest_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then partner_interest_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then partner_interest_value \n" +
                         "else null \n" +
-                        "end as partner_interest_value\n" +
+                        "end as partner_interest_value,\n" +
                         "case when 'partner_interest_description' in (select column_name from column_level_access) then partner_interest_description \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then partner_interest_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then partner_interest_description \n" +
                         "else null \n" +
-                        "end as partner_interest_description\n" +
+                        "end as partner_interest_description,\n" +
                         "case when 'partner_interest_source' in (select column_name from column_level_access) then partner_interest_source \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then partner_interest_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then partner_interest_source \n" +
                         "else null \n" +
-                        "end as partner_interest_source\n" +
+                        "end as partner_interest_source,\n" +
                         "case when 'multiple_languages_leverage_linguistic_level' in (select column_name from column_level_access) then multiple_languages_leverage_linguistic_level \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then multiple_languages_leverage_linguistic_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_linguistic_level \n" +
                         "else null \n" +
-                        "end as multiple_languages_leverage_linguistic_level\n" +
+                        "end as multiple_languages_leverage_linguistic_level,\n" +
                         "case when 'multiple_languages_leverage_linguistic_value' in (select column_name from column_level_access) then multiple_languages_leverage_linguistic_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then multiple_languages_leverage_linguistic_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_linguistic_value \n" +
                         "else null \n" +
-                        "end as multiple_languages_leverage_linguistic_value\n" +
+                        "end as multiple_languages_leverage_linguistic_value,\n" +
                         "case when 'multiple_languages_leverage_linguistic_description' in (select column_name from column_level_access) then multiple_languages_leverage_linguistic_description \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then multiple_languages_leverage_linguistic_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_linguistic_description \n" +
                         "else null \n" +
-                        "end as multiple_languages_leverage_linguistic_description\n" +
+                        "end as multiple_languages_leverage_linguistic_description,\n" +
                         "case when 'multiple_languages_leverage_linguistic_source' in (select column_name from column_level_access) then multiple_languages_leverage_linguistic_source \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then multiple_languages_leverage_linguistic_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_linguistic_source \n" +
                         "else null \n" +
-                        "end as multiple_languages_leverage_linguistic_source\n" +
+                        "end as multiple_languages_leverage_linguistic_source,\n" +
                         "case when 'multiple_languages_leverage_joint_training_level' in (select column_name from column_level_access) then multiple_languages_leverage_joint_training_level \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then multiple_languages_leverage_joint_training_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_joint_training_level \n" +
                         "else null \n" +
-                        "end as multiple_languages_leverage_joint_training_level\n" +
+                        "end as multiple_languages_leverage_joint_training_level,\n" +
                         "case when 'multiple_languages_leverage_joint_training_value' in (select column_name from column_level_access) then multiple_languages_leverage_joint_training_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then multiple_languages_leverage_joint_training_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_joint_training_value \n" +
                         "else null \n" +
-                        "end as multiple_languages_leverage_joint_training_value\n" +
+                        "end as multiple_languages_leverage_joint_training_value,\n" +
                         "case when 'multiple_languages_leverage_joint_training_description' in (select column_name from column_level_access) then multiple_languages_leverage_joint_training_description \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then multiple_languages_leverage_joint_training_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_joint_training_description \n" +
                         "else null \n" +
-                        "end as multiple_languages_leverage_joint_training_description\n" +
+                        "end as multiple_languages_leverage_joint_training_description,\n" +
                         "case when 'multiple_languages_leverage_joint_training_source' in (select column_name from column_level_access) then multiple_languages_leverage_joint_training_source \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then multiple_languages_leverage_joint_training_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then multiple_languages_leverage_joint_training_source \n" +
                         "else null \n" +
-                        "end as multiple_languages_leverage_joint_training_source\n" +
+                        "end as multiple_languages_leverage_joint_training_source,\n" +
                         "case when 'lang_comm_int_in_language_development_level' in (select column_name from column_level_access) then lang_comm_int_in_language_development_level \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then lang_comm_int_in_language_development_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_language_development_level \n" +
                         "else null \n" +
-                        "end as lang_comm_int_in_language_development_level\n" +
+                        "end as lang_comm_int_in_language_development_level,\n" +
                         "case when 'lang_comm_int_in_language_development_value' in (select column_name from column_level_access) then lang_comm_int_in_language_development_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then lang_comm_int_in_language_development_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_language_development_value \n" +
                         "else null \n" +
-                        "end as lang_comm_int_in_language_development_value\n" +
+                        "end as lang_comm_int_in_language_development_value,\n" +
                         "case when 'lang_comm_int_in_language_development_description' in (select column_name from column_level_access) then lang_comm_int_in_language_development_description \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then lang_comm_int_in_language_development_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_language_development_description \n" +
                         "else null \n" +
-                        "end as lang_comm_int_in_language_development_description\n" +
+                        "end as lang_comm_int_in_language_development_description,\n" +
                         "case when 'lang_comm_int_in_language_development_source' in (select column_name from column_level_access) then lang_comm_int_in_language_development_source \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then lang_comm_int_in_language_development_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_language_development_source \n" +
                         "else null \n" +
-                        "end as lang_comm_int_in_language_development_source\n" +
+                        "end as lang_comm_int_in_language_development_source,\n" +
                         "case when 'lang_comm_int_in_scripture_translation_level' in (select column_name from column_level_access) then lang_comm_int_in_scripture_translation_level \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then lang_comm_int_in_scripture_translation_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_scripture_translation_level \n" +
                         "else null \n" +
-                        "end as lang_comm_int_in_scripture_translation_level\n" +
+                        "end as lang_comm_int_in_scripture_translation_level,\n" +
                         "case when 'lang_comm_int_in_scripture_translation_value' in (select column_name from column_level_access) then lang_comm_int_in_scripture_translation_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then lang_comm_int_in_scripture_translation_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_scripture_translation_value \n" +
                         "else null \n" +
-                        "end as lang_comm_int_in_scripture_translation_value\n" +
+                        "end as lang_comm_int_in_scripture_translation_value,\n" +
                         "case when 'lang_comm_int_in_scripture_translation_description' in (select column_name from column_level_access) then lang_comm_int_in_scripture_translation_description \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then lang_comm_int_in_scripture_translation_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_scripture_translation_description \n" +
                         "else null \n" +
-                        "end as lang_comm_int_in_scripture_translation_description\n" +
+                        "end as lang_comm_int_in_scripture_translation_description,\n" +
                         "case when 'lang_comm_int_in_scripture_translation_source' in (select column_name from column_level_access) then lang_comm_int_in_scripture_translation_source \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then lang_comm_int_in_scripture_translation_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then lang_comm_int_in_scripture_translation_source \n" +
                         "else null \n" +
-                        "end as lang_comm_int_in_scripture_translation_source\n" +
+                        "end as lang_comm_int_in_scripture_translation_source,\n" +
                         "case when 'access_to_scripture_in_lwc_level' in (select column_name from column_level_access) then access_to_scripture_in_lwc_level \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then access_to_scripture_in_lwc_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then access_to_scripture_in_lwc_level \n" +
                         "else null \n" +
-                        "end as access_to_scripture_in_lwc_level\n" +
+                        "end as access_to_scripture_in_lwc_level,\n" +
                         "case when 'access_to_scripture_in_lwc_value' in (select column_name from column_level_access) then access_to_scripture_in_lwc_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then access_to_scripture_in_lwc_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then access_to_scripture_in_lwc_value \n" +
                         "else null \n" +
-                        "end as access_to_scripture_in_lwc_value\n" +
+                        "end as access_to_scripture_in_lwc_value,\n" +
                         "case when 'access_to_scripture_in_lwc_description' in (select column_name from column_level_access) then access_to_scripture_in_lwc_description \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then access_to_scripture_in_lwc_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then access_to_scripture_in_lwc_description \n" +
                         "else null \n" +
-                        "end as access_to_scripture_in_lwc_description\n" +
+                        "end as access_to_scripture_in_lwc_description,\n" +
                         "case when 'access_to_scripture_in_lwc_source' in (select column_name from column_level_access) then access_to_scripture_in_lwc_source \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then access_to_scripture_in_lwc_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then access_to_scripture_in_lwc_source \n" +
                         "else null \n" +
-                        "end as access_to_scripture_in_lwc_source\n" +
+                        "end as access_to_scripture_in_lwc_source,\n" +
                         "case when 'begin_work_geo_challenges_level' in (select column_name from column_level_access) then begin_work_geo_challenges_level \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then begin_work_geo_challenges_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_geo_challenges_level \n" +
                         "else null \n" +
-                        "end as begin_work_geo_challenges_level\n" +
+                        "end as begin_work_geo_challenges_level,\n" +
                         "case when 'begin_work_geo_challenges_value' in (select column_name from column_level_access) then begin_work_geo_challenges_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then begin_work_geo_challenges_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_geo_challenges_value \n" +
                         "else null \n" +
-                        "end as begin_work_geo_challenges_value\n" +
+                        "end as begin_work_geo_challenges_value,\n" +
                         "case when 'begin_work_geo_challenges_description' in (select column_name from column_level_access) then begin_work_geo_challenges_description \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then begin_work_geo_challenges_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_geo_challenges_description \n" +
                         "else null \n" +
-                        "end as begin_work_geo_challenges_description\n" +
+                        "end as begin_work_geo_challenges_description,\n" +
                         "case when 'begin_work_geo_challenges_source' in (select column_name from column_level_access) then begin_work_geo_challenges_source \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then begin_work_geo_challenges_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_geo_challenges_source \n" +
                         "else null \n" +
-                        "end as begin_work_geo_challenges_source\n" +
-                        "case when 'begin_work_rel_pol_obstacles_scale' in (select column_name from column_level_access) then begin_work_rel_pol_obstacles_scale \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then begin_work_rel_pol_obstacles_scale \n" +
+                        "end as begin_work_geo_challenges_source,\n" +
+                        "case when 'begin_work_rel_pol_obstacles_level' in (select column_name from column_level_access) then begin_work_rel_pol_obstacles_level \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_rel_pol_obstacles_level \n" +
                         "else null \n" +
-                        "end as begin_work_rel_pol_obstacles_scale\n" +
+                        "end as begin_work_rel_pol_obstacles_level,\n" +
                         "case when 'begin_work_rel_pol_obstacles_value' in (select column_name from column_level_access) then begin_work_rel_pol_obstacles_value \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then begin_work_rel_pol_obstacles_value \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_rel_pol_obstacles_value \n" +
                         "else null \n" +
-                        "end as begin_work_rel_pol_obstacles_value\n" +
+                        "end as begin_work_rel_pol_obstacles_value,\n" +
                         "case when 'begin_work_rel_pol_obstacles_description' in (select column_name from column_level_access) then begin_work_rel_pol_obstacles_description \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then begin_work_rel_pol_obstacles_description \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_rel_pol_obstacles_description \n" +
                         "else null \n" +
-                        "end as begin_work_rel_pol_obstacles_description\n" +
+                        "end as begin_work_rel_pol_obstacles_description,\n" +
                         "case when 'begin_work_rel_pol_obstacles_source' in (select column_name from column_level_access) then begin_work_rel_pol_obstacles_source \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then begin_work_rel_pol_obstacles_source \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then begin_work_rel_pol_obstacles_source \n" +
                         "else null \n" +
-                        "end as begin_work_rel_pol_obstacles_source\n" +
+                        "end as begin_work_rel_pol_obstacles_source,\n" +
                         "case when 'suggested_strategies' in (select column_name from column_level_access) then suggested_strategies \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then suggested_strategies \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then suggested_strategies \n" +
                         "else null \n" +
-                        "end as suggested_strategies\n" +
+                        "end as suggested_strategies,\n" +
                         "case when 'comments' in (select column_name from column_level_access) then comments \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then comments \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then comments \n" +
                         "else null \n" +
-                        "end as comments\n" +
+                        "end as comments,\n" +
                         "case when 'created_at' in (select column_name from column_level_access) then created_at \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then created_at \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then created_at \n" +
                         "else null \n" +
-                        "end as created_at\n" +
+                        "end as created_at,\n" +
                         "case when 'created_by' in (select column_name from column_level_access) then created_by \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then created_by \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then created_by \n" +
                         "else null \n" +
-                        "end as created_by\n" +
+                        "end as created_by,\n" +
                         "case when 'modified_at' in (select column_name from column_level_access) then modified_at \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then modified_at \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then modified_at \n" +
                         "else null \n" +
-                        "end as modified_at\n" +
+                        "end as modified_at,\n" +
                         "case when 'modified_by' in (select column_name from column_level_access) then modified_by \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then modified_by \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then modified_by \n" +
                         "else null \n" +
-                        "end as modified_by\n" +
+                        "end as modified_by,\n" +
                         "case when 'owning_person' in (select column_name from column_level_access) then owning_person \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then owning_person \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then owning_person \n" +
                         "else null \n" +
-                        "end as owning_person\n" +
+                        "end as owning_person,\n" +
                         "case when 'owning_group' in (select column_name from column_level_access) then owning_group \n" +
-                        "when (select exists( select id from public.global_role_memberships where person = (select person from public.tokens where token = :token) and global_role = 1))  then owning_group \n" +
+                        "when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = ?) and global_role = 1))  then owning_group \n" +
                         "else null \n" +
-                        "end as owning_group \n"+
+                        "end as owning_group\n"+
                         "from sc.languages_ex \n" +
                         "where id in (select row from row_level_access);"
             )
-            listStatement.setString("token",req.token)
+
+            for (i in 1..55) {
+                listStatement.setString(i, req.token)
+            }
 //
             try {
                 val listStatementResult = listStatement.executeQuery()
@@ -422,8 +425,8 @@ class Read(
                     if(listStatementResult.wasNull()) begin_work_geo_challenges_description = null
                     var begin_work_geo_challenges_source:String? = listStatementResult.getString("begin_work_geo_challenges_source")
                     if(listStatementResult.wasNull()) begin_work_geo_challenges_source = null
-                    var begin_work_rel_pol_obstacles_scale:String? = listStatementResult.getString("begin_work_rel_pol_obstacles_scale")
-                    if(listStatementResult.wasNull()) begin_work_rel_pol_obstacles_scale = null
+                    var begin_work_rel_pol_obstacles_level:String? = listStatementResult.getString("begin_work_rel_pol_obstacles_level")
+                    if(listStatementResult.wasNull()) begin_work_rel_pol_obstacles_level = null
                     var begin_work_rel_pol_obstacles_value:Double? = listStatementResult.getDouble("begin_work_rel_pol_obstacles_value")
                     if(listStatementResult.wasNull()) begin_work_rel_pol_obstacles_value = null
                     var begin_work_rel_pol_obstacles_description:String? = listStatementResult.getString("begin_work_rel_pol_obstacles_description")
@@ -488,7 +491,7 @@ class Read(
                         begin_work_geo_challenges_value,
                         begin_work_geo_challenges_description,
                         begin_work_geo_challenges_source,
-                        begin_work_rel_pol_obstacles_scale,
+                        begin_work_rel_pol_obstacles_level,
                         begin_work_rel_pol_obstacles_value,
                         begin_work_rel_pol_obstacles_description,
                         begin_work_rel_pol_obstacles_source,
