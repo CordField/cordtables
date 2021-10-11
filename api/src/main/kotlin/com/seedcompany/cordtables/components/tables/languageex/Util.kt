@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.languageex
 
 
 class Util {
-    fun getEgidsValue(egidsLevel: String): Number {
+    fun getEgidsValue(egidsLevel: String): Double {
         return when (egidsLevel) {
             "0" -> 1.0
             "1" -> 1.0
@@ -22,7 +22,7 @@ class Util {
         }
     }
 
-    fun getLeastReachedValue(leastReachedProgressJpsLevel: String): Number {
+    fun getLeastReachedValue(leastReachedProgressJpsLevel: String): Double {
         return when (leastReachedProgressJpsLevel) {
             "1" -> 1.00
             "2" -> 0.75
@@ -33,7 +33,7 @@ class Util {
         }
     }
 
-    fun getPartnerInterestValue(partnerInterestLevel: String): Number {
+    fun getPartnerInterestValue(partnerInterestLevel: String): Double {
         return when (partnerInterestLevel) {
             "No Partner Interest" -> 0.00
             "Some" -> 0.33
@@ -43,7 +43,7 @@ class Util {
         }
     }
 
-    fun getMultipleLanguagesLeverageLinguisticValue(multipleLanguagesLeverageLinguisticLevel: String): Number {
+    fun getMultipleLanguagesLeverageLinguisticValue(multipleLanguagesLeverageLinguisticLevel: String): Double {
         return when (multipleLanguagesLeverageLinguisticLevel) {
             "None" -> 0.0
             "Some" -> 0.2
@@ -55,7 +55,7 @@ class Util {
         }
     }
 
-    fun getMultipleLanguagesLeverageJointTrainingValue(multipleLanguagesLeverageJointTrainingLevel: String): Number {
+    fun getMultipleLanguagesLeverageJointTrainingValue(multipleLanguagesLeverageJointTrainingLevel: String): Double {
         return when (multipleLanguagesLeverageJointTrainingLevel) {
             "None" -> 0.0
             "Some" -> 0.2
@@ -67,7 +67,7 @@ class Util {
         }
     }
 
-    fun getLangCommIntInLanguageDevelopmentValue(langCommIntInLanguageDevelopmentLevel: String): Number {
+    fun getLangCommIntInLanguageDevelopmentValue(langCommIntInLanguageDevelopmentLevel: String): Double {
         return when(langCommIntInLanguageDevelopmentLevel){
             "No Interest" -> 0.00
             "Some" -> 0.25
@@ -78,7 +78,7 @@ class Util {
         }
     }
 
-    fun getLangCommIntInScriptureTranslationValue(langCommIntInScriptureTranslationLevel: String): Number {
+    fun getLangCommIntInScriptureTranslationValue(langCommIntInScriptureTranslationLevel: String): Double {
         return when(langCommIntInScriptureTranslationLevel){
             "No Interest" -> 0.00
             "Some" -> 0.25
@@ -89,7 +89,7 @@ class Util {
         }
     }
 
-    fun getAccessToScriptureInLwcValue(accessToScriptureInLwcLevel: String): Number {
+    fun getAccessToScriptureInLwcValue(accessToScriptureInLwcLevel: String): Double {
         return when(accessToScriptureInLwcLevel){
             "Full Access" -> 0.00
             "Vast Majority" -> 0.16
@@ -102,7 +102,7 @@ class Util {
         }
     }
 
-    fun getBeginWorkGeoChallengesValue(beginWorkGeoChallengesLevel: String): Number {
+    fun getBeginWorkGeoChallengesValue(beginWorkGeoChallengesLevel: String): Double {
         return when(beginWorkGeoChallengesLevel){
             "None" -> -0.50
             "Very Difficult" -> 0.00
@@ -113,7 +113,7 @@ class Util {
         }
     }
 
-    fun getBeginWorkRelPolObstaclesValue(beginWorkRelPolObstaclesLevel: String): Number {
+    fun getBeginWorkRelPolObstaclesValue(beginWorkRelPolObstaclesLevel: String): Double {
         return when(beginWorkRelPolObstaclesLevel){
             "None" -> 0.00
             "Very Difficult" -> 0.25
@@ -123,4 +123,6 @@ class Util {
             else -> 1.00
         }
     }
+
+
 }
