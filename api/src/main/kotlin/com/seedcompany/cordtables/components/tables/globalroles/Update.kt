@@ -53,7 +53,7 @@ class Update(
 
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.users where email = ?")
+                val getUserIdStatement = conn.prepareCall("select person from common.users where email = ?")
                 getUserIdStatement.setString(1, req.email)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
@@ -68,7 +68,7 @@ class Update(
             }
             try {
                 var reqValues: MutableList<Any> = mutableListOf()
-                var updateSql = "update public.global_roles set"
+                var updateSql = "update admin.global_roles set"
                 for (prop in UpdatableGlobalRoleFields::class.memberProperties) {
                     val propValue = prop.get(req.updatedFields)
                     println("$propValue ${prop.name}")

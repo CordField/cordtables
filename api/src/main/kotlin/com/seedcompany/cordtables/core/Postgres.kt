@@ -40,7 +40,7 @@ class BootstrapDB(
             """
        SELECT EXISTS (
        SELECT FROM information_schema.tables 
-       WHERE  table_schema = 'public'
+       WHERE  table_schema = 'admin'
        AND    table_name   = 'global_roles'
        );
       """.trimIndent()
@@ -52,10 +52,14 @@ class BootstrapDB(
             println("version 1 not found. creating schema.")
 
             // schema
-            runSqlFile("sql/schemas/public/public.admin.schema.sql")
-            runSqlFile("sql/schemas/public/public.admin.history.sql")
-            runSqlFile("sql/schemas/public/public.schema.sql")
-            runSqlFile("sql/schemas/public/public.history.sql")
+            runSqlFile("sql/schemas/admin/admin.schema.sql")
+            runSqlFile("sql/schemas/admin/admin.history.sql")
+
+            runSqlFile("sql/schemas/sil/sil.schema.sql")
+
+            runSqlFile("sql/schemas/common/common.schema.sql")
+            runSqlFile("sql/schemas/common/common.history.sql")
+
             runSqlFile("sql/schemas/sc/sc.schema.sql")
             runSqlFile("sql/schemas/sc/sc.history.sql")
             runSqlFile("sql/version-control/bootstrap.sql")

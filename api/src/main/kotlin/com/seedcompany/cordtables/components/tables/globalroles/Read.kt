@@ -43,7 +43,7 @@ class Read(
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall(
-                "select id, created_at, created_by,modified_at,modified_by, name, org from public.global_roles;"
+                "select id, created_at, created_by,modified_at,modified_by, name, org from admin.global_roles;"
             )
             try {
                 val listStatementResult = listStatement.executeQuery()

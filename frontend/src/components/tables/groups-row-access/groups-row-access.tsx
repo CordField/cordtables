@@ -115,56 +115,58 @@ export class GroupsRowAccess {
       <Host>
         <slot></slot>
         <h3>Group Row Access</h3>
-        <table>
-          <tr>
+        <div id="table-wrap">
+          <table>
+            <tr id="header-row">
+              {this.listResponse &&
+                this.listResponse.groupRowAccessList &&
+                this.listResponse.groupRowAccessList.length > 0 &&
+                Object.keys(this.listResponse.groupRowAccessList[0]).map(key => <th>{key}</th>)}
+              <th>ACTIONS</th>
+            </tr>
+
             {this.listResponse &&
               this.listResponse.groupRowAccessList &&
-              this.listResponse.groupRowAccessList.length > 0 &&
-              Object.keys(this.listResponse.groupRowAccessList[0]).map(key => <th>{key}</th>)}
-            <th>ACTIONS</th>
-          </tr>
-
-          {this.listResponse &&
-            this.listResponse.groupRowAccessList &&
-            this.listResponse.groupRowAccessList.map(item => (
-              <tr>
-                {Object.keys(item).map(key => (
+              this.listResponse.groupRowAccessList.map(item => (
+                <tr>
+                  {Object.keys(item).map(key => (
+                    <td>
+                      <cf-cell
+                        key={key}
+                        rowId={item.id}
+                        propKey={key}
+                        value={item[key]}
+                        isEditable={this.editableKeys.includes(key)}
+                        updateFn={this.editableKeys.includes(key) ? null : null}
+                      ></cf-cell>
+                    </td>
+                  ))}
                   <td>
-                    <cf-cell
-                      key={key}
-                      rowId={item.id}
-                      propKey={key}
-                      value={item[key]}
-                      isEditable={this.editableKeys.includes(key)}
-                      updateFn={this.editableKeys.includes(key) ? null : null}
-                    ></cf-cell>
+                    <cf-action actionType={ActionType.Delete} value={item.id} text={'DELETE'} actionFn={this.clickRemoveRowIcon} />
                   </td>
-                ))}
-                <td>
-                  <cf-action actionType={ActionType.Delete} value={item.id} text={'DELETE'} actionFn={this.clickRemoveRowIcon} />
-                </td>
-              </tr>
-            ))}
+                </tr>
+              ))}
 
-          {this.showNewForm && (
-            <tr>
-              <td class="disabled">&nbsp;</td>
-              <td>
-                <input type="text" id="group-input" name="group" onInput={event => this.inputGroup(event)}></input>
-              </td>
-              <td>
-                <input type="text" id="table-name-input" name="tableName" onInput={event => this.inputTableName(event)}></input>
-              </td>
-              <td>
-                <input type="text" id="row-input" name="row" onInput={event => this.inputRow(event)}></input>
-              </td>
-              <td class="disabled">&nbsp;</td>
-              <td class="disabled">&nbsp;</td>
-              <td class="disabled">&nbsp;</td>
-              <td class="disabled">&nbsp;</td>
-            </tr>
-          )}
-        </table>
+            {this.showNewForm && (
+              <tr>
+                <td class="disabled">&nbsp;</td>
+                <td>
+                  <input type="text" id="group-input" name="group" onInput={event => this.inputGroup(event)}></input>
+                </td>
+                <td>
+                  <input type="text" id="table-name-input" name="tableName" onInput={event => this.inputTableName(event)}></input>
+                </td>
+                <td>
+                  <input type="text" id="row-input" name="row" onInput={event => this.inputRow(event)}></input>
+                </td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+              </tr>
+            )}
+          </table>
+        </div>
 
         <div id="button-group">
           {!this.showNewForm && (

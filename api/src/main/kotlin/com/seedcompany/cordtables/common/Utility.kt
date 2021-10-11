@@ -75,13 +75,13 @@ class Utility(
                 """
                 select exists(
                 	select id 
-                	from public.global_roles 
+                	from admin.global_roles 
                 	where id in (
                 		select global_role 
-                		from public.global_role_memberships 
+                		from admin.global_role_memberships 
                 		where person = (
                 			select person
-                			from public.tokens 
+                			from admin.tokens 
                 			where token = ?
                         )
                     ) 
@@ -109,19 +109,19 @@ class Utility(
                 """
                 select exists(
                 	select a.id 
-                	from public.global_roles as a 
-                    inner join public.global_role_table_permissions as b 
+                	from admin.global_roles as a 
+                    inner join admin.global_role_table_permissions as b 
                     on a.id = b.global_role 
                 	where a.id in (
                 		select global_role 
-                		from public.global_role_memberships
+                		from admin.global_role_memberships
                 		where person = (
                 			select person
-                			from public.tokens 
+                			from admin.tokens 
                 			where token = ?
                         )
                     ) 
-                   and b.table_name = ?
+                   and b.table_name::text = ?
                    and b.table_permission = 'Create'
                 );
             """.trimIndent()
@@ -146,15 +146,15 @@ class Utility(
                 """
                 select exists(
                 	select a.id 
-                	from public.global_roles as a 
-                    inner join public.global_role_table_permissions as b 
+                	from admin.global_roles as a 
+                    inner join admin.global_role_table_permissions as b 
                     on a.id = b.global_role 
                 	where a.id in (
                 		select global_role 
-                		from public.global_role_memberships
+                		from admin.global_role_memberships
                 		where person = (
                 			select person
-                			from public.tokens 
+                			from admin.tokens 
                 			where token = ?
                         )
                     ) 
@@ -178,21 +178,22 @@ class Utility(
         var userHasUpdatePermission = false;
         this.ds.connection.use { conn ->
             var updateSql = "select count(*) from \n" +
-                    "(select column_name from public.global_role_column_grants as a \n" +
-                    "inner join public.global_roles as b  \n" +
+                    "(select column_name from admin.global_role_column_grants as a \n" +
+                    "inner join admin.global_roles as b  \n" +
                     "on a.global_role = b.id \n" +
                     "where b.id in (\n" +
                     "\tselect global_role \n" +
-                    "    from public.global_role_memberships\n" +
+                    "    from admin.global_role_memberships\n" +
                     "\twhere person = (\n" +
                     "\t\t\t\t\tselect person\n" +
-                    "\t\t\t\t\tfrom public.tokens \n" +
+                    "\t\t\t\t\tfrom admin.tokens \n" +
                     "\t\t\t\t\twhere token = ?\n" +
                     "                    )\n" +
                     ")\n" +
                     " and a.table_name::text = ? \n" +
                     " and a.access_level = 'Write' \n" +
-                    " and a.column_name in (\n"
+                    " and a.column_name in ( ''\n"
+//            need to add a empty column above so that when no update is sent, the query doesn't give an error for an empty subquery in check
             columnNames.forEach { columnName ->
                 updateSql = "$updateSql '$columnName',"
             }
@@ -214,6 +215,39 @@ class Utility(
         }
         return userHasUpdatePermission;
 
+    }
+
+    fun getReadableTables(token: String):MutableList<String>{
+        println("token $token")
+        val tableNames = mutableListOf<String>()
+        if(isAdmin(token)){
+            this.ds.connection.use{conn->
+                val statement = conn.prepareCall("select table_schema || '.' || table_name as table_name " +
+                        "from information_schema.tables where table_schema in ('admin', 'common', 'sc', 'sil') order by table_name asc")
+                val result = statement.executeQuery()
+                while(result.next()){
+                    tableNames.add(result.getString("table_name").replace('_','-'))
+                }
+            }
+            return tableNames;
+        }
+
+        this.ds.connection.use{ conn ->
+            val statement = conn.prepareCall("select distinct table_name \n" +
+                    "from admin.global_role_column_grants as a \n" +
+                    "inner join admin.global_role_memberships as b \n" +
+                    "on a.global_role = b.global_role \n" +
+                    "inner join admin.tokens as c \n" +
+                    "on b.person = c.person \n" +
+                    "where c.token = ? order by table_name asc")
+            statement.setString(1,token)
+            val result = statement.executeQuery()
+            while(result.next()){
+                tableNames.add(result.getString("table_name").replace('_','-'))
+            }
+            println("accessible tables: $tableNames")
+        }
+        return tableNames;
     }
 
 }

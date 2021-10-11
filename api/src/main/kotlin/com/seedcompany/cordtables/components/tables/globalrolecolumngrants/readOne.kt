@@ -65,7 +65,7 @@ class readOne(
                     "\tmodified_at,\n" +
                     "\tmodified_by,\n" +
                     "\ttable_name\n" +
-                    "FROM public.global_role_column_grants WHERE id = ?")
+                    "FROM admin.global_role_column_grants WHERE id = ?")
             listStatement.setInt(1, req.id)
             try {
                 val listStatementResult = listStatement.executeQuery();

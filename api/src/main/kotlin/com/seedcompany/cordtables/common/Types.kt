@@ -33,7 +33,8 @@ enum class ErrorType {
     UserTokenNotFound,
     emptyReadResult,
     CannotUpdateAdminGroup,
-    DoesNotHaveUpdatePermission
+    DoesNotHaveUpdatePermission,
+    DoesNotHaveDeletePermission
 }
 enum class access_level (val accessType: String){
     Read("Read"),

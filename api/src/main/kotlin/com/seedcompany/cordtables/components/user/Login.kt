@@ -19,6 +19,8 @@ data class LoginRequest(
 data class LoginReturn(
     val error: ErrorType,
     val token: String? = null,
+    val readableTables: MutableList<String> = mutableListOf(),
+    val isAdmin: Boolean = false
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -47,7 +49,7 @@ class Login (
         var errorType = ErrorType.UnknownError
 
         this.ds.connection.use { conn ->
-            val pashStatement = conn.prepareCall("select password from users where email = ?;")
+            val pashStatement = conn.prepareCall("select password from common.users where email = ?;")
             pashStatement.setString(1, req.email)
 
             val getPashResult = pashStatement.executeQuery()
@@ -61,10 +63,9 @@ class Login (
 
                 if (matches) {
                     token = util.createToken()
-                    errorType = loginDB(req.email, token!!)
-
+                   errorType = loginDB(req.email, token!!)
                     if (errorType === ErrorType.NoError) {
-                        response = LoginReturn(errorType, token)
+                        response = LoginReturn(errorType, token,util.getReadableTables(token!!), util.isAdmin(token!!))
                     } else {
                         println("login failed")
                     }
@@ -84,7 +85,7 @@ class Login (
         var errorType = ErrorType.UnknownError
 
         this.ds.connection.use{conn ->
-            val statement = conn.prepareCall("call Login(?, ?, ?);")
+            val statement = conn.prepareCall("call common.login(?, ?, ?);")
             statement.setString(1, email)
             statement.setString(2, token)
             statement.setString(3, errorType.name)

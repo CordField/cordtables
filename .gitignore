@@ -3,3 +3,5 @@ infra/dev/cf-server/static/*
 infra/dev/cf-server/cordfield.jar
 *.todo
 *.notes
+todo
+api/src/main/resources/local

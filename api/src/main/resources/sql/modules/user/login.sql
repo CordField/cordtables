@@ -10,12 +10,12 @@ DECLARE
     vToken varchar(512);
 BEGIN
     SELECT person
-    FROM users
+    FROM common.users
     INTO vPersonId
     WHERE email = p_email;
 
     if vPersonId is not null then
-      insert into public.tokens ("token", "person")
+      insert into admin.tokens ("token", "person")
       values (p_token, vPersonId);
 
       error_type = 'NoError';

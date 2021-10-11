@@ -93,7 +93,7 @@ export class CfGroups {
     }
   };
 
-  updateName = async (id: number, value: string): Promise<boolean> => {
+  updateName = async (id: number, columnName: string, value: string): Promise<boolean> => {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, name: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
@@ -119,49 +119,51 @@ export class CfGroups {
       <Host>
         <slot></slot>
         <h3>Groups</h3>
-        <table>
-          <tr>
-            {this.listResponse && this.listResponse.groups && this.listResponse.groups.length > 0 && Object.keys(this.listResponse.groups[0]).map(key => <th>{key}</th>)}
-            <th>ACTIONS</th>
-          </tr>
-
-          {this.listResponse &&
-            this.listResponse.groups &&
-            this.listResponse.groups.map(item => (
-              <tr>
-                {Object.keys(item).map(key => (
-                  <td>
-                    <cf-cell
-                      key={key}
-                      rowId={item.id}
-                      propKey={key}
-                      value={item[key]}
-                      isEditable={this.editableKeys.includes(key)}
-                      updateFn={this.editableKeys.includes(key) ? this.updateName : null}
-                    ></cf-cell>
-                  </td>
-                ))}
-                <td>
-                  <cf-action actionType={ActionType.Delete} value={item.id} text={'DELETE'} actionFn={this.clickRemoveRowIcon} />
-                </td>
-              </tr>
-            ))}
-
-          {this.showNewForm && (
+        <div id="table-wrap">
+          <table>
             <tr>
-              <td class="disabled">&nbsp;</td>
-              <td>
-                <input type="text" id="name-input" name="name" onInput={event => this.inputName(event)}></input>
-              </td>
-              <td class="disabled">&nbsp;</td>
-              <td class="disabled">&nbsp;</td>
-              <td class="disabled">&nbsp;</td>
-              <td class="disabled">&nbsp;</td>
-              <td class="disabled">&nbsp;</td>
-              <td class="disabled">&nbsp;</td>
+              {this.listResponse && this.listResponse.groups && this.listResponse.groups.length > 0 && Object.keys(this.listResponse.groups[0]).map(key => <th>{key}</th>)}
+              <th>ACTIONS</th>
             </tr>
-          )}
-        </table>
+
+            {this.listResponse &&
+              this.listResponse.groups &&
+              this.listResponse.groups.map(item => (
+                <tr>
+                  {Object.keys(item).map(key => (
+                    <td>
+                      <cf-cell
+                        key={key}
+                        rowId={item.id}
+                        propKey={key}
+                        value={item[key]}
+                        isEditable={this.editableKeys.includes(key)}
+                        updateFn={this.editableKeys.includes(key) ? this.updateName : null}
+                      ></cf-cell>
+                    </td>
+                  ))}
+                  <td>
+                    <cf-action actionType={ActionType.Delete} value={item.id} text={'DELETE'} actionFn={this.clickRemoveRowIcon} />
+                  </td>
+                </tr>
+              ))}
+
+            {this.showNewForm && (
+              <tr>
+                <td class="disabled">&nbsp;</td>
+                <td>
+                  <input type="text" id="name-input" name="name" onInput={event => this.inputName(event)}></input>
+                </td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
+              </tr>
+            )}
+          </table>
+        </div>
 
         <div id="button-group">
           {!this.showNewForm && (
