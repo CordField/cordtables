@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.languageex
 
 import org.springframework.stereotype.Component
 
-@Component
+@Component("LanguageExUtil")
 class LanguageExUtil {
 
 

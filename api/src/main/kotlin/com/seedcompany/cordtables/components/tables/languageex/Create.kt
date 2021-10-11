@@ -37,8 +37,8 @@ class Create(
     fun CreateHandler(@RequestBody req: CreateLanguageExRequest): CreateLanguageExResponse {
 
         if (req.token == null) return CreateLanguageExResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasCreatePermission(req.token, "sc.languages_ex"))
-            return CreateLanguageExResponse(ErrorType.DoesNotHaveCreatePermission, null)
+//        if(!util.userHasCreatePermission(req.token, "admin.languages_ex"))
+//            return CreateLanguageExResponse(ErrorType.DoesNotHaveCreatePermission, null)
 
         println("req: $req")
         var insertedLanguageEx: LanguageEx? = null
@@ -46,7 +46,7 @@ class Create(
         val reqValues: MutableList<Any> = mutableListOf()
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.tokens where token = ?")
+                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
                 getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
@@ -72,7 +72,7 @@ class Create(
                         insertStatementValues = "$insertStatementValues ?,"
                         reqValues.add(propValue)
                         if(prop.name == "egids_level"){
-                            insertStatementKeys = "$insertStatementKeys egids_value"
+                            insertStatementKeys = "$insertStatementKeys egids_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getEgidsValue(propValue as String))
                         }
@@ -131,7 +131,7 @@ class Create(
                 reqValues.forEach { value ->
                     when (value) {
                         is Int -> insertStatement.setInt(counter, value)
-                        is String -> insertStatement.setString(counter, value)
+                        is String -> insertStatement.setObject(counter, value, java.sql.Types.OTHER)
                         is Double -> insertStatement.setDouble(counter,value)
                     }
                     counter += 1

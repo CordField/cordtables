@@ -121,7 +121,7 @@ class Utility(
                 			where token = ?
                         )
                     ) 
-                   and b.table_name = ?
+                   and b.table_name::text = ?
                    and b.table_permission = 'Create'
                 );
             """.trimIndent()
