@@ -2,7 +2,7 @@ create schema admin;
 create schema if not exists common;
 set schema 'common';
 
-CREATE EXTENSION hstore;
+CREATE EXTENSION if not exists hstore;
 
 create type common.sensitivity as enum (
   'Low',

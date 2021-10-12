@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.grouprowaccess
+    package com.seedcompany.cordtables.components.tables.grouprowaccess
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -67,8 +67,18 @@ class Create(
                     //language=SQL
                     val statement = conn.prepareStatement(
                         """
-                        insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by) 
+                        insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group) 
                             values(?, ?, ?,
+                                (
+                                  select person 
+                                  from admin.tokens 
+                                  where token = ?
+                                ),
+                                (
+                                  select person 
+                                  from admin.tokens 
+                                  where token = ?
+                                ),
                                 (
                                   select person 
                                   from admin.tokens 
@@ -88,6 +98,8 @@ class Create(
                     statement.setInt(3, req.row)
                     statement.setString(4, req.token)
                     statement.setString(5, req.token)
+                    statement.setString(6, req.token)
+                    statement.setString(7, req.token)
 
                     statement.execute()
 
