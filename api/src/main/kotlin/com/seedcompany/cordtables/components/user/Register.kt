@@ -47,7 +47,12 @@ class Register (
 
         val result = registerDB(req.email, pash, token)
 
-        return RegisterReturn(result, token, util.getReadableTables(token), util.isAdmin(token))
+        return if (result === ErrorType.NoError){
+            RegisterReturn(result, token, util.getReadableTables(token), util.isAdmin(token))
+        } else {
+            RegisterReturn(result)
+        }
+
     }
 
     fun registerDB(email: String, pash: String, token: String): ErrorType{
@@ -76,7 +81,7 @@ class Register (
 
             statement.close()
         }
-
+        
         return errorType
     }
 }

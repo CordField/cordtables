@@ -65,19 +65,21 @@ class CordTablesTests(
 
     @Test
     fun user() {
-        val user1 = register("user1@cordtables.com", "asdfasdf")
+        val user1 = register("user1@cordtables.com", userPassword)
 
         assert(true) // temp until we have some legit assert in this test case
     }
 
     fun register(email: String, password: String): RegisterReturn {
-        val newUser = rest.postForEntity("$url/user/register", RegisterRequest("asdf@asdf.asdf", userPassword), RegisterReturn::class.java).body!!
+        val newUserResponse = rest.postForEntity("$url/user/register", RegisterRequest("asdf@asdf.asdf", userPassword), RegisterReturn::class.java)
 
-        assert(!newUser.isAdmin) // new user should not be admin
-        assert(newUser.token!!.isNotEmpty()) // token should be present
-        assert(newUser.readableTables.size == 0) // shouldn't be able to read any tables
+        assert(newUserResponse !== null) {"response was null"}
+        assert(newUserResponse.body !== null) {"response body was null"}
+        assert(!newUserResponse.body!!.isAdmin) {"new user should not be admin"}
+        assert(newUserResponse.body!!.token !== null) {"token should be present"}
+        assert(newUserResponse.body!!.readableTables.size == 0) {"shouldn't be able to read any tables"}
 
-        return newUser
+        return newUserResponse.body!!
     }
 
 }
