@@ -262,35 +262,37 @@ export class LanguagesEx {
 
             <button onClick={this.handleInsert}>Submit</button>
           </form> */}
-          <table>
-            <thead>
-              {/* this will be fixed -> on a shared component, this will be passed in and use Map to preserve order */}
-              <tr>
-                <th>*</th>
-                {Object.keys(this.defaultFields).map(key => (
-                  <th>{key}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {this.languagesEx.map(languageEx => (
+          <div id="table-wrap">
+            <table>
+              <thead>
+                {/* this will be fixed -> on a shared component, this will be passed in and use Map to preserve order */}
                 <tr>
-                  <div class="button-parent">
-                    <button class="delete-button" onClick={() => this.handleDelete(languageEx.id)}>
-                      Delete
-                    </button>
-                  </div>
-                  {Object.keys(languageEx).map(key => this.getEditableCell(key, languageEx))}
+                  <th>*</th>
+                  {Object.keys(this.defaultFields).map(key => (
+                    <th>{key}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-            {this.showNewForm && (
-              <tr>
-                <td>&nbsp;</td>
-                {Object.keys(this.defaultFields).map(key => this.getInputCell(key))}
-              </tr>
-            )}
-          </table>
+              </thead>
+              <tbody>
+                {this.languagesEx.map(languageEx => (
+                  <tr>
+                    <div class="button-parent">
+                      <button class="delete-button" onClick={() => this.handleDelete(languageEx.id)}>
+                        Delete
+                      </button>
+                    </div>
+                    {Object.keys(languageEx).map(key => this.getEditableCell(key, languageEx))}
+                  </tr>
+                ))}
+              </tbody>
+              {this.showNewForm && (
+                <tr>
+                  <td>&nbsp;</td>
+                  {Object.keys(this.defaultFields).map(key => this.getInputCell(key))}
+                </tr>
+              )}
+            </table>
+          </div>
           <div id="button-group">
             {!this.showNewForm && (
               <button

@@ -1,7 +1,6 @@
 package com.seedcompany.cordtables.components.tables.globalrolecolumngrants
 
 import com.seedcompany.cordtables.common.ErrorType
-import com.seedcompany.cordtables.common.access_level
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -16,7 +15,7 @@ import javax.sql.DataSource
 
 data class GlobalRoleColumnGrantsUpdate(
         val id: Int,
-        val access_level: access_level,
+        val access_level: String,
         val column_name: String? = null,
         val created_by: Int,
         val global_role: Int,
@@ -67,11 +66,11 @@ class Update(
                 return UpdateGlobalRoleColumnGrantsResponse(errorType, null)
             }
             try {
-                println(req.access_level.accessType);
+                println(req.access_level)
                 val insertStatement = conn.prepareCall(
-                        "update admin.global_role_column_grants set access_level = ?::access_level, column_name = ?, modified_by = ?, global_role = ?, table_name = ?::table_name where id = ? returning *"
+                        "update admin.global_role_column_grants set access_level = ?::admin.access_level, column_name = ?, modified_by = ?, global_role = ?, table_name = ?::admin.table_name where id = ? returning *"
                 )
-                insertStatement.setString(1, req.access_level.accessType)
+                insertStatement.setString(1, req.access_level)
                 insertStatement.setString(2, req.column_name)
                 insertStatement.setInt(3, userId)
                 insertStatement.setInt(4, req.global_role)

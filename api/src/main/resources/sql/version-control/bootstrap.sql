@@ -86,6 +86,18 @@ BEGIN
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'title', vAdminRoleId, 'admin.people', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'status', vAdminRoleId, 'admin.people', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
+    -- global_role_memberships
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'global_role', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'table_name', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'column_name', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'access_level', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'created_at', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'created_by', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'owning_person', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'owning_group', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+
+
     -- users
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'person', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
