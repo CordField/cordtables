@@ -115,9 +115,9 @@ class Update(
                         }
                     }
                 }
-//                if(!util.userHasUpdatePermission(req.token,"sc.languages_ex",columnNames)){
-//                    return UpdateLanguageExResponse(ErrorType.DoesNotHaveUpdatePermission, null)
-//                }
+                if(!util.userHasUpdatePermission(req.token,"sc.languages_ex",columnNames)){
+                    return UpdateLanguageExResponse(ErrorType.DoesNotHaveUpdatePermission, null)
+                }
                 updateSql = "$updateSql modified_by = ?, modified_at = ? where id = ? returning *"
                 println(updateSql)
                 val updateStatement = conn.prepareCall(
