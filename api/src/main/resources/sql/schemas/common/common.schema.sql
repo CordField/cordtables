@@ -186,26 +186,28 @@ create table if not exists common.education_by_person (
 
 -- ORGANIZATIONS ------------------------------------------------------------
 
-create table if not exists common.organizations (
-	id serial primary key,
+-- moving to admin schema
 
-	name varchar(255) unique not null,
-	neo4j_id varchar(32),
-	sensitivity common.sensitivity default 'High',
-	primary_location int,
-
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
-
-	foreign key (primary_location) references locations(id),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
-);
+--create table if not exists common.organizations (
+--	id serial primary key,
+--
+--	name varchar(255) unique not null,
+--	neo4j_id varchar(32),
+--	sensitivity common.sensitivity default 'High',
+--	primary_location int,
+--
+--	created_at timestamp not null default CURRENT_TIMESTAMP,
+--	created_by int not null,
+--	modified_at timestamp not null default CURRENT_TIMESTAMP,
+--  modified_by int not null,
+--  owning_person int not null,
+--  owning_group int not null,
+--
+--	foreign key (primary_location) references locations(id),
+--	foreign key (created_by) references admin.people(id),
+--  foreign key (modified_by) references admin.people(id),
+--  foreign key (owning_group) references admin.groups(id)
+--);
 
 DO $$ BEGIN
     create type common.person_to_org_relationship_type as enum (
@@ -225,35 +227,35 @@ DO $$ BEGIN
 	WHEN duplicate_object THEN null;
 END; $$;
 
-create table if not exists common.organization_grants(
-    id serial primary key,
-    access_level admin.access_level not null,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null default 1,
-    column_name varchar(32) not null,
-    modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-    org int not null,
-    table_name admin.table_name not null,
-    unique (org, table_name, column_name, access_level),
-    foreign key (created_by) references admin.people(id),
-    foreign key (modified_by) references admin.people(id),
-    foreign key (org) references organizations(id)
-);
-
-create table if not exists common.organization_memberships(
-    id serial primary key,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null default 1,
-    modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-    org int not null,
-    person int not null,
-    foreign key (created_by) references admin.people(id),
-    foreign key (modified_by) references admin.people(id),
-    foreign key (org) references organizations(id),
-    foreign key (person) references admin.people(id)
-);
+--create table if not exists common.organization_grants(
+--    id serial primary key,
+--    access_level admin.access_level not null,
+--    created_at timestamp not null default CURRENT_TIMESTAMP,
+--    created_by int not null default 1,
+--    column_name varchar(32) not null,
+--    modified_at timestamp not null default CURRENT_TIMESTAMP,
+--    modified_by int not null default 1,
+--    org int not null,
+--    table_name admin.table_name not null,
+--    unique (org, table_name, column_name, access_level),
+--    foreign key (created_by) references admin.people(id),
+--    foreign key (modified_by) references admin.people(id),
+--    foreign key (org) references organizations(id)
+--);
+--
+--create table if not exists common.organization_memberships(
+--    id serial primary key,
+--    created_at timestamp not null default CURRENT_TIMESTAMP,
+--    created_by int not null default 1,
+--    modified_at timestamp not null default CURRENT_TIMESTAMP,
+--    modified_by int not null default 1,
+--    org int not null,
+--    person int not null,
+--    foreign key (created_by) references admin.people(id),
+--    foreign key (modified_by) references admin.people(id),
+--    foreign key (org) references organizations(id),
+--    foreign key (person) references admin.people(id)
+--);
 
 create table if not exists admin.people_to_org_relationships (
   id serial primary key,
