@@ -62,7 +62,7 @@ class CordTablesTests(
 
     @Test
     fun `doesThisWork`() {
-        container.webDriver["http://host.docker.internal:$port/"]
+        container.webDriver["http://host.testcontainers.internal:$port/"]
         val messageElement = container.webDriver.findElementByTagName("app-root")
         println("app-root: ${messageElement.toString()}")
         assert(true)
