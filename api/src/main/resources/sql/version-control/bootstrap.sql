@@ -61,9 +61,7 @@ BEGIN
     insert into admin.global_role_table_permissions(global_role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Create', 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_table_permissions(global_role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Delete', 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
-    -- global role column grants
-
-    -- people
+    -- grants on people
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'admin.people', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'neo4j_id', vAdminRoleId, 'admin.people', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'about', vAdminRoleId, 'admin.people', vPersonId, vPersonId, vPersonId, vAdminGroupId);
@@ -86,7 +84,7 @@ BEGIN
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'title', vAdminRoleId, 'admin.people', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'status', vAdminRoleId, 'admin.people', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
-    -- global_role_memberships
+    -- grants on global_role_memberships
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'global_role', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'table_name', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
@@ -97,8 +95,7 @@ BEGIN
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'owning_person', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'owning_group', vAdminRoleId, 'admin.global_role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
-
-    -- users
+    -- grants on users
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'person', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'owning_org', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
@@ -109,7 +106,7 @@ BEGIN
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'modified_at', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'modified_by', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
-    -- organizations
+    -- grants on organizations
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'neo4j_id', vAdminRoleId, 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'created_at', vAdminRoleId, 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
@@ -120,7 +117,7 @@ BEGIN
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'sensitivity', vAdminRoleId, 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'primary_location', vAdminRoleId, 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
-    -- sc.languages_ex
+    -- grants on sc.languages_ex
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'lang_name', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'lang_code', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
@@ -153,22 +150,6 @@ BEGIN
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'comments', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'prioritization', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'progress_bible', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-
-    -- fake data for now
-    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Spanglish', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Old Spanglish', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Pigin Spanglish', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Hick', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Hill Billy', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into sc.languages_ex(language_name, iso, island, province, created_by, modified_by, owning_person, owning_group) values ('Creole', 'abc', 'US', 'Texarkana', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-
-    -- group row access
-    insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group) values (vAdminGroupId, 'sc.languages_ex', 1, vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group) values (vAdminGroupId, 'sc.languages_ex', 2, vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group) values (vAdminGroupId, 'sc.languages_ex', 3, vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group) values (vAdminGroupId, 'sc.languages_ex', 4, vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group) values (vAdminGroupId, 'sc.languages_ex', 5, vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group) values (vAdminGroupId, 'sc.languages_ex', 6, vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- group memberships
     insert into admin.group_memberships(group_id, person, created_by, modified_by, owning_person, owning_group) values (1, vPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
