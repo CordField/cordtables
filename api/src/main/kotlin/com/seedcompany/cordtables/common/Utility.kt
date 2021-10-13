@@ -102,6 +102,9 @@ class Utility(
     }
 
     fun userHasCreatePermission(token: String, tableName: String):Boolean {
+        if(isAdmin(token)){
+            return true;
+        }
         var userHasCreatePermission: Boolean = false;
         this.ds.connection.use { conn ->
             //language=SQL
@@ -139,6 +142,9 @@ class Utility(
     }
 
     fun userHasDeletePermission(token: String, tableName: String):Boolean {
+        if(isAdmin(token)){
+            return true;
+        }
         var userHasDeletePermission: Boolean = false;
         this.ds.connection.use { conn ->
             //language=SQL
@@ -158,7 +164,7 @@ class Utility(
                 			where token = ?
                         )
                     ) 
-                   and b.table_name = ?
+                   and b.table_name::text = ?
                    and b.table_permission = 'Delete'
                 );
             """.trimIndent()
@@ -175,6 +181,10 @@ class Utility(
         return userHasDeletePermission;
     }
     fun userHasUpdatePermission(token:String,tableName: String, columnNames:MutableList<String>):Boolean{
+        if(isAdmin(token)){
+            return true;
+        }
+
         var userHasUpdatePermission = false;
         this.ds.connection.use { conn ->
             var updateSql = "select count(*) from \n" +
