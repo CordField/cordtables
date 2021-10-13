@@ -108,7 +108,7 @@ export class LanguagesEx {
     begin_work_geo_challenges_value: null,
     begin_work_geo_challenges_description: null,
     begin_work_geo_challenges_source: null,
-    begin_work_rel_pol_obstacles_scale: null,
+    begin_work_rel_pol_obstacles_level: null,
     begin_work_rel_pol_obstacles_value: null,
     begin_work_rel_pol_obstacles_description: null,
     begin_work_rel_pol_obstacles_source: null,
