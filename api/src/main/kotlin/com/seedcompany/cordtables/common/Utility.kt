@@ -210,7 +210,6 @@ class Utility(
             updateSql = updateSql.dropLast(1)
             updateSql = "$updateSql ))sq"
             //language=SQL
-            println(updateSql)
             val statement = conn.prepareCall("$updateSql ;")
             statement.setString(1, token);
             statement.setString(2,tableName);
@@ -228,7 +227,6 @@ class Utility(
     }
 
     fun getReadableTables(token: String):MutableList<String>{
-        println("token $token")
         val tableNames = mutableListOf<String>()
         if(isAdmin(token)){
             this.ds.connection.use{conn->
@@ -255,7 +253,6 @@ class Utility(
             while(result.next()){
                 tableNames.add(result.getString("table_name").replace('_','-'))
             }
-            println("accessible tables: $tableNames")
         }
         return tableNames;
     }
