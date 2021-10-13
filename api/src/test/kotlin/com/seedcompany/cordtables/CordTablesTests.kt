@@ -1,8 +1,12 @@
 package com.seedcompany.cordtables
 
+import com.seedcompany.cordtables.components.user.RegisterRequest
+import com.seedcompany.cordtables.components.user.RegisterReturn
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.chrome.ChromeOptions
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -15,8 +19,13 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CordTablesTests(
     @LocalServerPort
-    val port: Int
+    val port: Int,
+
+    @Autowired
+    val rest: TestRestTemplate,
 ) {
+    val userPassword = "asdfasdf"
+    val url = "http://localhost:$port"
 
     @Container
     private val container: BrowserWebDriverContainer<*> = BrowserWebDriverContainer<Nothing>()
@@ -59,8 +68,20 @@ class CordTablesTests(
 //    }
 
     @Test
-    fun contextLoads() {
-        assert(true)
+    fun user() {
+        val user1 = register("user1@cordtables.com", "asdfasdf")
+
+        assert(true) // temp until we have some legit assert in this test case
+    }
+
+    fun register(email: String, password: String): RegisterReturn {
+        val newUser = rest.postForEntity("$url/user/register", RegisterRequest("asdf@asdf.asdf", userPassword), RegisterReturn::class.java).body!!
+
+        assert(!newUser.isAdmin) // new user should not be admin
+        assert(newUser.token!!.isNotEmpty()) // token should be present
+        assert(newUser.readableTables.size == 0) // shouldn't be able to read any tables
+
+        return newUser
     }
 
 }
