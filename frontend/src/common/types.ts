@@ -61,7 +61,7 @@ export interface languageEx {
   begin_work_geo_challenges_value?: number;
   begin_work_geo_challenges_description?: string;
   begin_work_geo_challenges_source?: string;
-  begin_work_rel_pol_obstacles_scale?: string;
+  begin_work_rel_pol_obstacles_level?: string;
   begin_work_rel_pol_obstacles_value?: number;
   begin_work_rel_pol_obstacles_description?: string;
   begin_work_rel_pol_obstacles_source?: string;

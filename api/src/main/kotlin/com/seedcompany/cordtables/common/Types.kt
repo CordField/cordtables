@@ -36,11 +36,7 @@ enum class ErrorType {
     DoesNotHaveUpdatePermission,
     DoesNotHaveDeletePermission
 }
-enum class access_level (val accessType: String){
-    Read("Read"),
-    Write("Write"),
-    Admin("Admin")
-}
+
 data class GenericResponse (
     val error: ErrorType,
 )

@@ -5,7 +5,7 @@ export class Globals {
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
     token: localStorage.getItem('token'),
     email: localStorage.getItem('email'),
-    readableTables: JSON.parse(localStorage.getItem('readableTables')),
+    readableTables: JSON.parse(localStorage.getItem('readableTables')) ?? [],
     isAdmin: localStorage.getItem('isAdmin'),
     // globalRolesData: localStorage.getItem('globalRolesData'),
   });
