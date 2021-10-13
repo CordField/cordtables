@@ -85,6 +85,10 @@ class Update(
                             updateSql = "$updateSql least_reached_value = ?,"
                             reqValues.add(languageExUtil.getLeastReachedValue(propValue as String))
                         }
+                        if(prop.name == "partner_interest_level"){
+                            updateSql = "$updateSql partner_interest_value = ?,"
+                            reqValues.add(languageExUtil.getPartnerInterestValue(propValue as String))
+                        }
                         if(prop.name == "multiple_languages_leverage_linguistic_level"){
                             updateSql = "$updateSql multiple_languages_leverage_linguistic_value = ?,"
                             reqValues.add(languageExUtil.getMultipleLanguagesLeverageLinguisticValue(propValue as String))
@@ -115,9 +119,9 @@ class Update(
                         }
                     }
                 }
-//                if(!util.userHasUpdatePermission(req.token,"sc.languages_ex",columnNames)){
-//                    return UpdateLanguageExResponse(ErrorType.DoesNotHaveUpdatePermission, null)
-//                }
+                if(!util.userHasUpdatePermission(req.token,"sc.languages_ex",columnNames)){
+                    return UpdateLanguageExResponse(ErrorType.DoesNotHaveUpdatePermission, null)
+                }
                 updateSql = "$updateSql modified_by = ?, modified_at = ? where id = ? returning *"
                 println(updateSql)
                 val updateStatement = conn.prepareCall(

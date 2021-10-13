@@ -6,4 +6,11 @@ class Enums {
 //       ''
 //
 //    }
+
+    enum class egidsScale{
+        `0`,
+        `1`, 
+        `2`,
+    }
+    val egids_value = egidsScale.valueOf("1")
 }

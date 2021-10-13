@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE login(
+CREATE OR REPLACE PROCEDURE public.login(
     in p_email VARCHAR(255),
     in p_token varchar(64),
     inout error_type varchar(32)

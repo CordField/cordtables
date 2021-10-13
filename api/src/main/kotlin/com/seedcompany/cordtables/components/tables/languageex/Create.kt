@@ -37,8 +37,8 @@ class Create(
     fun CreateHandler(@RequestBody req: CreateLanguageExRequest): CreateLanguageExResponse {
 
         if (req.token == null) return CreateLanguageExResponse(ErrorType.TokenNotFound, null)
-//        if(!util.userHasCreatePermission(req.token, "admin.languages_ex"))
-//            return CreateLanguageExResponse(ErrorType.DoesNotHaveCreatePermission, null)
+        if(!util.userHasCreatePermission(req.token, "admin.languages_ex"))
+            return CreateLanguageExResponse(ErrorType.DoesNotHaveCreatePermission, null)
 
         println("req: $req")
         var insertedLanguageEx: LanguageEx? = null
@@ -80,6 +80,11 @@ class Create(
                             insertStatementKeys = "$insertStatementKeys least_reached_value,"
                             insertStatementValues = "$insertStatementValues ?,"
                             reqValues.add(languageExUtil.getLeastReachedValue(propValue as String))
+                        }
+                        if(prop.name == "partner_interest_level"){
+                            insertStatementKeys = "$insertStatementKeys partner_interest_value,"
+                            insertStatementValues = "$insertStatementValues ?,"
+                            reqValues.add(languageExUtil.getPartnerInterestValue(propValue as String))
                         }
                         if(prop.name == "multiple_languages_leverage_linguistic_level"){
                             insertStatementKeys = "$insertStatementKeys multiple_languages_leverage_linguistic_value,"
