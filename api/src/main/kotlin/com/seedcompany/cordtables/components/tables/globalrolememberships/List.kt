@@ -92,16 +92,16 @@ class List(
             end as id,
             case 
                 when 'global_role' in (select column_name from column_level_access) 
-                then global_role
+                then  global_role
                 when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
-                then global_role
+                then  global_role
                 else null 
             end as global_role,
             case
-                when 'person' in (select column_name from column_level_access)
-                then person
+                when  'person' in (select column_name from column_level_access)
+                then  person
                 when (select exists( select person from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))
-                then person
+                then  person
                 else null
             end as person,
             case 
@@ -146,7 +146,7 @@ class List(
                 then owning_group
                 else null 
             end as owning_group
-            from admin.groups
+            from admin.global_role_memberships
             where id in (select row from row_level_access) or 
                 (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1));
         """.trimIndent()
