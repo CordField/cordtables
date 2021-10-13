@@ -101,7 +101,8 @@ class Read(
         paramSource.addValue("token", req.token)
 
         //language=SQL
-        val listSQL = """               with row_level_access as 
+        val listSQL = """               
+            with row_level_access as 
             (
                 select row 
                 from admin.group_row_access as a  
