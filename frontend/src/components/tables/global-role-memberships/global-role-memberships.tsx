@@ -171,13 +171,13 @@ export class GlobalRoleMemberships {
               <tr>
                 <td class="disabled">&nbsp;</td>
                 <td>
-                  <input type="text" id="global-role-input" name="global-role" onInput={event => this.inputGlobalRole(event)}></input>
+                  <input type="text" id="global-role-input" placeholder = "Global Role" name="global-role" onInput={event => this.inputGlobalRole(event)}></input>
                 </td>
                 <td class="disabled">
-                  <input type="text" id="person-input" name="person" onInput={event => this.inputPerson(event)}></input>
+                  <input type="text" id="person-input" placeholder = "Person" name="person" onInput={event => this.inputPerson(event)}></input>
                 </td>
                 <td class="disabled">
-                  <input type="text" id="owning_group" name="owning_group" onInput={event => this.inputOwningGroup(event)}></input>
+                  <input type="text" id="owning_group" placeholder = "Owning Group" name="owning_group" onInput={event => this.inputOwningGroup(event)}></input>
                 </td>
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
