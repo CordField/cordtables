@@ -1,6 +1,5 @@
 create schema admin;
 create schema if not exists common;
-create schema if not exists public;
 
 set schema 'common';
 
@@ -280,23 +279,23 @@ create table if not exists admin.tokens (
 
 -- ORGANIZATIONS ------------------------------------------------------------
 
-create table if not exists common.organizations (
-	id serial primary key,
-
-	name varchar(255) unique not null,
-	neo4j_id varchar(32),
-	sensitivity common.sensitivity default 'High',
-	primary_location int,
-
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
-
-	foreign key (primary_location) references locations(id),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
-);
+--create table if not exists common.organizations (
+--	id serial primary key,
+--
+--	name varchar(255) unique not null,
+--	neo4j_id varchar(32),
+--	sensitivity common.sensitivity default 'High',
+--	primary_location int,
+--
+--	created_at timestamp not null default CURRENT_TIMESTAMP,
+--	created_by int not null,
+--	modified_at timestamp not null default CURRENT_TIMESTAMP,
+--  modified_by int not null,
+--  owning_person int not null,
+--  owning_group int not null,
+--
+--	foreign key (primary_location) references locations(id),
+--	foreign key (created_by) references admin.people(id),
+--  foreign key (modified_by) references admin.people(id),
+--  foreign key (owning_group) references admin.groups(id)
+--);

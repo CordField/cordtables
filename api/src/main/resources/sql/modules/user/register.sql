@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE public.register(
+CREATE OR REPLACE PROCEDURE common.register(
   IN p_email VARCHAR(255),
   IN p_password VARCHAR(50),
   in p_token varchar(64),

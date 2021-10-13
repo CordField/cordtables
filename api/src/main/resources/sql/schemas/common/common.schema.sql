@@ -186,28 +186,26 @@ create table if not exists common.education_by_person (
 
 -- ORGANIZATIONS ------------------------------------------------------------
 
--- moving to admin schema
+create table if not exists common.organizations (
+	id serial primary key,
 
---create table if not exists common.organizations (
---	id serial primary key,
---
---	name varchar(255) unique not null,
---	neo4j_id varchar(32),
---	sensitivity common.sensitivity default 'High',
---	primary_location int,
---
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null,
---	modified_at timestamp not null default CURRENT_TIMESTAMP,
---  modified_by int not null,
---  owning_person int not null,
---  owning_group int not null,
---
---	foreign key (primary_location) references locations(id),
---	foreign key (created_by) references admin.people(id),
---  foreign key (modified_by) references admin.people(id),
---  foreign key (owning_group) references admin.groups(id)
---);
+	name varchar(255) unique not null,
+	neo4j_id varchar(32),
+	sensitivity common.sensitivity default 'High',
+	primary_location int,
+
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by int not null,
+	modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null,
+  owning_person int not null,
+  owning_group int not null,
+
+	foreign key (primary_location) references locations(id),
+	foreign key (created_by) references admin.people(id),
+  foreign key (modified_by) references admin.people(id),
+  foreign key (owning_group) references admin.groups(id)
+);
 
 DO $$ BEGIN
     create type common.person_to_org_relationship_type as enum (
