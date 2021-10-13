@@ -81,7 +81,7 @@ class Register (
 
             statement.close()
         }
-        
+
         return errorType
     }
 }
