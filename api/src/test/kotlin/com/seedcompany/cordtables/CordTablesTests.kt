@@ -10,6 +10,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.testcontainers.Testcontainers.exposeHostPorts
 import org.testcontainers.containers.BrowserWebDriverContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
@@ -55,13 +56,17 @@ class CordTablesTests(
         }
     }
 
-//    @Test
-//    fun `doesThisWork`() {
-//        container.webDriver["http://host.docker.internal:$port/"]
-//        val messageElement = container.webDriver.findElementByTagName("app-root")
-//        println("app-root: ${messageElement.toString()}")
-//        assert(true)
-//    }
+    init {
+        org.testcontainers.Testcontainers.exposeHostPorts(port);
+    }
+
+    @Test
+    fun `doesThisWork`() {
+        container.webDriver["http://host.docker.internal:$port/"]
+        val messageElement = container.webDriver.findElementByTagName("app-root")
+        println("app-root: ${messageElement.toString()}")
+        assert(true)
+    }
 
     @Test
     fun user() {
