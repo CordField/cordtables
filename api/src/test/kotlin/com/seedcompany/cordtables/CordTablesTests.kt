@@ -57,7 +57,7 @@ class CordTablesTests(
     }
 
     init {
-        org.testcontainers.Testcontainers.exposeHostPorts(port);
+        exposeHostPorts(port);
     }
 
     @Test
