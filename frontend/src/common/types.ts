@@ -9,6 +9,9 @@ export enum ErrorType {
   PasswordTooLong = 'PasswordTooLong',
   DuplicateEmail = 'DuplicateEmail',
 }
+
+// export type egidsScale = `0` | `1` | `2` | `3` | `4` | `5` | `6a` | `6b` | `7` | `8a` | `8b` | `9` | `10`;
+
 export interface globalRole {
   id: number;
   createdAt: string;

@@ -79,43 +79,43 @@ class Update(
                         columnNames.add(prop.name)
                         if(prop.name == "egids_level"){
                             updateSql = "$updateSql egids_value = ?,"
-                            reqValues.add(languageExUtil.getEgidsValue(propValue as String))
+                            reqValues.add(languageExUtil.getEgidsValue(propValue as egidsScale))
                         }
                         if(prop.name == "least_reached_progress_jps_level"){
                             updateSql = "$updateSql least_reached_value = ?,"
-                            reqValues.add(languageExUtil.getLeastReachedValue(propValue as String))
+                            reqValues.add(languageExUtil.getLeastReachedValue(propValue as leastReachedProgressScale))
                         }
                         if(prop.name == "partner_interest_level"){
                             updateSql = "$updateSql partner_interest_value = ?,"
-                            reqValues.add(languageExUtil.getPartnerInterestValue(propValue as String))
+                            reqValues.add(languageExUtil.getPartnerInterestValue(propValue as partnerInterestScale))
                         }
                         if(prop.name == "multiple_languages_leverage_linguistic_level"){
                             updateSql = "$updateSql multiple_languages_leverage_linguistic_value = ?,"
-                            reqValues.add(languageExUtil.getMultipleLanguagesLeverageLinguisticValue(propValue as String))
+                            reqValues.add(languageExUtil.getMultipleLanguagesLeverageLinguisticValue(propValue as multipleLanguagesLeverageLinguisticScale))
                         }
                         if(prop.name == "multiple_languages_leverage_joint_training_level"){
                             updateSql = "$updateSql multiple_languages_leverage_joint_training_value = ?,"
-                            reqValues.add(languageExUtil.getMultipleLanguagesLeverageJointTrainingValue(propValue as String))
+                            reqValues.add(languageExUtil.getMultipleLanguagesLeverageJointTrainingValue(propValue as multipleLanguagesLeverageJointTrainingScale))
                         }
                         if(prop.name == "lang_comm_int_in_language_development_level"){
                             updateSql = "$updateSql lang_comm_int_in_language_development_value = ?,"
-                            reqValues.add(languageExUtil.getLangCommIntInLanguageDevelopmentValue(propValue as String))
+                            reqValues.add(languageExUtil.getLangCommIntInLanguageDevelopmentValue(propValue as langCommIntInLanguageDevelopmentScale))
                         }
                         if(prop.name == "lang_comm_int_in_scripture_translation_level"){
                             updateSql = "$updateSql lang_comm_int_in_scripture_translation_value = ?,"
-                            reqValues.add(languageExUtil.getLangCommIntInScriptureTranslationValue(propValue as String))
+                            reqValues.add(languageExUtil.getLangCommIntInScriptureTranslationValue(propValue as langCommIntInScriptureTranslationScale))
                         }
                         if(prop.name == "access_to_scripture_in_lwc_level"){
                             updateSql = "$updateSql access_to_scripture_in_lwc_value = ?,"
-                            reqValues.add(languageExUtil.getAccessToScriptureInLwcValue(propValue as String))
+                            reqValues.add(languageExUtil.getAccessToScriptureInLwcValue(propValue as accessToScriptureInLwcScale))
                         }
                         if(prop.name == "begin_work_geo_challenges_level"){
                             updateSql = "$updateSql begin_work_geo_challenges_value = ?,"
-                            reqValues.add(languageExUtil.getBeginWorkGeoChallengesValue(propValue as String))
+                            reqValues.add(languageExUtil.getBeginWorkGeoChallengesValue(propValue as beginWorkGeoChallengesScale))
                         }
                         if(prop.name == "begin_work_rel_pol_obstacles_level"){
                             updateSql = "$updateSql begin_work_rel_pol_obstacles_value = ?,"
-                            reqValues.add(languageExUtil.getBeginWorkRelPolObstaclesValue(propValue as String))
+                            reqValues.add(languageExUtil.getBeginWorkRelPolObstaclesValue(propValue as beginWorkRelPolObstaclesScale))
                         }
                     }
                 }
@@ -250,58 +250,58 @@ class Update(
                     var owning_group:Int? = updateStatementResult.getInt("owning_group")
                     if(updateStatementResult.wasNull()) owning_group = null
                     updatedLanguageEx = LanguageEx(id,
-                        language_name,
-                        iso,
-                        prioritization,
-                        progress_bible,
-                        island,
-                        province,
-                        first_language_population,
-                        population_value,
-                        egids_level,
-                        egids_value,
-                        least_reached_progress_jps_level,
-                        least_reached_value,
-                        partner_interest_level,
-                        partner_interest_value,
-                        partner_interest_description,
-                        partner_interest_source,
-                        multiple_languages_leverage_linguistic_level,
-                        multiple_languages_leverage_linguistic_value,
-                        multiple_languages_leverage_linguistic_description,
-                        multiple_languages_leverage_linguistic_source,
-                        multiple_languages_leverage_joint_training_level,
-                        multiple_languages_leverage_joint_training_value,
-                        multiple_languages_leverage_joint_training_description,
-                        multiple_languages_leverage_joint_training_source,
-                        lang_comm_int_in_language_development_level,
-                        lang_comm_int_in_language_development_value,
-                        lang_comm_int_in_language_development_description,
-                        lang_comm_int_in_language_development_source,
-                        lang_comm_int_in_scripture_translation_level,
-                        lang_comm_int_in_scripture_translation_value,
-                        lang_comm_int_in_scripture_translation_description,
-                        lang_comm_int_in_scripture_translation_source,
-                        access_to_scripture_in_lwc_level,
-                        access_to_scripture_in_lwc_value,
-                        access_to_scripture_in_lwc_description,
-                        access_to_scripture_in_lwc_source,
-                        begin_work_geo_challenges_level,
-                        begin_work_geo_challenges_value,
-                        begin_work_geo_challenges_description,
-                        begin_work_geo_challenges_source,
-                        begin_work_rel_pol_obstacles_level,
-                        begin_work_rel_pol_obstacles_value,
-                        begin_work_rel_pol_obstacles_description,
-                        begin_work_rel_pol_obstacles_source,
-                        suggested_strategies,
-                        comments,
-                        created_at,
-                        created_by,
-                        modified_at,
-                        modified_by,
-                        owning_person,
-                        owning_group)
+                            language_name,
+                            iso,
+                            prioritization,
+                            progress_bible,
+                            island,
+                            province,
+                            first_language_population,
+                            population_value,
+                            egids_level as egidsScale,
+                            egids_value,
+                            least_reached_progress_jps_level as leastReachedProgressScale,
+                            least_reached_value,
+                            partner_interest_level as partnerInterestScale,
+                            partner_interest_value,
+                            partner_interest_description,
+                            partner_interest_source,
+                            multiple_languages_leverage_linguistic_level as multipleLanguagesLeverageLinguisticScale,
+                            multiple_languages_leverage_linguistic_value,
+                            multiple_languages_leverage_linguistic_description,
+                            multiple_languages_leverage_linguistic_source,
+                            multiple_languages_leverage_joint_training_level as multipleLanguagesLeverageJointTrainingScale,
+                            multiple_languages_leverage_joint_training_value,
+                            multiple_languages_leverage_joint_training_description,
+                            multiple_languages_leverage_joint_training_source,
+                            lang_comm_int_in_language_development_level as langCommIntInLanguageDevelopmentScale,
+                            lang_comm_int_in_language_development_value,
+                            lang_comm_int_in_language_development_description,
+                            lang_comm_int_in_language_development_source,
+                            lang_comm_int_in_scripture_translation_level as langCommIntInScriptureTranslationScale,
+                            lang_comm_int_in_scripture_translation_value,
+                            lang_comm_int_in_scripture_translation_description,
+                            lang_comm_int_in_scripture_translation_source,
+                            access_to_scripture_in_lwc_level as accessToScriptureInLwcScale,
+                            access_to_scripture_in_lwc_value,
+                            access_to_scripture_in_lwc_description,
+                            access_to_scripture_in_lwc_source,
+                            begin_work_geo_challenges_level as beginWorkGeoChallengesScale,
+                            begin_work_geo_challenges_value,
+                            begin_work_geo_challenges_description,
+                            begin_work_geo_challenges_source,
+                            begin_work_rel_pol_obstacles_level as beginWorkRelPolObstaclesScale,
+                            begin_work_rel_pol_obstacles_value,
+                            begin_work_rel_pol_obstacles_description,
+                            begin_work_rel_pol_obstacles_source,
+                            suggested_strategies,
+                            comments,
+                            created_at,
+                            created_by,
+                            modified_at,
+                            modified_by,
+                            owning_person,
+                            owning_group)
                     println("updated row's id: $id")
                 }
             } catch (e: SQLException) {
