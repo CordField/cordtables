@@ -106,11 +106,11 @@ create table admin.people (
 	status varchar(32),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int,
+  created_by int references admin.people(id), -- not null doesn't work here, on startup
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int,
-  owning_person int,
-  owning_group int
+  modified_by int references admin.people(id), -- not null doesn't work here, on startup
+  owning_person int references admin.people(id), -- not null doesn't work here, on startup
+  owning_group int references admin.groups(id), -- not null doesn't work here, on startup
 );
 
 -- GROUPS --------------------------------------------------------------------
@@ -118,64 +118,44 @@ create table admin.people (
 create table admin.groups(
   id serial primary key,
 
-  name varchar(64) not null,
-  parent_group int,
+  name varchar(64) not null unique,
+  parent_group int references admin.groups(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
+  created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int,
-
-  unique (name),
-  foreign key (parent_group) references admin.groups(id),
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_person) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int references admin.groups(id) -- not null doesn't work here, on startup
 );
 
 create table admin.group_row_access(
   id serial primary key,
 
-  group_id int not null,
+  group_id int not null references admin.groups(id),
   table_name admin.table_name not null,
   row int not null,
 
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
-
-  foreign key (group_id) references admin.groups(id),
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_person) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by int not null references admin.people(id),
+	modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 create table admin.group_memberships(
   id serial primary key,
 
-  group_id int not null,
-  person int not null,
+  group_id int not null references admin.groups(id),
+  person int not null references admin.people(id),
 
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
-
-  foreign key (group_id) references admin.groups(id),
-  foreign key (person) references admin.people(id),
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_person) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by int not null references admin.people(id),
+	modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- ROLES --------------------------------------------------------------------
@@ -186,93 +166,71 @@ create table admin.global_roles (
 	name varchar(255) not null,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null,
+	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-	owning_person int not null,
-	owning_group int not null,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
 
-	unique (owning_group, name),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_person) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+	unique (owning_group, name)
 );
 
 create table admin.global_role_column_grants(
 	id serial primary key,
 
-	global_role int not null,
+	global_role int not null references admin.global_roles(id),
 	table_name admin.table_name not null,
 	column_name varchar(64) not null,
 	access_level admin.access_level not null,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null,
+	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
 
-	unique (global_role, table_name, column_name),
-	foreign key (global_role) references admin.global_roles(id),
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_person) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+	unique (global_role, table_name, column_name)
 );
 
 create table admin.global_role_table_permissions(
   id serial primary key,
 
-  global_role int not null,
+  global_role int not null references admin.global_roles(id),
   table_name admin.table_name not null,
   table_permission admin.table_permission not null,
 
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by int not null references admin.people(id),
+	modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
 
-  unique (global_role, table_name, table_permission),
-  foreign key (global_role) references admin.global_roles(id),
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_person) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+  unique (global_role, table_name, table_permission)
 );
 
 create table admin.global_role_memberships (
   id serial primary key,
 
-	global_role int not null,
-	person int not null,
+	global_role int not null references admin.global_roles(id),
+	person int not null references admin.people(id),
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null,
+	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
 
-	unique(global_role,person),
-	foreign key (global_role) references admin.global_roles(id),
-	foreign key (person) references admin.people(id),
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_person) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+	unique(global_role, person)
 );
 
 -- AUTHENTICATION ------------------------------------------------------------
 
 create table if not exists admin.tokens (
 	id serial primary key,
-	token varchar(64),
-	person int,
-	unique(token),
+	token varchar(64) unique,
+	person int references people(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP
-	-- foreign key (person) references people(id)
 );
