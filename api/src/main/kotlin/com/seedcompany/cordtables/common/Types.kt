@@ -41,6 +41,12 @@ enum class access_level (val accessType: String){
     Write("Write"),
     Admin("Admin")
 }
+
+enum class CommonSensitivity (val accessType: String){
+    Low("Low"),
+    Medium("Medium"),
+    High("High")
+}
 data class GenericResponse (
     val error: ErrorType,
 )
