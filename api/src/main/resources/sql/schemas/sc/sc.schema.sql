@@ -184,7 +184,7 @@ create table sc.partners (
 	is_global_innovations_client bool,
 	pmc_entity_code varchar(32),
 	point_of_contact int references admin.people(id),
-	types common.partner_types[],
+	types sc.partner_types[],
 
 	chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -592,9 +592,9 @@ create type sc.change_to_plan_status as enum (
 create table sc.change_to_plans (
   id serial primary key,
 
-  status common.change_to_plan_status,
+  status sc.change_to_plan_status,
   summary text,
-  type common.change_to_plan_type,
+  type sc.change_to_plan_type,
 
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -617,7 +617,7 @@ create table sc.periodic_reports (
   end_at timestamp not null,
   reportFile int not null references sc.files(id),
   start_at timestamp not null,
-  type common.periodic_report_type not null,
+  type sc.periodic_report_type not null,
 
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -728,7 +728,7 @@ create table sc.budget_records (
   active bool,
   amount decimal,
   fiscal_year int,
-  partnership id references sc.partnerships(id),
+  partnership int references sc.partnerships(id),
 
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -963,18 +963,18 @@ create table sc.ceremonies (
 -- CRM TABLES, WIP ------------------------------------------------------------------
 
 create type common.involvements as enum (
-		'CIT',
-		'Engagements'
+  'CIT',
+  'Engagements'
 );
 
 create type admin.people_transitions as enum (
-		'New Org',
-		'Other'
+  'New Org',
+  'Other'
 );
 
 create type common.org_transitions as enum (
-		'To Manager',
-		'To Other'
+  'To Manager',
+  'To Other'
 );
 
 -- PARTNER CRM STUFF

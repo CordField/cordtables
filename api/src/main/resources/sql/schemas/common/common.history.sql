@@ -4,7 +4,6 @@ create table common.organizations_history (
 
 	id int,
 	name varchar(255) unique not null,
-  neo4j_id varchar(32),
   sensitivity common.sensitivity,
   primary_location int,
 
@@ -21,8 +20,8 @@ create table common.organizations_history (
         LANGUAGE PLPGSQL
         AS $$
       begin
-          insert into common.organizations_history(id, name, neo4j_id, sensitivity, primary_location, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
-          values (new.id, new.name, new.neo4j_id, new.sensitivity, new.primary_location, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
+          insert into common.organizations_history(id, name, sensitivity, primary_location, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
+          values (new.id, new.name, new.sensitivity, new.primary_location, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
         RETURN NEW;
       end; $$;
 
