@@ -2,9 +2,9 @@
 -- https://www.ethnologue.com/codes/code-table-structure
 -- http://www.ethnologue.com/sites/default/files/Ethnologue-19-Global%20Dataset%20Doc.pdf
 
-create schema if not exists sil;
+create schema sil;
 
-CREATE TABLE if not exists sil.language_codes (
+CREATE TABLE sil.language_codes (
   id serial primary key,
 
   lang char(3) not null,  -- Three-letter code
@@ -21,7 +21,7 @@ CREATE TABLE if not exists sil.language_codes (
   owning_group int not null references admin.groups(id)
 );
 
-CREATE TABLE if not exists sil.country_codes (
+CREATE TABLE sil.country_codes (
   id serial primary key,
 
   country char(2) not null,  -- Two-letter code from ISO3166
@@ -44,7 +44,7 @@ create type sil.language_name_type as enum (
   'L', 'LA', 'D', 'DA', 'LP', 'DP'
 );
 
-CREATE TABLE if not exists sil.language_index (
+CREATE TABLE sil.language_index (
   id serial primary key,
 
   lang char(3) not null,      -- Three-letter code for language
@@ -61,7 +61,7 @@ CREATE TABLE if not exists sil.language_index (
   owning_group int not null references admin.groups(id)
 );
 
-create table if not exists sil.table_of_languages (
+create table sil.table_of_languages (
   id serial primary key,
 
   sil_ethnologue_legacy varchar(32),
