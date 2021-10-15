@@ -64,6 +64,7 @@ class BootstrapDB(
             runSqlFile("sql/schemas/sc/sc.history.sql")
 
             runSqlFile("sql/version-control/bootstrap.sql")
+            runSqlFile("sql/version-control/roles.migration.sql")
 
             // user
             runSqlFile("sql/modules/user/register.sql")
@@ -75,16 +76,16 @@ class BootstrapDB(
             var errorType = ErrorType.UnknownError
 
             this.ds.connection.use { conn ->
-                val statement = conn.prepareCall("call bootstrap(?, ?, ?);")
-                statement.setString(1, "devops@tsco.org")
-                statement.setString(2, pash)
-                statement.setString(3, errorType.name)
-                statement.registerOutParameter(3, java.sql.Types.VARCHAR)
+                val bootstrapStatement = conn.prepareCall("call bootstrap(?, ?, ?);")
+                bootstrapStatement.setString(1, "devops@tsco.org")
+                bootstrapStatement.setString(2, pash)
+                bootstrapStatement.setString(3, errorType.name)
+                bootstrapStatement.registerOutParameter(3, java.sql.Types.VARCHAR)
 
-                statement.execute()
+                bootstrapStatement.execute()
 
                 try {
-                    errorType = ErrorType.valueOf(statement.getString(3))
+                    errorType = ErrorType.valueOf(bootstrapStatement.getString(3))
                 } catch (ex: IllegalArgumentException) {
                     errorType = ErrorType.UnknownError
                 }
@@ -93,8 +94,10 @@ class BootstrapDB(
                     println("bootstrap query failed")
                 }
 
-                statement.close()
+                bootstrapStatement.close()
             }
+
+            jdbcTemplate.execute("call roles_migration();")
         }
 
     }
