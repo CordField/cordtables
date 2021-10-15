@@ -3,538 +3,413 @@
 -- ENUMS ----
 
 -- todo
-DO $$ BEGIN
-    create type common.mime_type as enum (
-          'A',
-          'B',
-          'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-create type common.toggle_security as enum(
-    'NoSecurity',
-    'UpdateAccessLevelSecurity',
-    'UpdateAccessLevelAndIsClearedSecurity'
+create type common.mime_type as enum (
+  'A',
+  'B',
+  'C'
 );
-create type common.toggle_sensitivity as enum('UpdateIsCleared', 'DontUpdateIsCleared');
-
-create type common.toggle_mv as enum(
-    'NoRefreshMV',
-    'RefreshMV',
-    'RefreshMVConcurrently'
-);
-
-create type common.toggle_history as enum(
-    'NoHistory',
-    'History'
-);
-
-create type common.toggle_granters as enum(
-    'NoRefresh',
-    'RefreshSecurityTables',
-    'RefreshSecurityTablesAndMV',
-    'RefreshSecurityTablesAndMVConcurrently'
-);
-
-DO $$ BEGIN
-    create type common.post_type as enum (
-		'Note',
-		'Story',
-		'Prayer'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-DO $$ BEGIN
-    create type common.post_shareability as enum (
-		'Project Team',
-		'Internal',
-		'Ask to Share Externally',
-		'External'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-DO $$ BEGIN
-    create type common.periodic_report_type as enum (
-		'Financial',
-		'Narrative'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
 
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
 
 -- todo
-DO $$ BEGIN
-    create type common.book_name as enum (
-          'Genesis',
-          'Matthew',
-          'Revelation'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+create type common.book_name as enum (
+  'Genesis',
+  'Matthew',
+  'Revelation'
+);
 
-create table if not exists common.scripture_references (
-    id serial primary key,
-    book_start common.book_name,
-    book_end common.book_name,
-    chapter_start int,
-    chapter_end int,
-    verse_start int,
-    verse_end int,
-    unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
+create table common.scripture_references (
+  id serial primary key,
+
+  book_start common.book_name,
+  book_end common.book_name,
+  chapter_start int,
+  chapter_end int,
+  verse_start int,
+  verse_end int,
+
+  unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
+);
+
+-- CHAT ------------------------------------------------------------
+
+create table common.chats (
+	id serial primary key,
+
+	-- chats are different, talk to architect. note that some are nullable
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by int not null references admin.people(id)
+);
+
+alter table admin.people add constraint admin_people_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.groups add constraint admin_group_row_access_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.group_row_access add constraint admin_group_row_access_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.group_memberships add constraint admin_group_memberships_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.global_roles add constraint admin_global_roles_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.global_role_column_grants add constraint admin_global_role_column_grants_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.global_role_table_permissions add constraint admin_global_role_table_permissions_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.global_role_memberships add constraint admin_global_role_memberships_chat_fk foreign key (chat) references common.chats(id);
+
+create table common.posts (
+	id serial primary key,
+
+	chat int not null references common.chats(id),
+	content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id)
 );
 
 -- LOCATION -----------------------------------------------------------------
 
-DO $$ BEGIN
-    create type common.location_type as enum (
-          'City',
-          'County',
-          'State',
-		  'Country',
-          'CrossBorderArea'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+create type common.location_type as enum (
+  'City',
+  'County',
+  'State',
+  'Country',
+  'CrossBorderArea'
+);
 
-create table if not exists common.locations (
+create table common.locations (
 	id serial primary key,
-	neo4j_id varchar(32),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	chat_id int not null,
+
 	name varchar(255) unique not null,
 	sensitivity common.sensitivity not null default 'High',
-	type location_type not null
-	-- foreign key(chat_id) references common.chats(id)
--- foreign keys added after people table created
-);
+	type location_type not null,
 
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'common_people_primary_location_fk') THEN
-ALTER TABLE admin.people ADD CONSTRAINT common_people_primary_location_fk foreign key (primary_location) references common.locations(id);
-END IF; END; $$;
-
--- fkey for a bunch of stuff
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'common_locations_created_by_fk') THEN
-ALTER TABLE common.locations ADD CONSTRAINT common_locations_created_by_fk foreign key (created_by) references admin.people(id);
-END IF; END; $$;
-
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'common_locations_modified_by_fk') THEN
-ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk foreign key (modified_by) references admin.people(id);
-END IF; END; $$;
-
--- CHAT ------------------------------------------------------------
-
-create table if not exists common.chats (
-	id serial primary key,
+	chat int references common.chats(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	foreign key (created_by) references admin.people(id)
-);
-
-create table if not exists common.posts (
-	id serial primary key,
-	content text not null,
-	chat_id int not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
+	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-	is_modified bool not null default false,
-	foreign key (created_by) references admin.people(id)
-	-- foreign key (chat_id) references common.chats(id)
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
+
+ALTER TABLE admin.people ADD CONSTRAINT common_people_primary_location_fk foreign key (primary_location) references common.locations(id);
+ALTER TABLE common.locations ADD CONSTRAINT common_locations_created_by_fk foreign key (created_by) references admin.people(id);
+ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk foreign key (modified_by) references admin.people(id);
 
 -- Education
 
-create table if not exists common.education_entries (
+create table common.education_entries (
   id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null,
+
   degree varchar(64),
   institution varchar(64),
   major varchar(64),
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id)
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-create table if not exists common.education_by_person (
+create table common.education_by_person (
   id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-  education int not null,
+
+  person int not null references admin.people(id),
+  education int not null references common.education_entries(id),
   graduation_year int,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-  person int not null,
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (person) references admin.people(id),
-	foreign key (education) references common.education_entries(id)
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- ORGANIZATIONS ------------------------------------------------------------
 
-create table if not exists common.organizations (
+create table common.organizations (
 	id serial primary key,
 
 	name varchar(255) unique not null,
-	neo4j_id varchar(32),
 	sensitivity common.sensitivity default 'High',
-	primary_location int,
+	primary_location int references locations(id),
 
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
-
-	foreign key (primary_location) references locations(id),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-DO $$ BEGIN
-    create type common.person_to_org_relationship_type as enum (
-          'Vendor',
-          'Customer',
-          'Investor',
-          'Associate',
-          'Employee',
-          'Member',
-		  'Executive',
-		  'President/CEO',
-          'Board of Directors',
-          'Retired',
-          'Other'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-create table if not exists common.organization_grants(
-    id serial primary key,
-    access_level admin.access_level not null,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null default 1,
-    column_name varchar(32) not null,
-    modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-    org int not null,
-    table_name admin.table_name not null,
-    unique (org, table_name, column_name, access_level),
-    foreign key (created_by) references admin.people(id),
-    foreign key (modified_by) references admin.people(id),
-    foreign key (org) references organizations(id)
+create type common.person_to_org_relationship_type as enum (
+  'Vendor',
+  'Customer',
+  'Investor',
+  'Associate',
+  'Employee',
+  'Member',
+  'Executive',
+  'President/CEO',
+  'Board of Directors',
+  'Retired',
+  'Other'
 );
 
-create table if not exists common.organization_memberships(
-    id serial primary key,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null default 1,
-    modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-    org int not null,
-    person int not null,
-    foreign key (created_by) references admin.people(id),
-    foreign key (modified_by) references admin.people(id),
-    foreign key (org) references organizations(id),
-    foreign key (person) references admin.people(id)
-);
-
-create table if not exists admin.people_to_org_relationships (
+create table common.people_to_org_relationships (
   id serial primary key,
-	org int,
-	person int,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (org) references organizations(id),
-	foreign key (person) references admin.people(id)
+
+	org int not null references organizations(id),
+	person int not null references admin.people(id),
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-create table if not exists admin.people_to_org_relationship_type (
+create table common.people_to_org_relationship_type (
   id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
+
   begin_at timestamp not null,
 	end_at timestamp,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-  people_to_org int,
-	relationship_type person_to_org_relationship_type,
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (people_to_org) references admin.people_to_org_relationships(id)
+  people_to_org int not null,
+	relationship_type int not null references common.people_to_org_relationships(id),
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- USERS ---------------------------------------------------------------------
 
-create table if not exists common.users(
+create table common.users(
   id serial primary key,
 
-	person int not null,
+	person int not null references admin.people(id),
 	email varchar(255) unique not null,
 	password varchar(255) not null,
 
+	chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
+  created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
-
-	foreign key (person) references admin.people(id),
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
-
-
 
 -- PROJECTS ------------------------------------------------------------------
 
-create table if not exists common.projects (
+create table common.projects (
 	id serial primary key,
-	neo4j_id varchar(32),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
+	group_id int not null references admin.groups(id),
+
 	name varchar(32) not null,
-	primary_org int,
-	primary_location int,
+	primary_org int references organizations(id),
+	primary_location int references locations(id),
 	sensitivity common.sensitivity default 'High',
-	chat_id int not null,
-	unique (primary_org, name),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (primary_org) references organizations(id),
-	foreign key (primary_location) references locations(id)
-	-- foreign key (chat_id) references common.chats(id)
-);
 
-create table if not exists common.project_memberships (
-  id serial primary key,
+	chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null default 1,
+  created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-  person int not null,
-  project int not null,
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (project) references projects(id),
-  foreign key (person) references admin.people(id)
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (primary_org, name)
 );
 
-create table if not exists common.project_roles (
-	id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	name varchar(255) not null,
-	org int,
-	unique (org, name),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (org) references common.organizations(id)
-);
-
-create table if not exists common.project_role_column_grants (
-  id serial primary key,
-	access_level admin.access_level not null,
-	column_name varchar(32) not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	project_role int not null,
-	table_name admin.table_name not null,
-	unique (project_role, table_name, column_name, access_level),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (project_role) references project_roles(id)
-);
-
-create table if not exists common.project_member_roles (
-  id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-  person int not null,
-  project int not null,
-	project_role int,
-	unique (project, person),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (person) references admin.people(id),
-	foreign key (project) references projects(id),
-	foreign key (project_role) references project_roles(id)
-);
-
--- email tokens
-
-create table if not exists common.email_tokens (
-	id serial primary key,
-	token varchar(512),
-	email varchar(255),
-	unique(token),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	foreign key (email) references users(email)
-);
 
 -- TICKETS ----------------------------------------------------------------------
---
---DO $$ BEGIN
---    create type common.ticket_status as enum (
---          'Open',
---					'Blocked',
---					'Closed'
---	);
---	EXCEPTION
---	WHEN duplicate_object THEN null;
---END; $$;
---
---create table if not exists common.tickets (
---	id serial primary key,
---	ticket_status common.ticket_status not null default 'Open',
---	title varchar(125) not null,
---	chat_id int,
---	work_orders int,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (created_by) references admin.people(id),
---	foreign key (chat_id) references common.chats(id),
---	foreign key (work_orders) references common.work_order_lists(id)
---);
---
---create table if not exists common.work_orders(
---	id serial primary key,
---	ticket_id int,
---	content text not null,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (created_by) references admin.people(id),
---	foreign key (ticket_id) references common.ticket(id)
---);
---
---create table if not exists common.ticket_assignments (
---	id serial primary key,
---	ticket_id int not null,
---	person_id int not null,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (created_by) references admin.people(id),
---	foreign key (ticket_id) references common.tickets(id),
---	foreign key (person_id) references admin.people(id)
---);
---
---create table if not exists common.work_records(
---	id serial primary key,
---	person int not null,
---	hours decimal not null,
---	comment text,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (person) references admin.people(id),
---	foreign key (created_by) references admin.people(id)
---);
---
---create table if not exists common.work_estimates(
---	id serial primary key,
---	person int not null,
---	hours decimal not null,
---	comment text,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (person) references admin.people(id),
---	foreign key (created_by) references admin.people(id)
---);
---
---create table if not exists common.ticket_feedback(
---	id serial primary key,
---	ticket_id int,
---	stakeholder int not null,
---	content text not null,
---	chat_id int,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (created_by) references admin.people(id),
---	foreign key (stakeholder) references admin.people(id),
---	foreign key (chat_id) references common.chats(id),
---	foreign key (ticket_id) references common.ticket(id)
---);
---
----- WORKFLOW -----------------------------------------------------------------
---
---create table if not exists common.workflows(
---	id serial primary key,
---	title varchar(128) not null,
---	chat_id int,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (chat_id) references common.chats(id),
---	foreign key (created_by) references admin.people(id)
---);
---
---create table if not exists common.stages(
---	id serial primary key,
---	workflow_id int not null,
---	title varchar(128) not null,
---	chat_id int,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (created_by) references admin.people(id),
---	foreign key (chat_id) references common.chats(id),
---	foreign key (workflow_id) references common.workflows(id)
---);
---
---create table if not exists common.work_order_templates(
---	id serial primary key,
---	stage_id int,
---	content text not null,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (created_by) references admin.people(id),
---	foreign key (stage_id) references common.stages(id)
---);
---
---create table if not exists common.stage_options(
---	id serial primary key,
---	from_stage_id int not null,
---	to_stage_id int not null,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (created_by) references admin.people(id),
---	foreign key (from_stage_id) references common.stages(id),
---	foreign key (to_stage_id) references common.stages(id)
---);
---
---create table if not exists common.stage_notifications(
---	id serial primary key,
---	stage_id int not null,
---	email varchar(64) not null,
---	created_at timestamp not null default CURRENT_TIMESTAMP,
---	created_by int not null default 1,
---	foreign key (created_by) references admin.people(id),
---	foreign key (to_stage_id) references common.stages(id)
---);
+
+create type common.ticket_status as enum (
+  'Open',
+  'Blocked',
+  'Closed'
+);
+
+create table common.tickets (
+	id serial primary key,
+
+	ticket_status common.ticket_status not null default 'Open',
+	title varchar(125) not null,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.work_orders(
+	id serial primary key,
+
+	ticket int references common.tickets(id),
+	content text not null,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.ticket_assignments (
+	id serial primary key,
+
+	ticket int not null references common.tickets(id),
+	person_id int not null references admin.people(id),
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.work_records(
+	id serial primary key,
+
+	person int not null references admin.people(id),
+	hours decimal not null,
+	comment text,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.work_estimates(
+	id serial primary key,
+
+	person int not null references admin.people(id),
+	hours decimal not null,
+	comment text,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- expected to be used only by admins
+create table common.ticket_feedback_options (
+  id serial primary key,
+  option text
+);
+
+create table common.ticket_feedback(
+	id serial primary key,
+
+	ticket int references common.tickets(id),
+	stakeholder int not null references admin.people(id),
+	feedback int not null references common.ticket_feedback_options,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- WORKFLOW -----------------------------------------------------------------
+
+create table common.workflows(
+	id serial primary key,
+
+	title varchar(128) not null,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.stages(
+	id serial primary key,
+
+	workflow int not null references common.workflows(id),
+	title varchar(128) not null,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.work_order_templates(
+	id serial primary key,
+
+	stage int not null references common.stages(id),
+	content text not null,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.stage_options(
+	id serial primary key,
+
+	from_stage int not null references common.stages(id),
+	to_stage int not null references common.stages(id),
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.stage_notifications(
+	id serial primary key,
+
+	stage int not null references common.stages(id),
+	email varchar(64) not null,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);

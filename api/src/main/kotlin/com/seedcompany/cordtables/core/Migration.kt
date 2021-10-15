@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.queryForObject
 import org.springframework.stereotype.Component
 import java.io.FileReader
 import java.io.FileWriter
@@ -64,7 +65,30 @@ class Migration(
     val util: Utility,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+
+//    init {
+//        for (i in 1..10){
+//            jdbcTemplate.update("""
+//                insert into sc.languages_ex(
+//                    language_name, iso, island, province, created_by, modified_by, owning_person, owning_group
+//                ) values (
+//                    ?, 'abc', 'US', 'Texarkana', 1, 1, 2, 1
+//                );
+//            """.trimIndent(),
+//                    "lang $i",
+//                )
 //
+////            if (i % 10 == 0){
+////                jdbcTemplate.update("""
+////                insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group)
+////	                values (3, 'sc.languages_ex', ?, 1, 1, 1, 1);
+////            """.trimIndent(),
+////                    i+2,
+////                )
+////            }
+//        }
+//    }
+
 //    init {
 //
 //        val items: List<MasterRow> = readCsvFile("./src/main/resources/local/master1.csv")
