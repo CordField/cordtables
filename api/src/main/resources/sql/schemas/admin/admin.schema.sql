@@ -17,6 +17,7 @@ create type admin.access_level as enum (
 );
 
 create type admin.table_name as enum (
+  'admin.email_tokens',
   'admin.global_role_column_grants',
   'admin.global_role_memberships',
   'admin.global_role_table_permissions',
@@ -25,24 +26,34 @@ create type admin.table_name as enum (
   'admin.group_memberships',
   'admin.group_row_access',
   'admin.people',
+  'admin.tokens',
 
-  'common.people_to_org_relationship_type',
-  'common.people_to_org_relationships',
-  'common.project_member_roles',
-  'common.project_memberships',
-  'common.project_role_column_grants',
-  'common.project_roles',
-  'common.organization_grants',
-  'common.organization_memberships',
-  'common.organizations',
+  'common.chats',
   'common.education_by_person',
   'common.education_entries',
   'common.locations',
+  'common.organizations',
+  'common.people_to_org_relationships',
+  'common.people_to_org_relationship_type',
+  'common.posts',
   'common.projects',
+  'common.stages',
+  'common.stage_notifications',
+  'common.stage_options',
+  'common.tickets',
+  'common.ticket_assignments',
+  'common.ticket_feedback',
+  'common.ticket_feedback_options',
   'common.users',
+  'common.work_estimates',
+  'common.work_orders',
+  'common.work_order_templates',
+  'common.work_records',
+  'common.workflows',
 
   'sil.language_codes',
   'sil.country_codes',
+  'sil.language_index',
   'sil.table_of_languages',
 
   'sc.funding_account',
@@ -105,13 +116,18 @@ create table admin.people (
   title varchar(255),
 	status varchar(32),
 
+  chat int,
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int references admin.people(id), -- not null doesn't work here, on startup
+  created_by int, -- not null doesn't work here, on startup
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int references admin.people(id), -- not null doesn't work here, on startup
-  owning_person int references admin.people(id), -- not null doesn't work here, on startup
-  owning_group int references admin.groups(id), -- not null doesn't work here, on startup
+  modified_by int, -- not null doesn't work here, on startup
+  owning_person int, -- not null doesn't work here, on startup
+  owning_group int -- not null doesn't work here, on startup
 );
+
+alter table admin.people add constraint admin_people_created_by_fk foreign key (created_by) references admin.people(id);
+alter table admin.people add constraint admin_people_modified_by_fk foreign key (modified_by) references admin.people(id);
+alter table admin.people add constraint admin_people_owning_person_fk foreign key (owning_person) references admin.people(id);
 
 -- GROUPS --------------------------------------------------------------------
 
@@ -121,6 +137,7 @@ create table admin.groups(
   name varchar(64) not null unique,
   parent_group int references admin.groups(id),
 
+  chat int,
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -129,6 +146,8 @@ create table admin.groups(
   owning_group int references admin.groups(id) -- not null doesn't work here, on startup
 );
 
+alter table admin.people add constraint admin_people_owning_group_fk foreign key (owning_group) references admin.groups(id);
+
 create table admin.group_row_access(
   id serial primary key,
 
@@ -136,6 +155,7 @@ create table admin.group_row_access(
   table_name admin.table_name not null,
   row int not null,
 
+  chat int,
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -150,6 +170,7 @@ create table admin.group_memberships(
   group_id int not null references admin.groups(id),
   person int not null references admin.people(id),
 
+  chat int,
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -165,6 +186,7 @@ create table admin.global_roles (
 
 	name varchar(255) not null,
 
+  chat int,
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -183,6 +205,7 @@ create table admin.global_role_column_grants(
 	column_name varchar(64) not null,
 	access_level admin.access_level not null,
 
+  chat int,
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -200,6 +223,7 @@ create table admin.global_role_table_permissions(
   table_name admin.table_name not null,
   table_permission admin.table_permission not null,
 
+  chat int,
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -216,6 +240,7 @@ create table admin.global_role_memberships (
 	global_role int not null references admin.global_roles(id),
 	person int not null references admin.people(id),
 
+  chat int,
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -231,6 +256,17 @@ create table admin.global_role_memberships (
 create table if not exists admin.tokens (
 	id serial primary key,
 	token varchar(64) unique,
-	person int references people(id),
+	person int references admin.people(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP
+);
+
+-- email tokens
+
+create table admin.email_tokens (
+	id serial primary key,
+	token varchar(512),
+	email varchar(255),
+	unique(token),
+	created_at timestamp not null default CURRENT_TIMESTAMP
+-- 	foreign key (email) references users(email)
 );
