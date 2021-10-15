@@ -593,7 +593,7 @@ class Read(
                             province,
                             first_language_population,
                             population_value,
-                            egids_level as egidsScale,
+                            egids_level = if (egids_level == null) null else egidsScale.valueOf(egids_level),
                             egids_value,
                             least_reached_progress_jps_level as leastReachedProgressScale,
                             least_reached_value,
