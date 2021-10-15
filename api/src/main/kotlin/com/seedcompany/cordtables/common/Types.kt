@@ -42,10 +42,10 @@ enum class access_level (val accessType: String){
     Admin("Admin")
 }
 
-enum class CommonSensitivity (val accessType: String){
-    Low("Low"),
-    Medium("Medium"),
-    High("High")
+enum class CommonSensitivity {
+    Low,
+    Medium,
+    High,
 }
 data class GenericResponse (
     val error: ErrorType,

@@ -25,7 +25,7 @@ data class People(
     val primaryLocation: Int?,
     val privateFullName: String?,
     val publicFullName: String?,
-//    val sensitivityClearance: CommonSensitivity,
+    val sensitivityClearance: CommonSensitivity?,
     val timeZone: String?,
     val title: String?,
     val status: String?,
@@ -191,9 +191,9 @@ class List(
             var publicFullName: String? = jdbcResult.getString("public_full_name")
             if (jdbcResult.wasNull()) publicFullName = null
 
-//              Ask for help here.
-//            var sensitivityClearance: CommonSensitivity? = jdbcResult.getObject(CommonSensitivity)
-//            if (jdbcResult.wasNull()) sensitivityClearance = null
+
+            var sensitivityClearance: String? = jdbcResult.getString("CommonSensitivity")
+            if (jdbcResult.wasNull()) sensitivityClearance = null
 
             var timeZone: String? = jdbcResult.getString("time_zone")
             if (jdbcResult.wasNull()) timeZone = null
@@ -234,7 +234,7 @@ class List(
                     primaryLocation = primaryLocation,
                     privateFullName = privateFullName,
                     publicFullName = publicFullName,
-                    //InsertSensitivity here
+                    sensitivityClearance = if(sensitivityClearance == null) null else CommonSensitivity.valueOf("sensitivityClearance"),
                     timeZone = timeZone,
                     title = title,
                     status = status,
@@ -256,27 +256,3 @@ class List(
 
 
 }
-
-//data class People(
-//    val id: Int?,
-//    val phone: String?,
-//    val picture: String?,
-//    val privateFirstName: String?,
-//    val privateLastName: String?,
-//    val publicFirstName: String?,
-//    val publicLastName: String?,
-//    val primaryLocation: Int?,
-//    val privateFullName: String?,
-//    val publicFullName: String?,
-//    val sensitivityClearance: CommonSensitivity,
-//    val timeZone: String?,
-//    val title: String?,
-//    val status: String?,
-//    val createdAt: String?,
-//    val createdBy: Int?,
-//    val modifiedAt: String?,
-//    val modifiedBy: Int?,
-//    val owningPerson: Int?,
-//    val owningGroup: Int?,
-//
-//    )
