@@ -61,6 +61,7 @@ class BootstrapDB(
 
             // sil
             runSqlFile("sql/schemas/sil/sil.schema.sql")
+            runSqlFile("sql/schemas/sil/sil.history.sql")
 
             // sc
             runSqlFile("sql/schemas/sc/sc.schema.sql")
