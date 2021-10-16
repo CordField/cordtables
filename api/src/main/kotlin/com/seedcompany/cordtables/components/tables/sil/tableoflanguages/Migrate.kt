@@ -5,19 +5,18 @@ import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.core.AppConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.client.RestTemplate
 import javax.sql.DataSource
 
-data class ValueInt (
+data class ValueInt(
     val value: Int? = null,
 )
-data class ValueString (
+
+data class ValueString(
     val value: String? = null,
 )
 
@@ -28,6 +27,7 @@ data class Ethnologue(
     val provisionalCode: ValueString? = null,
     val sensitivity: String? = null,
 )
+
 data class Item(
     val id: String? = null,
     val ethnologue: Ethnologue? = null,
@@ -67,6 +67,7 @@ class Migrate(
 
     ) {
     val jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
+    val jdbcTemplate2 = JdbcTemplate(ds)
 
     init {
 
@@ -91,7 +92,21 @@ class Migrate(
 
                     val ethResponse = cord.post<Response>(token, ethQuery)
 
+                    val eth = ethResponse?.data?.languages?.items?.get(0)?.ethnologue
+                    if (eth != null) {
 
+                        val errorType = jdbcTemplate2.queryForObject(
+                            "call sc_migrate_ethnologue(?,?,?,?,?);",
+                            String::class.java,
+                            eth.code?.value,
+                            eth.name?.value,
+                            eth.population?.value,
+                            eth.provisionalCode?.value,
+                            eth.sensitivity,
+                        )
+
+                        println(errorType)
+                    }
 
                 }
             }
