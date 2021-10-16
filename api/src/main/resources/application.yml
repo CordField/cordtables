@@ -1,8 +1,12 @@
 cord:
   admin:
     password: ${CORD_ADMIN_PASSWORD}
+cord-api:
+  url: ${CORD_API_GRAPHQL_URL}
+  email: ${CORD_API_EMAIL}
+  password: ${CORD_API_PASSWORD}
 server:
-  port: 8080
+  port: ${SERVER_PORT}
 spring:
   datasource:
     jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:${DB_PORT}/${DB_DATABASE}

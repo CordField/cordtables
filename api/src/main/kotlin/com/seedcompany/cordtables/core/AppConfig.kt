@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestTemplate
 
 public enum class ConfigEnv {
     local,
@@ -37,8 +38,25 @@ class AppConfig(
 
     @Value("\${spring.datasource.password}")
     val dbPassword: String,
+
+    @Value("\${cord-api.url}")
+    val cordApiGraphqlUrl: String,
+
+    @Value("\${cord-api.email}")
+    val cordApiEmail: String,
+
+    @Value("\${cord-api.password}")
+    val cordApiPassword: String,
+
 ) {
     @get:Bean
     val appConfig: AppConfig
         get() = this
+
+
+    @Bean
+    fun restTemplate(): RestTemplate {
+        return RestTemplate()
+    }
 }
+
