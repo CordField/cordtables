@@ -60,7 +60,7 @@ class Register (
         var errorType = ErrorType.UnknownError
 
         this.ds.connection.use{conn ->
-            val statement = conn.prepareCall("call register(?, ?, ?, ?);")
+            val statement = conn.prepareCall("call admin.register(?, ?, ?, ?);")
             statement.setString(1, email)
             statement.setString(2, pash)
             statement.setString(3, token)

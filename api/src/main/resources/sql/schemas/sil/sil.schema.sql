@@ -64,12 +64,11 @@ CREATE TABLE sil.language_index (
 create table sil.table_of_languages (
   id serial primary key,
 
-  sil_ethnologue_legacy varchar(32),
-  iso_639 char(3),
-  code varchar(32),
-  language_name varchar(50) not null,
+  iso_639 char(3) unique,
+  language_name varchar(64),
   population int,
   provisional_code varchar(32),
+  sensitivity common.sensitivity not null default 'High',
 
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,

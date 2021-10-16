@@ -1,6 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sil.tableoflanguages
 
 import com.seedcompany.cordtables.common.CordApiRestUtils
+import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.core.AppConfig
 import org.springframework.beans.factory.annotation.Autowired
@@ -95,17 +96,37 @@ class Migrate(
                     val eth = ethResponse?.data?.languages?.items?.get(0)?.ethnologue
                     if (eth != null) {
 
-                        val errorType = jdbcTemplate2.queryForObject(
-                            "call sc_migrate_ethnologue(?,?,?,?,?);",
-                            String::class.java,
-                            eth.code?.value,
-                            eth.name?.value,
-                            eth.population?.value,
-                            eth.provisionalCode?.value,
-                            eth.sensitivity,
-                        )
+                        var errorType: ErrorType? = null
 
-                        println(errorType)
+                        this.ds.connection.use { conn ->
+                            val migrationStatement = conn.prepareCall("call sc.sc_migrate_ethnologue(?,?,?,?,?,?);")
+                            migrationStatement.setString(1, eth.code?.value)
+                            migrationStatement.setString(2, eth.name?.value)
+                            if (eth.population?.value != null) {
+                                migrationStatement.setInt(3, eth.population?.value)
+                            } else {
+                                migrationStatement.setNull(3, java.sql.Types.NULL)
+                            }
+                            migrationStatement.setString(4, eth.provisionalCode?.value)
+                            migrationStatement.setObject(5, eth.sensitivity, java.sql.Types.OTHER)
+                            migrationStatement.registerOutParameter(6, java.sql.Types.VARCHAR)
+
+                            migrationStatement.execute()
+
+                            try {
+                                errorType = ErrorType.valueOf(migrationStatement.getString(6))
+                            } catch (ex: IllegalArgumentException) {
+                                errorType = ErrorType.UnknownError
+                            }
+
+                            if (errorType != ErrorType.NoError) {
+                                println("ethnologue migration query failed")
+                            }
+
+                            migrationStatement.close()
+                        }
+
+                        println("Migrated ethnologue entry code: '${eth.code?.value}': $errorType")
                     }
 
                 }
