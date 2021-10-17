@@ -57,7 +57,7 @@ class Create(
                         chapter_end,
                         verse_start,
                         verse_end ) 
-                    values (?, ?, ?, ?, ?, ?)
+                    values (?::common.book_name, ?::common.book_name, ?, ?, ?, ?)
                     returning id
                     """.trimIndent()
                 )

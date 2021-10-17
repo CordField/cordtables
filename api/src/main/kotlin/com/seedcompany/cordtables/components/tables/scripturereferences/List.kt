@@ -17,7 +17,7 @@ data class ScriptureReferenceListRequest(
 
 data class ScriptureReferenceListResponse(
     val error: ErrorType,
-    val scriptReferences: MutableList<ScriptureReference>?,
+    val response: MutableList<ScriptureReference>?,
 )
 
 data class ScriptureReference(

@@ -14,11 +14,11 @@ import kotlin.reflect.full.memberProperties
 
 data class UpdatableScriptureReferenceFields(
     val book_start: String?,
-    var book_end: String?,
-    var chapter_start: Int?,
-    var chapter_end: Int?,
-    var verse_start: Int?,
-    var verse_end: Int?,
+    val book_end: String?,
+    val chapter_start: Int?,
+    val chapter_end: Int?,
+    val verse_start: Int?,
+    val verse_end: Int?,
 )
 
 data class ScriptureReferenceUpdateRequest(
@@ -29,7 +29,7 @@ data class ScriptureReferenceUpdateRequest(
 
 data class ScriptureReferenceUpdateResponse(
     val error: ErrorType,
-    var data: ScriptureReference?,
+    val response: ScriptureReference?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -52,16 +52,23 @@ class Update(
         if (req.id == null) return ScriptureReferenceUpdateResponse(ErrorType.MissingId, null)
         var updatedScriptureReference: ScriptureReference? = null
 
-        try {
-            this.ds.connection.use { conn ->
+        this.ds.connection.use { conn ->
+            try {
+
                 val reqValues: MutableList<Any> = mutableListOf()
-                var updateSql = "update common.scripture_reference set"
+                var updateSql = "update common.scripture_references set"
+                var counter = 1
                 for (prop in UpdatableScriptureReferenceFields::class.memberProperties) {
                     val propValue = prop.get(req.updatedFields)
-                    println("$propValue ${prop.name}")
                     if (propValue != null) {
-                        updateSql = "$updateSql ${prop.name} = ?,"
+                        if(counter > 1) updateSql = ", $updateSql"
+                        if(prop.name == "book_start" || prop.name == "book_end") {
+                            updateSql = "$updateSql ${prop.name} = ?::common.book_name"
+                        } else {
+                            updateSql = "$updateSql ${prop.name} = ?"
+                        }
                         reqValues.add(propValue)
+                        counter++
                     }
                 }
                 updateSql = "$updateSql where id = ? returning *"
@@ -69,26 +76,27 @@ class Update(
                 val updateStatement = conn.prepareCall(
                     updateSql
                 )
-                var counter = 1
+                counter = 1
                 reqValues.forEach { value ->
                     when (value) {
                         is Int -> updateStatement.setInt(counter, value)
                         is String -> updateStatement.setString(counter, value)
                     }
-                    counter += 1
+                    counter++
                 }
-
-                updateStatement.setInt(counter+2, req.id)
+                println("counter+++++++++++++++=")
+                println(counter)
+                updateStatement.setInt(counter, req.id)
                 val updateStatementResult = updateStatement.executeQuery()
 
                 if (updateStatementResult.next()) {
-                    val id = updateStatement.getInt("id")
-                    val bookStart = updateStatement.getString("book_start")
-                    val bookEnd = updateStatement.getString("book_end")
-                    val chapterStart = updateStatement.getInt("chapter_start")
-                    val chapterEnd = updateStatement.getInt("chapter_end")
-                    val verseStart = updateStatement.getInt("verse_start")
-                    val verseEnd = updateStatement.getInt("verse_end")
+                    val id = updateStatementResult.getInt("id")
+                    val bookStart = updateStatementResult.getString("book_start")
+                    val bookEnd = updateStatementResult.getString("book_end")
+                    val chapterStart = updateStatementResult.getInt("chapter_start")
+                    val chapterEnd = updateStatementResult.getInt("chapter_end")
+                    val verseStart = updateStatementResult.getInt("verse_start")
+                    val verseEnd = updateStatementResult.getInt("verse_end")
                     updatedScriptureReference = ScriptureReference(
                         id,
                         bookStart,
@@ -102,10 +110,10 @@ class Update(
                     println("updated row's id: $id")
                 }
             }
-        }
-        catch (e: SQLException) {
-            println(e.message)
-            return ScriptureReferenceUpdateResponse(ErrorType.SQLUpdateError, null)
+            catch (e: SQLException) {
+                println(e.message)
+                return ScriptureReferenceUpdateResponse(ErrorType.SQLUpdateError, null)
+            }
         }
 
         return ScriptureReferenceUpdateResponse(ErrorType.NoError, updatedScriptureReference)
