@@ -73,52 +73,52 @@ class Create(
                         if (prop.name == "egids_level") {
                             insertStatementKeys = "$insertStatementKeys egids_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getEgidsValue(propValue as egidsScale))
+                            reqValues.add(languageExUtil.getEgidsValue(propValue as EgidsScale))
                         }
                         if (prop.name == "least_reached_progress_jps_level") {
                             insertStatementKeys = "$insertStatementKeys least_reached_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getLeastReachedValue(propValue as leastReachedProgressScale))
+                            reqValues.add(languageExUtil.getLeastReachedValue(propValue as LeastReachedProgressScale))
                         }
                         if (prop.name == "partner_interest_level") {
                             insertStatementKeys = "$insertStatementKeys partner_interest_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getPartnerInterestValue(propValue as partnerInterestScale))
+                            reqValues.add(languageExUtil.getPartnerInterestValue(propValue as PartnerInterestScale))
                         }
                         if (prop.name == "multiple_languages_leverage_linguistic_level") {
                             insertStatementKeys = "$insertStatementKeys multiple_languages_leverage_linguistic_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getMultipleLanguagesLeverageLinguisticValue(propValue as multipleLanguagesLeverageLinguisticScale))
+                            reqValues.add(languageExUtil.getMultipleLanguagesLeverageLinguisticValue(propValue as MultipleLanguagesLeverageLinguisticScale))
                         }
                         if (prop.name == "multiple_languages_leverage_joint_training_level") {
                             insertStatementKeys = "$insertStatementKeys multiple_languages_leverage_joint_training_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getMultipleLanguagesLeverageJointTrainingValue(propValue as multipleLanguagesLeverageJointTrainingScale))
+                            reqValues.add(languageExUtil.getMultipleLanguagesLeverageJointTrainingValue(propValue as MultipleLanguagesLeverageJointTrainingScale))
                         }
                         if (prop.name == "lang_comm_int_in_language_development_level") {
                             insertStatementKeys = "$insertStatementKeys lang_comm_int_in_language_development_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getLangCommIntInLanguageDevelopmentValue(propValue as langCommIntInLanguageDevelopmentScale))
+                            reqValues.add(languageExUtil.getLangCommIntInLanguageDevelopmentValue(propValue as LangCommIntInLanguageDevelopmentScale))
                         }
                         if (prop.name == "lang_comm_int_in_scripture_translation_level") {
                             insertStatementKeys = "$insertStatementKeys lang_comm_int_in_scripture_translation_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getLangCommIntInScriptureTranslationValue(propValue as langCommIntInScriptureTranslationScale))
+                            reqValues.add(languageExUtil.getLangCommIntInScriptureTranslationValue(propValue as LangCommIntInScriptureTranslationScale))
                         }
                         if (prop.name == "access_to_scripture_in_lwc_level") {
                             insertStatementKeys = "$insertStatementKeys access_to_scripture_in_lwc_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getAccessToScriptureInLwcValue(propValue as accessToScriptureInLwcScale))
+                            reqValues.add(languageExUtil.getAccessToScriptureInLwcValue(propValue as AccessToScriptureInLwcScale))
                         }
                         if (prop.name == "begin_work_geo_challenges_level") {
                             insertStatementKeys = "$insertStatementKeys begin_work_geo_challenges_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getBeginWorkGeoChallengesValue(propValue as beginWorkGeoChallengesScale))
+                            reqValues.add(languageExUtil.getBeginWorkGeoChallengesValue(propValue as BeginWorkGeoChallengesScale))
                         }
                         if (prop.name == "begin_work_rel_pol_obstacles_level") {
                             insertStatementKeys = "$insertStatementKeys begin_work_rel_pol_obstacles_value,"
                             insertStatementValues = "$insertStatementValues ?,"
-                            reqValues.add(languageExUtil.getBeginWorkRelPolObstaclesValue(propValue as beginWorkRelPolObstaclesScale))
+                            reqValues.add(languageExUtil.getBeginWorkRelPolObstaclesValue(propValue as BeginWorkRelPolObstaclesScale))
                         }
                     }
                 }
@@ -264,39 +264,39 @@ class Create(
                             province= province,
                             first_language_population= first_language_population,
                             population_value= population_value,
-                            egids_level = if (egids_level == null) null else egidsScale.valueOf(egids_level),
+                            egids_level = if (egids_level == null) null else EgidsScale.valueOf(egids_level),
                             egids_value= egids_value,
-                            least_reached_progress_jps_level = if(least_reached_progress_jps_level == null) null else leastReachedProgressScale.valueOf(least_reached_progress_jps_level) ,
+                            least_reached_progress_jps_level = if(least_reached_progress_jps_level == null) null else LeastReachedProgressScale.valueOf(least_reached_progress_jps_level) ,
                             least_reached_value= least_reached_value,
-                            partner_interest_level = if(partner_interest_level == null) null else partnerInterestScale.valueOf(partner_interest_level),
+                            partner_interest_level = if(partner_interest_level == null) null else PartnerInterestScale.valueOf(partner_interest_level),
                             partner_interest_value= partner_interest_value,
                             partner_interest_description= partner_interest_description,
                             partner_interest_source= partner_interest_source,
-                            multiple_languages_leverage_linguistic_level = if(multiple_languages_leverage_linguistic_level == null) null else multipleLanguagesLeverageLinguisticScale.valueOf(multiple_languages_leverage_linguistic_level),
+                            multiple_languages_leverage_linguistic_level = if(multiple_languages_leverage_linguistic_level == null) null else MultipleLanguagesLeverageLinguisticScale.valueOf(multiple_languages_leverage_linguistic_level),
                             multiple_languages_leverage_linguistic_value= multiple_languages_leverage_linguistic_value,
                             multiple_languages_leverage_linguistic_description= multiple_languages_leverage_linguistic_description,
                             multiple_languages_leverage_linguistic_source= multiple_languages_leverage_linguistic_source,
-                            multiple_languages_leverage_joint_training_level = if(multiple_languages_leverage_joint_training_level == null) null else multipleLanguagesLeverageJointTrainingScale.valueOf(multiple_languages_leverage_joint_training_level),
+                            multiple_languages_leverage_joint_training_level = if(multiple_languages_leverage_joint_training_level == null) null else MultipleLanguagesLeverageJointTrainingScale.valueOf(multiple_languages_leverage_joint_training_level),
                             multiple_languages_leverage_joint_training_value= multiple_languages_leverage_joint_training_value,
                             multiple_languages_leverage_joint_training_description= multiple_languages_leverage_joint_training_description,
                             multiple_languages_leverage_joint_training_source= multiple_languages_leverage_joint_training_source,
-                            lang_comm_int_in_language_development_level = if(lang_comm_int_in_language_development_level == null) null else langCommIntInLanguageDevelopmentScale.valueOf(lang_comm_int_in_language_development_level),
+                            lang_comm_int_in_language_development_level = if(lang_comm_int_in_language_development_level == null) null else LangCommIntInLanguageDevelopmentScale.valueOf(lang_comm_int_in_language_development_level),
                             lang_comm_int_in_language_development_value= lang_comm_int_in_language_development_value,
                             lang_comm_int_in_language_development_description= lang_comm_int_in_language_development_description,
                             lang_comm_int_in_language_development_source= lang_comm_int_in_language_development_source,
-                            lang_comm_int_in_scripture_translation_level = if(lang_comm_int_in_scripture_translation_level == null) null else langCommIntInScriptureTranslationScale.valueOf(lang_comm_int_in_scripture_translation_level),
+                            lang_comm_int_in_scripture_translation_level = if(lang_comm_int_in_scripture_translation_level == null) null else LangCommIntInScriptureTranslationScale.valueOf(lang_comm_int_in_scripture_translation_level),
                             lang_comm_int_in_scripture_translation_value= lang_comm_int_in_scripture_translation_value,
                             lang_comm_int_in_scripture_translation_description= lang_comm_int_in_scripture_translation_description,
                             lang_comm_int_in_scripture_translation_source= lang_comm_int_in_scripture_translation_source,
-                            access_to_scripture_in_lwc_level = if(access_to_scripture_in_lwc_level == null) null else accessToScriptureInLwcScale.valueOf(access_to_scripture_in_lwc_level),
+                            access_to_scripture_in_lwc_level = if(access_to_scripture_in_lwc_level == null) null else AccessToScriptureInLwcScale.valueOf(access_to_scripture_in_lwc_level),
                             access_to_scripture_in_lwc_value= access_to_scripture_in_lwc_value,
                             access_to_scripture_in_lwc_description= access_to_scripture_in_lwc_description,
                             access_to_scripture_in_lwc_source= access_to_scripture_in_lwc_source,
-                            begin_work_geo_challenges_level = if(begin_work_geo_challenges_level == null) null else beginWorkGeoChallengesScale.valueOf(begin_work_geo_challenges_level),
+                            begin_work_geo_challenges_level = if(begin_work_geo_challenges_level == null) null else BeginWorkGeoChallengesScale.valueOf(begin_work_geo_challenges_level),
                             begin_work_geo_challenges_value = begin_work_geo_challenges_value,
                             begin_work_geo_challenges_description= begin_work_geo_challenges_description,
                             begin_work_geo_challenges_source= begin_work_geo_challenges_source,
-                            begin_work_rel_pol_obstacles_level = if(begin_work_rel_pol_obstacles_level == null) null else beginWorkRelPolObstaclesScale.valueOf(begin_work_rel_pol_obstacles_level),
+                            begin_work_rel_pol_obstacles_level = if(begin_work_rel_pol_obstacles_level == null) null else BeginWorkRelPolObstaclesScale.valueOf(begin_work_rel_pol_obstacles_level),
                             begin_work_rel_pol_obstacles_value= begin_work_rel_pol_obstacles_value,
                             begin_work_rel_pol_obstacles_description= begin_work_rel_pol_obstacles_description,
                             begin_work_rel_pol_obstacles_source= begin_work_rel_pol_obstacles_source,
