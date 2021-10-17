@@ -35,7 +35,8 @@ class CreateLanguageExResponse extends GenericResponse {
 
 class UpdateLanguageExRequest {
   token: string;
-  updatedFields: MutableLanguageExFields;
+  columnToUpdate: string;
+  updatedColumnValue: string | number;
   id: number;
 }
 
@@ -141,7 +142,6 @@ export class LanguagesEx {
   ];
   @State() languagesEx: languageEx[] = [];
   @State() insertedFields: MutableLanguageExFields = this.defaultFields;
-  @State() updatedFields: MutableLanguageExFields = {};
   @State() error: string;
   @State() success: string;
   @State() showNewForm = false;
@@ -179,10 +179,10 @@ export class LanguagesEx {
   }
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    this.updatedFields[columnName] = value;
     const updateResponse = await fetchAs<UpdateLanguageExRequest, UpdateLanguageExResponse>('language_ex/update', {
       token: globals.globalStore.state.token,
-      updatedFields: this.updatedFields,
+      updatedColumnValue: value,
+      columnToUpdate: columnName,
       id,
     });
 

@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.languageex
 
 
 
-enum class egidsScale  {
+enum class EgidsScale  {
         `0`,
         `1`,
         `2`,
@@ -17,7 +17,7 @@ enum class egidsScale  {
         `9`,
         `10`
 }
-enum class leastReachedProgressScale  {
+enum class LeastReachedProgressScale  {
     `0`,
     `1`,
     `2`,
@@ -26,14 +26,14 @@ enum class leastReachedProgressScale  {
     `5`
 };
 
-enum class partnerInterestScale  {
+enum class PartnerInterestScale  {
     `No Partner Interest`,
     `Some`,
     `Significant`,
     `Considerable`
 };
 
-enum class multipleLanguagesLeverageLinguisticScale  {
+enum class MultipleLanguagesLeverageLinguisticScale  {
     `None`,
     `Some`,
     `Significant`,
@@ -42,7 +42,7 @@ enum class multipleLanguagesLeverageLinguisticScale  {
     `Vast`
 };
 
-enum class multipleLanguagesLeverageJointTrainingScale  {
+enum class MultipleLanguagesLeverageJointTrainingScale  {
     `None`,
     `Some`,
     `Significant`,
@@ -51,7 +51,7 @@ enum class multipleLanguagesLeverageJointTrainingScale  {
     `Vast`
 };
 
-enum class langCommIntInLanguageDevelopmentScale  {
+enum class LangCommIntInLanguageDevelopmentScale  {
     `No Interest`,
     `Some`,
     `Expressed Need`,
@@ -59,7 +59,7 @@ enum class langCommIntInLanguageDevelopmentScale  {
     `Considerable`
 };
 
-enum class langCommIntInScriptureTranslationScale  {
+enum class LangCommIntInScriptureTranslationScale  {
     `No Interest`,
     `Some`,
     `Expressed Need`,
@@ -67,7 +67,7 @@ enum class langCommIntInScriptureTranslationScale  {
     `Considerable`
 };
 
-enum class accessToScriptureInLwcScale  {
+enum class AccessToScriptureInLwcScale  {
     `Full Access`,
     `Vast Majority`,
     `Large Majority`,
@@ -77,7 +77,7 @@ enum class accessToScriptureInLwcScale  {
     `Few`
 };
 
-enum class beginWorkGeoChallengesScale  {
+enum class BeginWorkGeoChallengesScale  {
     `None`,
     `Very Difficult`,
     `Difficult`,
@@ -85,7 +85,7 @@ enum class beginWorkGeoChallengesScale  {
     `Easy`
 };
 
-enum class beginWorkRelPolObstaclesScale  {
+enum class BeginWorkRelPolObstaclesScale  {
     `None`,
     `Very Difficult`,
     `Difficult`,
@@ -93,4 +93,4 @@ enum class beginWorkRelPolObstaclesScale  {
     `Easy`
 };
 
-val egids_value = egidsScale.valueOf("1")
+val egids_value = EgidsScale.valueOf("1")
