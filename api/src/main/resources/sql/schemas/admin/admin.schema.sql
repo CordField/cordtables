@@ -276,8 +276,10 @@ create table admin.email_tokens (
 create table admin.peers (
   id serial primary key,
   url varchar(128) not null unique,
-  approved bool not null default false,
-  secret varchar(64) not null,
+  peer_approved bool not null default false,
+  url_confirmed bool not null default false,
+  source_token varchar(64),
+  target_token varchar(64),
 
   chat int,
   created_at timestamp not null default CURRENT_TIMESTAMP,
