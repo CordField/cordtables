@@ -3,7 +3,6 @@ import { ActionType, ErrorType, ScriptureReference } from '../../../common/types
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 
-
 type MutableScriptureReferenceFields = Partial<ScriptureReference>;
 
 class ScriptureReferenceListRequest {
@@ -33,7 +32,7 @@ class ScriptureReferenceCreateResponse {
 class ScriptureReferenceUpdateRequest {
   token: string;
   id: number;
-  updatedFields: MutableScriptureReferenceFields
+  updatedFields: MutableScriptureReferenceFields;
 }
 
 class ScriptureReferenceUpdateResponse {
@@ -49,7 +48,6 @@ class ScriptureReferenceDeleteRequest {
 class ScriptureReferenceDeleteResponse {
   error: ErrorType;
 }
-
 
 @Component({
   tag: 'scripture-references',
@@ -81,6 +79,8 @@ export class ScriptureReferences {
 
   editableKeys = ['book_start', 'book_end', 'chapter_start', 'chapter_end', 'verse_start', 'verse_end'];
 
+  bookNames = ['Genesis', 'Matthew', 'Revelation'];
+
   componentWillLoad() {
     this.getList();
   }
@@ -101,12 +101,10 @@ export class ScriptureReferences {
   };
 
   handleInsert = async () => {
-    const result = await fetchAs<ScriptureReferenceCreateRequest, ScriptureReferenceCreateResponse>(
-      'table/common-scripture-references/create',
-      {
-        token: globals.globalStore.state.token,
-        ...this.insertedFields
-      });
+    const result = await fetchAs<ScriptureReferenceCreateRequest, ScriptureReferenceCreateResponse>('table/common-scripture-references/create', {
+      token: globals.globalStore.state.token,
+      ...this.insertedFields,
+    });
 
     this.showNewForm = false;
     this.insertedFields = this.defaultFields;
@@ -119,21 +117,18 @@ export class ScriptureReferences {
     }
   };
 
-
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     this.updatedFields[columnName] = value;
-    const result = await fetchAs<ScriptureReferenceUpdateRequest, ScriptureReferenceUpdateResponse>(
-      'table/common-scripture-references/update',
-      {
-        token: globals.globalStore.state.token,
-        updatedFields: this.updatedFields,
-        id,
+    const result = await fetchAs<ScriptureReferenceUpdateRequest, ScriptureReferenceUpdateResponse>('table/common-scripture-references/update', {
+      token: globals.globalStore.state.token,
+      updatedFields: this.updatedFields,
+      id,
     });
 
     if (result.error == ErrorType.NoError) {
-      this.list = this.list.map((item) => {
-        if(item.id === id) {
-          return result.response
+      this.list = this.list.map(item => {
+        if (item.id === id) {
+          return result.response;
         }
         return item;
       });
@@ -146,8 +141,7 @@ export class ScriptureReferences {
   };
 
   handleDelete = async (id: number): Promise<boolean> => {
-    const result = await fetchAs<ScriptureReferenceDeleteRequest, ScriptureReferenceDeleteResponse>(
-      'table/common-scripture-references/delete', {
+    const result = await fetchAs<ScriptureReferenceDeleteRequest, ScriptureReferenceDeleteResponse>('table/common-scripture-references/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -171,11 +165,7 @@ export class ScriptureReferences {
     }
     return (
       <td>
-        <input
-          type="text"
-          id={`input-${fieldName}`}
-          name={fieldName}
-          onInput={event => this.insertFieldChange(event, fieldName)} />
+        <input type="text" id={`input-${fieldName}`} name={fieldName} onInput={event => this.insertFieldChange(event, fieldName)} />
       </td>
     );
   }
@@ -187,6 +177,8 @@ export class ScriptureReferences {
           key={columnName}
           rowId={item.id}
           propKey={columnName}
+          type={columnName === 'book_start' || columnName === 'book_end' ? 'select' : 'text'}
+          options={columnName === 'book_start' || columnName === 'book_end' ? this.bookNames : []}
           value={item[columnName]}
           isEditable={!this.nonEditableColumns.includes(columnName)}
           updateFn={!this.nonEditableColumns.includes(columnName) ? this.handleUpdate : null}
@@ -199,7 +191,7 @@ export class ScriptureReferences {
     return (
       <Host>
         <slot></slot>
-        { this.message && <div>{this.message}</div> }
+        {this.message && <div>{this.message}</div>}
         <header>
           <h1>Scripture References</h1>
         </header>
@@ -215,16 +207,17 @@ export class ScriptureReferences {
                 </tr>
               </thead>
               <tbody>
-                {this.list && this.list.map(item => (
-                  <tr>
-                    <div class="button-parent">
-                      <button class="delete-button" onClick={() => this.handleDelete(item.id)}>
-                        Delete
-                      </button>
-                    </div>
-                    {Object.keys(item).map(key => this.getEditableCell(key, item))}
-                  </tr>
-                ))}
+                {this.list &&
+                  this.list.map(item => (
+                    <tr>
+                      <div class="button-parent">
+                        <button class="delete-button" onClick={() => this.handleDelete(item.id)}>
+                          Delete
+                        </button>
+                      </div>
+                      {Object.keys(item).map(key => this.getEditableCell(key, item))}
+                    </tr>
+                  ))}
               </tbody>
               {this.showNewForm && (
                 <tr>
