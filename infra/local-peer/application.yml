@@ -7,6 +7,7 @@ cord-api:
   password: asdfasdf
 server:
   port: 8079
+  url: http://localhost:8079
 spring:
   datasource:
     jdbcUrl: jdbc:postgresql://localhost:5432/peer1

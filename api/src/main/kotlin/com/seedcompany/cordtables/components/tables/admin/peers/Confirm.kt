@@ -43,6 +43,9 @@ class Confirm(
 
         this.ds.connection.use { conn ->
 
+            println(req.sourceToken)
+            println(req.url)
+
             //language=SQL
             val checkNameStatement = conn.prepareStatement(
                 """
@@ -68,6 +71,7 @@ class Confirm(
                     )
                     return PeerConfirmReturn(ErrorType.NoError)
                 } else {
+                    println("peer not found")
                     return PeerConfirmReturn(ErrorType.PeerNotPresent)
                 }
             }

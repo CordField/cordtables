@@ -6,7 +6,8 @@ cord-api:
   email: ${CORD_API_EMAIL}
   password: ${CORD_API_PASSWORD}
 server:
-  port: 8080
+  port: ${SERVER_PORT}
+  url: ${SERVER_URL}
 spring:
   datasource:
     jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:5432/${DB_DATABASE}

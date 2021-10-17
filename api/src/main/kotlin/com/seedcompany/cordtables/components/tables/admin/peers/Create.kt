@@ -2,9 +2,9 @@ package com.seedcompany.cordtables.components.tables.admin.peers
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.core.AppConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.queryForObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -42,6 +42,9 @@ class Create(
 
     @Autowired
     val rest: RestTemplate,
+
+    @Autowired
+    val appConfig: AppConfig,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
@@ -124,13 +127,17 @@ class Create(
         try {
             initResponse = rest.postForObject<PeerInitReturn>(
                 "${req.url}/admin/peers/init",
-                PeerInitRequest(url = req.url, sourceToken = sourceToken)
+                PeerInitRequest(url = appConfig.thisServerUrl, sourceToken = sourceToken)
             )
         } catch (e: Exception) {
+            println("init post failed")
             return PeerCreateReturn(ErrorType.PeerFailedToInitialize)
         }
 
-        if (initResponse == null) return PeerCreateReturn(ErrorType.PeerFailedToInitialize)
+        if (initResponse == null) {
+            println("initResponse was null")
+            return PeerCreateReturn(ErrorType.PeerFailedToInitialize)
+        }
 
         if (initResponse.error == ErrorType.NoError && initResponse.targetToken?.length == 64) {
             jdbcTemplate.update(
@@ -144,16 +151,15 @@ class Create(
                 req.url,
             )
         } else {
-            println(initResponse.error)
+            println("initResponse: ${initResponse.error}")
             return PeerCreateReturn(initResponse.error)
         }
 
         val person = jdbcTemplate.queryForObject(
             """
-                insert into admin.people(sensitivity_clearance) values (?) returning id;
+                insert into admin.people(sensitivity_clearance) values ('Low') returning id;
             """.trimIndent(),
-            String::class.java,
-            req.sensitivityClearance,
+            Int::class.java,
         )
 
         jdbcTemplate.update(

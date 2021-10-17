@@ -2,7 +2,9 @@ package com.seedcompany.cordtables.components.tables.admin.peers
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.core.AppConfig
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -33,7 +35,11 @@ class Init(
 
     @Autowired
     val rest: RestTemplate,
+
+    @Autowired
+    val appConfig: AppConfig,
 ) {
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
     @PostMapping("admin/peers/init")
     @ResponseBody
@@ -87,18 +93,40 @@ class Init(
         try {
             confirmResponse = rest.postForObject<PeerConfirmReturn>(
                 "${req.url}/admin/peers/confirm",
-                PeerConfirmRequest(url = req.url, sourceToken = req.sourceToken)
+                PeerConfirmRequest(url = appConfig.thisServerUrl, sourceToken = req.sourceToken)
             )
         } catch (e: Exception) {
+            println("confirm post failed")
             return PeerInitReturn(ErrorType.PeerFailedToConfirm)
         }
 
-        if (confirmResponse == null) return PeerInitReturn(ErrorType.PeerFailedToConfirm)
+        if (confirmResponse == null) {
+            println("confirmResponse was null")
+            return PeerInitReturn(ErrorType.PeerFailedToConfirm)
+        }
 
-        return if (confirmResponse.error == ErrorType.NoError) {
-            PeerInitReturn(ErrorType.NoError)
+        if (confirmResponse.error == ErrorType.NoError) {
+            val person = jdbcTemplate.queryForObject(
+                """
+                insert into admin.people(sensitivity_clearance) values ('Low') returning id;
+            """.trimIndent(),
+                Int::class.java,
+            )
+
+            jdbcTemplate.update(
+                """
+                    update admin.peers
+                    set url_confirmed = true,
+                        person = ?
+                    where url = ?;
+                """.trimIndent(),
+                person,
+                req.url,
+            )
+            return PeerInitReturn(ErrorType.NoError, targetToken = targetToken)
         } else {
-            PeerInitReturn(ErrorType.PeerFailedToConfirm)
+            println("Init fn: Confirm response: ${confirmResponse.error}")
+            return PeerInitReturn(ErrorType.PeerFailedToConfirm)
         }
 
     }
