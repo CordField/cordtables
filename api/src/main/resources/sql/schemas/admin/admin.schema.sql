@@ -275,6 +275,8 @@ create table admin.email_tokens (
 
 create table admin.peers (
   id serial primary key,
+
+  person int references admin.people(id),
   url varchar(128) not null unique,
   peer_approved bool not null default false,
   url_confirmed bool not null default false,

@@ -4,6 +4,7 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.queryForObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,10 +14,17 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
 import javax.sql.DataSource
 
+enum class Sensitivity {
+    Low,
+    Medium,
+    High,
+}
+
 data class PeerCreateRequest(
     val token: String? = null,
     val url: String? = null,
     var peerApproved: Boolean? = false,
+    val sensitivityClearance: Sensitivity = Sensitivity.Low,
 )
 
 data class PeerCreateReturn(
@@ -139,6 +147,24 @@ class Create(
             println(initResponse.error)
             return PeerCreateReturn(initResponse.error)
         }
+
+        val person = jdbcTemplate.queryForObject(
+            """
+                insert into admin.people(sensitivity_clearance) values (?) returning id;
+            """.trimIndent(),
+            String::class.java,
+            req.sensitivityClearance,
+        )
+
+        jdbcTemplate.update(
+            """
+                update admin.peers
+                set person = ?
+                where url = ?
+            """.trimIndent(),
+            person,
+            req.url,
+        )
 
         return PeerCreateReturn(ErrorType.NoError)
     }
