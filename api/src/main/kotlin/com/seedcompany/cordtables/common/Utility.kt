@@ -180,7 +180,40 @@ class Utility(
         }
         return userHasDeletePermission;
     }
-    fun userHasUpdatePermission(token:String,tableName: String, columnNames:MutableList<String>):Boolean{
+    fun userHasUpdatePermission(token:String, tableName: String, columnName:String):Boolean{
+        if(isAdmin(token)){
+            return true;
+        }
+        var userHasUpdatePermission = false;
+        this.ds.connection.use{ conn ->
+            //language=SQL
+            val statement = conn.prepareCall("""
+                select exists (select column_name 
+                from admin.global_role_column_grants as a 
+                inner join admin.global_roles as b 
+                on a.global_role = b.id 
+                where b.id in (
+                select global_role 
+                from admin.global_role_memberships 
+                where person = (
+                select person from admin.tokens where token = ? 
+                )
+                and a.column_name = ?
+                and a.access_level = 'Write'
+                and a.table_name::text = ?;
+                ))
+            """.trimIndent())
+            statement.setString(1,columnName);
+            statement.setString(2,tableName);
+            var result = statement.executeQuery()
+            if(result.next()){
+                userHasUpdatePermission = result.getBoolean(1)
+            }
+        }
+        return userHasUpdatePermission
+    }
+
+    fun userHasUpdatePermissionMultipleColumns(token:String,tableName: String, columnNames:MutableList<String>):Boolean{
         if(isAdmin(token)){
             return true;
         }
