@@ -57,8 +57,8 @@ class ScriptureReferenceDeleteResponse {
 export class ScriptureReferences {
   defaultFields = {
     id: null,
-    book_start: '',
-    book_end: '',
+    book_start: 'Genesis',
+    book_end: 'Genesis',
     chapter_start: null,
     chapter_end: null,
     verse_start: null,
@@ -156,6 +156,7 @@ export class ScriptureReferences {
   };
 
   insertFieldChange(event, fieldName) {
+    console.log('event.target.value', event.target.value);
     this.insertedFields[fieldName] = event.target.value;
   }
 
@@ -165,7 +166,15 @@ export class ScriptureReferences {
     }
     return (
       <td>
-        <input type="text" id={`input-${fieldName}`} name={fieldName} onInput={event => this.insertFieldChange(event, fieldName)} />
+        {fieldName === 'book_start' || fieldName === 'book_end' ? (
+          <select onInput={event => this.insertFieldChange(event, fieldName)}>
+            {this.bookNames.map(option => (
+              <option value={option}>{option}</option>
+            ))}
+          </select>
+        ) : (
+          <input type="text" id={`input-${fieldName}`} name={fieldName} onInput={event => this.insertFieldChange(event, fieldName)} />
+        )}
       </td>
     );
   }
