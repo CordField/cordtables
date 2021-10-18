@@ -47,7 +47,7 @@ class ReadGlobalRoleResponse extends GenericResponse {
   styleUrl: 'global-roles.css',
   shadow: true,
 })
-export class LanguagesEx {
+export class GlobalRoles {
   defaultFields = {
     id: null,
     created_at: null,

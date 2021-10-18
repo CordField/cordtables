@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.user
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.languageex.CreateLanguageExResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -23,12 +24,12 @@ data class CreateGlobalRoleResponse(
 )
 data class CreateGlobalRoleRequest(
     val insertedFields: InsertableGlobalRoleFields,
-    val email: String,
+    val token: String,
 )
 
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller()
+@Controller("GlobalRoleCreate")
 class Create(
     @Autowired
     val util: Utility,
@@ -45,10 +46,14 @@ class Create(
         var insertedGlobalRole: GlobalRole? = null
         var userId = 0
 
+        if (req.token == null) return CreateGlobalRoleResponse(ErrorType.TokenNotFound, null)
+        if (!util.userHasCreatePermission(req.token, "admin.languages_ex"))
+            return CreateGlobalRoleResponse(ErrorType.DoesNotHaveCreatePermission, null)
+
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from common.users where email = ?")
-                getUserIdStatement.setString(1, req.email)
+                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
+                getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
                     userId = getUserIdResult.getInt("person")
@@ -76,14 +81,21 @@ class Create(
                 val insertStatementResult = insertStatement.executeQuery()
 
                 if (insertStatementResult.next()) {
-                    val id = insertStatementResult.getInt("id")
-                    val name = insertStatementResult.getString("name")
-                    val createdBy = insertStatementResult.getInt("created_by")
-                    val modifiedBy = insertStatementResult.getInt("modified_by")
-                    val org = insertStatementResult.getInt("org")
-                    val createdAt = insertStatementResult.getString("created_at")
-                    val modifiedAt = insertStatementResult.getString("modified_at")
-                    insertedGlobalRole = GlobalRole(id,createdAt,createdBy,modifiedAt,modifiedBy,name,org)
+                    var id: Int? = insertStatementResult.getInt("id")
+                    if(insertStatementResult.wasNull()) id = null
+                    var name: String? = insertStatementResult.getString("name")
+                    if(insertStatementResult.wasNull()) name = null
+                    var created_by: Int? = insertStatementResult.getInt("created_by")
+                    if(insertStatementResult.wasNull()) created_by = null
+                    var modified_by: Int? = insertStatementResult.getInt("modified_by")
+                    if(insertStatementResult.wasNull()) modified_by = null
+                    var org: Int? = insertStatementResult.getInt("org")
+                    if(insertStatementResult.wasNull()) org = null
+                    var created_at: String? = insertStatementResult.getString("created_at")
+                    if(insertStatementResult.wasNull()) created_at = null
+                    var modified_at: String? = insertStatementResult.getString("modified_at")
+                    if(insertStatementResult.wasNull()) modified_at = null
+                    insertedGlobalRole = GlobalRole(id =id, created_at =created_at,created_by =  created_by, modified_at =modified_at,modified_by= modified_by,name=name,org= org)
                     println("newly inserted id: $id")
                 }
             }
