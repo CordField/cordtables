@@ -45,9 +45,11 @@ class Init(
     @ResponseBody
     fun initHandler(@RequestBody req: PeerInitRequest): PeerInitReturn {
 
+        println(req)
+
         var errorType: ErrorType? = null
 
-        var targetToken = util.createToken()
+        var thisSourceToken = util.createToken()
 
         this.ds.connection.use { conn ->
 
@@ -78,7 +80,7 @@ class Init(
                     )
 
                     statement.setString(1, req.url)
-                    statement.setString(2, targetToken) // their target token is our source token
+                    statement.setString(2, thisSourceToken)
                     statement.setString(3, req.sourceToken) // their source token is our target token
 
                     statement.execute()
@@ -93,7 +95,7 @@ class Init(
         try {
             confirmResponse = rest.postForObject<PeerConfirmReturn>(
                 "${req.url}/admin/peers/confirm",
-                PeerConfirmRequest(url = appConfig.thisServerUrl, sourceToken = req.sourceToken)
+                PeerConfirmRequest(url = appConfig.thisServerUrl, sourceToken = req.sourceToken, targetToken = thisSourceToken)
             )
         } catch (e: Exception) {
             println("confirm post failed")
@@ -123,12 +125,45 @@ class Init(
                 person,
                 req.url,
             )
-            return PeerInitReturn(ErrorType.NoError, targetToken = targetToken)
+
         } else {
             println("Init fn: Confirm response: ${confirmResponse.error}")
             return PeerInitReturn(ErrorType.PeerFailedToConfirm)
         }
 
+
+        var loginResponse: PeerLoginReturn? = null
+        try {
+            loginResponse = rest.postForObject<PeerLoginReturn>(
+                "${req.url}/admin/peers/login",
+                PeerLoginRequest(url = appConfig.thisServerUrl, targetToken = thisSourceToken)
+            )
+        } catch (e: Exception) {
+            println("failed to login peer")
+            return PeerInitReturn(ErrorType.PeerFailedToLogin)
+        }
+
+        if (loginResponse == null) {
+            println("peer login response was null")
+            return PeerInitReturn(ErrorType.PeerFailedToLogin)
+        }
+
+        if (loginResponse.sessionToken == null || loginResponse.sessionToken?.length !== 64) {
+            return PeerInitReturn(ErrorType.PeerFailedToLogin)
+        }
+
+        jdbcTemplate.update(
+            """
+                update admin.peers
+                set session_token = ?
+                where url = ?;
+            """.trimIndent(),
+            loginResponse.sessionToken,
+            req.url,
+        )
+
+
+        return PeerInitReturn(ErrorType.NoError, targetToken = thisSourceToken)
     }
 
 }

@@ -15,6 +15,7 @@ import javax.sql.DataSource
 data class PeerConfirmRequest(
     val url: String? = null,
     val sourceToken: String? = null,
+    val targetToken: String? = null,
 )
 
 data class PeerConfirmReturn(
@@ -39,12 +40,11 @@ class Confirm(
     @ResponseBody
     fun confirmHandler(@RequestBody req: PeerConfirmRequest): PeerConfirmReturn {
 
+        println(req)
+
         var errorType: ErrorType? = null
 
         this.ds.connection.use { conn ->
-
-            println(req.sourceToken)
-            println(req.url)
 
             //language=SQL
             val checkNameStatement = conn.prepareStatement(
@@ -64,9 +64,11 @@ class Confirm(
                 if (urlFound) {
                     jdbcTemplate.update("""
                         update admin.peers
-                        set url_confirmed = true
+                        set target_token = ?, 
+                            url_confirmed = true
                         where url = ?;
                     """.trimIndent(),
+                        req.targetToken,
                         req.url,
                     )
                     return PeerConfirmReturn(ErrorType.NoError)

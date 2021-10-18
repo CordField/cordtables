@@ -52,6 +52,8 @@ class Create(
     @ResponseBody
     fun createHandler(@RequestBody req: PeerCreateRequest): PeerCreateReturn {
 
+        println(req)
+
         if (req.token == null) return PeerCreateReturn(ErrorType.TokenNotFound)
         if (!util.isAdmin(req.token)) return PeerCreateReturn(ErrorType.AdminOnly)
 
@@ -123,6 +125,23 @@ class Create(
             }
         }
 
+        val person = jdbcTemplate.queryForObject(
+            """
+                insert into admin.people(sensitivity_clearance) values ('Low') returning id;
+            """.trimIndent(),
+            Int::class.java,
+        )
+
+        jdbcTemplate.update(
+            """
+                update admin.peers
+                set person = ?
+                where url = ?
+            """.trimIndent(),
+            person,
+            req.url,
+        )
+
         var initResponse: PeerInitReturn? = null
         try {
             initResponse = rest.postForObject<PeerInitReturn>(
@@ -140,37 +159,11 @@ class Create(
         }
 
         if (initResponse.error == ErrorType.NoError && initResponse.targetToken?.length == 64) {
-            jdbcTemplate.update(
-                """
-                update admin.peers
-                set target_token = ?, 
-                    url_confirmed = true
-                where url = ?;
-            """.trimIndent(),
-                initResponse.targetToken,
-                req.url,
-            )
+
         } else {
             println("initResponse: ${initResponse.error}")
             return PeerCreateReturn(initResponse.error)
         }
-
-        val person = jdbcTemplate.queryForObject(
-            """
-                insert into admin.people(sensitivity_clearance) values ('Low') returning id;
-            """.trimIndent(),
-            Int::class.java,
-        )
-
-        jdbcTemplate.update(
-            """
-                update admin.peers
-                set person = ?
-                where url = ?
-            """.trimIndent(),
-            person,
-            req.url,
-        )
 
         return PeerCreateReturn(ErrorType.NoError)
     }

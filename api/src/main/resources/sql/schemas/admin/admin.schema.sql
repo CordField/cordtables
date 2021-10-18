@@ -282,6 +282,7 @@ create table admin.peers (
   url_confirmed bool not null default false,
   source_token varchar(64),
   target_token varchar(64),
+  session_token varchar(64),
 
   chat int,
   created_at timestamp not null default CURRENT_TIMESTAMP,

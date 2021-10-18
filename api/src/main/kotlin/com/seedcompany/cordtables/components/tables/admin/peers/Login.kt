@@ -11,18 +11,16 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.postForObject
-import javax.naming.InsufficientResourcesException
 import javax.sql.DataSource
 
 data class PeerLoginRequest(
     val url: String? = null,
-    val sourceToken: String? = null,
+    val targetToken: String? = null,
 )
 
 data class PeerLoginReturn(
     val error: ErrorType,
-    val token: String? = null,
+    val sessionToken: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -41,7 +39,9 @@ class Login(
 
     @PostMapping("admin/peers/login")
     @ResponseBody
-    fun initHandler(@RequestBody req: PeerLoginRequest): PeerLoginReturn {
+    fun peerLoginHandler(@RequestBody req: PeerLoginRequest): PeerLoginReturn {
+
+        println(req)
 
         var errorType: ErrorType? = null
 
@@ -49,11 +49,11 @@ class Login(
         try {
             person = jdbcTemplate.queryForObject(
                 """
-                    select person from admin.peers where url = ? and source_token = ?;
+                    select person from admin.peers where url = ? and target_token = ? and peer_approved = true;
                 """.trimIndent(),
                 Int::class.java,
                 req.url,
-                req.sourceToken,
+                req.targetToken,
             )
         } catch (e: IncorrectResultSizeDataAccessException) {
             return PeerLoginReturn(ErrorType.BadCredentials)
@@ -61,21 +61,21 @@ class Login(
 
         if (person == null) return PeerLoginReturn(ErrorType.BadCredentials)
 
-        val token = util.createToken()
+        val sessionToken = util.createToken()
 
         try {
             jdbcTemplate.update(
                 """
                     insert into admin.tokens(token, person) values (?, ?);
                 """.trimIndent(),
-                token,
+                sessionToken,
                 person,
             )
         } catch (e: IncorrectResultSizeDataAccessException) {
             return PeerLoginReturn(ErrorType.UnknownError)
         }
 
-        return PeerLoginReturn(ErrorType.NoError, token)
+        return PeerLoginReturn(ErrorType.NoError, sessionToken)
     }
 
 }

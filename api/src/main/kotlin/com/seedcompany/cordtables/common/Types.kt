@@ -45,6 +45,7 @@ enum class ErrorType {
     PeerFailedToInitialize,
     PeerNotPresent,
     PeerFailedToConfirm,
+    PeerFailedToLogin,
 }
 
 data class GenericResponse (
