@@ -2,11 +2,11 @@ import { Component, Host, h, State } from '@stencil/core';
 import { ErrorType, GenericResponse } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
-import { languageEx } from '../../../common/types';
+import { LanguageEx } from '../../../common/types';
 import './languages-ex.css';
 
 type MutableLanguageExFields = Omit<
-  languageEx,
+  LanguageEx,
   | 'id'
   | 'createdAt'
   | 'createdBy'
@@ -30,7 +30,7 @@ class CreateLanguageExRequest {
   token: string;
 }
 class CreateLanguageExResponse extends GenericResponse {
-  data: languageEx;
+  data: LanguageEx;
 }
 
 class UpdateLanguageExRequest {
@@ -41,7 +41,7 @@ class UpdateLanguageExRequest {
 }
 
 class UpdateLanguageExResponse extends GenericResponse {
-  data: languageEx;
+  data: LanguageEx;
 }
 
 class DeleteLanguageExRequest {
@@ -54,7 +54,7 @@ class DeleteLanguageExResponse extends GenericResponse {
 }
 
 class ReadLanguageExResponse extends GenericResponse {
-  data: languageEx[];
+  data: LanguageEx[];
 }
 
 class ReadLanguageExRequest {
@@ -140,7 +140,7 @@ export class LanguagesEx {
     'begin_work_rel_pol_obstacles_value',
     'prioritization',
   ];
-  @State() languagesEx: languageEx[] = [];
+  @State() languagesEx: LanguageEx[] = [];
   @State() insertedFields: MutableLanguageExFields = this.defaultFields;
   @State() error: string;
   @State() success: string;
@@ -159,7 +159,7 @@ export class LanguagesEx {
       </td>
     );
   }
-  getEditableCell(columnName: string, languageEx: languageEx) {
+  getEditableCell(columnName: string, LanguageEx: LanguageEx) {
     return (
       <td
       // onKeyPress={this.disableNewlines}
@@ -168,9 +168,9 @@ export class LanguagesEx {
       >
         <cf-cell
           key={columnName}
-          rowId={languageEx.id}
+          rowId={LanguageEx.id}
           propKey={columnName}
-          value={languageEx[columnName]}
+          value={LanguageEx[columnName]}
           isEditable={!this.nonEditableColumns.includes(columnName)}
           updateFn={!this.nonEditableColumns.includes(columnName) ? this.handleUpdate : null}
         ></cf-cell>
@@ -274,14 +274,14 @@ export class LanguagesEx {
                 </tr>
               </thead>
               <tbody>
-                {this.languagesEx.map(languageEx => (
+                {this.languagesEx.map(LanguageEx => (
                   <tr>
                     <div class="button-parent">
-                      <button class="delete-button" onClick={() => this.handleDelete(languageEx.id)}>
+                      <button class="delete-button" onClick={() => this.handleDelete(LanguageEx.id)}>
                         Delete
                       </button>
                     </div>
-                    {Object.keys(languageEx).map(key => this.getEditableCell(key, languageEx))}
+                    {Object.keys(LanguageEx).map(key => this.getEditableCell(key, LanguageEx))}
                   </tr>
                 ))}
               </tbody>

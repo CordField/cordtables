@@ -36,7 +36,7 @@ class Create(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("globalroles/create")
+    @PostMapping("global_role/create")
     @ResponseBody
     fun CreateHandler(@RequestBody req: CreateGlobalRoleRequest): CreateGlobalRoleResponse {
 

@@ -34,7 +34,7 @@ class Read(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("globalroles/read")
+    @PostMapping("global_role/read")
     @ResponseBody
     fun ReadHandler(): ReadGlobalRolesResponse {
         //mutableList as we need to add each global role as an element to it

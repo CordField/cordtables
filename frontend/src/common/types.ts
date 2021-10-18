@@ -9,25 +9,20 @@ export enum ErrorType {
   PasswordTooLong = 'PasswordTooLong',
   DuplicateEmail = 'DuplicateEmail',
 }
-// export enum EgidsScale {
-//    '0',
-//    '1',
-
-// }
 
 //export type EgidsScale = `0` | `1` | `2` | `3` | `4` | `5` | `6a` | `6b` | `7` | `8a` | `8b` | `9` | `10`;
 
-export interface globalRole {
+export interface GlobalRole {
   id: number;
-  createdAt: string;
-  createdBy: number;
-  modifiedAt: string;
-  modifiedBy: number;
+  created_at: string;
+  created_by: number;
+  modified_at: string;
+  modified_by: number;
   name: string;
   org: number;
 }
 
-export interface languageEx {
+export interface LanguageEx {
   id?: number;
   language_name?: string;
   iso?: string;

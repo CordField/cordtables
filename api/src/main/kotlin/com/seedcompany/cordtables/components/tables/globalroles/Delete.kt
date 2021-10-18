@@ -36,7 +36,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("globalroles/delete")
+    @PostMapping("global_role/delete")
     @ResponseBody
     fun DeleteHandler(@RequestBody req: DeleteGlobalRoleRequest): DeleteGlobalRoleResponse {
 

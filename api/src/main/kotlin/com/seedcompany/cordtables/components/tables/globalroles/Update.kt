@@ -42,7 +42,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("globalroles/update")
+    @PostMapping("global_role/update")
     @ResponseBody
     fun UpdateHandler(@RequestBody req: UpdateGlobalRoleRequest): UpdateGlobalRoleResponse {
 
