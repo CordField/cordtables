@@ -154,6 +154,15 @@ BEGIN
     -- group memberships
     insert into admin.group_memberships(group_id, person, created_by, modified_by, owning_person, owning_group) values (1, vPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
+    -- grants on scripture_references
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'book_start', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'book_end', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'chapter_start', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'chapter_end', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'verse_start', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.global_role_column_grants(access_level, column_name, global_role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'verse_end', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+
     error_type := 'NoError';
   end if;
 

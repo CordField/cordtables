@@ -2,7 +2,10 @@ package com.seedcompany.cordtables.components.tables.scripturereferences
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.groups.GroupsRow
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,13 +24,13 @@ data class ScriptureReferenceListResponse(
 )
 
 data class ScriptureReference(
-    val id: Int,
-    val book_start: String,
-    val book_end: String,
-    val chapter_start: Int,
-    val chapter_end: Int,
-    val verse_start: Int,
-    val verse_end: Int,
+    val id: Int?,
+    val book_start: String?,
+    val book_end: String?,
+    val chapter_start: Int?,
+    val chapter_end: Int?,
+    val verse_start: Int?,
+    val verse_end: Int?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -39,6 +42,7 @@ class List(
     @Autowired
     val ds: DataSource,
 ) {
+    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
     @PostMapping("table/common-scripture-references/list")
     @ResponseBody
@@ -47,48 +51,121 @@ class List(
         if (req.token == null) return ScriptureReferenceListResponse(ErrorType.TokenNotFound, null)
         if (!util.isAdmin(req.token)) return ScriptureReferenceListResponse(ErrorType.AdminOnly, null)
 
-        var data: MutableList<ScriptureReference> = mutableListOf()
+        var data: MutableList<ScriptureReference> = mutableListOf<ScriptureReference>()
 
-        this.ds.connection.use { conn ->
-            try {
+        val paramSource = MapSqlParameterSource()
+        paramSource.addValue("token", req.token)
 
-                val listStatement = conn.prepareCall("""
-                    select
-                        id,
-                        book_start,
-                        book_end,
-                        chapter_start,
-                        chapter_end,
-                        verse_start,
-                        verse_end
-                     from common.scripture_references
-                    """.trimIndent()
+        try {
+            //language=SQL
+            val listSQL = """
+                with column_level_access as 
+                (
+                    select  column_name 
+                    from admin.global_role_column_grants a 
+                    inner join admin.global_role_memberships b 
+                    on a.global_role = b.global_role 
+                    inner join admin.tokens c 
+                    on b.person = c.person 
+                    where a.table_name = 'common.scripture_references'
+                    and c.token = :token
                 )
-                val listStatementResult = listStatement.executeQuery()
+                select 
+                case 
+                    when 'id' in 
+                        (select column_name from column_level_access) 
+                    then id 
+                    when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                    then id 
+                    else null 
+                end as id,
+                case 
+                    when 'book_start' in (select column_name from column_level_access) 
+                    then book_start
+                    when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                    then book_start
+                    else null 
+                end as book_start,
+                case 
+                when 'book_end' in (select column_name from column_level_access) 
+                    then book_end
+                    when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                    then book_end
+                    else null 
+                end as book_end,
+                case 
+                    when 'chapter_start' in (select column_name from column_level_access) 
+                    then chapter_start 
+                    when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                    then chapter_start
+                    else null 
+                end as chapter_start,
+                case 
+                    when 'chapter_end' in (select column_name from column_level_access) 
+                    then chapter_end
+                    when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                    then chapter_end
+                    else null 
+                end as chapter_end,
+                case 
+                    when 'verse_start' in (select column_name from column_level_access) 
+                    then verse_start 
+                    when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                    then verse_start
+                    else null 
+                end as verse_start,
+                case 
+                    when 'verse_end' in (select column_name from column_level_access) 
+                    then verse_end 
+                    when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                    then verse_end
+                    else null 
+                end as verse_end
+                from common.scripture_references
+                where (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1));
+            """.trimIndent()
 
-                while (listStatementResult.next()) {
-                    val id = listStatementResult.getInt("id")
-                    val bookStart = listStatementResult.getString("book_start")
-                    val bookEnd = listStatementResult.getString("book_end")
-                    val chapterStart = listStatementResult.getInt("chapter_start")
-                    val chapterEnd = listStatementResult.getInt("chapter_end")
-                    val verseStart = listStatementResult.getInt("verse_start")
-                    val verseEnd = listStatementResult.getInt("verse_end")
-                    data.add(ScriptureReference(
+            val jdbcResult = jdbcTemplate.queryForRowSet(listSQL, paramSource)
+    
+            while (jdbcResult.next()) {
+    
+                var id: Int? = jdbcResult.getInt("id")
+                if (jdbcResult.wasNull()) id = null
+    
+                var bookStart: String? = jdbcResult.getString("book_start")
+                if (jdbcResult.wasNull()) bookStart = null
+    
+                var bookEnd: String? = jdbcResult.getString("book_end")
+                if (jdbcResult.wasNull()) bookEnd = null
+    
+                var chapterStart: Int? = jdbcResult.getInt("chapter_start")
+                if (jdbcResult.wasNull()) chapterStart = null
+    
+                var chapterEnd: Int? = jdbcResult.getInt("chapter_end")
+                if (jdbcResult.wasNull()) chapterEnd = null
+    
+                var verseStart: Int? = jdbcResult.getInt("verse_start")
+                if (jdbcResult.wasNull()) verseStart = null
+    
+                var verseEnd: Int? = jdbcResult.getInt("verse_end")
+                if (jdbcResult.wasNull()) verseEnd = null
+    
+                data.add(
+                    ScriptureReference(
                         id,
                         bookStart,
                         bookEnd,
                         chapterStart,
                         chapterEnd,
                         verseStart,
-                        verseEnd)
+                        verseEnd
                     )
-                }
+                )
             }
-            catch(e: SQLException){
-                println("error while listing ${e.message}")
-                return ScriptureReferenceListResponse(ErrorType.SQLReadError, null)
-            }
+        }
+        catch(e: SQLException){
+            println("error while listing ${e.message}")
+            return ScriptureReferenceListResponse(ErrorType.SQLReadError, null)
         }
 
         return ScriptureReferenceListResponse(ErrorType.NoError, data)

@@ -37,6 +37,7 @@ create type admin.table_name as enum (
   'common.people_to_org_relationship_type',
   'common.posts',
   'common.projects',
+  'common.scripture_references',
   'common.stages',
   'common.stage_notifications',
   'common.stage_options',
