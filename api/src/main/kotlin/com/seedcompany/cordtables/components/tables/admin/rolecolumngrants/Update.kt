@@ -38,7 +38,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("table/global-role-column-grants-update")
+    @PostMapping("table/role-column-grants-update")
     @ResponseBody
     fun UpdateHandler(@RequestBody req: GlobalRoleColumnGrantsUpdate): UpdateGlobalRoleColumnGrantsResponse {
 

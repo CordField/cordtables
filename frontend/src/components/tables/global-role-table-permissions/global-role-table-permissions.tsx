@@ -34,7 +34,7 @@ class CreateGlobalRoleTablePermissionsReponse extends GenericResponse {
   data: globalRoleTablePermissions[];
 }
 @Component({
-  tag: 'global-role-table-permissions',
+  tag: 'role-table-permissions',
   styleUrl: 'global-role-table-permissions.css',
   shadow: true,
 })

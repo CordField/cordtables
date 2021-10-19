@@ -67,7 +67,7 @@ interface readOne {
 let rowId = 0;
 
 @Component({
-  tag: 'global-role-column-grants',
+  tag: 'role-column-grants',
   styleUrl: 'global-role-column-grants.css',
   shadow: true,
 })
@@ -96,7 +96,7 @@ export class GlobalRoleColumnGrants {
   }
 
   async loadData() {
-    const result = await fetchAs<{}, readAllResponse>('table/global-role-column-grants', {});
+    const result = await fetchAs<{}, readAllResponse>('table/role-column-grants', {});
     if (result && result?.response) this.dataAll = result.response;
   }
 
@@ -104,7 +104,7 @@ export class GlobalRoleColumnGrants {
   async handleClick(event) {
     if (event && event.detail) {
       rowId = event.detail;
-      const result = await fetchAs<readOneRequest, readAllResponse>('table/global-role-column-grants-read-one', { id: rowId });
+      const result = await fetchAs<readOneRequest, readAllResponse>('table/role-column-grants-read-one', { id: rowId });
       if (result && result?.response) {
         result.response.map(item => {
           this.readOneValues.id = item.id;
@@ -134,7 +134,7 @@ export class GlobalRoleColumnGrants {
     if (event && event.detail) {
       if (this.readOneValues.id === 0) {
         try {
-          await fetchAs<create, readAllResponse>('table/global-role-column-grants-create', {
+          await fetchAs<create, readAllResponse>('table/role-column-grants-create', {
             access_level: this.selectValue,
             column_name: this.readOneValues.column_name,
             created_by: this.readOneValues.created_by,
@@ -149,7 +149,7 @@ export class GlobalRoleColumnGrants {
         }
       } else {
         try {
-          await fetchAs<update, readAllResponse>('table/global-role-column-grants-update', {
+          await fetchAs<update, readAllResponse>('table/role-column-grants-update', {
             id: this.readOneValues.id,
             access_level: this.selectValue,
             column_name: this.readOneValues.column_name,
@@ -172,7 +172,7 @@ export class GlobalRoleColumnGrants {
     if (event && event.detail) {
       if (this.readOneValues.id !== 0) {
         try {
-          await fetchAs<deleteRow, readAllResponse>('table/global-role-column-grants-delete', {
+          await fetchAs<deleteRow, readAllResponse>('table/role-column-grants-delete', {
             id: this.readOneValues.id,
             token: localStorage.getItem('token'),
           });

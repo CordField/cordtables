@@ -56,7 +56,7 @@ class GroupDeleteResponse {
 }
 
 @Component({
-  tag: 'global-role-memberships',
+  tag: 'role-memberships',
   styleUrl: 'global-role-memberships.css',
   shadow: true,
 })
@@ -78,7 +78,7 @@ export class GlobalRoleMemberships {
   }
 
   async getList() {
-    this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('global-role-memberships/list', {
+    this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role-memberships/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -98,7 +98,7 @@ export class GlobalRoleMemberships {
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GlobalRoleMembershipCreateRequest, GroupCreateResponse>('global-role-memberships/create', {
+    this.createResponse = await fetchAs<GlobalRoleMembershipCreateRequest, GroupCreateResponse>('role-memberships/create', {
       token: globals.globalStore.state.token,
       role: this.newGlobalRole,
       person: this.newPerson,
@@ -107,7 +107,7 @@ export class GlobalRoleMemberships {
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('global-role-memberships/list', {
+      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role-memberships/list', {
         token: globals.globalStore.state.token,
       });
     } else {
@@ -119,7 +119,7 @@ export class GlobalRoleMemberships {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, role: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('global-role-memberships/list', {
+      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role-memberships/list', {
         token: globals.globalStore.state.token,
       });
       return true;
@@ -131,7 +131,7 @@ export class GlobalRoleMemberships {
     this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groups/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('global-role-memberships/list', {
+      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role-memberships/list', {
         token: globals.globalStore.state.token,
       });
       return true;
@@ -178,7 +178,7 @@ export class GlobalRoleMemberships {
               <tr>
                 <td class="disabled">&nbsp;</td>
                 <td>
-                  <input type="text" id="global-role-input" placeholder="Global Role" name="global-role" onInput={event => this.inputGlobalRole(event)}></input>
+                  <input type="text" id="role-input" placeholder="Global Role" name="role" onInput={event => this.inputGlobalRole(event)}></input>
                 </td>
                 <td class="disabled">
                   <input type="text" id="person-input" placeholder="Person" name="person" onInput={event => this.inputPerson(event)}></input>

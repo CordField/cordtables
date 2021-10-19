@@ -45,7 +45,7 @@ class List(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("global-role-memberships/list")
+    @PostMapping("role-memberships/list")
     @ResponseBody
     fun listHandler(@RequestBody req: GlobalRoleMembershipsRequest): GlobalRoleMembershipsReturn {
 

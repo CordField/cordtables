@@ -37,7 +37,7 @@ class Create(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("table/global-role-column-grants-create", consumes = ["application/json"], produces = ["application/json"])
+    @PostMapping("table/role-column-grants-create", consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
     fun CreateHandler(@RequestBody req: GlobalRoleColumnGrantsCreate): CreateGlobalRoleColumnGrantsResponse {
 

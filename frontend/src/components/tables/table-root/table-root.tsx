@@ -14,15 +14,15 @@ export class TableRoot {
     return (
       <Host>
         <slot></slot>
-        {(this.match.params.table === 'admin-global-roles' ||
-          this.match.params.table === 'admin-global-role-column-grants' ||
-          this.match.params.table === 'admin-global-role-memberships' ||
-          this.match.params.table === 'admin-global-role-table-permissions') && (
+        {(this.match.params.table === 'admin-roles' ||
+          this.match.params.table === 'admin-role-column-grants' ||
+          this.match.params.table === 'admin-role-memberships' ||
+          this.match.params.table === 'admin-role-table-permissions') && (
           <div>
-            <global-roles></global-roles>
-            <global-role-memberships></global-role-memberships>
-            <global-role-table-permissions></global-role-table-permissions>
-            <global-role-column-grants></global-role-column-grants>
+            <roles-table></roles-table>
+            <role-memberships></role-memberships>
+            <role-table-permissions></role-table-permissions>
+            <role-column-grants></role-column-grants>
           </div>
         )}
 

@@ -42,7 +42,7 @@ class readAll(
 ) {
 
 
-    @PostMapping(path = ["table/global-role-column-grants"], consumes = ["application/json"], produces = ["application/json"])
+    @PostMapping(path = ["table/role-column-grants"], consumes = ["application/json"], produces = ["application/json"])
 
     @ResponseBody
     fun GlobalRoleColumnGrantsHandler(): GlobalRoleColumnGrantsReturn {

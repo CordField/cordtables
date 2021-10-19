@@ -47,7 +47,7 @@ class readOne(
 ) {
 
 
-    @PostMapping(path = ["table/global-role-column-grants-read-one"], consumes = ["application/json"], produces = ["application/json"])
+    @PostMapping(path = ["table/role-column-grants-read-one"], consumes = ["application/json"], produces = ["application/json"])
 
     @ResponseBody
     fun GlobalRoleColumnGrantsHandler(@RequestBody req: GlobalRoleColumnGrantsRequest): GlobalRoleColumnGrantsReturnUnique {

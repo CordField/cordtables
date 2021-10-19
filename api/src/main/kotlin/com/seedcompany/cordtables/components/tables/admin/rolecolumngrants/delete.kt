@@ -33,7 +33,7 @@ class Delete(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("table/global-role-column-grants-delete")
+    @PostMapping("table/role-column-grants-delete")
     @ResponseBody
     fun DeleteHandler(@RequestBody req: GlobalRoleColumnGrantsDelete): DeleteGlobalRoleColumnGrantsResponse {
 

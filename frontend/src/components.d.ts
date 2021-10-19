@@ -55,15 +55,6 @@ export namespace Components {
         "name": String;
         "values": Array<any>;
     }
-    interface GlobalRoleColumnGrants {
-        "history": RouterHistory;
-    }
-    interface GlobalRoleMemberships {
-    }
-    interface GlobalRoleTablePermissions {
-    }
-    interface GlobalRoles {
-    }
     interface GroupMemberships {
     }
     interface GroupsRowAccess {
@@ -73,6 +64,15 @@ export namespace Components {
     interface LanguagesEx {
     }
     interface PeopleTable {
+    }
+    interface RoleColumnGrants {
+        "history": RouterHistory;
+    }
+    interface RoleMemberships {
+    }
+    interface RoleTablePermissions {
+    }
+    interface RolesTable {
     }
     interface ScriptureReferences {
     }
@@ -153,30 +153,6 @@ declare global {
         prototype: HTMLGenericTableElement;
         new (): HTMLGenericTableElement;
     };
-    interface HTMLGlobalRoleColumnGrantsElement extends Components.GlobalRoleColumnGrants, HTMLStencilElement {
-    }
-    var HTMLGlobalRoleColumnGrantsElement: {
-        prototype: HTMLGlobalRoleColumnGrantsElement;
-        new (): HTMLGlobalRoleColumnGrantsElement;
-    };
-    interface HTMLGlobalRoleMembershipsElement extends Components.GlobalRoleMemberships, HTMLStencilElement {
-    }
-    var HTMLGlobalRoleMembershipsElement: {
-        prototype: HTMLGlobalRoleMembershipsElement;
-        new (): HTMLGlobalRoleMembershipsElement;
-    };
-    interface HTMLGlobalRoleTablePermissionsElement extends Components.GlobalRoleTablePermissions, HTMLStencilElement {
-    }
-    var HTMLGlobalRoleTablePermissionsElement: {
-        prototype: HTMLGlobalRoleTablePermissionsElement;
-        new (): HTMLGlobalRoleTablePermissionsElement;
-    };
-    interface HTMLGlobalRolesElement extends Components.GlobalRoles, HTMLStencilElement {
-    }
-    var HTMLGlobalRolesElement: {
-        prototype: HTMLGlobalRolesElement;
-        new (): HTMLGlobalRolesElement;
-    };
     interface HTMLGroupMembershipsElement extends Components.GroupMemberships, HTMLStencilElement {
     }
     var HTMLGroupMembershipsElement: {
@@ -207,6 +183,30 @@ declare global {
         prototype: HTMLPeopleTableElement;
         new (): HTMLPeopleTableElement;
     };
+    interface HTMLRoleColumnGrantsElement extends Components.RoleColumnGrants, HTMLStencilElement {
+    }
+    var HTMLRoleColumnGrantsElement: {
+        prototype: HTMLRoleColumnGrantsElement;
+        new (): HTMLRoleColumnGrantsElement;
+    };
+    interface HTMLRoleMembershipsElement extends Components.RoleMemberships, HTMLStencilElement {
+    }
+    var HTMLRoleMembershipsElement: {
+        prototype: HTMLRoleMembershipsElement;
+        new (): HTMLRoleMembershipsElement;
+    };
+    interface HTMLRoleTablePermissionsElement extends Components.RoleTablePermissions, HTMLStencilElement {
+    }
+    var HTMLRoleTablePermissionsElement: {
+        prototype: HTMLRoleTablePermissionsElement;
+        new (): HTMLRoleTablePermissionsElement;
+    };
+    interface HTMLRolesTableElement extends Components.RolesTable, HTMLStencilElement {
+    }
+    var HTMLRolesTableElement: {
+        prototype: HTMLRolesTableElement;
+        new (): HTMLRolesTableElement;
+    };
     interface HTMLScriptureReferencesElement extends Components.ScriptureReferences, HTMLStencilElement {
     }
     var HTMLScriptureReferencesElement: {
@@ -232,15 +232,15 @@ declare global {
         "common-organizations": HTMLCommonOrganizationsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "generic-table": HTMLGenericTableElement;
-        "global-role-column-grants": HTMLGlobalRoleColumnGrantsElement;
-        "global-role-memberships": HTMLGlobalRoleMembershipsElement;
-        "global-role-table-permissions": HTMLGlobalRoleTablePermissionsElement;
-        "global-roles": HTMLGlobalRolesElement;
         "group-memberships": HTMLGroupMembershipsElement;
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
         "languages-ex": HTMLLanguagesExElement;
         "people-table": HTMLPeopleTableElement;
+        "role-column-grants": HTMLRoleColumnGrantsElement;
+        "role-memberships": HTMLRoleMembershipsElement;
+        "role-table-permissions": HTMLRoleTablePermissionsElement;
+        "roles-table": HTMLRolesTableElement;
         "scripture-references": HTMLScriptureReferencesElement;
         "table-root": HTMLTableRootElement;
     }
@@ -297,15 +297,6 @@ declare namespace LocalJSX {
         "onRowClicked"?: (event: CustomEvent<number>) => void;
         "values"?: Array<any>;
     }
-    interface GlobalRoleColumnGrants {
-        "history"?: RouterHistory;
-    }
-    interface GlobalRoleMemberships {
-    }
-    interface GlobalRoleTablePermissions {
-    }
-    interface GlobalRoles {
-    }
     interface GroupMemberships {
     }
     interface GroupsRowAccess {
@@ -315,6 +306,15 @@ declare namespace LocalJSX {
     interface LanguagesEx {
     }
     interface PeopleTable {
+    }
+    interface RoleColumnGrants {
+        "history"?: RouterHistory;
+    }
+    interface RoleMemberships {
+    }
+    interface RoleTablePermissions {
+    }
+    interface RolesTable {
     }
     interface ScriptureReferences {
     }
@@ -334,15 +334,15 @@ declare namespace LocalJSX {
         "common-organizations": CommonOrganizations;
         "create-update-modal": CreateUpdateModal;
         "generic-table": GenericTable;
-        "global-role-column-grants": GlobalRoleColumnGrants;
-        "global-role-memberships": GlobalRoleMemberships;
-        "global-role-table-permissions": GlobalRoleTablePermissions;
-        "global-roles": GlobalRoles;
         "group-memberships": GroupMemberships;
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
         "languages-ex": LanguagesEx;
         "people-table": PeopleTable;
+        "role-column-grants": RoleColumnGrants;
+        "role-memberships": RoleMemberships;
+        "role-table-permissions": RoleTablePermissions;
+        "roles-table": RolesTable;
         "scripture-references": ScriptureReferences;
         "table-root": TableRoot;
     }
@@ -363,15 +363,15 @@ declare module "@stencil/core" {
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
-            "global-role-column-grants": LocalJSX.GlobalRoleColumnGrants & JSXBase.HTMLAttributes<HTMLGlobalRoleColumnGrantsElement>;
-            "global-role-memberships": LocalJSX.GlobalRoleMemberships & JSXBase.HTMLAttributes<HTMLGlobalRoleMembershipsElement>;
-            "global-role-table-permissions": LocalJSX.GlobalRoleTablePermissions & JSXBase.HTMLAttributes<HTMLGlobalRoleTablePermissionsElement>;
-            "global-roles": LocalJSX.GlobalRoles & JSXBase.HTMLAttributes<HTMLGlobalRolesElement>;
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
             "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
+            "role-column-grants": LocalJSX.RoleColumnGrants & JSXBase.HTMLAttributes<HTMLRoleColumnGrantsElement>;
+            "role-memberships": LocalJSX.RoleMemberships & JSXBase.HTMLAttributes<HTMLRoleMembershipsElement>;
+            "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
+            "roles-table": LocalJSX.RolesTable & JSXBase.HTMLAttributes<HTMLRolesTableElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }

@@ -43,7 +43,7 @@ class ReadGlobalRoleResponse extends GenericResponse {
 }
 
 @Component({
-  tag: 'global-roles',
+  tag: 'roles-table',
   styleUrl: 'global-roles.css',
   shadow: true,
 })
