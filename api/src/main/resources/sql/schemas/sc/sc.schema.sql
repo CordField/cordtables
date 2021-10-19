@@ -224,7 +224,8 @@ create table sc.language_goal_definitions (
 -- NOT an extension table, but has a reference to common
 -- sc languages may different from other org's language listings
 create table sc.languages (
-	id int primary key references sil.table_of_languages(id),
+  id serial primary key,
+  ethnologue int references sil.table_of_languages(id),
 
 	display_name varchar(255) unique not null,
 	is_dialect bool,
