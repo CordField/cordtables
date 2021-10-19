@@ -270,3 +270,25 @@ create table admin.email_tokens (
 	created_at timestamp not null default CURRENT_TIMESTAMP
 -- 	foreign key (email) references users(email)
 );
+
+-- PEER to PEER -------------------------------------------------------------
+
+create table admin.peers (
+  id serial primary key,
+
+  person int references admin.people(id),
+  url varchar(128) not null unique,
+  peer_approved bool not null default false,
+  url_confirmed bool not null default false,
+  source_token varchar(64),
+  target_token varchar(64),
+  session_token varchar(64),
+
+  chat int,
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
