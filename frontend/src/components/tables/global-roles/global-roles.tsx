@@ -55,7 +55,9 @@ export class GlobalRoles {
     modified_at: null,
     modified_by: null,
     name: null,
-    org: null,
+    owning_group: null,
+    owning_person: null,
+    chat: null,
   };
   nonEditableColumns = ['id', 'modified_at', 'created_at', 'created_by', 'modified_by'];
   @State() globalRoles: GlobalRole[] = [];

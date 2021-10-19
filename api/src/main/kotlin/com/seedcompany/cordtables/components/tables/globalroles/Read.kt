@@ -22,7 +22,9 @@ data class GlobalRole(
         val modified_at: String?,
         val modified_by: Int?,
         val name: String?,
-        val org: Int?
+        val owning_group: Int?,
+        val owning_person:Int?,
+        val chat: Int?,
 )
 
 data class ReadGlobalRoleRequest(
@@ -92,40 +94,52 @@ class Read(
                     end as id,       
                     case
                         when 'name' in (select column_name from column_level_access) then name 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then id 
-                        when owning_person = (select person from admin.tokens where token = :token) then id 
+                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then name 
+                        when owning_person = (select person from admin.tokens where token = :token) then name 
                         else null 
                     end as name,     
                     case
-                        when 'org' in (select column_name from column_level_access) then org 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then id 
-                        when owning_person = (select person from admin.tokens where token = :token) then id 
-                        else null 
-                    end as org,      
-                    case
-                        when 'modified_by' in (select column_name from column_level_access) then id 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then id 
-                        when owning_person = (select person from admin.tokens where token = :token) then id 
+                        when 'modified_by' in (select column_name from column_level_access) then modified_by 
+                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then modified_by 
+                        when owning_person = (select person from admin.tokens where token = :token) then modified_by 
                         else null 
                     end as modified_by, 
                     case
                         when 'created_by' in (select column_name from column_level_access) then created_by 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then id 
-                        when owning_person = (select person from admin.tokens where token = :token) then id 
+                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then created_by 
+                        when owning_person = (select person from admin.tokens where token = :token) then created_by 
                         else null 
                     end as created_by, 
                     case
                         when 'created_at' in (select column_name from column_level_access) then created_at 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then id 
-                        when owning_person = (select person from admin.tokens where token = :token) then id 
+                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then created_at 
+                        when owning_person = (select person from admin.tokens where token = :token) then created_at 
                         else null 
                     end as created_at,
                     case
-                        when 'modified_by' in (select column_name from column_level_access) then modified_by 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then id 
-                        when owning_person = (select person from admin.tokens where token = :token) then id 
+                        when 'modified_at' in (select column_name from column_level_access) then modified_at 
+                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then modified_at 
+                        when owning_person = (select person from admin.tokens where token = :token) then modified_at 
                         else null 
-                    end as modified_by         
+                    end as modified_at,
+                     case
+                        when 'owning_group' in (select column_name from column_level_access) then owning_group 
+                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then owning_group 
+                        when owning_person = (select person from admin.tokens where token = :token) then owning_group 
+                        else null 
+                    end as owning_group,  
+                    case
+                        when 'owning_person' in (select column_name from column_level_access) then owning_person 
+                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) then owning_person 
+                        when owning_person = (select person from admin.tokens where token = :token) then owning_person 
+                        else null 
+                    end as owning_person,
+                    case
+                        when 'chat' in (select column_name from column_level_access) then chat 
+                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then chat 
+                        when owning_person = (select person from admin.tokens where token = :token) then chat 
+                        else null 
+                    end as chat         
                     from admin.global_roles 
                     where id in (select row from row_level_access) or 
                     (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) or
@@ -143,13 +157,17 @@ class Read(
                     if(listStatementResult.wasNull()) created_by = null
                     var modified_by: Int? = listStatementResult.getInt("modified_by")
                     if(listStatementResult.wasNull()) modified_by = null
-                    var org: Int? = listStatementResult.getInt("org")
-                    if(listStatementResult.wasNull()) org = null
+                    var owning_group: Int? = listStatementResult.getInt("owning_group")
+                    if(listStatementResult.wasNull()) owning_group = null
+                    var owning_person: Int? = listStatementResult.getInt("owning_person")
+                    if(listStatementResult.wasNull()) owning_person = null
+                    var chat: Int? = listStatementResult.getInt("chat")
+                    if(listStatementResult.wasNull()) chat = null
                     var created_at: String? = listStatementResult.getString("created_at")
                     if(listStatementResult.wasNull()) created_at = null
                     var modified_at: String? = listStatementResult.getString("modified_at")
                     if(listStatementResult.wasNull()) modified_at = null
-                    data.add(GlobalRole(id =id, created_at =created_at,created_by =  created_by, modified_at =modified_at,modified_by= modified_by,name=name,org= org))
+                    data.add(GlobalRole(id =id, chat=chat,owning_group=owning_group,owning_person=owning_person, created_at =created_at,created_by =  created_by, modified_at =modified_at,modified_by= modified_by,name=name))
                 }
             } catch (e: SQLException) {
                 println("error while listing ${e.message}")

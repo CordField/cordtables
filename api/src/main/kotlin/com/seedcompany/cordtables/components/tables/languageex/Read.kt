@@ -125,7 +125,6 @@ class Read(
                 and c.token = :token
             )
             select 
-        
             case
                 when 'id' in (select column_name from column_level_access) then id 
                 when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then id 

@@ -19,7 +19,9 @@ export interface GlobalRole {
   modified_at: string;
   modified_by: number;
   name: string;
-  org: number;
+  owning_group: number;
+  owning_person: number;
+  chat: number;
 }
 
 export interface LanguageEx {
