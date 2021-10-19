@@ -1,19 +1,19 @@
 cord:
   admin:
-    password: ${CORD_ADMIN_PASSWORD}
+    password: asdfasdf
 cord-api:
-  url: ${CORD_API_GRAPHQL_URL}
-  email: ${CORD_API_EMAIL}
-  password: ${CORD_API_PASSWORD}
+  url: https://api.dev.cordfield.com/graphql
+  email: michaelmarshall220+5@gmail.com
+  password: asdfasdf
 server:
-  port: ${SERVER_PORT}
-  url: ${SERVER_URL}
+  port: 8079
+  url: http://localhost:8079
 spring:
   datasource:
-    jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:${DB_PORT}/${DB_DATABASE}
+    jdbcUrl: jdbc:postgresql://localhost:5432/peer1
     driverClassName: software.aws.rds.jdbc.postgresql.Driver
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: postgres
+    password: asdfasdf
     ssl: false
   hikari:
     connection-timeout: 20000 #maximum number of milliseconds that a client will wait for a connection

@@ -35,6 +35,7 @@ export class TableRoot {
         )}
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
+        {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
       </Host>
     );
   }

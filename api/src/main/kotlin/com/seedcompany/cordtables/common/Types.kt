@@ -34,7 +34,18 @@ enum class ErrorType {
     emptyReadResult,
     CannotUpdateAdminGroup,
     DoesNotHaveUpdatePermission,
-    DoesNotHaveDeletePermission
+    DoesNotHaveDeletePermission,
+    InputMissingUrl,
+    UrlTooShort,
+    UrlTooLong,
+    UrlAlreadyExists,
+    InputMissingSecret,
+    SecretNotValid,
+    PeerAlreadyExists,
+    PeerFailedToInitialize,
+    PeerNotPresent,
+    PeerFailedToConfirm,
+    PeerFailedToLogin,
 }
 
 data class GenericResponse (

@@ -25,8 +25,10 @@ export namespace Components {
     }
     interface CfCell {
         "isEditable": boolean;
+        "options"?: Array<string>;
         "propKey": keyof any;
         "rowId": number;
+        "type"?: string;
         "updateFn": (id: number, columnName: any, value: any) => Promise<boolean>;
         "value": any;
     }
@@ -69,6 +71,8 @@ export namespace Components {
     interface GroupsTable {
     }
     interface LanguagesEx {
+    }
+    interface ScriptureReferences {
     }
     interface TableRoot {
         "match": MatchResults;
@@ -195,6 +199,12 @@ declare global {
         prototype: HTMLLanguagesExElement;
         new (): HTMLLanguagesExElement;
     };
+    interface HTMLScriptureReferencesElement extends Components.ScriptureReferences, HTMLStencilElement {
+    }
+    var HTMLScriptureReferencesElement: {
+        prototype: HTMLScriptureReferencesElement;
+        new (): HTMLScriptureReferencesElement;
+    };
     interface HTMLTableRootElement extends Components.TableRoot, HTMLStencilElement {
     }
     var HTMLTableRootElement: {
@@ -222,6 +232,7 @@ declare global {
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
         "languages-ex": HTMLLanguagesExElement;
+        "scripture-references": HTMLScriptureReferencesElement;
         "table-root": HTMLTableRootElement;
     }
 }
@@ -242,8 +253,10 @@ declare namespace LocalJSX {
     }
     interface CfCell {
         "isEditable"?: boolean;
+        "options"?: Array<string>;
         "propKey"?: keyof any;
         "rowId"?: number;
+        "type"?: string;
         "updateFn"?: (id: number, columnName: any, value: any) => Promise<boolean>;
         "value"?: any;
     }
@@ -292,6 +305,8 @@ declare namespace LocalJSX {
     }
     interface LanguagesEx {
     }
+    interface ScriptureReferences {
+    }
     interface TableRoot {
         "match"?: MatchResults;
     }
@@ -316,6 +331,7 @@ declare namespace LocalJSX {
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
         "languages-ex": LanguagesEx;
+        "scripture-references": ScriptureReferences;
         "table-root": TableRoot;
     }
 }
@@ -343,6 +359,7 @@ declare module "@stencil/core" {
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
             "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
+            "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
     }

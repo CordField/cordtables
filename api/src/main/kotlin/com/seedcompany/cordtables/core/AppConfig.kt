@@ -48,6 +48,9 @@ class AppConfig(
     @Value("\${cord-api.password}")
     val cordApiPassword: String,
 
+    @Value("\${server.url}")
+    val thisServerUrl: String,
+
 ) {
     @get:Bean
     val appConfig: AppConfig
