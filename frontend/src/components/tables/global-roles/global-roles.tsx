@@ -95,7 +95,7 @@ export class GlobalRoles {
   }
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<UpdateGlobalRoleRequest, UpdateGlobalRoleResponse>('global_role/update', {
+    const updateResponse = await fetchAs<UpdateGlobalRoleRequest, UpdateGlobalRoleResponse>('role/update', {
       token: globals.globalStore.state.token,
       updatedColumnValue: value,
       columnToUpdate: columnName,
@@ -103,7 +103,7 @@ export class GlobalRoles {
     });
 
     if (updateResponse.error == ErrorType.NoError) {
-      const result = await fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('global_role/read', { token: globals.globalStore.state.token });
+      const result = await fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('role/read', { token: globals.globalStore.state.token });
       this.globalRoles = result.data.sort((a, b) => a.id - b.id);
       return true;
     } else {
@@ -112,7 +112,7 @@ export class GlobalRoles {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteGlobalRoleRequest, DeleteGlobalRoleResponse>('global_role/delete', {
+    const result = await fetchAs<DeleteGlobalRoleRequest, DeleteGlobalRoleResponse>('role/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -128,7 +128,7 @@ export class GlobalRoles {
     event.preventDefault();
     event.stopPropagation();
     console.log(this.insertedFields);
-    const result = await fetchAs<CreateGlobalRoleRequest, CreateGlobalRoleResponse>('global_role/create', {
+    const result = await fetchAs<CreateGlobalRoleRequest, CreateGlobalRoleResponse>('role/create', {
       insertedFields: this.insertedFields,
       token: globals.globalStore.state.token,
     });
@@ -146,7 +146,7 @@ export class GlobalRoles {
   };
 
   componentWillLoad() {
-    fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('global_role/read', {
+    fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('role/read', {
       token: globals.globalStore.state.token,
     }).then(res => {
       this.globalRoles = res.data.sort((a, b) => a.id - b.id);

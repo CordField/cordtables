@@ -17,7 +17,7 @@ data class GlobalRoleColumnGrantsCreate(
         val access_level: String,
         val column_name: String? = null,
         val created_by: Int,
-        val global_role: Int,
+        val role: Int,
         val table_name: String? = null,
         val token: String
 )
@@ -67,7 +67,7 @@ class Create(
             try {
                 println(req.access_level)
                 val insertStatement = conn.prepareCall(
-                        "insert into admin.global_role_column_grants(access_level, column_name, created_by, modified_by, owning_person, owning_group, global_role, table_name) values(?::admin.access_level,?,?,?,?,?,?,?::admin.table_name) returning *"
+                        "insert into admin.role_column_grants(access_level, column_name, created_by, modified_by, owning_person, owning_group, role, table_name) values(?::admin.access_level,?,?,?,?,?,?,?::admin.table_name) returning *"
                 )
                 insertStatement.setString(1, req.access_level)
                 insertStatement.setString(2, req.column_name)
@@ -75,7 +75,7 @@ class Create(
                 insertStatement.setInt(4, userId)
                 insertStatement.setInt(5, userId)
                 insertStatement.setInt(6, 1)
-                insertStatement.setInt(7, req.global_role)
+                insertStatement.setInt(7, req.role)
                 insertStatement.setString(8, req.table_name)
 
 

@@ -1,7 +1,7 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ErrorType, GenericResponse, globalRoleTablePermissions } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
-import { globals } from '../../../core/global.store'
+import { globals } from '../../../core/global.store';
 
 type MutablePermissionsFields = Omit<globalRoleTablePermissions, 'id' | 'createdBy' | 'modifiedBy' | 'modifiedAt' | 'createdAt'>;
 class CreateGlobalRoleTablePermissionsRequest {
@@ -10,7 +10,7 @@ class CreateGlobalRoleTablePermissionsRequest {
 }
 
 class DeletePermissionsResponse extends GenericResponse {
-  data: { id: number};
+  data: { id: number };
 }
 
 class DeletePermissionsRequest {
@@ -18,7 +18,7 @@ class DeletePermissionsRequest {
 }
 
 class UpdatePermissionsRequest {
-  email: string; 
+  email: string;
   id: number;
   updatedFields: MutablePermissionsFields;
 }
@@ -47,7 +47,7 @@ export class GlobalRoleTablePermissions {
   @State() updatedFields: MutablePermissionsFields = this.defaultFields;
   @State() error: string;
   @State() success: string;
-  
+
   insertFieldChange(event, fieldName) {
     this.insertedFields[fieldName] = event.target.value;
   }
@@ -66,14 +66,18 @@ export class GlobalRoleTablePermissions {
     });
     if (result.error === ErrorType.NoError) {
       this.updatedFields = this.defaultFields;
-      this.globalRoleTablePermissions = this.globalRoleTablePermissions.map(globalRoleTablePermissions => (globalRoleTablePermissions.id === result.data.id ? result.data : globalRoleTablePermissions));
+      this.globalRoleTablePermissions = this.globalRoleTablePermissions.map(globalRoleTablePermissions =>
+        globalRoleTablePermissions.id === result.data.id ? result.data : globalRoleTablePermissions,
+      );
       this.success = 'Row with id ${result.data.id} updated successfully!';
     } else {
       console.error('Failed to update row');
       this.error = result.error;
-      this.globalRoleTablePermissions = this.globalRoleTablePermissions.map(globalRoleTablePermissions => (globalRoleTablePermissions.id === result.data?.id ? result.data : globalRoleTablePermissions));
+      this.globalRoleTablePermissions = this.globalRoleTablePermissions.map(globalRoleTablePermissions =>
+        globalRoleTablePermissions.id === result.data?.id ? result.data : globalRoleTablePermissions,
+      );
     }
-    };
+  };
   handleDelete = async id => {
     const result = await fetchAs<DeletePermissionsRequest, DeletePermissionsResponse>('globalrolestablepermissions/delete', {
       id,
@@ -88,29 +92,28 @@ export class GlobalRoleTablePermissions {
   handleSubmit = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-  // return new row to avoid page refresh
+    // return new row to avoid page refresh
     const result = await fetchAs<CreateGlobalRoleTablePermissionsRequest, CreateGlobalRoleTablePermissionsReponse>('globalrolestablepermissions/create', {
       insertedFields: this.insertedFields,
       email: globals.globalStore.state.email,
+    });
 
-      });
+    console.log(result);
 
-      console.log(result);
-
-      if (result.error === ErrorType.NoError) {
-        this.insertedFields = this.defaultFields;
-        this.globalRoleTablePermissions = this.globalRoleTablePermissions.concat(result.data);
-        this.success = 'New Row with id ${result.data.id} submitted successfully';
-      } else {
-        console.error("failed to create global role table permission");
-        this.error = result.error;
-      }
+    if (result.error === ErrorType.NoError) {
+      this.insertedFields = this.defaultFields;
+      this.globalRoleTablePermissions = this.globalRoleTablePermissions.concat(result.data);
+      this.success = 'New Row with id ${result.data.id} submitted successfully';
+    } else {
+      console.error('failed to create global role table permission');
+      this.error = result.error;
+    }
   };
   componentWillLoad() {
     fetchAs<null, ReadGlobalRoleTablePermissionsResponse>('globalrolestablepermissions/read', null).then(res => {
-      this.globalRoleTablePermissions = res.data;   
+      this.globalRoleTablePermissions = res.data;
     });
-  }  
+  }
   render() {
     return (
       <Host>
@@ -141,7 +144,6 @@ export class GlobalRoleTablePermissions {
             </div>
 
             <button onClick={this.handleSubmit}>Submit</button>
-
           </form>
           <table>
             <thead>
@@ -154,46 +156,37 @@ export class GlobalRoleTablePermissions {
                 <th>modified_by</th>
                 <th>table_name</th>
                 <th>table_permissions</th>
-                <th>global_roles</th>
+                <th>roles</th>
               </tr>
             </thead>
             <tbody>
               {this.globalRoleTablePermissions.map(globalRoleTablePermissions => {
                 return (
-                <tr>
-                  {/* use map to preserve order, loop over them*/}
-                  <td>{globalRoleTablePermissions.id}</td>
-                  <td>{globalRoleTablePermissions.createdAt}</td>
-                  <td>{globalRoleTablePermissions.createdBy}</td>
-                  <td>{globalRoleTablePermissions.modifiedAt}</td>
-                  <td>{globalRoleTablePermissions.modifiedBy}</td>
-                  <td
-                     contentEditable
-                     onInput={() => this.updateFieldChange(event, 'tableName')}
-                  >
-                    {globalRoleTablePermissions.tableName}  
-                  </td>
-                  <td
-                     contentEditable
-                     onInput={() => this.updateFieldChange(event, 'tablePermissions')}
-                  >
-                    {globalRoleTablePermissions.tablePermission}  
-                  </td>
-                  <td
-                     contentEditable
-                     onInput={() => this.updateFieldChange(event, 'globalRoles')}
-                  >
-                    {globalRoleTablePermissions.globalRole}  
-                  </td>
-                
-                  <button onClick={() => this.handleUpdate(globalRoleTablePermissions.id)}>Update</button>
-                  <button onClick={() => this.handleDelete(globalRoleTablePermissions.id)}>Delete</button>
-                </tr>
+                  <tr>
+                    {/* use map to preserve order, loop over them*/}
+                    <td>{globalRoleTablePermissions.id}</td>
+                    <td>{globalRoleTablePermissions.createdAt}</td>
+                    <td>{globalRoleTablePermissions.createdBy}</td>
+                    <td>{globalRoleTablePermissions.modifiedAt}</td>
+                    <td>{globalRoleTablePermissions.modifiedBy}</td>
+                    <td contentEditable onInput={() => this.updateFieldChange(event, 'tableName')}>
+                      {globalRoleTablePermissions.tableName}
+                    </td>
+                    <td contentEditable onInput={() => this.updateFieldChange(event, 'tablePermissions')}>
+                      {globalRoleTablePermissions.tablePermission}
+                    </td>
+                    <td contentEditable onInput={() => this.updateFieldChange(event, 'globalRoles')}>
+                      {globalRoleTablePermissions.globalRole}
+                    </td>
+
+                    <button onClick={() => this.handleUpdate(globalRoleTablePermissions.id)}>Update</button>
+                    <button onClick={() => this.handleDelete(globalRoleTablePermissions.id)}>Delete</button>
+                  </tr>
                 );
               })}
             </tbody>
           </table>
-        </main>   
+        </main>
       </Host>
     );
   }

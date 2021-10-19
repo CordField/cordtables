@@ -46,7 +46,7 @@ class Read (
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall(
-                "select id, created_at, created_by, modified_at, modified_by, table_name, table_permission, global_role from public.global_roles_table_permissions;"
+                "select id, created_at, created_by, modified_at, modified_by, table_name, table_permission, role from public.roles_table_permissions;"
             )
             try {
 
@@ -59,7 +59,7 @@ class Read (
                     val modifiedAt = listStatementResult.getString("modified_at")
                     val tableName = listStatementResult.getString("table_name")
                     val tablePermissions = listStatementResult.getString("table_permissions")
-                    val globalRole = listStatementResult.getInt("global_role")
+                    val globalRole = listStatementResult.getInt("role")
                     data.add(GlobalRolesTablePermissions(id,createdAt,createdBy,modifiedAt,modifiedBy,tableName,tablePermissions,globalRole))
                 }
             }

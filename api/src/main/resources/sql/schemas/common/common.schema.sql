@@ -45,10 +45,10 @@ alter table admin.people add constraint admin_people_chat_fk foreign key (chat) 
 alter table admin.groups add constraint admin_group_row_access_chat_fk foreign key (chat) references common.chats(id);
 alter table admin.group_row_access add constraint admin_group_row_access_chat_fk foreign key (chat) references common.chats(id);
 alter table admin.group_memberships add constraint admin_group_memberships_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.global_roles add constraint admin_global_roles_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.global_role_column_grants add constraint admin_global_role_column_grants_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.global_role_table_permissions add constraint admin_global_role_table_permissions_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.global_role_memberships add constraint admin_global_role_memberships_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.roles add constraint admin_roles_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.role_column_grants add constraint admin_role_column_grants_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.role_table_permissions add constraint admin_role_table_permissions_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.role_memberships add constraint admin_role_memberships_chat_fk foreign key (chat) references common.chats(id);
 
 create table common.posts (
 	id serial primary key,

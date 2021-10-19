@@ -34,7 +34,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("global_role/delete")
+    @PostMapping("role/delete")
     @ResponseBody
     fun DeleteHandler(@RequestBody req: DeleteGlobalRoleRequest): DeleteGlobalRoleResponse {
 
@@ -47,7 +47,7 @@ class Delete(
         this.ds.connection.use { conn ->
             try {
                 val deleteStatement = conn.prepareCall(
-                    "delete from admin.global_roles where id = ? returning id"
+                    "delete from admin.roles where id = ? returning id"
                 )
 
 //                modified_by, modified_at, id

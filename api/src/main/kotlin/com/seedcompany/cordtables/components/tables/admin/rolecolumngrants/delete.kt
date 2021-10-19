@@ -62,7 +62,7 @@ class Delete(
             }
             try {
                 val insertStatement = conn.prepareCall(
-                        "delete from admin.global_role_column_grants where id = ?"
+                        "delete from admin.role_column_grants where id = ?"
                 )
 
                 insertStatement.setInt(1, req.id)

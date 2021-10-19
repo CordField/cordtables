@@ -18,10 +18,10 @@ create type admin.access_level as enum (
 
 create type admin.table_name as enum (
   'admin.email_tokens',
-  'admin.global_role_column_grants',
-  'admin.global_role_memberships',
-  'admin.global_role_table_permissions',
-  'admin.global_roles',
+  'admin.role_column_grants',
+  'admin.role_memberships',
+  'admin.role_table_permissions',
+  'admin.roles',
   'admin.groups',
   'admin.group_memberships',
   'admin.group_row_access',
@@ -182,7 +182,7 @@ create table admin.group_memberships(
 
 -- ROLES --------------------------------------------------------------------
 
-create table admin.global_roles (
+create table admin.roles (
 	id serial primary key,
 
 	name varchar(255) not null,
@@ -198,10 +198,10 @@ create table admin.global_roles (
 	unique (owning_group, name)
 );
 
-create table admin.global_role_column_grants(
+create table admin.role_column_grants(
 	id serial primary key,
 
-	global_role int not null references admin.global_roles(id),
+	role int not null references admin.roles(id),
 	table_name admin.table_name not null,
 	column_name varchar(64) not null,
 	access_level admin.access_level not null,
@@ -214,13 +214,13 @@ create table admin.global_role_column_grants(
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
 
-	unique (global_role, table_name, column_name)
+	unique (role, table_name, column_name)
 );
 
-create table admin.global_role_table_permissions(
+create table admin.role_table_permissions(
   id serial primary key,
 
-  global_role int not null references admin.global_roles(id),
+  role int not null references admin.roles(id),
   table_name admin.table_name not null,
   table_permission admin.table_permission not null,
 
@@ -232,13 +232,13 @@ create table admin.global_role_table_permissions(
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
 
-  unique (global_role, table_name, table_permission)
+  unique (role, table_name, table_permission)
 );
 
-create table admin.global_role_memberships (
+create table admin.role_memberships (
   id serial primary key,
 
-	global_role int not null references admin.global_roles(id),
+	role int not null references admin.roles(id),
 	person int not null references admin.people(id),
 
   chat int,
@@ -249,7 +249,7 @@ create table admin.global_role_memberships (
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
 
-	unique(global_role, person)
+	unique(role, person)
 );
 
 -- AUTHENTICATION ------------------------------------------------------------

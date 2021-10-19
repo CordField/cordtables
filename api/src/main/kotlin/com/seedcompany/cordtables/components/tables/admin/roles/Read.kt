@@ -48,7 +48,7 @@ class Read(
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
 
-    @PostMapping("global_role/read")
+    @PostMapping("role/read")
     @ResponseBody
     fun ReadHandler(@RequestBody req: ReadGlobalRoleRequest): ReadGlobalRoleResponse {
         //mutableList as we need to add each global role as an element to it
@@ -71,78 +71,78 @@ class Read(
                         on a.group_id = b.group_id 
                         inner join admin.tokens as c 
                         on b.person = c.person
-                        where a.table_name = 'admin.global_roles'
+                        where a.table_name = 'admin.roles'
                         and c.token = :token
                     ), 
                     column_level_access as 
                     (
                         select column_name 
-                        from admin.global_role_column_grants a 
-                        inner join admin.global_role_memberships b 
-                        on a.global_role = b.global_role 
+                        from admin.role_column_grants a 
+                        inner join admin.role_memberships b 
+                        on a.role = b.role 
                         inner join admin.tokens c 
                         on b.person = c.person 
-                        where a.table_name = 'admin.global_roles'
+                        where a.table_name = 'admin.roles'
                         and c.token = :token
                     )
                     select       
                     case
                         when 'id' in (select column_name from column_level_access) then id 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then id 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then id 
                         when owning_person = (select person from admin.tokens where token = :token) then id 
                         else null 
                     end as id,       
                     case
                         when 'name' in (select column_name from column_level_access) then name 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then name 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then name 
                         when owning_person = (select person from admin.tokens where token = :token) then name 
                         else null 
                     end as name,     
                     case
                         when 'modified_by' in (select column_name from column_level_access) then modified_by 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then modified_by 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then modified_by 
                         when owning_person = (select person from admin.tokens where token = :token) then modified_by 
                         else null 
                     end as modified_by, 
                     case
                         when 'created_by' in (select column_name from column_level_access) then created_by 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then created_by 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then created_by 
                         when owning_person = (select person from admin.tokens where token = :token) then created_by 
                         else null 
                     end as created_by, 
                     case
                         when 'created_at' in (select column_name from column_level_access) then created_at 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then created_at 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then created_at 
                         when owning_person = (select person from admin.tokens where token = :token) then created_at 
                         else null 
                     end as created_at,
                     case
                         when 'modified_at' in (select column_name from column_level_access) then modified_at 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then modified_at 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then modified_at 
                         when owning_person = (select person from admin.tokens where token = :token) then modified_at 
                         else null 
                     end as modified_at,
                      case
                         when 'owning_group' in (select column_name from column_level_access) then owning_group 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then owning_group 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then owning_group 
                         when owning_person = (select person from admin.tokens where token = :token) then owning_group 
                         else null 
                     end as owning_group,  
                     case
                         when 'owning_person' in (select column_name from column_level_access) then owning_person 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) then owning_person 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) then owning_person 
                         when owning_person = (select person from admin.tokens where token = :token) then owning_person 
                         else null 
                     end as owning_person,
                     case
                         when 'chat' in (select column_name from column_level_access) then chat 
-                        when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))  then chat 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then chat 
                         when owning_person = (select person from admin.tokens where token = :token) then chat 
                         else null 
                     end as chat         
-                    from admin.global_roles 
+                    from admin.roles 
                     where id in (select row from row_level_access) or 
-                    (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) or
+                    (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
                     owning_person = (select person from admin.tokens where token = :token);
                     """.trimIndent()
             try {

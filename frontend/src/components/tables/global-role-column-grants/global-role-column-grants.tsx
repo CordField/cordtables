@@ -1,4 +1,4 @@
-import { Component, Host, h, Listen, State, Prop} from '@stencil/core';
+import { Component, Host, h, Listen, State, Prop } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
 import { GenericResponse } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
@@ -9,7 +9,7 @@ class readAllResponse extends GenericResponse {
   column_name?: String;
   created_at?: String;
   created_by?: number;
-  global_role?: number;
+  role?: number;
   modified_at?: String;
   modified_by?: number;
   table_name?: String;
@@ -17,7 +17,7 @@ class readAllResponse extends GenericResponse {
 }
 
 class readOneRequest {
-  id: number
+  id: number;
 }
 
 class create {
@@ -25,10 +25,10 @@ class create {
   column_name?: String;
   created_at?: String;
   created_by?: number;
-  global_role?: number;
+  role?: number;
   table_name?: String;
   response?: Array<any>;
-  token: String
+  token: String;
 }
 
 class update {
@@ -39,10 +39,10 @@ class update {
   created_by?: number;
   modified_at?: String;
   modified_by?: number;
-  global_role?: number;
+  role?: number;
   table_name?: String;
   response?: Array<any>;
-  token: String
+  token: String;
 }
 
 class deleteRow {
@@ -50,25 +50,15 @@ class deleteRow {
   token: String;
 }
 
-const tableColumns = [
-    "Id",
-    "Access Level",
-    "Column Name",
-    "Created At",
-    "Created By",
-    "Global Role",
-    "Modified At",
-    "Modified By",
-    "Table Name",
-];
+const tableColumns = ['Id', 'Access Level', 'Column Name', 'Created At', 'Created By', 'Global Role', 'Modified At', 'Modified By', 'Table Name'];
 
-interface readOne{
+interface readOne {
   id: number;
   access_level?: string;
   column_name?: string;
   created_at?: string;
   created_by?: number;
-  global_role?: number;
+  role?: number;
   modified_at?: string;
   modified_by?: number;
   table_name?: string;
@@ -81,7 +71,6 @@ let rowId = 0;
   styleUrl: 'global-role-column-grants.css',
   shadow: true,
 })
-
 export class GlobalRoleColumnGrants {
   @Prop() history: RouterHistory;
   @State() email: string;
@@ -90,114 +79,106 @@ export class GlobalRoleColumnGrants {
   @State() dataAll: Array<object>;
   @State() dataOne: Array<readOne>;
   @State() selectValue: string;
-  @State() readOneValues : readOne = {
-    'id': 0,
-    'access_level' : '',
-    'column_name' : '',
-    'created_at' : '',
-    'created_by' : 0,
-    'global_role' : 0,
-    'modified_at' : '',
-    'modified_by' : 0,
-    'table_name' : '',
-  }
+  @State() readOneValues: readOne = {
+    id: 0,
+    access_level: '',
+    column_name: '',
+    created_at: '',
+    created_by: 0,
+    role: 0,
+    modified_at: '',
+    modified_by: 0,
+    table_name: '',
+  };
 
-
-  async componentWillLoad(){
+  async componentWillLoad() {
     await this.loadData();
   }
 
-  async loadData(){
-    const result = await fetchAs<{}, readAllResponse>('table/global-role-column-grants', { });
-    if(result && result?.response) this.dataAll = result.response;
+  async loadData() {
+    const result = await fetchAs<{}, readAllResponse>('table/global-role-column-grants', {});
+    if (result && result?.response) this.dataAll = result.response;
   }
 
- 
-
   @Listen('rowClicked')
-  async handleClick(event){
-    if(event && event.detail){
+  async handleClick(event) {
+    if (event && event.detail) {
       rowId = event.detail;
-      const result = await fetchAs<readOneRequest, readAllResponse>('table/global-role-column-grants-read-one', { id: rowId});
-      if(result && result?.response) {
-        result.response.map((item) => {
+      const result = await fetchAs<readOneRequest, readAllResponse>('table/global-role-column-grants-read-one', { id: rowId });
+      if (result && result?.response) {
+        result.response.map(item => {
           this.readOneValues.id = item.id;
           this.selectValue = item.access_level;
           this.readOneValues.column_name = item.column_name;
           this.readOneValues.created_at = item.created_at;
           this.readOneValues.created_by = item.created_by;
-          this.readOneValues.global_role = item.global_role;
+          this.readOneValues.role = item.role;
           this.readOneValues.modified_at = item.modified_at;
           this.readOneValues.modified_by = item.modified_by;
           this.readOneValues.table_name = item.table_name;
-        })
-      };
+        });
+      }
       this.isOpen = !this.isOpen;
     }
   }
 
   @Listen('modalClosed')
-  handleModalClose(event){
-    if(event && event.detail){
+  handleModalClose(event) {
+    if (event && event.detail) {
       this.isOpen = !this.isOpen;
     }
   }
 
   @Listen('modalOkay')
-  async handleModalOkay(event){
-    if(event && event.detail){
-      if (this.readOneValues.id === 0){
-        try{
-            await fetchAs<create, readAllResponse>('table/global-role-column-grants-create', 
-          { 
+  async handleModalOkay(event) {
+    if (event && event.detail) {
+      if (this.readOneValues.id === 0) {
+        try {
+          await fetchAs<create, readAllResponse>('table/global-role-column-grants-create', {
             access_level: this.selectValue,
             column_name: this.readOneValues.column_name,
             created_by: this.readOneValues.created_by,
-            global_role: this.readOneValues.global_role,
+            role: this.readOneValues.role,
             table_name: this.readOneValues.table_name,
-            token: localStorage.getItem('token')
+            token: localStorage.getItem('token'),
           });
-        
+
           await this.loadData();
-        
-        }catch(error){
+        } catch (error) {
           console.log('Error during row insertion: ', error);
         }
-      }else{
-        try{
-          await fetchAs<update, readAllResponse>('table/global-role-column-grants-update', 
-        { 
-          id: this.readOneValues.id,
-          access_level: this.selectValue,
-          column_name: this.readOneValues.column_name,
-          global_role: this.readOneValues.global_role,
-          table_name: this.readOneValues.table_name,
-          token: localStorage.getItem('token')
-        });
-      
-        await this.loadData();
-      
-      }catch(error){
-        console.log('Error during row update: ', error);
-      }
+      } else {
+        try {
+          await fetchAs<update, readAllResponse>('table/global-role-column-grants-update', {
+            id: this.readOneValues.id,
+            access_level: this.selectValue,
+            column_name: this.readOneValues.column_name,
+            role: this.readOneValues.role,
+            table_name: this.readOneValues.table_name,
+            token: localStorage.getItem('token'),
+          });
+
+          await this.loadData();
+        } catch (error) {
+          console.log('Error during row update: ', error);
+        }
       }
       this.isOpen = !this.isOpen;
     }
   }
 
   @Listen('modalDelete')
-  async handleModalDelete(event){
-    if(event && event.detail){
-      if (this.readOneValues.id !== 0){
-        try{
-          await fetchAs<deleteRow, readAllResponse>('table/global-role-column-grants-delete', 
-          { 
+  async handleModalDelete(event) {
+    if (event && event.detail) {
+      if (this.readOneValues.id !== 0) {
+        try {
+          await fetchAs<deleteRow, readAllResponse>('table/global-role-column-grants-delete', {
             id: this.readOneValues.id,
-            token: localStorage.getItem('token')
+            token: localStorage.getItem('token'),
           });
-        
+
           await this.loadData();
-        }catch(error){
+        } catch (error) {
           console.log('An error ocurred when trying to delete the record: ', error);
         }
       }
@@ -212,24 +193,24 @@ export class GlobalRoleColumnGrants {
     this.readOneValues.column_name = event.target.value;
   }
   handleChangeGlobalRole(event) {
-    this.readOneValues.global_role = parseInt(event.target.value);
+    this.readOneValues.role = parseInt(event.target.value);
   }
   handleChangeTableName(event) {
     this.readOneValues.table_name = event.target.value;
   }
 
-  cleanFields(){
+  cleanFields() {
     this.readOneValues.id = 0;
     this.readOneValues.column_name = '';
     this.readOneValues.created_at = '';
     this.readOneValues.created_by = null;
-    this.readOneValues.global_role = null;
+    this.readOneValues.role = null;
     this.readOneValues.modified_at = '';
     this.readOneValues.modified_by = null;
     this.readOneValues.table_name = '';
   }
 
-  onInsertNew(){
+  onInsertNew() {
     this.cleanFields();
     this.isOpen = !this.isOpen;
   }
@@ -239,42 +220,44 @@ export class GlobalRoleColumnGrants {
       <Host>
         <div class="insertNewButton">
           <button onClick={() => this.onInsertNew()}>Insert New</button>
-          </div>
-         <create-update-modal
-         isOpen={this.isOpen}
-         >
-           <div class="container">
+        </div>
+        <create-update-modal isOpen={this.isOpen}>
+          <div class="container">
             <div class="row">
               <div class="col">
-                <select onInput={(event) => this.handleChangeAccessLevel(event)}>
-                  <option value="Write" selected>Write</option>
-                  <option value="Read" selected={this.selectValue === 'Read'}>Read</option>
-                  <option value="Admin" selected={this.selectValue === 'Admin'}>Admin</option>
+                <select onInput={event => this.handleChangeAccessLevel(event)}>
+                  <option value="Write" selected>
+                    Write
+                  </option>
+                  <option value="Read" selected={this.selectValue === 'Read'}>
+                    Read
+                  </option>
+                  <option value="Admin" selected={this.selectValue === 'Admin'}>
+                    Admin
+                  </option>
                 </select>
               </div>
               <div class="col">
-              <input type="text" placeholder="Column Name" value={this.readOneValues.column_name} onInput={(event) => this.handleChangeColumnName(event)}> </input>
+                <input type="text" placeholder="Column Name" value={this.readOneValues.column_name} onInput={event => this.handleChangeColumnName(event)}>
+                  {' '}
+                </input>
               </div>
               <div class="col">
-              <input type="text" placeholder="Global Role" value={this.readOneValues.global_role} onInput={(event) => this.handleChangeGlobalRole(event)}> </input>
+                <input type="text" placeholder="Global Role" value={this.readOneValues.role} onInput={event => this.handleChangeGlobalRole(event)}>
+                  {' '}
+                </input>
               </div>
               <div class="col">
-              <input type="text" placeholder="Table Name" value={this.readOneValues.table_name} onInput={(event) => this.handleChangeTableName(event)}> </input>
+                <input type="text" placeholder="Table Name" value={this.readOneValues.table_name} onInput={event => this.handleChangeTableName(event)}>
+                  {' '}
+                </input>
               </div>
             </div>
           </div>
-          
-          </create-update-modal>
+        </create-update-modal>
         <slot></slot>
-        <generic-table 
-          name="Global Role Column Grants" 
-          columns={tableColumns} 
-          values={this.dataAll}>
-        
-        </generic-table>
-       
+        <generic-table name="Global Role Column Grants" columns={tableColumns} values={this.dataAll}></generic-table>
       </Host>
-      
     );
   }
 }

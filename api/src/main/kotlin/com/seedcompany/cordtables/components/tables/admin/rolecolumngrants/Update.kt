@@ -18,7 +18,7 @@ data class GlobalRoleColumnGrantsUpdate(
         val access_level: String,
         val column_name: String? = null,
         val created_by: Int,
-        val global_role: Int,
+        val role: Int,
         val table_name: String? = null,
         val token: String,
 )
@@ -68,12 +68,12 @@ class Update(
             try {
                 println(req.access_level)
                 val insertStatement = conn.prepareCall(
-                        "update admin.global_role_column_grants set access_level = ?::admin.access_level, column_name = ?, modified_by = ?, global_role = ?, table_name = ?::admin.table_name where id = ? returning *"
+                        "update admin.role_column_grants set access_level = ?::admin.access_level, column_name = ?, modified_by = ?, role = ?, table_name = ?::admin.table_name where id = ? returning *"
                 )
                 insertStatement.setString(1, req.access_level)
                 insertStatement.setString(2, req.column_name)
                 insertStatement.setInt(3, userId)
-                insertStatement.setInt(4, req.global_role)
+                insertStatement.setInt(4, req.role)
                 insertStatement.setString(5, req.table_name)
                 insertStatement.setInt(6, req.id)
 

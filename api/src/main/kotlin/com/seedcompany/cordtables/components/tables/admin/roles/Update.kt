@@ -39,11 +39,11 @@ class Update(
         @Autowired
         val globalRoleUtil: GlobalRoleUtil
 ) {
-    @PostMapping("global_role/update")
+    @PostMapping("role/update")
     @ResponseBody
     fun UpdateHandler(@RequestBody req: UpdateGlobalRoleRequest): UpdateGlobalRoleResponse {
         if (req.token == null) return UpdateGlobalRoleResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasUpdatePermission(req.token, "admin.global_roles", req.columnToUpdate)) {
+        if (!util.userHasUpdatePermission(req.token, "admin.roles", req.columnToUpdate)) {
             return UpdateGlobalRoleResponse(ErrorType.DoesNotHaveUpdatePermission, null)
         }
         println("req: $req")
@@ -68,7 +68,7 @@ class Update(
             }
             try {
                 var reqValues: MutableList<Any> = mutableListOf()
-                var updateSql = "update admin.global_roles set"
+                var updateSql = "update admin.roles set"
                 if (req.updatedColumnValue != null && req.columnToUpdate !in globalRoleUtil.nonMutableColumns) {
                     updateSql = "$updateSql ${req.columnToUpdate} = ?,"
                     reqValues.add(req.updatedColumnValue)

@@ -13,7 +13,7 @@ import javax.sql.DataSource
 
 data class GlobalRoleMembershipsCreateRequest(
         val token: String? = null,
-        val global_role: Int,
+        val role: Int,
         val person: Int,
         val owning_group: Int,
 )
@@ -63,12 +63,12 @@ class Create(
 
             val statement = conn.prepareStatement(
                     """
-                        insert into admin.global_role_memberships(global_role, person, created_by, modified_by, owning_person, owning_group) 
+                        insert into admin.role_memberships(role, person, created_by, modified_by, owning_person, owning_group) 
                             values(?, ? , ? ,? , ? ,?);
                         """.trimIndent()
             )
 
-            statement.setInt(1, req.global_role)
+            statement.setInt(1, req.role)
             statement.setInt(2, req.person)
             statement.setInt(3, userId)
             statement.setInt(4, userId)

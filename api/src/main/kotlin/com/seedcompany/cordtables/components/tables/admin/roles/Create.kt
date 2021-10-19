@@ -39,7 +39,7 @@ class Create(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("global_role/create")
+    @PostMapping("role/create")
     @ResponseBody
     fun CreateHandler(@RequestBody req: CreateGlobalRoleRequest): CreateGlobalRoleResponse {
 
@@ -50,7 +50,7 @@ class Create(
         val reqValues: MutableList<Any> = mutableListOf()
 
         if (req.token == null) return CreateGlobalRoleResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasCreatePermission(req.token, "admin.global_roles"))
+        if (!util.userHasCreatePermission(req.token, "admin.roles"))
             return CreateGlobalRoleResponse(ErrorType.DoesNotHaveCreatePermission, null)
 
         this.ds.connection.use { conn ->
@@ -72,7 +72,7 @@ class Create(
                 return CreateGlobalRoleResponse(errorType, null)
             }
             try {
-                var insertStatementKeys = "insert into admin.global_roles("
+                var insertStatementKeys = "insert into admin.roles("
                 var insertStatementValues = " values("
                 for (prop in GlobalRole::class.memberProperties) {
                     val propValue = prop.get(req.insertedFields)

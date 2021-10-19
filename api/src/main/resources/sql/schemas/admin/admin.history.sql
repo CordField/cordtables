@@ -170,7 +170,7 @@ create table admin.group_memberships_history (
         FOR EACH ROW
         EXECUTE PROCEDURE group_memberships_history_fn(); 
 
-create table admin.global_roles_history (
+create table admin.roles_history (
   _history_id serial primary key,
   _history_created_at timestamp not null default CURRENT_TIMESTAMP,
 
@@ -185,36 +185,36 @@ create table admin.global_roles_history (
 	owning_group int
 );
 
-      CREATE OR REPLACE FUNCTION global_roles_history_fn()
+      CREATE OR REPLACE FUNCTION roles_history_fn()
         RETURNS TRIGGER
         LANGUAGE PLPGSQL
         AS $$
       begin
-          insert into admin.global_roles_history(id, name, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
+          insert into admin.roles_history(id, name, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
           values (new.id, new.name, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
         RETURN NEW;
       end; $$;
 
-      DROP TRIGGER IF EXISTS global_roles_history_insert_trigger ON admin.global_roles;
-      CREATE TRIGGER global_roles_history_insert_trigger
+      DROP TRIGGER IF EXISTS roles_history_insert_trigger ON admin.roles;
+      CREATE TRIGGER roles_history_insert_trigger
         AFTER INSERT
-        ON admin.global_roles
+        ON admin.roles
         FOR EACH ROW
-        EXECUTE PROCEDURE global_roles_history_fn();
+        EXECUTE PROCEDURE roles_history_fn();
 
-      DROP TRIGGER IF EXISTS global_roles_history_update_trigger ON admin.global_roles;
-      CREATE TRIGGER global_roles_history_update_trigger
+      DROP TRIGGER IF EXISTS roles_history_update_trigger ON admin.roles;
+      CREATE TRIGGER roles_history_update_trigger
         AFTER UPDATE
-        ON admin.global_roles
+        ON admin.roles
         FOR EACH ROW
-        EXECUTE PROCEDURE global_roles_history_fn();
+        EXECUTE PROCEDURE roles_history_fn();
 
-create table admin.global_role_column_grants_history(
+create table admin.role_column_grants_history(
   _history_id serial primary key,
   _history_created_at timestamp not null default CURRENT_TIMESTAMP,
 
 	id int,
-	global_role int,
+	role int,
 	table_name admin.table_name,
 	column_name varchar(64),
 	access_level admin.access_level,
@@ -227,36 +227,36 @@ create table admin.global_role_column_grants_history(
   owning_group int
 );
 
-      CREATE OR REPLACE FUNCTION global_role_column_grants_history_fn()
+      CREATE OR REPLACE FUNCTION role_column_grants_history_fn()
         RETURNS TRIGGER
         LANGUAGE PLPGSQL
         AS $$
       begin
-          insert into admin.global_role_column_grants_history(id, global_role, table_name, column_name, access_level, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
-          values (new.id, new.global_role, new.table_name, new.column_name, new.access_level, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
+          insert into admin.role_column_grants_history(id, role, table_name, column_name, access_level, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
+          values (new.id, new.role, new.table_name, new.column_name, new.access_level, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
         RETURN NEW;
       end; $$;
 
-      DROP TRIGGER IF EXISTS global_role_column_grants_history_insert_trigger ON admin.global_role_column_grants;
-      CREATE TRIGGER global_role_column_grants_history_insert_trigger
+      DROP TRIGGER IF EXISTS role_column_grants_history_insert_trigger ON admin.role_column_grants;
+      CREATE TRIGGER role_column_grants_history_insert_trigger
         AFTER INSERT
-        ON admin.global_role_column_grants
+        ON admin.role_column_grants
         FOR EACH ROW
-        EXECUTE PROCEDURE global_role_column_grants_history_fn();
+        EXECUTE PROCEDURE role_column_grants_history_fn();
 
-      DROP TRIGGER IF EXISTS global_role_column_grants_history_update_trigger ON admin.global_role_column_grants;
-      CREATE TRIGGER global_role_column_grants_history_update_trigger
+      DROP TRIGGER IF EXISTS role_column_grants_history_update_trigger ON admin.role_column_grants;
+      CREATE TRIGGER role_column_grants_history_update_trigger
         AFTER UPDATE
-        ON admin.global_role_column_grants
+        ON admin.role_column_grants
         FOR EACH ROW
-        EXECUTE PROCEDURE global_role_column_grants_history_fn();
+        EXECUTE PROCEDURE role_column_grants_history_fn();
 
-create table admin.global_role_table_permissions_history (
+create table admin.role_table_permissions_history (
   _history_id serial primary key,
   _history_created_at timestamp not null default CURRENT_TIMESTAMP,
 
 	id int,
-	global_role int,
+	role int,
   table_name admin.table_name,
   table_permission admin.table_permission,
 
@@ -268,36 +268,36 @@ create table admin.global_role_table_permissions_history (
 	owning_group int
 );
 
-      CREATE OR REPLACE FUNCTION global_role_table_permissions_history_fn()
+      CREATE OR REPLACE FUNCTION role_table_permissions_history_fn()
         RETURNS TRIGGER
         LANGUAGE PLPGSQL
         AS $$
       begin
-          insert into admin.global_role_table_permissions_history(id, global_role, table_name, table_permission, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
-          values (new.id, new.global_role, new.table_name, new.table_permission, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
+          insert into admin.role_table_permissions_history(id, role, table_name, table_permission, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
+          values (new.id, new.role, new.table_name, new.table_permission, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
         RETURN NEW;
       end; $$;
 
-      DROP TRIGGER IF EXISTS global_role_table_permissions_history_insert_trigger ON admin.global_role_table_permissions;
-      CREATE TRIGGER global_role_table_permissions_history_insert_trigger
+      DROP TRIGGER IF EXISTS role_table_permissions_history_insert_trigger ON admin.role_table_permissions;
+      CREATE TRIGGER role_table_permissions_history_insert_trigger
         AFTER INSERT
-        ON admin.global_role_table_permissions
+        ON admin.role_table_permissions
         FOR EACH ROW
-        EXECUTE PROCEDURE global_role_table_permissions_history_fn();
+        EXECUTE PROCEDURE role_table_permissions_history_fn();
 
-      DROP TRIGGER IF EXISTS global_role_table_permissions_history_update_trigger ON admin.global_role_table_permissions;
-      CREATE TRIGGER global_role_table_permissions_history_update_trigger
+      DROP TRIGGER IF EXISTS role_table_permissions_history_update_trigger ON admin.role_table_permissions;
+      CREATE TRIGGER role_table_permissions_history_update_trigger
         AFTER UPDATE
-        ON admin.global_role_table_permissions
+        ON admin.role_table_permissions
         FOR EACH ROW
-        EXECUTE PROCEDURE global_role_table_permissions_history_fn();
+        EXECUTE PROCEDURE role_table_permissions_history_fn();
 
-create table admin.global_role_memberships_history (
+create table admin.role_memberships_history (
   _history_id serial primary key,
   _history_created_at timestamp not null default CURRENT_TIMESTAMP,
 
 	id int,
-	global_role int,
+	role int,
   person int,
 
 	created_at timestamp,
@@ -308,26 +308,26 @@ create table admin.global_role_memberships_history (
 	owning_group int
 );
 
-      CREATE OR REPLACE FUNCTION global_role_memberships_history_fn()
+      CREATE OR REPLACE FUNCTION role_memberships_history_fn()
         RETURNS TRIGGER
         LANGUAGE PLPGSQL
         AS $$
       begin
-          insert into admin.global_role_memberships_history(id, global_role, person, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
-          values (new.id, new.global_role, new.person, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
+          insert into admin.role_memberships_history(id, role, person, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
+          values (new.id, new.role, new.person, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
         RETURN NEW;
       end; $$;
 
-      DROP TRIGGER IF EXISTS global_role_memberships_history_insert_trigger ON admin.global_role_memberships;
-      CREATE TRIGGER global_role_memberships_history_insert_trigger
+      DROP TRIGGER IF EXISTS role_memberships_history_insert_trigger ON admin.role_memberships;
+      CREATE TRIGGER role_memberships_history_insert_trigger
         AFTER INSERT
-        ON admin.global_role_memberships
+        ON admin.role_memberships
         FOR EACH ROW
-        EXECUTE PROCEDURE global_role_memberships_history_fn();
+        EXECUTE PROCEDURE role_memberships_history_fn();
 
-      DROP TRIGGER IF EXISTS global_role_memberships_history_update_trigger ON admin.global_role_memberships;
-      CREATE TRIGGER global_role_memberships_history_update_trigger
+      DROP TRIGGER IF EXISTS role_memberships_history_update_trigger ON admin.role_memberships;
+      CREATE TRIGGER role_memberships_history_update_trigger
         AFTER UPDATE
-        ON admin.global_role_memberships
+        ON admin.role_memberships
         FOR EACH ROW
-        EXECUTE PROCEDURE global_role_memberships_history_fn();
+        EXECUTE PROCEDURE role_memberships_history_fn();

@@ -21,7 +21,7 @@ data class GlobalRoleColumnGrantsUnique(
         val column_name: String? = null,
         val created_at: String? = null,
         val created_by: Int? = null,
-        val global_role: Int? = null,
+        val role: Int? = null,
         val modified_at: String? = null,
         val modified_by: Int? = null,
         val table_name: String? = null,
@@ -61,11 +61,11 @@ class readOne(
                     "\tcolumn_name, \n" +
                     "\tcreated_at,\n" +
                     "\tcreated_by,\n" +
-                    "\tglobal_role,\n" +
+                    "\trole,\n" +
                     "\tmodified_at,\n" +
                     "\tmodified_by,\n" +
                     "\ttable_name\n" +
-                    "FROM admin.global_role_column_grants WHERE id = ?")
+                    "FROM admin.role_column_grants WHERE id = ?")
             listStatement.setInt(1, req.id)
             try {
                 val listStatementResult = listStatement.executeQuery();
@@ -75,11 +75,11 @@ class readOne(
                     val column_name = listStatementResult.getString("column_name");
                     val created_at = listStatementResult.getString("created_at");
                     val created_by = listStatementResult.getInt("created_by");
-                    val global_role = listStatementResult.getInt("global_role");
+                    val role = listStatementResult.getInt("role");
                     val modified_at = listStatementResult.getString("modified_at");
                     val modified_by = listStatementResult.getInt("modified_by");
                     val table_name = listStatementResult.getString("table_name");
-                    response.add(GlobalRoleColumnGrantsUnique(id, access_level, column_name, created_at, created_by, global_role, modified_at, modified_by, table_name));
+                    response.add(GlobalRoleColumnGrantsUnique(id, access_level, column_name, created_at, created_by, role, modified_at, modified_by, table_name));
                 }
                 println(response)
             } catch (e: SQLException) {

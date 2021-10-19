@@ -48,7 +48,7 @@ class Delete(
 
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from public.global_roles_table_permissions where id = ? returning id"
+                    "delete from public.roles_table_permissions where id = ? returning id"
                 )
 
 //                modified_by, modified_at, id

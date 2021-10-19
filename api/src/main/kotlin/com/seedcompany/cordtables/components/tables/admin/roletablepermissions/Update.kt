@@ -68,7 +68,7 @@ class Update(
             try {
 
                 var reqValues: MutableList<Any> = mutableListOf()
-                var updateSQL = "update public.global_roles_table_permissions set"
+                var updateSQL = "update public.roles_table_permissions set"
                 for (prop in UpdatePermissionsRequest::class.memberProperties) {
                     val propValue = prop.get(req)
                     println("$propValue $(prop.name) = ?,")
@@ -104,7 +104,7 @@ class Update(
                     val modifiedAt = updateStatementResult.getString("modified_at")
                     val modifiedBy = updateStatementResult.getInt("modified_by")
                     val tablePermissions = updateStatementResult.getString("table_permissions")
-                    val globalRole = updateStatementResult.getInt("global_role")
+                    val globalRole = updateStatementResult.getInt("role")
                     updatedPermission = GlobalRolesTablePermissions(id, tableName, createdBy, createdAt, modifiedBy, modifiedAt, tablePermissions, globalRole)
                     println("updated row's id: $id")
                 }

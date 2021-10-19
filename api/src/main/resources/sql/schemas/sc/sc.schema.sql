@@ -181,7 +181,7 @@ create table sc.partners (
 	organization int not null references sc.organizations(id),
 	active bool,
 	financial_reporting_types sc.financial_reporting_types[],
-	is_global_innovations_client bool,
+	is_innovations_client bool,
 	pmc_entity_code varchar(32),
 	point_of_contact int references admin.people(id),
 	types sc.partner_types[],

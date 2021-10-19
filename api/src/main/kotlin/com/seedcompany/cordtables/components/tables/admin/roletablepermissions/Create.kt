@@ -65,7 +65,7 @@ class Create(
             }
             try {
                 val insertStatement = conn.prepareCall(
-                    "insert into public.global_roles_table_permissions(table_name, table_permissions, global_role, created_by, modified_by) values(?,?,?,?, ?) returning *"
+                    "insert into public.roles_table_permissions(table_name, table_permissions, role, created_by, modified_by) values(?,?,?,?, ?) returning *"
                 )
                 insertStatement.setString(1, req.insertedFields.tableName)
                 insertStatement.setString(2, req.insertedFields.tablePermissions)
@@ -83,7 +83,7 @@ class Create(
                     val modifiedBy = insertStatementResult.getInt("modified_by")
                     val tableName = insertStatementResult.getString("table_name")
                     val tablePermissions = insertStatementResult.getString("table_permissions")
-                    val globalRole = insertStatementResult.getInt("global_role")
+                    val globalRole = insertStatementResult.getInt("role")
                     newGRTPermission = GlobalRolesTablePermissions(id, createdAt, createdBy, modifiedAt, modifiedBy, tableName, tablePermissions, globalRole)
                     println("newly inserted id: $id")
                 }
