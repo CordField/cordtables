@@ -47,7 +47,12 @@ class Register (
 
         val result = registerDB(req.email, pash, token)
 
-        return RegisterReturn(result, token, util.getReadableTables(token), util.isAdmin(token))
+        return if (result === ErrorType.NoError){
+            RegisterReturn(result, token, util.getReadableTables(token), util.isAdmin(token))
+        } else {
+            RegisterReturn(result)
+        }
+
     }
 
     fun registerDB(email: String, pash: String, token: String): ErrorType{
@@ -55,7 +60,7 @@ class Register (
         var errorType = ErrorType.UnknownError
 
         this.ds.connection.use{conn ->
-            val statement = conn.prepareCall("call register(?, ?, ?, ?);")
+            val statement = conn.prepareCall("call admin.register(?, ?, ?, ?);")
             statement.setString(1, email)
             statement.setString(2, pash)
             statement.setString(3, token)

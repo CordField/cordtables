@@ -9,17 +9,22 @@ export enum ErrorType {
   PasswordTooLong = 'PasswordTooLong',
   DuplicateEmail = 'DuplicateEmail',
 }
-export interface globalRole {
+
+//export type EgidsScale = `0` | `1` | `2` | `3` | `4` | `5` | `6a` | `6b` | `7` | `8a` | `8b` | `9` | `10`;
+
+export interface GlobalRole {
   id: number;
-  createdAt: string;
-  createdBy: number;
-  modifiedAt: string;
-  modifiedBy: number;
+  created_at: string;
+  created_by: number;
+  modified_at: string;
+  modified_by: number;
   name: string;
-  org: number;
+  owning_group: number;
+  owning_person: number;
+  chat: number;
 }
 
-export interface languageEx {
+export interface LanguageEx {
   id?: number;
   language_name?: string;
   iso?: string;
@@ -61,7 +66,7 @@ export interface languageEx {
   begin_work_geo_challenges_value?: number;
   begin_work_geo_challenges_description?: string;
   begin_work_geo_challenges_source?: string;
-  begin_work_rel_pol_obstacles_scale?: string;
+  begin_work_rel_pol_obstacles_level?: string;
   begin_work_rel_pol_obstacles_value?: number;
   begin_work_rel_pol_obstacles_description?: string;
   begin_work_rel_pol_obstacles_source?: string;
@@ -91,4 +96,14 @@ export class GenericResponse {
 
 export enum ActionType {
   Delete = 'Delete',
+}
+
+export interface ScriptureReference {
+  id: number;
+  book_start: string;
+  book_end: string;
+  chapter_start: number;
+  chapter_end: number;
+  verse_start: number;
+  verse_end: number;
 }

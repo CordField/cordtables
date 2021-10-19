@@ -85,7 +85,7 @@ class Login (
         var errorType = ErrorType.UnknownError
 
         this.ds.connection.use{conn ->
-            val statement = conn.prepareCall("call common.login(?, ?, ?);")
+            val statement = conn.prepareCall("call admin.login(?, ?, ?);")
             statement.setString(1, email)
             statement.setString(2, token)
             statement.setString(3, errorType.name)

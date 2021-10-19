@@ -1,123 +1,161 @@
 -- Seed Company Schema -------------------------------------------------------------
 
-create schema if not exists sc;
-
-
+create schema sc;
 
 -- POSTS ----------------------------------------------------------
 
-create table if not exists sc.posts_directory ( -- does not need to be secure
-    id serial primary key,
-    created_at timestamp not null default CURRENT_TIMESTAMP
+create table sc.posts_directory ( -- does not need to be secure
+  id serial primary key,
+  created_at timestamp not null default CURRENT_TIMESTAMP
 );
 
-create table if not exists sc.posts (
-    id serial primary key,
-    directory int not null,
-    type common.post_type not null,
-    shareability common.post_shareability not null,
-    body text not null,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null default 1,
-    foreign key (created_by) references admin.people(id)
-    -- foreign key (directory) references common.posts_directory(id)
+create type sc.post_shareability as enum (
+  'Project Team',
+  'Internal',
+  'Ask to Share Externally',
+  'External'
+);
+
+
+create type sc.post_type as enum (
+  'Note',
+  'Story',
+  'Prayer'
+);
+
+create table sc.posts (
+  id serial primary key,
+
+  directory int not null references sc.posts_directory(id),
+  type sc.post_type not null,
+  shareability sc.post_shareability not null,
+  body text not null,
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- ACCOUNTING TABLES --------------------------------------------------------
 
-create table if not exists sc.funding_account (
-  	id serial primary key,
-  	neo4j_id varchar(32),
+create table sc.funding_account (
+  id serial primary key,
+  neo4j_id varchar(32),
+
 	account_number int unique not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
 	name varchar(32),
-	foreign key (created_by) references admin.people(id),
-	foreign key (modified_by) references admin.people(id)
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- LOCATION TABLES ----------------------------------------------------------
 
-create table if not exists sc.field_zone (
+create table sc.field_zone (
 	id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	director int,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	name varchar(32) unique not null,
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (director) references admin.people(id)
-);
-
-create table if not exists sc.field_regions (
-	id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	director int,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	name varchar(32) unique not null,
-	foreign key (created_by) references admin.people(id),
-	foreign key (modified_by) references admin.people(id),
-	foreign key (director) references admin.people(id)
-);
-
-create table if not exists sc.locations (
-	id int primary key not null,
 	neo4j_id varchar(32),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	default_region int,
-	funding_account int,
+
+	director int references admin.people(id),
+	name varchar(32) unique not null,
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table sc.field_regions (
+	id serial primary key,
+	neo4j_id varchar(32),
+
+	director int references admin.people(id),
+	name varchar(32) unique not null,
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- extension table from commmon
+create table sc.locations (
+	id int primary key not null references common.locations(id),
+	neo4j_id varchar(32),
+
+	default_region int references sc.field_regions(id),
+	funding_account int references sc.funding_account(account_number),
 	iso_alpha_3 char(3),
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
 	name varchar(32) unique not null,
 	type location_type not null,
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (id) references common.locations(id),
-	foreign key (default_region) references sc.field_regions(id),
-	foreign key (funding_account) references sc.funding_account(account_number)
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- ORGANIZATION TABLES
 
-create table if not exists sc.organizations (
-	id int primary key not null,
+-- extension table from commmon
+create table sc.organizations (
+	id int primary key not null references common.organizations(id),
+	neo4j_id varchar(32),
+
 	address varchar(255),
 	base64 varchar(32) unique not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	internal varchar(32) unique not null,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (id) references common.organizations(id)
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-create table if not exists sc.organization_locations(
+create table sc.organization_locations(
   id serial primary key,
-	organization varchar(32) not null,
-	location int not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-	modified_by int not null default 1,
-	unique (organization, location),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (organization) references sc.organizations(base64),
-	foreign key (location) references common.locations(id)
+
+	organization int not null references sc.organizations(id),
+	location int not null references sc.locations(id),
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (organization, location)
+);
+
+
+create type sc.periodic_report_type as enum (
+  'Financial',
+  'Narrative'
 );
 
 DO $$ BEGIN
-    create type common.financial_reporting_types as enum (
+    create type sc.financial_reporting_types as enum (
 		'A',
 		'B',
 		'C'
@@ -128,7 +166,7 @@ END; $$;
 
 -- todo
 DO $$ BEGIN
-    create type common.partner_types as enum (
+    create type sc.partner_types as enum (
 		'A',
 		'B',
 		'C'
@@ -137,90 +175,102 @@ DO $$ BEGIN
 	WHEN duplicate_object THEN null;
 END; $$;
 
-create table if not exists sc.partners (
+create table sc.partners (
 	id serial primary key,
-	organization varchar(32) not null,
+
+	organization int not null references sc.organizations(id),
 	active bool,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	financial_reporting_types common.financial_reporting_types[],
+	financial_reporting_types sc.financial_reporting_types[],
 	is_global_innovations_client bool,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
 	pmc_entity_code varchar(32),
-	point_of_contact int,
-	types common.partner_types[],
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (point_of_contact) references admin.people(id),
-	foreign key (organization) references sc.organizations(base64)
+	point_of_contact int references admin.people(id),
+	types sc.partner_types[],
+
+	chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- LANGUAGE TABLES ----------------------------------------------------------
 
-create table if not exists sc.language_goal_definitions (
+create table sc.language_goal_definitions (
 	id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	foreign key (created_by) references admin.people(id),
-	foreign key (modified_by) references admin.people(id)
+
 	-- todo
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-create table if not exists sc.languages (
-	id int primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
+-- NOT an extension table, but has a reference to common
+-- sc languages may different from other org's language listings
+create table sc.languages (
+	id int primary key references sil.table_of_languages(id),
+
+	display_name varchar(255) unique not null,
 	is_dialect bool,
 	is_sign_language bool,
 	is_least_of_these bool,
-	display_name varchar(255) unique not null,
 	least_of_these_reason varchar(255),
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
 	name varchar(255) unique not null,
 	population_override int,
 	registry_of_dialects_code varchar(32),
 	sensitivity sensitivity,
 	sign_language_code varchar(32),
 	sponsor_estimated_eng_date timestamp,
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (id) references sil.table_of_languages(id)
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-create table if not exists sc.language_locations (
+create table sc.language_locations (
   id serial primary key,
-	ethnologue int not null,
-	location int not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	unique (ethnologue, location),
-	foreign key (location) references common.locations(id),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (ethnologue) references sil.table_of_languages(id)
+
+	language int not null references sc.languages(id),
+	location int not null references sc.locations(id),
 	-- todo
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (language, location)
 );
 
-create table if not exists sc.language_goals (
+create table sc.language_goals (
   id serial primary key,
-  ethnologue int not null,
-	goal int not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	unique (ethnologue, goal),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (ethnologue) references sil.table_of_languages(id),
-	foreign key (goal) references sc.language_goal_definitions(id)
+
+  language int not null references sc.languages(id),
+	goal int not null references sc.language_goal_definitions(id),
 	-- todo
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (language, goal)
 );
 
 create type sc.egids_scale as enum (
@@ -315,7 +365,7 @@ create type sc.begin_work_rel_pol_obstacles_scale as enum (
 		'Easy'
 );
 
-create table if not exists sc.languages_ex(
+create table sc.languages_ex(
 	id serial primary key,
 
 	language_name varchar(32),
@@ -406,346 +456,336 @@ create table if not exists sc.languages_ex(
 
 -- USER TABLES --------------------------------------------------------------
 
-create table if not exists sc.known_languages_by_person (
+create table sc.known_languages_by_person (
   id serial primary key,
-  person int not null,
-  known_language int not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	unique (person, known_language),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (person) references admin.people(id),
-	foreign key (known_language) references sil.table_of_languages(id)
+
+  person int not null references admin.people(id),
+  known_language int not null references sc.languages(id),
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (person, known_language)
 );
 
-create table if not exists sc.people (
-  id int primary key,
-  internal varchar(32) unique,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
+-- extension table from commmon
+create table sc.people (
+  id int primary key references admin.people(id),
+  neo4j_id varchar(32) unique,
+
 	skills varchar(32)[],
 	status varchar(32),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (id) references admin.people(id)
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-create table if not exists sc.person_unavailabilities (
-  id int primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	description text,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	period_end timestamp not null,
+create table sc.person_unavailabilities (
+  id serial primary key,
+
+  person int references admin.people(id),
 	period_start timestamp not null,
-	foreign key (created_by) references admin.people(id),
-	foreign key (modified_by) references admin.people(id),
-	foreign key (id) references admin.people(id)
+	period_end timestamp not null,
+	description text,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- FILES & DIRECTORIES ----------------------------------------------------------
 
-create table if not exists sc.directories (
+create table sc.directories (
   id serial primary key,
-	parent int not null,
+
+	parent int references sc.directories(id),
   name varchar(255),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null default 1,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (parent) references sc.directories(id)
 	-- todo
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-create table if not exists sc.files (
+create table sc.files (
   id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-  directory int not null,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
+
+  directory int not null references sc.directories(id),
 	name varchar(255),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (directory) references sc.directories(id)
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-create table if not exists sc.file_versions (
+create table sc.file_versions (
   id serial primary key,
+
   category varchar(255),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null default 1,
   mime_type mime_type not null,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
   name varchar(255) not null,
-  file int not null,
+  file int not null references sc.files(id),
   file_url varchar(255) not null,
   file_size int, -- bytes
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (file) references sc.files(id)
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- PROJECT TABLES ----------------------------------------------------------
 
 -- todo
-DO $$ BEGIN
-    create type common.project_step as enum (
+create type sc.project_step as enum (
 		'A',
 		'B',
 		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+);
 
 -- todo
-DO $$ BEGIN
-    create type common.project_status as enum (
+create type sc.project_status as enum (
 		'A',
 		'B',
 		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+);
 
 -- todo
-DO $$ BEGIN
-    create type common.change_to_plan_type as enum (
+create type sc.change_to_plan_type as enum (
 		'a',
 		'b',
 		'c'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+);
 
 -- todo
-DO $$ BEGIN
-    create type common.change_to_plan_status as enum (
+create type sc.change_to_plan_status as enum (
 		'a',
 		'b',
 		'c'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+);
 
-create table if not exists sc.change_to_plans (
+create table sc.change_to_plans (
   id serial primary key,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-  status common.change_to_plan_status,
+
+  status sc.change_to_plan_status,
   summary text,
-  type common.change_to_plan_type,
-	foreign key (created_by) references admin.people(id),
-	foreign key (modified_by) references admin.people(id)
+  type sc.change_to_plan_type,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
-create table if not exists sc.periodic_reports_directory ( -- security not needed
-    id serial primary key,
-    created_at timestamp not null default CURRENT_TIMESTAMP
-);
-
-create table if not exists sc.periodic_reports (
-    id serial primary key,
-    directory int not null,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null default 1,
-    end_at timestamp not null,
-    reportFile int not null,
-    start_at timestamp not null,
-    type common.periodic_report_type not null,
-    foreign key (created_by) references admin.people(id),
-    foreign key (reportFile) references sc.files(id),
-    foreign key (directory) references sc.periodic_reports_directory(id)
-);
-
-create table if not exists sc.projects (
+create table sc.periodic_reports_directory ( -- security not needed
   id serial primary key,
-  project int not null,
+  created_at timestamp not null default CURRENT_TIMESTAMP
+);
+
+create table sc.periodic_reports (
+  id serial primary key,
+
+  directory int not null references sc.periodic_reports_directory(id),
+  end_at timestamp not null,
+  reportFile int not null references sc.files(id),
+  start_at timestamp not null,
+  type sc.periodic_report_type not null,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- extension table to common
+create table sc.projects (
+  id int primary key references common.projects(id),
+  neo4j_id varchar(32),
+
 	base64 varchar(32) not null,
-	change_to_plan int not null default 1,
+	change_to_plan int not null default 1 references sc.change_to_plans(id),
 	active bool,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
 	department varchar(255),
 	estimated_submission timestamp,
-	field_region int,
+	field_region int references sc.field_regions(id),
 	initial_mou_end timestamp,
-	marketing_location int,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
+	marketing_location int references sc.locations(id),
 	mou_start timestamp,
 	mou_end timestamp,
-	owning_organization varchar(32),
-	periodic_reports_directory int,
-	posts_directory int,
-	primary_location int,
-	root_directory int,
-	status common.project_status,
+	owning_organization int references sc.organizations(id),
+	periodic_reports_directory int references sc.periodic_reports_directory(id),
+	posts_directory int references sc.posts_directory(id),
+	primary_location int references sc.locations(id),
+	root_directory int references sc.directories(id),
+	status sc.project_status,
 	status_changed_at timestamp,
-	step common.project_step,
-	unique (base64, change_to_plan),
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (change_to_plan) references sc.change_to_plans(id),
-	foreign key (field_region) references sc.field_regions(id),
-	foreign key (marketing_location) references common.locations(id),
-	foreign key (owning_organization) references sc.organizations(base64),
-	foreign key (periodic_reports_directory) references sc.periodic_reports_directory(id),
-	foreign key (posts_directory) references sc.posts_directory(id),
-	foreign key (primary_location) references common.locations(id),
-	foreign key (project) references common.projects(id),
-	foreign key (root_directory) references sc.directories(id)
+	step sc.project_step,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (base64, change_to_plan)
 );
 
-create table if not exists sc.pinned_projects (
-	person int not null,
-	project int not null,
-	foreign key (person) references admin.people(id),
-	foreign key (project) references common.projects(id)
+create table sc.pinned_projects (
+	person int not null references sc.people(id),
+	project int not null references sc.projects(id)
 );
 
-create table if not exists sc.partnerships (
+create table sc.partnerships (
   id serial primary key,
+
   base64 varchar(32) unique not null,
-  project int not null,
-  partner varchar(32) not null,
-  change_to_plan int not null default 1,
+  project int not null references sc.projects(id),
+  partner int not null references sc.organizations(id),
+  change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
-  agreement int,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	unique (project, partner, change_to_plan),
-	foreign key (agreement) references sc.file_versions(id),
-	foreign key (change_to_plan) references sc.change_to_plans(id),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (partner) references sc.organizations(base64),
-	foreign key (project) references common.projects(id)
+  agreement int references sc.file_versions(id),
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (project, partner, change_to_plan)
 );
 
 -- PROJECT BUDGETS
 
 -- todo
-DO $$ BEGIN
-    create type common.budget_status as enum (
+create type common.budget_status as enum (
 		'A',
 		'B',
 		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-create table if not exists sc.budgets (
-  id serial primary key,
-  base64 varchar(32) not null,
-  change_to_plan int not null default 1,
-  project int not null,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-  status common.budget_status,
-  universal_template int,
-  universal_template_file_url varchar(255),
-  unique (base64, change_to_plan),
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-  foreign key (project) references common.projects(id),
-	foreign key (universal_template) references sc.file_versions(id)
 );
 
-create table if not exists sc.budget_records (
-	id serial primary key,
+create table sc.budgets (
+  id serial primary key,
+
   base64 varchar(32) not null,
-  budget int not null,
   change_to_plan int not null default 1,
+  project int not null references common.projects(id),
+  status common.budget_status,
+  universal_template int references sc.file_versions(id),
+  universal_template_file_url varchar(255),
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+  unique (base64, change_to_plan)
+);
+
+create table sc.budget_records (
+	id serial primary key,
+
+  base64 varchar(32) not null,
+  budget int not null references sc.budgets(id),
+  change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
   amount decimal,
   fiscal_year int,
-  partnership varchar(32),
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-	unique (budget, change_to_plan),
-	foreign key (budget) references sc.budgets(id),
-	foreign key (change_to_plan) references sc.change_to_plans(id),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (partnership) references sc.partnerships(base64)
+  partnership int references sc.partnerships(id),
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (budget, change_to_plan)
 );
 
 -- PROJECT LOCATION
 
-create table if not exists sc.project_locations (
+create table sc.project_locations (
   id serial primary key,
+
   active bool,
-  change_to_plan int not null default 1,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
-  location int not null,
+  change_to_plan int not null default 1 references sc.change_to_plans(id),
+  location int not null references sc.locations(id),
+  project int not null references sc.projects(id),
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
-  project int not null,
-	unique (project, location, change_to_plan),
-	foreign key (change_to_plan) references sc.change_to_plans(id),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (location) references sc.locations(id),
-	foreign key (project) references common.projects(id)
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (project, location, change_to_plan)
 );
 
 -- LANGUAGE ENGAGEMENTS
 
 -- todo
-DO $$ BEGIN
-    create type common.engagement_status as enum (
+create type common.engagement_status as enum (
 		'A',
 		'B',
 		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+);
 
 -- todo
-DO $$ BEGIN
-    create type common.project_engagement_tag as enum (
+create type common.project_engagement_tag as enum (
 		'A',
 		'B',
 		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+);
 
-create table if not exists sc.language_engagements (
+create table sc.language_engagements (
   id serial primary key,
+
   base64 varchar(32) not null,
-	project int not null,
-	ethnologue int not null,
-	change_to_plan int not null default 1,
+	project int not null references sc.projects(id),
+	ethnologue int not null references sil.table_of_languages(id),
+	change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
 	communications_complete_date timestamp,
 	complete_date timestamp,
 	disbursement_complete_date timestamp,
@@ -756,225 +796,190 @@ create table if not exists sc.language_engagements (
 	is_luke_partnership bool,
 	is_sent_printing bool,
 	last_reactivated_at timestamp,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
 	paratext_registry varchar(32),
-	periodic_reports_directory int,
+	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	pnp varchar(255),
-	pnp_file int,
+	pnp_file int references sc.file_versions(id),
 	product_engagement_tag common.project_engagement_tag,
 	start_date timestamp,
 	start_date_override timestamp,
 	status common.engagement_status,
-	unique (project, ethnologue, change_to_plan),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (change_to_plan) references sc.change_to_plans(id),
-	foreign key (ethnologue) references sil.table_of_languages(id),
-	foreign key (periodic_reports_directory) references sc.periodic_reports_directory(id),
-	foreign key (pnp_file) references sc.file_versions(id),
-	foreign key (project) references common.projects(id)
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (project, ethnologue, change_to_plan)
 );
 
 -- PRODUCTS
 
 -- todo
-DO $$ BEGIN
-    create type common.product_mediums as enum (
-		'A',
-		'B',
-		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
--- todo
-DO $$ BEGIN
-    create type common.product_methodologies as enum (
-		'A',
-		'B',
-		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
--- todo
-DO $$ BEGIN
-    create type common.product_purposes as enum (
-		'A',
-		'B',
-		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
--- todo
-DO $$ BEGIN
-    create type common.product_type as enum (
-		'Film',
-		'Literacy Material',
-		'Scripture',
-		'Song',
-		'Story'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-create table if not exists sc.products (
-    id serial primary key,
-    base64 varchar(32) not null,
-    change_to_plan int not null default 1,
-    active bool,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null default 1,
-    mediums common.product_mediums[],
-    methodologies common.product_methodologies[],
-    modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-    purposes common.product_purposes[],
-    type common.product_type,
-    name varchar(64),
-    unique (base64, change_to_plan),
-    foreign key (created_by) references admin.people(id),
-    foreign key (modified_by) references admin.people(id),
-    foreign key (change_to_plan) references sc.change_to_plans(id)
+create type common.product_mediums as enum (
+  'A',
+  'B',
+  'C'
 );
 
-create table if not exists sc.product_scripture_references (
-    product int not null,
-    scripture_reference int not null,
-    change_to_plan int not null default 1,
-    active bool,
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null default 1,
-    modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null default 1,
-    primary key (product, scripture_reference, change_to_plan),
-    foreign key (created_by) references admin.people(id),
-    foreign key (modified_by) references admin.people(id),
-    foreign key (product) references sc.products(id),
-    foreign key (scripture_reference) references common.scripture_references(id),
-    foreign key (change_to_plan) references sc.change_to_plans(id)
+-- todo
+create type common.product_methodologies as enum (
+  'A',
+  'B',
+  'C'
+);
+
+-- todo
+create type common.product_purposes as enum (
+  'A',
+  'B',
+  'C'
+);
+
+-- todo
+create type common.product_type as enum (
+  'Film',
+  'Literacy Material',
+  'Scripture',
+  'Song',
+  'Story'
+);
+
+create table sc.products (
+  id serial primary key,
+
+  base64 varchar(32) not null,
+  name varchar(64),
+  change_to_plan int not null default 1 references sc.change_to_plans(id),
+  active bool,
+  mediums common.product_mediums[],
+  methodologies common.product_methodologies[],
+  purposes common.product_purposes[],
+  type common.product_type,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+  unique (base64, change_to_plan)
+);
+
+create table sc.product_scripture_references (
+  product int not null references sc.products(id),
+  scripture_reference int not null references common.scripture_references(id),
+  change_to_plan int not null default 1 references sc.change_to_plans(id),
+  active bool,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+  primary key (product, scripture_reference, change_to_plan)
 );
 
 -- INTERNSHIP ENGAGEMENTS
 
 -- todo
-DO $$ BEGIN
-    create type common.internship_methodology as enum (
-		'A',
-		'B',
-		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+create type common.internship_methodology as enum (
+  'A',
+  'B',
+  'C'
+);
 
 -- todo
-DO $$ BEGIN
-    create type common.internship_position as enum (
-		'A',
-		'B',
-		'C'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+create type common.internship_position as enum (
+  'A',
+  'B',
+  'C'
+);
 
-create table if not exists sc.internship_engagements (
+create table sc.internship_engagements (
   id serial primary key,
-	project int not null,
-	ethnologue int not null,
-	change_to_plan int not null default 1,
+
+	project int not null references sc.projects(id),
+	ethnologue int not null references sil.table_of_languages(id),
+	change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
 	communications_complete_date timestamp,
 	complete_date timestamp,
-	country_of_origin int,
+	country_of_origin int references common.locations(id),
 	disbursement_complete_date timestamp,
 	end_date timestamp,
 	end_date_override timestamp,
-	growth_plan int,
+	growth_plan int references sc.file_versions(id),
 	initial_end_date timestamp,
-	intern int,
+	intern int references admin.people(id),
 	last_reactivated_at timestamp,
-	mentor int,
+	mentor int references admin.people(id),
 	methodology common.internship_methodology,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
 	paratext_registry varchar(32),
-	periodic_reports_directory int,
+	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	position common.internship_position,
 	start_date timestamp,
 	start_date_override timestamp,
 	status common.engagement_status,
-	unique (project, ethnologue, change_to_plan),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (change_to_plan) references sc.change_to_plans(id),
-	foreign key (ethnologue) references sil.table_of_languages(id),
-	foreign key (project) references common.projects(id),
-	foreign key (country_of_origin) references common.locations(id),
-	foreign key (growth_plan) references sc.file_versions(id),
-	foreign key (intern) references admin.people(id),
-	foreign key (mentor) references admin.people(id),
-	foreign key (periodic_reports_directory) references sc.periodic_reports_directory(id)
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+	unique (project, ethnologue, change_to_plan)
 );
 
-create table if not exists sc.ceremonies (
+create table sc.ceremonies (
   id serial primary key,
-  project int not null,
-	ethnologue int not null,
+
+  project int not null references sc.projects(id),
+	ethnologue int not null references sil.table_of_languages(id),
 	actual_date timestamp,
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null default 1,
 	estimated_date timestamp,
 	is_planned bool,
-	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null default 1,
 	type varchar(255),
-	foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (ethnologue) references sil.table_of_languages(id),
-  foreign key (project) references common.projects(id)
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- CRM TABLES, WIP ------------------------------------------------------------------
 
-DO $$ BEGIN
-    create type common.involvements as enum (
-		'CIT',
-		'Engagements'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+create type common.involvements as enum (
+  'CIT',
+  'Engagements'
+);
 
-DO $$ BEGIN
-    create type admin.people_transitions as enum (
-		'New Org',
-		'Other'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+create type admin.people_transitions as enum (
+  'New Org',
+  'Other'
+);
 
-DO $$ BEGIN
-    create type common.org_transitions as enum (
-		'To Manager',
-		'To Other'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
+create type common.org_transitions as enum (
+  'To Manager',
+  'To Other'
+);
 
+-- PARTNER CRM STUFF
 --
---create table if not exists sc_org_to_org_rels (
+--create table sc_org_to_org_rels (
 --    from_sys_org varchar(32) not null,
 --    to_sys_org varchar(32) not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -983,28 +988,28 @@ END; $$;
 --    foreign key (to_sys_org) references sc_organizations(sys_org)
 --);
 --
---create table if not exists sc_partner_performance (
+--create table sc_partner_performance (
 --    sc_internal_org varchar(32) not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,
 --    primary key (sc_internal_org),
 --    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
 --);
 --
---create table if not exists sc_partner_finances (
+--create table sc_partner_finances (
 --    sc_internal_org varchar(32) not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,
 --    primary key (sc_internal_org),
 --    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
 --);
 --
---create table if not exists sc_partner_reporting (
+--create table sc_partner_reporting (
 --    sc_internal_org varchar(32) not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,
 --    primary key (sc_internal_org),
 --    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
 --);
 --
---create table if not exists sc_partner_translation_progress (
+--create table sc_partner_translation_progress (
 --    sc_internal_org varchar(32) not null,
 --    sc_internal_id varchar(32) not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1012,7 +1017,7 @@ END; $$;
 --    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
 --);
 --
---create table if not exists sc_partner_notes (
+--create table sc_partner_notes (
 --    sc_internal_org varchar(32) not null,
 --    author_sys_person int not null,
 --    note_text text not null,
@@ -1022,7 +1027,7 @@ END; $$;
 --    foreign key (author_sys_person) references sys_people(sys_person)
 --);
 --
---create table if not exists sc_org_transitions (
+--create table sc_org_transitions (
 --    sc_internal_org varchar(32) not null,
 --    transition_type sc_org_transitions not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1030,13 +1035,13 @@ END; $$;
 --    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
 --);
 --
---create table if not exists sc_roles (
+--create table sc_roles (
 --    sc_role serial primary key,
 --    name varchar(32) unique not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP
 --);
 --
---create table if not exists sc_role_memberships (
+--create table sc_role_memberships (
 --    sys_person int not null,
 --    sc_role int not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1044,7 +1049,7 @@ END; $$;
 --    foreign key (sys_person) references sys_people(sys_person)
 --);
 --
---create table if not exists sc_person_to_person_rels (
+--create table sc_person_to_person_rels (
 --    from_sys_person int not null,
 --    to_sys_person int not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1053,7 +1058,7 @@ END; $$;
 --    foreign key (to_sys_person) references sys_people(sys_person)
 --);
 --
---create table if not exists sys_people_transitions (
+--create table sys_people_transitions (
 --    sys_person int not null,
 --    transition_type sc_people_transitions not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1061,7 +1066,7 @@ END; $$;
 --    foreign key (sys_person) references sys_people(sys_person)
 --);
 --
---create table if not exists sc_involvements (
+--create table sc_involvements (
 --    sc_internal_org varchar(32) not null,
 --    type sc_involvements not null,
 --    created_at timestamp not null default CURRENT_TIMESTAMP,

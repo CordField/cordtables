@@ -1,46 +1,45 @@
 import { Component, Host, h, State } from '@stencil/core';
-import { ErrorType, GenericResponse, globalRole } from '../../../common/types';
+import { ErrorType, GenericResponse, GlobalRole } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 
-// class InsertableGlobalRoleFields {
-//   name: string;
-//   org: number;
-// }
-type MutableGlobalRoleFields = Omit<globalRole, 'id' | 'createdBy' | 'modifiedBy' | 'modifiedAt' | 'createdAt'>;
+type MutableGlobalRoleFields = Omit<GlobalRole, 'id' | 'createdBy' | 'modifiedBy' | 'modifiedAt' | 'createdAt'>;
+
 class CreateGlobalRoleRequest {
   insertedFields: MutableGlobalRoleFields;
-  email: string;
-}
-class CreateGlobalRoleResponse extends GenericResponse {
-  data: globalRole;
+  token: string;
 }
 
-// class UpdatableGlobalRoleFields {
-//   name: string;
-//   org: number;
-// }
+class CreateGlobalRoleResponse extends GenericResponse {
+  data: GlobalRole;
+}
 
 class UpdateGlobalRoleRequest {
-  email: string;
-  updatedFields: MutableGlobalRoleFields;
+  token: string;
+  columnToUpdate: string;
+  updatedColumnValue: string | number;
   id: number;
 }
 
 class UpdateGlobalRoleResponse extends GenericResponse {
-  data: globalRole;
+  data: GlobalRole;
 }
 
 class DeleteGlobalRoleRequest {
   id: number;
+  token: string;
 }
 
 class DeleteGlobalRoleResponse extends GenericResponse {
-  data: { id: number };
+  id: number;
 }
 
-class ReadGlobalRolesResponse extends GenericResponse {
-  data: globalRole[];
+class ReadGlobalRoleRequest {
+  token: string;
+}
+
+class ReadGlobalRoleResponse extends GenericResponse {
+  data: GlobalRole[];
 }
 
 @Component({
@@ -49,44 +48,77 @@ class ReadGlobalRolesResponse extends GenericResponse {
   shadow: true,
 })
 export class GlobalRoles {
-  defaultFields = { name: '', org: null };
-  @State() globalRoles: globalRole[] = [];
+  defaultFields = {
+    id: null,
+    created_at: null,
+    created_by: null,
+    modified_at: null,
+    modified_by: null,
+    name: null,
+    owning_group: null,
+    owning_person: null,
+    chat: null,
+  };
+  nonEditableColumns = ['id', 'modified_at', 'created_at', 'created_by', 'modified_by'];
+  @State() globalRoles: GlobalRole[] = [];
   @State() insertedFields: MutableGlobalRoleFields = this.defaultFields;
-  @State() updatedFields: MutableGlobalRoleFields = this.defaultFields;
   @State() error: string;
   @State() success: string;
+  @State() showNewForm = false;
   insertFieldChange(event, fieldName) {
+    console.log(fieldName, event.target.value);
     this.insertedFields[fieldName] = event.target.value;
   }
-
-  updateFieldChange(event, columnName) {
-    console.log(this.updatedFields[columnName], event.currentTarget.textContent);
-    this.updatedFields[columnName] = event.currentTarget.textContent;
+  getInputCell(fieldName) {
+    if (this.nonEditableColumns.includes(fieldName)) {
+      return <td>&nbsp;</td>;
+    }
+    return (
+      <td>
+        <input type="text" id={`input-${fieldName}`} name={fieldName} onInput={event => this.insertFieldChange(event, fieldName)}></input>
+      </td>
+    );
   }
-  handleUpdate = async id => {
-    console.log(this.updatedFields);
-    const result = await fetchAs<UpdateGlobalRoleRequest, UpdateGlobalRoleResponse>('globalroles/update', {
-      updatedFields: this.updatedFields,
-      email: globals.globalStore.state.email,
+  getEditableCell(columnName: string, globalRole: GlobalRole) {
+    return (
+      <td>
+        <cf-cell
+          key={columnName}
+          rowId={globalRole.id}
+          propKey={columnName}
+          value={globalRole[columnName]}
+          isEditable={!this.nonEditableColumns.includes(columnName)}
+          updateFn={!this.nonEditableColumns.includes(columnName) ? this.handleUpdate : null}
+        ></cf-cell>
+      </td>
+    );
+  }
+
+  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<UpdateGlobalRoleRequest, UpdateGlobalRoleResponse>('global_role/update', {
+      token: globals.globalStore.state.token,
+      updatedColumnValue: value,
+      columnToUpdate: columnName,
       id,
     });
-    if (result.error === ErrorType.NoError) {
-      this.updatedFields = this.defaultFields;
-      this.globalRoles = this.globalRoles.map(globalRole => (globalRole.id === result.data.id ? result.data : globalRole));
-      this.success = `Row with id ${result.data.id} updated successfully!`;
+
+    if (updateResponse.error == ErrorType.NoError) {
+      const result = await fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('global_role/read', { token: globals.globalStore.state.token });
+      this.globalRoles = result.data.sort((a, b) => a.id - b.id);
+      return true;
     } else {
-      console.error('Failed to update row');
-      this.error = result.error;
-      this.globalRoles = this.globalRoles.map(globalRole => (globalRole.id === result.data?.id ? result.data : globalRole));
+      alert(updateResponse.error);
     }
   };
+
   handleDelete = async id => {
-    const result = await fetchAs<DeleteGlobalRoleRequest, DeleteGlobalRoleResponse>('globalroles/delete', {
+    const result = await fetchAs<DeleteGlobalRoleRequest, DeleteGlobalRoleResponse>('global_role/delete', {
       id,
+      token: globals.globalStore.state.token,
     });
     if (result.error === ErrorType.NoError) {
-      this.success = `Row with id ${result.data.id} deleted successfully!`;
-      this.globalRoles = this.globalRoles.filter(globalRole => globalRole.id !== result.data.id);
+      this.success = `Row with id ${result.id} deleted successfully!`;
+      this.globalRoles = this.globalRoles.filter(globalRole => globalRole.id !== result.id);
     } else {
       this.error = result.error;
     }
@@ -95,15 +127,16 @@ export class GlobalRoles {
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    const result = await fetchAs<CreateGlobalRoleRequest, CreateGlobalRoleResponse>('globalroles/create', {
+    console.log(this.insertedFields);
+    const result = await fetchAs<CreateGlobalRoleRequest, CreateGlobalRoleResponse>('global_role/create', {
       insertedFields: this.insertedFields,
-      email: globals.globalStore.state.email,
+      token: globals.globalStore.state.token,
     });
 
     console.log(result);
-
+    this.showNewForm = false;
+    this.insertedFields = this.defaultFields;
     if (result.error === ErrorType.NoError) {
-      this.insertedFields = this.defaultFields;
       this.globalRoles = this.globalRoles.concat(result.data);
       this.success = `New Row with id ${result.data.id} inserted successfully`;
     } else {
@@ -113,8 +146,10 @@ export class GlobalRoles {
   };
 
   componentWillLoad() {
-    fetchAs<null, ReadGlobalRolesResponse>('globalroles/read', null).then(res => {
-      this.globalRoles = res.data;
+    fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('global_role/read', {
+      token: globals.globalStore.state.token,
+    }).then(res => {
+      this.globalRoles = res.data.sort((a, b) => a.id - b.id);
     });
   }
   render() {
@@ -124,288 +159,67 @@ export class GlobalRoles {
         <header>
           <h1>Global Roles</h1>
         </header>
-        {/* add flexbox to main -> create and update form should be to the side */}
         <main>
-          <form class="form insert-form">
-            <div class="form-row">
-              <label htmlFor="name" class="label insert-form__label">
-                Name
-              </label>
-              <input type="text" value={this.insertedFields.name} onInput={event => this.insertFieldChange(event, 'name')} class="input insert-form__input" />
-            </div>
-
-            <div class="form form-row">
-              <label htmlFor="org" class="label insert-form__label">
-                Org
-              </label>
-              <input type="number" value={this.insertedFields.org} onInput={event => this.insertFieldChange(event, 'org')} class="insert-form__input" />
-            </div>
-
-            <button onClick={this.handleInsert}>Submit</button>
-          </form>
-          <table>
-            <thead>
-              {/* this will be fixed -> on a shared component, this will be passed in and use Map to preserve order */}
-              <tr>
-                <th>id</th>
-                <th>created_at</th>
-                <th>created_by</th>
-                <th>modified_at</th>
-                <th>modified_by</th>
-                <th>name</th>
-                <th>org</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.globalRoles.map(globalRole => {
-                return (
+          <div id="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>*</th>
+                  {Object.keys(this.defaultFields).map(key => (
+                    <th>{key}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {this.globalRoles.map(globalRole => (
                   <tr>
-                    {/* can loop over these as well (using Map to preserve order) */}
-                    <td>{globalRole.id}</td>
-                    <td>{globalRole.createdAt}</td>
-                    <td>{globalRole.createdBy}</td>
-                    <td>{globalRole.modifiedAt}</td>
-                    <td>{globalRole.modifiedBy}</td>
-                    <td
-                      contentEditable
-                      onInput={event => this.updateFieldChange(event, 'name')}
-                      // onKeyPress={this.disableNewlines}
-                      // onPaste={this.pasteAsPlainText}
-                      // onFocus={this.highlightAll}
-                    >
-                      {globalRole.name}
-                    </td>
-                    <td
-                      contentEditable
-                      onInput={event => this.updateFieldChange(event, 'org')}
-                      // onKeyPress={this.disableNewlines}
-                      // onPaste={this.pasteAsPlainText}
-                      // onFocus={this.highlightAll}
-                    >
-                      {globalRole.org}
-                    </td>
-                    <button onClick={() => this.handleUpdate(globalRole.id)}>Update</button>
-                    <button onClick={() => this.handleDelete(globalRole.id)}>Delete</button>
+                    <div class="button-parent">
+                      <button class="delete-button" onClick={() => this.handleDelete(globalRole.id)}>
+                        Delete
+                      </button>
+                    </div>
+                    {Object.keys(globalRole).map(key => this.getEditableCell(key, globalRole))}
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                ))}
+              </tbody>
+              {this.showNewForm && (
+                <tr>
+                  <td>&nbsp;</td>
+                  {Object.keys(this.defaultFields).map(key => this.getInputCell(key))}
+                </tr>
+              )}
+            </table>
+          </div>
+          <div id="button-group">
+            {!this.showNewForm && (
+              <button
+                id="new-button"
+                onClick={() => {
+                  this.showNewForm = !this.showNewForm;
+                }}
+              >
+                Create New Global Role
+              </button>
+            )}
+
+            {this.showNewForm && (
+              <div>
+                <button
+                  id="cancel-button"
+                  onClick={() => {
+                    this.showNewForm = !this.showNewForm;
+                  }}
+                >
+                  Cancel
+                </button>
+                <button id="submit-button" onClick={this.handleInsert}>
+                  Submit
+                </button>
+              </div>
+            )}
+          </div>
         </main>
       </Host>
     );
   }
 }
-
-// import ReactDOM from 'react-dom'
-// import ContentEditable from 'react-contenteditable'
-// import { Table, Button } from 'semantic-ui-react'
-// import './styles.css'
-
-// class App extends Component {
-//   initialState = {
-//     store: [
-//       { id: 1, item: 'silver', price: 15.41 },
-//       { id: 2, item: 'gold', price: 1284.3 },
-//       { id: 3, item: 'platinum', price: 834.9 },
-//     ],
-//     row: {
-//       item: '',
-//       price: '',
-//     },
-//   }
-
-//   state = this.initialState
-//   firstEditable = React.createRef()
-
-//   addRow = () => {
-//     const { store, row } = this.state
-//     const trimSpaces = string => {
-//       return string
-//         .replace(/&nbsp;/g, '')
-//         .replace(/&amp;/g, '&')
-//         .replace(/&gt;/g, '>')
-//         .replace(/&lt;/g, '<')
-//     }
-//     const trimmedRow = {
-//       ...row,
-//       item: trimSpacenames(row.item),
-//     }
-
-//     row.id = store.length + 1
-
-//     this.setState({
-//       store: [...store, trimmedRow],
-//       row: this.initialState.row,
-//     })
-
-//     this.firstEditable.current.focus()
-//   }
-
-//   deleteRow = id => {
-//     const { store } = this.state
-
-//     this.setState({
-//       store: store.filter(item => id !== item.id),
-//     })
-//   }
-
-//   disableNewlines = event => {
-//     const keyCode = event.keyCode || event.which
-
-//     if (keyCode === 13) {
-//       event.returnValue = false
-//       if (event.preventDefault) event.preventDefault()
-//     }
-//   }
-
-//   validateNumber = event => {
-//     const keyCode = event.keyCode || event.which
-//     const string = String.fromCharCode(keyCode)
-//     const regex = /[0-9,]|\./
-
-//     if (!regex.test(string)) {
-//       event.returnValue = false
-//       if (event.preventDefault) event.preventDefault()
-//     }
-//   }
-
-//   pasteAsPlainText = event => {
-//     event.preventDefault()
-
-//     const text = event.clipboardData.getData('text/plain')
-//     document.execCommand('insertHTML', false, text)
-//   }
-
-//   highlightAll = () => {
-//     setTimeout(() => {
-//       document.execCommand('selectAll', false, null)
-//     }, 0)
-//   }
-
-//   handleContentEditable = event => {
-//     const { row } = this.state
-//     const {
-//       currentTarget: {
-//         dataset: { column },
-//       },
-//       target: { value },
-//     } = event
-
-//     this.setState({ row: { ...row, [column]: value } })
-//   }
-
-//   handleContentEditableUpdate = event => {
-//     const { store } = this.state
-
-//     const {
-//       currentTarget: {
-//         dataset: { row, column },
-//       },
-//       target: { value },
-//     } = event
-
-//     let updatedRow = store.filter((item, i) => parseInt(i) === parseInt(row))[0]
-//     updatedRow[column] = value
-
-//     this.setState({
-//       store: store.map((item, i) => (item[column] === row ? updatedRow : item)),
-//     })
-//   }
-
-//   render() {
-//     const {
-//       store,
-//       row: { item, price },
-//     } = this.state
-
-//     return (
-//       <div className="App">
-//         <h1>React Contenteditable</h1>
-
-//         <Table celled>
-//           <Table.Header>
-//             <Table.Row>
-//               <Table.HeaderCell>Item</Table.HeaderCell>
-//               <Table.HeaderCell>Price</Table.HeaderCell>
-//               <Table.HeaderCell>Action</Table.HeaderCell>
-//             </Table.Row>
-//           </Table.Header>
-//           <Table.Body>
-//             {store.map((row, i) => {
-//               return (
-//                 <Table.Row key={row.id}>
-//                   <Table.Cell className="narrow">
-//                     <ContentEditable
-//                       html={row.item}
-//                       data-column="item"
-//                       data-row={i}
-//                       className="content-editable"
-//                       onKeyPress={this.disableNewlines}
-//                       onPaste={this.pasteAsPlainText}
-//                       onFocus={this.highlightAll}
-//                       onChange={this.handleContentEditableUpdate}
-//                     />
-//                   </Table.Cell>
-//                   <Table.Cell className="narrow">
-//                     <ContentEditable
-//                       html={row.price.toString()}
-//                       data-column="price"
-//                       data-row={i}
-//                       className="content-editable"
-//                       onKeyPress={this.validateNumber}
-//                       onPaste={this.pasteAsPlainText}
-//                       onFocus={this.highlightAll}
-//                       onChange={this.handleContentEditableUpdate}
-//                     />
-//                   </Table.Cell>
-//                   <Table.Cell className="narrow">
-//                     <Button
-//                       onClick={() => {
-//                         this.deleteRow(row.id)
-//                       }}
-//                     >
-//                       Delete
-//                     </Button>
-//                   </Table.Cell>
-//                 </Table.Row>
-//               )
-//             })}
-//             <Table.Row>
-//               <Table.Cell className="narrow">
-//                 <ContentEditable
-//                   html={item}
-//                   data-column="item"
-//                   className="content-editable"
-//                   innerRef={this.firstEditable}
-//                   onKeyPress={this.disableNewlines}
-//                   onPaste={this.pasteAsPlainText}
-//                   onFocus={this.highlightAll}
-//                   onChange={this.handleContentEditable}
-//                 />
-//               </Table.Cell>
-//               <Table.Cell className="narrow">
-//                 <ContentEditable
-//                   html={price}
-//                   data-column="price"
-//                   className="content-editable"
-//                   onKeyPress={this.validateNumber}
-//                   onPaste={this.pasteAsPlainText}
-//                   onFocus={this.highlightAll}
-//                   onChange={this.handleContentEditable}
-//                 />
-//               </Table.Cell>
-//               <Table.Cell className="narrow">
-//                 <Button disabled={!item || !price} onClick={this.addRow}>
-//                   Add
-//                 </Button>
-//               </Table.Cell>
-//             </Table.Row>
-//           </Table.Body>
-//         </Table>
-//       </div>
-//     )
-//   }
-// }
-
-// ReactDOM.render(<App />, document.getElementById('root'))

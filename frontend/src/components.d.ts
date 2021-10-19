@@ -25,8 +25,10 @@ export namespace Components {
     }
     interface CfCell {
         "isEditable": boolean;
+        "options"?: Array<string>;
         "propKey": keyof any;
         "rowId": number;
+        "type"?: string;
         "updateFn": (id: number, columnName: any, value: any) => Promise<boolean>;
         "value": any;
     }
@@ -41,6 +43,8 @@ export namespace Components {
     }
     interface CfRegister {
         "history": RouterHistory;
+    }
+    interface CommonOrganizations {
     }
     interface CreateUpdateModal {
         "isOpen": boolean;
@@ -67,6 +71,8 @@ export namespace Components {
     interface GroupsTable {
     }
     interface LanguagesEx {
+    }
+    interface ScriptureReferences {
     }
     interface TableRoot {
         "match": MatchResults;
@@ -126,6 +132,12 @@ declare global {
     var HTMLCfRegisterElement: {
         prototype: HTMLCfRegisterElement;
         new (): HTMLCfRegisterElement;
+    };
+    interface HTMLCommonOrganizationsElement extends Components.CommonOrganizations, HTMLStencilElement {
+    }
+    var HTMLCommonOrganizationsElement: {
+        prototype: HTMLCommonOrganizationsElement;
+        new (): HTMLCommonOrganizationsElement;
     };
     interface HTMLCreateUpdateModalElement extends Components.CreateUpdateModal, HTMLStencilElement {
     }
@@ -187,6 +199,12 @@ declare global {
         prototype: HTMLLanguagesExElement;
         new (): HTMLLanguagesExElement;
     };
+    interface HTMLScriptureReferencesElement extends Components.ScriptureReferences, HTMLStencilElement {
+    }
+    var HTMLScriptureReferencesElement: {
+        prototype: HTMLScriptureReferencesElement;
+        new (): HTMLScriptureReferencesElement;
+    };
     interface HTMLTableRootElement extends Components.TableRoot, HTMLStencilElement {
     }
     var HTMLTableRootElement: {
@@ -203,6 +221,7 @@ declare global {
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-register": HTMLCfRegisterElement;
+        "common-organizations": HTMLCommonOrganizationsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "generic-table": HTMLGenericTableElement;
         "global-role-column-grants": HTMLGlobalRoleColumnGrantsElement;
@@ -213,6 +232,7 @@ declare global {
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
         "languages-ex": HTMLLanguagesExElement;
+        "scripture-references": HTMLScriptureReferencesElement;
         "table-root": HTMLTableRootElement;
     }
 }
@@ -233,8 +253,10 @@ declare namespace LocalJSX {
     }
     interface CfCell {
         "isEditable"?: boolean;
+        "options"?: Array<string>;
         "propKey"?: keyof any;
         "rowId"?: number;
+        "type"?: string;
         "updateFn"?: (id: number, columnName: any, value: any) => Promise<boolean>;
         "value"?: any;
     }
@@ -250,6 +272,8 @@ declare namespace LocalJSX {
     }
     interface CfRegister {
         "history"?: RouterHistory;
+    }
+    interface CommonOrganizations {
     }
     interface CreateUpdateModal {
         "isOpen"?: boolean;
@@ -281,6 +305,8 @@ declare namespace LocalJSX {
     }
     interface LanguagesEx {
     }
+    interface ScriptureReferences {
+    }
     interface TableRoot {
         "match"?: MatchResults;
     }
@@ -294,6 +320,7 @@ declare namespace LocalJSX {
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-register": CfRegister;
+        "common-organizations": CommonOrganizations;
         "create-update-modal": CreateUpdateModal;
         "generic-table": GenericTable;
         "global-role-column-grants": GlobalRoleColumnGrants;
@@ -304,6 +331,7 @@ declare namespace LocalJSX {
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
         "languages-ex": LanguagesEx;
+        "scripture-references": ScriptureReferences;
         "table-root": TableRoot;
     }
 }
@@ -320,6 +348,7 @@ declare module "@stencil/core" {
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
+            "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "global-role-column-grants": LocalJSX.GlobalRoleColumnGrants & JSXBase.HTMLAttributes<HTMLGlobalRoleColumnGrantsElement>;
@@ -330,6 +359,7 @@ declare module "@stencil/core" {
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
             "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
+            "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
     }

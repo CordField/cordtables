@@ -34,19 +34,27 @@ enum class ErrorType {
     emptyReadResult,
     CannotUpdateAdminGroup,
     DoesNotHaveUpdatePermission,
-    DoesNotHaveDeletePermission
+    DoesNotHaveDeletePermission,
+    InputMissingUrl,
+    UrlTooShort,
+    UrlTooLong,
+    UrlAlreadyExists,
+    InputMissingSecret,
+    SecretNotValid,
+    PeerAlreadyExists,
+    PeerFailedToInitialize,
+    PeerNotPresent,
+    PeerFailedToConfirm,
+    PeerFailedToLogin,
 }
-enum class access_level (val accessType: String){
-    Read("Read"),
-    Write("Write"),
-    Admin("Admin")
-}
+
 
 enum class CommonSensitivity {
     Low,
     Medium,
     High,
 }
+
 data class GenericResponse (
     val error: ErrorType,
 )

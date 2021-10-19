@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.globalroles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.languageex.DeleteLanguageExResponse
 import com.seedcompany.cordtables.components.user.GlobalRole
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -14,55 +15,37 @@ import javax.sql.DataSource
 import kotlin.reflect.full.memberProperties
 import kotlin.collections.mutableListOf as mutableListOf
 
-data class dataId(
-    val id: Int?
-)
 
 data class DeleteGlobalRoleResponse(
     val error: ErrorType,
-    val data: dataId?
+    val id: Int?,
 )
 
 data class DeleteGlobalRoleRequest(
-    val id: Int
+    val id: Int,
+    val token: String,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller()
+@Controller("GlobalRoleDelete")
 class Delete(
     @Autowired
     val util: Utility,
-
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("globalroles/delete")
+    @PostMapping("global_role/delete")
     @ResponseBody
     fun DeleteHandler(@RequestBody req: DeleteGlobalRoleRequest): DeleteGlobalRoleResponse {
 
         println("req: $req")
         var deletedGlobalRowId: Int?= null
         var userId = 0
-
-
+        if (req.token == null) return DeleteGlobalRoleResponse(ErrorType.TokenNotFound, null)
+        if(!util.userHasDeletePermission(req.token, "sc.languages_ex"))
+            return DeleteGlobalRoleResponse(ErrorType.DoesNotHaveDeletePermission, null)
         this.ds.connection.use { conn ->
-//            try {
-//                val getUserIdStatement = conn.prepareCall("select person from common.users where email = ?")
-//                getUserIdStatement.setString(1, req.email)
-//                val getUserIdResult = getUserIdStatement.executeQuery()
-//                if (getUserIdResult.next()) {
-//                    userId = getUserIdResult.getInt("person")
-//                    println("userId: $userId")
-//                } else {
-//                    throw SQLException("User not found")
-//                }
-//            } catch (e: SQLException) {
-//                println(e.message)
-//                return UpdateGlobalRoleResponse(ErrorType.UserNotFound, null)
-//            }
             try {
-
-
                 val deleteStatement = conn.prepareCall(
                     "delete from admin.global_roles where id = ? returning id"
                 )
@@ -80,6 +63,6 @@ class Delete(
                 return DeleteGlobalRoleResponse(ErrorType.SQLDeleteError, null)
             }
         }
-        return DeleteGlobalRoleResponse(ErrorType.NoError, dataId(deletedGlobalRowId))
+        return DeleteGlobalRoleResponse(ErrorType.NoError, deletedGlobalRowId)
     }
 }
