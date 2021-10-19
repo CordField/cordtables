@@ -89,3 +89,13 @@ export class GenericResponse {
 export enum ActionType {
   Delete = 'Delete',
 }
+
+export interface ScriptureReference {
+  id: number;
+  book_start: string;
+  book_end: string;
+  chapter_start: number;
+  chapter_end: number;
+  verse_start: number;
+  verse_end: number;
+}

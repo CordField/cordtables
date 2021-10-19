@@ -34,6 +34,7 @@ export class TableRoot {
           </div>
         )}
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
+        {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
       </Host>
     );
   }
