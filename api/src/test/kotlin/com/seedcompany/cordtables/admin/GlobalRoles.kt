@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables
+package com.seedcompany.cordtables.admin
 
 import com.seedcompany.cordtables.components.user.RegisterRequest
 import com.seedcompany.cordtables.components.user.RegisterReturn
@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CordTablesTests(
+class GlobalRoles(
     @LocalServerPort
     val port: Int,
 
@@ -27,10 +27,6 @@ class CordTablesTests(
 ) {
     val userPassword = "asdfasdf"
     val url = "http://localhost:$port"
-
-    @Container
-    private val container: BrowserWebDriverContainer<*> = BrowserWebDriverContainer<Nothing>()
-        .withCapabilities(ChromeOptions().addArguments("no-sandbox").addArguments("headless"))
 
     companion object {
         @Container
@@ -65,14 +61,6 @@ class CordTablesTests(
 
     init {
         exposeHostPorts(port);
-    }
-
-    @Test
-    fun `doesThisWork`() {
-        container.webDriver["http://host.testcontainers.internal:$port/"]
-        val messageElement = container.webDriver.findElementByTagName("app-root")
-        println("app-root: ${messageElement.toString()}")
-        assert(true)
     }
 
     @Test
