@@ -18,7 +18,8 @@ CREATE TABLE sil.language_codes (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );
 
 CREATE TABLE sil.country_codes (
@@ -34,7 +35,8 @@ CREATE TABLE sil.country_codes (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );
 
 -- L(anguage), LA(lternate),
@@ -58,7 +60,8 @@ CREATE TABLE sil.language_index (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );
 
 create table sil.table_of_languages (
@@ -76,5 +79,6 @@ create table sil.table_of_languages (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );

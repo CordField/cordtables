@@ -97,6 +97,8 @@ create type admin.table_permission as enum (
   'Delete'
 );
 
+
+
 -- PEOPLE ------------------------------------------------------------
 
 create table admin.people (
@@ -123,12 +125,14 @@ create table admin.people (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int, -- not null doesn't work here, on startup
   owning_person int, -- not null doesn't work here, on startup
-  owning_group int -- not null doesn't work here, on startup
+  owning_group int, -- not null doesn't work here, on startup
+  peer int
 );
 
 alter table admin.people add constraint admin_people_created_by_fk foreign key (created_by) references admin.people(id);
 alter table admin.people add constraint admin_people_modified_by_fk foreign key (modified_by) references admin.people(id);
 alter table admin.people add constraint admin_people_owning_person_fk foreign key (owning_person) references admin.people(id);
+
 
 -- GROUPS --------------------------------------------------------------------
 
@@ -144,7 +148,8 @@ create table admin.groups(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int references admin.groups(id) -- not null doesn't work here, on startup
+  owning_group int references admin.groups(id), -- not null doesn't work here, on startup
+  peer int
 );
 
 alter table admin.people add constraint admin_people_owning_group_fk foreign key (owning_group) references admin.groups(id);
@@ -162,7 +167,8 @@ create table admin.group_row_access(
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+  peer int
 );
 
 create table admin.group_memberships(
@@ -177,8 +183,38 @@ create table admin.group_memberships(
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+  peer int
 );
+
+-- PEER to PEER -------------------------------------------------------------
+
+create table admin.peers (
+  id serial primary key,
+
+  person int references admin.people(id),
+  url varchar(128) not null unique,
+  peer_approved bool not null default false,
+  url_confirmed bool not null default false,
+  source_token varchar(64),
+  target_token varchar(64),
+  session_token varchar(64),
+
+  chat int,
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int
+);
+
+alter table admin.people add constraint admin_people_peer_fk foreign key (peer) references admin.peers(id);
+alter table admin.groups add constraint admin_groups_peer_fk foreign key (peer) references admin.peers(id);
+alter table admin.group_row_access add constraint admin_group_row_access_peer_fk foreign key (peer) references admin.peers(id);
+alter table admin.group_memberships add constraint admin_group_memberships_peer_fk foreign key (peer) references admin.peers(id);
+alter table admin.peers add constraint admin_peers_peer_fk foreign key (peer) references admin.peers(id);
 
 -- ROLES --------------------------------------------------------------------
 
@@ -194,6 +230,7 @@ create table admin.roles (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
 
 	unique (owning_group, name)
 );
@@ -213,6 +250,7 @@ create table admin.role_column_grants(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
 
 	unique (role, table_name, column_name)
 );
@@ -231,6 +269,7 @@ create table admin.role_table_permissions(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
 
   unique (role, table_name, table_permission)
 );
@@ -248,6 +287,7 @@ create table admin.role_memberships (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
 
 	unique(role, person)
 );
@@ -270,26 +310,4 @@ create table admin.email_tokens (
 	unique(token),
 	created_at timestamp not null default CURRENT_TIMESTAMP
 -- 	foreign key (email) references users(email)
-);
-
--- PEER to PEER -------------------------------------------------------------
-
-create table admin.peers (
-  id serial primary key,
-
-  person int references admin.people(id),
-  url varchar(128) not null unique,
-  peer_approved bool not null default false,
-  url_confirmed bool not null default false,
-  source_token varchar(64),
-  target_token varchar(64),
-  session_token varchar(64),
-
-  chat int,
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
 );
