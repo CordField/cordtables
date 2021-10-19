@@ -72,6 +72,8 @@ export namespace Components {
     }
     interface LanguagesEx {
     }
+    interface PeopleTable {
+    }
     interface ScriptureReferences {
     }
     interface TableRoot {
@@ -199,6 +201,12 @@ declare global {
         prototype: HTMLLanguagesExElement;
         new (): HTMLLanguagesExElement;
     };
+    interface HTMLPeopleTableElement extends Components.PeopleTable, HTMLStencilElement {
+    }
+    var HTMLPeopleTableElement: {
+        prototype: HTMLPeopleTableElement;
+        new (): HTMLPeopleTableElement;
+    };
     interface HTMLScriptureReferencesElement extends Components.ScriptureReferences, HTMLStencilElement {
     }
     var HTMLScriptureReferencesElement: {
@@ -232,6 +240,7 @@ declare global {
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
         "languages-ex": HTMLLanguagesExElement;
+        "people-table": HTMLPeopleTableElement;
         "scripture-references": HTMLScriptureReferencesElement;
         "table-root": HTMLTableRootElement;
     }
@@ -305,6 +314,8 @@ declare namespace LocalJSX {
     }
     interface LanguagesEx {
     }
+    interface PeopleTable {
+    }
     interface ScriptureReferences {
     }
     interface TableRoot {
@@ -331,6 +342,7 @@ declare namespace LocalJSX {
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
         "languages-ex": LanguagesEx;
+        "people-table": PeopleTable;
         "scripture-references": ScriptureReferences;
         "table-root": TableRoot;
     }
@@ -359,6 +371,7 @@ declare module "@stencil/core" {
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
             "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
+            "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
