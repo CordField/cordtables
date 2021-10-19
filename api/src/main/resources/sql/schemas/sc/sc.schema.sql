@@ -31,7 +31,7 @@ create table sc.posts (
   shareability sc.post_shareability not null,
   body text not null,
 
-	chat int references common.chats(id),
+  chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -211,11 +211,12 @@ create table sc.language_goal_definitions (
   owning_group int not null references admin.groups(id)
 );
 
--- NOT an extension table, but has a reference to common
+-- An extension table, but has a reference to common
 -- sc languages may different from other org's language listings
 create table sc.languages (
+    neo4j_id varchar(32) unique,
 	id int primary key references sil.table_of_languages(id),
-
+    neo4j_id
 	display_name varchar(255) unique not null,
 	is_dialect bool,
 	is_sign_language bool,
