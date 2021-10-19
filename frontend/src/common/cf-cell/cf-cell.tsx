@@ -10,6 +10,8 @@ export class CfCell {
   @Prop() propKey: keyof any;
   @Prop() value: any;
   @Prop() isEditable: boolean;
+  @Prop() type?: string;
+  @Prop() options?: Array<string>;
   @Prop() updateFn: (id: number, columnName: any, value: any) => Promise<boolean>;
 
   @State() showEdit = false;
@@ -26,12 +28,17 @@ export class CfCell {
   };
 
   submit = async () => {
+    if (this.newValue === undefined) return;
     const result = await this.updateFn(this.rowId, this.propKey, this.newValue);
     if (result) {
       this.showEdit = false;
     } else {
     }
   };
+
+  handleSelect(event) {
+    this.newValue = event.target.value;
+  }
 
   render() {
     return (
@@ -50,9 +57,21 @@ export class CfCell {
           )}
           {this.showEdit && (
             <span id="value-edit">
-              <input type="text" id="value-input" name="value-input" defaultValue={this.value} onInput={event => this.updateValue(event)}>
-                {this.value}
-              </input>
+              {this.type === 'select' ? (
+                <select onInput={event => this.handleSelect(event)}>
+                  {this.options &&
+                    this.options.length > 0 &&
+                    this.options.map(option => (
+                      <option value={option} selected={this.value === option}>
+                        {option}
+                      </option>
+                    ))}
+                </select>
+              ) : (
+                <input type="text" id="value-input" name="value-input" defaultValue={this.value} onInput={event => this.updateValue(event)}>
+                  {this.value}
+                </input>
+              )}
               <span id="save-icon" class="edit-buttons" onClick={this.submit}>
                 <ion-icon name="checkmark-outline"></ion-icon>
               </span>
