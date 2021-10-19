@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.common.scripturereferences
+package com.seedcompany.cordtables.components.tables.common.scripture_references
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility

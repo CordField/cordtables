@@ -1,10 +1,8 @@
-package com.seedcompany.cordtables.components.tables.sil.tableoflanguages
+package com.seedcompany.cordtables.components.tables.sil.table_of_languages
 
 import com.seedcompany.cordtables.common.CordApiRestUtils
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.user.RegisterRequest
-import com.seedcompany.cordtables.components.user.RegisterReturn
 import com.seedcompany.cordtables.core.AppConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
@@ -13,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
 import javax.sql.DataSource
