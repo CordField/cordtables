@@ -1,8 +1,7 @@
-package com.seedcompany.cordtables.components.tables.scripturereferences
+package com.seedcompany.cordtables.components.tables.common.scripturereferences
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.groups.GroupsRow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
