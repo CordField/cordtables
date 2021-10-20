@@ -27,6 +27,7 @@ create type admin.table_name as enum (
   'admin.group_row_access',
   'admin.people',
   'admin.tokens',
+  'admin.users',
 
   'common.chats',
   'common.education_by_person',
@@ -310,4 +311,24 @@ create table admin.email_tokens (
 	unique(token),
 	created_at timestamp not null default CURRENT_TIMESTAMP
 -- 	foreign key (email) references users(email)
+);
+
+
+-- USERS ---------------------------------------------------------------------
+
+create table admin.users(
+  id serial primary key,
+
+  person int not null references admin.people(id),
+  email varchar(255) unique not null,
+  password varchar(255) not null,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );
