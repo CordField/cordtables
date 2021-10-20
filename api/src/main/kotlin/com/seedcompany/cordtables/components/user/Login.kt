@@ -49,7 +49,7 @@ class Login (
         var errorType = ErrorType.UnknownError
 
         this.ds.connection.use { conn ->
-            val pashStatement = conn.prepareCall("select password from common.users where email = ?;")
+            val pashStatement = conn.prepareCall("select password from admin.users where email = ?;")
             pashStatement.setString(1, req.email)
 
             val getPashResult = pashStatement.executeQuery()

@@ -52,6 +52,7 @@ alter table admin.roles add constraint admin_roles_chat_fk foreign key (chat) re
 alter table admin.role_column_grants add constraint admin_role_column_grants_chat_fk foreign key (chat) references common.chats(id);
 alter table admin.role_table_permissions add constraint admin_role_table_permissions_chat_fk foreign key (chat) references common.chats(id);
 alter table admin.role_memberships add constraint admin_role_memberships_chat_fk foreign key (chat) references common.chats(id);
+alter table admin.users add constraint admin_users_chat_fk foreign key (chat) references common.chats(id);
 
 create table common.posts (
 	id serial primary key,
@@ -191,25 +192,6 @@ create table common.people_to_org_relationship_type (
 	end_at timestamp,
   people_to_org int not null,
 	relationship_type int not null references common.people_to_org_relationships(id),
-
-	chat int references common.chats(id),
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
--- USERS ---------------------------------------------------------------------
-
-create table common.users(
-  id serial primary key,
-
-	person int not null references admin.people(id),
-	email varchar(255) unique not null,
-	password varchar(255) not null,
 
 	chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,

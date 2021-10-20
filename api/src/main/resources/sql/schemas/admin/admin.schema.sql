@@ -46,7 +46,6 @@ create type admin.table_name as enum (
   'common.ticket_assignments',
   'common.ticket_feedback',
   'common.ticket_feedback_options',
-  'common.users',
   'common.work_estimates',
   'common.work_orders',
   'common.work_order_templates',
@@ -323,7 +322,7 @@ create table admin.users(
   email varchar(255) unique not null,
   password varchar(255) not null,
 
-  chat int references common.chats(id),
+  chat int,
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

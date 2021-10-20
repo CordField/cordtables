@@ -53,7 +53,7 @@ BEGIN
     into vOrgId;
 
     -- users
-    insert into common.users(person, email, password, created_by, modified_by, owning_person, owning_group)
+    insert into admin.users(person, email, password, created_by, modified_by, owning_person, owning_group)
     values (vPersonId, p_email, p_password, vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- global roles
@@ -74,8 +74,8 @@ BEGIN
     insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Create', 'admin.people', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Delete', 'admin.people', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
-    insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Create', 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Delete', 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Create', 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Delete', 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Create', 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vAdminRoleId, 'Delete', 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
@@ -118,15 +118,15 @@ BEGIN
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'owning_group', vAdminRoleId, 'admin.role_memberships', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- grants on users
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'person', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'owning_org', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'email', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'password', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'created_at', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'created_by', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'modified_at', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'modified_by', vAdminRoleId, 'common.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'person', vAdminRoleId, 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'owning_org', vAdminRoleId, 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'email', vAdminRoleId, 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'password', vAdminRoleId, 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'created_at', vAdminRoleId, 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'created_by', vAdminRoleId, 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'modified_at', vAdminRoleId, 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'modified_by', vAdminRoleId, 'admin.users', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- grants on organizations
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group) values ('Write', 'id', vAdminRoleId, 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
