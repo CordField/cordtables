@@ -10,10 +10,18 @@ export class RolesPage {
     return (
       <Host>
         <slot></slot>
-        <roles-table></roles-table>
-        <role-memberships></role-memberships>
-        <role-table-permissions></role-table-permissions>
-        <role-column-grants></role-column-grants>
+        <div class="table-wrap">
+          <roles-table></roles-table>
+        </div>
+        <div class="table-wrap">
+          <role-memberships></role-memberships>
+        </div>
+        <div class="table-wrap">
+          <role-table-permissions></role-table-permissions>
+        </div>
+        <div class="table-wrap">
+          <role-column-grants></role-column-grants>
+        </div>
       </Host>
     );
   }

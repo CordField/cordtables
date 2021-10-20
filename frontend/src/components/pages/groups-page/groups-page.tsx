@@ -10,9 +10,15 @@ export class GroupsPage {
     return (
       <Host>
         <slot></slot>
-        <groups-table></groups-table>
-        <group-memberships></group-memberships>
-        <groups-row-access></groups-row-access>
+        <div class="table-wrap">
+          <groups-table></groups-table>
+        </div>
+        <div class="table-wrap">
+          <group-memberships></group-memberships>
+        </div>
+        <div class="table-wrap">
+          <groups-row-access></groups-row-access>
+        </div>
       </Host>
     );
   }
