@@ -82,4 +82,13 @@ class GlobalRoles(
         return newUserResponse.body!!
     }
 
+
+
+    fun getSecureListQuery(tableName:String){
+        //get the columns -> information_schema
+        //create the list query
+    }
+
+
+
 }

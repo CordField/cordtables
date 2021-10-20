@@ -170,7 +170,7 @@ export class LanguagesEx {
           key={columnName}
           rowId={LanguageEx.id}
           propKey={columnName}
-          value={LanguageEx[columnName]}
+          value={typeof LanguageEx[columnName] === 'string' ? LanguageEx[columnName] : LanguageEx[columnName]?.toString()}
           isEditable={!this.nonEditableColumns.includes(columnName)}
           updateFn={!this.nonEditableColumns.includes(columnName) ? this.handleUpdate : null}
         ></cf-cell>
@@ -243,29 +243,10 @@ export class LanguagesEx {
         <header>
           <h1>Language Ex</h1>
         </header>
-        {/* add flexbox to main -> create and update form should be to the side */}
         <main>
-          {/* <form class="form insert-form">
-            <div class="form-row">
-              <label htmlFor="name" class="label insert-form__label">
-                Name
-              </label>
-              <input type="text" value={this.insertedFields.lang_name} onInput={event => this.insertFieldChange(event, 'langName')} class="input insert-form__input" />
-            </div>
-
-            <div class="form form-row">
-              <label htmlFor="org" class="label insert-form__label">
-                Org
-              </label>
-              <input type="text" value={this.insertedFields.lang_code} onInput={event => this.insertFieldChange(event, 'langCode')} class="insert-form__input" />
-            </div>
-
-            <button onClick={this.handleInsert}>Submit</button>
-          </form> */}
           <div id="table-wrap">
             <table>
               <thead>
-                {/* this will be fixed -> on a shared component, this will be passed in and use Map to preserve order */}
                 <tr>
                   <th>*</th>
                   {Object.keys(this.defaultFields).map(key => (
