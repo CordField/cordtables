@@ -57,11 +57,18 @@ export namespace Components {
     }
     interface GroupMemberships {
     }
+    interface GroupsPage {
+    }
     interface GroupsRowAccess {
     }
     interface GroupsTable {
     }
     interface LanguagesEx {
+    }
+    interface OrganizationsPage {
+    }
+    interface PageRoot {
+        "match": MatchResults;
     }
     interface PeopleTable {
     }
@@ -71,6 +78,8 @@ export namespace Components {
     interface RoleMemberships {
     }
     interface RoleTablePermissions {
+    }
+    interface RolesPage {
     }
     interface RolesTable {
     }
@@ -159,6 +168,12 @@ declare global {
         prototype: HTMLGroupMembershipsElement;
         new (): HTMLGroupMembershipsElement;
     };
+    interface HTMLGroupsPageElement extends Components.GroupsPage, HTMLStencilElement {
+    }
+    var HTMLGroupsPageElement: {
+        prototype: HTMLGroupsPageElement;
+        new (): HTMLGroupsPageElement;
+    };
     interface HTMLGroupsRowAccessElement extends Components.GroupsRowAccess, HTMLStencilElement {
     }
     var HTMLGroupsRowAccessElement: {
@@ -176,6 +191,18 @@ declare global {
     var HTMLLanguagesExElement: {
         prototype: HTMLLanguagesExElement;
         new (): HTMLLanguagesExElement;
+    };
+    interface HTMLOrganizationsPageElement extends Components.OrganizationsPage, HTMLStencilElement {
+    }
+    var HTMLOrganizationsPageElement: {
+        prototype: HTMLOrganizationsPageElement;
+        new (): HTMLOrganizationsPageElement;
+    };
+    interface HTMLPageRootElement extends Components.PageRoot, HTMLStencilElement {
+    }
+    var HTMLPageRootElement: {
+        prototype: HTMLPageRootElement;
+        new (): HTMLPageRootElement;
     };
     interface HTMLPeopleTableElement extends Components.PeopleTable, HTMLStencilElement {
     }
@@ -200,6 +227,12 @@ declare global {
     var HTMLRoleTablePermissionsElement: {
         prototype: HTMLRoleTablePermissionsElement;
         new (): HTMLRoleTablePermissionsElement;
+    };
+    interface HTMLRolesPageElement extends Components.RolesPage, HTMLStencilElement {
+    }
+    var HTMLRolesPageElement: {
+        prototype: HTMLRolesPageElement;
+        new (): HTMLRolesPageElement;
     };
     interface HTMLRolesTableElement extends Components.RolesTable, HTMLStencilElement {
     }
@@ -233,13 +266,17 @@ declare global {
         "create-update-modal": HTMLCreateUpdateModalElement;
         "generic-table": HTMLGenericTableElement;
         "group-memberships": HTMLGroupMembershipsElement;
+        "groups-page": HTMLGroupsPageElement;
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
         "languages-ex": HTMLLanguagesExElement;
+        "organizations-page": HTMLOrganizationsPageElement;
+        "page-root": HTMLPageRootElement;
         "people-table": HTMLPeopleTableElement;
         "role-column-grants": HTMLRoleColumnGrantsElement;
         "role-memberships": HTMLRoleMembershipsElement;
         "role-table-permissions": HTMLRoleTablePermissionsElement;
+        "roles-page": HTMLRolesPageElement;
         "roles-table": HTMLRolesTableElement;
         "scripture-references": HTMLScriptureReferencesElement;
         "table-root": HTMLTableRootElement;
@@ -299,11 +336,18 @@ declare namespace LocalJSX {
     }
     interface GroupMemberships {
     }
+    interface GroupsPage {
+    }
     interface GroupsRowAccess {
     }
     interface GroupsTable {
     }
     interface LanguagesEx {
+    }
+    interface OrganizationsPage {
+    }
+    interface PageRoot {
+        "match"?: MatchResults;
     }
     interface PeopleTable {
     }
@@ -313,6 +357,8 @@ declare namespace LocalJSX {
     interface RoleMemberships {
     }
     interface RoleTablePermissions {
+    }
+    interface RolesPage {
     }
     interface RolesTable {
     }
@@ -335,13 +381,17 @@ declare namespace LocalJSX {
         "create-update-modal": CreateUpdateModal;
         "generic-table": GenericTable;
         "group-memberships": GroupMemberships;
+        "groups-page": GroupsPage;
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
         "languages-ex": LanguagesEx;
+        "organizations-page": OrganizationsPage;
+        "page-root": PageRoot;
         "people-table": PeopleTable;
         "role-column-grants": RoleColumnGrants;
         "role-memberships": RoleMemberships;
         "role-table-permissions": RoleTablePermissions;
+        "roles-page": RolesPage;
         "roles-table": RolesTable;
         "scripture-references": ScriptureReferences;
         "table-root": TableRoot;
@@ -364,13 +414,17 @@ declare module "@stencil/core" {
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
+            "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
             "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
+            "organizations-page": LocalJSX.OrganizationsPage & JSXBase.HTMLAttributes<HTMLOrganizationsPageElement>;
+            "page-root": LocalJSX.PageRoot & JSXBase.HTMLAttributes<HTMLPageRootElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "role-column-grants": LocalJSX.RoleColumnGrants & JSXBase.HTMLAttributes<HTMLRoleColumnGrantsElement>;
             "role-memberships": LocalJSX.RoleMemberships & JSXBase.HTMLAttributes<HTMLRoleMembershipsElement>;
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
+            "roles-page": LocalJSX.RolesPage & JSXBase.HTMLAttributes<HTMLRolesPageElement>;
             "roles-table": LocalJSX.RolesTable & JSXBase.HTMLAttributes<HTMLRolesTableElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
