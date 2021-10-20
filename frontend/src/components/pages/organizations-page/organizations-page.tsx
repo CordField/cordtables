@@ -10,7 +10,6 @@ export class OrganizationsPage {
     return (
       <Host>
         <slot></slot>
-        Organizations Page
       </Host>
     );
   }

@@ -13,7 +13,6 @@ export class PageRoot {
     return (
       <Host>
         <slot></slot>
-        Page Root
         {this.match.params.page === 'groups' && <groups-page></groups-page>}
         {this.match.params.page === 'organizations' && <organizations-page></organizations-page>}
         {this.match.params.page === 'roles' && <roles-page></roles-page>}

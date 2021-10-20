@@ -10,7 +10,6 @@ export class GroupsPage {
     return (
       <Host>
         <slot></slot>
-        Groups Page
         <groups-table></groups-table>
         <group-memberships></group-memberships>
         <groups-row-access></groups-row-access>

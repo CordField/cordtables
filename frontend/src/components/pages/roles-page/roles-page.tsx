@@ -10,7 +10,6 @@ export class RolesPage {
     return (
       <Host>
         <slot></slot>
-        Roles Page
         <roles-table></roles-table>
         <role-memberships></role-memberships>
         <role-table-permissions></role-table-permissions>
