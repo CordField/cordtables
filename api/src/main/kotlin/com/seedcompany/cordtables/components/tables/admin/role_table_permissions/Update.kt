@@ -52,7 +52,7 @@ class Update(
 
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from public.users where email = ?")
+                val getUserIdStatement = conn.prepareCall("select person from admin.users where email = ?")
                 getUserIdStatement.setString(1, req.email)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
