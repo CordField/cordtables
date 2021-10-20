@@ -15,7 +15,7 @@ data class ValueBoolean(
 )
 
 data class ValueDate(
-    val value: Date? = null,   //TODO: not sure what kind of Date, just going for something at the moment
+    val value: java.sql.Timestamp? = null,   //TODO: not sure what kind of Date, just going for something at the moment
 )
 
 data class EthnologueCode(
@@ -31,7 +31,7 @@ data class Ethnologue(
 )
 
 data class Language(
-    val id: String? = null,
+    val id: String,
     val name: ValueString? = null,
     val displayName: ValueString? = null,
     val displayNamePronunciation: ValueString? = null,

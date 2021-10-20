@@ -41,6 +41,7 @@ class Migrate(
     val jdbcTemplate2 = JdbcTemplate(ds)
 
 
+
     @PostMapping("migrate/sc-language")
     @ResponseBody
     fun registerHandler() {
@@ -81,33 +82,65 @@ class Migrate(
 
                 this.ds.connection.use { conn ->
                     val migrationStatement = conn.prepareCall("call sc.sc_migrate_language(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);")
-                    migrationStatement.setString(1, lang.iso639?.code)
-                    migrationStatement.setString(2, lang.neo4j_id?.value)
-                    if (lang.population?.value != null) {
-                        migrationStatement.setInt(3, lang.population?.value)
+                    migrationStatement.setString(1, lang.ethnologue?.code?.value)
+                    migrationStatement.setString(2, lang.id)
+                    migrationStatement.setString(3, lang.name?.value)
+                    migrationStatement.setString(4, lang.displayName?.value)
+                    migrationStatement.setString(5, lang.displayNamePronunciation?.value)
+                    if (lang.isDialect?.value == null)
+                        migrationStatement.setNull(6, java.sql.Types.NULL)
+                    else
+                        migrationStatement.setBoolean(6, lang.isDialect?.value)
+                    if (lang.populationOverride?.value == null) {
+                        migrationStatement.setNull(7, java.sql.Types.NULL)
                     } else {
-                        migrationStatement.setNull(3, java.sql.Types.NULL)
+                        migrationStatement.setInt(7, lang.populationOverride?.value)
                     }
-                    migrationStatement.setString(4, lang.provisionalCode?.value)
-                    migrationStatement.setObject(5, lang.sensitivity, java.sql.Types.OTHER)
-                    migrationStatement.registerOutParameter(6, java.sql.Types.VARCHAR)
+
+                    migrationStatement.setString(8, lang.registryOfDialectsCode?.value)
+
+                    if(lang.leastOfThese?.value == null )
+                        migrationStatement.setNull(9, java.sql.Types.NULL)
+                    else
+                        migrationStatement.setBoolean(9, lang.leastOfThese?.value)
+
+                    migrationStatement.setString(10, lang.leastOfTheseReason?.value)
+                    migrationStatement.setString(11, lang.signLanguageCode?.value)
+                    migrationStatement.setTimestamp(12, lang.sponsorEstimatedEndDate?.value)
+                    migrationStatement.setObject(13, lang.sensitivity, java.sql.Types.OTHER)
+
+                    if(lang.isSignLanguage?.value == null)
+                        migrationStatement.setNull(14, java.sql.Types.NULL)
+                    else
+                        migrationStatement.setBoolean(14, lang.isSignLanguage?.value)
+                    if(lang.hasExternalFirstScripture?.value == null)
+                        migrationStatement.setNull(15, java.sql.Types.NULL)
+                    else
+                        migrationStatement.setBoolean(15, lang.hasExternalFirstScripture?.value)
+                    migrationStatement.setString(16, lang.tags?.value)
+                    if(lang.presetInventory?.value == null)
+                        migrationStatement.setNull(17, java.sql.Types.NULL)
+                    else
+                        migrationStatement.setBoolean(17, lang.presetInventory?.value)
+
+                    migrationStatement.registerOutParameter(18, java.sql.Types.VARCHAR)
 
                     migrationStatement.execute()
 
                     try {
-                        errorType = ErrorType.valueOf(migrationStatement.getString(6))
+                        errorType = ErrorType.valueOf(migrationStatement.getString(18))
                     } catch (ex: IllegalArgumentException) {
                         errorType = ErrorType.UnknownError
                     }
 
                     if (errorType != ErrorType.NoError) {
-                        println("ethnologue migration query failed")
+                        println("language migration query failed")
                     }
 
                     migrationStatement.close()
                 }
 
-               // println("Migrated ethnologue entry code: '${lang.code?.value}': $errorType")
+                println("Migrated language entry code: '${lang.id}': $errorType")
 
 
             }

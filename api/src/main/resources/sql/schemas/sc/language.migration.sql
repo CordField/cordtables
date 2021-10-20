@@ -23,8 +23,6 @@ AS $$
 DECLARE
   vLangId int;
 BEGIN
-  -- TODO: get the language by neo4j_id, since it's migration, I'm making the assumption that
-  -- everything being migrated will have a neo4j_id, right?
   select id
   from sc.languages
   into vLangId
@@ -120,7 +118,6 @@ BEGIN
        sponsor_estimated_end_date != pSponsor_estimated_end_date;
 
     error_type := 'NoError';
-
 
   else
     insert into sc.languages(
