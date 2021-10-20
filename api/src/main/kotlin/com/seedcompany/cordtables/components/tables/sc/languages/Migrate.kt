@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.sc.languages
 
 import com.seedcompany.cordtables.common.CordApiRestUtils
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.*
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.core.AppConfig
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,69 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
 import java.util.*
 import javax.sql.DataSource
-
-data class ValueInt(
-    val value: Int? = null,
-)
-
-data class ValueString(
-    val value: String? = null,
-)
-
-data class ValueBoolean(
-    val value: Boolean? = null,
-)
-
-data class ValueDate(
-    val value: Date? = null,   //TODO: not sure what kind of Date, just going for something at the moment
-)
-
-data class EthnologueCode(
-    val code: ValueString? = null,
-)
-
-data class Ethnologue(
-    val code: ValueString? = null,
-    val name: ValueString? = null,
-    val population: ValueInt? = null,
-    val provisionalCode: ValueString? = null,
-    val sensitivity: String? = null,
-)
-
-
-
-data class Language(
-    val id: String? = null,
-    val name: ValueString? = null,
-    val displayName: ValueString? = null,
-    val displayNamePronunciation: ValueString? = null,
-    val isDialect: ValueBoolean? = null,
-    val populationOverride: ValueInt? = null,
-    val registryOfDialectsCode: ValueString? = null,
-    val leastOfThese: ValueBoolean? = null,
-    val leastOfTheseReason: ValueString? = null,
-    val signLanguageCode: ValueString? = null,
-    val sponsorEstimatedEndDate: ValueDate? = null,
-    val sensitivity: String? = null,
-    val isSignLanguage: ValueBoolean? = null,
-    val hasExternalFirstScripture: ValueBoolean? = null,
-    val tags: ValueString? = null,
-    val presetInventory: ValueBoolean? = null,
-    val ethnologue: EthnologueCode? = null,
-)
-
-data class Languages(
-    val items: List<Language>? = listOf(),
-    val total: Int? = null,
-)
-
-data class Data(
-    val languages: Languages? = null,
-)
-
-data class Response(
-    val data: Data? = null,
-)
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("ScLanguagesMigrate")
@@ -113,7 +51,7 @@ class Migrate(
 
             // get count of language entries
             val countQuery = """{"query":"query Query {languages {total}}"}"""
-            val countResponse = cord.post<Response>(token, countQuery)
+            val countResponse = cord.post<GResponse>(token, countQuery)
             val total = countResponse?.data?.languages?.total
 
             if (total == null) {
@@ -130,7 +68,7 @@ class Migrate(
                         {"query":"query Query { languages { items { id ethnologue { code { value } } avatarLetters name { value } displayName { value } displayNamePronunciation { value } isDialect { value } populationOverride { value } registryOfDialectsCode { value } leastOfThese { value } leastOfTheseReason { value } signLanguageCode { value } sponsorEstimatedEndDate { value } sensitivity isSignLanguage { value } hasExternalFirstScripture { value } tags { value } presetInventory { value } population { value } } } }"}
                     """.trimIndent()
 
-                val langResponse = cord.post<Response>(token, langQuery)
+                val langResponse = cord.post<GResponse>(token, langQuery)
 
                 val lang = langResponse?.data?.languages?.items?.get(0)
 
