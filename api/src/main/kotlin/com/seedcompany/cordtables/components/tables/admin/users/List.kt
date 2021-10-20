@@ -52,7 +52,7 @@ class List<T>(
                 on a.group_id = b.group_id 
                 inner join admin.tokens as c 
                 on b.person = c.person
-                where a.table_name = 'sc.languages_ex'
+                where a.table_name = 'admin.users'
                 and c.token = :token
             ), 
             column_level_access as 
@@ -63,7 +63,7 @@ class List<T>(
                 on a.role = b.role 
                 inner join admin.tokens c 
                 on b.person = c.person 
-                where a.table_name = 'sc.languages_ex'
+                where a.table_name = 'admin.users'
                 and c.token = :token
             )
             select 
