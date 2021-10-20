@@ -87,8 +87,12 @@ data class ReadLanguageExRequest(
 class Read(
     @Autowired
     val util: Utility,
+
     @Autowired
     val ds: DataSource,
+
+    @Autowired
+    val secureList: GetSecureListQuery,
 ) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
@@ -102,7 +106,7 @@ class Read(
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
 
-        val query = GetSecureListQuery().getSecureListQueryHandler(
+        val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "sc.languages_ex",
                 columns = arrayOf(

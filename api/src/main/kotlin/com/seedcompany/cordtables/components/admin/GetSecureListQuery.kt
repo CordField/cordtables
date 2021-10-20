@@ -77,9 +77,9 @@ class GetSecureListQuery() {
             """
                 case
                     when '$it' in (select column_name from column_level_access) then $it 
-                    when '$it' in (select column_name from public_column_level_access) then $it 
                     when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) then $it
                     when owning_person = (select person from admin.tokens where token = :token) then $it 
+                    when '$it' in (select column_name from public_column_level_access) then $it 
                     else null 
                 end as $it
             """.replace('\n', ' ')
@@ -89,11 +89,10 @@ class GetSecureListQuery() {
 
         response.query += """
             from ${req.tableName} 
-            where id in 
-                (select row from row_level_access) or
-                (select row from public_row_level_access) or
+            where id in (select row from row_level_access) or
                 (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
-                owning_person = (select person from admin.tokens where token = :token);
+                owning_person = (select person from admin.tokens where token = :token) or
+                id in (select row from public_row_level_access);
         """.replace('\n', ' ')
 
         return response
