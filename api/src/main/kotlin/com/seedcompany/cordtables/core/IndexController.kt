@@ -45,6 +45,7 @@ class IndexController(
             "/register",
             "/login",
             "/table/{table}",
+            "/page/{page}",
             "/profile",
             "/email/{token}",
         ]
