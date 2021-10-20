@@ -73,6 +73,7 @@ class GlobalRoles(
     fun register(email: String, password: String): RegisterReturn {
         val newUserResponse = rest.postForEntity("$url/user/register", RegisterRequest("asdf@asdf.asdf", userPassword), RegisterReturn::class.java)
 
+        // assertAll would be a good idea
         assert(newUserResponse !== null) {"response was null"}
         assert(newUserResponse.body !== null) {"response body was null"}
         assert(!newUserResponse.body!!.isAdmin) {"new user should not be admin"}
