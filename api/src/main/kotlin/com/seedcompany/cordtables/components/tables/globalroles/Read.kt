@@ -167,7 +167,16 @@ class Read(
                     if(listStatementResult.wasNull()) created_at = null
                     var modified_at: String? = listStatementResult.getString("modified_at")
                     if(listStatementResult.wasNull()) modified_at = null
-                    data.add(GlobalRole(id =id, chat=chat,owning_group=owning_group,owning_person=owning_person, created_at =created_at,created_by =  created_by, modified_at =modified_at,modified_by= modified_by,name=name))
+                    data.add(GlobalRole(
+                            id = id,
+                            chat = chat,
+                            owning_group = owning_group,
+                            owning_person = owning_person,
+                            created_at = created_at,
+                            created_by = created_by,
+                            modified_at = modified_at,
+                            modified_by = modified_by,
+                            name = name))
                 }
             } catch (e: SQLException) {
                 println("error while listing ${e.message}")

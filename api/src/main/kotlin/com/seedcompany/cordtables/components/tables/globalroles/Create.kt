@@ -126,7 +126,16 @@ class Create(
                     if(insertStatementResult.wasNull()) created_at = null
                     var modified_at: String? = insertStatementResult.getString("modified_at")
                     if(insertStatementResult.wasNull()) modified_at = null
-                    insertedGlobalRole = GlobalRole(id =id, created_at =created_at,created_by =  created_by, modified_at =modified_at,modified_by= modified_by,name=name,owning_group= owning_group, owning_person = owning_person, chat=chat)
+                    insertedGlobalRole = GlobalRole(
+                            id = id,
+                            created_at = created_at,
+                            created_by = created_by,
+                            modified_at = modified_at,
+                            modified_by = modified_by,
+                            name = name,
+                            owning_group = owning_group,
+                            owning_person = owning_person,
+                            chat = chat)
                     println("newly inserted id: $id")
                 }
             }

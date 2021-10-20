@@ -115,7 +115,16 @@ class Update(
                     if(updateStatementResult.wasNull()) created_at = null
                     var modified_at: String? = updateStatementResult.getString("modified_at")
                     if(updateStatementResult.wasNull()) modified_at = null
-                    updatedGlobalRole = GlobalRole(id =id, chat=chat,owning_group=owning_group,owning_person=owning_person, created_at =created_at,created_by =  created_by, modified_at =modified_at,modified_by= modified_by,name=name)
+                    updatedGlobalRole = GlobalRole(
+                            id = id,
+                            chat = chat,
+                            owning_group = owning_group,
+                            owning_person = owning_person,
+                            created_at = created_at,
+                            created_by = created_by,
+                            modified_at = modified_at,
+                            modified_by = modified_by,
+                            name = name)
                     println("updated row's id: $id")
                 }
             } catch (e: SQLException) {
