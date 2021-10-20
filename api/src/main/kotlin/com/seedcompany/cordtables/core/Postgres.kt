@@ -41,7 +41,7 @@ class BootstrapDB(
        SELECT EXISTS (
        SELECT FROM information_schema.tables 
        WHERE  table_schema = 'admin'
-       AND    table_name   = 'global_roles'
+       AND    table_name   = 'roles'
        );
       """.trimIndent()
         )

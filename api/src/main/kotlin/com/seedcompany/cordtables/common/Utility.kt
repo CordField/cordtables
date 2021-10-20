@@ -75,10 +75,10 @@ class Utility(
                 """
                 select exists(
                 	select id 
-                	from admin.global_roles 
+                	from admin.roles 
                 	where id in (
-                		select global_role 
-                		from admin.global_role_memberships 
+                		select role 
+                		from admin.role_memberships 
                 		where person = (
                 			select person
                 			from admin.tokens 
@@ -112,12 +112,12 @@ class Utility(
                 """
                 select exists(
                 	select a.id 
-                	from admin.global_roles as a 
-                    inner join admin.global_role_table_permissions as b 
-                    on a.id = b.global_role 
+                	from admin.roles as a 
+                    inner join admin.role_table_permissions as b 
+                    on a.id = b.role 
                 	where a.id in (
-                		select global_role 
-                		from admin.global_role_memberships
+                		select role 
+                		from admin.role_memberships
                 		where person = (
                 			select person
                 			from admin.tokens 
@@ -152,12 +152,12 @@ class Utility(
                 """
                 select exists(
                 	select a.id 
-                	from admin.global_roles as a 
-                    inner join admin.global_role_table_permissions as b 
-                    on a.id = b.global_role 
+                	from admin.roles as a 
+                    inner join admin.role_table_permissions as b 
+                    on a.id = b.role 
                 	where a.id in (
-                		select global_role 
-                		from admin.global_role_memberships
+                		select role 
+                		from admin.role_memberships
                 		where person = (
                 			select person
                 			from admin.tokens 
@@ -189,12 +189,12 @@ class Utility(
             //language=SQL
             val statement = conn.prepareCall("""
                 select exists (select column_name 
-                from admin.global_role_column_grants as a 
-                inner join admin.global_roles as b 
-                on a.global_role = b.id 
+                from admin.role_column_grants as a 
+                inner join admin.roles as b 
+                on a.role = b.id 
                 where b.id in (
-                select global_role 
-                from admin.global_role_memberships 
+                select role 
+                from admin.role_memberships 
                 where person = (
                 select person from admin.tokens where token = ? 
                 )
@@ -221,12 +221,12 @@ class Utility(
         var userHasUpdatePermission = false;
         this.ds.connection.use { conn ->
             var updateSql = "select count(*) from \n" +
-                    "(select column_name from admin.global_role_column_grants as a \n" +
-                    "inner join admin.global_roles as b  \n" +
-                    "on a.global_role = b.id \n" +
+                    "(select column_name from admin.role_column_grants as a \n" +
+                    "inner join admin.roles as b  \n" +
+                    "on a.role = b.id \n" +
                     "where b.id in (\n" +
-                    "\tselect global_role \n" +
-                    "    from admin.global_role_memberships\n" +
+                    "\tselect role \n" +
+                    "    from admin.role_memberships\n" +
                     "\twhere person = (\n" +
                     "\t\t\t\t\tselect person\n" +
                     "\t\t\t\t\tfrom admin.tokens \n" +
@@ -275,9 +275,9 @@ class Utility(
 
         this.ds.connection.use{ conn ->
             val statement = conn.prepareCall("select distinct table_name \n" +
-                    "from admin.global_role_column_grants as a \n" +
-                    "inner join admin.global_role_memberships as b \n" +
-                    "on a.global_role = b.global_role \n" +
+                    "from admin.role_column_grants as a \n" +
+                    "inner join admin.role_memberships as b \n" +
+                    "on a.role = b.role \n" +
                     "inner join admin.tokens as c \n" +
                     "on b.person = c.person \n" +
                     "where c.token = ? order by table_name asc")

@@ -6,7 +6,7 @@ class CommonOrganizationsRequest {
   token: string;
 }
 
-class CommonOrganizationsRow{
+class CommonOrganizationsRow {
   id: number;
   name: string;
   neo4j_id?: string = null;
@@ -27,7 +27,7 @@ class CommonOrganizationsListResponse {
 
 class GlobalRoleMembershipCreateRequest {
   token: string;
-  global_role: number;
+  role: number;
   person: number;
   owning_group: number;
 }
@@ -38,7 +38,7 @@ class GroupCreateResponse {
 
 class GroupUpdateRequest {
   token: string;
-  global_role?: number;
+  role?: number;
   person?: number;
   owning_group?: number;
   id: number;
@@ -98,27 +98,26 @@ export class CommonOrganizations {
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GlobalRoleMembershipCreateRequest, GroupCreateResponse>('global-role-memberships/create', 
-    { 
-      token: globals.globalStore.state.token, 
-      global_role: this.newGlobalRole, 
+    this.createResponse = await fetchAs<GlobalRoleMembershipCreateRequest, GroupCreateResponse>('role-memberships/create', {
+      token: globals.globalStore.state.token,
+      role: this.newGlobalRole,
       person: this.newPerson,
       owning_group: this.newOwningGroup,
     });
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<CommonOrganizationsRequest, CommonOrganizationsListResponse>('global-role-memberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<CommonOrganizationsRequest, CommonOrganizationsListResponse>('role-memberships/list', { token: globals.globalStore.state.token });
     } else {
       console.warn('Error creating group');
     }
   };
 
   updateGlobalRole = async (id: number, columnName: string, value: number): Promise<boolean> => {
-    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, global_role: value, id, });
+    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, role: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
-      this.listResponse = await fetchAs<CommonOrganizationsRequest, CommonOrganizationsListResponse>('global-role-memberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<CommonOrganizationsRequest, CommonOrganizationsListResponse>('role-memberships/list', { token: globals.globalStore.state.token });
       return true;
     } else {
     }
@@ -128,7 +127,7 @@ export class CommonOrganizations {
     this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groups/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<CommonOrganizationsRequest, CommonOrganizationsListResponse>('global-role-memberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<CommonOrganizationsRequest, CommonOrganizationsListResponse>('role-memberships/list', { token: globals.globalStore.state.token });
       return true;
     } else {
       return false;
@@ -173,13 +172,13 @@ export class CommonOrganizations {
               <tr>
                 <td class="disabled">&nbsp;</td>
                 <td>
-                  <input type="text" id="global-role-input" placeholder = "Global Role" name="global-role" onInput={event => this.inputGlobalRole(event)}></input>
+                  <input type="text" id="role-input" placeholder="Global Role" name="role" onInput={event => this.inputGlobalRole(event)}></input>
                 </td>
                 <td class="disabled">
-                  <input type="text" id="person-input" placeholder = "Person" name="person" onInput={event => this.inputPerson(event)}></input>
+                  <input type="text" id="person-input" placeholder="Person" name="person" onInput={event => this.inputPerson(event)}></input>
                 </td>
                 <td class="disabled">
-                  <input type="text" id="owning_group" placeholder = "Owning Group" name="owning_group" onInput={event => this.inputOwningGroup(event)}></input>
+                  <input type="text" id="owning_group" placeholder="Owning Group" name="owning_group" onInput={event => this.inputOwningGroup(event)}></input>
                 </td>
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
@@ -193,7 +192,7 @@ export class CommonOrganizations {
         <div id="button-group">
           {!this.showNewForm && (
             <button id="new-button" onClick={this.toggleNewForm}>
-              Create New 
+              Create New
             </button>
           )}
 
@@ -212,4 +211,3 @@ export class CommonOrganizations {
     );
   }
 }
-

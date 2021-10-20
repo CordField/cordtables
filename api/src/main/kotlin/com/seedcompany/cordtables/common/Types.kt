@@ -48,6 +48,13 @@ enum class ErrorType {
     PeerFailedToLogin,
 }
 
+
+enum class CommonSensitivity {
+    Low,
+    Medium,
+    High,
+}
+
 data class GenericResponse (
     val error: ErrorType,
 )

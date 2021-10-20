@@ -10,7 +10,7 @@ DECLARE
     vToken varchar(512);
 BEGIN
     SELECT person
-    FROM common.users
+    FROM admin.users
     INTO vPersonId
     WHERE email = p_email;
 

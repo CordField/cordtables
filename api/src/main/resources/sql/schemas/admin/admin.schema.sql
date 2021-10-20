@@ -18,15 +18,16 @@ create type admin.access_level as enum (
 
 create type admin.table_name as enum (
   'admin.email_tokens',
-  'admin.global_role_column_grants',
-  'admin.global_role_memberships',
-  'admin.global_role_table_permissions',
-  'admin.global_roles',
+  'admin.role_column_grants',
+  'admin.role_memberships',
+  'admin.role_table_permissions',
+  'admin.roles',
   'admin.groups',
   'admin.group_memberships',
   'admin.group_row_access',
   'admin.people',
   'admin.tokens',
+  'admin.users',
 
   'common.chats',
   'common.education_by_person',
@@ -45,7 +46,6 @@ create type admin.table_name as enum (
   'common.ticket_assignments',
   'common.ticket_feedback',
   'common.ticket_feedback_options',
-  'common.users',
   'common.work_estimates',
   'common.work_orders',
   'common.work_order_templates',
@@ -97,6 +97,8 @@ create type admin.table_permission as enum (
   'Delete'
 );
 
+
+
 -- PEOPLE ------------------------------------------------------------
 
 create table admin.people (
@@ -123,12 +125,14 @@ create table admin.people (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int, -- not null doesn't work here, on startup
   owning_person int, -- not null doesn't work here, on startup
-  owning_group int -- not null doesn't work here, on startup
+  owning_group int, -- not null doesn't work here, on startup
+  peer int
 );
 
 alter table admin.people add constraint admin_people_created_by_fk foreign key (created_by) references admin.people(id);
 alter table admin.people add constraint admin_people_modified_by_fk foreign key (modified_by) references admin.people(id);
 alter table admin.people add constraint admin_people_owning_person_fk foreign key (owning_person) references admin.people(id);
+
 
 -- GROUPS --------------------------------------------------------------------
 
@@ -144,7 +148,8 @@ create table admin.groups(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int references admin.groups(id) -- not null doesn't work here, on startup
+  owning_group int references admin.groups(id), -- not null doesn't work here, on startup
+  peer int
 );
 
 alter table admin.people add constraint admin_people_owning_group_fk foreign key (owning_group) references admin.groups(id);
@@ -162,7 +167,8 @@ create table admin.group_row_access(
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+  peer int
 );
 
 create table admin.group_memberships(
@@ -177,12 +183,42 @@ create table admin.group_memberships(
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+  peer int
 );
+
+-- PEER to PEER -------------------------------------------------------------
+
+create table admin.peers (
+  id serial primary key,
+
+  person int references admin.people(id),
+  url varchar(128) not null unique,
+  peer_approved bool not null default false,
+  url_confirmed bool not null default false,
+  source_token varchar(64),
+  target_token varchar(64),
+  session_token varchar(64),
+
+  chat int,
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int
+);
+
+alter table admin.people add constraint admin_people_peer_fk foreign key (peer) references admin.peers(id);
+alter table admin.groups add constraint admin_groups_peer_fk foreign key (peer) references admin.peers(id);
+alter table admin.group_row_access add constraint admin_group_row_access_peer_fk foreign key (peer) references admin.peers(id);
+alter table admin.group_memberships add constraint admin_group_memberships_peer_fk foreign key (peer) references admin.peers(id);
+alter table admin.peers add constraint admin_peers_peer_fk foreign key (peer) references admin.peers(id);
 
 -- ROLES --------------------------------------------------------------------
 
-create table admin.global_roles (
+create table admin.roles (
 	id serial primary key,
 
 	name varchar(255) not null,
@@ -194,14 +230,15 @@ create table admin.global_roles (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
 
 	unique (owning_group, name)
 );
 
-create table admin.global_role_column_grants(
+create table admin.role_column_grants(
 	id serial primary key,
 
-	global_role int not null references admin.global_roles(id),
+	role int not null references admin.roles(id),
 	table_name admin.table_name not null,
 	column_name varchar(64) not null,
 	access_level admin.access_level not null,
@@ -213,14 +250,15 @@ create table admin.global_role_column_grants(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
 
-	unique (global_role, table_name, column_name)
+	unique (role, table_name, column_name)
 );
 
-create table admin.global_role_table_permissions(
+create table admin.role_table_permissions(
   id serial primary key,
 
-  global_role int not null references admin.global_roles(id),
+  role int not null references admin.roles(id),
   table_name admin.table_name not null,
   table_permission admin.table_permission not null,
 
@@ -231,14 +269,15 @@ create table admin.global_role_table_permissions(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
 
-  unique (global_role, table_name, table_permission)
+  unique (role, table_name, table_permission)
 );
 
-create table admin.global_role_memberships (
+create table admin.role_memberships (
   id serial primary key,
 
-	global_role int not null references admin.global_roles(id),
+	role int not null references admin.roles(id),
 	person int not null references admin.people(id),
 
   chat int,
@@ -248,8 +287,9 @@ create table admin.global_role_memberships (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
 
-	unique(global_role, person)
+	unique(role, person)
 );
 
 -- AUTHENTICATION ------------------------------------------------------------
@@ -272,18 +312,15 @@ create table admin.email_tokens (
 -- 	foreign key (email) references users(email)
 );
 
--- PEER to PEER -------------------------------------------------------------
 
-create table admin.peers (
+-- USERS ---------------------------------------------------------------------
+
+create table admin.users(
   id serial primary key,
 
-  person int references admin.people(id),
-  url varchar(128) not null unique,
-  peer_approved bool not null default false,
-  url_confirmed bool not null default false,
-  source_token varchar(64),
-  target_token varchar(64),
-  session_token varchar(64),
+  person int not null references admin.people(id),
+  email varchar(255) unique not null,
+  password varchar(255) not null,
 
   chat int,
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -291,5 +328,6 @@ create table admin.peers (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );

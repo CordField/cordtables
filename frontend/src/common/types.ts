@@ -79,6 +79,17 @@ export interface LanguageEx {
   owning_person?: number;
   owning_group?: number;
 }
+export interface globalRoleTablePermissions {
+  id: number;
+  createdAt: string;
+  createdBy: number;
+  globalRole: number;
+  modifiedAt: string;
+  modifiedBy: number;
+  tableName: string;
+  tablePermission: string;
+}
+
 export class GenericResponse {
   public error: ErrorType;
 }

@@ -76,9 +76,9 @@ class List(
             column_level_access as 
             (
                 select  column_name 
-                from admin.global_role_column_grants a 
-                inner join admin.global_role_memberships b 
-                on a.global_role = b.global_role 
+                from admin.role_column_grants a 
+                inner join admin.role_memberships b 
+                on a.role = b.role 
                 inner join admin.tokens c 
                 on b.person = c.person 
                 where a.table_name = 'common.organizations'
@@ -89,83 +89,83 @@ class List(
                 when 'id' in 
                     (select column_name from column_level_access) 
                 then id 
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then id 
                 else null 
             end as id,
             case 
                 when 'name' in (select column_name from column_level_access) 
                 then  name
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then  name
                 else null 
             end as name,
             case
                 when  'neo4j_id' in (select column_name from column_level_access)
                 then  neo4j_id
-                when (select exists( select person from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1))
+                when (select exists( select person from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))
                 then  neo4j_id
                 else null
             end as neo4j_id,
             case 
                 when 'sensitivity' in (select column_name from column_level_access) 
                 then sensitivity 
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then sensitivity
                 else null 
             end as sensitivity,
             case 
                 when 'primary_location' in (select column_name from column_level_access) 
                 then primary_location 
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then primary_location
                 else null 
             end as primary_location,
             case
             when 'created_at' in (select column_name from column_level_access) 
                 then created_at 
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then created_at
                 else null 
             end as created_at,
             case 
                 when 'created_by' in (select column_name from column_level_access) 
                 then created_by 
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then created_by
                 else null 
             end as created_by,
             case 
                 when 'modified_at' in (select column_name from column_level_access) 
                 then modified_at 
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then modified_at
                 else null 
             end as modified_at,
             case 
                 when 'modified_by' in (select column_name from column_level_access) 
                 then modified_by 
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then modified_by
                 else null 
             end as modified_by,
             case 
                 when 'owning_person' in (select column_name from column_level_access) 
                 then owning_person 
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then owning_person
                 else null 
             end as owning_person,
             case 
                 when 'owning_group' in (select column_name from column_level_access) 
                 then owning_group 
-                when (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
                 then owning_group
                 else null 
             end as owning_group
             from common.organizations
             where id in (select row from row_level_access) or 
-                (select exists( select id from admin.global_role_memberships where person = (select person from admin.tokens where token = :token) and global_role = 1));
+                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1));
         """.trimIndent()
 
         val jdbcResult = jdbcTemplate.queryForRowSet(listSQL, paramSource)
