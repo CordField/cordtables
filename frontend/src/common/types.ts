@@ -29,7 +29,7 @@ export interface LanguageEx {
   language_name?: string;
   iso?: string;
   prioritization?: number;
-  progress_bible?: Boolean;
+  progress_bible?: boolean;
   island?: string;
   province?: string;
   first_language_population?: number;

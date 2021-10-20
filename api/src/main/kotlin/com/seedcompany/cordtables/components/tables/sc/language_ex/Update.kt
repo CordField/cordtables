@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.languageex
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import org.apache.commons.codec.language.bm.Lang
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -15,6 +16,8 @@ import javax.sql.DataSource
 import kotlin.reflect.full.memberProperties
 import kotlin.collections.mutableListOf as mutableListOf
 import java.time.Instant
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.jvm.javaField
 
 data class UpdateLanguageExResponse(
         val error: ErrorType,
@@ -23,7 +26,7 @@ data class UpdateLanguageExResponse(
 
 data class UpdateLanguageExRequest(
         val columnToUpdate: String,
-        val updatedColumnValue: Any,
+        val updatedColumnValue: String?,
         val token: String?,
         val id: Int
 )
@@ -66,71 +69,70 @@ class Update(
                 return UpdateLanguageExResponse(ErrorType.UserNotFound, null)
             }
             try {
-                var reqValues: MutableList<Any> = mutableListOf()
+                var reqValues: MutableList<Any?> = mutableListOf()
                 var updateSql = "update sc.languages_ex set"
 
                 if (req.updatedColumnValue != null && req.columnToUpdate !in languageExUtil.nonMutableColumns) {
                     updateSql = "$updateSql ${req.columnToUpdate} = ?,"
-                    reqValues.add(req.updatedColumnValue)
-                    if (req.columnToUpdate == "egids_level") {
-                        val castedUpdatedColumnValue = EgidsScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+
+                    if (req.columnToUpdate == "progress_bible") {
+                        reqValues.add(req.updatedColumnValue.toBoolean())
+                    } else if (req.columnToUpdate in listOf<String>("first_language_population", "owning_group", "owning_person")) {
+                        reqValues.add(req.updatedColumnValue.toInt())
+                    }
+                    // casting the column value as an enum, updating the array and then updating the calculated columns
+                    else if (req.columnToUpdate == "egids_level") {
+                        val castedUpdatedColumnValue = EgidsScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql egids_value = ?,"
                         reqValues.add(languageExUtil.getEgidsValue(castedUpdatedColumnValue))
-                    }
-                    if (req.columnToUpdate == "least_reached_progress_jps_level") {
-                        val castedUpdatedColumnValue = LeastReachedProgressScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+                    } else if (req.columnToUpdate == "least_reached_progress_jps_level") {
+                        val castedUpdatedColumnValue = LeastReachedProgressScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql least_reached_value = ?,"
                         reqValues.add(languageExUtil.getLeastReachedValue(castedUpdatedColumnValue))
-                    }
-                    if (req.columnToUpdate == "partner_interest_level") {
-                        val castedUpdatedColumnValue = PartnerInterestScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+                    } else if (req.columnToUpdate == "partner_interest_level") {
+                        val castedUpdatedColumnValue = PartnerInterestScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql partner_interest_value = ?,"
                         reqValues.add(languageExUtil.getPartnerInterestValue(castedUpdatedColumnValue))
-                    }
-                    if (req.columnToUpdate == "multiple_languages_leverage_linguistic_level") {
-                        val castedUpdatedColumnValue = MultipleLanguagesLeverageLinguisticScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+                    } else if (req.columnToUpdate == "multiple_languages_leverage_linguistic_level") {
+                        val castedUpdatedColumnValue = MultipleLanguagesLeverageLinguisticScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql multiple_languages_leverage_linguistic_value = ?,"
                         reqValues.add(languageExUtil.getMultipleLanguagesLeverageLinguisticValue(castedUpdatedColumnValue))
-                    }
-                    if (req.columnToUpdate == "multiple_languages_leverage_joint_training_level") {
-                        val castedUpdatedColumnValue = MultipleLanguagesLeverageJointTrainingScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+                    } else if (req.columnToUpdate == "multiple_languages_leverage_joint_training_level") {
+                        val castedUpdatedColumnValue = MultipleLanguagesLeverageJointTrainingScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql multiple_languages_leverage_joint_training_value = ?,"
                         reqValues.add(languageExUtil.getMultipleLanguagesLeverageJointTrainingValue(castedUpdatedColumnValue))
-                    }
-                    if (req.columnToUpdate == "lang_comm_int_in_language_development_level") {
-                        val castedUpdatedColumnValue = LangCommIntInLanguageDevelopmentScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+                    } else if (req.columnToUpdate == "lang_comm_int_in_language_development_level") {
+                        val castedUpdatedColumnValue = LangCommIntInLanguageDevelopmentScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql lang_comm_int_in_language_development_value = ?,"
                         reqValues.add(languageExUtil.getLangCommIntInLanguageDevelopmentValue(castedUpdatedColumnValue))
-                    }
-                    if (req.columnToUpdate == "lang_comm_int_in_scripture_translation_level") {
-                        val castedUpdatedColumnValue = LangCommIntInScriptureTranslationScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+                    } else if (req.columnToUpdate == "lang_comm_int_in_scripture_translation_level") {
+                        val castedUpdatedColumnValue = LangCommIntInScriptureTranslationScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql lang_comm_int_in_scripture_translation_value = ?,"
                         reqValues.add(languageExUtil.getLangCommIntInScriptureTranslationValue(castedUpdatedColumnValue))
-                    }
-                    if (req.columnToUpdate == "access_to_scripture_in_lwc_level") {
-                        val castedUpdatedColumnValue = AccessToScriptureInLwcScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+                    } else if (req.columnToUpdate == "access_to_scripture_in_lwc_level") {
+                        val castedUpdatedColumnValue = AccessToScriptureInLwcScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql access_to_scripture_in_lwc_value = ?,"
                         reqValues.add(languageExUtil.getAccessToScriptureInLwcValue(castedUpdatedColumnValue))
-                    }
-                    if (req.columnToUpdate == "begin_work_geo_challenges_level") {
-                        val castedUpdatedColumnValue = BeginWorkGeoChallengesScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+                    } else if (req.columnToUpdate == "begin_work_geo_challenges_level") {
+                        val castedUpdatedColumnValue = BeginWorkGeoChallengesScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql begin_work_geo_challenges_value = ?,"
                         reqValues.add(languageExUtil.getBeginWorkGeoChallengesValue(castedUpdatedColumnValue))
-                    }
-                    if (req.columnToUpdate == "begin_work_rel_pol_obstacles_level") {
-                        val castedUpdatedColumnValue = BeginWorkRelPolObstaclesScale.valueOf(req.updatedColumnValue as String)
-                        reqValues.set(0,castedUpdatedColumnValue)
+                    } else if (req.columnToUpdate == "begin_work_rel_pol_obstacles_level") {
+                        val castedUpdatedColumnValue = BeginWorkRelPolObstaclesScale.valueOf(req.updatedColumnValue)
+                        reqValues.add(castedUpdatedColumnValue)
                         updateSql = "$updateSql begin_work_rel_pol_obstacles_value = ?,"
                         reqValues.add(languageExUtil.getBeginWorkRelPolObstaclesValue(castedUpdatedColumnValue))
+                    } else {
+                        reqValues.add(req.updatedColumnValue)
                     }
                 }
 
@@ -146,6 +148,7 @@ class Update(
                         is Int -> updateStatement.setInt(counter, value)
                         is String -> updateStatement.setString(counter, value)
                         is Double -> updateStatement.setDouble(counter, value)
+                        is Boolean -> updateStatement.setBoolean(counter, value)
                         else -> updateStatement.setObject(counter, value, java.sql.Types.OTHER)
                     }
                     counter += 1
