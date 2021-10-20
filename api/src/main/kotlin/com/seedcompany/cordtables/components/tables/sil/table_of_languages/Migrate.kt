@@ -76,7 +76,6 @@ class Migrate(
     @PostMapping("migrate/sc-ethnologue")
     @ResponseBody
     fun registerHandler() {
-
         val token = cord.login()
 
         if (token != null) {

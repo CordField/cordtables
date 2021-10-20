@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
+import java.util.*
 import javax.sql.DataSource
 
 data class ValueInt(
@@ -25,6 +26,14 @@ data class ValueString(
 
 data class ValueBoolean(
     val value: Boolean? = null,
+)
+
+data class ValueDate(
+    val value: Date? = null,   //TODO: not sure what kind of Date, just going for something at the moment
+)
+
+data class EthnologueCode(
+    val code: ValueString? = null,
 )
 
 data class Ethnologue(
@@ -47,8 +56,14 @@ data class Language(
     val registryOfDialectsCode: ValueString? = null,
     val leastOfThese: ValueBoolean? = null,
     val leastOfTheseReason: ValueString? = null,
-    val signLanguageCode:
-
+    val signLanguageCode: ValueString? = null,
+    val sponsorEstimatedEndDate: ValueDate? = null,
+    val sensitivity: String? = null,
+    val isSignLanguage: ValueBoolean? = null,
+    val hasExternalFirstScripture: ValueBoolean? = null,
+    val tags: ValueString? = null,
+    val presetInventory: ValueBoolean? = null,
+    val ethnologue: EthnologueCode? = null,
 )
 
 data class Languages(
@@ -112,12 +127,13 @@ class Migrate(
             for (i in 1..total) {
 
                 val langQuery = """
-                        {"query":"query Query { languages { items { avatarLetters name { value } displayName { value } displayNamePronunciation { value } isDialect { value } populationOverride { value } registryOfDialectsCode { value } leastOfThese { value } leastOfTheseReason { value } signLanguageCode { value } sponsorEstimatedEndDate { value } sensitivity isSignLanguage { value } hasExternalFirstScripture { value } tags { value } presetInventory { value } population { value } } } }"}
+                        {"query":"query Query { languages { items { id ethnologue { code { value } } avatarLetters name { value } displayName { value } displayNamePronunciation { value } isDialect { value } populationOverride { value } registryOfDialectsCode { value } leastOfThese { value } leastOfTheseReason { value } signLanguageCode { value } sponsorEstimatedEndDate { value } sensitivity isSignLanguage { value } hasExternalFirstScripture { value } tags { value } presetInventory { value } population { value } } } }"}
                     """.trimIndent()
 
                 val langResponse = cord.post<Response>(token, langQuery)
 
                 val lang = langResponse?.data?.languages?.items?.get(0)
+
                 if (lang == null) {
                     println("language entry was null")
                     continue
@@ -126,9 +142,9 @@ class Migrate(
                 var errorType: ErrorType? = null
 
                 this.ds.connection.use { conn ->
-                    val migrationStatement = conn.prepareCall("call sc.sc_migrate_language(?,?,?,?,?,?);")
-                    migrationStatement.setString(1, lang.code?.value)
-                    migrationStatement.setString(2, lang.name?.value)
+                    val migrationStatement = conn.prepareCall("call sc.sc_migrate_language(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);")
+                    migrationStatement.setString(1, lang.iso639?.code)
+                    migrationStatement.setString(2, lang.neo4j_id?.value)
                     if (lang.population?.value != null) {
                         migrationStatement.setInt(3, lang.population?.value)
                     } else {
@@ -153,7 +169,7 @@ class Migrate(
                     migrationStatement.close()
                 }
 
-                println("Migrated ethnologue entry code: '${lang.code?.value}': $errorType")
+               // println("Migrated ethnologue entry code: '${lang.code?.value}': $errorType")
 
 
             }
