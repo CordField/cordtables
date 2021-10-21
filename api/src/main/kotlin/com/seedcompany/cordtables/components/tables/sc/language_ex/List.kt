@@ -83,8 +83,8 @@ data class ReadLanguageExRequest(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("LanguageExRead")
-class Read(
+@Controller("LanguageExList")
+class List(
     @Autowired
     val util: Utility,
 
@@ -99,7 +99,7 @@ class Read(
 
     @PostMapping("language_ex/read")
     @ResponseBody
-    fun ReadHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
+    fun ListHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
         var data: MutableList<LanguageEx> = mutableListOf()
         if (req.token == null) return ReadLanguageExResponse(ErrorType.TokenNotFound, mutableListOf())
 

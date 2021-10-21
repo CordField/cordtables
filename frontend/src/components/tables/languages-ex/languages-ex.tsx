@@ -171,7 +171,7 @@ export class LanguagesEx {
     return (
       <select onInput={event => this.selectFieldChange(event, fieldName)}>
         {['-', ...this.columnDropdownOptions[fieldName]].map(option => (
-          <option value={option !== '-' ? option : null} selected={option !== '-' ? this.insertedFields[fieldName] === option : this.insertedFields[fieldName] === null}>
+          <option value={option !== '-' ? option : ''} selected={option !== '-' ? this.insertedFields[fieldName] === option : this.insertedFields[fieldName] === ''}>
             {option}
           </option>
         ))}

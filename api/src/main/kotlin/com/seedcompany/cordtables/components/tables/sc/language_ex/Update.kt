@@ -45,7 +45,7 @@ class Update(
     @ResponseBody
     fun UpdateHandler(@RequestBody req: UpdateLanguageExRequest): UpdateLanguageExResponse {
         if (req.token == null) return UpdateLanguageExResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasUpdatePermission(req.token, "sc.languages_ex", req.columnToUpdate)) {
+        if (!util.userHasUpdatePermission(req.token, "sc.languages_ex", req.columnToUpdate,req.id)) {
             return UpdateLanguageExResponse(ErrorType.DoesNotHaveUpdatePermission, null)
         }
         println("req: $req")

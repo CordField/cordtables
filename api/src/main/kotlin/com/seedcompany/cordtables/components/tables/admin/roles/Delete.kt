@@ -2,8 +2,6 @@ package com.seedcompany.cordtables.components.tables.globalroles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.languageex.DeleteLanguageExResponse
-import com.seedcompany.cordtables.components.user.GlobalRole
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -12,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.reflect.full.memberProperties
-import kotlin.collections.mutableListOf as mutableListOf
 
 
 data class DeleteGlobalRoleResponse(

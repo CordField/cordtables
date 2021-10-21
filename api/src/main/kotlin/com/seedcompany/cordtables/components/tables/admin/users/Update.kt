@@ -40,7 +40,7 @@ class Update(
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminUserUpdateRequest): AdminUserUpdateResponse {
         if (req.token == null) return AdminUserUpdateResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasUpdatePermission(req.token, "admin.users", req.columnToUpdate)) {
+        if (!util.userHasUpdatePermission(req.token, "admin.users", req.columnToUpdate,req.id)) {
             return AdminUserUpdateResponse(ErrorType.DoesNotHaveUpdatePermission, null)
         }
         println("req: $req")

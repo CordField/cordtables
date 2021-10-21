@@ -38,7 +38,7 @@ class GetIsCellEditable(
         if (req.row == null) return GetIsCellEditableResponse(ErrorType.InputMissingRow, false)
 
         // todo - add row check to the util function
-        val canEdit = util.userHasUpdatePermission(token = req.token, tableName = req.table, columnName = req.column)
+        val canEdit = util.userHasUpdatePermission(token = req.token, tableName = req.table, columnName = req.column, rowId = req.row)
         return GetIsCellEditableResponse( ErrorType.NoError, canEdit)
     }
 }

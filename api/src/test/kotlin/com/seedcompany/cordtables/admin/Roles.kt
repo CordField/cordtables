@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class GlobalRoles(
+class Roles(
     @LocalServerPort
     val port: Int,
 
