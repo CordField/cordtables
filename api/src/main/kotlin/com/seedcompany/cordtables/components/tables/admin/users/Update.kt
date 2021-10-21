@@ -99,7 +99,7 @@ class Update(
                     var person: Int? = updateStatementResult.getInt("person")
                     if (updateStatementResult.wasNull()) person = null
 
-                    var email: String? = updateStatementResult.getString("iso")
+                    var email: String? = updateStatementResult.getString("email")
                     if (updateStatementResult.wasNull()) email = null
 
                     var chat: Int? = updateStatementResult.getInt("chat")
