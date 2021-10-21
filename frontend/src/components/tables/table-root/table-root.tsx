@@ -14,6 +14,7 @@ export class TableRoot {
     return (
       <Host>
         <slot></slot>
+        {this.match.params.table === 'admin-users' && <admin-users></admin-users>}
         {this.match.params.table === 'admin-roles' && <roles-table></roles-table>}
         {this.match.params.table === 'admin-role-column-grants' && <role-column-grants></role-column-grants>}
         {this.match.params.table === 'admin-role-membership' && <role-memberships></role-memberships>}

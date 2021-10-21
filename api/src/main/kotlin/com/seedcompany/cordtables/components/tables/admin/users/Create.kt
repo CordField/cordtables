@@ -46,7 +46,7 @@ class Create(
     val adminUserUtil: AdminUserUtil,
 
   @Autowired
-        val ds: DataSource,
+    val ds: DataSource,
 ) {
     @PostMapping("table/admin-users/create")
     @ResponseBody
@@ -79,12 +79,13 @@ class Create(
                 var insertStatementKeys = "insert into admin.users("
                 var insertStatementValues = " values("
                 for (prop in AdminUser::class.memberProperties) {
-                    val propValue = prop.get(req.insertedFields)
+                    var propValue = prop.get(req.insertedFields)
                     println("$propValue ${prop.name}")
                     if (propValue != null && prop.name !in adminUserUtil.nonMutableColumns) {
                         insertStatementKeys = "$insertStatementKeys ${prop.name},"
                         insertStatementValues = "$insertStatementValues ?,"
-                        reqValues.add(propValue)
+                        if(prop.name == "password") propValue = util.encoder.encode(propValue as String)
+                        reqValues.add(propValue as Any)
                     }
                 }
                 insertStatementKeys = "$insertStatementKeys modified_by,created_by)"
