@@ -17,6 +17,7 @@ create type admin.access_level as enum (
 );
 
 create type admin.table_name as enum (
+  'admin.database_version_control',
   'admin.email_tokens',
   'admin.role_column_grants',
   'admin.role_memberships',
@@ -231,7 +232,6 @@ alter table admin.group_row_access add constraint admin_group_row_access_peer_fk
 alter table admin.group_memberships add constraint admin_group_memberships_peer_fk foreign key (peer) references admin.peers(id);
 alter table admin.peers add constraint admin_peers_peer_fk foreign key (peer) references admin.peers(id);
 alter table admin.database_version_control add constraint admin_db_vc_control_peer_fk foreign key (peer) references admin.peers(id);
-
 
 -- ROLES --------------------------------------------------------------------
 
