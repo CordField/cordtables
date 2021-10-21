@@ -68,7 +68,9 @@ class Update(
 
                 if (req.updatedColumnValue != null && req.columnToUpdate !in adminUserUtil.nonMutableColumns) {
                     updateSql = "$updateSql ${req.columnToUpdate} = ?,"
-                    reqValues.add(req.updatedColumnValue)
+                    var value: String = req.updatedColumnValue as String
+                    if(req.columnToUpdate == "password") value = util.encoder.encode(req.columnToUpdate)
+                    reqValues.add(value)
                 }
 
                 updateSql = "$updateSql modified_by = ?, modified_at = ? where id = ? returning *"
@@ -99,7 +101,7 @@ class Update(
                     var person: Int? = updateStatementResult.getInt("person")
                     if (updateStatementResult.wasNull()) person = null
 
-                    var email: String? = updateStatementResult.getString("iso")
+                    var email: String? = updateStatementResult.getString("email")
                     if (updateStatementResult.wasNull()) email = null
 
                     var chat: Int? = updateStatementResult.getInt("chat")
