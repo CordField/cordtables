@@ -30,6 +30,7 @@ class DatabaseVersionControl(
         if (!isVersion1()) toVersion1()
         updateSchemaIdempotent()
         println("database schema update complete")
+        updateHistoryTables()
     }
 
     private fun updateSchemaIdempotent() {
@@ -49,6 +50,10 @@ class DatabaseVersionControl(
             }
         }
 
+    }
+
+    private fun updateHistoryTables(){
+        // todo
     }
 
     private fun toVersion2() {
