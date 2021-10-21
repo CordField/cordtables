@@ -1,4 +1,4 @@
-create schema admin;
+create schema if not exists admin;
 create schema if not exists common;
 
 set schema 'common';
