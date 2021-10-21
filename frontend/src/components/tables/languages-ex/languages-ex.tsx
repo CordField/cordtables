@@ -237,9 +237,6 @@ export class LanguagesEx {
     });
   }
 
-  toggleEditMode = () => {
-    globals.globalStore.state.editMode = !globals.globalStore.state.editMode;
-  };
   render() {
     return (
       <Host>
@@ -247,13 +244,13 @@ export class LanguagesEx {
         <header>
           <h1>Language Ex</h1>
         </header>
-        <button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>
+
         <main>
           <div id="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>*</th>
+                  {globals.globalStore.state.editMode && <th>*</th>}
                   {Object.keys(this.defaultFields).map(key => (
                     <th>{key}</th>
                   ))}
@@ -262,18 +259,20 @@ export class LanguagesEx {
               <tbody>
                 {this.languagesEx.map(LanguageEx => (
                   <tr>
-                    <div class="button-parent">
-                      <button class="delete-button" onClick={() => this.handleDelete(LanguageEx.id)}>
-                        Delete
-                      </button>
-                    </div>
+                    {globals.globalStore.state.editMode && (
+                      <div class="button-parent">
+                        <button class="delete-button" onClick={() => this.handleDelete(LanguageEx.id)}>
+                          Delete
+                        </button>
+                      </div>
+                    )}
                     {Object.keys(LanguageEx).map(key => this.getEditableCell(key, LanguageEx))}
                   </tr>
                 ))}
               </tbody>
               {this.showNewForm && (
                 <tr>
-                  <td>&nbsp;</td>
+                  {globals.globalStore.state.editMode && <td>&nbsp;</td>}
                   {Object.keys(this.defaultFields).map(key => this.getInputCell(key))}
                 </tr>
               )}
