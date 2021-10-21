@@ -2,6 +2,8 @@ package com.seedcompany.cordtables.components.tables.admin.users
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.admin.GetSecureListQuery
+import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -24,12 +26,17 @@ data class AdminUserListRequest(
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("AdminUserList")
-class List<T>(
+class List(
     @Autowired
     val util: Utility,
+
     @Autowired
     val ds: DataSource,
-) {
+
+    @Autowired
+    val secureList: GetSecureListQuery,
+
+    ) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
@@ -42,94 +49,27 @@ class List<T>(
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
 
-        //language=SQL
-        val listSQL = """               
-            with row_level_access as 
-            (
-                select row 
-                from admin.group_row_access as a  
-                inner join admin.group_memberships as b 
-                on a.group_id = b.group_id 
-                inner join admin.tokens as c 
-                on b.person = c.person
-                where a.table_name = 'admin.users'
-                and c.token = :token
-            ), 
-            column_level_access as 
-            (
-                select column_name 
-                from admin.role_column_grants a 
-                inner join admin.role_memberships b 
-                on a.role = b.role 
-                inner join admin.tokens c 
-                on b.person = c.person 
-                where a.table_name = 'admin.users'
-                and c.token = :token
+        val query = secureList.getSecureListQueryHandler(
+            GetSecureListQueryRequest(
+                tableName = "admin.users",
+                columns = arrayOf(
+                    "id",
+                    "person",
+                    "email",
+                    "chat",
+                    "created_at",
+                    "created_by",
+                    "modified_at",
+                    "modified_by",
+                    "owning_person",
+                    "owning_group",
+                    "peer"
+                )
             )
-            select 
-            case
-                when 'id' in (select column_name from column_level_access) then id 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then id 
-                when owning_person = (select person from admin.tokens where token = :token) then id 
-                else null 
-            end as id,
-            case
-                when 'person' in (select column_name from column_level_access) then person 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then person
-                else null 
-            end as person,
-            case
-                when 'email' in (select column_name from column_level_access) then email
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then email
-                else null 
-            end as email,
-            case
-                when 'chat' in (select column_name from column_level_access) then chat 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then chat
-                else null 
-            end as chat,
-            case
-                when 'created_at' in (select column_name from column_level_access) then created_at 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then created_at
-                else null 
-            end as created_at,
-            case
-                when 'created_by' in (select column_name from column_level_access) then created_by 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then created_by
-                else null 
-            end as created_by,
-            case
-                when 'modified_at' in (select column_name from column_level_access) then modified_at 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then modified_at
-                else null 
-            end as modified_at,
-            case
-                when 'modified_by' in (select column_name from column_level_access) then modified_by 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then modified_by
-                else null 
-            end as modified_by,
-            case
-                when 'owning_person' in (select column_name from column_level_access) then owning_person 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then owning_person
-                else null 
-            end as owning_person,
-            case
-                when 'owning_group' in (select column_name from column_level_access) then owning_group 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then owning_group
-                else null 
-            end as owning_group,
-            case
-                when 'peer' in (select column_name from column_level_access) then peer 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then peer
-                else null 
-            end as peer
-            from admin.users
-            where id in (select row from row_level_access) or 
-                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
-        """.trimIndent()
+        ).query
 
         try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(listSQL, paramSource)
+            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
                 var id: Int? = jdbcResult.getInt("id")
@@ -138,7 +78,7 @@ class List<T>(
                 var person: Int? = jdbcResult.getInt("person")
                 if (jdbcResult.wasNull()) person = null
 
-                var email: String? = jdbcResult.getString("iso")
+                var email: String? = jdbcResult.getString("email")
                 if (jdbcResult.wasNull()) email = null
 
                 var chat: Int? = jdbcResult.getInt("chat")
