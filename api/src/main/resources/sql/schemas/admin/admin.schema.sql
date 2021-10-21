@@ -97,7 +97,22 @@ create type admin.table_permission as enum (
   'Delete'
 );
 
+-- VERSION CONTROL ---------------------------------------------------
 
+create type admin.db_vc_status as enum (
+  'In Progress',
+  'Completed',
+  'Abandoned'
+);
+
+create table admin.database_version_control (
+  id serial primary key,
+  version int not null,
+  status admin.db_vc_status default 'In Progress',
+  started timestamp not null default CURRENT_TIMESTAMP,
+  completed timestamp,
+  peer int
+);
 
 -- PEOPLE ------------------------------------------------------------
 
@@ -215,6 +230,8 @@ alter table admin.groups add constraint admin_groups_peer_fk foreign key (peer) 
 alter table admin.group_row_access add constraint admin_group_row_access_peer_fk foreign key (peer) references admin.peers(id);
 alter table admin.group_memberships add constraint admin_group_memberships_peer_fk foreign key (peer) references admin.peers(id);
 alter table admin.peers add constraint admin_peers_peer_fk foreign key (peer) references admin.peers(id);
+alter table admin.database_version_control add constraint admin_db_vc_control_peer_fk foreign key (peer) references admin.peers(id);
+
 
 -- ROLES --------------------------------------------------------------------
 
