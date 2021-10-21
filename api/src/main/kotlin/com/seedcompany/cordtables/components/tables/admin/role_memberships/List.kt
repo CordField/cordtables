@@ -50,7 +50,6 @@ class List(
     fun listHandler(@RequestBody req: GlobalRoleMembershipsRequest): GlobalRoleMembershipsReturn {
 
         if (req.token == null) return GlobalRoleMembershipsReturn(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return GlobalRoleMembershipsReturn(ErrorType.AdminOnly, null)
 
         val items = mutableListOf<GlobalRoleMemberships>()
 

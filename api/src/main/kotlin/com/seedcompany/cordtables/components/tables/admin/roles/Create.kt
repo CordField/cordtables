@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.user
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.users.AdminUserCreateResponse
 import com.seedcompany.cordtables.components.tables.globalroles.GlobalRoleUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -50,8 +51,7 @@ class Create(
         val reqValues: MutableList<Any> = mutableListOf()
 
         if (req.token == null) return CreateGlobalRoleResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasCreatePermission(req.token, "admin.roles"))
-            return CreateGlobalRoleResponse(ErrorType.DoesNotHaveCreatePermission, null)
+        if (!util.isAdmin(req.token)) return CreateGlobalRoleResponse(ErrorType.AdminOnly, null)
 
         this.ds.connection.use { conn ->
             try {

@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.people
+package com.seedcompany.cordtables.components.tables.admin.people
 
 import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
@@ -43,8 +43,8 @@ data class PeopleListRequest(
 )
 
 data class PeopleListResponse(
-    val error: ErrorType,
-    val people: List<People>?,
+        val error: ErrorType,
+        val people: List<People>?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -64,7 +64,6 @@ class List(
     fun listHandler(@RequestBody req: PeopleListRequest): PeopleListResponse {
 
         if (req.token == null) return PeopleListResponse(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return PeopleListResponse(ErrorType.AdminOnly, null)
 
         val items = mutableListOf<People>()
 

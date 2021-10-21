@@ -46,6 +46,9 @@ class Create(
         var insertedGlobalRole: GlobalRoleColumnGrantsCreate? = null
         var userId = 0
 
+        if (req.token == null) return CreateGlobalRoleColumnGrantsResponse(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return CreateGlobalRoleColumnGrantsResponse(ErrorType.AdminOnly, null)
+
         this.ds.connection.use { conn ->
             try {
                 val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")

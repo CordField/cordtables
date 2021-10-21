@@ -53,7 +53,6 @@ class List(
     fun listHandler(@RequestBody req: CommonOrganizationsRequest): CommonOrganizationsReturn{
 
         if (req.token == null) return CommonOrganizationsReturn(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return CommonOrganizationsReturn(ErrorType.AdminOnly, null)
 
         val items = mutableListOf<CommonOrganizations>()
 

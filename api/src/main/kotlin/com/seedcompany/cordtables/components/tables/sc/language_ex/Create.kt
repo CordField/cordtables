@@ -38,8 +38,7 @@ class Create(
     fun CreateHandler(@RequestBody req: CreateLanguageExRequest): CreateLanguageExResponse {
 
         if (req.token == null) return CreateLanguageExResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasCreatePermission(req.token, "admin.languages_ex"))
-            return CreateLanguageExResponse(ErrorType.DoesNotHaveCreatePermission, null)
+        if (!util.isAdmin(req.token)) return CreateLanguageExResponse(ErrorType.AdminOnly, null)
 
         println("req: $req")
         var insertedLanguageEx: LanguageEx? = null

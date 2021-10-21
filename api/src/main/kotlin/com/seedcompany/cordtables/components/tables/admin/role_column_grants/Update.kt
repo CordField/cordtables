@@ -47,6 +47,9 @@ class Update(
         var insertedGlobalRole: GlobalRoleColumnGrantsUpdate? = null
         var userId = 0
 
+        if (req.token == null) return UpdateGlobalRoleColumnGrantsResponse(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return UpdateGlobalRoleColumnGrantsResponse(ErrorType.AdminOnly, null)
+
         this.ds.connection.use { conn ->
             try {
                 val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")

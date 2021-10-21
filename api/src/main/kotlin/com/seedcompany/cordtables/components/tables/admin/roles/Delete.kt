@@ -3,6 +3,7 @@ package com.seedcompany.cordtables.components.tables.globalroles
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.tables.languageex.DeleteLanguageExResponse
+import com.seedcompany.cordtables.components.user.CreateGlobalRoleResponse
 import com.seedcompany.cordtables.components.user.GlobalRole
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -42,8 +43,8 @@ class Delete(
         var deletedGlobalRowId: Int?= null
         var userId = 0
         if (req.token == null) return DeleteGlobalRoleResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "sc.languages_ex"))
-            return DeleteGlobalRoleResponse(ErrorType.DoesNotHaveDeletePermission, null)
+        if (!util.isAdmin(req.token)) return DeleteGlobalRoleResponse(ErrorType.AdminOnly, null)
+
         this.ds.connection.use { conn ->
             try {
                 val deleteStatement = conn.prepareCall(

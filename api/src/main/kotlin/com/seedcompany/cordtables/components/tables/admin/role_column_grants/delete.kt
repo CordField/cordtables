@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.globalrolecolumngrants
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.languageex.CreateLanguageExResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RestController
@@ -41,6 +42,9 @@ class Delete(
         var errorType = ErrorType.UnknownError
         var deletedGlobalRole: GlobalRoleColumnGrantsDelete? = null
         var userId = 0
+
+        if (req.token == null) return DeleteGlobalRoleColumnGrantsResponse(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return DeleteGlobalRoleColumnGrantsResponse(ErrorType.AdminOnly, null)
 
         this.ds.connection.use { conn ->
             try {

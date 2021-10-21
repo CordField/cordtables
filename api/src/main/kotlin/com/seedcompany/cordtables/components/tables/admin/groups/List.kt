@@ -50,7 +50,6 @@ class List(
     fun listHandler(@RequestBody req: GroupsListRequest): GroupsListReturn {
 
         if (req.token == null) return GroupsListReturn(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return GroupsListReturn(ErrorType.AdminOnly, null)
 
         val items = mutableListOf<GroupsRow>()
 

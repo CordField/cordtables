@@ -45,9 +45,8 @@ class Update(
     @ResponseBody
     fun UpdateHandler(@RequestBody req: UpdateLanguageExRequest): UpdateLanguageExResponse {
         if (req.token == null) return UpdateLanguageExResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasUpdatePermission(req.token, "sc.languages_ex", req.columnToUpdate)) {
-            return UpdateLanguageExResponse(ErrorType.DoesNotHaveUpdatePermission, null)
-        }
+        if (!util.isAdmin(req.token)) return UpdateLanguageExResponse(ErrorType.AdminOnly, null)
+
         println("req: $req")
         var updatedLanguageEx: LanguageEx? = null
         var userId = 0

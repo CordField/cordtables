@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.globalroles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.user.CreateGlobalRoleResponse
 import com.seedcompany.cordtables.components.user.GlobalRole
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -43,9 +44,8 @@ class Update(
     @ResponseBody
     fun UpdateHandler(@RequestBody req: UpdateGlobalRoleRequest): UpdateGlobalRoleResponse {
         if (req.token == null) return UpdateGlobalRoleResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasUpdatePermission(req.token, "admin.roles", req.columnToUpdate)) {
-            return UpdateGlobalRoleResponse(ErrorType.DoesNotHaveUpdatePermission, null)
-        }
+        if (!util.isAdmin(req.token)) return UpdateGlobalRoleResponse(ErrorType.AdminOnly, null)
+
         println("req: $req")
         var updatedGlobalRole: GlobalRole? = null
         var userId = 0
