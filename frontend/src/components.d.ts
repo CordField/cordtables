@@ -9,6 +9,8 @@ import { MatchResults, RouterHistory } from "@stencil/router";
 import { ActionType } from "./common/types";
 import { MenuClickedEvent } from "./components/header/types";
 export namespace Components {
+    interface AdminUsers {
+    }
     interface AppHome {
     }
     interface AppProfile {
@@ -90,6 +92,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAdminUsersElement extends Components.AdminUsers, HTMLStencilElement {
+    }
+    var HTMLAdminUsersElement: {
+        prototype: HTMLAdminUsersElement;
+        new (): HTMLAdminUsersElement;
+    };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
     var HTMLAppHomeElement: {
@@ -253,6 +261,7 @@ declare global {
         new (): HTMLTableRootElement;
     };
     interface HTMLElementTagNameMap {
+        "admin-users": HTMLAdminUsersElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
@@ -283,6 +292,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AdminUsers {
+    }
     interface AppHome {
     }
     interface AppProfile {
@@ -368,6 +379,7 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface IntrinsicElements {
+        "admin-users": AdminUsers;
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
@@ -401,6 +413,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "admin-users": LocalJSX.AdminUsers & JSXBase.HTMLAttributes<HTMLAdminUsersElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
