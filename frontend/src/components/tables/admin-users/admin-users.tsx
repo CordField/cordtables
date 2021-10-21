@@ -84,6 +84,7 @@ export class AdminUsers {
     );
   }
   getEditableCell(columnName: string, adminUser: AdminUser) {
+
     return (
       <td>
         <cf-cell
@@ -177,18 +178,20 @@ export class AdminUsers {
                 </tr>
               </thead>
               <tbody>
-                {this.adminUsers.map(adminUser => (
-                  <tr>
-                    {globals.globalStore.state.editMode && (
-                      <div class="button-parent">
-                        <button class="delete-button" onClick={() => this.handleDelete(adminUser.id)}>
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                    {Object.keys(AdminUsers).map(key => this.getEditableCell(key, adminUser))}
-                  </tr>
-                ))}
+                {this.adminUsers &&
+                  this.adminUsers.length > 0 &&
+                  this.adminUsers.map(adminUser => (
+                    <tr>
+                      {globals.globalStore.state.editMode && (
+                        <div class="button-parent">
+                          <button class="delete-button" onClick={() => this.handleDelete(adminUser.id)}>
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                      {Object.keys(adminUser).map(key => this.getEditableCell(key, adminUser))}
+                    </tr>
+                  ))}
               </tbody>
               {this.showNewForm && (
                 <tr>
