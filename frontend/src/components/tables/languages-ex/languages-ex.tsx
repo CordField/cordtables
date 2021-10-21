@@ -236,6 +236,10 @@ export class LanguagesEx {
       this.languagesEx = res.data.sort((a, b) => a.id - b.id);
     });
   }
+
+  toggleEditMode = () => {
+    globals.globalStore.state.editMode = !globals.globalStore.state.editMode;
+  };
   render() {
     return (
       <Host>
@@ -243,6 +247,7 @@ export class LanguagesEx {
         <header>
           <h1>Language Ex</h1>
         </header>
+        <button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>
         <main>
           <div id="table-wrap">
             <table>
