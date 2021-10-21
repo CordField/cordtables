@@ -46,6 +46,9 @@ enum class ErrorType {
     PeerNotPresent,
     PeerFailedToConfirm,
     PeerFailedToLogin,
+    InputMissingToken,
+    InputMissingTable,
+    InputMissingColumn,
 }
 
 
