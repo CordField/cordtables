@@ -70,7 +70,6 @@ export class AdminUsers {
   @State() success: string;
   @State() showNewForm = false;
   insertFieldChange(event, fieldName) {
-    console.log(fieldName, event.target.value);
     this.insertedFields[fieldName] = event.target.value;
   }
   getInputCell(fieldName) {
@@ -84,7 +83,6 @@ export class AdminUsers {
     );
   }
   getEditableCell(columnName: string, adminUser: AdminUser) {
-
     return (
       <td>
         <cf-cell
@@ -108,7 +106,7 @@ export class AdminUsers {
     });
 
     if (updateResponse.error == ErrorType.NoError) {
-      const result = await fetchAs<ListAdminUserRequest, ListAdminUserResponse>('table/admin-users/read', { token: globals.globalStore.state.token });
+      const result = await fetchAs<ListAdminUserRequest, ListAdminUserResponse>('table/admin-users/list', { token: globals.globalStore.state.token });
       this.adminUsers = result.data.sort((a, b) => a.id - b.id);
       return true;
     } else {
@@ -117,7 +115,7 @@ export class AdminUsers {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteAdminUserRequest, DeleteAdminUserResponse>('table/delete', {
+    const result = await fetchAs<DeleteAdminUserRequest, DeleteAdminUserResponse>('table/admin-users/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -132,13 +130,11 @@ export class AdminUsers {
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    console.log(this.insertedFields);
-    const result = await fetchAs<CreateAdminUserRequest, CreateAdminUserResponse>('table/admin-uers/create', {
+    const result = await fetchAs<CreateAdminUserRequest, CreateAdminUserResponse>('table/admin-users/create', {
       insertedFields: this.insertedFields,
       token: globals.globalStore.state.token,
     });
 
-    console.log(result);
     this.showNewForm = false;
     this.insertedFields = this.defaultFields;
     if (result.error === ErrorType.NoError) {
