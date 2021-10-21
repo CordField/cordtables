@@ -11,6 +11,9 @@
 }
 
 table {
+  /* border-collapse: collapse; */
+  border: 3px solid #ddd;
+  text-align: left;
   /* border: 2px solid black; */
 }
 
@@ -29,7 +32,11 @@ td {
 }
 
 tr:nth-child(odd) {
-  background-color: #7abbf1;
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
 }
 
 /* tr:first-child {
@@ -38,9 +45,16 @@ tr:nth-child(odd) {
 
 th {
   color: white;
-  background-color: #1872ef;
+  background-color: #255dab;
 
   font-weight: normal;
+
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  /* background-color: #4caf50; */
+  color: white;
+  cursor: default;
 }
 
 #new-button {

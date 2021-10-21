@@ -252,7 +252,7 @@ export class LanguagesEx {
                 <tr>
                   {globals.globalStore.state.editMode && <th>*</th>}
                   {Object.keys(this.defaultFields).map(key => (
-                    <th>{key}</th>
+                    <th>{key.replaceAll('_', ' ')}</th>
                   ))}
                 </tr>
               </thead>
