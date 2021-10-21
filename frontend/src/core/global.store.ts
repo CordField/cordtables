@@ -2,6 +2,7 @@ import { createStore } from '@stencil/store';
 
 export class Globals {
   public globalStore = createStore({
+    editMode: false,
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
     token: localStorage.getItem('token'),
     email: localStorage.getItem('email'),

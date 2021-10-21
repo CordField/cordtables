@@ -49,6 +49,10 @@ export class AppRoot {
     }
   }
 
+  toggleEditMode = () => {
+    globals.globalStore.state.editMode = !globals.globalStore.state.editMode;
+  };
+
   render() {
     return (
       <div id="root-wrap-outer">
@@ -58,7 +62,7 @@ export class AppRoot {
             {!globals.globalStore.state.isLoggedIn && <div>Please login or register</div>}
 
             {globals.globalStore.state.isLoggedIn && this.showSelect && (
-              <div>
+              <div id="top-thing">
                 <div id="nav-menu">
                   <div>
                     <select name="tables" id="tables" onChange={event => this.selectChange(event)}>
@@ -80,6 +84,8 @@ export class AppRoot {
                     </select>
                   </div>
                 </div>
+
+                <button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>
               </div>
             )}
           </div>

@@ -200,11 +200,12 @@ class Utility(
                 )
                 and a.column_name = ?
                 and a.access_level = 'Write'
-                and a.table_name::text = ?;
+                and a.table_name::text = ?
                 ))
             """.trimIndent())
-            statement.setString(1,columnName);
-            statement.setString(2,tableName);
+            statement.setString(1, token)
+            statement.setString(2, columnName)
+            statement.setString(3, tableName)
             var result = statement.executeQuery()
             if(result.next()){
                 userHasUpdatePermission = result.getBoolean(1)

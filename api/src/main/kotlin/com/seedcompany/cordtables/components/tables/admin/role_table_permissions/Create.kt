@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.globalroletablepermissions
+package com.seedcompany.cordtables.components.tables.admin.role_table_permissions
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -15,7 +15,7 @@ import javax.sql.DataSource
 data class InsertableGRTPFields(
     val tableName: String,
     val globalRole: Int,
-    val tablePermissions: String,
+    val tablePermission: String,
 )
 
 data class CreateGRTPermissionsResponse(
@@ -23,8 +23,8 @@ data class CreateGRTPermissionsResponse(
     val data: GlobalRolesTablePermissions?
 )
 data class CreateGRTPermissionsRequest(
-    val insertedFields: InsertableGRTPFields,
-    val email: String
+        val insertedFields: InsertableGRTPFields,
+        val email: String
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -65,13 +65,15 @@ class Create(
             }
             try {
                 val insertStatement = conn.prepareCall(
-                    "insert into public.roles_table_permissions(table_name, table_permissions, role, created_by, modified_by) values(?,?,?,?, ?) returning *"
+                    "insert into admin.role_table_permissions(table_name, table_permission, role, created_by, modified_by, owning_person, owning_group) values(?::admin.table_name,?::admin.table_permission,?, ?, ?, ?, ?) returning *"
                 )
                 insertStatement.setString(1, req.insertedFields.tableName)
-                insertStatement.setString(2, req.insertedFields.tablePermissions)
+                insertStatement.setString(2, req.insertedFields.tablePermission)
                 insertStatement.setInt(3, req.insertedFields.globalRole)
                 insertStatement.setInt(4, userId)
                 insertStatement.setInt(5, userId)
+                insertStatement.setInt(6, userId)
+                insertStatement.setInt(7, 1)
 
                 val insertStatementResult = insertStatement.executeQuery()
 
@@ -82,9 +84,9 @@ class Create(
                     val modifiedAt = insertStatementResult.getString("modified_at")
                     val modifiedBy = insertStatementResult.getInt("modified_by")
                     val tableName = insertStatementResult.getString("table_name")
-                    val tablePermissions = insertStatementResult.getString("table_permissions")
+                    val tablePermission = insertStatementResult.getString("table_permission")
                     val globalRole = insertStatementResult.getInt("role")
-                    newGRTPermission = GlobalRolesTablePermissions(id, createdAt, createdBy, modifiedAt, modifiedBy, tableName, tablePermissions, globalRole)
+                    newGRTPermission = GlobalRolesTablePermissions(id, createdAt, createdBy, modifiedAt, modifiedBy, tableName, tablePermission, globalRole)
                     println("newly inserted id: $id")
                 }
             }

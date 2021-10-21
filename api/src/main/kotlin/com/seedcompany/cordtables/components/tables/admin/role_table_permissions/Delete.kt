@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.globalroletablepermissions
+package com.seedcompany.cordtables.components.tables.admin.role_table_permissions
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.reflect.full.memberProperties
-import kotlin.collections.mutableListOf as mutableListOf
 
 data class dataId(
     val id: Int?
@@ -48,7 +46,7 @@ class Delete(
 
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from public.roles_table_permissions where id = ? returning id"
+                    "delete from admin.role_table_permissions where id = ? returning id"
                 )
 
 //                modified_by, modified_at, id

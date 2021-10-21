@@ -32,6 +32,13 @@ h1 {
   padding: 0 12px;
 }
 
+#top-thing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 10px;
+}
+
 #nav-menu {
   display: flex;
   align-items: center;

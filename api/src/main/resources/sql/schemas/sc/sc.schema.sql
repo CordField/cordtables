@@ -997,114 +997,188 @@ create table sc.ceremonies (
 
 -- CRM TABLES, WIP ------------------------------------------------------------------
 
-create type common.involvements as enum (
+create type common.involvement_options as enum (
   'CIT',
   'Engagements'
 );
 
-create type admin.people_transitions as enum (
+create type common.people_transition_options as enum (
   'New Org',
   'Other'
 );
 
-create type common.org_transitions as enum (
+create type common.organization_transition_options as enum (
   'To Manager',
   'To Other'
 );
 
 -- PARTNER CRM STUFF
---
---create table sc_org_to_org_rels (
---    from_sys_org varchar(32) not null,
---    to_sys_org varchar(32) not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (from_sys_org, to_sys_org),
---    foreign key (from_sys_org) references sc_organizations(sys_org),
---    foreign key (to_sys_org) references sc_organizations(sys_org)
---);
---
---create table sc_partner_performance (
---    sc_internal_org varchar(32) not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (sc_internal_org),
---    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
---);
---
---create table sc_partner_finances (
---    sc_internal_org varchar(32) not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (sc_internal_org),
---    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
---);
---
---create table sc_partner_reporting (
---    sc_internal_org varchar(32) not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (sc_internal_org),
---    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
---);
---
---create table sc_partner_translation_progress (
---    sc_internal_org varchar(32) not null,
---    sc_internal_id varchar(32) not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (sc_internal_org, sc_internal_id),
---    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
---);
---
---create table sc_partner_notes (
---    sc_internal_org varchar(32) not null,
---    author_sys_person int not null,
---    note_text text not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (sc_internal_org, author_sys_person, created_at),
---    foreign key (sc_internal_org) references sc_organizations(sc_internal_org),
---    foreign key (author_sys_person) references sys_people(sys_person)
---);
---
---create table sc_org_transitions (
---    sc_internal_org varchar(32) not null,
---    transition_type sc_org_transitions not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (sc_internal_org),
---    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
---);
---
---create table sc_roles (
---    sc_role serial primary key,
---    name varchar(32) unique not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP
---);
---
---create table sc_role_memberships (
---    sys_person int not null,
---    sc_role int not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (sys_person, sc_role),
---    foreign key (sys_person) references sys_people(sys_person)
---);
---
---create table sc_person_to_person_rels (
---    from_sys_person int not null,
---    to_sys_person int not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (from_sys_person, to_sys_person),
---    foreign key (from_sys_person) references sys_people(sys_person),
---    foreign key (to_sys_person) references sys_people(sys_person)
---);
---
---create table sys_people_transitions (
---    sys_person int not null,
---    transition_type sc_people_transitions not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---    primary key (sys_person, transition_type),
---    foreign key (sys_person) references sys_people(sys_person)
---);
---
---create table sc_involvements (
---    sc_internal_org varchar(32) not null,
---    type sc_involvements not null,
---    created_at timestamp not null default CURRENT_TIMESTAMP,
---	primary key (sc_internal_org, type),
---    foreign key (sc_internal_org) references sc_organizations(sc_internal_org)
---);
+
+create table common.organization_relationships (
+  id serial primary key,
+  
+  from_org int not null references sc.organizations(id),
+  to_org int not null references sc.organizations(id),
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
+
+  unique (from_org, to_org)
+);
+
+create table sc.partner_performance (
+  id serial primary key,
+  
+  organization int unique not null references sc.organizations(id),
+  -- todo
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table sc.partner_finances (
+  id serial primary key,
+  
+  organization int unique not null references sc.organizations(id),
+  -- todo
+  
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table sc.partner_reporting (
+  id serial primary key,
+  
+  organization int unique not null references sc.organizations(id),
+  -- todo
+  
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table sc.partner_translation_progress (
+  id serial primary key,
+  
+  organization int unique not null references sc.organizations(id),
+  -- todo
+  
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table sc.partner_notes (
+  id serial primary key,
+  
+  organization int unique not null references sc.organizations(id),
+  author int not null references admin.people(id),
+  note text not null,
+  -- todo
+  
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table common.organization_transitions (
+  id serial primary key,
+  
+  organization int unique not null references sc.organizations(id),
+  transition_type common.organization_transition_options not null,
+  -- todo
+  
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table common.person_to_person_relationships (
+  id serial primary key,
+  
+  from_person int not null references admin.people(id),
+  to_person int not null references admin.people(id),
+  -- todo
+  
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table common.people_transitions (
+  id serial primary key,
+
+  person int not null references admin.people(id),
+  transition_type common.people_transition_options not null,
+  -- todo
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table common.involvements (
+  id serial primary key,
+
+  organization int not null references common.organizations(id),
+  type common.involvement_options not null,
+
+  chat int references common.chats(id),
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
+
+  unique (organization, type)
+);
