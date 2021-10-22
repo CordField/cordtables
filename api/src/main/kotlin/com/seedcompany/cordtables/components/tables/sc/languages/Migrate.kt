@@ -66,7 +66,7 @@ class Migrate(
             for (i in 1..total) {
 
                 val langQuery = """
-                        {"query":"query Query { languages { items { id ethnologue { code { value } } avatarLetters name { value } displayName { value } displayNamePronunciation { value } isDialect { value } populationOverride { value } registryOfDialectsCode { value } leastOfThese { value } leastOfTheseReason { value } signLanguageCode { value } sponsorEstimatedEndDate { value } sensitivity isSignLanguage { value } hasExternalFirstScripture { value } tags { value } presetInventory { value } population { value } } } }"}
+                        {"query":"query Query { languages(input: { page: $i, count: 1 }) { items { id ethnologue { code { value } } avatarLetters name { value } displayName { value } displayNamePronunciation { value } isDialect { value } populationOverride { value } registryOfDialectsCode { value } leastOfThese { value } leastOfTheseReason { value } signLanguageCode { value } sponsorEstimatedEndDate { value } sensitivity isSignLanguage { value } hasExternalFirstScripture { value } tags { value } presetInventory { value } population { value } } } }"}
                     """.trimIndent()
 
                 val langResponse = cord.post<GResponse>(token, langQuery)
@@ -117,14 +117,16 @@ class Migrate(
                         migrationStatement.setNull(15, java.sql.Types.NULL)
                     else
                         migrationStatement.setBoolean(15, lang.hasExternalFirstScripture?.value)
-                    migrationStatement.setString(16, lang.tags?.value)
+                    migrationStatement.setArray(16, conn.createArrayOf("text", lang.tags?.value))
                     if(lang.presetInventory?.value == null)
                         migrationStatement.setNull(17, java.sql.Types.NULL)
                     else
                         migrationStatement.setBoolean(17, lang.presetInventory?.value)
 
+                    migrationStatement.setNull(18, java.sql.Types.NULL)
                     migrationStatement.registerOutParameter(18, java.sql.Types.VARCHAR)
 
+                    migrationStatement.toString()
                     migrationStatement.execute()
 
                     try {

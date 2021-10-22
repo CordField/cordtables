@@ -18,6 +18,10 @@ data class ValueDate(
     val value: java.sql.Timestamp? = null,   //TODO: not sure what kind of Date, just going for something at the moment
 )
 
+data class ValueArray(
+    val value: Array<String> = arrayOf<String>(),
+)
+
 data class EthnologueCode(
     val code: ValueString? = null,
 )
@@ -45,7 +49,7 @@ data class Language(
     val sensitivity: String? = null,
     val isSignLanguage: ValueBoolean? = null,
     val hasExternalFirstScripture: ValueBoolean? = null,
-    val tags: ValueString? = null,
+    val tags: ValueArray? = null,
     val presetInventory: ValueBoolean? = null,
     val ethnologue: Ethnologue? = null,
 )

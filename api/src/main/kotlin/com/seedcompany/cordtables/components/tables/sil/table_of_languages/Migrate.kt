@@ -87,6 +87,7 @@ class Migrate(
                     }
                     migrationStatement.setString(4, eth.provisionalCode?.value)
                     migrationStatement.setObject(5, eth.sensitivity, java.sql.Types.OTHER)
+                    migrationStatement.setNull(6, java.sql.Types.NULL)
                     migrationStatement.registerOutParameter(6, java.sql.Types.VARCHAR)
 
                     migrationStatement.execute()

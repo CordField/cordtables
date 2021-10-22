@@ -1,5 +1,5 @@
 CREATE OR REPLACE PROCEDURE sc.sc_migrate_language(
-    in pIso_639 char(3) unique,
+    in pIso_639 char(3),
     in pNeo4j_id VARCHAR(32),
     in pName varchar(255),
     in pDisplay_name varchar(255),
@@ -14,7 +14,7 @@ CREATE OR REPLACE PROCEDURE sc.sc_migrate_language(
     in pSensitivity common.sensitivity,
     in pIs_sign_language bool,
     in pHas_external_first_scripture bool,
-    in pTags varchar(32),
+    in pTags text[],
     in pPreset_inventory bool,
     inout error_type varchar(32) default 'UnknownError'
 )
@@ -22,6 +22,7 @@ LANGUAGE PLPGSQL
 AS $$
 DECLARE
   vLangId int;
+  l_eth int;
 BEGIN
   select id
   from sc.languages
@@ -46,7 +47,13 @@ BEGIN
     set display_name_pronunciation = pDisplay_name_pronunciation,
       modified_at = CURRENT_TIMESTAMP
     where neo4j_id = pNeo4j_id and
-      display_name_pronunciation != pDisplay_name_pronunciation;
+      (
+        (display_name_pronunciation != pDisplay_name_pronunciation)
+        OR
+        (display_name_pronunciation IS NULL AND pDisplay_name_pronunciation IS NOT NULL)
+        OR
+        (display_name_pronunciation IS NOT NULL AND pDisplay_name_pronunciation IS NULL )
+      );
 
     update sc.languages
     set tags = pTags,
@@ -85,19 +92,37 @@ BEGIN
     set least_of_these_reason = pLeast_of_these_reason,
       modified_at = CURRENT_TIMESTAMP
     where neo4j_id = pNeo4j_id and
-       least_of_these_reason != pLeast_of_these_reason;
+       (
+           (least_of_these_reason != pLeast_of_these_reason)
+           OR
+           (least_of_these_reason IS NULL AND pLeast_of_these_reason IS NOT NULL)
+           OR
+           (least_of_these_reason IS NOT NULL AND pLeast_of_these_reason IS NULL)
+       );
 
     update sc.languages
     set population_override = pPopulation_override,
       modified_at = CURRENT_TIMESTAMP
     where neo4j_id = pNeo4j_id and
-       population_override != pPopulation_override;
+       (
+           (population_override != pPopulation_override)
+           OR
+           (population_override IS NULL AND pPopulation_override IS NOT NULL)
+           OR
+           (population_override IS NOT NULL AND pPopulation_override IS NULL)
+       );
 
     update sc.languages
     set registry_of_dialects_code = pRegistry_of_dialects_code,
       modified_at = CURRENT_TIMESTAMP
     where neo4j_id = pNeo4j_id and
-       registry_of_dialects_code != pRegistry_of_dialects_code;
+       (
+          (registry_of_dialects_code != pRegistry_of_dialects_code)
+          OR
+          (registry_of_dialects_code IS NULL AND pRegistry_of_dialects_code IS NOT NULL)
+          OR
+          (registry_of_dialects_code IS NOT NULL AND pRegistry_of_dialects_code IS NULL)
+       );
 
     update sc.languages
     set sensitivity = pSensitivity,
@@ -109,19 +134,30 @@ BEGIN
     set sign_language_code = pSign_language_code,
       modified_at = CURRENT_TIMESTAMP
     where neo4j_id = pNeo4j_id and
-       sign_language_code != pSign_language_code;
+       (
+          (sign_language_code != pSign_language_code)
+          OR
+          (sign_language_code IS NULL AND pSign_language_code IS NOT NULL)
+          OR
+          (sign_language_code IS NOT NULL AND pSign_language_code IS NULL)
+       );
 
     update sc.languages
     set sponsor_estimated_end_date = pSponsor_estimated_end_date,
       modified_at = CURRENT_TIMESTAMP
     where neo4j_id = pNeo4j_id and
-       sponsor_estimated_end_date != pSponsor_estimated_end_date;
-
+       (
+          (sponsor_estimated_end_date != pSponsor_estimated_end_date)
+          OR
+          (sponsor_estimated_end_date IS NULL AND pSponsor_estimated_end_date IS NOT NULL)
+          OR
+          (sponsor_estimated_end_date IS NOT NULL AND pSponsor_estimated_end_date IS NULL)
+       );
     error_type := 'NoError';
 
   else
     insert into sc.languages(
-      neo4j_id
+      neo4j_id,
       name,
       display_name,
       display_name_pronunciation,
@@ -141,7 +177,7 @@ BEGIN
       owning_person,
       owning_group
     ) values (
-      pNeo4j_id
+      pNeo4j_id,
       pName,
       pDisplay_name,
       pDisplay_name_pronunciation,
@@ -161,8 +197,23 @@ BEGIN
       1,
       1
     );
-
     error_type := 'NoError';
   end if;
 
+  -- update the "relationship" props.
+  SELECT ethnologue INTO l_eth FROM sc.languages WHERE ethnologue IS NULL and neo4j_id = pNeo4j_id;
+  if found then
+      WITH eth AS (select id from sil.table_of_languages where iso_639 = pIso_639)
+    update sc.languages
+      set ethnologue = eth.id
+    FROM eth
+    WHERE neo4j_id = pNeo4j_id;
+  else
+      WITH eth AS (select id from sil.table_of_languages where iso_639 = pIso_639)
+    update sc.languages
+      set ethnologue = eth.id
+    FROM eth
+    WHERE neo4j_id = pNeo4j_id
+    AND ethnologue != eth.id;
+  END IF;
 END; $$;

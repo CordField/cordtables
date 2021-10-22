@@ -220,7 +220,7 @@ create table sc.languages (
 	name varchar(255) unique not null,
 	display_name varchar(255) unique not null,
 	display_name_pronunciation varchar(255),
-	tags varchar(32),
+	tags text[],
 	preset_inventory bool,
 	is_dialect bool,
 	is_sign_language bool,
