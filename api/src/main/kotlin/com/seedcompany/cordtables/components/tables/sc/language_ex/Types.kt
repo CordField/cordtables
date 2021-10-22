@@ -119,3 +119,96 @@ data class LanguageExInput(
     val owning_group: Int? = null,
     val peer: Int? = null,
 )
+
+
+enum class EgidsScale  {
+    `0`,
+    `1`,
+    `2`,
+    `3`,
+    `4`,
+    `5`,
+    `6a`,
+    `6b`,
+    `7`,
+    `8a`,
+    `8b`,
+    `9`,
+    `10`
+}
+enum class LeastReachedProgressScale  {
+    `0`,
+    `1`,
+    `2`,
+    `3`,
+    `4`,
+    `5`
+}
+
+enum class PartnerInterestScale  {
+    NoPartnerInterest,
+    Some,
+    Significant,
+    Considerable
+}
+
+enum class MultipleLanguagesLeverageLinguisticScale  {
+    None,
+    Some,
+    Significant,
+    Considerable,
+    Large,
+    Vast
+}
+
+enum class MultipleLanguagesLeverageJointTrainingScale  {
+    None,
+    Some,
+    Significant,
+    Considerable,
+    Large,
+    Vast
+}
+
+enum class LangCommIntInLanguageDevelopmentScale  {
+    NoInterest,
+    Some,
+    ExpressedNeed,
+    Significant,
+    Considerable
+}
+
+enum class LangCommIntInScriptureTranslationScale  {
+    NoInterest,
+    Some,
+    ExpressedNeed,
+    Significant,
+    Considerable
+}
+
+enum class AccessToScriptureInLwcScale  {
+    FullAccess,
+    VastMajority,
+    LargeMajority,
+    Majority,
+    Significant,
+    Some,
+    Few
+}
+
+enum class BeginWorkGeoChallengesScale  {
+    None,
+    VeryDifficult,
+    Difficult,
+    Moderate,
+    Easy
+}
+
+enum class BeginWorkRelPolObstaclesScale  {
+    None,
+    VeryDifficult,
+    Difficult,
+    Moderate,
+    Easy
+}
+

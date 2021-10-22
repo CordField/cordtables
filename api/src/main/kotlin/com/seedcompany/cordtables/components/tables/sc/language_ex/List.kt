@@ -4,9 +4,9 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
+import com.seedcompany.cordtables.components.tables.sc.language_ex.*
 import com.seedcompany.cordtables.components.tables.sc.language_ex.LanguageEx
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
@@ -44,7 +44,7 @@ class List(
 
     @PostMapping("language_ex/read")
     @ResponseBody
-    fun ListHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
+    fun listHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
         var data: MutableList<LanguageEx> = mutableListOf()
         if (req.token == null) return ReadLanguageExResponse(ErrorType.TokenNotFound, mutableListOf())
 

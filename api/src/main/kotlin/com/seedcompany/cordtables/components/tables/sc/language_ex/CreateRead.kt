@@ -37,7 +37,7 @@ class CreateRead(
 ) {
     @PostMapping("language_ex/create-read")
     @ResponseBody
-    fun CreateHandler(@RequestBody req: LanguageExCreateReadRequest): LanguageExCreateReadResponse {
+    fun createReadHandler(@RequestBody req: LanguageExCreateReadRequest): LanguageExCreateReadResponse {
 
         val createResponse = create.createHandler(
             CreateLanguageExRequest(

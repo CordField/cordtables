@@ -3,7 +3,6 @@ package com.seedcompany.cordtables.components.tables.sc.language_ex
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.languageex.EgidsScale
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
