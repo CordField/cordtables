@@ -1,12 +1,12 @@
-package com.seedcompany.cordtables.components.tables.languageex
+package com.seedcompany.cordtables.components.tables.sc.language_ex
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.common.enumContains
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sc.language_ex.LanguageEx
+import com.seedcompany.cordtables.components.tables.languageex.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-
-data class ReadLanguageExResponse(
-    val error: ErrorType,
-    val data: MutableList<LanguageEx>?
+data class LanguageExReadRequest(
+    val token: String?,
+    val id: Int? = null,
 )
 
-data class ReadLanguageExRequest(
-    val token: String?
+data class LanguageExReadResponse(
+    val error: ErrorType,
+    val languageEx: LanguageEx? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("LanguageExList")
-class List(
+@Controller("SCLanguagesExRead2")
+class Read(
     @Autowired
     val util: Utility,
 
@@ -39,21 +39,23 @@ class List(
     @Autowired
     val secureList: GetSecureListQuery,
 ) {
-
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("language_ex/read")
+    @PostMapping("sc-languages-ex/read")
     @ResponseBody
-    fun ListHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
-        var data: MutableList<LanguageEx> = mutableListOf()
-        if (req.token == null) return ReadLanguageExResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun readHandler(@RequestBody req: LanguageExReadRequest): LanguageExReadResponse {
+
+        if (req.token == null) return LanguageExReadResponse(ErrorType.TokenNotFound)
+        if (req.id == null) return LanguageExReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+        paramSource.addValue("id", req.id)
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "sc.languages_ex",
+                getList = false,
                 columns = arrayOf(
                     "id",
                     "language_name",
@@ -103,7 +105,7 @@ class List(
                     "begin_work_rel_pol_obstacles_source",
                     "suggested_strategies",
                     "comments",
-                    "chat",
+//                    "chat",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -111,7 +113,7 @@ class List(
                     "owning_person",
                     "owning_group",
                     "peer"
-                )
+                ),
             )
         ).query
 
@@ -301,7 +303,7 @@ class List(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                data.add(
+                val languageEx =
                     LanguageEx(
                         id = id,
                         language_name = language_name,
@@ -375,13 +377,15 @@ class List(
                         owning_person = owning_person,
                         owning_group = owning_group
                     )
-                )
+
+                return LanguageExReadResponse(ErrorType.NoError, languageEx = languageEx)
+
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return ReadLanguageExResponse(ErrorType.SQLReadError, mutableListOf())
+            return LanguageExReadResponse(ErrorType.SQLReadError)
         }
 
-        return ReadLanguageExResponse(ErrorType.NoError, data)
+        return LanguageExReadResponse(error = ErrorType.UnknownError)
     }
 }

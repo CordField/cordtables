@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class LanguageExCreateReadRequest(
-    val token: String? = null,
-    val languageEx: LanguageExInput,
+data class LanguageExUpdateReadRequest(
+    val token: String?,
+    val languageEx: LanguageExInput? = null,
 )
 
-data class LanguageExCreateReadResponse(
+data class LanguageExUpdateReadResponse(
     val error: ErrorType,
     val languageEx: LanguageEx? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("SCLanguageExCreateRead")
-class CreateRead(
+@Controller("LanguageExUpdate")
+class UpdateRead(
     @Autowired
     val util: Utility,
 
@@ -30,33 +30,33 @@ class CreateRead(
     val ds: DataSource,
 
     @Autowired
-    val create: Create,
+    val update: Update,
 
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("language_ex/create-read")
+    @PostMapping("sc-language-ex/update-read")
     @ResponseBody
-    fun CreateHandler(@RequestBody req: LanguageExCreateReadRequest): LanguageExCreateReadResponse {
+    fun updateReadHandler(@RequestBody req: LanguageExUpdateReadRequest): LanguageExUpdateReadResponse {
 
-        val createResponse = create.createHandler(
-            CreateLanguageExRequest(
+        val updateResponse = update.updateHandler(
+            LanguageExUpdateRequest(
                 token = req.token,
-                languageEx = req.languageEx
+                languageEx = req.languageEx,
             )
         )
 
-        if (createResponse.error != ErrorType.NoError) {
-            return LanguageExCreateReadResponse(error = createResponse.error)
+        if (updateResponse.error != ErrorType.NoError) {
+            return LanguageExUpdateReadResponse(updateResponse.error)
         }
 
         val readResponse = read.readHandler(
             LanguageExReadRequest(
                 token = req.token,
-                id = createResponse!!.id
+                id = req.languageEx!!.id
             )
         )
 
-        return LanguageExCreateReadResponse(error = readResponse.error, languageEx = readResponse.languageEx)
+        return LanguageExUpdateReadResponse(error = readResponse.error, readResponse.languageEx)
     }
 }

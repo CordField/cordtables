@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.sc.language_ex
 import com.seedcompany.cordtables.components.tables.languageex.*
 
 data class LanguageEx(
-    val id: Int? = null,
+    var id: Int? = null,
     val language_name: String? = null,
     val iso: String? = null,
     val prioritization: Double? = null,
@@ -62,7 +62,7 @@ data class LanguageEx(
 )
 
 data class LanguageExInput(
-    val id: Int? = null,
+    var id: Int? = null,
     val language_name: String? = null,
     val iso: String? = null,
     val prioritization: Double? = null,

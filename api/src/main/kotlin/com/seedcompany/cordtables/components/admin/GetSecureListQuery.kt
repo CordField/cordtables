@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 data class GetSecureListQueryRequest(
     val tableName: String,
     val columns: Array<String>,
+    val getList: Boolean = true, // get read if false
 )
 
 data class GetSecureListQueryResponse(
@@ -87,13 +88,29 @@ class GetSecureListQuery() {
 
         response.query += columns.joinToString()
 
-        response.query += """
+        if (req.getList) {
+
+            response.query += """
             from ${req.tableName} 
             where id in (select row from row_level_access) or
                 (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
                 owning_person = (select person from admin.tokens where token = :token) or
                 id in (select row from public_row_level_access);
         """.replace('\n', ' ')
+
+        } else {
+
+            response.query += """
+            from ${req.tableName} 
+            where
+                id = :id and
+                (id in (select row from row_level_access) or
+                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
+                owning_person = (select person from admin.tokens where token = :token) or
+                id in (select row from public_row_level_access));
+        """.replace('\n', ' ')
+
+        }
 
         return response
     }

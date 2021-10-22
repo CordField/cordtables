@@ -20,13 +20,12 @@ data class CreateLanguageExRequest(
 
 data class CreateLanguageExResponse(
     val error: ErrorType,
-    val languageEx: LanguageEx? = null,
+    val id: Int? = null,
 )
-
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("SCLanguageExCreate")
-class CreateRead(
+class Create(
     @Autowired
     val util: Utility,
 
@@ -34,13 +33,16 @@ class CreateRead(
     val ds: DataSource,
 
     @Autowired
-    val update: Update2,
+    val update: Update,
+
+    @Autowired
+    val read: Read,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
     @PostMapping("language_ex/create")
     @ResponseBody
-    fun CreateHandler(@RequestBody req: CreateLanguageExRequest): CreateLanguageExResponse {
+    fun createHandler(@RequestBody req: CreateLanguageExRequest): CreateLanguageExResponse {
 
         if (req.token == null) return CreateLanguageExResponse(error = ErrorType.InputMissingToken, null)
 
@@ -136,18 +138,20 @@ class CreateRead(
             req.token,
         )
 
-        val response = update.updateHandler(
-            UpdateLanguageExRequest2(
+        req.languageEx.id = id
+
+        val updateResponse = update.updateHandler(
+            LanguageExUpdateRequest(
                 token = req.token,
                 languageEx = req.languageEx,
             )
         )
 
-        if (response.error == ErrorType.NoError) {
-            return CreateLanguageExResponse(error = ErrorType.NoError)
+        if (updateResponse.error != ErrorType.NoError) {
+            return CreateLanguageExResponse(updateResponse.error)
         }
 
-        return CreateLanguageExResponse(error = ErrorType.UnknownError, null)
+        return CreateLanguageExResponse(error = ErrorType.NoError, id = id)
     }
 
 
