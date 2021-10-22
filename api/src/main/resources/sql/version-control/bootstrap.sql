@@ -259,33 +259,30 @@ BEGIN
 
 
 -- creating non-admin user
+    insert into admin.users(email,password, person, created_by, modified_by, owning_person,owning_group)
+    values
+    ('non-admin@tsco.org','$argon2id$v=19$m=4096,t=3,p=1$wrgddJLJEp4iGr1xtX9f9A$7iicFbpW55+8wo0yoLd8kK1yToMIy6FNLXRIAtTAuLU',
+     vPublicPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId)
+    returning id into vNonAdminPersonId;
 
+     insert into admin.role_memberships(role, person, created_by, modified_by, owning_person, owning_group) values
+     (vPublicRoleId, vNonAdminPersonId, vPersonId, vPersonId, vPersonId,vAdminGroupId ) ;
 
---     insert into admin.role_memberships(role, person, created_by, modified_by, owning_person, owning_group) values
---     (vPublicRoleId, vNonAdminPersonId, vPersonId, vPersonId, vPersonId,vAdminGroupId ) ;
+     insert into admin.group_memberships(group_id,person,created_by,modified_by,owning_person,owning_group) values
+     (vPublicGroupId, vNonAdminPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
+ --    only giving the user create permission so we can test if they have create and don't have delete
+     insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group)
+     values (vPublicRoleId, 'Create', 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
---     insert into admin.group_memberships(group_id,person,created_by,modified_by,owning_person,owning_group) values
---     (vPublicGroupId, vNonAdminPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
--- --    only giving the user create permission so we can test if they have create and don't have delete
---     insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group)
---     values (vPublicRoleId, 'Create', 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+       values
+       ('Write', 'id', vPublicRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+       ('Write', 'iso', vPublicRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+       ('Write', 'prioritization', vPublicRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
---      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
---       values
---       ('Write', 'id', vPublicRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
---       ('Write', 'iso', vPublicRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
---       ('Write', 'prioritization', vPublicRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-
---      -- giving row membership to only one row
---      insert into admin.group_row_access(group_id,table_name,row,created_by,modified_by,owning_person,owning_group)
---      values(vPublicGroupId,'sc.languages_ex',1,vPersonId,vPersonId,vPersonId,vAdminGroupId);
-
-
-
-
-
-
-
+      -- giving row membership to only one row
+      insert into admin.group_row_access(group_id,table_name,row,created_by,modified_by,owning_person,owning_group)
+      values(vPublicGroupId,'sc.languages_ex',1,vPersonId,vPersonId,vPersonId,vAdminGroupId);
 
     error_type := 'NoError';
   end if;
