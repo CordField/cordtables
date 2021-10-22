@@ -340,7 +340,6 @@ create type sc.multiple_languages_leverage_joint_training_scale as enum (
 create type sc.lang_comm_int_in_language_development_scale as enum (
 		'No Interest',
 		'Some',
-		'Expressed Need',
 		'Significant',
 		'Considerable'
 );

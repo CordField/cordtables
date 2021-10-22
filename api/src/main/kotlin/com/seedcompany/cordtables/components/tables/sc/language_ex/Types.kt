@@ -1,7 +1,5 @@
 package com.seedcompany.cordtables.components.tables.sc.language_ex
 
-import com.seedcompany.cordtables.components.tables.languageex.*
-
 data class LanguageEx(
     var id: Int? = null,
     val language_name: String? = null,
@@ -120,95 +118,92 @@ data class LanguageExInput(
     val peer: Int? = null,
 )
 
-
-enum class EgidsScale  {
-    `0`,
-    `1`,
-    `2`,
-    `3`,
-    `4`,
-    `5`,
-    `6a`,
-    `6b`,
-    `7`,
-    `8a`,
-    `8b`,
-    `9`,
-    `10`
-}
-enum class LeastReachedProgressScale  {
-    `0`,
-    `1`,
-    `2`,
-    `3`,
-    `4`,
-    `5`
+enum class EgidsScale(val value: Float)  {
+    `0`(1.0F),
+    `1`(1.0F),
+    `2`(1.0F),
+    `3`(1.0F),
+    `4`(0.9F),
+    `5`(0.8F),
+    `6a`(0.6F),
+    `6b`(0.4F),
+    `7`(0.3F),
+    `8a`(0.2F),
+    `8b`(0.1F),
+    `9`(0.0F),
+    `10`(0.0F),
 }
 
-enum class PartnerInterestScale  {
-    NoPartnerInterest,
-    Some,
-    Significant,
-    Considerable
+enum class LeastReachedProgressScale(val value: Float)  {
+    `1`(1.00F),
+    `2`(0.75F),
+    `3`(0.50F),
+    `4`(0.25F),
+    `5`(0.00F),
 }
 
-enum class MultipleLanguagesLeverageLinguisticScale  {
-    None,
-    Some,
-    Significant,
-    Considerable,
-    Large,
-    Vast
+enum class PartnerInterestScale(val value: Float)  {
+    NoPartnerInterest(0.00F),
+    Some(0.33F),
+    Significant(0.66F),
+    Considerable(1.00F),
 }
 
-enum class MultipleLanguagesLeverageJointTrainingScale  {
-    None,
-    Some,
-    Significant,
-    Considerable,
-    Large,
-    Vast
+enum class MultipleLanguagesLeverageLinguisticScale(val value: Float)  {
+    None(0.0F),
+    Some(0.2F),
+    Significant(0.4F),
+    Considerable(0.6F),
+    Large(0.8F),
+    Vast(1.0F),
 }
 
-enum class LangCommIntInLanguageDevelopmentScale  {
-    NoInterest,
-    Some,
-    ExpressedNeed,
-    Significant,
-    Considerable
+enum class MultipleLanguagesLeverageJointTrainingScale(val value: Float)  {
+    None(0.0F),
+    Some(0.2F),
+    Significant(0.4F),
+    Considerable(0.6F),
+    Large(0.8F),
+    Vast(1.0F),
 }
 
-enum class LangCommIntInScriptureTranslationScale  {
-    NoInterest,
-    Some,
-    ExpressedNeed,
-    Significant,
-    Considerable
+enum class LangCommIntInLanguageDevelopmentScale(val value: Float) {
+    NoInterest(0.00F),
+    Some(0.33F),
+    Significant(0.67F),
+    Considerable(1.00F),
 }
 
-enum class AccessToScriptureInLwcScale  {
-    FullAccess,
-    VastMajority,
-    LargeMajority,
-    Majority,
-    Significant,
-    Some,
-    Few
+enum class LangCommIntInScriptureTranslationScale(val value: Float)  {
+    NoInterest(0.00F),
+    Some(0.25F),
+    ExpressedNeed(0.50F),
+    Significant(0.75F),
+    Considerable(1.00F),
 }
 
-enum class BeginWorkGeoChallengesScale  {
-    None,
-    VeryDifficult,
-    Difficult,
-    Moderate,
-    Easy
+enum class AccessToScriptureInLwcScale(val value: Float)  {
+    FullAccess(0.00F),
+    VastMajority(0.16F),
+    LargeMajority(0.33F),
+    Majority(0.50F),
+    Significant(0.66F),
+    Some(0.83F),
+    Few(1.00F),
 }
 
-enum class BeginWorkRelPolObstaclesScale  {
-    None,
-    VeryDifficult,
-    Difficult,
-    Moderate,
-    Easy
+enum class BeginWorkGeoChallengesScale(val value: Float) {
+    None(-0.50F),
+    VeryDifficult(0.00F),
+    Difficult(0.33F),
+    Moderate(0.66F),
+    Easy(1.00F),
 }
 
+enum class BeginWorkRelPolObstaclesScale(val value: Float)  {
+    None(0.00F),
+    VeryDifficult(0.25F),
+    Difficult(0.50F),
+    Moderate(0.75F),
+    Easy(1.00F),
+}

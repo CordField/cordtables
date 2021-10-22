@@ -44,55 +44,70 @@ class Update(
             )
         }
 
-        if (req.languageEx.least_reached_progress_jps_level != null && !enumContains<EgidsScale>(req.languageEx.least_reached_progress_jps_level)) {
+        if (req.languageEx.least_reached_progress_jps_level != null && !enumContains<LeastReachedProgressScale>(req.languageEx.least_reached_progress_jps_level)) {
             return LanguageExUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.partner_interest_level != null && !enumContains<EgidsScale>(req.languageEx.partner_interest_level)) {
+        if (req.languageEx.partner_interest_level != null && !enumContains<PartnerInterestScale>(req.languageEx.partner_interest_level)) {
             return LanguageExUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.multiple_languages_leverage_linguistic_level != null && !enumContains<EgidsScale>(req.languageEx.multiple_languages_leverage_linguistic_level)) {
+        if (req.languageEx.multiple_languages_leverage_linguistic_level != null && !enumContains<MultipleLanguagesLeverageLinguisticScale>(
+                req.languageEx.multiple_languages_leverage_linguistic_level
+            )
+        ) {
             return LanguageExUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.multiple_languages_leverage_joint_training_level != null && !enumContains<EgidsScale>(req.languageEx.multiple_languages_leverage_joint_training_level)) {
+        if (req.languageEx.multiple_languages_leverage_joint_training_level != null && !enumContains<MultipleLanguagesLeverageJointTrainingScale>(
+                req.languageEx.multiple_languages_leverage_joint_training_level
+            )
+        ) {
             return LanguageExUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.lang_comm_int_in_language_development_level != null && !enumContains<EgidsScale>(req.languageEx.lang_comm_int_in_language_development_level)) {
+        if (req.languageEx.lang_comm_int_in_language_development_level != null && !enumContains<LangCommIntInLanguageDevelopmentScale>(
+                req.languageEx.lang_comm_int_in_language_development_level
+            )
+        ) {
             return LanguageExUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.lang_comm_int_in_scripture_translation_level != null && !enumContains<EgidsScale>(req.languageEx.lang_comm_int_in_scripture_translation_level)) {
+        if (req.languageEx.lang_comm_int_in_scripture_translation_level != null && !enumContains<LangCommIntInScriptureTranslationScale>(
+                req.languageEx.lang_comm_int_in_scripture_translation_level
+            )
+        ) {
             return LanguageExUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.access_to_scripture_in_lwc_level != null && !enumContains<EgidsScale>(req.languageEx.access_to_scripture_in_lwc_level)) {
+        if (req.languageEx.access_to_scripture_in_lwc_level != null && !enumContains<AccessToScriptureInLwcScale>(req.languageEx.access_to_scripture_in_lwc_level)) {
             return LanguageExUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.begin_work_geo_challenges_level != null && !enumContains<EgidsScale>(req.languageEx.begin_work_geo_challenges_level)) {
+        if (req.languageEx.begin_work_geo_challenges_level != null && !enumContains<BeginWorkGeoChallengesScale>(req.languageEx.begin_work_geo_challenges_level)) {
             return LanguageExUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.begin_work_rel_pol_obstacles_level != null && !enumContains<EgidsScale>(req.languageEx.begin_work_rel_pol_obstacles_level)) {
+        if (req.languageEx.begin_work_rel_pol_obstacles_level != null && !enumContains<BeginWorkRelPolObstaclesScale>(
+                req.languageEx.begin_work_rel_pol_obstacles_level
+            )
+        ) {
             return LanguageExUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
@@ -163,6 +178,14 @@ class Update(
             cast = "::sc.egids_scale",
         )
 
+        if (req.languageEx.egids_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "egids_value",
+            id = req.languageEx.id!!,
+            value = EgidsScale.valueOf(req.languageEx.egids_level!!).value,
+        )
+
         if (req.languageEx.least_reached_progress_jps_level != null) util.updateField(
             token = req.token,
             table = "sc.languages_ex",
@@ -172,6 +195,14 @@ class Update(
             cast = "::sc.least_reached_progress_jps_scale"
         )
 
+        if (req.languageEx.least_reached_progress_jps_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "least_reached_value",
+            id = req.languageEx.id!!,
+            value = LeastReachedProgressScale.valueOf(req.languageEx.least_reached_progress_jps_level).value,
+        )
+
         if (req.languageEx.partner_interest_level != null) util.updateField(
             token = req.token,
             table = "sc.languages_ex",
@@ -179,6 +210,14 @@ class Update(
             id = req.languageEx.id!!,
             value = req.languageEx.partner_interest_level,
             cast = "::partner_interest_scale",
+        )
+
+        if (req.languageEx.partner_interest_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "partner_interest_value",
+            id = req.languageEx.id!!,
+            value = PartnerInterestScale.valueOf(req.languageEx.partner_interest_level).value,
         )
 
         if (req.languageEx.partner_interest_description != null) util.updateField(
@@ -206,6 +245,14 @@ class Update(
             cast = "::multiple_languages_leverage_linguistic_scale",
         )
 
+        if (req.languageEx.multiple_languages_leverage_linguistic_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "multiple_languages_leverage_linguistic_value",
+            id = req.languageEx.id!!,
+            value = MultipleLanguagesLeverageLinguisticScale.valueOf(req.languageEx.multiple_languages_leverage_linguistic_level).value,
+        )
+
         if (req.languageEx.multiple_languages_leverage_linguistic_description != null) util.updateField(
             token = req.token,
             table = "sc.languages_ex",
@@ -229,6 +276,14 @@ class Update(
             id = req.languageEx.id!!,
             value = req.languageEx.multiple_languages_leverage_joint_training_level,
             cast = "::multiple_languages_leverage_joint_training_scale",
+        )
+
+        if (req.languageEx.multiple_languages_leverage_joint_training_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "multiple_languages_leverage_joint_training_value",
+            id = req.languageEx.id!!,
+            value = MultipleLanguagesLeverageJointTrainingScale.valueOf(req.languageEx.multiple_languages_leverage_joint_training_level).value,
         )
 
         if (req.languageEx.multiple_languages_leverage_joint_training_description != null) util.updateField(
@@ -256,6 +311,14 @@ class Update(
             cast = "::lang_comm_int_in_language_development_scale",
         )
 
+        if (req.languageEx.lang_comm_int_in_language_development_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "lang_comm_int_in_language_development_value",
+            id = req.languageEx.id!!,
+            value = LangCommIntInLanguageDevelopmentScale.valueOf(req.languageEx.lang_comm_int_in_language_development_level).value,
+        )
+
         if (req.languageEx.lang_comm_int_in_language_development_description != null) util.updateField(
             token = req.token,
             table = "sc.languages_ex",
@@ -279,6 +342,14 @@ class Update(
             id = req.languageEx.id!!,
             value = req.languageEx.lang_comm_int_in_scripture_translation_level,
             cast = "::lang_comm_int_in_scripture_translation_scale",
+        )
+
+        if (req.languageEx.lang_comm_int_in_scripture_translation_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "lang_comm_int_in_scripture_translation_value",
+            id = req.languageEx.id!!,
+            value = LangCommIntInScriptureTranslationScale.valueOf(req.languageEx.lang_comm_int_in_scripture_translation_level).value,
         )
 
         if (req.languageEx.lang_comm_int_in_scripture_translation_description != null) util.updateField(
@@ -306,6 +377,14 @@ class Update(
             cast = "::access_to_scripture_in_lwc_scale",
         )
 
+        if (req.languageEx.access_to_scripture_in_lwc_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "access_to_scripture_in_lwc_value",
+            id = req.languageEx.id!!,
+            value = AccessToScriptureInLwcScale.valueOf(req.languageEx.access_to_scripture_in_lwc_level).value,
+        )
+
         if (req.languageEx.access_to_scripture_in_lwc_description != null) util.updateField(
             token = req.token,
             table = "sc.languages_ex",
@@ -331,6 +410,14 @@ class Update(
             cast = "::begin_work_geo_challenges_scale",
         )
 
+        if (req.languageEx.begin_work_geo_challenges_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "begin_work_geo_challenges_value",
+            id = req.languageEx.id!!,
+            value = BeginWorkGeoChallengesScale.valueOf(req.languageEx.begin_work_geo_challenges_level).value,
+        )
+
         if (req.languageEx.begin_work_geo_challenges_description != null) util.updateField(
             token = req.token,
             table = "sc.languages_ex",
@@ -354,6 +441,14 @@ class Update(
             id = req.languageEx.id!!,
             value = req.languageEx.begin_work_rel_pol_obstacles_level,
             cast = "::begin_work_rel_pol_obstacles_scale",
+        )
+
+        if (req.languageEx.begin_work_rel_pol_obstacles_level != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "begin_work_rel_pol_obstacles_value",
+            id = req.languageEx.id!!,
+            value = BeginWorkRelPolObstaclesScale.valueOf(req.languageEx.begin_work_rel_pol_obstacles_level).value,
         )
 
         if (req.languageEx.begin_work_rel_pol_obstacles_description != null) util.updateField(
@@ -421,5 +516,19 @@ class Update(
         )
 
         return LanguageExUpdateResponse(ErrorType.NoError)
+    }
+
+    fun getPopulationValue(population: Int): Float{
+        return when (population){
+            in 1..100 -> 0.000F
+            in 101..500 -> 0.125F
+            in 501..1000 -> 0.250F
+            in 1001..10000 -> 0.375F
+            in 10001..100000 -> 0.500F
+            in 100001..1000000 -> 0.625F
+            in 1000001..10000000 -> 0.750F
+            in 10000000.. 100000000 -> 0.875F
+            else -> 1.000F
+        }
     }
 }
