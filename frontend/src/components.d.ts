@@ -46,6 +46,8 @@ export namespace Components {
     interface CfRegister {
         "history": RouterHistory;
     }
+    interface CfTable {
+    }
     interface CommonOrganizations {
     }
     interface CreateUpdateModal {
@@ -151,6 +153,12 @@ declare global {
     var HTMLCfRegisterElement: {
         prototype: HTMLCfRegisterElement;
         new (): HTMLCfRegisterElement;
+    };
+    interface HTMLCfTableElement extends Components.CfTable, HTMLStencilElement {
+    }
+    var HTMLCfTableElement: {
+        prototype: HTMLCfTableElement;
+        new (): HTMLCfTableElement;
     };
     interface HTMLCommonOrganizationsElement extends Components.CommonOrganizations, HTMLStencilElement {
     }
@@ -271,6 +279,7 @@ declare global {
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-register": HTMLCfRegisterElement;
+        "cf-table": HTMLCfTableElement;
         "common-organizations": HTMLCommonOrganizationsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "generic-table": HTMLGenericTableElement;
@@ -329,6 +338,8 @@ declare namespace LocalJSX {
     }
     interface CfRegister {
         "history"?: RouterHistory;
+    }
+    interface CfTable {
     }
     interface CommonOrganizations {
     }
@@ -389,6 +400,7 @@ declare namespace LocalJSX {
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-register": CfRegister;
+        "cf-table": CfTable;
         "common-organizations": CommonOrganizations;
         "create-update-modal": CreateUpdateModal;
         "generic-table": GenericTable;
@@ -423,6 +435,7 @@ declare module "@stencil/core" {
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
+            "cf-table": LocalJSX.CfTable & JSXBase.HTMLAttributes<HTMLCfTableElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
