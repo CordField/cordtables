@@ -34,12 +34,14 @@ create table common.scripture_references (
 
 -- CHAT ------------------------------------------------------------
 
+-- chats are different, talk to architect
 create table common.chats (
 	id serial primary key,
 
-	-- chats are different, talk to architect. note that some are nullable
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null references admin.people(id),
+	table_name admin.table_name not null,
+	row int not null,
+	total_posts int default 0,
+
 	peer int references admin.peers(id)
 
 );
@@ -59,6 +61,37 @@ create table common.posts (
 
 	chat int not null references common.chats(id),
 	content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table common.discussion_boards(
+	id serial primary key,
+
+	title varchar(64) not null,
+	description text,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table common.threads(
+	id serial primary key,
+
+  board int not null references common.discussion_boards(id),
+	title varchar(128) not null,
+	chat int references common.chats(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
