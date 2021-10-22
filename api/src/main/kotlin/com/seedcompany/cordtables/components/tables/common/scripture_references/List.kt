@@ -50,7 +50,7 @@ class List(
         if (req.token == null) return ScriptureReferenceListResponse(ErrorType.TokenNotFound, null)
         if (!util.isAdmin(req.token)) return ScriptureReferenceListResponse(ErrorType.AdminOnly, null)
 
-        var data: MutableList<ScriptureReference> = mutableListOf<ScriptureReference>()
+        var data: MutableList<ScriptureReference> = mutableListOf()
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)

@@ -2,8 +2,6 @@ package com.seedcompany.cordtables.components.user
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.languageex.ReadLanguageExRequest
-import com.seedcompany.cordtables.components.tables.languageex.ReadLanguageExResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class GlobalRole(
+data class Role(
         val id: Int?,
         val created_at: String?,
         val created_by: Int?,
@@ -27,18 +25,18 @@ data class GlobalRole(
         val chat: Int?,
 )
 
-data class ReadGlobalRoleRequest(
+data class ListRoleRequest(
         val token: String,
 )
 
-data class ReadGlobalRoleResponse(
+data class ListRoleResponse(
         val error: ErrorType,
-        val data: MutableList<GlobalRole>?
+        val data: MutableList<Role>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("GlobalRoleRead")
-class Read(
+@Controller("RoleList")
+class List(
         @Autowired
         val util: Utility,
 
@@ -50,10 +48,10 @@ class Read(
 
     @PostMapping("role/read")
     @ResponseBody
-    fun ReadHandler(@RequestBody req: ReadGlobalRoleRequest): ReadGlobalRoleResponse {
+    fun ListHandler(@RequestBody req: ListRoleRequest): ListRoleResponse {
         //mutableList as we need to add each global role as an element to it
-        var data: MutableList<GlobalRole> = mutableListOf()
-        if (req.token == null) return ReadGlobalRoleResponse(ErrorType.TokenNotFound, mutableListOf())
+        var data: MutableList<Role> = mutableListOf()
+        if (req.token == null) return ListRoleResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -167,13 +165,22 @@ class Read(
                     if(listStatementResult.wasNull()) created_at = null
                     var modified_at: String? = listStatementResult.getString("modified_at")
                     if(listStatementResult.wasNull()) modified_at = null
-                    data.add(GlobalRole(id =id, chat=chat,owning_group=owning_group,owning_person=owning_person, created_at =created_at,created_by =  created_by, modified_at =modified_at,modified_by= modified_by,name=name))
+                    data.add(Role(
+                            id = id,
+                            chat = chat,
+                            owning_group = owning_group,
+                            owning_person = owning_person,
+                            created_at = created_at,
+                            created_by = created_by,
+                            modified_at = modified_at,
+                            modified_by = modified_by,
+                            name = name))
                 }
             } catch (e: SQLException) {
                 println("error while listing ${e.message}")
-                return ReadGlobalRoleResponse(ErrorType.SQLReadError, null)
+                return ListRoleResponse(ErrorType.SQLReadError, null)
             }
         }
-        return ReadGlobalRoleResponse(ErrorType.NoError, data)
+        return ListRoleResponse(ErrorType.NoError, data)
     }
 }

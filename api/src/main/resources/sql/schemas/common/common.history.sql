@@ -39,7 +39,7 @@ create table common.organizations_history (
         FOR EACH ROW
         EXECUTE PROCEDURE organizations_history_fn();   
         
-create table common.users_history (
+create table admin.users_history (
   _history_id serial primary key,
   _history_created_at timestamp not null default CURRENT_TIMESTAMP,
 
@@ -61,21 +61,21 @@ create table common.users_history (
         LANGUAGE PLPGSQL
         AS $$
       begin
-          insert into common.users_history(id, person, email, password, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
+          insert into admin.users_history(id, person, email, password, created_at, created_by, modified_at, modified_by, owning_person, owning_group)
           values (new.id, new.person, new.email, new.password, new.created_at, new.created_by, new.modified_at, new.modified_by, new.owning_person, new.owning_group);
         RETURN NEW;
       end; $$;
 
-      DROP TRIGGER IF EXISTS users_history_insert_trigger ON common.users;
+      DROP TRIGGER IF EXISTS users_history_insert_trigger ON admin.users;
       CREATE TRIGGER users_history_insert_trigger
         AFTER INSERT
-        ON common.users
+        ON admin.users
         FOR EACH ROW
         EXECUTE PROCEDURE users_history_fn();
 
-      DROP TRIGGER IF EXISTS users_history_update_trigger ON common.users;
+      DROP TRIGGER IF EXISTS users_history_update_trigger ON admin.users;
       CREATE TRIGGER users_history_update_trigger
         AFTER UPDATE
-        ON common.users
+        ON admin.users
         FOR EACH ROW
         EXECUTE PROCEDURE users_history_fn();   

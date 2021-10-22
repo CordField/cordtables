@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.globalroles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.user.GlobalRole
+import com.seedcompany.cordtables.components.user.Role
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -17,7 +17,7 @@ import java.time.Instant
 
 data class UpdateGlobalRoleResponse(
         val error: ErrorType,
-        val data: GlobalRole?
+        val data: Role?
 )
 
 data class UpdateGlobalRoleRequest(
@@ -43,11 +43,11 @@ class Update(
     @ResponseBody
     fun UpdateHandler(@RequestBody req: UpdateGlobalRoleRequest): UpdateGlobalRoleResponse {
         if (req.token == null) return UpdateGlobalRoleResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasUpdatePermission(req.token, "admin.roles", req.columnToUpdate)) {
+        if (!util.userHasUpdatePermission(req.token, "admin.roles", req.columnToUpdate, req.id)) {
             return UpdateGlobalRoleResponse(ErrorType.DoesNotHaveUpdatePermission, null)
         }
         println("req: $req")
-        var updatedGlobalRole: GlobalRole? = null
+        var updatedRole: Role? = null
         var userId = 0
 
 
@@ -115,7 +115,16 @@ class Update(
                     if(updateStatementResult.wasNull()) created_at = null
                     var modified_at: String? = updateStatementResult.getString("modified_at")
                     if(updateStatementResult.wasNull()) modified_at = null
-                    updatedGlobalRole = GlobalRole(id =id, chat=chat,owning_group=owning_group,owning_person=owning_person, created_at =created_at,created_by =  created_by, modified_at =modified_at,modified_by= modified_by,name=name)
+                    updatedRole = Role(
+                            id = id,
+                            chat = chat,
+                            owning_group = owning_group,
+                            owning_person = owning_person,
+                            created_at = created_at,
+                            created_by = created_by,
+                            modified_at = modified_at,
+                            modified_by = modified_by,
+                            name = name)
                     println("updated row's id: $id")
                 }
             } catch (e: SQLException) {
@@ -123,6 +132,6 @@ class Update(
                 return UpdateGlobalRoleResponse(ErrorType.SQLUpdateError, null)
             }
         }
-        return UpdateGlobalRoleResponse(ErrorType.NoError, updatedGlobalRole)
+        return UpdateGlobalRoleResponse(ErrorType.NoError, updatedRole)
     }
 }

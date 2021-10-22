@@ -1,4 +1,5 @@
 import { Component, Host, h, Prop, State } from '@stencil/core';
+import { globals } from '../../core/global.store';
 
 @Component({
   tag: 'cf-cell',
@@ -48,7 +49,7 @@ export class CfCell {
           {!this.showEdit && (
             <span id="value-view">
               <span class="value">{this.value}</span>
-              {this.isEditable && (
+              {this.isEditable && globals.globalStore.state.editMode && (
                 <span class="edit-buttons" onClick={this.clickEdit}>
                   <ion-icon name="create-outline"></ion-icon>
                 </span>

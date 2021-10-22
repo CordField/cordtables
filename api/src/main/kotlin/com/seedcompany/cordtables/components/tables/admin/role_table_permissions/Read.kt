@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.globalroletablepermissions
+package com.seedcompany.cordtables.components.tables.admin.role_table_permissions
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -46,7 +46,7 @@ class Read (
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall(
-                "select id, created_at, created_by, modified_at, modified_by, table_name, table_permission, role from public.roles_table_permissions;"
+                "select id, created_at, created_by, modified_at, modified_by, table_name, table_permission, role from admin.role_table_permissions;"
             )
             try {
 
@@ -58,7 +58,7 @@ class Read (
                     val modifiedBy = listStatementResult.getInt("modified_by")
                     val modifiedAt = listStatementResult.getString("modified_at")
                     val tableName = listStatementResult.getString("table_name")
-                    val tablePermissions = listStatementResult.getString("table_permissions")
+                    val tablePermissions = listStatementResult.getString("table_permission")
                     val globalRole = listStatementResult.getInt("role")
                     data.add(GlobalRolesTablePermissions(id,createdAt,createdBy,modifiedAt,modifiedBy,tableName,tablePermissions,globalRole))
                 }

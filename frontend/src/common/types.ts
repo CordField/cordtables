@@ -29,7 +29,7 @@ export interface LanguageEx {
   language_name?: string;
   iso?: string;
   prioritization?: number;
-  progress_bible?: Boolean;
+  progress_bible?: boolean;
   island?: string;
   province?: string;
   first_language_population?: number;
@@ -106,4 +106,18 @@ export interface ScriptureReference {
   chapter_end: number;
   verse_start: number;
   verse_end: number;
+}
+
+export interface AdminUser {
+  id?: number,
+  person?: number,
+  email?: string,
+  chat?: number,
+  created_at?: string,
+  created_by?: number,
+  modified_at?: string,
+  modified_by?: number,
+  owning_person?: number,
+  owning_group?: number,
+  peer: number,
 }
