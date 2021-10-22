@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.user
+package com.seedcompany.cordtables.components.tables.admin.roles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -36,7 +36,7 @@ data class ListRoleResponse(
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("RoleList")
-class List(
+class GetList(
         @Autowired
         val util: Utility,
 
