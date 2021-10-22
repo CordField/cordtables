@@ -455,6 +455,7 @@ create table sc.languages_ex(
 	suggested_strategies text,
 	comments text,
 
+  chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null,
   modified_at timestamp not null default CURRENT_TIMESTAMP,

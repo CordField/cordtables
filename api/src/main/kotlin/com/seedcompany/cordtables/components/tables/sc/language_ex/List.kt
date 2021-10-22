@@ -65,6 +65,7 @@ data class LanguageEx(
     val begin_work_rel_pol_obstacles_source: String?,
     val suggested_strategies: String?,
     val comments: String?,
+    val chat: Int? = null,
     val created_at: String?,
     val created_by: Int?,
     val modified_at: String?,
@@ -158,6 +159,7 @@ class List(
                     "begin_work_rel_pol_obstacles_source",
                     "suggested_strategies",
                     "comments",
+                    "chat",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -337,6 +339,9 @@ class List(
                 var comments: String? = jdbcResult.getString("comments")
                 if (jdbcResult.wasNull()) comments = null
 
+                var chat: Int? = jdbcResult.getInt("chat")
+                if (jdbcResult.wasNull()) chat = null
+
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
@@ -422,6 +427,7 @@ class List(
                         begin_work_rel_pol_obstacles_source = begin_work_rel_pol_obstacles_source,
                         suggested_strategies = suggested_strategies,
                         comments = comments,
+                        chat = chat,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

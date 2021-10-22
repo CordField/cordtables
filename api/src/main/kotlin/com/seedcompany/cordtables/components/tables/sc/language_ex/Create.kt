@@ -2,6 +2,8 @@ package com.seedcompany.cordtables.components.tables.languageex
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.common.chats.Create
+import com.seedcompany.cordtables.components.tables.common.chats.CreateChatRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -32,6 +34,9 @@ class Create(
 
         @Autowired
         val ds: DataSource,
+
+        @Autowired
+        val chat: Create,
 ) {
     @PostMapping("language_ex/create")
     @ResponseBody
@@ -302,6 +307,7 @@ class Create(
                             begin_work_rel_pol_obstacles_source= begin_work_rel_pol_obstacles_source,
                             suggested_strategies= suggested_strategies,
                             comments= comments,
+                            chat = null,
                             created_at= created_at,
                             created_by= created_by,
                             modified_at= modified_at,
@@ -316,6 +322,8 @@ class Create(
                 return CreateLanguageExResponse(ErrorType.SQLInsertError, null)
             }
         }
+        chat.createHandler(CreateChatRequest(token = req.token, table = "sc.languages_ex", row = insertedLanguageEx?.id))
+
         return CreateLanguageExResponse(ErrorType.NoError, insertedLanguageEx)
     }
 }

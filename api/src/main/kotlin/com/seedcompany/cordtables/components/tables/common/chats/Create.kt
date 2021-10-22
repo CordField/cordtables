@@ -35,7 +35,7 @@ class Create(
 
     @PostMapping("common-chats/create")
     @ResponseBody
-    fun CreateHandler(@RequestBody req: CreateChatRequest): CreateChatResponse {
+    fun createHandler(@RequestBody req: CreateChatRequest): CreateChatResponse {
 
         val id = jdbcTemplate.queryForObject(
             """

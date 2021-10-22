@@ -115,6 +115,7 @@ export class LanguagesEx {
     begin_work_rel_pol_obstacles_source: null,
     suggested_strategies: null,
     comments: null,
+    chat: null,
     created_at: null,
     created_by: null,
     modified_at: null,
