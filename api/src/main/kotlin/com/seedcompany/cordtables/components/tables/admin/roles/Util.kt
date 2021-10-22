@@ -1,6 +1,7 @@
 package com.seedcompany.cordtables.components.tables.admin.roles
 
 import org.springframework.stereotype.Component
+import kotlin.collections.List
 
 
 @Component("RoleUtil")
