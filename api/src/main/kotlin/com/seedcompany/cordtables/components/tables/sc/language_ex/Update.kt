@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.languageex
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.sc.language_ex.LanguageEx
 import org.apache.commons.codec.language.bm.Lang
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller

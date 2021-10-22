@@ -4,6 +4,7 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
+import com.seedcompany.cordtables.components.tables.sc.language_ex.LanguageEx
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -16,62 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-
-data class LanguageEx(
-    val id: Int?,
-    val language_name: String?,
-    val iso: String?,
-    val prioritization: Double?,
-    val progress_bible: Boolean?,
-    val island: String?,
-    val province: String?,
-    val first_language_population: Int?,
-    val population_value: Double?,
-    val egids_level: EgidsScale?,
-    val egids_value: Double?,
-    val least_reached_progress_jps_level: LeastReachedProgressScale?,
-    val least_reached_value: Double?,
-    val partner_interest_level: PartnerInterestScale?,
-    val partner_interest_value: Double?,
-    val partner_interest_description: String?,
-    val partner_interest_source: String?,
-    val multiple_languages_leverage_linguistic_level: MultipleLanguagesLeverageLinguisticScale?,
-    val multiple_languages_leverage_linguistic_value: Double?,
-    val multiple_languages_leverage_linguistic_description: String?,
-    val multiple_languages_leverage_linguistic_source: String?,
-    val multiple_languages_leverage_joint_training_level: MultipleLanguagesLeverageJointTrainingScale?,
-    val multiple_languages_leverage_joint_training_value: Double?,
-    val multiple_languages_leverage_joint_training_description: String?,
-    val multiple_languages_leverage_joint_training_source: String?,
-    val lang_comm_int_in_language_development_level: LangCommIntInLanguageDevelopmentScale?,
-    val lang_comm_int_in_language_development_value: Double?,
-    val lang_comm_int_in_language_development_description: String?,
-    val lang_comm_int_in_language_development_source: String?,
-    val lang_comm_int_in_scripture_translation_level: LangCommIntInScriptureTranslationScale?,
-    val lang_comm_int_in_scripture_translation_value: Double?,
-    val lang_comm_int_in_scripture_translation_description: String?,
-    val lang_comm_int_in_scripture_translation_source: String?,
-    val access_to_scripture_in_lwc_level: AccessToScriptureInLwcScale?,
-    val access_to_scripture_in_lwc_value: Double?,
-    val access_to_scripture_in_lwc_description: String?,
-    val access_to_scripture_in_lwc_source: String?,
-    val begin_work_geo_challenges_level: BeginWorkGeoChallengesScale?,
-    val begin_work_geo_challenges_value: Double?,
-    val begin_work_geo_challenges_description: String?,
-    val begin_work_geo_challenges_source: String?,
-    val begin_work_rel_pol_obstacles_level: BeginWorkRelPolObstaclesScale?,
-    val begin_work_rel_pol_obstacles_value: Double?,
-    val begin_work_rel_pol_obstacles_description: String?,
-    val begin_work_rel_pol_obstacles_source: String?,
-    val suggested_strategies: String?,
-    val comments: String?,
-    val created_at: String?,
-    val created_by: Int?,
-    val modified_at: String?,
-    val modified_by: Int?,
-    val owning_person: Int?,
-    val owning_group: Int?
-)
 
 data class ReadLanguageExResponse(
     val error: ErrorType,

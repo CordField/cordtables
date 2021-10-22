@@ -103,8 +103,8 @@ class Utility(
         return isAdmin;
     }
 
-    fun userHasCreatePermission(token: String, tableName: String):Boolean {
-        if(isAdmin(token)){
+    fun userHasCreatePermission(token: String, tableName: String): Boolean {
+        if (isAdmin(token)) {
             return true;
         }
         var userHasCreatePermission: Boolean = false;
@@ -133,7 +133,7 @@ class Utility(
             )
 
             statement.setString(1, token);
-            statement.setString(2,tableName);
+            statement.setString(2, tableName);
             val result = statement.executeQuery()
 
             if (result.next()) {
@@ -143,8 +143,8 @@ class Utility(
         return userHasCreatePermission;
     }
 
-    fun userHasDeletePermission(token: String, tableName: String):Boolean {
-        if(isAdmin(token)){
+    fun userHasDeletePermission(token: String, tableName: String): Boolean {
+        if (isAdmin(token)) {
             return true;
         }
         var userHasDeletePermission: Boolean = false;
@@ -173,7 +173,7 @@ class Utility(
             )
 
             statement.setString(1, token);
-            statement.setString(2,tableName);
+            statement.setString(2, tableName);
             val result = statement.executeQuery()
 
             if (result.next()) {
@@ -182,8 +182,9 @@ class Utility(
         }
         return userHasDeletePermission;
     }
-    fun userHasUpdatePermission(token:String, tableName: String, columnName:String, rowId: Int):Boolean{
-        if(isAdmin(token)){
+
+    fun userHasUpdatePermission(token: String, tableName: String, columnName: String, rowId: Int): Boolean {
+        if (isAdmin(token)) {
             return true;
         }
         var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
@@ -238,8 +239,12 @@ class Utility(
         return userHasUpdatePermission
     }
 
-    fun userHasUpdatePermissionMultipleColumns(token:String,tableName: String, columnNames:MutableList<String>):Boolean{
-        if(isAdmin(token)){
+    fun userHasUpdatePermissionMultipleColumns(
+        token: String,
+        tableName: String,
+        columnNames: MutableList<String>
+    ): Boolean {
+        if (isAdmin(token)) {
             return true;
         }
 
@@ -270,12 +275,12 @@ class Utility(
             //language=SQL
             val statement = conn.prepareCall("$updateSql ;")
             statement.setString(1, token);
-            statement.setString(2,tableName);
+            statement.setString(2, tableName);
             val result = statement.executeQuery()
 
             if (result.next()) {
                 val countOfColumnsWithWriteAccess = result.getInt(1)
-                if(countOfColumnsWithWriteAccess == columnNames.size){
+                if (countOfColumnsWithWriteAccess == columnNames.size) {
                     userHasUpdatePermission = true
                 }
             }
@@ -284,35 +289,73 @@ class Utility(
 
     }
 
-    fun getReadableTables(token: String):MutableList<String>{
+    fun getReadableTables(token: String): MutableList<String> {
         val tableNames = mutableListOf<String>()
-        if(isAdmin(token)){
-            this.ds.connection.use{conn->
-                val statement = conn.prepareCall("select table_schema || '.' || table_name as table_name " +
-                        "from information_schema.tables where table_schema in ('admin', 'common', 'sc', 'sil') order by table_name asc")
+        if (isAdmin(token)) {
+            this.ds.connection.use { conn ->
+                val statement = conn.prepareCall(
+                    "select table_schema || '.' || table_name as table_name " +
+                            "from information_schema.tables where table_schema in ('admin', 'common', 'sc', 'sil') order by table_name asc"
+                )
                 val result = statement.executeQuery()
-                while(result.next()){
-                    tableNames.add(result.getString("table_name").replace('_','-'))
+                while (result.next()) {
+                    tableNames.add(result.getString("table_name").replace('_', '-'))
                 }
             }
             return tableNames;
         }
 
-        this.ds.connection.use{ conn ->
-            val statement = conn.prepareCall("select distinct table_name \n" +
-                    "from admin.role_column_grants as a \n" +
-                    "inner join admin.role_memberships as b \n" +
-                    "on a.role = b.role \n" +
-                    "inner join admin.tokens as c \n" +
-                    "on b.person = c.person \n" +
-                    "where c.token = ? order by table_name asc")
-            statement.setString(1,token)
+        this.ds.connection.use { conn ->
+            val statement = conn.prepareCall(
+                "select distinct table_name \n" +
+                        "from admin.role_column_grants as a \n" +
+                        "inner join admin.role_memberships as b \n" +
+                        "on a.role = b.role \n" +
+                        "inner join admin.tokens as c \n" +
+                        "on b.person = c.person \n" +
+                        "where c.token = ? order by table_name asc"
+            )
+            statement.setString(1, token)
             val result = statement.executeQuery()
-            while(result.next()){
-                tableNames.add(result.getString("table_name").replace('_','-'))
+            while (result.next()) {
+                tableNames.add(result.getString("table_name").replace('_', '-'))
             }
         }
         return tableNames;
     }
 
+    fun updateField(token: String, table: String, column: String, id: Int, value: Any, cast: String? = "") {
+
+        if (userHasUpdatePermission(
+                token = token,
+                tableName = table,
+                columnName = column,
+                rowId = id
+            )
+        ) {
+            jdbcTemplate.update(
+                """
+                    update $table 
+                    set 
+                        $column = ?$cast,
+                        modified_by = 
+                            (
+                              select person 
+                              from admin.tokens 
+                              where token = ?
+                            ),
+                        modified_at = CURRENT_TIMESTAMP
+                    where id = ?;
+                """.trimIndent(),
+                value,
+                token,
+                id,
+            )
+        }
+    }
+
+}
+
+inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
+    return enumValues<T>().any { it.name == name }
 }

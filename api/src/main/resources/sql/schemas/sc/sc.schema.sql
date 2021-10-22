@@ -403,7 +403,7 @@ create table sc.languages_ex(
 	island varchar(32),
 	province varchar(32),
 
-	first_language_population int NULL,
+	first_language_population int,
 	population_value decimal default 0, -- calculated from first_language_population
 
 	egids_level sc.egids_scale,
@@ -455,18 +455,14 @@ create table sc.languages_ex(
 	suggested_strategies text,
 	comments text,
 
+  chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
+  created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
-  peer int references admin.peers(id),
-
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (owning_person) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );
 
 -- USER TABLES --------------------------------------------------------------
