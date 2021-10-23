@@ -74,11 +74,8 @@ export class ScLanguages {
     });
     if (result.error === ErrorType.NoError) {
       this.getList();
-      // this.success = `Row with id ${result.id} deleted successfully!`;
-      // this.languagesEx = this.languagesEx.filter(globalRole => globalRole.id !== result.id);
       return true;
     } else {
-      // this.error = result.error;
       return false;
     }
   };
@@ -543,16 +540,10 @@ export class ScLanguages {
       },
     });
 
-    // console.log(result);
-    // this.showNewForm = false;
-    // this.insertedFields = this.defaultFields;
-    // if (result.error === ErrorType.NoError) {
-    //   this.languagesEx = this.languagesEx.concat(result.data);
-    //   this.success = `New Row with id ${result.data.id} inserted successfully`;
-    // } else {
-    //   console.error('Failed to create global role');
-    //   this.error = result.error;
-    // }
+    if (result.error === ErrorType.NoError) {
+      globals.globalStore.state.editMode = false;
+      this.getList();
+    }
   };
   render() {
     return (
