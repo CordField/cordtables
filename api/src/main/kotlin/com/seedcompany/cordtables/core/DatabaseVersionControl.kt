@@ -54,6 +54,7 @@ class DatabaseVersionControl(
 
     private fun updateHistoryTables(){
         // todo
+        runSqlFile("sql/version-control/history.sql")
     }
 
     private fun toVersion2() {

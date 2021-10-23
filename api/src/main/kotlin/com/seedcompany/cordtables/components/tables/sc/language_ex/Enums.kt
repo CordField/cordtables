@@ -93,4 +93,3 @@ enum class BeginWorkRelPolObstaclesScale  {
     `Easy`
 };
 
-val egids_value = EgidsScale.valueOf("1")

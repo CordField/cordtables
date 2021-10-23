@@ -1,12 +1,14 @@
 package com.seedcompany.cordtables.components.tables.languageex
 
 import org.springframework.stereotype.Component
+import kotlin.collections.List
 
 @Component("LanguageExUtil")
 class LanguageExUtil {
 
 
-    val nonMutableColumns = listOf("id", "modified_at", "created_at", "created_by", "modified_by", "egids_value","least_reached_value", "partner_interest_value", "multiple_languages_leverage_linguistic_value", "multiple_languages_leverage_joint_training_value", "lang_comm_int_in_language_development_value", "lang_comm_int_in_scripture_translation_value", "access_to_scripture_in_lwc_value", "begin_work_geo_challenges_value", "begin_work_rel_pol_obstacles_value", "prioritization")
+    val nonMutableColumns: List<String> = listOf("id", "modified_at", "created_at", "created_by", "modified_by", "egids_value","least_reached_value", "partner_interest_value", "multiple_languages_leverage_linguistic_value", "multiple_languages_leverage_joint_training_value", "lang_comm_int_in_language_development_value", "lang_comm_int_in_scripture_translation_value", "access_to_scripture_in_lwc_value", "begin_work_geo_challenges_value", "begin_work_rel_pol_obstacles_value", "prioritization")
+
 
     fun getEgidsValue(egidsLevel: EgidsScale): Double {
         return when (egidsLevel) {
