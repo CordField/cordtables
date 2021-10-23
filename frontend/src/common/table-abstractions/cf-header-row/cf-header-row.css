@@ -1,9 +1,0 @@
-:host {
-  display: block;
-}
-
-#header-row {
-  display: flex;
-  align-items: center;
-  background-color: #255dab;
-}

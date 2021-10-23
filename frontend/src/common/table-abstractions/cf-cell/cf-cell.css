@@ -15,12 +15,14 @@
   /* background-color: #4caf50; */
   color: white;
   cursor: default;
+  border-right: 1px solid white;
 }
 
 .data {
   /* border: 1px solid red; */
   /* padding: 3px; */
   /* margin: 3px; */
+  border-right: 1px solid gray;
 }
 
 .both {

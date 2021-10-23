@@ -14,6 +14,12 @@ export class CfRow {
     return (
       <Host>
         <slot></slot>
+        {(this.row === null || this.row === undefined) && (
+          <div id="header-row">
+            {this.columnData &&
+              this.columnData.map(columnDescription => <cf-cell2 rowId={0} value={columnDescription.displayName} columnDescription={columnDescription} isHeader={true}></cf-cell2>)}
+          </div>
+        )}
         <div id="data-row">
           {this.columnData &&
             this.row &&
