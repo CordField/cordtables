@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.globalroles
+package com.seedcompany.cordtables.components.tables.admin.roles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -18,7 +18,7 @@ import java.time.Instant
 
 data class UpdateGlobalRoleResponse(
         val error: ErrorType,
-        val data: GlobalRole?
+        val data: Role?
 )
 
 data class UpdateGlobalRoleRequest(
@@ -38,7 +38,7 @@ class Update(
         val ds: DataSource,
 
         @Autowired
-        val globalRoleUtil: GlobalRoleUtil
+        val roleUtil: RoleUtil
 ) {
     @PostMapping("role/update")
     @ResponseBody
@@ -47,7 +47,7 @@ class Update(
         if (!util.isAdmin(req.token)) return UpdateGlobalRoleResponse(ErrorType.AdminOnly, null)
 
         println("req: $req")
-        var updatedGlobalRole: GlobalRole? = null
+        var updatedRole: Role? = null
         var userId = 0
 
 
@@ -69,7 +69,7 @@ class Update(
             try {
                 var reqValues: MutableList<Any> = mutableListOf()
                 var updateSql = "update admin.roles set"
-                if (req.updatedColumnValue != null && req.columnToUpdate !in globalRoleUtil.nonMutableColumns) {
+                if (req.updatedColumnValue != null && req.columnToUpdate !in roleUtil.nonMutableColumns) {
                     updateSql = "$updateSql ${req.columnToUpdate} = ?,"
                     reqValues.add(req.updatedColumnValue)
                 }
@@ -115,7 +115,7 @@ class Update(
                     if(updateStatementResult.wasNull()) created_at = null
                     var modified_at: String? = updateStatementResult.getString("modified_at")
                     if(updateStatementResult.wasNull()) modified_at = null
-                    updatedGlobalRole = GlobalRole(
+                    updatedRole = Role(
                             id = id,
                             chat = chat,
                             owning_group = owning_group,
@@ -132,6 +132,6 @@ class Update(
                 return UpdateGlobalRoleResponse(ErrorType.SQLUpdateError, null)
             }
         }
-        return UpdateGlobalRoleResponse(ErrorType.NoError, updatedGlobalRole)
+        return UpdateGlobalRoleResponse(ErrorType.NoError, updatedRole)
     }
 }

@@ -140,6 +140,19 @@ export class LanguagesEx {
     'begin_work_rel_pol_obstacles_value',
     'prioritization',
   ];
+  columnDropdownOptions = {
+    progress_bible: [`true`, `false`],
+    egids_level: [`0`, `1`, `2`, `3`, `4`, `5`, `6a`, `6b`, `7`, `8a`, `8b`, `9`, `10`],
+    least_reached_progress_jps_level: [`0`, `1`, `2`, `3`, `4`, `5`],
+    partner_interest_level: [`No Partner Interest`, `Some`, `Significant`, `Considerable`],
+    multiple_languages_leverage_linguistic_level: [`None`, `Some`, `Significant`, `Considerable`, `Large`, `Vast`],
+    multiple_languages_leverage_joint_training_level: [`None`, `Some`, `Significant`, `Considerable`, `Large`, `Vast`],
+    lang_comm_int_in_language_development_level: [`No Interest`, `Some`, `Expressed Need`, `Significant`, `Considerable`],
+    lang_comm_int_in_scripture_translation_level: [`No Interest`, `Some`, `Expressed Need`, `Significant`, `Considerable`],
+    access_to_scripture_in_lwc_level: [`Full Access`, `Vast Majority`, `Large Majority`, `Majority`, `Significant`, `Some`, `Few`],
+    begin_work_geo_challenges_level: [`None`, `Very Difficult`, `Difficult`, `Moderate`, `Easy`],
+    begin_work_rel_pol_obstacles_level: [`None`, `Very Difficult`, `Difficult`, `Moderate`, `Easy`],
+  };
   @State() languagesEx: LanguageEx[] = [];
   @State() insertedFields: MutableLanguageExFields = this.defaultFields;
   @State() error: string;
@@ -149,10 +162,24 @@ export class LanguagesEx {
     console.log(fieldName, event.target.value);
     this.insertedFields[fieldName] = event.target.value;
   }
+  selectFieldChange(event, fieldName) {
+    console.log(fieldName, event.target.value);
+    this.insertedFields[fieldName] = event.target.value;
+  }
+
+  getSelectCell(fieldName) {
+    return (
+      <select onInput={event => this.selectFieldChange(event, fieldName)}>
+        {['-', ...this.columnDropdownOptions[fieldName]].map(option => (
+          <option value={option !== '-' ? option : ''} selected={option !== '-' ? this.insertedFields[fieldName] === option : this.insertedFields[fieldName] === ''}>
+            {option}
+          </option>
+        ))}
+      </select>
+    );
+  }
+
   getInputCell(fieldName) {
-    if (this.nonEditableColumns.includes(fieldName)) {
-      return <td>&nbsp;</td>;
-    }
     return (
       <td>
         <input type="text" id={`input-${fieldName}`} name={fieldName} onInput={event => this.insertFieldChange(event, fieldName)}></input>
@@ -171,6 +198,8 @@ export class LanguagesEx {
           rowId={LanguageEx.id}
           propKey={columnName}
           value={typeof LanguageEx[columnName] === 'string' ? LanguageEx[columnName] : LanguageEx[columnName]?.toString()}
+          type={this.columnDropdownOptions.hasOwnProperty(columnName) ? 'select' : 'text'}
+          options={this.columnDropdownOptions.hasOwnProperty(columnName) ? this.columnDropdownOptions[columnName] : []}
           isEditable={!this.nonEditableColumns.includes(columnName)}
           updateFn={!this.nonEditableColumns.includes(columnName) ? this.handleUpdate : null}
         ></cf-cell>
@@ -273,7 +302,16 @@ export class LanguagesEx {
               {this.showNewForm && (
                 <tr>
                   {globals.globalStore.state.editMode && <td>&nbsp;</td>}
-                  {Object.keys(this.defaultFields).map(key => this.getInputCell(key))}
+
+                  {Object.keys(this.defaultFields).map(key => {
+                    if (this.nonEditableColumns.includes(key)) {
+                      return <td>&nbsp;</td>;
+                    } else if (this.columnDropdownOptions.hasOwnProperty(key)) {
+                      return this.getSelectCell(key);
+                    } else {
+                      return this.getInputCell(key);
+                    }
+                  })}
                 </tr>
               )}
             </table>

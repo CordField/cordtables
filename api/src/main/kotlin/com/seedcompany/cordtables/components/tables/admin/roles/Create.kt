@@ -1,9 +1,7 @@
-package com.seedcompany.cordtables.components.user
+package com.seedcompany.cordtables.components.tables.admin.roles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.admin.users.AdminUserCreateResponse
-import com.seedcompany.cordtables.components.tables.globalroles.GlobalRoleUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -22,11 +20,11 @@ data class InsertableGlobalRoleFields(
 
 data class CreateGlobalRoleResponse(
     val error: ErrorType,
-    val data: GlobalRole?
+    val data: Role?
 )
 data class CreateGlobalRoleRequest(
-    val insertedFields: GlobalRole,
-    val token: String,
+        val insertedFields: Role,
+        val token: String,
 )
 
 
@@ -36,7 +34,7 @@ class Create(
     @Autowired
     val util: Utility,
     @Autowired
-    val globalRoleUtil: GlobalRoleUtil,
+    val globalRoleUtil: RoleUtil,
     @Autowired
     val ds: DataSource,
 ) {
@@ -46,7 +44,7 @@ class Create(
 
         println("req: $req")
         var errorType = ErrorType.UnknownError
-        var insertedGlobalRole: GlobalRole? = null
+        var insertedRole: Role? = null
         var userId = 0
         val reqValues: MutableList<Any> = mutableListOf()
 
@@ -74,7 +72,7 @@ class Create(
             try {
                 var insertStatementKeys = "insert into admin.roles("
                 var insertStatementValues = " values("
-                for (prop in GlobalRole::class.memberProperties) {
+                for (prop in Role::class.memberProperties) {
                     val propValue = prop.get(req.insertedFields)
                     println("$propValue ${prop.name}")
                     if (propValue != null && prop.name !in globalRoleUtil.nonMutableColumns) {
@@ -126,7 +124,7 @@ class Create(
                     if(insertStatementResult.wasNull()) created_at = null
                     var modified_at: String? = insertStatementResult.getString("modified_at")
                     if(insertStatementResult.wasNull()) modified_at = null
-                    insertedGlobalRole = GlobalRole(
+                    insertedRole = Role(
                             id = id,
                             created_at = created_at,
                             created_by = created_by,
@@ -145,6 +143,6 @@ class Create(
                 return CreateGlobalRoleResponse(errorType, null)
             }
         }
-       return CreateGlobalRoleResponse(ErrorType.NoError,insertedGlobalRole)
+       return CreateGlobalRoleResponse(ErrorType.NoError,insertedRole)
     }
 }

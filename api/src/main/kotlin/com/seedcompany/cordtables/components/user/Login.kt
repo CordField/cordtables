@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.user
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.common.scripture_references.ScriptureReferenceCreateResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Controller
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import java.sql.SQLException
 import javax.sql.DataSource
 
 data class LoginRequest(
@@ -49,31 +51,33 @@ class Login (
         var errorType = ErrorType.UnknownError
 
         this.ds.connection.use { conn ->
-            val pashStatement = conn.prepareCall("select password from admin.users where email = ?;")
-            pashStatement.setString(1, req.email)
+            try {
+                val pashStatement = conn.prepareCall("select password from admin.users where email = ?;")
+                pashStatement.setString(1, req.email)
 
-            val getPashResult = pashStatement.executeQuery()
+                val getPashResult = pashStatement.executeQuery()
 
-            var pash: String? = null
+                var pash: String? = null
+                if (getPashResult.next()) {
+                    pash = getPashResult.getString("password")
+                    val matches = encoder.matches(req.password, pash)
+                    if (matches) {
+                        token = util.createToken()
 
-            if (getPashResult.next()) {
-                pash = getPashResult.getString("password")
-
-                val matches = encoder.matches(req.password, pash)
-
-                if (matches) {
-                    token = util.createToken()
-                   errorType = loginDB(req.email, token!!)
-                    if (errorType === ErrorType.NoError) {
-                        response = LoginReturn(errorType, token,util.getReadableTables(token!!), util.isAdmin(token!!))
+                        errorType = loginDB(req.email, token!!)
+                        if (errorType === ErrorType.NoError) {
+                            response = LoginReturn(errorType, token, util.getReadableTables(token!!), util.isAdmin(token!!))
+                        }
                     } else {
-                        println("login failed")
+                        response = LoginReturn(ErrorType.BadCredentials, null)
                     }
                 } else {
-                    errorType = ErrorType.BadCredentials
+                    response = LoginReturn(ErrorType.InvalidEmail, null)
                 }
-            } else {
-                println("pash not found")
+            }
+            catch (e: SQLException){
+                println(e.message)
+                return LoginReturn(ErrorType.SQLInsertError, null)
             }
         }
 
@@ -96,7 +100,7 @@ class Login (
             try {
                 errorType = ErrorType.valueOf(statement.getString(3))
             } catch (ex: IllegalArgumentException) {
-                errorType = ErrorType.UnknownError
+                throw ex
             }
 
             if (errorType != ErrorType.NoError) {

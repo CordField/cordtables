@@ -79,7 +79,7 @@ class Update(
                     } else if (req.columnToUpdate in listOf<String>("first_language_population", "owning_group", "owning_person")) {
                         reqValues.add(req.updatedColumnValue.toInt())
                     }
-                    // casting the column value as an enum, updating the array and then updating the calculated columns
+                    // casting the column value as an enum, adding the element to the array and then updating the calculated columns
                     else if (req.columnToUpdate == "egids_level") {
                         val castedUpdatedColumnValue = EgidsScale.valueOf(req.updatedColumnValue)
                         reqValues.add(castedUpdatedColumnValue)

@@ -2,6 +2,8 @@ package com.seedcompany.cordtables.common
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Component
 import java.util.regex.Pattern
@@ -180,34 +182,56 @@ class Utility(
         }
         return userHasDeletePermission;
     }
-    fun userHasUpdatePermission(token:String, tableName: String, columnName:String):Boolean{
+    fun userHasUpdatePermission(token:String, tableName: String, columnName:String, rowId: Int):Boolean{
         if(isAdmin(token)){
             return true;
         }
+        var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
         var userHasUpdatePermission = false;
-        this.ds.connection.use{ conn ->
+        val paramSource = MapSqlParameterSource()
+        paramSource.addValue("token", token)
+        paramSource.addValue("table", tableName)
+        paramSource.addValue("column", columnName)
+        paramSource.addValue("rowId", rowId)
+
+        this.ds.connection.use { conn ->
             //language=SQL
-            val statement = conn.prepareCall("""
-                select exists (select column_name 
-                from admin.role_column_grants as a 
-                inner join admin.roles as b 
-                on a.role = b.id 
-                where b.id in (
-                select role 
-                from admin.role_memberships 
-                where person = (
-                select person from admin.tokens where token = ? 
-                )
-                and a.column_name = ?
-                and a.access_level = 'Write'
-                and a.table_name::text = ?
-                ))
-            """.trimIndent())
-            statement.setString(1, token)
-            statement.setString(2, columnName)
-            statement.setString(3, tableName)
-            var result = statement.executeQuery()
-            if(result.next()){
+            val statement = """
+                with row_level_access as 
+                    (
+                        select 1 as dummy_column
+                        from admin.group_row_access as a  
+                        inner join admin.group_memberships as b 
+                        on a.group_id = b.group_id 
+                        inner join admin.tokens as c 
+                        on b.person = c.person
+                        where a.table_name::text = :table
+                        and a.row = :rowId
+                        and c.token = :token
+                    ), 
+                column_level_access as 
+                    (
+                        select 1 as dummy_column
+                        from admin.role_column_grants a 
+                        inner join admin.role_memberships b 
+                        on a.role = b.role 
+                        inner join admin.tokens c 
+                        on b.person = c.person 
+                        where a.table_name::text = :table 
+                        and a.column_name = :column
+                        and a.access_level = 'Write'
+                        and c.token = :token
+                    )
+                    select exists(
+                        select 1 from row_level_access as a 
+                        inner join column_level_access as b
+                        on a.dummy_column = b.dummy_column
+                    )
+               
+            """.trimIndent()
+            val result = jdbcTemplate.queryForRowSet(statement, paramSource)
+            println("result $result")
+            if (result.next()) {
                 userHasUpdatePermission = result.getBoolean(1)
             }
         }

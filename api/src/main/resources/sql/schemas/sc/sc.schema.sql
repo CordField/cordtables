@@ -32,7 +32,7 @@ create table sc.posts (
   shareability sc.post_shareability not null,
   body text not null,
 
-	chat int references common.chats(id),
+  chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -221,25 +221,26 @@ create table sc.language_goal_definitions (
   peer int references admin.peers(id)
 );
 
--- NOT an extension table, but has a reference to common
+-- An extension table, but has a reference to common
 -- sc languages may different from other org's language listings
 create table sc.languages (
-  id serial primary key,
-  ethnologue int references sil.table_of_languages(id),
-
+    neo4j_id varchar(32) unique,
+	id serial primary key,
+	ethnologue int references sil.table_of_languages(id),
+	name varchar(255) unique not null,
 	display_name varchar(255) unique not null,
+	display_name_pronunciation varchar(255),
+	tags text[],
+	preset_inventory bool,
 	is_dialect bool,
 	is_sign_language bool,
 	is_least_of_these bool,
 	least_of_these_reason varchar(255),
-	name varchar(255) unique not null,
 	population_override int,
 	registry_of_dialects_code varchar(32),
 	sensitivity sensitivity,
 	sign_language_code varchar(32),
-	sponsor_estimated_eng_date timestamp,
-
-  chat int references common.chats(id),
+	sponsor_estimated_end_date timestamp,
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1016,7 +1017,7 @@ create type common.organization_transition_options as enum (
 
 create table common.organization_relationships (
   id serial primary key,
-  
+
   from_org int not null references sc.organizations(id),
   to_org int not null references sc.organizations(id),
 
@@ -1034,7 +1035,7 @@ create table common.organization_relationships (
 
 create table sc.partner_performance (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   -- todo
 
@@ -1050,10 +1051,10 @@ create table sc.partner_performance (
 
 create table sc.partner_finances (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   -- todo
-  
+
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1066,10 +1067,10 @@ create table sc.partner_finances (
 
 create table sc.partner_reporting (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   -- todo
-  
+
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1082,10 +1083,10 @@ create table sc.partner_reporting (
 
 create table sc.partner_translation_progress (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   -- todo
-  
+
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1098,12 +1099,12 @@ create table sc.partner_translation_progress (
 
 create table sc.partner_notes (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   author int not null references admin.people(id),
   note text not null,
   -- todo
-  
+
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1116,11 +1117,11 @@ create table sc.partner_notes (
 
 create table common.organization_transitions (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   transition_type common.organization_transition_options not null,
   -- todo
-  
+
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1133,11 +1134,11 @@ create table common.organization_transitions (
 
 create table common.person_to_person_relationships (
   id serial primary key,
-  
+
   from_person int not null references admin.people(id),
   to_person int not null references admin.people(id),
   -- todo
-  
+
   chat int references common.chats(id),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
