@@ -14,7 +14,7 @@ import javax.sql.DataSource
 
 data class CreateLanguageExRequest(
     val token: String? = null,
-    val languageEx: LanguageExInput,
+    val language: LanguageExInput,
 )
 
 data class CreateLanguageExResponse(
@@ -44,64 +44,67 @@ class Create(
     fun createHandler(@RequestBody req: CreateLanguageExRequest): CreateLanguageExResponse {
 
         if (req.token == null) return CreateLanguageExResponse(error = ErrorType.InputMissingToken, null)
+        if (req.language == null) return CreateLanguageExResponse(error = ErrorType.MissingId, null)
+        if (req.language.language_name == null) return CreateLanguageExResponse(error = ErrorType.InputMissingName, null)
+        if (req.language.language_name.length > 32) return CreateLanguageExResponse(error = ErrorType.NameTooLong, null)
 
         // check enums and error out if needed
 
-        if (req.languageEx.egids_level != null && !enumContains<EgidsScale>(req.languageEx.egids_level)) {
+        if (req.language.egids_level != null && !enumContains<EgidsScale>(req.language.egids_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.least_reached_progress_jps_level != null && !enumContains<EgidsScale>(req.languageEx.least_reached_progress_jps_level)) {
+        if (req.language.least_reached_progress_jps_level != null && !enumContains<EgidsScale>(req.language.least_reached_progress_jps_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.partner_interest_level != null && !enumContains<EgidsScale>(req.languageEx.partner_interest_level)) {
+        if (req.language.partner_interest_level != null && !enumContains<EgidsScale>(req.language.partner_interest_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.multiple_languages_leverage_linguistic_level != null && !enumContains<EgidsScale>(req.languageEx.multiple_languages_leverage_linguistic_level)) {
+        if (req.language.multiple_languages_leverage_linguistic_level != null && !enumContains<EgidsScale>(req.language.multiple_languages_leverage_linguistic_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.multiple_languages_leverage_joint_training_level != null && !enumContains<EgidsScale>(req.languageEx.multiple_languages_leverage_joint_training_level)) {
+        if (req.language.multiple_languages_leverage_joint_training_level != null && !enumContains<EgidsScale>(req.language.multiple_languages_leverage_joint_training_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.lang_comm_int_in_language_development_level != null && !enumContains<EgidsScale>(req.languageEx.lang_comm_int_in_language_development_level)) {
+        if (req.language.lang_comm_int_in_language_development_level != null && !enumContains<EgidsScale>(req.language.lang_comm_int_in_language_development_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.lang_comm_int_in_scripture_translation_level != null && !enumContains<EgidsScale>(req.languageEx.lang_comm_int_in_scripture_translation_level)) {
+        if (req.language.lang_comm_int_in_scripture_translation_level != null && !enumContains<EgidsScale>(req.language.lang_comm_int_in_scripture_translation_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.access_to_scripture_in_lwc_level != null && !enumContains<EgidsScale>(req.languageEx.access_to_scripture_in_lwc_level)) {
+        if (req.language.access_to_scripture_in_lwc_level != null && !enumContains<EgidsScale>(req.language.access_to_scripture_in_lwc_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.begin_work_geo_challenges_level != null && !enumContains<EgidsScale>(req.languageEx.begin_work_geo_challenges_level)) {
+        if (req.language.begin_work_geo_challenges_level != null && !enumContains<EgidsScale>(req.language.begin_work_geo_challenges_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.languageEx.begin_work_rel_pol_obstacles_level != null && !enumContains<EgidsScale>(req.languageEx.begin_work_rel_pol_obstacles_level)) {
+        if (req.language.begin_work_rel_pol_obstacles_level != null && !enumContains<EgidsScale>(req.language.begin_work_rel_pol_obstacles_level)) {
             return CreateLanguageExResponse(
                 error = ErrorType.ValueDoesNotMap
             )
@@ -110,8 +113,9 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.languages_ex(created_by, modified_by, owning_person, owning_group)
+            insert into sc.languages_ex(language_name, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -132,17 +136,18 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
+            req.language.language_name,
             req.token,
             req.token,
             req.token,
         )
 
-        req.languageEx.id = id
+        req.language.id = id
 
         val updateResponse = update.updateHandler(
             LanguageExUpdateRequest(
                 token = req.token,
-                languageEx = req.languageEx,
+                languageEx = req.language,
             )
         )
 

@@ -12,12 +12,12 @@ import javax.sql.DataSource
 
 data class LanguageExCreateReadRequest(
     val token: String? = null,
-    val languageEx: LanguageExInput,
+    val language: LanguageExInput,
 )
 
 data class LanguageExCreateReadResponse(
     val error: ErrorType,
-    val languageEx: LanguageEx? = null,
+    val language: LanguageEx? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -42,7 +42,7 @@ class CreateRead(
         val createResponse = create.createHandler(
             CreateLanguageExRequest(
                 token = req.token,
-                languageEx = req.languageEx
+                language = req.language
             )
         )
 
@@ -57,6 +57,6 @@ class CreateRead(
             )
         )
 
-        return LanguageExCreateReadResponse(error = readResponse.error, languageEx = readResponse.languageEx)
+        return LanguageExCreateReadResponse(error = readResponse.error, language = readResponse.languageEx)
     }
 }

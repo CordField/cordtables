@@ -4,6 +4,14 @@ import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
+class CreateLanguageExRequest {
+  token: string;
+  language: ScLanguage;
+}
+class CreateLanguageExResponse extends GenericResponse {
+  langauge: ScLanguage;
+}
+
 class ScLanguagesListRequest {
   token: string;
 }
@@ -38,6 +46,7 @@ class DeleteLanguageExResponse extends GenericResponse {
 })
 export class ScLanguages {
   @State() languagesResponse: ScLanguagesListResponse;
+  newLanguageName: string;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
@@ -519,11 +528,57 @@ export class ScLanguages {
     });
   }
 
+  languageNameChange(event) {
+    this.newLanguageName = event.target.value;
+  }
+
+  handleInsert = async (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('sc-languages/create-read', {
+      token: globals.globalStore.state.token,
+      language: {
+        language_name: this.newLanguageName,
+      },
+    });
+
+    // console.log(result);
+    // this.showNewForm = false;
+    // this.insertedFields = this.defaultFields;
+    // if (result.error === ErrorType.NoError) {
+    //   this.languagesEx = this.languagesEx.concat(result.data);
+    //   this.success = `New Row with id ${result.data.id} inserted successfully`;
+    // } else {
+    //   console.error('Failed to create global role');
+    //   this.error = result.error;
+    // }
+  };
   render() {
     return (
       <Host>
         <slot></slot>
+        {/* table abstraction */}
         {this.languagesResponse && <cf-table rowData={this.languagesResponse.languages} columnData={this.columnData}></cf-table>}
+
+        {/* create form - we'll only do creates using the minimum amount of fields
+         and then expect the user to use the update functionality to do the rest*/}
+
+        {globals.globalStore.state.editMode === true && (
+          <form class="form-thing">
+            <span id="language-name-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="language-name">New Language Name</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="language-name" name="language-name" onInput={event => this.languageNameChange(event)} />
+              </span>
+            </span>
+            <span class="form-thing">
+              <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
+            </span>
+          </form>
+        )}
       </Host>
     );
   }
