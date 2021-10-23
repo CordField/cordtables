@@ -1,5 +1,5 @@
 import { Component, Host, h, State, Prop } from '@stencil/core';
-import { ColumnDescription } from './types';
+import { ColumnDescription } from '../types';
 
 @Component({
   tag: 'cf-table',

@@ -7,7 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
 import { ActionType } from "./common/types";
-import { ColumnDescription } from "./common/table-abstractions/cf-table/types";
+import { ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 export namespace Components {
     interface AdminUsers {
