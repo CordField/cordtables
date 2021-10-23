@@ -18,23 +18,9 @@ export class CfCell {
 
   @State() width: number;
 
-  componentWillLoad() {
-    globals.globalStore.onChange('editMode', () => {
-      this.updateWidth();
-    });
+  connectedCallback() {
+    this.newValue = this.value;
   }
-
-  componentWillRender() {
-    this.updateWidth();
-  }
-
-  updateWidth = () => {
-    let newWidth = this.columnDescription.width;
-    if (globals.globalStore.state.editMode === true) {
-      newWidth += 100;
-    }
-    this.width = newWidth;
-  };
 
   clickEdit = () => {
     if (this.columnDescription.editable) this.showEdit = !this.showEdit;
@@ -65,7 +51,10 @@ export class CfCell {
         <span id="value-view" class={this.isHeader ? 'header both' : 'data both'} style={{ width: this.columnDescription.width + globals.globalStore.state.editModeWidth + 'px' }}>
           {!this.showEdit && (
             <span>
-              <span>{this.value && this.value.toString()} &nbsp;</span>
+              <span>
+                {this.value && typeof this.value != 'boolean' && this.value.toString()}
+                {typeof this.value == 'boolean' && this.value.toString()} &nbsp;
+              </span>
             </span>
           )}
           {!this.isHeader && globals.globalStore.state.editMode && this.columnDescription.editable && !this.showEdit && (
@@ -81,7 +70,7 @@ export class CfCell {
                     {this.columnDescription.selectOptions &&
                       this.columnDescription.selectOptions.length > 0 &&
                       this.columnDescription.selectOptions.map(option => (
-                        <option value={option.value} selected={this.value === option.display}>
+                        <option value={option.value} selected={this.value === option.value}>
                           {option.display}
                         </option>
                       ))}

@@ -39,6 +39,8 @@ export class ScLanguages {
       },
     });
 
+    console.log(updateResponse);
+
     if (updateResponse.error == ErrorType.NoError) {
       return true;
     } else {
@@ -66,6 +68,7 @@ export class ScLanguages {
       displayName: 'ISO code',
       width: 50,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'prioritization',
@@ -78,6 +81,7 @@ export class ScLanguages {
       displayName: 'On progress.Bible list',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
       selectOptions: [
         { display: `true`, value: true },
         { display: 'false', value: false },
@@ -88,18 +92,21 @@ export class ScLanguages {
       displayName: 'Island',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'province',
       displayName: 'Province',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'first_language_population',
       displayName: 'First Language Population',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'population_value',
@@ -112,6 +119,7 @@ export class ScLanguages {
       displayName: 'EGIDS Level',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
       selectOptions: [
         { display: `0`, value: '0' },
         { display: `1`, value: '1' },
@@ -139,6 +147,7 @@ export class ScLanguages {
       displayName: 'Least Reached Progress JPS',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
       selectOptions: [
         { display: `1`, value: '1' },
         { display: `2`, value: '2' },
@@ -158,6 +167,7 @@ export class ScLanguages {
       displayName: 'Partner Interest',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
       selectOptions: [
         { display: `No Partner Interest`, value: 'No_Partner_Interest' },
         { display: `Some`, value: 'Some' },
@@ -176,18 +186,21 @@ export class ScLanguages {
       displayName: 'Description',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'partner_interest_source',
       displayName: 'Source',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'multiple_languages_leverage_linguistic_level',
       displayName: 'Leverage from using multiple languages at the linguistic',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
       selectOptions: [
         { display: `None`, value: 'None' },
         { display: `Some`, value: 'Some' },
@@ -208,18 +221,21 @@ export class ScLanguages {
       displayName: 'Description',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'multiple_languages_leverage_linguistic_source',
       displayName: 'Source',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'multiple_languages_leverage_joint_training_level',
       displayName: 'Leverage from joint training',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
       selectOptions: [
         { display: `None`, value: 'None' },
         { display: `Some`, value: 'Some' },
@@ -240,18 +256,21 @@ export class ScLanguages {
       displayName: 'Description',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'multiple_languages_leverage_joint_training_source',
       displayName: 'Source',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'lang_comm_int_in_language_development_level',
       displayName: 'Language community interest in language development',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
       selectOptions: [
         { display: `No Interest`, value: 'No_Interest' },
         { display: `Some`, value: 'Some' },
@@ -271,18 +290,21 @@ export class ScLanguages {
       displayName: 'Description',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'lang_comm_int_in_language_development_source',
       displayName: 'Source',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'lang_comm_int_in_scripture_translation_level',
       displayName: 'Language community interest in scripture translation',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
       selectOptions: [
         { display: `No Interest`, value: 'No_Interest' },
         { display: `Some`, value: 'Some' },
@@ -302,18 +324,21 @@ export class ScLanguages {
       displayName: 'Description',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'lang_comm_int_in_scripture_translation_source',
       displayName: 'Source',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'access_to_scripture_in_lwc_level',
       displayName: 'Access to scripture in a LWC',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
       selectOptions: [
         { display: `Full Access`, value: 'Full_Access' },
         { display: `Vast Majority`, value: 'Vast_Majority' },
@@ -335,18 +360,21 @@ export class ScLanguages {
       displayName: 'Description',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'access_to_scripture_in_lwc_source',
       displayName: 'Source',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'begin_work_geo_challenges_level',
       displayName: 'Geographical challenges to begin work',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'begin_work_geo_challenges_value',
@@ -359,18 +387,21 @@ export class ScLanguages {
       displayName: 'Description',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'begin_work_geo_challenges_source',
       displayName: 'Source',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'begin_work_rel_pol_obstacles_level',
       displayName: 'Religious and political obstacles to begin work',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'begin_work_rel_pol_obstacles_value',
@@ -383,24 +414,28 @@ export class ScLanguages {
       displayName: 'Description',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'begin_work_rel_pol_obstacles_source',
       displayName: 'Source',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'suggested_strategies',
       displayName: 'Suggested Strategies',
       width: 200,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'comments',
       displayName: 'Comments',
       width: 150,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'created_at',
@@ -431,12 +466,14 @@ export class ScLanguages {
       displayName: 'Owning Person ID',
       width: 100,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'owning_group',
       displayName: 'Owning Group ID',
       width: 100,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'peer',
