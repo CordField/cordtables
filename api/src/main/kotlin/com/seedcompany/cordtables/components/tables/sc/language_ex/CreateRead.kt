@@ -35,7 +35,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("language_ex/create-read")
+    @PostMapping("sc-languages/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: LanguageExCreateReadRequest): LanguageExCreateReadResponse {
 

@@ -30,7 +30,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-languages-ex/update")
+    @PostMapping("sc-languages/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: LanguageExUpdateRequest): LanguageExUpdateResponse {
 
@@ -481,14 +481,6 @@ class Update(
             column = "comments",
             id = req.languageEx.id!!,
             value = req.languageEx.comments,
-        )
-
-        if (req.languageEx.chat != null) util.updateField(
-            token = req.token,
-            table = "sc.languages_ex",
-            column = "chat",
-            id = req.languageEx.id!!,
-            value = req.languageEx.chat,
         )
 
         if (req.languageEx.owning_person != null) util.updateField(

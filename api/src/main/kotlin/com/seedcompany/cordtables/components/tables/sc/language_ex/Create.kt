@@ -39,7 +39,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("language_ex/create")
+    @PostMapping("sc-languages/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CreateLanguageExRequest): CreateLanguageExResponse {
 

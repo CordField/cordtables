@@ -41,7 +41,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-languages-ex/read")
+    @PostMapping("sc-languages/read")
     @ResponseBody
     fun readHandler(@RequestBody req: LanguageExReadRequest): LanguageExReadResponse {
 
@@ -105,7 +105,6 @@ class Read(
                     "begin_work_rel_pol_obstacles_source",
                     "suggested_strategies",
                     "comments",
-//                    "chat",
                     "created_at",
                     "created_by",
                     "modified_at",

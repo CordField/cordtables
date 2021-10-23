@@ -35,7 +35,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-language-ex/update-read")
+    @PostMapping("sc-languages/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: LanguageExUpdateReadRequest): LanguageExUpdateReadResponse {
 

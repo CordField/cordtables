@@ -1,3 +1,29 @@
 :host {
-  display: block;
+  display: flex;
+  align-items: center;
+}
+
+.header {
+  /* border: 1px solid blue; */
+
+  color: white;
+  background-color: #255dab;
+
+  font-weight: normal;
+  /* padding: 12px 5px 12px 5px; */
+  /* text-align: center; */
+  /* background-color: #4caf50; */
+  color: white;
+  cursor: default;
+}
+
+.data {
+  /* border: 1px solid red; */
+  /* padding: 3px; */
+  /* margin: 3px; */
+}
+
+.both {
+  padding-left: 15px;
+  padding-right: 2px;
 }

@@ -18,13 +18,13 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 
-data class ReadLanguageExResponse(
-    val error: ErrorType,
-    val data: MutableList<LanguageEx>?
-)
-
 data class ReadLanguageExRequest(
     val token: String?
+)
+
+data class ReadLanguageExResponse(
+    val error: ErrorType,
+    val languages: MutableList<LanguageEx>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("language_ex/read")
+    @PostMapping("sc-languages/list")
     @ResponseBody
     fun listHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
         var data: MutableList<LanguageEx> = mutableListOf()
@@ -103,7 +103,6 @@ class List(
                     "begin_work_rel_pol_obstacles_source",
                     "suggested_strategies",
                     "comments",
-                    "chat",
                     "created_at",
                     "created_by",
                     "modified_at",
