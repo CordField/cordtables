@@ -3,6 +3,13 @@
   align-items: center;
 }
 
+.both {
+  padding-top: 5px;
+  padding-left: 15px;
+  padding-right: 2px;
+  padding-bottom: 5px;
+}
+
 .header {
   /* border: 1px solid blue; */
 
@@ -22,12 +29,7 @@
   /* border: 1px solid red; */
   /* padding: 3px; */
   /* margin: 3px; */
-  border-right: 1px solid gray;
-}
-
-.both {
-  padding-left: 15px;
-  padding-right: 2px;
+  border-right: 1px solid lightgray;
 }
 
 #value-view {
@@ -41,7 +43,7 @@
 }
 
 .edit-buttons {
-  margin-left: 15px;
+  /* margin-left: 15px; */
   cursor: pointer;
 }
 

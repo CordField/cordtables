@@ -1,4 +1,5 @@
-import { Component, Host, h, Prop } from '@stencil/core';
+import { Component, Host, h, Prop, State } from '@stencil/core';
+import { globals } from '../../../core/global.store';
 import { ColumnDescription } from '../types';
 
 @Component({
@@ -9,6 +10,8 @@ import { ColumnDescription } from '../types';
 export class CfRow {
   @Prop() row: any;
   @Prop() columnData: ColumnDescription[];
+
+  @State() processedColumnData: ColumnDescription[];
 
   render() {
     return (

@@ -40,8 +40,6 @@ export class ScLanguages {
     });
 
     if (updateResponse.error == ErrorType.NoError) {
-      // const result = await fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('language_ex/read', { token: globals.globalStore.state.token });
-      // this.languagesEx = result.data.sort((a, b) => a.id - b.id);
       return true;
     } else {
       alert(updateResponse.error);
@@ -407,43 +405,43 @@ export class ScLanguages {
     {
       field: 'created_at',
       displayName: 'Created At',
-      width: 150,
+      width: 250,
       editable: false,
     },
     {
       field: 'created_by',
       displayName: 'Created By',
-      width: 150,
+      width: 100,
       editable: false,
     },
     {
       field: 'modified_at',
       displayName: 'Last Modified',
-      width: 150,
+      width: 250,
       editable: false,
     },
     {
       field: 'modified_by',
       displayName: 'Last Modified By',
-      width: 150,
+      width: 100,
       editable: false,
     },
     {
       field: 'owning_person',
       displayName: 'Owning Person ID',
-      width: 150,
+      width: 100,
       editable: true,
     },
     {
       field: 'owning_group',
       displayName: 'Owning Group ID',
-      width: 150,
+      width: 100,
       editable: true,
     },
     {
       field: 'peer',
       displayName: 'Peer ID',
-      width: 150,
+      width: 50,
       editable: false,
     },
   ];

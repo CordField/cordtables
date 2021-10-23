@@ -3,6 +3,7 @@ import { createStore } from '@stencil/store';
 export class Globals {
   public globalStore = createStore({
     editMode: false,
+    editModeWidth: 0,
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
     token: localStorage.getItem('token'),
     email: localStorage.getItem('email'),
@@ -12,6 +13,14 @@ export class Globals {
   });
 
   constructor() {
+    this.globalStore.onChange('editMode', newValue => {
+      if (newValue === true) {
+        this.globalStore.state.editModeWidth = 150;
+      } else {
+        this.globalStore.state.editModeWidth = 0;
+      }
+    });
+
     this.globalStore.onChange('isLoggedIn', newValue => {
       if (newValue) {
         localStorage.setItem('isLoggedIn', 'true');

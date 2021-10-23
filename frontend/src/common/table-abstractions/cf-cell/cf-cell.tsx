@@ -16,6 +16,26 @@ export class CfCell {
   @State() showEdit = false;
   @State() newValue: any;
 
+  @State() width: number;
+
+  componentWillLoad() {
+    globals.globalStore.onChange('editMode', () => {
+      this.updateWidth();
+    });
+  }
+
+  componentWillRender() {
+    this.updateWidth();
+  }
+
+  updateWidth = () => {
+    let newWidth = this.columnDescription.width;
+    if (globals.globalStore.state.editMode === true) {
+      newWidth += 100;
+    }
+    this.width = newWidth;
+  };
+
   clickEdit = () => {
     if (this.columnDescription.editable) this.showEdit = !this.showEdit;
   };
@@ -32,6 +52,7 @@ export class CfCell {
     if (this.newValue === undefined) return;
     const result = await this.columnDescription.updateFn(this.rowId, this.columnDescription.field, this.newValue);
     if (result) {
+      this.value = this.newValue;
       this.showEdit = false;
     } else {
     }
@@ -41,10 +62,10 @@ export class CfCell {
     return (
       <Host>
         <slot></slot>
-        <span id="value-view" class={this.isHeader ? 'header both' : 'data both'} style={{ width: this.columnDescription.width + 'px' }}>
+        <span id="value-view" class={this.isHeader ? 'header both' : 'data both'} style={{ width: this.columnDescription.width + globals.globalStore.state.editModeWidth + 'px' }}>
           {!this.showEdit && (
             <span>
-              <span>{this.value && this.value.toString()}</span>
+              <span>{this.value && this.value.toString()} &nbsp;</span>
             </span>
           )}
           {!this.isHeader && globals.globalStore.state.editMode && this.columnDescription.editable && !this.showEdit && (
