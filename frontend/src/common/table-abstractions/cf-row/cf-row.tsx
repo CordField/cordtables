@@ -17,7 +17,7 @@ export class CfRow {
         <div id="data-row">
           {this.columnData &&
             this.row &&
-            this.columnData.map(columnDescription => <cf-cell2 value={this.row[columnDescription.field]} columnDescription={columnDescription}></cf-cell2>)}
+            this.columnData.map(columnDescription => <cf-cell2 rowId={this.row.id} value={this.row[columnDescription.field]} columnDescription={columnDescription}></cf-cell2>)}
         </div>
       </Host>
     );

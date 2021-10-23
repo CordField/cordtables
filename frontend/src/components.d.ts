@@ -38,6 +38,7 @@ export namespace Components {
     interface CfCell2 {
         "columnDescription": ColumnDescription;
         "isHeader": boolean;
+        "rowId": number;
         "value": any;
     }
     interface CfHeader {
@@ -394,6 +395,7 @@ declare namespace LocalJSX {
     interface CfCell2 {
         "columnDescription"?: ColumnDescription;
         "isHeader"?: boolean;
+        "rowId"?: number;
         "value"?: any;
     }
     interface CfHeader {
