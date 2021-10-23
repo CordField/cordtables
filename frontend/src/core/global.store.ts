@@ -15,7 +15,7 @@ export class Globals {
   constructor() {
     this.globalStore.onChange('editMode', newValue => {
       if (newValue === true) {
-        this.globalStore.state.editModeWidth = 150;
+        this.globalStore.state.editModeWidth = 50;
       } else {
         this.globalStore.state.editModeWidth = 0;
       }

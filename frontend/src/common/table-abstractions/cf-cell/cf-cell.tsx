@@ -75,27 +75,30 @@ export class CfCell {
           )}
           {this.showEdit && (
             <span id="value-edit">
-              {this.columnDescription.selectOptions != null || this.columnDescription.selectOptions != undefined ? (
-                <select onInput={event => this.handleSelect(event)}>
-                  {this.columnDescription.selectOptions &&
-                    this.columnDescription.selectOptions.length > 0 &&
-                    this.columnDescription.selectOptions.map(option => (
-                      <option value={option.value} selected={this.value === option.display}>
-                        {option.display}
-                      </option>
-                    ))}
-                </select>
-              ) : (
-                <input type="text" id="value-input" name="value-input" defaultValue={this.value} onInput={event => this.updateValue(event)}>
-                  {this.value}
-                </input>
-              )}
-
-              <span id="save-icon" class="edit-buttons" onClick={this.submit}>
-                <ion-icon name="checkmark-outline"></ion-icon>
+              <span>
+                {this.columnDescription.selectOptions != null || this.columnDescription.selectOptions != undefined ? (
+                  <select onInput={event => this.handleSelect(event)}>
+                    {this.columnDescription.selectOptions &&
+                      this.columnDescription.selectOptions.length > 0 &&
+                      this.columnDescription.selectOptions.map(option => (
+                        <option value={option.value} selected={this.value === option.display}>
+                          {option.display}
+                        </option>
+                      ))}
+                  </select>
+                ) : (
+                  <input type="text" id="value-input" name="value-input" defaultValue={this.value} onInput={event => this.updateValue(event)}>
+                    {this.value}
+                  </input>
+                )}
               </span>
-              <span id="cancel-icon" class="edit-buttons" onClick={this.clickEdit}>
-                <ion-icon name="close-outline"></ion-icon>
+              <span>
+                <span id="save-icon" class="edit-buttons" onClick={this.submit}>
+                  <ion-icon name="checkmark-outline"></ion-icon>
+                </span>
+                <span id="cancel-icon" class="edit-buttons" onClick={this.clickEdit}>
+                  <ion-icon name="close-outline"></ion-icon>
+                </span>
               </span>
             </span>
           )}

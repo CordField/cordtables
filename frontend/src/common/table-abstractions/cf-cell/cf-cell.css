@@ -38,12 +38,13 @@
 }
 
 #value-edit {
+  width: 100%;
   display: flex;
   justify-content: space-between;
 }
 
 .edit-buttons {
-  /* margin-left: 15px; */
+  margin-left: 15px;
   cursor: pointer;
 }
 
