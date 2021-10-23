@@ -1,8 +1,7 @@
-package com.seedcompany.cordtables.components.user
+package com.seedcompany.cordtables.components.tables.admin.roles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.globalroles.GlobalRoleUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -35,7 +34,7 @@ class Create(
     @Autowired
     val util: Utility,
     @Autowired
-    val globalRoleUtil: GlobalRoleUtil,
+    val globalRoleUtil: RoleUtil,
     @Autowired
     val ds: DataSource,
 ) {

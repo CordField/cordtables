@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.globalrolememberships
+package com.seedcompany.cordtables.components.tables.admin.role_memberships
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
