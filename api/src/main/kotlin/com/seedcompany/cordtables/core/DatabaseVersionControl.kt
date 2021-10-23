@@ -142,6 +142,10 @@ class DatabaseVersionControl(
             bootstrapStatement.close()
         }
 
+        if (appConfig.thisServerUrl == "http://localhost:8080"){
+            runSqlFile("sql/dummy.data.sql")
+        }
+
         jdbcTemplate.execute(
             """
             insert into admin.database_version_control(version, status, started, completed)
