@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.people
+package com.seedcompany.cordtables.components.tables.admin.people
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility

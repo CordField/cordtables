@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.sil.table_of_languages
 
 import com.seedcompany.cordtables.common.CordApiRestUtils
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.GResponse
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.core.AppConfig
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,40 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
 import javax.sql.DataSource
-
-data class ValueInt(
-    val value: Int? = null,
-)
-
-data class ValueString(
-    val value: String? = null,
-)
-
-data class Ethnologue(
-    val code: ValueString? = null,
-    val name: ValueString? = null,
-    val population: ValueInt? = null,
-    val provisionalCode: ValueString? = null,
-    val sensitivity: String? = null,
-)
-
-data class Item(
-    val id: String? = null,
-    val ethnologue: Ethnologue? = null,
-)
-
-data class Languages(
-    val items: List<Item>? = listOf(),
-    val total: Int? = null,
-)
-
-data class Data(
-    val languages: Languages? = null,
-)
-
-data class Response(
-    val data: Data? = null,
-)
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("SilTableOfLanguagesMigrate")
@@ -76,14 +43,13 @@ class Migrate(
     @PostMapping("migrate/sc-ethnologue")
     @ResponseBody
     fun registerHandler() {
-
         val token = cord.login()
 
         if (token != null) {
 
             // get count of ethnologue entries
             val countQuery = """{"query":"query Query {languages {total}}"}"""
-            val countResponse = cord.post<Response>(token, countQuery)
+            val countResponse = cord.post<GResponse>(token, countQuery)
             val total = countResponse?.data?.languages?.total
 
             if (total == null) {
@@ -100,7 +66,7 @@ class Migrate(
                         {"query":"query Query {languages(input: { page: $i, count: 1 }) {items {id ethnologue {code {value}name {value}population {value} provisionalCode {value} sensitivity}}}}"}
                     """.trimIndent()
 
-                val ethResponse = cord.post<Response>(token, ethQuery)
+                val ethResponse = cord.post<GResponse>(token, ethQuery)
 
                 val eth = ethResponse?.data?.languages?.items?.get(0)?.ethnologue
                 if (eth == null) {
@@ -121,6 +87,7 @@ class Migrate(
                     }
                     migrationStatement.setString(4, eth.provisionalCode?.value)
                     migrationStatement.setObject(5, eth.sensitivity, java.sql.Types.OTHER)
+                    migrationStatement.setNull(6, java.sql.Types.NULL)
                     migrationStatement.registerOutParameter(6, java.sql.Types.VARCHAR)
 
                     migrationStatement.execute()

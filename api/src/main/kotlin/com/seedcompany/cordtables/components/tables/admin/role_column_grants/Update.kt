@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.globalrolecolumngrants
+package com.seedcompany.cordtables.components.tables.admin.role_column_grants
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
