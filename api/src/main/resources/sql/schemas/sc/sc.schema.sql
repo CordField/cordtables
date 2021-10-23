@@ -32,7 +32,7 @@ create table sc.posts (
   shareability sc.post_shareability not null,
   body text not null,
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -51,7 +51,7 @@ create table sc.funding_account (
 	account_number int unique not null,
 	name varchar(32),
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -70,7 +70,7 @@ create table sc.field_zone (
 	director int references admin.people(id),
 	name varchar(32) unique not null,
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -87,7 +87,7 @@ create table sc.field_regions (
 	director int references admin.people(id),
 	name varchar(32) unique not null,
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -108,7 +108,7 @@ create table sc.locations (
 	name varchar(32) unique not null,
 	type location_type not null,
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -128,7 +128,7 @@ create table sc.organizations (
 	address varchar(255),
 	base64 varchar(32) unique not null,
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -144,7 +144,7 @@ create table sc.organization_locations(
 	organization int not null references sc.organizations(id),
 	location int not null references sc.locations(id),
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -194,7 +194,7 @@ create table sc.partners (
 	point_of_contact int references admin.people(id),
 	types sc.partner_types[],
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -211,7 +211,7 @@ create table sc.language_goal_definitions (
 
 	-- todo
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -221,25 +221,28 @@ create table sc.language_goal_definitions (
   peer int references admin.peers(id)
 );
 
--- NOT an extension table, but has a reference to common
+-- An extension table, but has a reference to common
 -- sc languages may different from other org's language listings
 create table sc.languages (
-  id serial primary key,
-  ethnologue int references sil.table_of_languages(id),
-
+    neo4j_id varchar(32) unique,
+	id serial primary key,
+	ethnologue int references sil.table_of_languages(id),
+	name varchar(255) unique not null,
 	display_name varchar(255) unique not null,
+	display_name_pronunciation varchar(255),
+	tags text[],
+	preset_inventory bool,
 	is_dialect bool,
 	is_sign_language bool,
 	is_least_of_these bool,
 	least_of_these_reason varchar(255),
-	name varchar(255) unique not null,
 	population_override int,
 	registry_of_dialects_code varchar(32),
 	sensitivity sensitivity,
 	sign_language_code varchar(32),
 	sponsor_estimated_eng_date timestamp,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -256,7 +259,7 @@ create table sc.language_locations (
 	location int not null references sc.locations(id),
 	-- todo
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -275,7 +278,7 @@ create table sc.language_goals (
 	goal int not null references sc.language_goal_definitions(id),
 	-- todo
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -340,7 +343,6 @@ create type sc.multiple_languages_leverage_joint_training_scale as enum (
 create type sc.lang_comm_int_in_language_development_scale as enum (
 		'No Interest',
 		'Some',
-		'Expressed Need',
 		'Significant',
 		'Considerable'
 );
@@ -403,7 +405,7 @@ create table sc.languages_ex(
 	island varchar(32),
 	province varchar(32),
 
-	first_language_population int NULL,
+	first_language_population int,
 	population_value decimal default 0, -- calculated from first_language_population
 
 	egids_level sc.egids_scale,
@@ -455,18 +457,14 @@ create table sc.languages_ex(
 	suggested_strategies text,
 	comments text,
 
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null,
+  created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null,
-  owning_person int not null,
-  owning_group int not null,
-  peer int references admin.peers(id),
-
-  foreign key (created_by) references admin.people(id),
-  foreign key (modified_by) references admin.people(id),
-	foreign key (owning_person) references admin.people(id),
-  foreign key (owning_group) references admin.groups(id)
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );
 
 -- USER TABLES --------------------------------------------------------------
@@ -477,7 +475,7 @@ create table sc.known_languages_by_person (
   person int not null references admin.people(id),
   known_language int not null references sc.languages(id),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -497,7 +495,7 @@ create table sc.people (
 	skills varchar(32)[],
 	status varchar(32),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -515,7 +513,7 @@ create table sc.person_unavailabilities (
 	period_end timestamp not null,
 	description text,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -534,7 +532,7 @@ create table sc.directories (
   name varchar(255),
 	-- todo
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -550,7 +548,7 @@ create table sc.files (
   directory int not null references sc.directories(id),
 	name varchar(255),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -570,7 +568,7 @@ create table sc.file_versions (
   file_url varchar(255) not null,
   file_size int, -- bytes
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -617,7 +615,7 @@ create table sc.change_to_plans (
   summary text,
   type sc.change_to_plan_type,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -642,7 +640,7 @@ create table sc.periodic_reports (
   start_at timestamp not null,
   type sc.periodic_report_type not null,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -676,7 +674,7 @@ create table sc.projects (
 	status_changed_at timestamp,
 	step sc.project_step,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -704,7 +702,7 @@ create table sc.partnerships (
   active bool,
   agreement int references sc.file_versions(id),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -735,7 +733,7 @@ create table sc.budgets (
   universal_template int references sc.file_versions(id),
   universal_template_file_url varchar(255),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -758,7 +756,7 @@ create table sc.budget_records (
   fiscal_year int,
   partnership int references sc.partnerships(id),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -780,7 +778,7 @@ create table sc.project_locations (
   location int not null references sc.locations(id),
   project int not null references sc.projects(id),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -835,7 +833,7 @@ create table sc.language_engagements (
 	start_date_override timestamp,
 	status common.engagement_status,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -891,7 +889,7 @@ create table sc.products (
   purposes common.product_purposes[],
   type common.product_type,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -909,7 +907,7 @@ create table sc.product_scripture_references (
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -963,7 +961,7 @@ create table sc.internship_engagements (
 	start_date_override timestamp,
 	status common.engagement_status,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -985,7 +983,7 @@ create table sc.ceremonies (
 	is_planned bool,
 	type varchar(255),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1016,11 +1014,11 @@ create type common.organization_transition_options as enum (
 
 create table common.organization_relationships (
   id serial primary key,
-  
+
   from_org int not null references sc.organizations(id),
   to_org int not null references sc.organizations(id),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1034,11 +1032,11 @@ create table common.organization_relationships (
 
 create table sc.partner_performance (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   -- todo
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1050,11 +1048,11 @@ create table sc.partner_performance (
 
 create table sc.partner_finances (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   -- todo
   
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1066,11 +1064,11 @@ create table sc.partner_finances (
 
 create table sc.partner_reporting (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   -- todo
   
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1082,11 +1080,11 @@ create table sc.partner_reporting (
 
 create table sc.partner_translation_progress (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   -- todo
   
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1098,30 +1096,26 @@ create table sc.partner_translation_progress (
 
 create table sc.partner_notes (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   author int not null references admin.people(id),
   note text not null,
   -- todo
   
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id)
 );
 
 create table common.organization_transitions (
   id serial primary key,
-  
+
   organization int unique not null references sc.organizations(id),
   transition_type common.organization_transition_options not null,
   -- todo
   
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1133,12 +1127,12 @@ create table common.organization_transitions (
 
 create table common.person_to_person_relationships (
   id serial primary key,
-  
+
   from_person int not null references admin.people(id),
   to_person int not null references admin.people(id),
   -- todo
   
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1155,7 +1149,7 @@ create table common.people_transitions (
   transition_type common.people_transition_options not null,
   -- todo
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1171,7 +1165,7 @@ create table common.involvements (
   organization int not null references common.organizations(id),
   type common.involvement_options not null,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

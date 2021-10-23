@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
 import { ActionType } from "./common/types";
+import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 export namespace Components {
     interface AdminUsers {
@@ -34,6 +35,12 @@ export namespace Components {
         "updateFn": (id: number, columnName: any, value: any) => Promise<boolean>;
         "value": any;
     }
+    interface CfCell2 {
+        "cellType": CellType;
+        "columnDescription": ColumnDescription;
+        "rowId": number;
+        "value": any;
+    }
     interface CfHeader {
         "history": RouterHistory;
     }
@@ -45,6 +52,20 @@ export namespace Components {
     }
     interface CfRegister {
         "history": RouterHistory;
+    }
+    interface CfRow {
+        "columnData": ColumnDescription[];
+        "row": any;
+    }
+    interface CfTable {
+        "columnData": ColumnDescription[];
+        "rowData": any[];
+    }
+    interface CfTableBody {
+        "columnData": ColumnDescription[];
+        "rowData": any[];
+    }
+    interface CfTableFooter {
     }
     interface CommonOrganizations {
     }
@@ -84,6 +105,8 @@ export namespace Components {
     interface RolesPage {
     }
     interface RolesTable {
+    }
+    interface ScLanguages {
     }
     interface ScriptureReferences {
     }
@@ -128,6 +151,12 @@ declare global {
         prototype: HTMLCfCellElement;
         new (): HTMLCfCellElement;
     };
+    interface HTMLCfCell2Element extends Components.CfCell2, HTMLStencilElement {
+    }
+    var HTMLCfCell2Element: {
+        prototype: HTMLCfCell2Element;
+        new (): HTMLCfCell2Element;
+    };
     interface HTMLCfHeaderElement extends Components.CfHeader, HTMLStencilElement {
     }
     var HTMLCfHeaderElement: {
@@ -151,6 +180,30 @@ declare global {
     var HTMLCfRegisterElement: {
         prototype: HTMLCfRegisterElement;
         new (): HTMLCfRegisterElement;
+    };
+    interface HTMLCfRowElement extends Components.CfRow, HTMLStencilElement {
+    }
+    var HTMLCfRowElement: {
+        prototype: HTMLCfRowElement;
+        new (): HTMLCfRowElement;
+    };
+    interface HTMLCfTableElement extends Components.CfTable, HTMLStencilElement {
+    }
+    var HTMLCfTableElement: {
+        prototype: HTMLCfTableElement;
+        new (): HTMLCfTableElement;
+    };
+    interface HTMLCfTableBodyElement extends Components.CfTableBody, HTMLStencilElement {
+    }
+    var HTMLCfTableBodyElement: {
+        prototype: HTMLCfTableBodyElement;
+        new (): HTMLCfTableBodyElement;
+    };
+    interface HTMLCfTableFooterElement extends Components.CfTableFooter, HTMLStencilElement {
+    }
+    var HTMLCfTableFooterElement: {
+        prototype: HTMLCfTableFooterElement;
+        new (): HTMLCfTableFooterElement;
     };
     interface HTMLCommonOrganizationsElement extends Components.CommonOrganizations, HTMLStencilElement {
     }
@@ -248,6 +301,12 @@ declare global {
         prototype: HTMLRolesTableElement;
         new (): HTMLRolesTableElement;
     };
+    interface HTMLScLanguagesElement extends Components.ScLanguages, HTMLStencilElement {
+    }
+    var HTMLScLanguagesElement: {
+        prototype: HTMLScLanguagesElement;
+        new (): HTMLScLanguagesElement;
+    };
     interface HTMLScriptureReferencesElement extends Components.ScriptureReferences, HTMLStencilElement {
     }
     var HTMLScriptureReferencesElement: {
@@ -267,10 +326,15 @@ declare global {
         "app-root": HTMLAppRootElement;
         "cf-action": HTMLCfActionElement;
         "cf-cell": HTMLCfCellElement;
+        "cf-cell2": HTMLCfCell2Element;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-register": HTMLCfRegisterElement;
+        "cf-row": HTMLCfRowElement;
+        "cf-table": HTMLCfTableElement;
+        "cf-table-body": HTMLCfTableBodyElement;
+        "cf-table-footer": HTMLCfTableFooterElement;
         "common-organizations": HTMLCommonOrganizationsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "generic-table": HTMLGenericTableElement;
@@ -287,6 +351,7 @@ declare global {
         "role-table-permissions": HTMLRoleTablePermissionsElement;
         "roles-page": HTMLRolesPageElement;
         "roles-table": HTMLRolesTableElement;
+        "sc-languages": HTMLScLanguagesElement;
         "scripture-references": HTMLScriptureReferencesElement;
         "table-root": HTMLTableRootElement;
     }
@@ -317,6 +382,12 @@ declare namespace LocalJSX {
         "updateFn"?: (id: number, columnName: any, value: any) => Promise<boolean>;
         "value"?: any;
     }
+    interface CfCell2 {
+        "cellType"?: CellType;
+        "columnDescription"?: ColumnDescription;
+        "rowId"?: number;
+        "value"?: any;
+    }
     interface CfHeader {
         "history"?: RouterHistory;
     }
@@ -329,6 +400,20 @@ declare namespace LocalJSX {
     }
     interface CfRegister {
         "history"?: RouterHistory;
+    }
+    interface CfRow {
+        "columnData"?: ColumnDescription[];
+        "row"?: any;
+    }
+    interface CfTable {
+        "columnData"?: ColumnDescription[];
+        "rowData"?: any[];
+    }
+    interface CfTableBody {
+        "columnData"?: ColumnDescription[];
+        "rowData"?: any[];
+    }
+    interface CfTableFooter {
     }
     interface CommonOrganizations {
     }
@@ -373,6 +458,8 @@ declare namespace LocalJSX {
     }
     interface RolesTable {
     }
+    interface ScLanguages {
+    }
     interface ScriptureReferences {
     }
     interface TableRoot {
@@ -385,10 +472,15 @@ declare namespace LocalJSX {
         "app-root": AppRoot;
         "cf-action": CfAction;
         "cf-cell": CfCell;
+        "cf-cell2": CfCell2;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-register": CfRegister;
+        "cf-row": CfRow;
+        "cf-table": CfTable;
+        "cf-table-body": CfTableBody;
+        "cf-table-footer": CfTableFooter;
         "common-organizations": CommonOrganizations;
         "create-update-modal": CreateUpdateModal;
         "generic-table": GenericTable;
@@ -405,6 +497,7 @@ declare namespace LocalJSX {
         "role-table-permissions": RoleTablePermissions;
         "roles-page": RolesPage;
         "roles-table": RolesTable;
+        "sc-languages": ScLanguages;
         "scripture-references": ScriptureReferences;
         "table-root": TableRoot;
     }
@@ -419,10 +512,15 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "cf-action": LocalJSX.CfAction & JSXBase.HTMLAttributes<HTMLCfActionElement>;
             "cf-cell": LocalJSX.CfCell & JSXBase.HTMLAttributes<HTMLCfCellElement>;
+            "cf-cell2": LocalJSX.CfCell2 & JSXBase.HTMLAttributes<HTMLCfCell2Element>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
+            "cf-row": LocalJSX.CfRow & JSXBase.HTMLAttributes<HTMLCfRowElement>;
+            "cf-table": LocalJSX.CfTable & JSXBase.HTMLAttributes<HTMLCfTableElement>;
+            "cf-table-body": LocalJSX.CfTableBody & JSXBase.HTMLAttributes<HTMLCfTableBodyElement>;
+            "cf-table-footer": LocalJSX.CfTableFooter & JSXBase.HTMLAttributes<HTMLCfTableFooterElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
@@ -439,6 +537,7 @@ declare module "@stencil/core" {
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
             "roles-page": LocalJSX.RolesPage & JSXBase.HTMLAttributes<HTMLRolesPageElement>;
             "roles-table": LocalJSX.RolesTable & JSXBase.HTMLAttributes<HTMLRolesTableElement>;
+            "sc-languages": LocalJSX.ScLanguages & JSXBase.HTMLAttributes<HTMLScLanguagesElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }

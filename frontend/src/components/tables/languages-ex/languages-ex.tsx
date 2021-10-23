@@ -241,7 +241,7 @@ export class LanguagesEx {
     event.preventDefault();
     event.stopPropagation();
     console.log(this.insertedFields);
-    const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('language_ex/create', {
+    const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('language_ex/create-read', {
       insertedFields: this.insertedFields,
       token: globals.globalStore.state.token,
     });

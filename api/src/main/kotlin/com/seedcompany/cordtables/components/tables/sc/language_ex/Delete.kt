@@ -30,9 +30,9 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("language_ex/delete")
+    @PostMapping("sc-languages/delete")
     @ResponseBody
-    fun DeleteHandler(@RequestBody req: DeleteLanguageExRequest): DeleteLanguageExResponse {
+    fun deleteHandler(@RequestBody req: DeleteLanguageExRequest): DeleteLanguageExResponse {
 
         if (req.token == null) return DeleteLanguageExResponse(ErrorType.TokenNotFound, null)
         if(!util.userHasDeletePermission(req.token, "sc.languages_ex"))

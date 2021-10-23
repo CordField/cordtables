@@ -135,7 +135,7 @@ create table admin.people (
   title varchar(255),
 	status varchar(32),
 
-  chat int,
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int, -- not null doesn't work here, on startup
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -158,7 +158,7 @@ create table admin.groups(
   name varchar(64) not null unique,
   parent_group int references admin.groups(id),
 
-  chat int,
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -177,7 +177,7 @@ create table admin.group_row_access(
   table_name admin.table_name not null,
   row int not null,
 
-  chat int,
+  
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -193,7 +193,7 @@ create table admin.group_memberships(
   group_id int not null references admin.groups(id),
   person int not null references admin.people(id),
 
-  chat int,
+  
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -216,7 +216,7 @@ create table admin.peers (
   target_token varchar(64),
   session_token varchar(64),
 
-  chat int,
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -240,7 +240,7 @@ create table admin.roles (
 
 	name varchar(255) not null,
 
-  chat int,
+  
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -260,7 +260,7 @@ create table admin.role_column_grants(
 	column_name varchar(64) not null,
 	access_level admin.access_level not null,
 
-  chat int,
+  
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -279,7 +279,7 @@ create table admin.role_table_permissions(
   table_name admin.table_name not null,
   table_permission admin.table_permission not null,
 
-  chat int,
+  
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -297,7 +297,7 @@ create table admin.role_memberships (
 	role int not null references admin.roles(id),
 	person int not null references admin.people(id),
 
-  chat int,
+  
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -339,7 +339,7 @@ create table admin.users(
   email varchar(255) unique not null,
   password varchar(255),
 
-  chat int,
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

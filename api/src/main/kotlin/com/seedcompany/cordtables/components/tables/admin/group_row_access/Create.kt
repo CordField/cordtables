@@ -1,4 +1,4 @@
-    package com.seedcompany.cordtables.components.tables.grouprowaccess
+    package com.seedcompany.cordtables.components.tables.admin.group_row_access
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility

@@ -23,19 +23,37 @@ BEGIN
     set language_name = pLanguage_name,
       modified_at = CURRENT_TIMESTAMP
     where iso_639 = pIso_639 and
-      language_name != pLanguage_name;
+      (
+         (language_name != pLanguage_name)
+         OR
+         (language_name IS NULL AND pLanguage_name IS NOT NULL)
+         OR
+         (language_name IS NOT NULL AND pLanguage_name IS NULL)
+      );
 
     update sil.table_of_languages
     set population = pPopulation,
       modified_at = CURRENT_TIMESTAMP
     where iso_639 = pIso_639 and
-      population != pPopulation;
+      (
+         (population != pPopulation)
+         OR
+         (population IS NULL AND pPopulation IS NOT NULL)
+         OR
+         (population IS NOT NULL AND pPopulation IS NULL)
+      );
 
     update sil.table_of_languages
     set provisional_code = pProvisional_code,
       modified_at = CURRENT_TIMESTAMP
     where iso_639 = pIso_639 and
-      provisional_code != pProvisional_code;
+      (
+         (provisional_code != pProvisional_code)
+         OR
+         (provisional_code IS NULL AND pProvisional_code IS NOT NULL)
+         OR
+         (provisional_code IS NOT NULL AND pProvisional_code IS NULL)
+      );
 
     update sil.table_of_languages
     set sensitivity = pSensitivity,

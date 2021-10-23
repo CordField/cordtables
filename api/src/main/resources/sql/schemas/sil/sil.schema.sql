@@ -12,7 +12,7 @@ CREATE TABLE sil.language_codes (
   lang_status char(1) not null,  -- L(iving), (e)X(tinct)
   name varchar(75) not null,   -- Primary name in that country
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -29,7 +29,7 @@ CREATE TABLE sil.country_codes (
   name varchar(75) not null,  -- Country name
   area varchar(10) not null, -- World area
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -54,7 +54,7 @@ CREATE TABLE sil.language_index (
   name_type sil.language_name_type not null,
   name  varchar(75) not null,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -73,7 +73,7 @@ create table sil.table_of_languages (
   provisional_code varchar(32),
   sensitivity common.sensitivity not null default 'High',
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
