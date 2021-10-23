@@ -54,6 +54,7 @@ class List(
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "sc.languages_ex",
+                filter = "order by id",
                 columns = arrayOf(
                     "id",
                     "language_name",

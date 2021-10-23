@@ -12,12 +12,12 @@ import javax.sql.DataSource
 
 data class LanguageExUpdateReadRequest(
     val token: String?,
-    val languageEx: LanguageExInput? = null,
+    val language: LanguageExInput? = null,
 )
 
 data class LanguageExUpdateReadResponse(
     val error: ErrorType,
-    val languageEx: LanguageEx? = null,
+    val language: LanguageEx? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -42,7 +42,7 @@ class UpdateRead(
         val updateResponse = update.updateHandler(
             LanguageExUpdateRequest(
                 token = req.token,
-                languageEx = req.languageEx,
+                languageEx = req.language,
             )
         )
 
@@ -53,7 +53,7 @@ class UpdateRead(
         val readResponse = read.readHandler(
             LanguageExReadRequest(
                 token = req.token,
-                id = req.languageEx!!.id
+                id = req.language!!.id
             )
         )
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 data class GetSecureListQueryRequest(
     val tableName: String,
     val columns: Array<String>,
+    val filter: String = "",
     val getList: Boolean = true, // get read if false
 )
 
@@ -95,7 +96,8 @@ class GetSecureListQuery() {
             where id in (select row from row_level_access) or
                 (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
                 owning_person = (select person from admin.tokens where token = :token) or
-                id in (select row from public_row_level_access);
+                id in (select row from public_row_level_access)
+            ${req.filter};
         """.replace('\n', ' ')
 
         } else {

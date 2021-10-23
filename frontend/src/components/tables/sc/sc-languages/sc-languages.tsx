@@ -12,6 +12,16 @@ class ScLanguagesListResponse {
   error: ErrorType;
   languages: ScLanguage[];
 }
+
+class ScLanguagesUpdateRequest {
+  token: string;
+  language: ScLanguage;
+}
+
+class ScLanguageUpdateResponse {
+  error: ErrorType;
+  language: ScLanguage | null = null;
+}
 @Component({
   tag: 'sc-languages',
   styleUrl: 'sc-languages.css',
@@ -19,6 +29,25 @@ class ScLanguagesListResponse {
 })
 export class ScLanguages {
   @State() languagesResponse: ScLanguagesListResponse;
+
+  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
+      token: globals.globalStore.state.token,
+      language: {
+        id: id,
+        [columnName]: value,
+      },
+    });
+
+    if (updateResponse.error == ErrorType.NoError) {
+      // const result = await fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('language_ex/read', { token: globals.globalStore.state.token });
+      // this.languagesEx = result.data.sort((a, b) => a.id - b.id);
+      return true;
+    } else {
+      alert(updateResponse.error);
+      return false;
+    }
+  };
 
   columnData: ColumnDescription[] = [
     {
@@ -32,6 +61,7 @@ export class ScLanguages {
       displayName: 'Language Name',
       width: 200,
       editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'iso',
