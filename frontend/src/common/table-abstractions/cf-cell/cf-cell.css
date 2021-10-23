@@ -55,3 +55,15 @@
 #cancel-icon {
   color: red;
 }
+
+#value-span {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 3px;
+}
+
+#delete-span {
+  cursor: pointer;
+  color: red;
+}

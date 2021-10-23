@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType } from '../../../../common/types';
+import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
@@ -21,6 +21,15 @@ class ScLanguagesUpdateRequest {
 class ScLanguageUpdateResponse {
   error: ErrorType;
   language: ScLanguage | null = null;
+}
+
+class DeleteLanguageExRequest {
+  id: number;
+  token: string;
+}
+
+class DeleteLanguageExResponse extends GenericResponse {
+  id: number;
 }
 @Component({
   tag: 'sc-languages',
@@ -49,12 +58,29 @@ export class ScLanguages {
     }
   };
 
+  handleDelete = async id => {
+    const result = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('sc-languages/delete', {
+      id,
+      token: globals.globalStore.state.token,
+    });
+    if (result.error === ErrorType.NoError) {
+      this.getList();
+      // this.success = `Row with id ${result.id} deleted successfully!`;
+      // this.languagesEx = this.languagesEx.filter(globalRole => globalRole.id !== result.id);
+      return true;
+    } else {
+      // this.error = result.error;
+      return false;
+    }
+  };
+
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
       width: 50,
       editable: false,
+      deleteFn: this.handleDelete,
     },
     {
       field: 'language_name',
@@ -491,8 +517,6 @@ export class ScLanguages {
     this.languagesResponse = await fetchAs<ScLanguagesListRequest, ScLanguagesListResponse>('sc-languages/list', {
       token: globals.globalStore.state.token,
     });
-
-    console.log(this.languagesResponse.languages);
   }
 
   render() {

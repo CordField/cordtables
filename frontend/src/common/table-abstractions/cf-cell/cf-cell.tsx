@@ -1,6 +1,6 @@
 import { Component, Host, h, Prop, State } from '@stencil/core';
 import { globals } from '../../../core/global.store';
-import { ColumnDescription } from '../types';
+import { CellType, ColumnDescription } from '../types';
 
 @Component({
   tag: 'cf-cell2',
@@ -11,9 +11,10 @@ export class CfCell {
   @Prop() rowId: number;
   @Prop() value: any;
   @Prop() columnDescription: ColumnDescription;
-  @Prop() isHeader = false;
+  @Prop() cellType: CellType = 'data';
 
   @State() showEdit = false;
+  @State() showDelete = false;
   @State() newValue: any;
 
   @State() width: number;
@@ -26,6 +27,10 @@ export class CfCell {
     if (this.columnDescription.editable) this.showEdit = !this.showEdit;
   };
 
+  showDeleteConfirm = () => {
+    this.showDelete = !this.showDelete;
+  };
+
   updateValue = async event => {
     this.newValue = event.target.value;
   };
@@ -33,6 +38,10 @@ export class CfCell {
   handleSelect(event) {
     this.newValue = event.target.value;
   }
+
+  handleDelete = event => {
+    this.columnDescription.deleteFn(this.rowId);
+  };
 
   submit = async () => {
     if (this.newValue === undefined) return;
@@ -48,23 +57,57 @@ export class CfCell {
     return (
       <Host>
         <slot></slot>
-        <span id="value-view" class={this.isHeader ? 'header both' : 'data both'} style={{ width: this.columnDescription.width + globals.globalStore.state.editModeWidth + 'px' }}>
-          {!this.showEdit && (
-            <span>
+        {/* holds entire cell - width is calculated based on base value and edit mode */}
+        <span
+          id="value-view"
+          class={this.cellType === 'header' ? 'header both' : 'data both'}
+          style={{ width: this.columnDescription.width + globals.globalStore.state.editModeWidth + 'px' }}
+        >
+          {/* need to display base on type of value, some types like actions don't like toString() */}
+          {!this.showEdit && (this.cellType === 'data' || this.cellType === 'header') && (
+            <span id="value-span">
               <span>
-                {this.value && typeof this.value != 'boolean' && this.value.toString()}
-                {typeof this.value == 'boolean' && this.value.toString()} &nbsp;
+                {typeof this.value === 'boolean' && <span>{this.value.toString()}</span>}
+                {typeof this.value === 'number' && <span>{this.value.toString()}</span>}
+                {typeof this.value === 'string' && <span>{this.value}</span>}
+                {typeof this.value === 'object' && <span>{this.value}</span>}
               </span>
+
+              {/* if this is the ID field and edit mode is true, show the delete button */}
+              {this.columnDescription && this.columnDescription.field === 'id' && this.cellType === 'data' && globals.globalStore.state.editMode === true && (
+                <span>
+                  {this.showDelete === false && (
+                    <span id="delete-span" onClick={this.showDeleteConfirm}>
+                      Delete
+                    </span>
+                  )}
+                  {this.showDelete === true && (
+                    <span>
+                      <span id="save-icon" class="edit-buttons" onClick={this.handleDelete}>
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                      </span>
+                      <span id="cancel-icon" class="edit-buttons" onClick={this.showDeleteConfirm}>
+                        <ion-icon name="close-outline"></ion-icon>
+                      </span>
+                    </span>
+                  )}
+                </span>
+              )}
             </span>
           )}
-          {!this.isHeader && globals.globalStore.state.editMode && this.columnDescription.editable && !this.showEdit && (
+
+          {/* show's the edit icon */}
+          {!(this.cellType === 'header') && globals.globalStore.state.editMode && this.columnDescription.editable && !this.showEdit && (
             <span class="edit-buttons" onClick={this.clickEdit}>
               <ion-icon name="create-outline"></ion-icon>
             </span>
           )}
+
+          {/* holds the form and buttons for editing the field */}
           {this.showEdit && (
             <span id="value-edit">
               <span>
+                {/* might be a select menu or a text input */}
                 {this.columnDescription.selectOptions != null || this.columnDescription.selectOptions != undefined ? (
                   <select onInput={event => this.handleSelect(event)}>
                     {this.columnDescription.selectOptions &&
@@ -81,6 +124,8 @@ export class CfCell {
                   </input>
                 )}
               </span>
+
+              {/* confirm and cancel buttons */}
               <span>
                 <span id="save-icon" class="edit-buttons" onClick={this.submit}>
                   <ion-icon name="checkmark-outline"></ion-icon>

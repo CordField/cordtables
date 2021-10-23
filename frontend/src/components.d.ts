@@ -7,7 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
 import { ActionType } from "./common/types";
-import { ColumnDescription } from "./common/table-abstractions/types";
+import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 export namespace Components {
     interface AdminUsers {
@@ -36,8 +36,8 @@ export namespace Components {
         "value": any;
     }
     interface CfCell2 {
+        "cellType": CellType;
         "columnDescription": ColumnDescription;
-        "isHeader": boolean;
         "rowId": number;
         "value": any;
     }
@@ -383,8 +383,8 @@ declare namespace LocalJSX {
         "value"?: any;
     }
     interface CfCell2 {
+        "cellType"?: CellType;
         "columnDescription"?: ColumnDescription;
-        "isHeader"?: boolean;
         "rowId"?: number;
         "value"?: any;
     }
