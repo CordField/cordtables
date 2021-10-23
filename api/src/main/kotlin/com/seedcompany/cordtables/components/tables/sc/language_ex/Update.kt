@@ -209,7 +209,7 @@ class Update(
             column = "partner_interest_level",
             id = req.languageEx.id!!,
             value = req.languageEx.partner_interest_level,
-            cast = "::partner_interest_scale",
+            cast = "::sc.partner_interest_scale",
         )
 
         if (req.languageEx.partner_interest_level != null) util.updateField(
@@ -242,7 +242,7 @@ class Update(
             column = "multiple_languages_leverage_linguistic_level",
             id = req.languageEx.id!!,
             value = req.languageEx.multiple_languages_leverage_linguistic_level,
-            cast = "::multiple_languages_leverage_linguistic_scale",
+            cast = "::sc.multiple_languages_leverage_linguistic_scale",
         )
 
         if (req.languageEx.multiple_languages_leverage_linguistic_level != null) util.updateField(
@@ -275,7 +275,7 @@ class Update(
             column = "multiple_languages_leverage_joint_training_level",
             id = req.languageEx.id!!,
             value = req.languageEx.multiple_languages_leverage_joint_training_level,
-            cast = "::multiple_languages_leverage_joint_training_scale",
+            cast = "::sc.multiple_languages_leverage_joint_training_scale",
         )
 
         if (req.languageEx.multiple_languages_leverage_joint_training_level != null) util.updateField(
@@ -308,7 +308,7 @@ class Update(
             column = "lang_comm_int_in_language_development_level",
             id = req.languageEx.id!!,
             value = req.languageEx.lang_comm_int_in_language_development_level,
-            cast = "::lang_comm_int_in_language_development_scale",
+            cast = "::sc.lang_comm_int_in_language_development_scale",
         )
 
         if (req.languageEx.lang_comm_int_in_language_development_level != null) util.updateField(
@@ -341,7 +341,7 @@ class Update(
             column = "lang_comm_int_in_scripture_translation_level",
             id = req.languageEx.id!!,
             value = req.languageEx.lang_comm_int_in_scripture_translation_level,
-            cast = "::lang_comm_int_in_scripture_translation_scale",
+            cast = "::sc.lang_comm_int_in_scripture_translation_scale",
         )
 
         if (req.languageEx.lang_comm_int_in_scripture_translation_level != null) util.updateField(
@@ -374,7 +374,7 @@ class Update(
             column = "access_to_scripture_in_lwc_level",
             id = req.languageEx.id!!,
             value = req.languageEx.access_to_scripture_in_lwc_level,
-            cast = "::access_to_scripture_in_lwc_scale",
+            cast = "::sc.access_to_scripture_in_lwc_scale",
         )
 
         if (req.languageEx.access_to_scripture_in_lwc_level != null) util.updateField(
@@ -407,7 +407,7 @@ class Update(
             column = "begin_work_geo_challenges_level",
             id = req.languageEx.id!!,
             value = req.languageEx.begin_work_geo_challenges_level,
-            cast = "::begin_work_geo_challenges_scale",
+            cast = "::sc.begin_work_geo_challenges_scale",
         )
 
         if (req.languageEx.begin_work_geo_challenges_level != null) util.updateField(
@@ -440,7 +440,7 @@ class Update(
             column = "begin_work_rel_pol_obstacles_level",
             id = req.languageEx.id!!,
             value = req.languageEx.begin_work_rel_pol_obstacles_level,
-            cast = "::begin_work_rel_pol_obstacles_scale",
+            cast = "::sc.begin_work_rel_pol_obstacles_scale",
         )
 
         if (req.languageEx.begin_work_rel_pol_obstacles_level != null) util.updateField(
