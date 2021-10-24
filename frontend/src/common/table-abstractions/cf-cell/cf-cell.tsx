@@ -56,7 +56,12 @@ export class CfCell {
     const result = await this.columnDescription.updateFn(this.rowId, this.columnDescription.field, this.newValue);
 
     if (result) {
-      this.value = this.newValue;
+      if (typeof this.value === 'boolean') {
+        this.value = this.newValue === 'true';
+      } else {
+        this.value = this.newValue;
+      }
+      console.log(typeof this.value);
       this.showEdit = false;
     } else {
       // todo
@@ -89,7 +94,10 @@ export class CfCell {
 
                 {/* for enums - we need to show their display */}
                 {typeof this.value === 'string' && this.cellType === 'data' && this.columnDescription.selectOptions !== undefined && (
-                  <span>{this.columnDescription.selectOptions.find(item => item.value === this.value).display}</span>
+                  <span>
+                    {this.columnDescription.selectOptions.find(item => item.value === this.value) &&
+                      this.columnDescription.selectOptions.find(item => item.value === this.value).display}
+                  </span>
                 )}
               </span>
 
