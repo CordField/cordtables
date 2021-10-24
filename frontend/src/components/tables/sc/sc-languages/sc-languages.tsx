@@ -201,7 +201,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
-        { display: `No Partner Interest`, value: 'No_Partner_Interest' },
+        { display: `No Partner Interest`, value: 'NoPartnerInterest' },
         { display: `Some`, value: 'Some' },
         { display: `Significant`, value: 'Significant' },
         { display: `Considerable`, value: 'Considerable' },
@@ -304,9 +304,8 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
-        { display: `No Interest`, value: 'No_Interest' },
+        { display: `No Interest`, value: 'NoInterest' },
         { display: `Some`, value: 'Some' },
-        { display: `Expressed Need`, value: 'Expressed_Need' },
         { display: `Significant`, value: 'Significant' },
         { display: `Considerable`, value: 'Considerable' },
       ],
@@ -338,9 +337,9 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
-        { display: `No Interest`, value: 'No_Interest' },
+        { display: `No Interest`, value: 'NoInterest' },
         { display: `Some`, value: 'Some' },
-        { display: `Expressed Need`, value: 'Expressed_Need' },
+        { display: `Expressed Need`, value: 'ExpressedNeed' },
         { display: `Significant`, value: 'Significant' },
         { display: `Considerable`, value: 'Considerable' },
       ],
@@ -372,9 +371,9 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
-        { display: `Full Access`, value: 'Full_Access' },
-        { display: `Vast Majority`, value: 'Vast_Majority' },
-        { display: `Large Majority`, value: 'Large_Majority' },
+        { display: `Full Access`, value: 'FullAccess' },
+        { display: `Vast Majority`, value: 'VastMajority' },
+        { display: `Large Majority`, value: 'LargeMajority' },
         { display: `Majority`, value: 'Majority' },
         { display: `Significant`, value: 'Significant' },
         { display: `Some`, value: 'Some' },
@@ -407,6 +406,13 @@ export class ScLanguages {
       width: 150,
       editable: true,
       updateFn: this.handleUpdate,
+      selectOptions: [
+        { display: `None`, value: 'None' },
+        { display: `Very Difficult`, value: 'VeryDifficult' },
+        { display: `Difficult`, value: 'Difficult' },
+        { display: `Moderate`, value: 'Moderate' },
+        { display: `Easy`, value: 'Easy' },
+      ],
     },
     {
       field: 'begin_work_geo_challenges_value',
@@ -434,6 +440,13 @@ export class ScLanguages {
       width: 150,
       editable: true,
       updateFn: this.handleUpdate,
+      selectOptions: [
+        { display: `None`, value: 'None' },
+        { display: `Very Difficult`, value: 'VeryDifficult' },
+        { display: `Difficult`, value: 'Difficult' },
+        { display: `Moderate`, value: 'Moderate' },
+        { display: `Easy`, value: 'Easy' },
+      ],
     },
     {
       field: 'begin_work_rel_pol_obstacles_value',

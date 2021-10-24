@@ -316,7 +316,7 @@ create type sc.least_reached_progress_scale as enum (
 );
 
 create type sc.partner_interest_scale as enum (
-		'No Partner Interest',
+		'NoPartnerInterest',
 		'Some',
 		'Significant',
 		'Considerable'
@@ -341,24 +341,24 @@ create type sc.multiple_languages_leverage_joint_training_scale as enum (
 );
 
 create type sc.lang_comm_int_in_language_development_scale as enum (
-		'No Interest',
+		'NoInterest',
 		'Some',
 		'Significant',
 		'Considerable'
 );
 
 create type sc.lang_comm_int_in_scripture_translation_scale as enum (
-		'No Interest',
+		'NoInterest',
 		'Some',
-		'Expressed Need',
+		'ExpressedNeed',
 		'Significant',
 		'Considerable'
 );
 
 create type sc.access_to_scripture_in_lwc_scale as enum (
-		'Full Access',
-		'Vast Majority',
-		'Large Majority',
+		'FullAccess',
+		'VastMajority',
+		'LargeMajority',
 		'Majority',
 		'Significant',
 		'Some',
@@ -367,7 +367,7 @@ create type sc.access_to_scripture_in_lwc_scale as enum (
 
 create type sc.begin_work_geo_challenges_scale as enum (
 		'None',
-		'Very Difficult',
+		'VeryDifficult',
 		'Difficult',
 		'Moderate',
 		'Easy'
@@ -375,7 +375,7 @@ create type sc.begin_work_geo_challenges_scale as enum (
 
 create type sc.begin_work_rel_pol_obstacles_scale as enum (
 		'None',
-		'Very Difficult',
+		'VeryDifficult',
 		'Difficult',
 		'Moderate',
 		'Easy'

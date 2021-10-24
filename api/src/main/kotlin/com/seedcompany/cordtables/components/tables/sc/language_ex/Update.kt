@@ -169,6 +169,14 @@ class Update(
             value = req.languageEx.first_language_population,
         )
 
+        if (req.languageEx.first_language_population != null) util.updateField(
+            token = req.token,
+            table = "sc.languages_ex",
+            column = "population_value",
+            id = req.languageEx.id!!,
+            value = getPopulationValue(req.languageEx.first_language_population),
+        )
+
         if (req.languageEx.egids_level != null) util.updateField(
             token = req.token,
             table = "sc.languages_ex",
@@ -192,7 +200,7 @@ class Update(
             column = "least_reached_progress_jps_level",
             id = req.languageEx.id!!,
             value = req.languageEx.least_reached_progress_jps_level,
-            cast = "::sc.least_reached_progress_jps_scale"
+            cast = "::sc.least_reached_progress_scale"
         )
 
         if (req.languageEx.least_reached_progress_jps_level != null) util.updateField(
