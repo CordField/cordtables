@@ -1,11 +1,10 @@
-package com.seedcompany.cordtables.components.tables.sc.language_ex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
+import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.languageex.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -17,18 +16,18 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class LanguageExReadRequest(
+data class ScLanguagesReadRequest(
     val token: String?,
     val id: Int? = null,
 )
 
-data class LanguageExReadResponse(
+data class ScLanguagesReadResponse(
     val error: ErrorType,
-    val languageEx: LanguageEx? = null,
+    val language: Language? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("SCLanguagesExRead2")
+@Controller("ScLanguagesRead")
 class Read(
     @Autowired
     val util: Utility,
@@ -43,10 +42,10 @@ class Read(
 
     @PostMapping("sc-languages/read")
     @ResponseBody
-    fun readHandler(@RequestBody req: LanguageExReadRequest): LanguageExReadResponse {
+    fun readHandler(@RequestBody req: ScLanguagesReadRequest): ScLanguagesReadResponse {
 
-        if (req.token == null) return LanguageExReadResponse(ErrorType.TokenNotFound)
-        if (req.id == null) return LanguageExReadResponse(ErrorType.MissingId)
+        if (req.token == null) return ScLanguagesReadResponse(ErrorType.TokenNotFound)
+        if (req.id == null) return ScLanguagesReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -54,12 +53,28 @@ class Read(
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "sc.languages_ex",
+                tableName = "sc.languages",
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "language_name",
-                    "iso",
+                    "neo4j_id",
+
+                    "ethnologue",
+                    "name",
+                    "display_name",
+                    "display_name_pronunciation",
+                    "tags",
+                    "preset_inventory",
+                    "is_dialect",
+                    "is_sign_language",
+                    "is_least_of_these",
+                    "least_of_these_reason",
+                    "population_override",
+                    "registry_of_dialects_code",
+                    "sensitivity",
+                    "sign_language_code",
+                    "sponsor_estimated_eng_date",
+
                     "prioritization",
                     "progress_bible",
                     "location_long",
@@ -123,11 +138,53 @@ class Read(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var language_name: String? = jdbcResult.getString("language_name")
-                if (jdbcResult.wasNull()) language_name = null
+                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
+                if (jdbcResult.wasNull()) neo4j_id = null
 
-                var iso: String? = jdbcResult.getString("iso")
-                if (jdbcResult.wasNull()) iso = null
+                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
+                if (jdbcResult.wasNull()) ethnologue = null
+
+                var name: String? = jdbcResult.getString("name")
+                if (jdbcResult.wasNull()) name = null
+
+                var display_name: String? = jdbcResult.getString("display_name")
+                if (jdbcResult.wasNull()) display_name = null
+
+                var display_name_pronunciation: String? = jdbcResult.getString("display_name_pronunciation")
+                if (jdbcResult.wasNull()) display_name_pronunciation = null
+
+                var tags: String? = jdbcResult.getString("tags")
+                if (jdbcResult.wasNull()) tags = null
+
+                var preset_inventory: Boolean? = jdbcResult.getBoolean("preset_inventory")
+                if (jdbcResult.wasNull()) preset_inventory = null
+
+                var is_dialect: Boolean? = jdbcResult.getBoolean("is_dialect")
+                if (jdbcResult.wasNull()) is_dialect = null
+
+                var is_sign_language: Boolean? = jdbcResult.getBoolean("is_sign_language")
+                if (jdbcResult.wasNull()) is_sign_language = null
+
+                var is_least_of_these: Boolean? = jdbcResult.getBoolean("is_least_of_these")
+                if (jdbcResult.wasNull()) is_least_of_these = null
+
+                var least_of_these_reason: String? = jdbcResult.getString("least_of_these_reason")
+                if (jdbcResult.wasNull()) least_of_these_reason = null
+
+                var population_override: Int? = jdbcResult.getInt("population_override")
+                if (jdbcResult.wasNull()) population_override = null
+
+                var registry_of_dialects_code: String? = jdbcResult.getString("registry_of_dialects_code")
+                if (jdbcResult.wasNull()) registry_of_dialects_code = null
+
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
+
+                var sign_language_code: String? = jdbcResult.getString("sign_language_code")
+                if (jdbcResult.wasNull()) sign_language_code = null
+
+                var sponsor_estimated_eng_date: String? = jdbcResult.getString("sponsor_estimated_eng_date")
+                if (jdbcResult.wasNull()) sponsor_estimated_eng_date = null
 
                 var prioritization: Double? = jdbcResult.getDouble("prioritization")
                 if (jdbcResult.wasNull()) prioritization = null
@@ -302,11 +359,27 @@ class Read(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                val languageEx =
-                    LanguageEx(
+                val language =
+                    Language(
                         id = id,
-                        language_name = language_name,
-                        iso = iso,
+                        neo4j_id = neo4j_id,
+
+                        ethnologue = ethnologue,
+                        name = name,
+                        display_name = display_name,
+                        display_name_pronunciation = display_name_pronunciation,
+                        tags = tags,
+                        preset_inventory = preset_inventory,
+                        is_dialect = is_dialect,
+                        is_sign_language = is_sign_language,
+                        is_least_of_these = is_least_of_these,
+                        least_of_these_reason = least_of_these_reason,
+                        population_override = population_override,
+                        registry_of_dialects_code = registry_of_dialects_code,
+                        sensitivity = if (sensitivity == null) null else CommonSensitivity.valueOf(sensitivity),
+                        sign_language_code = sign_language_code,
+                        sponsor_estimated_eng_date = sponsor_estimated_eng_date,
+
                         prioritization = prioritization,
                         progress_bible = progress_bible,
                         island = island,
@@ -377,14 +450,14 @@ class Read(
                         owning_group = owning_group
                     )
 
-                return LanguageExReadResponse(ErrorType.NoError, languageEx = languageEx)
+                return ScLanguagesReadResponse(ErrorType.NoError, language = language)
 
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return LanguageExReadResponse(ErrorType.SQLReadError)
+            return ScLanguagesReadResponse(ErrorType.SQLReadError)
         }
 
-        return LanguageExReadResponse(error = ErrorType.UnknownError)
+        return ScLanguagesReadResponse(error = ErrorType.UnknownError)
     }
 }

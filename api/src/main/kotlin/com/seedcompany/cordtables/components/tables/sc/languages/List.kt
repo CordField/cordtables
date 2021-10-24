@@ -1,10 +1,10 @@
-package com.seedcompany.cordtables.components.tables.languageex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
+import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sc.language_ex.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -17,17 +17,17 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 
-data class ReadLanguageExRequest(
+data class ScLanguagesListRequest(
     val token: String?
 )
 
-data class ReadLanguageExResponse(
+data class ScLanguagesListResponse(
     val error: ErrorType,
-    val languages: MutableList<LanguageEx>?
+    val languages: MutableList<Language>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("LanguageExList")
+@Controller("ScLanguagesList")
 class List(
     @Autowired
     val util: Utility,
@@ -43,21 +43,37 @@ class List(
 
     @PostMapping("sc-languages/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
-        var data: MutableList<LanguageEx> = mutableListOf()
-        if (req.token == null) return ReadLanguageExResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun listHandler(@RequestBody req: ScLanguagesListRequest): ScLanguagesListResponse {
+        var data: MutableList<Language> = mutableListOf()
+        if (req.token == null) return ScLanguagesListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "sc.languages_ex",
+                tableName = "sc.languages",
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
-                    "language_name",
-                    "iso",
+                    "neo4j_id",
+
+                    "ethnologue",
+                    "name",
+                    "display_name",
+                    "display_name_pronunciation",
+                    "tags",
+                    "preset_inventory",
+                    "is_dialect",
+                    "is_sign_language",
+                    "is_least_of_these",
+                    "least_of_these_reason",
+                    "population_override",
+                    "registry_of_dialects_code",
+                    "sensitivity",
+                    "sign_language_code",
+                    "sponsor_estimated_eng_date",
+
                     "prioritization",
                     "progress_bible",
                     "location_long",
@@ -121,11 +137,53 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var language_name: String? = jdbcResult.getString("language_name")
-                if (jdbcResult.wasNull()) language_name = null
+                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
+                if (jdbcResult.wasNull()) neo4j_id = null
 
-                var iso: String? = jdbcResult.getString("iso")
-                if (jdbcResult.wasNull()) iso = null
+                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
+                if (jdbcResult.wasNull()) ethnologue = null
+
+                var name: String? = jdbcResult.getString("name")
+                if (jdbcResult.wasNull()) name = null
+
+                var display_name: String? = jdbcResult.getString("display_name")
+                if (jdbcResult.wasNull()) display_name = null
+
+                var display_name_pronunciation: String? = jdbcResult.getString("display_name_pronunciation")
+                if (jdbcResult.wasNull()) display_name_pronunciation = null
+
+                var tags: String? = jdbcResult.getString("tags")
+                if (jdbcResult.wasNull()) tags = null
+
+                var preset_inventory: Boolean? = jdbcResult.getBoolean("preset_inventory")
+                if (jdbcResult.wasNull()) preset_inventory = null
+
+                var is_dialect: Boolean? = jdbcResult.getBoolean("is_dialect")
+                if (jdbcResult.wasNull()) is_dialect = null
+
+                var is_sign_language: Boolean? = jdbcResult.getBoolean("is_sign_language")
+                if (jdbcResult.wasNull()) is_sign_language = null
+
+                var is_least_of_these: Boolean? = jdbcResult.getBoolean("is_least_of_these")
+                if (jdbcResult.wasNull()) is_least_of_these = null
+
+                var least_of_these_reason: String? = jdbcResult.getString("least_of_these_reason")
+                if (jdbcResult.wasNull()) least_of_these_reason = null
+
+                var population_override: Int? = jdbcResult.getInt("population_override")
+                if (jdbcResult.wasNull()) population_override = null
+
+                var registry_of_dialects_code: String? = jdbcResult.getString("registry_of_dialects_code")
+                if (jdbcResult.wasNull()) registry_of_dialects_code = null
+
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
+
+                var sign_language_code: String? = jdbcResult.getString("sign_language_code")
+                if (jdbcResult.wasNull()) sign_language_code = null
+
+                var sponsor_estimated_eng_date: String? = jdbcResult.getString("sponsor_estimated_eng_date")
+                if (jdbcResult.wasNull()) sponsor_estimated_eng_date = null
 
                 var prioritization: Double? = jdbcResult.getDouble("prioritization")
                 if (jdbcResult.wasNull()) prioritization = null
@@ -301,10 +359,26 @@ class List(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
-                    LanguageEx(
+                    Language(
                         id = id,
-                        language_name = language_name,
-                        iso = iso,
+                        neo4j_id = neo4j_id,
+
+                        ethnologue = ethnologue,
+                        name = name,
+                        display_name = display_name,
+                        display_name_pronunciation = display_name_pronunciation,
+                        tags = tags,
+                        preset_inventory = preset_inventory,
+                        is_dialect = is_dialect,
+                        is_sign_language = is_sign_language,
+                        is_least_of_these = is_least_of_these,
+                        least_of_these_reason = least_of_these_reason,
+                        population_override = population_override,
+                        registry_of_dialects_code = registry_of_dialects_code,
+                        sensitivity = if (sensitivity == null) null else CommonSensitivity.valueOf(sensitivity),
+                        sign_language_code = sign_language_code,
+                        sponsor_estimated_eng_date = sponsor_estimated_eng_date,
+
                         prioritization = prioritization,
                         progress_bible = progress_bible,
                         island = island,
@@ -378,9 +452,9 @@ class List(
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return ReadLanguageExResponse(ErrorType.SQLReadError, mutableListOf())
+            return ScLanguagesListResponse(ErrorType.SQLReadError, mutableListOf())
         }
 
-        return ReadLanguageExResponse(ErrorType.NoError, data)
+        return ScLanguagesListResponse(ErrorType.NoError, data)
     }
 }

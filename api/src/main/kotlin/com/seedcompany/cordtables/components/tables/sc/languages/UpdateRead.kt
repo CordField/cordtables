@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.sc.language_ex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class LanguageExUpdateReadRequest(
+data class ScLanguagesUpdateReadRequest(
     val token: String?,
-    val language: LanguageExInput? = null,
+    val language: LanguageInput? = null,
 )
 
-data class LanguageExUpdateReadResponse(
+data class ScLanguagesUpdateReadResponse(
     val error: ErrorType,
-    val language: LanguageEx? = null,
+    val language: Language? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("LanguageExUpdate")
+@Controller("ScLanugagesUpdateRead")
 class UpdateRead(
     @Autowired
     val util: Utility,
@@ -37,26 +37,26 @@ class UpdateRead(
 ) {
     @PostMapping("sc-languages/update-read")
     @ResponseBody
-    fun updateReadHandler(@RequestBody req: LanguageExUpdateReadRequest): LanguageExUpdateReadResponse {
+    fun updateReadHandler(@RequestBody req: ScLanguagesUpdateReadRequest): ScLanguagesUpdateReadResponse {
 
         val updateResponse = update.updateHandler(
-            LanguageExUpdateRequest(
+            ScLanguagesUpdateRequest(
                 token = req.token,
-                languageEx = req.language,
+                language = req.language,
             )
         )
 
         if (updateResponse.error != ErrorType.NoError) {
-            return LanguageExUpdateReadResponse(updateResponse.error)
+            return ScLanguagesUpdateReadResponse(updateResponse.error)
         }
 
         val readResponse = read.readHandler(
-            LanguageExReadRequest(
+            ScLanguagesReadRequest(
                 token = req.token,
                 id = req.language!!.id
             )
         )
 
-        return LanguageExUpdateReadResponse(error = readResponse.error, readResponse.languageEx)
+        return ScLanguagesUpdateReadResponse(error = readResponse.error, readResponse.language)
     }
 }

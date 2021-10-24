@@ -1,12 +1,30 @@
-package com.seedcompany.cordtables.components.tables.sc.language_ex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
-data class LanguageEx(
+import com.seedcompany.cordtables.common.CommonSensitivity
+
+data class Language(
     var id: Int? = null,
-    val language_name: String? = null,
-    val iso: String? = null,
+
+    val neo4j_id: String? = null,
+    val ethnologue: Int? = null,
+    val name: String? = null,
+    val display_name: String? = null,
+    val display_name_pronunciation: String? = null,
+    val tags: String? = null,
+    val preset_inventory: Boolean? = null,
+    val is_dialect: Boolean? = null,
+    val is_sign_language: Boolean? = null,
+    val is_least_of_these: Boolean? = null,
+    val least_of_these_reason: String? = null,
+    val population_override: Int? = null,
+    val registry_of_dialects_code: String? = null,
+    val sensitivity: CommonSensitivity? = null,
+    val sign_language_code: String? = null,
+    val sponsor_estimated_eng_date: String? = null,
+
     val prioritization: Double? = null,
     val progress_bible: Boolean? = null,
-    val location_long: String? = null,
+    val location_detail: String? = null,
     val island: String? = null,
     val province: String? = null,
     val first_language_population: Int? = null,
@@ -58,10 +76,26 @@ data class LanguageEx(
     val peer: Int? = null,
 )
 
-data class LanguageExInput(
+data class LanguageInput(
     var id: Int? = null,
-    val language_name: String? = null,
-    val iso: String? = null,
+
+    val neo4j_id: String? = null,
+    val ethnologue: Int? = null,
+    val name: String? = null,
+    val display_name: String? = null,
+    val display_name_pronunciation: String? = null,
+    val tags: String? = null,
+    val preset_inventory: Boolean? = null,
+    val is_dialect: Boolean? = null,
+    val is_sign_language: Boolean? = null,
+    val is_least_of_these: Boolean? = null,
+    val least_of_these_reason: String? = null,
+    val population_override: Int? = null,
+    val registry_of_dialects_code: String? = null,
+    val sensitivity: String? = null,
+    val sign_language_code: String? = null,
+    val sponsor_estimated_eng_date: String? = null,
+
     val prioritization: Double? = null,
     val progress_bible: Boolean? = null,
     val location_long: String? = null,

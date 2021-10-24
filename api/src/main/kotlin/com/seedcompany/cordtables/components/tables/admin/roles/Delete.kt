@@ -38,7 +38,7 @@ class Delete(
         var deletedGlobalRowId: Int?= null
         var userId = 0
         if (req.token == null) return DeleteGlobalRoleResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "sc.languages_ex"))
+        if(!util.userHasDeletePermission(req.token, "sc.languages"))
             return DeleteGlobalRoleResponse(ErrorType.DoesNotHaveDeletePermission, null)
         this.ds.connection.use { conn ->
             try {

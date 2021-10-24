@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.languageex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -10,20 +10,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.reflect.full.memberProperties
 
-
-data class DeleteLanguageExResponse(
-    val error: ErrorType,
-    val id: Int?
-)
-data class DeleteLanguageExRequest(
+data class ScLanguagesDeleteRequest(
     val id: Int,
     val token: String?,
 )
 
+data class ScLanguagesDeleteResponse(
+    val error: ErrorType,
+    val id: Int?
+)
+
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("LanguageExDelete")
+@Controller("ScLanguagesDelete")
 class Delete(
     @Autowired
     val util: Utility,
@@ -32,11 +31,11 @@ class Delete(
 ) {
     @PostMapping("sc-languages/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: DeleteLanguageExRequest): DeleteLanguageExResponse {
+    fun deleteHandler(@RequestBody req: ScLanguagesDeleteRequest): ScLanguagesDeleteResponse {
 
-        if (req.token == null) return DeleteLanguageExResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "sc.languages_ex"))
-            return DeleteLanguageExResponse(ErrorType.DoesNotHaveDeletePermission, null)
+        if (req.token == null) return ScLanguagesDeleteResponse(ErrorType.TokenNotFound, null)
+        if(!util.userHasDeletePermission(req.token, "sc.languages"))
+            return ScLanguagesDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
         var deletedLanguageExId: Int? = null
@@ -45,7 +44,7 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from sc.languages_ex where id = ? returning id"
+                    "delete from sc.languages where id = ? returning id"
                 )
                 deleteStatement.setInt(1, req.id)
 
@@ -61,9 +60,9 @@ class Delete(
             catch (e:SQLException ){
                 println(e.message)
 
-                return DeleteLanguageExResponse(ErrorType.SQLDeleteError, null)
+                return ScLanguagesDeleteResponse(ErrorType.SQLDeleteError, null)
             }
         }
-        return DeleteLanguageExResponse(ErrorType.NoError,deletedLanguageExId)
+        return ScLanguagesDeleteResponse(ErrorType.NoError,deletedLanguageExId)
     }
 }

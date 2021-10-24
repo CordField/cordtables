@@ -67,7 +67,6 @@ create type admin.table_name as enum (
   'sc.partners',
   'sc.language_goal_definitions',
   'sc.languages',
-  'sc.languages_ex',
   'sc.language_locations',
   'sc.language_goals',
   'sc.known_languages_by_person',
