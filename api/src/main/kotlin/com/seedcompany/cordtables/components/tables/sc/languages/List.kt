@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.sc.language_ex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class LanguageExReadRequest(
-    val token: String?,
-    val id: Int? = null,
+
+data class ScLanguagesListRequest(
+    val token: String?
 )
 
-data class LanguageExReadResponse(
+data class ScLanguagesListResponse(
     val error: ErrorType,
-    val languageEx: LanguageEx? = null,
+    val languages: MutableList<Language>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("SCLanguagesExRead2")
-class Read(
+@Controller("ScLanguagesList")
+class List(
     @Autowired
     val util: Utility,
 
@@ -37,23 +37,22 @@ class Read(
     @Autowired
     val secureList: GetSecureListQuery,
 ) {
+
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-languages/read")
+    @PostMapping("sc-languages/list")
     @ResponseBody
-    fun readHandler(@RequestBody req: LanguageExReadRequest): LanguageExReadResponse {
-
-        if (req.token == null) return LanguageExReadResponse(ErrorType.TokenNotFound)
-        if (req.id == null) return LanguageExReadResponse(ErrorType.MissingId)
+    fun listHandler(@RequestBody req: ScLanguagesListRequest): ScLanguagesListResponse {
+        var data: MutableList<Language> = mutableListOf()
+        if (req.token == null) return ScLanguagesListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
-        paramSource.addValue("id", req.id)
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "sc.languages",
-                getList = false,
+                filter = "order by id",
                 columns = arrayOf(
                     "id",
                     "name",
@@ -109,7 +108,7 @@ class Read(
                     "owning_person",
                     "owning_group",
                     "peer"
-                ),
+                )
             )
         ).query
 
@@ -296,8 +295,8 @@ class Read(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                val languageEx =
-                    LanguageEx(
+                data.add(
+                    Language(
                         id = id,
                         name = name,
                         prioritization = prioritization,
@@ -369,15 +368,13 @@ class Read(
                         owning_person = owning_person,
                         owning_group = owning_group
                     )
-
-                return LanguageExReadResponse(ErrorType.NoError, languageEx = languageEx)
-
+                )
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return LanguageExReadResponse(ErrorType.SQLReadError)
+            return ScLanguagesListResponse(ErrorType.SQLReadError, mutableListOf())
         }
 
-        return LanguageExReadResponse(error = ErrorType.UnknownError)
+        return ScLanguagesListResponse(ErrorType.NoError, data)
     }
 }

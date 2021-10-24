@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.sc.language_ex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class LanguageExCreateReadRequest(
+data class ScLanguagesCreateReadRequest(
     val token: String? = null,
-    val language: LanguageExInput,
+    val language: LanguageInput,
 )
 
-data class LanguageExCreateReadResponse(
+data class ScLanguagesCreateReadResponse(
     val error: ErrorType,
-    val language: LanguageEx? = null,
+    val language: Language? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("SCLanguageExCreateRead")
+@Controller("ScLanguagesCreateRead")
 class CreateRead(
     @Autowired
     val util: Utility,
@@ -37,26 +37,26 @@ class CreateRead(
 ) {
     @PostMapping("sc-languages/create-read")
     @ResponseBody
-    fun createReadHandler(@RequestBody req: LanguageExCreateReadRequest): LanguageExCreateReadResponse {
+    fun createReadHandler(@RequestBody req: ScLanguagesCreateReadRequest): ScLanguagesCreateReadResponse {
 
         val createResponse = create.createHandler(
-            CreateLanguageExRequest(
+            ScLanguagesCreateRequest(
                 token = req.token,
                 language = req.language
             )
         )
 
         if (createResponse.error != ErrorType.NoError) {
-            return LanguageExCreateReadResponse(error = createResponse.error)
+            return ScLanguagesCreateReadResponse(error = createResponse.error)
         }
 
         val readResponse = read.readHandler(
-            LanguageExReadRequest(
+            ScLanguagesReadRequest(
                 token = req.token,
                 id = createResponse!!.id
             )
         )
 
-        return LanguageExCreateReadResponse(error = readResponse.error, language = readResponse.languageEx)
+        return ScLanguagesCreateReadResponse(error = readResponse.error, language = readResponse.language)
     }
 }

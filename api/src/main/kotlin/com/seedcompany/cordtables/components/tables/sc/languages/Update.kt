@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.sc.language_ex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class LanguageExUpdateRequest(
+data class ScLanguagesUpdateRequest(
     val token: String?,
-    val languageEx: LanguageExInput? = null,
+    val languageEx: LanguageInput? = null,
 )
 
-data class LanguageExUpdateResponse(
+data class ScLanguagesUpdateResponse(
     val error: ErrorType,
 )
 
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("SCLanguagesExUpdate2")
+@Controller("ScLanguagesUpdate")
 class Update(
     @Autowired
     val util: Utility,
@@ -32,26 +32,26 @@ class Update(
 ) {
     @PostMapping("sc-languages/update")
     @ResponseBody
-    fun updateHandler(@RequestBody req: LanguageExUpdateRequest): LanguageExUpdateResponse {
+    fun updateHandler(@RequestBody req: ScLanguagesUpdateRequest): ScLanguagesUpdateResponse {
 
-        if (req.token == null) return LanguageExUpdateResponse(ErrorType.TokenNotFound)
-        if (req.languageEx == null) return LanguageExUpdateResponse(ErrorType.MissingId)
-        if (req.languageEx.id == null) return LanguageExUpdateResponse(ErrorType.MissingId)
+        if (req.token == null) return ScLanguagesUpdateResponse(ErrorType.TokenNotFound)
+        if (req.languageEx == null) return ScLanguagesUpdateResponse(ErrorType.MissingId)
+        if (req.languageEx.id == null) return ScLanguagesUpdateResponse(ErrorType.MissingId)
 
         if (req.languageEx.egids_level != null && !enumContains<EgidsScale>(req.languageEx.egids_level)) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
         if (req.languageEx.least_reached_progress_jps_level != null && !enumContains<LeastReachedProgressScale>(req.languageEx.least_reached_progress_jps_level)) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
         if (req.languageEx.partner_interest_level != null && !enumContains<PartnerInterestScale>(req.languageEx.partner_interest_level)) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
@@ -60,7 +60,7 @@ class Update(
                 req.languageEx.multiple_languages_leverage_linguistic_level
             )
         ) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
@@ -69,7 +69,7 @@ class Update(
                 req.languageEx.multiple_languages_leverage_joint_training_level
             )
         ) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
@@ -78,7 +78,7 @@ class Update(
                 req.languageEx.lang_comm_int_in_language_development_level
             )
         ) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
@@ -87,19 +87,19 @@ class Update(
                 req.languageEx.lang_comm_int_in_scripture_translation_level
             )
         ) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
         if (req.languageEx.access_to_scripture_in_lwc_level != null && !enumContains<AccessToScriptureInLwcScale>(req.languageEx.access_to_scripture_in_lwc_level)) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
         if (req.languageEx.begin_work_geo_challenges_level != null && !enumContains<BeginWorkGeoChallengesScale>(req.languageEx.begin_work_geo_challenges_level)) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
@@ -108,7 +108,7 @@ class Update(
                 req.languageEx.begin_work_rel_pol_obstacles_level
             )
         ) {
-            return LanguageExUpdateResponse(
+            return ScLanguagesUpdateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
@@ -507,7 +507,7 @@ class Update(
             value = req.languageEx.peer,
         )
 
-        return LanguageExUpdateResponse(ErrorType.NoError)
+        return ScLanguagesUpdateResponse(ErrorType.NoError)
     }
 
     fun getPopulationValue(population: Int): Float{

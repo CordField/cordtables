@@ -1,6 +1,6 @@
-package com.seedcompany.cordtables.components.tables.sc.language_ex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
-data class LanguageEx(
+data class Language(
     var id: Int? = null,
     val name: String? = null,
     val prioritization: Double? = null,
@@ -57,7 +57,7 @@ data class LanguageEx(
     val peer: Int? = null,
 )
 
-data class LanguageExInput(
+data class LanguageInput(
     var id: Int? = null,
     val name: String? = null,
     val prioritization: Double? = null,

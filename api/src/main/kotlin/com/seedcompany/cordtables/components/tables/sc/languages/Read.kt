@@ -1,10 +1,9 @@
-package com.seedcompany.cordtables.components.tables.languageex
+package com.seedcompany.cordtables.components.tables.sc.languages
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sc.language_ex.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -16,19 +15,19 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-
-data class ReadLanguageExRequest(
-    val token: String?
+data class ScLanguagesReadRequest(
+    val token: String?,
+    val id: Int? = null,
 )
 
-data class ReadLanguageExResponse(
+data class ScLanguagesReadResponse(
     val error: ErrorType,
-    val languages: MutableList<LanguageEx>?
+    val language: Language? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("LanguageExList")
-class List(
+@Controller("ScLanguagesRead")
+class Read(
     @Autowired
     val util: Utility,
 
@@ -38,22 +37,23 @@ class List(
     @Autowired
     val secureList: GetSecureListQuery,
 ) {
-
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-languages/list")
+    @PostMapping("sc-languages/read")
     @ResponseBody
-    fun listHandler(@RequestBody req: ReadLanguageExRequest): ReadLanguageExResponse {
-        var data: MutableList<LanguageEx> = mutableListOf()
-        if (req.token == null) return ReadLanguageExResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun readHandler(@RequestBody req: ScLanguagesReadRequest): ScLanguagesReadResponse {
+
+        if (req.token == null) return ScLanguagesReadResponse(ErrorType.TokenNotFound)
+        if (req.id == null) return ScLanguagesReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+        paramSource.addValue("id", req.id)
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "sc.languages",
-                filter = "order by id",
+                getList = false,
                 columns = arrayOf(
                     "id",
                     "name",
@@ -109,7 +109,7 @@ class List(
                     "owning_person",
                     "owning_group",
                     "peer"
-                )
+                ),
             )
         ).query
 
@@ -296,8 +296,8 @@ class List(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                data.add(
-                    LanguageEx(
+                val language =
+                    Language(
                         id = id,
                         name = name,
                         prioritization = prioritization,
@@ -369,13 +369,15 @@ class List(
                         owning_person = owning_person,
                         owning_group = owning_group
                     )
-                )
+
+                return ScLanguagesReadResponse(ErrorType.NoError, language = language)
+
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return ReadLanguageExResponse(ErrorType.SQLReadError, mutableListOf())
+            return ScLanguagesReadResponse(ErrorType.SQLReadError)
         }
 
-        return ReadLanguageExResponse(ErrorType.NoError, data)
+        return ScLanguagesReadResponse(error = ErrorType.UnknownError)
     }
 }
