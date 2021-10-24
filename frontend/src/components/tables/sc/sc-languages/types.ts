@@ -1,6 +1,22 @@
 class ScLanguage {
   id?: number | undefined;
   name?: string | undefined;
+
+  ethnologue?: number | undefined;
+  display_name?: string | undefined;
+  display_name_pronunciation?: string | undefined;
+  tags?: string | undefined;
+  preset_inventory?: boolean | undefined;
+  is_dialect?: boolean | undefined;
+  is_sign_language?: boolean | undefined;
+  is_least_of_these?: boolean | undefined;
+  least_of_these_reason?: string | undefined;
+  population_override?: number | undefined;
+  registry_of_dialects_code?: string | undefined;
+  sensitivity?: string | undefined;
+  sign_language_code?: string | undefined;
+  sponsor_estimated_eng_date?: string | undefined;
+
   prioritization?: number | undefined;
   progress_bible?: boolean | undefined;
   island?: string | undefined;

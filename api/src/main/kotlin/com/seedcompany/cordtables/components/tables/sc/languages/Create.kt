@@ -1,5 +1,6 @@
 package com.seedcompany.cordtables.components.tables.sc.languages
 
+import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
@@ -46,9 +47,15 @@ class Create(
         if (req.token == null) return ScLanguagesCreateResponse(error = ErrorType.InputMissingToken, null)
         if (req.language == null) return ScLanguagesCreateResponse(error = ErrorType.MissingId, null)
         if (req.language.name == null) return ScLanguagesCreateResponse(error = ErrorType.InputMissingName, null)
-        if (req.language.name.length > 32) return ScLanguagesCreateResponse(error = ErrorType.NameTooLong, null)
+        if (req.language.display_name == null) return ScLanguagesCreateResponse(error = ErrorType.InputMissingName, null)
 
         // check enums and error out if needed
+
+        if (req.language.sensitivity != null && !enumContains<CommonSensitivity>(req.language.sensitivity)) {
+            return ScLanguagesCreateResponse(
+                error = ErrorType.ValueDoesNotMap
+            )
+        }
 
         if (req.language.egids_level != null && !enumContains<EgidsScale>(req.language.egids_level)) {
             return ScLanguagesCreateResponse(
@@ -138,7 +145,7 @@ class Create(
         """.trimIndent(),
             Int::class.java,
             req.language.name,
-            req.language.name,
+            req.language.display_name,
             req.token,
             req.token,
             req.token,
@@ -149,7 +156,7 @@ class Create(
         val updateResponse = update.updateHandler(
             ScLanguagesUpdateRequest(
                 token = req.token,
-                languageEx = req.language,
+                language = req.language,
             )
         )
 

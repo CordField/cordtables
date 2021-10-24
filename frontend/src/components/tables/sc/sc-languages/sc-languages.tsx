@@ -47,6 +47,7 @@ class DeleteLanguageExResponse extends GenericResponse {
 export class ScLanguages {
   @State() languagesResponse: ScLanguagesListResponse;
   newLanguageName: string;
+  newDisplayName: string;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
@@ -102,6 +103,27 @@ export class ScLanguages {
       editable: false,
     },
     {
+      field: 'ethnologue',
+      displayName: 'Ethnologue',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'display_name',
+      displayName: 'Display Name',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'display_name_pronunciation',
+      displayName: 'Display Name Pronunciation',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
       field: 'progress_bible',
       displayName: 'On progress.Bible list',
       width: 150,
@@ -111,6 +133,93 @@ export class ScLanguages {
         { display: `true`, value: true },
         { display: 'false', value: false },
       ],
+    },
+    {
+      field: 'tags',
+      displayName: 'Tags',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'preset_inventory',
+      displayName: 'Preset Inventory',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+      selectOptions: [
+        { display: `true`, value: true },
+        { display: 'false', value: false },
+      ],
+    },
+    {
+      field: 'is_sign_language',
+      displayName: 'Sign Language?',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+      selectOptions: [
+        { display: `true`, value: true },
+        { display: 'false', value: false },
+      ],
+    },
+    {
+      field: 'is_least_of_these',
+      displayName: 'Least of These?',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+      selectOptions: [
+        { display: `true`, value: true },
+        { display: 'false', value: false },
+      ],
+    },
+    {
+      field: 'least_of_these_reason',
+      displayName: 'Least of These reason',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'population_override',
+      displayName: 'Population Override',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'registry_of_dialects_code',
+      displayName: 'Registry of Dialects Code',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'sensitivity',
+      displayName: 'Sensitivity',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+      selectOptions: [
+        { display: `Low`, value: 'Low' },
+        { display: 'Medium', value: 'Medium' },
+        { display: 'High', value: 'High' },
+      ],
+    },
+    {
+      field: 'sign_language_code',
+      displayName: 'Sign Language Code',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'sponsor_estimated_eng_date',
+      displayName: 'Estimated Date for the Sponsor to Engage',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'island',
@@ -535,6 +644,10 @@ export class ScLanguages {
     this.newLanguageName = event.target.value;
   }
 
+  displayNameChange(event) {
+    this.newDisplayName = event.target.value;
+  }
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -543,6 +656,7 @@ export class ScLanguages {
       token: globals.globalStore.state.token,
       language: {
         name: this.newLanguageName,
+        display_name: this.newDisplayName,
       },
     });
 
@@ -563,14 +677,22 @@ export class ScLanguages {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <span id="language-name-holder" class="form-input-item form-thing">
+            <div id="language-name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="language-name">New Language Name</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="language-name" name="language-name" onInput={event => this.languageNameChange(event)} />
               </span>
-            </span>
+            </div>
+            <div id="display-name-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="display-name">Display Name</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />
+              </span>
+            </div>
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>

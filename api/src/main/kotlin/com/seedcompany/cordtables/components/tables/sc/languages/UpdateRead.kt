@@ -42,7 +42,7 @@ class UpdateRead(
         val updateResponse = update.updateHandler(
             ScLanguagesUpdateRequest(
                 token = req.token,
-                languageEx = req.language,
+                language = req.language,
             )
         )
 
