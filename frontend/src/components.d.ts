@@ -9,6 +9,7 @@ import { MatchResults, RouterHistory } from "@stencil/router";
 import { ActionType } from "./common/types";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
+import { TinyUpdateEvent } from "./components/cf-tiny/types";
 export namespace Components {
     interface AdminUsers {
     }
@@ -68,6 +69,7 @@ export namespace Components {
     interface CfTableFooter {
     }
     interface CfTiny {
+        "uid": number;
     }
     interface CommonOrganizations {
     }
@@ -425,6 +427,8 @@ declare namespace LocalJSX {
     interface CfTableFooter {
     }
     interface CfTiny {
+        "onContentUpdate"?: (event: CustomEvent<TinyUpdateEvent>) => void;
+        "uid"?: number;
     }
     interface CommonOrganizations {
     }
