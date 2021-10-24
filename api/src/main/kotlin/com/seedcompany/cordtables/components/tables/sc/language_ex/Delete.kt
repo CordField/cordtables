@@ -35,7 +35,7 @@ class Delete(
     fun deleteHandler(@RequestBody req: DeleteLanguageExRequest): DeleteLanguageExResponse {
 
         if (req.token == null) return DeleteLanguageExResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "sc.languages_ex"))
+        if(!util.userHasDeletePermission(req.token, "sc.languages"))
             return DeleteLanguageExResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
@@ -45,7 +45,7 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from sc.languages_ex where id = ? returning id"
+                    "delete from sc.languages where id = ? returning id"
                 )
                 deleteStatement.setInt(1, req.id)
 

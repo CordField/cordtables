@@ -1,7 +1,6 @@
 class ScLanguage {
   id?: number | undefined;
-  language_name?: string | undefined;
-  iso?: string | undefined;
+  name?: string | undefined;
   prioritization?: number | undefined;
   progress_bible?: boolean | undefined;
   island?: string | undefined;

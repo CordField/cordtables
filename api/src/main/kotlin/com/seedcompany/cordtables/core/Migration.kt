@@ -14,7 +14,7 @@ import javax.sql.DataSource
 
 data class MasterRow(
     val priority: Float,
-    val language_name: String,
+    val language: String,
     val iso: String,
     val location_details: String,
     val island: String,
@@ -69,8 +69,8 @@ class Migration(
 //    init {
 //        for (i in 1..10){
 //            jdbcTemplate.update("""
-//                insert into sc.languages_ex(
-//                    language_name, iso, island, province, created_by, modified_by, owning_person, owning_group
+//                insert into sc.languages(
+//                    name, iso, island, province, created_by, modified_by, owning_person, owning_group
 //                ) values (
 //                    ?, 'abc', 'US', 'Texarkana', 1, 1, 2, 1
 //                );
@@ -81,7 +81,7 @@ class Migration(
 ////            if (i % 10 == 0){
 ////                jdbcTemplate.update("""
 ////                insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group)
-////	                values (3, 'sc.languages_ex', ?, 1, 1, 1, 1);
+////	                values (3, 'sc.languages', ?, 1, 1, 1, 1);
 ////            """.trimIndent(),
 ////                    i+2,
 ////                )
@@ -95,7 +95,7 @@ class Migration(
 //
 //        items.forEach {
 //
-//            val language_name = it.language_name.substringBefore('[').trim()
+//            val name = it.name.substringBefore('[').trim()
 //
 //            val least_reached_progress_level = if (it.least_reached_progress_level.isEmpty()) null else it.least_reached_progress_level
 //
@@ -138,8 +138,8 @@ class Migration(
 //
 //            this.ds.connection.use { conn ->
 //                val statement = conn.prepareStatement("""
-//                    insert into sc.languages_ex(
-//                        language_name,
+//                    insert into sc.languages(
+//                        name,
 //                        iso,
 //
 //                        location_long,
@@ -191,7 +191,7 @@ class Migration(
 //                    );
 //                """.trimIndent())
 //
-//                statement.setString(1, language_name)
+//                statement.setString(1, name)
 //                statement.setString(2, it.iso)
 //
 //                statement.setString(3, it.location_details)

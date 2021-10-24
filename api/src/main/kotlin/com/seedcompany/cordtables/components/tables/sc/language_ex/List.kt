@@ -52,12 +52,11 @@ class List(
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "sc.languages_ex",
+                tableName = "sc.languages",
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
-                    "language_name",
-                    "iso",
+                    "name",
                     "prioritization",
                     "progress_bible",
                     "location_long",
@@ -121,11 +120,8 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var language_name: String? = jdbcResult.getString("language_name")
-                if (jdbcResult.wasNull()) language_name = null
-
-                var iso: String? = jdbcResult.getString("iso")
-                if (jdbcResult.wasNull()) iso = null
+                var name: String? = jdbcResult.getString("name")
+                if (jdbcResult.wasNull()) name = null
 
                 var prioritization: Double? = jdbcResult.getDouble("prioritization")
                 if (jdbcResult.wasNull()) prioritization = null
@@ -303,8 +299,7 @@ class List(
                 data.add(
                     LanguageEx(
                         id = id,
-                        language_name = language_name,
-                        iso = iso,
+                        name = name,
                         prioritization = prioritization,
                         progress_bible = progress_bible,
                         island = island,

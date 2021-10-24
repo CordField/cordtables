@@ -2,8 +2,7 @@ package com.seedcompany.cordtables.components.tables.sc.language_ex
 
 data class LanguageEx(
     var id: Int? = null,
-    val language_name: String? = null,
-    val iso: String? = null,
+    val name: String? = null,
     val prioritization: Double? = null,
     val progress_bible: Boolean? = null,
     val location_long: String? = null,
@@ -60,8 +59,7 @@ data class LanguageEx(
 
 data class LanguageExInput(
     var id: Int? = null,
-    val language_name: String? = null,
-    val iso: String? = null,
+    val name: String? = null,
     val prioritization: Double? = null,
     val progress_bible: Boolean? = null,
     val location_long: String? = null,

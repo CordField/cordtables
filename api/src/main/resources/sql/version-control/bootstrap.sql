@@ -85,8 +85,8 @@ BEGIN
     (vAdminRoleId, 'Delete', 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group)
-    values (vAdminRoleId, 'Create', 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     (vAdminRoleId, 'Delete', 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values (vAdminRoleId, 'Create', 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     (vAdminRoleId, 'Delete', 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- grants on people
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
@@ -153,87 +153,86 @@ BEGIN
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
     values ('Write', 'name', vPublicRoleId, 'common.organizations', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
-    -- grants on sc.languages_ex
+    -- grants on sc.languages
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'id', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-    ('Write', 'iso', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-    ('Write', 'prioritization', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-    ('Write', 'progress_bible', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-    ('Write', 'location_long', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-    ('Write', 'island', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-    ('Write', 'province', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'id', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+    ('Write', 'prioritization', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+    ('Write', 'progress_bible', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+    ('Write', 'location_long', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+    ('Write', 'island', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+    ('Write', 'province', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'first_language_population', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'population_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'egids_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'egids_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'first_language_population', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'population_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'egids_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'egids_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'least_reached_progress_jps_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'least_reached_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'least_reached_progress_jps_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'least_reached_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'partner_interest_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'partner_interest_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'partner_interest_description', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'partner_interest_source', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'partner_interest_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'partner_interest_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'partner_interest_description', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'partner_interest_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'multiple_languages_leverage_linguistic_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'multiple_languages_leverage_linguistic_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'multiple_languages_leverage_linguistic_description', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'multiple_languages_leverage_linguistic_source', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'multiple_languages_leverage_linguistic_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'multiple_languages_leverage_linguistic_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'multiple_languages_leverage_linguistic_description', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'multiple_languages_leverage_linguistic_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'multiple_languages_leverage_joint_training_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'multiple_languages_leverage_joint_training_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'multiple_languages_leverage_joint_training_description', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'multiple_languages_leverage_joint_training_source', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'multiple_languages_leverage_joint_training_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'multiple_languages_leverage_joint_training_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'multiple_languages_leverage_joint_training_description', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'multiple_languages_leverage_joint_training_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'lang_comm_int_in_language_development_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'lang_comm_int_in_language_development_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'lang_comm_int_in_language_development_description', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'lang_comm_int_in_language_development_source', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'lang_comm_int_in_language_development_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'lang_comm_int_in_language_development_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'lang_comm_int_in_language_development_description', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'lang_comm_int_in_language_development_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'lang_comm_int_in_scripture_translation_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'lang_comm_int_in_scripture_translation_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'lang_comm_int_in_scripture_translation_description', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'lang_comm_int_in_scripture_translation_source', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'lang_comm_int_in_scripture_translation_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'lang_comm_int_in_scripture_translation_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'lang_comm_int_in_scripture_translation_description', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'lang_comm_int_in_scripture_translation_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'access_to_scripture_in_lwc_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'access_to_scripture_in_lwc_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'access_to_scripture_in_lwc_description', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'access_to_scripture_in_lwc_source', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'access_to_scripture_in_lwc_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'access_to_scripture_in_lwc_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'access_to_scripture_in_lwc_description', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'access_to_scripture_in_lwc_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'begin_work_geo_challenges_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'begin_work_geo_challenges_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'begin_work_geo_challenges_description', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'begin_work_geo_challenges_source', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'begin_work_geo_challenges_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'begin_work_geo_challenges_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'begin_work_geo_challenges_description', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'begin_work_geo_challenges_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'begin_work_rel_pol_obstacles_level', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'begin_work_rel_pol_obstacles_value', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'begin_work_rel_pol_obstacles_description', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'begin_work_rel_pol_obstacles_source', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'begin_work_rel_pol_obstacles_level', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'begin_work_rel_pol_obstacles_value', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'begin_work_rel_pol_obstacles_description', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'begin_work_rel_pol_obstacles_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-     values ('Write', 'suggested_strategies', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+     values ('Write', 'suggested_strategies', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'comments', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'comments', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
     values
-    ('Write', 'created_at', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'created_by', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'modified_at', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'modified_by', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'owning_person', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-     ('Write', 'owning_group', vAdminRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    ('Write', 'created_at', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'created_by', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'modified_at', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'modified_by', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'owning_person', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+     ('Write', 'owning_group', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- group memberships
     insert into admin.group_memberships(group_id, person, created_by, modified_by, owning_person, owning_group)
@@ -266,17 +265,16 @@ BEGIN
      (vPublicGroupId, vNonAdminPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
  --    only giving the user create permission so we can test if they have create and don't have delete
      insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group)
-     values (vPublicRoleId, 'Create', 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+     values (vPublicRoleId, 'Create', 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
       insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
        values
-       ('Write', 'id', vPublicRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-       ('Write', 'iso', vPublicRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-       ('Write', 'prioritization', vPublicRoleId, 'sc.languages_ex', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+       ('Write', 'id', vPublicRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+       ('Write', 'prioritization', vPublicRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
       -- giving row membership to only one row
       insert into admin.group_row_access(group_id,table_name,row,created_by,modified_by,owning_person,owning_group)
-      values(vPublicGroupId,'sc.languages_ex',1,vPersonId,vPersonId,vPersonId,vAdminGroupId);
+      values(vPublicGroupId,'sc.languages',1,vPersonId,vPersonId,vPersonId,vAdminGroupId);
 
     error_type := 'NoError';
   end if;

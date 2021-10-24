@@ -2,10 +2,8 @@ package com.seedcompany.cordtables.components.tables.sc.language_ex
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.languageex.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -54,12 +52,11 @@ class Read(
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "sc.languages_ex",
+                tableName = "sc.languages",
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "language_name",
-                    "iso",
+                    "name",
                     "prioritization",
                     "progress_bible",
                     "location_long",
@@ -123,11 +120,8 @@ class Read(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var language_name: String? = jdbcResult.getString("language_name")
-                if (jdbcResult.wasNull()) language_name = null
-
-                var iso: String? = jdbcResult.getString("iso")
-                if (jdbcResult.wasNull()) iso = null
+                var name: String? = jdbcResult.getString("name")
+                if (jdbcResult.wasNull()) name = null
 
                 var prioritization: Double? = jdbcResult.getDouble("prioritization")
                 if (jdbcResult.wasNull()) prioritization = null
@@ -305,8 +299,7 @@ class Read(
                 val languageEx =
                     LanguageEx(
                         id = id,
-                        language_name = language_name,
-                        iso = iso,
+                        name = name,
                         prioritization = prioritization,
                         progress_bible = progress_bible,
                         island = island,

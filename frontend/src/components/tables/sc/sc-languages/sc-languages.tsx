@@ -89,16 +89,9 @@ export class ScLanguages {
       deleteFn: this.handleDelete,
     },
     {
-      field: 'language_name',
+      field: 'name',
       displayName: 'Language Name',
       width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
-    {
-      field: 'iso',
-      displayName: 'ISO code',
-      width: 50,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -549,7 +542,7 @@ export class ScLanguages {
     const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('sc-languages/create-read', {
       token: globals.globalStore.state.token,
       language: {
-        language_name: this.newLanguageName,
+        name: this.newLanguageName,
       },
     });
 

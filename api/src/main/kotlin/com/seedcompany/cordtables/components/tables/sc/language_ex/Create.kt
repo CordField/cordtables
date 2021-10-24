@@ -45,8 +45,8 @@ class Create(
 
         if (req.token == null) return CreateLanguageExResponse(error = ErrorType.InputMissingToken, null)
         if (req.language == null) return CreateLanguageExResponse(error = ErrorType.MissingId, null)
-        if (req.language.language_name == null) return CreateLanguageExResponse(error = ErrorType.InputMissingName, null)
-        if (req.language.language_name.length > 32) return CreateLanguageExResponse(error = ErrorType.NameTooLong, null)
+        if (req.language.name == null) return CreateLanguageExResponse(error = ErrorType.InputMissingName, null)
+        if (req.language.name.length > 32) return CreateLanguageExResponse(error = ErrorType.NameTooLong, null)
 
         // check enums and error out if needed
 
@@ -113,8 +113,9 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.languages_ex(language_name, created_by, modified_by, owning_person, owning_group)
+            insert into sc.languages(name, display_name, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?,
                     ?,
                     (
                       select person 
@@ -136,7 +137,8 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
-            req.language.language_name,
+            req.language.name,
+            req.language.name,
             req.token,
             req.token,
             req.token,

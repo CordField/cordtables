@@ -113,25 +113,17 @@ class Update(
             )
         }
 
-        if (req.languageEx.language_name != null) util.updateField(
+        if (req.languageEx.name != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
-            column = "language_name",
+            table = "sc.languages",
+            column = "name",
             id = req.languageEx.id!!,
-            value = req.languageEx.language_name,
-        )
-
-        if (req.languageEx.iso != null) util.updateField(
-            token = req.token,
-            table = "sc.languages_ex",
-            column = "iso",
-            id = req.languageEx.id!!,
-            value = req.languageEx.iso,
+            value = req.languageEx.name,
         )
 
         if (req.languageEx.progress_bible != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "progress_bible",
             id = req.languageEx.id!!,
             value = req.languageEx.progress_bible,
@@ -139,7 +131,7 @@ class Update(
 
         if (req.languageEx.location_long != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "location_long",
             id = req.languageEx.id!!,
             value = req.languageEx.location_long,
@@ -147,7 +139,7 @@ class Update(
 
         if (req.languageEx.island != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "island",
             id = req.languageEx.id!!,
             value = req.languageEx.island,
@@ -155,7 +147,7 @@ class Update(
 
         if (req.languageEx.province != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "province",
             id = req.languageEx.id!!,
             value = req.languageEx.province,
@@ -163,7 +155,7 @@ class Update(
 
         if (req.languageEx.first_language_population != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "first_language_population",
             id = req.languageEx.id!!,
             value = req.languageEx.first_language_population,
@@ -171,7 +163,7 @@ class Update(
 
         if (req.languageEx.first_language_population != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "population_value",
             id = req.languageEx.id!!,
             value = getPopulationValue(req.languageEx.first_language_population),
@@ -179,7 +171,7 @@ class Update(
 
         if (req.languageEx.egids_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "egids_level",
             id = req.languageEx.id!!,
             value = req.languageEx.egids_level,
@@ -188,7 +180,7 @@ class Update(
 
         if (req.languageEx.egids_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "egids_value",
             id = req.languageEx.id!!,
             value = EgidsScale.valueOf(req.languageEx.egids_level!!).value,
@@ -196,7 +188,7 @@ class Update(
 
         if (req.languageEx.least_reached_progress_jps_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "least_reached_progress_jps_level",
             id = req.languageEx.id!!,
             value = req.languageEx.least_reached_progress_jps_level,
@@ -205,7 +197,7 @@ class Update(
 
         if (req.languageEx.least_reached_progress_jps_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "least_reached_value",
             id = req.languageEx.id!!,
             value = LeastReachedProgressScale.valueOf(req.languageEx.least_reached_progress_jps_level).value,
@@ -213,7 +205,7 @@ class Update(
 
         if (req.languageEx.partner_interest_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "partner_interest_level",
             id = req.languageEx.id!!,
             value = req.languageEx.partner_interest_level,
@@ -222,7 +214,7 @@ class Update(
 
         if (req.languageEx.partner_interest_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "partner_interest_value",
             id = req.languageEx.id!!,
             value = PartnerInterestScale.valueOf(req.languageEx.partner_interest_level).value,
@@ -230,7 +222,7 @@ class Update(
 
         if (req.languageEx.partner_interest_description != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "partner_interest_description",
             id = req.languageEx.id!!,
             value = req.languageEx.partner_interest_description,
@@ -238,7 +230,7 @@ class Update(
 
         if (req.languageEx.partner_interest_source != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "partner_interest_source",
             id = req.languageEx.id!!,
             value = req.languageEx.partner_interest_source,
@@ -246,7 +238,7 @@ class Update(
 
         if (req.languageEx.multiple_languages_leverage_linguistic_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "multiple_languages_leverage_linguistic_level",
             id = req.languageEx.id!!,
             value = req.languageEx.multiple_languages_leverage_linguistic_level,
@@ -255,7 +247,7 @@ class Update(
 
         if (req.languageEx.multiple_languages_leverage_linguistic_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "multiple_languages_leverage_linguistic_value",
             id = req.languageEx.id!!,
             value = MultipleLanguagesLeverageLinguisticScale.valueOf(req.languageEx.multiple_languages_leverage_linguistic_level).value,
@@ -263,7 +255,7 @@ class Update(
 
         if (req.languageEx.multiple_languages_leverage_linguistic_description != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "multiple_languages_leverage_linguistic_description",
             id = req.languageEx.id!!,
             value = req.languageEx.multiple_languages_leverage_linguistic_description,
@@ -271,7 +263,7 @@ class Update(
 
         if (req.languageEx.multiple_languages_leverage_linguistic_source != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "multiple_languages_leverage_linguistic_source",
             id = req.languageEx.id!!,
             value = req.languageEx.multiple_languages_leverage_linguistic_source,
@@ -279,7 +271,7 @@ class Update(
 
         if (req.languageEx.multiple_languages_leverage_joint_training_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "multiple_languages_leverage_joint_training_level",
             id = req.languageEx.id!!,
             value = req.languageEx.multiple_languages_leverage_joint_training_level,
@@ -288,7 +280,7 @@ class Update(
 
         if (req.languageEx.multiple_languages_leverage_joint_training_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "multiple_languages_leverage_joint_training_value",
             id = req.languageEx.id!!,
             value = MultipleLanguagesLeverageJointTrainingScale.valueOf(req.languageEx.multiple_languages_leverage_joint_training_level).value,
@@ -296,7 +288,7 @@ class Update(
 
         if (req.languageEx.multiple_languages_leverage_joint_training_description != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "multiple_languages_leverage_joint_training_description",
             id = req.languageEx.id!!,
             value = req.languageEx.multiple_languages_leverage_joint_training_description,
@@ -304,7 +296,7 @@ class Update(
 
         if (req.languageEx.multiple_languages_leverage_joint_training_source != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "multiple_languages_leverage_joint_training_source",
             id = req.languageEx.id!!,
             value = req.languageEx.multiple_languages_leverage_joint_training_source,
@@ -312,7 +304,7 @@ class Update(
 
         if (req.languageEx.lang_comm_int_in_language_development_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "lang_comm_int_in_language_development_level",
             id = req.languageEx.id!!,
             value = req.languageEx.lang_comm_int_in_language_development_level,
@@ -321,7 +313,7 @@ class Update(
 
         if (req.languageEx.lang_comm_int_in_language_development_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "lang_comm_int_in_language_development_value",
             id = req.languageEx.id!!,
             value = LangCommIntInLanguageDevelopmentScale.valueOf(req.languageEx.lang_comm_int_in_language_development_level).value,
@@ -329,7 +321,7 @@ class Update(
 
         if (req.languageEx.lang_comm_int_in_language_development_description != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "lang_comm_int_in_language_development_description",
             id = req.languageEx.id!!,
             value = req.languageEx.lang_comm_int_in_language_development_description,
@@ -337,7 +329,7 @@ class Update(
 
         if (req.languageEx.lang_comm_int_in_language_development_source != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "lang_comm_int_in_language_development_source",
             id = req.languageEx.id!!,
             value = req.languageEx.lang_comm_int_in_language_development_source,
@@ -345,7 +337,7 @@ class Update(
 
         if (req.languageEx.lang_comm_int_in_scripture_translation_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "lang_comm_int_in_scripture_translation_level",
             id = req.languageEx.id!!,
             value = req.languageEx.lang_comm_int_in_scripture_translation_level,
@@ -354,7 +346,7 @@ class Update(
 
         if (req.languageEx.lang_comm_int_in_scripture_translation_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "lang_comm_int_in_scripture_translation_value",
             id = req.languageEx.id!!,
             value = LangCommIntInScriptureTranslationScale.valueOf(req.languageEx.lang_comm_int_in_scripture_translation_level).value,
@@ -362,7 +354,7 @@ class Update(
 
         if (req.languageEx.lang_comm_int_in_scripture_translation_description != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "lang_comm_int_in_scripture_translation_description",
             id = req.languageEx.id!!,
             value = req.languageEx.lang_comm_int_in_scripture_translation_description,
@@ -370,7 +362,7 @@ class Update(
 
         if (req.languageEx.lang_comm_int_in_scripture_translation_source != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "lang_comm_int_in_scripture_translation_source",
             id = req.languageEx.id!!,
             value = req.languageEx.lang_comm_int_in_scripture_translation_source,
@@ -378,7 +370,7 @@ class Update(
 
         if (req.languageEx.access_to_scripture_in_lwc_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "access_to_scripture_in_lwc_level",
             id = req.languageEx.id!!,
             value = req.languageEx.access_to_scripture_in_lwc_level,
@@ -387,7 +379,7 @@ class Update(
 
         if (req.languageEx.access_to_scripture_in_lwc_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "access_to_scripture_in_lwc_value",
             id = req.languageEx.id!!,
             value = AccessToScriptureInLwcScale.valueOf(req.languageEx.access_to_scripture_in_lwc_level).value,
@@ -395,7 +387,7 @@ class Update(
 
         if (req.languageEx.access_to_scripture_in_lwc_description != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "access_to_scripture_in_lwc_description",
             id = req.languageEx.id!!,
             value = req.languageEx.access_to_scripture_in_lwc_description,
@@ -403,7 +395,7 @@ class Update(
 
         if (req.languageEx.access_to_scripture_in_lwc_source != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "access_to_scripture_in_lwc_source",
             id = req.languageEx.id!!,
             value = req.languageEx.access_to_scripture_in_lwc_source,
@@ -411,7 +403,7 @@ class Update(
 
         if (req.languageEx.begin_work_geo_challenges_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "begin_work_geo_challenges_level",
             id = req.languageEx.id!!,
             value = req.languageEx.begin_work_geo_challenges_level,
@@ -420,7 +412,7 @@ class Update(
 
         if (req.languageEx.begin_work_geo_challenges_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "begin_work_geo_challenges_value",
             id = req.languageEx.id!!,
             value = BeginWorkGeoChallengesScale.valueOf(req.languageEx.begin_work_geo_challenges_level).value,
@@ -428,7 +420,7 @@ class Update(
 
         if (req.languageEx.begin_work_geo_challenges_description != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "begin_work_geo_challenges_description",
             id = req.languageEx.id!!,
             value = req.languageEx.begin_work_geo_challenges_description,
@@ -436,7 +428,7 @@ class Update(
 
         if (req.languageEx.begin_work_geo_challenges_source != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "begin_work_geo_challenges_source",
             id = req.languageEx.id!!,
             value = req.languageEx.begin_work_geo_challenges_source,
@@ -444,7 +436,7 @@ class Update(
 
         if (req.languageEx.begin_work_rel_pol_obstacles_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "begin_work_rel_pol_obstacles_level",
             id = req.languageEx.id!!,
             value = req.languageEx.begin_work_rel_pol_obstacles_level,
@@ -453,7 +445,7 @@ class Update(
 
         if (req.languageEx.begin_work_rel_pol_obstacles_level != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "begin_work_rel_pol_obstacles_value",
             id = req.languageEx.id!!,
             value = BeginWorkRelPolObstaclesScale.valueOf(req.languageEx.begin_work_rel_pol_obstacles_level).value,
@@ -461,7 +453,7 @@ class Update(
 
         if (req.languageEx.begin_work_rel_pol_obstacles_description != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "begin_work_rel_pol_obstacles_description",
             id = req.languageEx.id!!,
             value = req.languageEx.begin_work_rel_pol_obstacles_description,
@@ -469,7 +461,7 @@ class Update(
 
         if (req.languageEx.begin_work_rel_pol_obstacles_source != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "begin_work_rel_pol_obstacles_source",
             id = req.languageEx.id!!,
             value = req.languageEx.begin_work_rel_pol_obstacles_source,
@@ -477,7 +469,7 @@ class Update(
 
         if (req.languageEx.suggested_strategies != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "suggested_strategies",
             id = req.languageEx.id!!,
             value = req.languageEx.suggested_strategies,
@@ -485,7 +477,7 @@ class Update(
 
         if (req.languageEx.comments != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "comments",
             id = req.languageEx.id!!,
             value = req.languageEx.comments,
@@ -493,7 +485,7 @@ class Update(
 
         if (req.languageEx.owning_person != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "owning_person",
             id = req.languageEx.id!!,
             value = req.languageEx.owning_person,
@@ -501,7 +493,7 @@ class Update(
 
         if (req.languageEx.owning_group != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "owning_group",
             id = req.languageEx.id!!,
             value = req.languageEx.owning_group,
@@ -509,7 +501,7 @@ class Update(
 
         if (req.languageEx.peer != null) util.updateField(
             token = req.token,
-            table = "sc.languages_ex",
+            table = "sc.languages",
             column = "peer",
             id = req.languageEx.id!!,
             value = req.languageEx.peer,

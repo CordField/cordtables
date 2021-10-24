@@ -206,90 +206,6 @@ create table sc.partners (
 
 -- LANGUAGE TABLES ----------------------------------------------------------
 
-create table sc.language_goal_definitions (
-	id serial primary key,
-
-	-- todo
-
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
--- An extension table, but has a reference to common
--- sc languages may different from other org's language listings
-create table sc.languages (
-    neo4j_id varchar(32) unique,
-	id serial primary key,
-	ethnologue int references sil.table_of_languages(id),
-	name varchar(255) unique not null,
-	display_name varchar(255) unique not null,
-	display_name_pronunciation varchar(255),
-	tags text[],
-	preset_inventory bool,
-	is_dialect bool,
-	is_sign_language bool,
-	is_least_of_these bool,
-	least_of_these_reason varchar(255),
-	population_override int,
-	registry_of_dialects_code varchar(32),
-	sensitivity sensitivity,
-	sign_language_code varchar(32),
-	sponsor_estimated_eng_date timestamp,
-
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.language_locations (
-  id serial primary key,
-
-	language int not null references sc.languages(id),
-	location int not null references sc.locations(id),
-	-- todo
-
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
-
-	unique (language, location)
-);
-
-create table sc.language_goals (
-  id serial primary key,
-
-  language int not null references sc.languages(id),
-	goal int not null references sc.language_goal_definitions(id),
-	-- todo
-
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
-
-	unique (language, goal)
-);
-
 create type sc.egids_scale as enum (
 		'0',
 		'1',
@@ -381,11 +297,29 @@ create type sc.begin_work_rel_pol_obstacles_scale as enum (
 		'Easy'
 );
 
-create table sc.languages_ex(
+create table sc.languages(
 	id serial primary key,
+  neo4j_id varchar(32) unique,
 
-	language_name varchar(32),
-	iso varchar(4),
+  ethnologue int references sil.table_of_languages(id),
+  name varchar(255) unique not null,
+  display_name varchar(255) unique not null,
+  display_name_pronunciation varchar(255),
+  tags text[],
+  preset_inventory bool,
+  is_dialect bool,
+  is_sign_language bool,
+  is_least_of_these bool,
+  least_of_these_reason varchar(255),
+  population_override int,
+  registry_of_dialects_code varchar(32),
+  sensitivity sensitivity,
+  sign_language_code varchar(32),
+  sponsor_estimated_eng_date timestamp,
+
+--	language_name varchar(32),
+--	iso varchar(4),
+
 	prioritization decimal generated always as (
 	  population_value * 2 +
 	  egids_value * 3 +
@@ -457,7 +391,6 @@ create table sc.languages_ex(
 	suggested_strategies text,
 	comments text,
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -466,6 +399,91 @@ create table sc.languages_ex(
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id)
 );
+
+-- An extension table, but has a reference to common
+-- sc languages may different from other org's language listings
+--create table sc.languages (
+--    neo4j_id varchar(32) unique,
+--	id serial primary key,
+--	ethnologue int references sil.table_of_languages(id),
+--	name varchar(255) unique not null,
+--	display_name varchar(255) unique not null,
+--	display_name_pronunciation varchar(255),
+--	tags text[],
+--	preset_inventory bool,
+--	is_dialect bool,
+--	is_sign_language bool,
+--	is_least_of_these bool,
+--	least_of_these_reason varchar(255),
+--	population_override int,
+--	registry_of_dialects_code varchar(32),
+--	sensitivity sensitivity,
+--	sign_language_code varchar(32),
+--	sponsor_estimated_eng_date timestamp,
+--
+--
+--  created_at timestamp not null default CURRENT_TIMESTAMP,
+--  created_by int not null references admin.people(id),
+--  modified_at timestamp not null default CURRENT_TIMESTAMP,
+--  modified_by int not null references admin.people(id),
+--  owning_person int not null references admin.people(id),
+--  owning_group int not null references admin.groups(id),
+--  peer int references admin.peers(id)
+--);
+
+create table sc.language_goal_definitions (
+	id serial primary key,
+
+	-- todo
+
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table sc.language_locations (
+  id serial primary key,
+
+	language int not null references sc.languages(id),
+	location int not null references sc.locations(id),
+	-- todo
+
+  
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
+
+	unique (language, location)
+);
+
+create table sc.language_goals (
+  id serial primary key,
+
+  language int not null references sc.languages(id),
+	goal int not null references sc.language_goal_definitions(id),
+	-- todo
+
+  
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
+
+	unique (language, goal)
+);
+
 
 -- USER TABLES --------------------------------------------------------------
 
