@@ -24,7 +24,7 @@ data class Language(
 
     val prioritization: Double? = null,
     val progress_bible: Boolean? = null,
-    val location_detail: String? = null,
+    val location_long: String? = null,
     val island: String? = null,
     val province: String? = null,
     val first_language_population: Int? = null,
