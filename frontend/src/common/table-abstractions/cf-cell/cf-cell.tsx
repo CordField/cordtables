@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, State } from '@stencil/core';
+import { Component, Host, h, Prop, State, Element } from '@stencil/core';
 import { globals } from '../../../core/global.store';
 import { CellType, ColumnDescription } from '../types';
 
@@ -8,6 +8,8 @@ import { CellType, ColumnDescription } from '../types';
   shadow: true,
 })
 export class CfCell {
+  @Element() el: HTMLElement;
+
   @Prop() rowId: number;
   @Prop() value: any;
   @Prop() columnDescription: ColumnDescription;
@@ -44,12 +46,20 @@ export class CfCell {
   };
 
   submit = async () => {
+    if (this.columnDescription.selectOptions !== null && this.columnDescription.selectOptions !== undefined) {
+      const select = this.el.shadowRoot.getElementById('select') as any;
+      this.newValue = select.value;
+    }
+
     if (this.newValue === undefined) return;
+
     const result = await this.columnDescription.updateFn(this.rowId, this.columnDescription.field, this.newValue);
+
     if (result) {
       this.value = this.newValue;
       this.showEdit = false;
     } else {
+      // todo
     }
   };
 
@@ -109,7 +119,7 @@ export class CfCell {
               <span>
                 {/* might be a select menu or a text input */}
                 {this.columnDescription.selectOptions != null || this.columnDescription.selectOptions != undefined ? (
-                  <select onInput={event => this.handleSelect(event)}>
+                  <select id="select" onInput={event => this.handleSelect(event)}>
                     {this.columnDescription.selectOptions &&
                       this.columnDescription.selectOptions.length > 0 &&
                       this.columnDescription.selectOptions.map(option => (
