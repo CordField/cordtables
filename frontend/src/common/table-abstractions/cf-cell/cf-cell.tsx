@@ -79,8 +79,18 @@ export class CfCell {
               <span>
                 {typeof this.value === 'boolean' && <span>{this.value.toString()}</span>}
                 {typeof this.value === 'number' && <span>{this.value.toString()}</span>}
-                {typeof this.value === 'string' && <span>{this.value}</span>}
                 {typeof this.value === 'object' && <span>{this.value}</span>}
+
+                {/* for header cells - they'll never be enums */}
+                {typeof this.value === 'string' && this.cellType === 'header' && <span>{this.value}</span>}
+
+                {/* for data cell strings that aren't enums */}
+                {typeof this.value === 'string' && this.cellType === 'data' && this.columnDescription.selectOptions === undefined && <span>{this.value}</span>}
+
+                {/* for enums - we need to show their display */}
+                {typeof this.value === 'string' && this.cellType === 'data' && this.columnDescription.selectOptions !== undefined && (
+                  <span>{this.columnDescription.selectOptions.find(item => item.value === this.value).display}</span>
+                )}
               </span>
 
               {/* if this is the ID field and edit mode is true, show the delete button */}
