@@ -120,12 +120,133 @@ class Update(
             )
         }
 
+        if (req.language.neo4j_id != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "neo4j_id",
+            id = req.language.id!!,
+            value = req.language.neo4j_id,
+        )
+
+        if (req.language.ethnologue != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "ethnologue",
+            id = req.language.id!!,
+            value = req.language.ethnologue,
+        )
+
         if (req.language.name != null) util.updateField(
             token = req.token,
             table = "sc.languages",
             column = "name",
             id = req.language.id!!,
             value = req.language.name,
+        )
+
+        if (req.language.display_name != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "display_name",
+            id = req.language.id!!,
+            value = req.language.display_name,
+        )
+
+        if (req.language.display_name_pronunciation != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "display_name_pronunciation",
+            id = req.language.id!!,
+            value = req.language.display_name_pronunciation,
+        )
+
+        if (req.language.tags != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "tags",
+            id = req.language.id!!,
+            value = req.language.tags,
+        )
+
+        if (req.language.preset_inventory != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "preset_inventory",
+            id = req.language.id!!,
+            value = req.language.preset_inventory,
+        )
+
+        if (req.language.is_dialect != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "is_dialect",
+            id = req.language.id!!,
+            value = req.language.is_dialect,
+        )
+
+        if (req.language.is_sign_language != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "is_sign_language",
+            id = req.language.id!!,
+            value = req.language.is_sign_language,
+        )
+
+        if (req.language.is_least_of_these != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "is_least_of_these",
+            id = req.language.id!!,
+            value = req.language.is_least_of_these,
+        )
+
+        if (req.language.least_of_these_reason != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "least_of_these_reason",
+            id = req.language.id!!,
+            value = req.language.least_of_these_reason,
+        )
+
+        if (req.language.population_override != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "population_override",
+            id = req.language.id!!,
+            value = req.language.population_override,
+        )
+
+        if (req.language.registry_of_dialects_code != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "registry_of_dialects_code",
+            id = req.language.id!!,
+            value = req.language.registry_of_dialects_code,
+        )
+
+        if (req.language.sensitivity != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "sensitivity",
+            id = req.language.id!!,
+            value = req.language.sensitivity,
+            cast = "::common.sensitivity"
+        )
+
+        if (req.language.sign_language_code != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "sign_language_code",
+            id = req.language.id!!,
+            value = req.language.sign_language_code,
+        )
+
+        if (req.language.sponsor_estimated_eng_date != null) util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "sponsor_estimated_eng_date",
+            id = req.language.id!!,
+            value = req.language.sponsor_estimated_eng_date,
         )
 
         if (req.language.progress_bible != null) util.updateField(

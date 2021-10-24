@@ -105,7 +105,7 @@ export class ScLanguages {
     {
       field: 'ethnologue',
       displayName: 'Ethnologue',
-      width: 200,
+      width: 100,
       editable: true,
       updateFn: this.handleUpdate,
     },

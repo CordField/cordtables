@@ -61,7 +61,6 @@ export class CfCell {
       } else {
         this.value = this.newValue;
       }
-      console.log(typeof this.value);
       this.showEdit = false;
     } else {
       // todo
