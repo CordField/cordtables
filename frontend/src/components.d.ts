@@ -67,6 +67,8 @@ export namespace Components {
     }
     interface CfTableFooter {
     }
+    interface CfTiny {
+    }
     interface CommonOrganizations {
     }
     interface CreateUpdateModal {
@@ -205,6 +207,12 @@ declare global {
         prototype: HTMLCfTableFooterElement;
         new (): HTMLCfTableFooterElement;
     };
+    interface HTMLCfTinyElement extends Components.CfTiny, HTMLStencilElement {
+    }
+    var HTMLCfTinyElement: {
+        prototype: HTMLCfTinyElement;
+        new (): HTMLCfTinyElement;
+    };
     interface HTMLCommonOrganizationsElement extends Components.CommonOrganizations, HTMLStencilElement {
     }
     var HTMLCommonOrganizationsElement: {
@@ -335,6 +343,7 @@ declare global {
         "cf-table": HTMLCfTableElement;
         "cf-table-body": HTMLCfTableBodyElement;
         "cf-table-footer": HTMLCfTableFooterElement;
+        "cf-tiny": HTMLCfTinyElement;
         "common-organizations": HTMLCommonOrganizationsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "generic-table": HTMLGenericTableElement;
@@ -415,6 +424,8 @@ declare namespace LocalJSX {
     }
     interface CfTableFooter {
     }
+    interface CfTiny {
+    }
     interface CommonOrganizations {
     }
     interface CreateUpdateModal {
@@ -481,6 +492,7 @@ declare namespace LocalJSX {
         "cf-table": CfTable;
         "cf-table-body": CfTableBody;
         "cf-table-footer": CfTableFooter;
+        "cf-tiny": CfTiny;
         "common-organizations": CommonOrganizations;
         "create-update-modal": CreateUpdateModal;
         "generic-table": GenericTable;
@@ -521,6 +533,7 @@ declare module "@stencil/core" {
             "cf-table": LocalJSX.CfTable & JSXBase.HTMLAttributes<HTMLCfTableElement>;
             "cf-table-body": LocalJSX.CfTableBody & JSXBase.HTMLAttributes<HTMLCfTableBodyElement>;
             "cf-table-footer": LocalJSX.CfTableFooter & JSXBase.HTMLAttributes<HTMLCfTableFooterElement>;
+            "cf-tiny": LocalJSX.CfTiny & JSXBase.HTMLAttributes<HTMLCfTinyElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
