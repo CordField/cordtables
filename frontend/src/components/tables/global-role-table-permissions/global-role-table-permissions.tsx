@@ -6,7 +6,7 @@ import { globals } from '../../../core/global.store';
 type MutablePermissionsFields = Omit<globalRoleTablePermissions, 'id' | 'createdBy' | 'modifiedBy' | 'modifiedAt' | 'createdAt'>;
 class CreateGlobalRoleTablePermissionsRequest {
   insertedFields: MutablePermissionsFields;
-  email: string;
+  token: string;
 }
 
 class DeletePermissionsResponse extends GenericResponse {
@@ -15,13 +15,14 @@ class DeletePermissionsResponse extends GenericResponse {
 
 class DeletePermissionsRequest {
   id: number;
+  token: string;
 }
 
 class UpdatePermissionsRequest {
   table_name: string;
   role: number;
   table_permission: string;
-  email: string;
+  token: string;
   id: number;
 }
 
@@ -63,7 +64,7 @@ export class GlobalRoleTablePermissions {
       table_name: this.updatedFields.tableName,  
       role: this.updatedFields.globalRole,
       table_permission: this.updatedFields.tablePermission,
-      email: globals.globalStore.state.email,
+      token: globals.globalStore.state.token,
       id,
     });
     if (result.error === ErrorType.NoError) {
@@ -84,6 +85,7 @@ export class GlobalRoleTablePermissions {
   handleDelete = async id => {
     const result = await fetchAs<DeletePermissionsRequest, DeletePermissionsResponse>('globalrolestablepermissions/delete', {
       id,
+      token: globals.globalStore.state.token
     });
     if (result.error === ErrorType.NoError) {
       this.success = 'Row with id ${result.data.id} deleted successfully!';
@@ -98,7 +100,7 @@ export class GlobalRoleTablePermissions {
     // return new row to avoid page refresh
     const result = await fetchAs<CreateGlobalRoleTablePermissionsRequest, CreateGlobalRoleTablePermissionsReponse>('globalrolestablepermissions/create', {
       insertedFields: this.insertedFields,
-      email: globals.globalStore.state.email,
+      token: globals.globalStore.state.token,
     });
 
 

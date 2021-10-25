@@ -24,7 +24,7 @@ data class CreateGRTPermissionsResponse(
 )
 data class CreateGRTPermissionsRequest(
         val insertedFields: InsertableGRTPFields,
-        val email: String
+        val token: String,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -45,10 +45,13 @@ class Create(
         var newGRTPermission: GlobalRolesTablePermissions? = null
         var userId = 0
 
+        if (req.token == null) return CreateGRTPermissionsResponse(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return CreateGRTPermissionsResponse(ErrorType.AdminOnly, null)
+
         this.ds.connection.use { conn ->
             try {
                 val getUserIdStatement = conn.prepareCall("select person from admin.users where email = ?")
-                getUserIdStatement.setString(1, req.email)
+                getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
                     userId = getUserIdResult.getInt("person")

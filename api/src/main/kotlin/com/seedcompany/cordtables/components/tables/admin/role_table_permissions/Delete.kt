@@ -21,7 +21,8 @@ data class DeletePermissionResponse(
 )
 
 data class DeletePermissionRequest(
-    val id: Int
+    val id: Int,
+    val token: String
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -39,6 +40,9 @@ class Delete(
 
         println("req: $req")
         var deletedPermissionRowId: Int?= null
+
+        if (req.token.isEmpty()) return DeletePermissionResponse(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return DeletePermissionResponse(ErrorType.AdminOnly, null)
 
         this.ds.connection.use { conn ->
 

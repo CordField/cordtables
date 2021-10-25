@@ -37,6 +37,7 @@ class Delete(
         println("req: $req")
         var deletedGlobalRowId: Int?= null
         var userId = 0
+
         if (req.token == null) return DeleteGlobalRoleResponse(ErrorType.TokenNotFound, null)
         if (!util.isAdmin(req.token)) return DeleteGlobalRoleResponse(ErrorType.AdminOnly, null)
 

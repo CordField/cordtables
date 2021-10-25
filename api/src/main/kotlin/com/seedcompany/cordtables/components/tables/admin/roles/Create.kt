@@ -48,7 +48,7 @@ class Create(
         var userId = 0
         val reqValues: MutableList<Any> = mutableListOf()
 
-        if (req.token == null) return CreateGlobalRoleResponse(ErrorType.TokenNotFound, null)
+        if (req.token.isBlank()) return CreateGlobalRoleResponse(ErrorType.TokenNotFound, null)
         if (!util.isAdmin(req.token)) return CreateGlobalRoleResponse(ErrorType.AdminOnly, null)
 
         this.ds.connection.use { conn ->
