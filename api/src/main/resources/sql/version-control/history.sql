@@ -7,7 +7,6 @@ declare
 	rec0 record;
 	rec1 record;
     rec2 record;
-    existing_column text;
     history_table_name text;
 	status text;
 begin
@@ -28,7 +27,7 @@ begin
             execute format('create table if not exists %I.%I ( _history_id serial primary key,
             _history_created_at timestamp not null default CURRENT_TIMESTAMP)', rec0.table_schema,history_table_name);
 
-            -- UPDATE BOTH SECURITY AND HISTORY TABLE (IDEMPOTENT MANNER)
+            -- UPDATE HISTORY TABLE (IDEMPOTENT MANNER)
             for rec2 in (select column_name,case
                         when (data_type = 'USER-DEFINED') then udt_schema || '.' || udt_name
                         when (data_type = 'ARRAY') then  udt_schema || '.' || substr(udt_name, 2, length(udt_name)-1) || '[]'
@@ -37,7 +36,7 @@ begin
                         where table_schema = rec0.table_schema and table_name = rec1.table_name) loop
             raise info 'col-name: % | data-type: %', rec2.column_name, rec2.data_type;
 
-                select column_name from information_schema.columns into existing_column where table_schema = rec0.table_schema
+                perform column_name from information_schema.columns where table_schema = rec0.table_schema
                 and table_name = history_table_name and column_name = rec2.column_name;
 
                 if not found then

@@ -215,7 +215,7 @@ export class ScLanguages {
       updateFn: this.handleUpdate,
     },
     {
-      field: 'sponsor_estimated_eng_date',
+      field: 'sponsor_estimated_end_date',
       displayName: 'Estimated Date for the Sponsor to Engage',
       width: 100,
       editable: true,

@@ -15,7 +15,7 @@ class ScLanguage {
   registry_of_dialects_code?: string | undefined;
   sensitivity?: string | undefined;
   sign_language_code?: string | undefined;
-  sponsor_estimated_eng_date?: string | undefined;
+  sponsor_estimated_end_date?: string | undefined;
 
   prioritization?: number | undefined;
   progress_bible?: boolean | undefined;

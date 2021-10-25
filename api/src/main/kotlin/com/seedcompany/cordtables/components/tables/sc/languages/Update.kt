@@ -241,12 +241,12 @@ class Update(
             value = req.language.sign_language_code,
         )
 
-        if (req.language.sponsor_estimated_eng_date != null) util.updateField(
+        if (req.language.sponsor_estimated_end_date != null) util.updateField(
             token = req.token,
             table = "sc.languages",
-            column = "sponsor_estimated_eng_date",
+            column = "sponsor_estimated_end_date",
             id = req.language.id!!,
-            value = req.language.sponsor_estimated_eng_date,
+            value = req.language.sponsor_estimated_end_date,
         )
 
         if (req.language.progress_bible != null) util.updateField(
