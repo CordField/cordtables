@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
+import kotlin.reflect.full.memberProperties
 
 data class ScLanguagesUpdateRequest(
     val token: String?,
@@ -35,9 +36,12 @@ class Update(
     @ResponseBody
     fun updateHandler(@RequestBody req: ScLanguagesUpdateRequest): ScLanguagesUpdateResponse {
 
+
         if (req.token == null) return ScLanguagesUpdateResponse(ErrorType.TokenNotFound)
         if (req.language == null) return ScLanguagesUpdateResponse(ErrorType.MissingId)
         if (req.language.id == null) return ScLanguagesUpdateResponse(ErrorType.MissingId)
+
+
 
         if (req.language.sensitivity != null && !enumContains<CommonSensitivity>(req.language.sensitivity)) {
             return ScLanguagesUpdateResponse(
