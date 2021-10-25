@@ -44,16 +44,6 @@ create table common.chats (
 
 );
 
-alter table admin.people add constraint admin_people_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.groups add constraint admin_group_row_access_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.group_row_access add constraint admin_group_row_access_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.group_memberships add constraint admin_group_memberships_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.roles add constraint admin_roles_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.role_column_grants add constraint admin_role_column_grants_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.role_table_permissions add constraint admin_role_table_permissions_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.role_memberships add constraint admin_role_memberships_chat_fk foreign key (chat) references common.chats(id);
-alter table admin.users add constraint admin_users_chat_fk foreign key (chat) references common.chats(id);
-
 create table common.posts (
 	id serial primary key,
 
@@ -85,7 +75,7 @@ create table common.locations (
 	name varchar(255) unique not null,
 	type location_type not null,
 
-	chat int references common.chats(id),
+	
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -108,7 +98,7 @@ create table common.education_entries (
   institution varchar(64),
   major varchar(64),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -125,7 +115,7 @@ create table common.education_by_person (
   education int not null references common.education_entries(id),
   graduation_year int,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -144,7 +134,7 @@ create table common.organizations (
 	sensitivity common.sensitivity default 'High',
 	primary_location int references locations(id),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -174,7 +164,7 @@ create table common.people_to_org_relationships (
 	org int not null references organizations(id),
 	person int not null references admin.people(id),
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -192,7 +182,7 @@ create table common.people_to_org_relationship_type (
   people_to_org int not null,
 	relationship_type int not null references common.people_to_org_relationships(id),
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -213,7 +203,7 @@ create table common.projects (
 	primary_location int references locations(id),
 	sensitivity common.sensitivity default 'High',
 
-	chat int references common.chats(id),
+	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -240,7 +230,7 @@ create table common.tickets (
 	ticket_status common.ticket_status not null default 'Open',
 	title varchar(125) not null,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -256,7 +246,7 @@ create table common.work_orders(
 	ticket int references common.tickets(id),
 	content text not null,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -272,7 +262,7 @@ create table common.ticket_assignments (
 	ticket int not null references common.tickets(id),
 	person_id int not null references admin.people(id),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -289,7 +279,7 @@ create table common.work_records(
 	hours decimal not null,
 	comment text,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -306,7 +296,7 @@ create table common.work_estimates(
 	hours decimal not null,
 	comment text,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -330,7 +320,7 @@ create table common.ticket_feedback(
 	stakeholder int not null references admin.people(id),
 	feedback int not null references common.ticket_feedback_options,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -347,7 +337,7 @@ create table common.workflows(
 
 	title varchar(128) not null,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -363,7 +353,7 @@ create table common.stages(
 	workflow int not null references common.workflows(id),
 	title varchar(128) not null,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -379,7 +369,7 @@ create table common.work_order_templates(
 	stage int not null references common.stages(id),
 	content text not null,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -395,7 +385,7 @@ create table common.stage_options(
 	from_stage int not null references common.stages(id),
 	to_stage int not null references common.stages(id),
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -411,7 +401,7 @@ create table common.stage_notifications(
 	stage int not null references common.stages(id),
 	email varchar(64) not null,
 
-  chat int references common.chats(id),
+  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

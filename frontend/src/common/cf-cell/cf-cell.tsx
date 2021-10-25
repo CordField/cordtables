@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, State } from '@stencil/core';
+import { Component, Host, h, Prop, State, Element } from '@stencil/core';
 import { globals } from '../../core/global.store';
 
 @Component({
@@ -7,6 +7,8 @@ import { globals } from '../../core/global.store';
   shadow: true,
 })
 export class CfCell {
+  @Element() el: HTMLElement;
+
   @Prop() rowId: number;
   @Prop() propKey: keyof any;
   @Prop() value: any;
@@ -29,11 +31,21 @@ export class CfCell {
   };
 
   submit = async () => {
+    console.log('asdfasdf');
+    if (this.options !== null && this.options !== undefined) {
+      console.log('asdf');
+      const select = this.el.shadowRoot.getElementById('select') as any;
+      this.newValue = select.value;
+    }
+
     if (this.newValue === undefined) return;
+
     const result = await this.updateFn(this.rowId, this.propKey, this.newValue);
+
     if (result) {
       this.showEdit = false;
     } else {
+      // todo
     }
   };
 
@@ -59,7 +71,7 @@ export class CfCell {
           {this.showEdit && (
             <span id="value-edit">
               {this.type === 'select' ? (
-                <select onInput={event => this.handleSelect(event)}>
+                <select id="select" onInput={event => this.handleSelect(event)}>
                   {this.options &&
                     this.options.length > 0 &&
                     this.options.map(option => (

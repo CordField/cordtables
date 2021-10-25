@@ -1,8 +1,8 @@
-package com.seedcompany.cordtables.components.user
+package com.seedcompany.cordtables.components.tables.admin.roles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.globalroles.GlobalRoleUtil
+import com.seedcompany.cordtables.components.tables.admin.role_column_grants.CreateGlobalRoleColumnGrantsResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -35,7 +35,7 @@ class Create(
     @Autowired
     val util: Utility,
     @Autowired
-    val globalRoleUtil: GlobalRoleUtil,
+    val globalRoleUtil: RoleUtil,
     @Autowired
     val ds: DataSource,
 ) {
@@ -43,6 +43,7 @@ class Create(
     @ResponseBody
     fun CreateHandler(@RequestBody req: CreateGlobalRoleRequest): CreateGlobalRoleResponse {
 
+        if (!util.isAdmin(req.token)) return CreateGlobalRoleResponse(ErrorType.AdminOnly, null)
         println("req: $req")
         var errorType = ErrorType.UnknownError
         var insertedRole: Role? = null

@@ -33,7 +33,7 @@ class Delete(
     fun deleteHandler(@RequestBody req: AdminUserDeleteRequest): AdminUserDeleteResponse {
 
         if (req.token == null) return AdminUserDeleteResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "sc.languages_ex"))
+        if(!util.userHasDeletePermission(req.token, "sc.languages"))
             return AdminUserDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")

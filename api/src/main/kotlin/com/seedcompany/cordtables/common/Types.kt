@@ -49,6 +49,7 @@ enum class ErrorType {
     InputMissingToken,
     InputMissingTable,
     InputMissingColumn,
+    ValueDoesNotMap,
 }
 
 
