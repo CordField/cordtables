@@ -62,3 +62,11 @@ enum class CommonSensitivity {
 data class GenericResponse (
     val error: ErrorType,
 )
+
+enum class LocationType {
+    City,
+    County,
+    State,
+    Country,
+    CrossBorderArea,
+}
