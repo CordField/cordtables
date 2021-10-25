@@ -29,6 +29,7 @@ export class TableRoot {
         {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
 
         {this.match.params.table === 'sc-languages' && <sc-languages></sc-languages>}
+        {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
       </Host>
     );
   }
