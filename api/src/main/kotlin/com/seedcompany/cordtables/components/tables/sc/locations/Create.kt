@@ -59,13 +59,15 @@ class Create(
         val id = jdbcTemplate.queryForObject(
             """
             insert into sc.locations(
-                name, 
+                name,
+                type,
                 created_by, 
                 modified_by, 
                 owning_person, 
                 owning_group)
             values(
-                    ?,                    
+                    ?,
+                    ?::common.location_type,
                     (
                       select person 
                       from admin.tokens 
@@ -87,6 +89,7 @@ class Create(
         """.trimIndent(),
             Int::class.java,
             req.location.name,
+            req.location.type,
             req.token,
             req.token,
             req.token,
