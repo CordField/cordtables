@@ -329,7 +329,7 @@ create table sc.languages(
   registry_of_dialects_code varchar(32),
   sensitivity sensitivity,
   sign_language_code varchar(32),
-  sponsor_estimated_end _date timestamp,
+  sponsor_estimated_end_date timestamp,
 
 --	language_name varchar(32),
 --	iso varchar(4),
