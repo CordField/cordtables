@@ -83,7 +83,6 @@ create table common.locations (
 	id serial primary key,
 
 	name varchar(255) unique not null,
-	sensitivity common.sensitivity not null default 'High',
 	type location_type not null,
 
 	chat int references common.chats(id),
