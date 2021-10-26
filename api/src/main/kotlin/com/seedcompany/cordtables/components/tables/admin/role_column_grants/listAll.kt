@@ -1,15 +1,14 @@
 package com.seedcompany.cordtables.components.tables.admin.role_column_grants
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.admin.GetSecureListQuery
+import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
 import org.apache.tomcat.jni.Global
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 import java.sql.SQLException
 import javax.sql.DataSource
 
@@ -26,6 +25,10 @@ data class GlobalRoleColumnGrants(
         val table_name: String? = null,
 )
 
+data class GlobalRoleColumnGrantsListAllRequest(
+        val token: String,
+)
+
 data class GlobalRoleColumnGrantsReturn(
         val error : ErrorType,
         val response: MutableList<GlobalRoleColumnGrants>?
@@ -39,15 +42,19 @@ class readAll(
 
         @Autowired
         val ds: DataSource,
+
 ) {
 
 
     @PostMapping(path = ["table/role-column-grants"], consumes = ["application/json"], produces = ["application/json"])
 
     @ResponseBody
-    fun GlobalRoleColumnGrantsHandler(): GlobalRoleColumnGrantsReturn {
+    fun GlobalRoleColumnGrantsHandler(@RequestBody req: GlobalRoleColumnGrantsListAllRequest): GlobalRoleColumnGrantsReturn {
 
         var response: MutableList<GlobalRoleColumnGrants> = mutableListOf()
+
+        if (req.token == null) return GlobalRoleColumnGrantsReturn(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return GlobalRoleColumnGrantsReturn(ErrorType.AdminOnly, null)
 
         this.ds.connection.use { conn ->
             val listStatement = conn.prepareCall("SELECT\n" +

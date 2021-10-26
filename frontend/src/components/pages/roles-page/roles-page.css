@@ -2,5 +2,7 @@
   display: block;
 }
 .table-wrap {
+  overflow-x:hidden; 
+  overflow-y:auto;
   max-height: 500px;
 }

@@ -2,6 +2,7 @@ import { Component, Host, h, Listen, State, Prop } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
 import { GenericResponse } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
+import { globals } from '../../../core/global.store';
 
 class readAllResponse extends GenericResponse {
   id: number;
@@ -18,6 +19,10 @@ class readAllResponse extends GenericResponse {
 
 class readOneRequest {
   id: number;
+}
+
+class readAllRequest {
+  token: String;
 }
 
 class create {
@@ -96,7 +101,9 @@ export class GlobalRoleColumnGrants {
   }
 
   async loadData() {
-    const result = await fetchAs<{}, readAllResponse>('table/role-column-grants', {});
+    const result = await fetchAs<readAllRequest, readAllResponse>('table/role-column-grants', {
+      token: globals.globalStore.state.token,
+    });
     if (result && result?.response) this.dataAll = result.response;
   }
 

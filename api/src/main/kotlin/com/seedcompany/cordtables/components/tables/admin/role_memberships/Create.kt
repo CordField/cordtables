@@ -32,7 +32,7 @@ class Create(
         val ds: DataSource,
 ) {
 
-    @PostMapping("role-memberships/create")
+    @PostMapping("role_memberships/create")
     @ResponseBody
     fun createHandler(@RequestBody req: GlobalRoleMembershipsCreateRequest): GlobalRoleMembershipsCreateReturn {
 

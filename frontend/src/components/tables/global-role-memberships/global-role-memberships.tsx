@@ -6,7 +6,7 @@ class GroupsGlobalRoleMembershipsRequest {
   token: string;
 }
 
-class GroupsGlobalRoleMembershipsRow {
+interface globalRoleMemberships{
   id: number;
   globalRole: number;
   person: number;
@@ -17,10 +17,9 @@ class GroupsGlobalRoleMembershipsRow {
   owningPerson: number;
   owningGroup: number;
 }
-
 class GlobalRoleMembershipsListResponse {
   error: ErrorType;
-  groups: Array<GroupsGlobalRoleMembershipsRow>;
+  globalRoleMemberships: Array<globalRoleMemberships>;
 }
 
 class GlobalRoleMembershipCreateRequest {
@@ -78,7 +77,7 @@ export class GlobalRoleMemberships {
   }
 
   async getList() {
-    this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role-memberships/list', {
+    this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role_memberships/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -98,7 +97,7 @@ export class GlobalRoleMemberships {
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GlobalRoleMembershipCreateRequest, GroupCreateResponse>('role-memberships/create', {
+    this.createResponse = await fetchAs<GlobalRoleMembershipCreateRequest, GroupCreateResponse>('role_memberships/create', {
       token: globals.globalStore.state.token,
       role: this.newGlobalRole,
       person: this.newPerson,
@@ -107,7 +106,7 @@ export class GlobalRoleMemberships {
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role-memberships/list', {
+      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role_memberships/list', {
         token: globals.globalStore.state.token,
       });
     } else {
@@ -119,7 +118,7 @@ export class GlobalRoleMemberships {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, role: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role-memberships/list', {
+      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role_memberships/list', {
         token: globals.globalStore.state.token,
       });
       return true;
@@ -131,7 +130,7 @@ export class GlobalRoleMemberships {
     this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groups/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role-memberships/list', {
+      this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role_memberships/list', {
         token: globals.globalStore.state.token,
       });
       return true;
@@ -148,13 +147,12 @@ export class GlobalRoleMemberships {
         <div id="table-wrap">
           <table>
             <tr>
-              {this.listResponse && this.listResponse.groups && this.listResponse.groups.length > 0 && Object.keys(this.listResponse.groups[0]).map(key => <th>{key}</th>)}
+              {this.listResponse && this.listResponse.globalRoleMemberships && this.listResponse.globalRoleMemberships.length > 0 && Object.keys(this.listResponse.globalRoleMemberships[0]).map(key => <th>{key}</th>)}
               <th>ACTIONS</th>
             </tr>
-
             {this.listResponse &&
-              this.listResponse.groups &&
-              this.listResponse.groups.map(item => (
+              this.listResponse.globalRoleMemberships &&
+              this.listResponse.globalRoleMemberships.map(item => (
                 <tr>
                   {Object.keys(item).map(key => (
                     <td>

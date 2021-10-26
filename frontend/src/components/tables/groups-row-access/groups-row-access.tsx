@@ -64,7 +64,7 @@ export class GroupsRowAccess {
   }
 
   async getList() {
-    this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('grouprowaccess/list', { token: globals.globalStore.state.token });
+    this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('group_row_access/list', { token: globals.globalStore.state.token });
   }
 
   toggleNewForm = () => {
@@ -84,7 +84,7 @@ export class GroupsRowAccess {
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GroupRowAccessCreateRequest, GroupRowAccessCreateResponse>('grouprowaccess/create', {
+    this.createResponse = await fetchAs<GroupRowAccessCreateRequest, GroupRowAccessCreateResponse>('group_row_access/create', {
       token: globals.globalStore.state.token,
       group: this.newRowGroup,
       tableName: this.newRowTableName,
@@ -93,17 +93,17 @@ export class GroupsRowAccess {
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('grouprowaccess/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('group_row_access/list', { token: globals.globalStore.state.token });
     } else {
       console.warn('Error creating group');
     }
   };
 
   clickRemoveRowIcon = async (value: number): Promise<boolean> => {
-    this.deleteResponse = await fetchAs<GroupRowAccessDeleteRequest, GroupRowAccessDeleteResponse>('grouprowaccess/delete', { token: globals.globalStore.state.token, id: value });
+    this.deleteResponse = await fetchAs<GroupRowAccessDeleteRequest, GroupRowAccessDeleteResponse>('group_row_access/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('grouprowaccess/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('group_row_access/list', { token: globals.globalStore.state.token });
       return true;
     } else {
       return false;
@@ -151,13 +151,13 @@ export class GroupsRowAccess {
               <tr>
                 <td class="disabled">&nbsp;</td>
                 <td>
-                  <input type="text" id="group-input" name="group" onInput={event => this.inputGroup(event)}></input>
+                  <input type="text" id="group-input" name="group" placeholder="Group" onInput={event => this.inputGroup(event)}></input>
                 </td>
                 <td>
-                  <input type="text" id="table-name-input" name="tableName" onInput={event => this.inputTableName(event)}></input>
+                  <input type="text" id="table-name-input" name="tableName" placeholder="Table Name" onInput={event => this.inputTableName(event)}></input>
                 </td>
                 <td>
-                  <input type="text" id="row-input" name="row" onInput={event => this.inputRow(event)}></input>
+                  <input type="text" id="row-input" name="row" placeholder="Row" onInput={event => this.inputRow(event)}></input>
                 </td>
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
@@ -171,7 +171,7 @@ export class GroupsRowAccess {
         <div id="button-group">
           {!this.showNewForm && (
             <button id="new-button" onClick={this.toggleNewForm}>
-              Create New Group Membership
+              Create New Group Access
             </button>
           )}
 

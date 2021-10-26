@@ -29,7 +29,7 @@ class Delete(
         val ds: DataSource,
 ) {
 
-    @PostMapping("role-memberships/delete")
+    @PostMapping("role_memberships/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: GlobalRoleMembershipsDeleteRequest): GlobalRoleMembershipsDeleteResponse {
 

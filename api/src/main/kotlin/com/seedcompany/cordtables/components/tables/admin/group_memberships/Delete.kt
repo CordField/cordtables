@@ -29,7 +29,7 @@ class Delete(
     val ds: DataSource,
 ) {
 
-    @PostMapping("groupmemberships/delete")
+    @PostMapping("group_memberships/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: GroupMembershipDeleteRequest): GroupMembershipDeleteResponse {
 

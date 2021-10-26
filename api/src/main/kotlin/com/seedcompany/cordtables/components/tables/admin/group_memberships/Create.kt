@@ -30,7 +30,7 @@ class Create(
     val ds: DataSource,
 ) {
 
-    @PostMapping("groupmemberships/create")
+    @PostMapping("group_memberships/create")
     @ResponseBody
     fun createHandler(@RequestBody req: GroupMembershipCreateRequest): GroupMembershipCreateReturn {
 
@@ -64,8 +64,13 @@ class Create(
                     //language=SQL
                     val statement = conn.prepareStatement(
                         """
-                        insert into admin.group_memberships(group_id, person, created_by, modified_by) 
-                            values(?, ?,
+                        insert into admin.group_memberships(group_id, person, owning_person, owning_group, created_by, modified_by) 
+                            values(?, ?, ?, 
+                                (
+                                  select person 
+                                  from admin.tokens 
+                                  where token = ?
+                                ),
                                 (
                                   select person 
                                   from admin.tokens 
@@ -82,8 +87,10 @@ class Create(
 
                     statement.setInt(1, req.group)
                     statement.setInt(2, req.person)
-                    statement.setString(3, req.token)
+                    statement.setInt(3, req.group)
                     statement.setString(4, req.token)
+                    statement.setString(5, req.token)
+                    statement.setString(6, req.token)
 
                     statement.execute()
 

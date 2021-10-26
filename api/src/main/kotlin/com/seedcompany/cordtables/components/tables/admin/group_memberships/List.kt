@@ -66,12 +66,12 @@ class List(
                 tableName = "admin.group_memberships",
                 columns = arrayOf(
                     "id",
-                    "group",
+                    "group_id",
                     "person",
-                    "createdAt",
-                    "createdBy",
-                    "modifiedAt",
-                    "modifiedBy"
+                    "created_at",
+                    "created_by",
+                    "modified_at",
+                    "modified_by"
                 )
             )
         ).query
@@ -82,7 +82,7 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var group: Int? = jdbcResult.getInt("group")
+                var group: Int? = jdbcResult.getInt("group_id")
                 if (jdbcResult.wasNull()) group = null
 
                 var person: Int? = jdbcResult.getInt("person")

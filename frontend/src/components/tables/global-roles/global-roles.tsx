@@ -127,13 +127,11 @@ export class GlobalRoles {
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    console.log(this.insertedFields);
     const result = await fetchAs<CreateGlobalRoleRequest, CreateGlobalRoleResponse>('role/create', {
       insertedFields: this.insertedFields,
       token: globals.globalStore.state.token,
     });
 
-    console.log(result);
     this.showNewForm = false;
     this.insertedFields = this.defaultFields;
     if (result.error === ErrorType.NoError) {
@@ -155,6 +153,7 @@ export class GlobalRoles {
   render() {
     return (
       <Host>
+        <div class="container">
         <div>{this.error}</div>
         <header>
           <h1>Global Roles</h1>
@@ -219,6 +218,7 @@ export class GlobalRoles {
             )}
           </div>
         </main>
+        </div>
       </Host>
     );
   }

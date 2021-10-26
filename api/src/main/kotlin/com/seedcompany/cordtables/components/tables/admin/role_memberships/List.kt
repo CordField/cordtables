@@ -67,14 +67,14 @@ class List(
                 tableName = "admin.role_memberships",
                 columns = arrayOf(
                     "id",
-                    "globalRole",
+                    "role",
                     "person",
-                    "createdAt",
-                    "createdBy",
-                    "modifiedAt",
-                    "modifiedBy",
-                    "owningPerson",
-                    "owningGroup"
+                    "created_at",
+                    "created_by",
+                    "modified_at",
+                    "modified_by",
+                    "owning_person",
+                    "owning_group"
                 )
             )
         ).query

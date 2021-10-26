@@ -31,7 +31,7 @@ class Create(
     val ds: DataSource,
 ) {
 
-    @PostMapping("grouprowaccess/create")
+    @PostMapping("group_row_access/create")
     @ResponseBody
     fun createHandler(@RequestBody req: GroupRowAccessCreateRequest): GroupRowAccessCreateReturn {
 

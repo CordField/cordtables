@@ -22,7 +22,7 @@ data class UpdatePermissionsRequest(
         val table_name: String? = null,
         val role: Int? = null,
         val table_permission: String ? = null,
-        val email: String,
+        val token: String,
         val id: Int
 )
 
@@ -43,10 +43,13 @@ class Update(
         var updatedPermission: GlobalRolesTablePermissions? = null
         var userId = 0
 
+        if (req.token == null) return UpdatePermissionsResponse(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return UpdatePermissionsResponse(ErrorType.AdminOnly, null)
+
         this.ds.connection.use { conn ->
             try {
-                val getUserIdStatement = conn.prepareCall("select person from admin.users where email = ?")
-                getUserIdStatement.setString(1, req.email)
+                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
+                getUserIdStatement.setString(1, req.token)
                 val getUserIdResult = getUserIdStatement.executeQuery()
                 if (getUserIdResult.next()) {
                     userId = getUserIdResult.getInt("person")
@@ -65,20 +68,19 @@ class Update(
                 for (prop in UpdatePermissionsRequest::class.memberProperties) {
                     val propValue = prop.get(req)
 
-                    println("$propValue $(prop.name) = ?,")
-                    if (propValue !== "" && prop.name != "email" && prop.name == "table_name") {
+                    if (propValue !== "" && prop.name == "table_name") {
                         updateSQL = "$updateSQL ${prop.name} = ?::admin.table_name,"
                         if (propValue != null) {
                             reqValues.add(propValue)
                         }
                     }
-                    if (propValue !== "" && prop.name != "email" && prop.name == "role") {
+                    if (propValue !== "" && prop.name == "role") {
                         updateSQL = "$updateSQL ${prop.name} = ?,"
                         if (propValue != null) {
                             reqValues.add(propValue)
                         }
                     }
-                    if (propValue !== "" && prop.name != "email" && prop.name == "table_permission") {
+                    if (propValue !== "" && prop.name == "table_permission") {
                         updateSQL = "$updateSQL ${prop.name} = ?::admin.table_permission,"
                         if (propValue != null) {
                             reqValues.add(propValue)
@@ -87,7 +89,6 @@ class Update(
 
                 }
                 updateSQL = "$updateSQL modified_by = ? where id = ? returning *"
-                println(updateSQL)
                 val updateStatement = conn.prepareCall(
                         updateSQL
                 )

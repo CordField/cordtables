@@ -66,13 +66,13 @@ class List(
                 tableName = "admin.group_row_access",
                 columns = arrayOf(
                     "id",
-                    "group",
-                    "tableName",
+                    "group_id",
+                    "table_name",
                     "row",
-                    "createdAt",
-                    "createdBy",
-                    "modifiedAt",
-                    "modifiedBy"
+                    "created_at",
+                    "created_by",
+                    "modified_at",
+                    "modified_by"
                 )
             )
         ).query
@@ -84,7 +84,7 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var group: Int? = jdbcResult.getInt("group")
+                var group: Int? = jdbcResult.getInt("group_id")
                 if (jdbcResult.wasNull()) group = null
 
                 var tableName: String? = jdbcResult.getString("table_name")
