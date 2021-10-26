@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
-import java.util.*
 import javax.sql.DataSource
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -42,7 +41,7 @@ class Migrate(
 
 
 
-    @PostMapping("migrate/sc-language")
+    @PostMapping("migrate/sc-languages")
     @ResponseBody
     fun registerHandler() {
 

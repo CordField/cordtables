@@ -6,7 +6,6 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.queryForObject
 import org.springframework.stereotype.Component
 import java.io.FileReader
 import java.io.FileWriter
@@ -69,8 +68,8 @@ class Migration(
 //    init {
 //        for (i in 1..10){
 //            jdbcTemplate.update("""
-//                insert into sc.languages_ex(
-//                    language_name, iso, island, province, created_by, modified_by, owning_person, owning_group
+//                insert into sc.languages(
+//                    name, iso, island, province, created_by, modified_by, owning_person, owning_group
 //                ) values (
 //                    ?, 'abc', 'US', 'Texarkana', 1, 1, 2, 1
 //                );
@@ -81,7 +80,7 @@ class Migration(
 ////            if (i % 10 == 0){
 ////                jdbcTemplate.update("""
 ////                insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group)
-////	                values (3, 'sc.languages_ex', ?, 1, 1, 1, 1);
+////	                values (3, 'sc.languages', ?, 1, 1, 1, 1);
 ////            """.trimIndent(),
 ////                    i+2,
 ////                )
@@ -91,11 +90,11 @@ class Migration(
 
 //    init {
 //
-//        val items: List<MasterRow> = readCsvFile("./src/main/resources/local/master1.csv")
+//        val items: List<MasterRow> = readCsvFile("./src/main/resources/local/master2.csv")
 //
 //        items.forEach {
 //
-//            val language_name = it.language_name.substringBefore('[').trim()
+//            val name = it.language_name.substringBefore('[').trim()
 //
 //            val least_reached_progress_level = if (it.least_reached_progress_level.isEmpty()) null else it.least_reached_progress_level
 //
@@ -138,9 +137,9 @@ class Migration(
 //
 //            this.ds.connection.use { conn ->
 //                val statement = conn.prepareStatement("""
-//                    insert into sc.languages_ex(
-//                        language_name,
-//                        iso,
+//                    insert into sc.languages(
+//                        name,
+//                        display_name,
 //
 //                        location_long,
 //                        island,
@@ -191,8 +190,8 @@ class Migration(
 //                    );
 //                """.trimIndent())
 //
-//                statement.setString(1, language_name)
-//                statement.setString(2, it.iso)
+//                statement.setString(1, name)
+//                statement.setString(2, it.language_name)
 //
 //                statement.setString(3, it.location_details)
 //                statement.setString(4, it.island)
@@ -207,27 +206,27 @@ class Migration(
 //                statement.setObject(10, least_reached_progress_level, java.sql.Types.OTHER)
 //                statement.setFloat(11, it.least_reached_progress_value)
 //
-//                statement.setObject(12, partner_interest_level, java.sql.Types.OTHER)
+//                statement.setObject(12, partner_interest_level!!.filter{!it.isWhitespace()}, java.sql.Types.OTHER)
 //                statement.setFloat(13, it.partner_interest_value)
 //                statement.setString(14, it.partner_interest_description)
 //                statement.setString(15, it.partner_interest_source)
 //
-//                statement.setObject(16, multi_lang_leverage_linguistic_level, java.sql.Types.OTHER)
+//                statement.setObject(16, multi_lang_leverage_linguistic_level!!.filter{!it.isWhitespace()}, java.sql.Types.OTHER)
 //                statement.setFloat(17, it.multi_lang_leverage_linguistic_value)
 //                statement.setString(18, it.multi_lang_leverage_linguistic_description)
 //                statement.setString(19, it.multi_lang_leverage_linguistic_source)
 //
-//                statement.setObject(20, community_interest_translation_level, java.sql.Types.OTHER)
+//                statement.setObject(20, community_interest_translation_level!!.filter{!it.isWhitespace()}, java.sql.Types.OTHER)
 //                statement.setFloat(21, it.community_interest_translation_value)
 //                statement.setString(22, it.community_interest_translation_description)
 //                statement.setString(23, it.community_interest_translation_source)
 //
-//                statement.setObject(24, lwc_access_level, java.sql.Types.OTHER)
+//                statement.setObject(24, lwc_access_level!!.filter{!it.isWhitespace()}, java.sql.Types.OTHER)
 //                statement.setFloat(25, it.lwc_access_value)
 //                statement.setString(26, it.lwc_access_description)
 //                statement.setString(27, it.lwc_access_source)
 //
-//                statement.setObject(28, begin_work_geo_challenges_level, java.sql.Types.OTHER)
+//                statement.setObject(28, begin_work_geo_challenges_level!!.filter{!it.isWhitespace()}, java.sql.Types.OTHER)
 //                statement.setFloat(29, it.begin_work_geo_challenges_value)
 //                statement.setString(30, it.begin_work_geo_challenges_description)
 //                statement.setString(31, it.begin_work_geo_challenges_source)

@@ -1,0 +1,69 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.both {
+  padding-top: 5px;
+  padding-left: 15px;
+  padding-right: 2px;
+  padding-bottom: 5px;
+}
+
+.header {
+  /* border: 1px solid blue; */
+
+  color: white;
+  background-color: #255dab;
+
+  font-weight: normal;
+  /* padding: 12px 5px 12px 5px; */
+  /* text-align: center; */
+  /* background-color: #4caf50; */
+  color: white;
+  cursor: default;
+  border-right: 1px solid white;
+}
+
+.data {
+  /* border: 1px solid red; */
+  /* padding: 3px; */
+  /* margin: 3px; */
+  border-right: 1px solid lightgray;
+}
+
+#value-view {
+  display: flex;
+  justify-content: space-between;
+}
+
+#value-edit {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-buttons {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+#save-icon {
+  color: green;
+}
+
+#cancel-icon {
+  color: red;
+}
+
+#value-span {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 3px;
+}
+
+#delete-span {
+  cursor: pointer;
+  color: red;
+}

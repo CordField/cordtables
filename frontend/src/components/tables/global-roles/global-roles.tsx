@@ -104,7 +104,7 @@ export class GlobalRoles {
 
     if (updateResponse.error == ErrorType.NoError) {
       const result = await fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('role/read', { token: globals.globalStore.state.token });
-      this.globalRoles = result.data.sort((a, b) => a.id - b.id);
+      this.globalRoles = result.data?.sort((a, b) => a.id - b.id);
       return true;
     } else {
       alert(updateResponse.error);
@@ -147,7 +147,7 @@ export class GlobalRoles {
     fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('role/read', {
       token: globals.globalStore.state.token,
     }).then(res => {
-      this.globalRoles = res.data.sort((a, b) => a.id - b.id);
+      this.globalRoles = res.data?.sort((a, b) => a.id - b.id);
     });
   }
   render() {

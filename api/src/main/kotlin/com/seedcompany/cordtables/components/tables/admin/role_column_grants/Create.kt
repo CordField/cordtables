@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.role_column_grants
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.people.PeopleCreateResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -41,6 +42,7 @@ class Create(
     @ResponseBody
     fun CreateHandler(@RequestBody req: GlobalRoleColumnGrantsCreate): CreateGlobalRoleColumnGrantsResponse {
 
+        if (!util.isAdmin(req.token)) return CreateGlobalRoleColumnGrantsResponse(ErrorType.AdminOnly, null)
         println("req: $req")
         var errorType = ErrorType.UnknownError
         var insertedGlobalRole: GlobalRoleColumnGrantsCreate? = null

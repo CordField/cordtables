@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.users
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.languageex.CreateLanguageExResponse
+import com.seedcompany.cordtables.components.tables.admin.roles.CreateGlobalRoleResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -55,6 +55,9 @@ class Create(
 
         if (req.token == null) return AdminUserCreateResponse(ErrorType.TokenNotFound, null)
         if (!util.isAdmin(req.token)) return AdminUserCreateResponse(ErrorType.AdminOnly, null)
+
+        if (!util.userHasCreatePermission(req.token, "admin.users"))
+            return AdminUserCreateResponse(ErrorType.DoesNotHaveCreatePermission, null)
 
         println("req: $req")
         var insertedAdminUser: AdminUser? = null
