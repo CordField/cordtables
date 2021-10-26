@@ -24,7 +24,7 @@ data class CreateGRTPermissionsResponse(
     val data: GlobalRolesTablePermissions?
 )
 data class CreateGRTPermissionsRequest(
-    val token: String,
+
         val insertedFields: InsertableGRTPFields,
         val token: String,
 )
@@ -42,7 +42,6 @@ class Create(
     @ResponseBody
     fun CreateHandler(@RequestBody req: CreateGRTPermissionsRequest): CreateGRTPermissionsResponse {
 
-        if (!util.isAdmin(req.token)) return CreateGRTPermissionsResponse(ErrorType.AdminOnly, null)
         println("req: $req")
         var errorType = ErrorType.UnknownError
         var newGRTPermission: GlobalRolesTablePermissions? = null

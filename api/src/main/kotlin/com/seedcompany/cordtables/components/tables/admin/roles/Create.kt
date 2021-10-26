@@ -120,8 +120,6 @@ class Create(
                     if(insertStatementResult.wasNull()) owning_group = null
                     var owning_person: Int? = insertStatementResult.getInt("owning_person")
                     if(insertStatementResult.wasNull()) owning_person = null
-                    var chat: Int? = insertStatementResult.getInt("chat")
-                    if(insertStatementResult.wasNull()) chat = null
                     var created_at: String? = insertStatementResult.getString("created_at")
                     if(insertStatementResult.wasNull()) created_at = null
                     var modified_at: String? = insertStatementResult.getString("modified_at")
@@ -134,8 +132,7 @@ class Create(
                             modified_by = modified_by,
                             name = name,
                             owning_group = owning_group,
-                            owning_person = owning_person,
-                            chat = chat)
+                            owning_person = owning_person)
                     println("newly inserted id: $id")
                 }
             }

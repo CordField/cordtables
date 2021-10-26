@@ -57,7 +57,6 @@ export class GlobalRoles {
     name: null,
     owning_group: null,
     owning_person: null,
-    chat: null,
   };
   nonEditableColumns = ['id', 'modified_at', 'created_at', 'created_by', 'modified_by'];
   @State() globalRoles: GlobalRole[] = [];
@@ -66,7 +65,6 @@ export class GlobalRoles {
   @State() success: string;
   @State() showNewForm = false;
   insertFieldChange(event, fieldName) {
-    console.log(fieldName, event.target.value);
     this.insertedFields[fieldName] = event.target.value;
   }
   getInputCell(fieldName) {

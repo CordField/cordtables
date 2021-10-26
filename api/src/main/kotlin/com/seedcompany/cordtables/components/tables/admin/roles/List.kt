@@ -22,7 +22,6 @@ data class Role(
         val name: String?,
         val owning_group: Int?,
         val owning_person:Int?,
-        val chat: Int?,
 )
 
 data class ListRoleRequest(
@@ -131,13 +130,7 @@ class List(
                         when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) then owning_person 
                         when owning_person = (select person from admin.tokens where token = :token) then owning_person 
                         else null 
-                    end as owning_person,
-                    case
-                        when 'chat' in (select column_name from column_level_access) then chat 
-                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))  then chat 
-                        when owning_person = (select person from admin.tokens where token = :token) then chat 
-                        else null 
-                    end as chat         
+                    end as owning_person       
                     from admin.roles 
                     where id in (select row from row_level_access) or 
                     (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
@@ -159,15 +152,12 @@ class List(
                     if(listStatementResult.wasNull()) owning_group = null
                     var owning_person: Int? = listStatementResult.getInt("owning_person")
                     if(listStatementResult.wasNull()) owning_person = null
-                    var chat: Int? = listStatementResult.getInt("chat")
-                    if(listStatementResult.wasNull()) chat = null
                     var created_at: String? = listStatementResult.getString("created_at")
                     if(listStatementResult.wasNull()) created_at = null
                     var modified_at: String? = listStatementResult.getString("modified_at")
                     if(listStatementResult.wasNull()) modified_at = null
                     data.add(Role(
                             id = id,
-                            chat = chat,
                             owning_group = owning_group,
                             owning_person = owning_person,
                             created_at = created_at,

@@ -107,15 +107,12 @@ class Update(
                     if(updateStatementResult.wasNull()) owning_group = null
                     var owning_person: Int? = updateStatementResult.getInt("owning_person")
                     if(updateStatementResult.wasNull()) owning_person = null
-                    var chat: Int? = updateStatementResult.getInt("chat")
-                    if(updateStatementResult.wasNull()) chat = null
                     var created_at: String? = updateStatementResult.getString("created_at")
                     if(updateStatementResult.wasNull()) created_at = null
                     var modified_at: String? = updateStatementResult.getString("modified_at")
                     if(updateStatementResult.wasNull()) modified_at = null
                     updatedRole = Role(
                             id = id,
-                            chat = chat,
                             owning_group = owning_group,
                             owning_person = owning_person,
                             created_at = created_at,

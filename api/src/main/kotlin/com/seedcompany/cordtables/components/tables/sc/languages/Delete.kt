@@ -33,8 +33,8 @@ class Delete(
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScLanguagesDeleteRequest): ScLanguagesDeleteResponse {
 
-        if (req.token == null) return DeleteLanguageExResponse(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return DeleteLanguageExResponse(ErrorType.AdminOnly, null)
+        if (req.token == null) return ScLanguagesDeleteResponse(ErrorType.TokenNotFound, null)
+        if (!util.isAdmin(req.token)) return ScLanguagesDeleteResponse(ErrorType.AdminOnly, null)
 
         println("req: $req")
         var deletedLanguageExId: Int? = null

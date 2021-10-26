@@ -21,7 +21,6 @@ export interface GlobalRole {
   name: string;
   owning_group: number;
   owning_person: number;
-  chat: number;
 }
 
 export interface LanguageEx {
