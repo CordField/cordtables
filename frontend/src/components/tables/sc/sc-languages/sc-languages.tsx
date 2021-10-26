@@ -262,7 +262,6 @@ export class ScLanguages {
       updateFn: this.handleUpdate,
       selectOptions: [
         { display: `-`, value: '' },
-        { display: `-`, value: '' },
         { display: `0`, value: '0' },
         { display: `1`, value: '1' },
         { display: `2`, value: '2' },
