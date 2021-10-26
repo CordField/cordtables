@@ -208,7 +208,7 @@ export class LanguagesEx {
   }
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<UpdateLanguageExRequest, UpdateLanguageExResponse>('sc-languages/update', {
+    const updateResponse = await fetchAs<UpdateLanguageExRequest, UpdateLanguageExResponse>('language_ex/update', {
       token: globals.globalStore.state.token,
       updatedColumnValue: value,
       columnToUpdate: columnName,
@@ -216,8 +216,8 @@ export class LanguagesEx {
     });
 
     if (updateResponse.error == ErrorType.NoError) {
-      const result = await fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('sc-languages/read', { token: globals.globalStore.state.token });
-      this.languagesEx = result.data?.sort((a, b) => a.id - b.id);
+      const result = await fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('language_ex/read', { token: globals.globalStore.state.token });
+      this.languagesEx = result.data.sort((a, b) => a.id - b.id);
       return true;
     } else {
       alert(updateResponse.error);
@@ -225,7 +225,7 @@ export class LanguagesEx {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('sc-languages/delete', {
+    const result = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('language_ex/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -241,7 +241,7 @@ export class LanguagesEx {
     event.preventDefault();
     event.stopPropagation();
     console.log(this.insertedFields);
-    const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('sc-languages/create-read', {
+    const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('language_ex/create-read', {
       insertedFields: this.insertedFields,
       token: globals.globalStore.state.token,
     });
@@ -259,10 +259,10 @@ export class LanguagesEx {
   };
 
   componentWillLoad() {
-    fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('sc-languages/read', {
+    fetchAs<ReadLanguageExRequest, ReadLanguageExResponse>('language_ex/read', {
       token: globals.globalStore.state.token,
     }).then(res => {
-      this.languagesEx = res.data?.sort((a, b) => a.id - b.id);
+      this.languagesEx = res.data.sort((a, b) => a.id - b.id);
     });
   }
 

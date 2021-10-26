@@ -73,7 +73,7 @@ class Read(
                     "registry_of_dialects_code",
                     "sensitivity",
                     "sign_language_code",
-                    "sponsor_estimated_end_date",
+                    "sponsor_estimated_eng_date",
 
                     "prioritization",
                     "progress_bible",
@@ -183,8 +183,8 @@ class Read(
                 var sign_language_code: String? = jdbcResult.getString("sign_language_code")
                 if (jdbcResult.wasNull()) sign_language_code = null
 
-                var sponsor_estimated_end_date: String? = jdbcResult.getString("sponsor_estimated_end_date")
-                if (jdbcResult.wasNull()) sponsor_estimated_end_date = null
+                var sponsor_estimated_eng_date: String? = jdbcResult.getString("sponsor_estimated_eng_date")
+                if (jdbcResult.wasNull()) sponsor_estimated_eng_date = null
 
                 var prioritization: Double? = jdbcResult.getDouble("prioritization")
                 if (jdbcResult.wasNull()) prioritization = null
@@ -378,7 +378,7 @@ class Read(
                         registry_of_dialects_code = registry_of_dialects_code,
                         sensitivity = if (sensitivity == null) null else CommonSensitivity.valueOf(sensitivity),
                         sign_language_code = sign_language_code,
-                        sponsor_estimated_end_date = sponsor_estimated_end_date,
+                        sponsor_estimated_eng_date = sponsor_estimated_eng_date,
 
                         prioritization = prioritization,
                         progress_bible = progress_bible,

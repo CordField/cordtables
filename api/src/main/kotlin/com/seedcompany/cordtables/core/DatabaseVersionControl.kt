@@ -105,8 +105,6 @@ class DatabaseVersionControl(
         // sc
         runSqlFile("sql/schemas/sc/sc.schema.sql")
         runSqlFile("sql/schemas/sc/ethnologue.migration.sql")
-        runSqlFile("sql/schemas/sc/language.migration.sql")
-        runSqlFile("sql/schemas/sc/location.migration.sql")
 
         // bootstrap
         runSqlFile("sql/version-control/bootstrap.sql")

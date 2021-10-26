@@ -107,7 +107,7 @@ export class AdminUsers {
 
     if (updateResponse.error == ErrorType.NoError) {
       const result = await fetchAs<ListAdminUserRequest, ListAdminUserResponse>('table/admin-users/list', { token: globals.globalStore.state.token });
-      this.adminUsers = result.data?.sort((a, b) => a.id - b.id);
+      this.adminUsers = result.data.sort((a, b) => a.id - b.id);
       return true;
     } else {
       alert(updateResponse.error);
@@ -150,7 +150,7 @@ export class AdminUsers {
     fetchAs<ListAdminUserRequest, ListAdminUserResponse>('table/admin-users/list', {
       token: globals.globalStore.state.token,
     }).then(res => {
-      this.adminUsers = res.data?.sort((a, b) => a.id - b.id);
+      this.adminUsers = res.data.sort((a, b) => a.id - b.id);
     });
   }
 

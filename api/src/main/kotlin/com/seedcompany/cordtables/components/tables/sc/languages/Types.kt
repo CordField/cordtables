@@ -20,7 +20,7 @@ data class Language(
     val registry_of_dialects_code: String? = null,
     val sensitivity: CommonSensitivity? = null,
     val sign_language_code: String? = null,
-    val sponsor_estimated_end_date: String? = null,
+    val sponsor_estimated_eng_date: String? = null,
 
     val prioritization: Double? = null,
     val progress_bible: Boolean? = null,
@@ -94,7 +94,7 @@ data class LanguageInput(
     val registry_of_dialects_code: String? = null,
     val sensitivity: String? = null,
     val sign_language_code: String? = null,
-    val sponsor_estimated_end_date: String? = null,
+    val sponsor_estimated_eng_date: String? = null,
 
     val prioritization: Double? = null,
     val progress_bible: Boolean? = null,

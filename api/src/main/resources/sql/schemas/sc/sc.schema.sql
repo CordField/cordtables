@@ -105,6 +105,8 @@ create table sc.locations (
 	default_region int references sc.field_regions(id),
 	funding_account int references sc.funding_account(account_number),
 	iso_alpha_3 char(3),
+	name varchar(32) unique not null,
+	type location_type not null,
 
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -114,22 +116,6 @@ create table sc.locations (
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id)
-);
-
-create table sc.location_iso_country (
-    id int primary key not null references sc.locations(id),
-    inumeric int,
-    country VARCHAR(255),
-    alpha3 CHAR(3),
-    alpha2 CHAR(2),
-
-    created_at timestamp not null default CURRENT_TIMESTAMP,
-    created_by int not null references admin.people(id),
-    modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null references admin.people(id),
-    owning_person int not null references admin.people(id),
-    owning_group int not null references admin.groups(id),
-    peer int references admin.peers(id)
 );
 
 -- ORGANIZATION TABLES
@@ -329,7 +315,7 @@ create table sc.languages(
   registry_of_dialects_code varchar(32),
   sensitivity sensitivity,
   sign_language_code varchar(32),
-  sponsor_estimated_end_date timestamp,
+  sponsor_estimated_eng_date timestamp,
 
 --	language_name varchar(32),
 --	iso varchar(4),
@@ -433,7 +419,7 @@ create table sc.languages(
 --	registry_of_dialects_code varchar(32),
 --	sensitivity sensitivity,
 --	sign_language_code varchar(32),
---	sponsor_estimated_end_date timestamp,
+--	sponsor_estimated_eng_date timestamp,
 --
 --
 --  created_at timestamp not null default CURRENT_TIMESTAMP,

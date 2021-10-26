@@ -1,6 +1,7 @@
 package com.seedcompany.cordtables.core
 
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
@@ -23,6 +24,9 @@ class BootstrapDB(
 
     @Autowired
     val ds: DataSource,
+
+    @Autowired
+    val util: Utility,
 
     @Autowired
     val vc: DatabaseVersionControl,
