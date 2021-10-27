@@ -9,6 +9,37 @@ create type common.mime_type as enum (
   'C'
 );
 
+-- SITE TEXT --------------------------------------------------------------------------------
+
+create table common.site_text(
+  id serial primary key,
+
+  ethnologue int not null,
+
+  cord_tables varchar(32),
+  edit_mode varchar(32),
+  email_address varchar(32),
+  false_ varchar(32),
+  home varchar(32),
+  languages varchar(32),
+  login varchar(32),
+  logout varchar(32),
+  password varchar(32),
+  please_login_or_register varchar(128),
+  profile_page varchar(32),
+  register varchar(32),
+  sc_languages varchar(32),
+  true_ varchar(32),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
 
 -- todo

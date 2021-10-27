@@ -12,7 +12,6 @@ CREATE TABLE sil.language_codes (
   lang_status char(1) not null,  -- L(iving), (e)X(tinct)
   name varchar(75) not null,   -- Primary name in that country
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -29,7 +28,6 @@ CREATE TABLE sil.country_codes (
   name varchar(75) not null,  -- Country name
   area varchar(10) not null, -- World area
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -53,7 +51,6 @@ CREATE TABLE sil.language_index (
   country char(2) not null,   -- Country where this name is used
   name_type sil.language_name_type not null,
   name  varchar(75) not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -72,7 +69,6 @@ create table sil.table_of_languages (
   population int,
   provisional_code varchar(32),
   sensitivity common.sensitivity not null default 'High',
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -82,3 +78,5 @@ create table sil.table_of_languages (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id)
 );
+
+ALTER TABLE common.site_text ADD CONSTRAINT common_site_text_ethnologue_fk foreign key (ethnologue) references sil.table_of_languages(id);
