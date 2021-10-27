@@ -11,6 +11,11 @@ DECLARE
   vFieldOperationsDirectorRoleId int;
   vFieldOperationsDirectorsGroupId int;
 BEGIN
+ select count(id)
+ from admin.roles
+ into vRoleCount;
+
+ if vRoleCount = 0 then
   -- create roles and groups to replicate the cord field permissions
   -- use bootstrap.sql for examples
 
@@ -450,6 +455,8 @@ insert into admin.role_column_grants(access_level, column_name, role, table_name
       insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
       values ('Write', 'name', vFieldOperationsDirectorRoleId, 'common.organizations', 1, 1, 1, 1);
 
+    error_type := 'NoError';
+  end if;
 
 
 END; $$;
