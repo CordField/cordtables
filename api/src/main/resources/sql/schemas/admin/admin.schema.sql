@@ -30,7 +30,8 @@ create type admin.table_name as enum (
   'admin.tokens',
   'admin.users',
 
-  'common.chats',
+  'common.cell_channels',
+  'common.discussion_channels',
   'common.education_by_person',
   'common.education_entries',
   'common.locations',
@@ -43,6 +44,7 @@ create type admin.table_name as enum (
   'common.stages',
   'common.stage_notifications',
   'common.stage_options',
+  'common.threads',
   'common.tickets',
   'common.ticket_assignments',
   'common.ticket_feedback',
