@@ -1,4 +1,4 @@
--- system schema. org specific schema should go in an org-specific file.
+-- common schema. org specific schema should go in an org-specific file.
 
 -- ENUMS ----
 
@@ -34,20 +34,53 @@ create table common.scripture_references (
 
 -- CHAT ------------------------------------------------------------
 
-create table common.chats (
+create table common.discussion_channels (
 	id serial primary key,
 
-	-- chats are different, talk to architect. note that some are nullable
-	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null references admin.people(id),
-	peer int references admin.peers(id)
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
 
+create table common.cell_channels (
+	id serial primary key,
+
+  table_name admin.table_name not null,
+  column_name varchar(64) not null,
+  row int not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table common.threads (
+	id serial primary key,
+
+	channel int not null references common.discussion_channels(id),
+	content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );
 
 create table common.posts (
 	id serial primary key,
 
-	chat int not null references common.chats(id),
+	thread int not null references common.threads(id),
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -74,9 +107,8 @@ create table common.locations (
 
 	name varchar(255) unique not null,
 	sensitivity common.sensitivity not null default 'High',
-	type location_type not null,
+	type common.location_type not null,
 
-	
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -98,7 +130,6 @@ create table common.education_entries (
   degree varchar(64),
   institution varchar(64),
   major varchar(64),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -133,7 +164,7 @@ create table common.organizations (
 
 	name varchar(255) unique not null,
 	sensitivity common.sensitivity default 'High',
-	primary_location int references locations(id),
+	primary_location int references common.locations(id),
 
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -162,7 +193,7 @@ create type common.person_to_org_relationship_type as enum (
 create table common.people_to_org_relationships (
   id serial primary key,
 
-	org int not null references organizations(id),
+	org int not null references common.organizations(id),
 	person int not null references admin.people(id),
 
 	
@@ -200,8 +231,8 @@ create table common.projects (
 	group_id int not null references admin.groups(id),
 
 	name varchar(32) not null,
-	primary_org int references organizations(id),
-	primary_location int references locations(id),
+	primary_org int references common.organizations(id),
+	primary_location int references common.locations(id),
 	sensitivity common.sensitivity default 'High',
 
 	
