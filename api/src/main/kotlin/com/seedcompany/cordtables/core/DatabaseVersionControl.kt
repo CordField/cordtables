@@ -54,6 +54,7 @@ class DatabaseVersionControl(
 
     private fun updateHistoryTables(){
         // todo
+        runSqlFile("sql/version-control/history.sql")
     }
 
     private fun toVersion2() {
@@ -94,19 +95,15 @@ class DatabaseVersionControl(
 
         // admin
         runSqlFile("sql/schemas/admin/admin.schema.sql")
-        runSqlFile("sql/schemas/admin/admin.history.sql")
 
         // common
         runSqlFile("sql/schemas/common/common.schema.sql")
-        runSqlFile("sql/schemas/common/common.history.sql")
 
         // sil
         runSqlFile("sql/schemas/sil/sil.schema.sql")
-        runSqlFile("sql/schemas/sil/sil.history.sql")
 
         // sc
         runSqlFile("sql/schemas/sc/sc.schema.sql")
-        runSqlFile("sql/schemas/sc/sc.history.sql")
         runSqlFile("sql/schemas/sc/ethnologue.migration.sql")
 
         // bootstrap
@@ -144,6 +141,10 @@ class DatabaseVersionControl(
             }
 
             bootstrapStatement.close()
+        }
+
+        if (appConfig.thisServerUrl == "http://localhost:8080"){
+            runSqlFile("sql/dummy.data.sql")
         }
 
         jdbcTemplate.execute(

@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.role_table_permission
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.role_memberships.GlobalRoleMembershipsCreateReturn
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -23,6 +24,7 @@ data class CreateGRTPermissionsResponse(
     val data: GlobalRolesTablePermissions?
 )
 data class CreateGRTPermissionsRequest(
+    val token: String,
         val insertedFields: InsertableGRTPFields,
         val email: String
 )
@@ -40,6 +42,7 @@ class Create(
     @ResponseBody
     fun CreateHandler(@RequestBody req: CreateGRTPermissionsRequest): CreateGRTPermissionsResponse {
 
+        if (!util.isAdmin(req.token)) return CreateGRTPermissionsResponse(ErrorType.AdminOnly, null)
         println("req: $req")
         var errorType = ErrorType.UnknownError
         var newGRTPermission: GlobalRolesTablePermissions? = null
