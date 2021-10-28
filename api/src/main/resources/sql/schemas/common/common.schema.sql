@@ -224,7 +224,6 @@ create table common.people_to_org_relationships (
 
 	org int not null references common.organizations(id),
 	person int not null references admin.people(id),
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -252,28 +251,58 @@ create table common.people_to_org_relationship_type (
   peer int references admin.peers(id)
 );
 
--- PROJECTS ------------------------------------------------------------------
 
-create table common.projects (
-	id serial primary key,
-	group_id int not null references admin.groups(id),
+-- FILES & DIRECTORIES ----------------------------------------------------------
 
-	name varchar(32) not null,
-	primary_org int references common.organizations(id),
-	primary_location int references common.locations(id),
-	sensitivity common.sensitivity default 'High',
-	
+create table common.directories (
+  id serial primary key,
+
+	parent int references common.directories(id),
+  name varchar(255),
+	-- todo
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
-
-	unique (primary_org, name)
+  peer int references admin.peers(id)
 );
 
+create table common.files (
+  id serial primary key,
+
+  directory int not null references common.directories(id),
+	name varchar(255),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table common.file_versions (
+  id serial primary key,
+
+  category varchar(255),
+  mime_type mime_type not null,
+  name varchar(255) not null,
+  file int not null references common.files(id),
+  file_url varchar(255) not null,
+  file_size int, -- bytes
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
 
 -- TICKETS ----------------------------------------------------------------------
 
