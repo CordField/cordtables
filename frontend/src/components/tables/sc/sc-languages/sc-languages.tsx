@@ -54,13 +54,14 @@ export class ScLanguages {
       token: globals.globalStore.state.token,
       language: {
         id: id,
-        [columnName]: value,
+        [columnName]: value !== '' ? value : null,
       },
     });
 
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
+      this.languagesResponse = { error: ErrorType.NoError, languages: this.languagesResponse.languages.map(language => (language.id === id ? updateResponse.language : language)) };
       return true;
     } else {
       alert(updateResponse.error);
@@ -130,6 +131,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `true`, value: true },
         { display: 'false', value: false },
       ],
@@ -148,6 +150,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `true`, value: true },
         { display: 'false', value: false },
       ],
@@ -159,6 +162,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `true`, value: true },
         { display: 'false', value: false },
       ],
@@ -170,6 +174,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `true`, value: true },
         { display: 'false', value: false },
       ],
@@ -202,6 +207,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `Low`, value: 'Low' },
         { display: 'Medium', value: 'Medium' },
         { display: 'High', value: 'High' },
@@ -215,7 +221,7 @@ export class ScLanguages {
       updateFn: this.handleUpdate,
     },
     {
-      field: 'sponsor_estimated_eng_date',
+      field: 'sponsor_estimated_end_date',
       displayName: 'Estimated Date for the Sponsor to Engage',
       width: 100,
       editable: true,
@@ -255,6 +261,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `0`, value: '0' },
         { display: `1`, value: '1' },
         { display: `2`, value: '2' },
@@ -283,6 +290,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `1`, value: '1' },
         { display: `2`, value: '2' },
         { display: `3`, value: '3' },
@@ -303,6 +311,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `No Partner Interest`, value: 'NoPartnerInterest' },
         { display: `Some`, value: 'Some' },
         { display: `Significant`, value: 'Significant' },
@@ -336,6 +345,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `None`, value: 'None' },
         { display: `Some`, value: 'Some' },
         { display: `Significant`, value: 'Significant' },
@@ -371,6 +381,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `None`, value: 'None' },
         { display: `Some`, value: 'Some' },
         { display: `Significant`, value: 'Significant' },
@@ -406,6 +417,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `No Interest`, value: 'NoInterest' },
         { display: `Some`, value: 'Some' },
         { display: `Significant`, value: 'Significant' },
@@ -439,6 +451,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `No Interest`, value: 'NoInterest' },
         { display: `Some`, value: 'Some' },
         { display: `Expressed Need`, value: 'ExpressedNeed' },
@@ -473,6 +486,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `Full Access`, value: 'FullAccess' },
         { display: `Vast Majority`, value: 'VastMajority' },
         { display: `Large Majority`, value: 'LargeMajority' },
@@ -509,6 +523,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `None`, value: 'None' },
         { display: `Very Difficult`, value: 'VeryDifficult' },
         { display: `Difficult`, value: 'Difficult' },
@@ -543,6 +558,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
       selectOptions: [
+        { display: `-`, value: '' },
         { display: `None`, value: 'None' },
         { display: `Very Difficult`, value: 'VeryDifficult' },
         { display: `Difficult`, value: 'Difficult' },

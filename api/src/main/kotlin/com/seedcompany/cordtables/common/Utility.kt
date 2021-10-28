@@ -324,7 +324,7 @@ class Utility(
         return tableNames;
     }
 
-    fun updateField(token: String, table: String, column: String, id: Int, value: Any, cast: String? = "") {
+    fun updateField(token: String, table: String, column: String, id: Int, value: Any?, cast: String? = "") {
 
         if (userHasUpdatePermission(
                 token = token,

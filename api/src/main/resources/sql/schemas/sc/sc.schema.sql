@@ -32,7 +32,6 @@ create table sc.posts (
   shareability sc.post_shareability not null,
   body text not null,
 
-	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -50,7 +49,6 @@ create table sc.funding_account (
 
 	account_number int unique not null,
 	name varchar(32),
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -69,7 +67,6 @@ create table sc.field_zone (
 
 	director int references admin.people(id),
 	name varchar(32) unique not null,
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -87,7 +84,6 @@ create table sc.field_regions (
 	director int references admin.people(id),
 	name varchar(32) unique not null,
 
-	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -106,9 +102,8 @@ create table sc.locations (
 	funding_account int references sc.funding_account(account_number),
 	iso_alpha_3 char(3),
 	name varchar(32) unique not null,
-	type location_type not null,
+	type common.location_type not null,
 
-	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -126,8 +121,6 @@ create table sc.organizations (
 	neo4j_id varchar(32),
 
 	address varchar(255),
-	base64 varchar(32) unique not null,
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -143,7 +136,6 @@ create table sc.organization_locations(
 
 	organization int not null references sc.organizations(id),
 	location int not null references sc.locations(id),
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -194,7 +186,6 @@ create table sc.partners (
 	point_of_contact int references admin.people(id),
 	types sc.partner_types[],
 
-	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -313,9 +304,9 @@ create table sc.languages(
   least_of_these_reason varchar(255),
   population_override int,
   registry_of_dialects_code varchar(32),
-  sensitivity sensitivity,
+  sensitivity common.sensitivity,
   sign_language_code varchar(32),
-  sponsor_estimated_eng_date timestamp,
+  sponsor_estimated_end_date timestamp,
 
 --	language_name varchar(32),
 --	iso varchar(4),
@@ -400,42 +391,10 @@ create table sc.languages(
   peer int references admin.peers(id)
 );
 
--- An extension table, but has a reference to common
--- sc languages may different from other org's language listings
---create table sc.languages (
---    neo4j_id varchar(32) unique,
---	id serial primary key,
---	ethnologue int references sil.table_of_languages(id),
---	name varchar(255) unique not null,
---	display_name varchar(255) unique not null,
---	display_name_pronunciation varchar(255),
---	tags text[],
---	preset_inventory bool,
---	is_dialect bool,
---	is_sign_language bool,
---	is_least_of_these bool,
---	least_of_these_reason varchar(255),
---	population_override int,
---	registry_of_dialects_code varchar(32),
---	sensitivity sensitivity,
---	sign_language_code varchar(32),
---	sponsor_estimated_eng_date timestamp,
---
---
---  created_at timestamp not null default CURRENT_TIMESTAMP,
---  created_by int not null references admin.people(id),
---  modified_at timestamp not null default CURRENT_TIMESTAMP,
---  modified_by int not null references admin.people(id),
---  owning_person int not null references admin.people(id),
---  owning_group int not null references admin.groups(id),
---  peer int references admin.peers(id)
---);
-
 create table sc.language_goal_definitions (
 	id serial primary key,
 
 	-- todo
-
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -452,7 +411,6 @@ create table sc.language_locations (
 	language int not null references sc.languages(id),
 	location int not null references sc.locations(id),
 	-- todo
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -472,7 +430,6 @@ create table sc.language_goals (
 	goal int not null references sc.language_goal_definitions(id),
 	-- todo
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -492,7 +449,6 @@ create table sc.known_languages_by_person (
 
   person int not null references admin.people(id),
   known_language int not null references sc.languages(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -513,7 +469,6 @@ create table sc.people (
 	skills varchar(32)[],
 	status varchar(32),
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -531,7 +486,6 @@ create table sc.person_unavailabilities (
 	period_end timestamp not null,
 	description text,
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -541,60 +495,6 @@ create table sc.person_unavailabilities (
   peer int references admin.peers(id)
 );
 
--- FILES & DIRECTORIES ----------------------------------------------------------
-
-create table sc.directories (
-  id serial primary key,
-
-	parent int references sc.directories(id),
-  name varchar(255),
-	-- todo
-
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.files (
-  id serial primary key,
-
-  directory int not null references sc.directories(id),
-	name varchar(255),
-
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.file_versions (
-  id serial primary key,
-
-  category varchar(255),
-  mime_type mime_type not null,
-  name varchar(255) not null,
-  file int not null references sc.files(id),
-  file_url varchar(255) not null,
-  file_size int, -- bytes
-
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
 
 -- PROJECT TABLES ----------------------------------------------------------
 
@@ -632,7 +532,6 @@ create table sc.change_to_plans (
   status sc.change_to_plan_status,
   summary text,
   type sc.change_to_plan_type,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -654,10 +553,9 @@ create table sc.periodic_reports (
 
   directory int not null references sc.periodic_reports_directory(id),
   end_at timestamp not null,
-  reportFile int not null references sc.files(id),
+  reportFile int not null references common.files(id),
   start_at timestamp not null,
   type sc.periodic_report_type not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -670,10 +568,10 @@ create table sc.periodic_reports (
 
 -- extension table to common
 create table sc.projects (
-  id int primary key references common.projects(id),
+  id serial primary key,
   neo4j_id varchar(32),
 
-	base64 varchar(32) not null,
+	name varchar(32) not null,
 	change_to_plan int not null default 1 references sc.change_to_plans(id),
 	active bool,
 	department varchar(255),
@@ -687,11 +585,10 @@ create table sc.projects (
 	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	posts_directory int references sc.posts_directory(id),
 	primary_location int references sc.locations(id),
-	root_directory int references sc.directories(id),
+	root_directory int references common.directories(id),
 	status sc.project_status,
 	status_changed_at timestamp,
 	step sc.project_step,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -701,7 +598,7 @@ create table sc.projects (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id),
 
-	unique (base64, change_to_plan)
+	unique (id, change_to_plan)
 );
 
 create table sc.pinned_projects (
@@ -713,13 +610,11 @@ create table sc.pinned_projects (
 create table sc.partnerships (
   id serial primary key,
 
-  base64 varchar(32) unique not null,
   project int not null references sc.projects(id),
   partner int not null references sc.organizations(id),
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
-  agreement int references sc.file_versions(id),
-
+  agreement int references common.file_versions(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -744,13 +639,12 @@ create type common.budget_status as enum (
 create table sc.budgets (
   id serial primary key,
 
-  base64 varchar(32) not null,
+  neo4j_id varchar(32) not null,
   change_to_plan int not null default 1,
-  project int not null references common.projects(id),
+  project int not null references sc.projects(id),
   status common.budget_status,
-  universal_template int references sc.file_versions(id),
+  universal_template int references common.file_versions(id),
   universal_template_file_url varchar(255),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -760,20 +654,19 @@ create table sc.budgets (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id),
 
-  unique (base64, change_to_plan)
+  unique (id, change_to_plan)
 );
 
 create table sc.budget_records (
 	id serial primary key,
 
-  base64 varchar(32) not null,
+  neo4j_id varchar(32) not null,
   budget int not null references sc.budgets(id),
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
   amount decimal,
   fiscal_year int,
   partnership int references sc.partnerships(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -795,7 +688,6 @@ create table sc.project_locations (
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   location int not null references sc.locations(id),
   project int not null references sc.projects(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -827,7 +719,7 @@ create type common.project_engagement_tag as enum (
 create table sc.language_engagements (
   id serial primary key,
 
-  base64 varchar(32) not null,
+  neo4j_id varchar(32) not null,
 	project int not null references sc.projects(id),
 	ethnologue int not null references sil.table_of_languages(id),
 	change_to_plan int not null default 1 references sc.change_to_plans(id),
@@ -845,12 +737,11 @@ create table sc.language_engagements (
 	paratext_registry varchar(32),
 	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	pnp varchar(255),
-	pnp_file int references sc.file_versions(id),
+	pnp_file int references common.file_versions(id),
 	product_engagement_tag common.project_engagement_tag,
 	start_date timestamp,
 	start_date_override timestamp,
 	status common.engagement_status,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -898,7 +789,7 @@ create type common.product_type as enum (
 create table sc.products (
   id serial primary key,
 
-  base64 varchar(32) not null,
+  neo4j_id varchar(32) not null,
   name varchar(64),
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
@@ -906,7 +797,6 @@ create table sc.products (
   methodologies common.product_methodologies[],
   purposes common.product_purposes[],
   type common.product_type,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -916,7 +806,7 @@ create table sc.products (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id),
 
-  unique (base64, change_to_plan)
+  unique (id, change_to_plan)
 );
 
 create table sc.product_scripture_references (
@@ -924,7 +814,6 @@ create table sc.product_scripture_references (
   scripture_reference int not null references common.scripture_references(id),
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -966,7 +855,7 @@ create table sc.internship_engagements (
 	disbursement_complete_date timestamp,
 	end_date timestamp,
 	end_date_override timestamp,
-	growth_plan int references sc.file_versions(id),
+	growth_plan int references common.file_versions(id),
 	initial_end_date timestamp,
 	intern int references admin.people(id),
 	last_reactivated_at timestamp,
@@ -978,7 +867,6 @@ create table sc.internship_engagements (
 	start_date timestamp,
 	start_date_override timestamp,
 	status common.engagement_status,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1000,7 +888,6 @@ create table sc.ceremonies (
 	estimated_date timestamp,
 	is_planned bool,
 	type varchar(255),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1035,7 +922,6 @@ create table common.organization_relationships (
 
   from_org int not null references sc.organizations(id),
   to_org int not null references sc.organizations(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1053,7 +939,6 @@ create table sc.partner_performance (
 
   organization int unique not null references sc.organizations(id),
   -- todo
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1070,7 +955,6 @@ create table sc.partner_finances (
   organization int unique not null references sc.organizations(id),
   -- todo
   
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1086,7 +970,6 @@ create table sc.partner_reporting (
   organization int unique not null references sc.organizations(id),
   -- todo
   
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1101,7 +984,6 @@ create table sc.partner_translation_progress (
 
   organization int unique not null references sc.organizations(id),
   -- todo
-  
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1120,7 +1002,6 @@ create table sc.partner_notes (
   note text not null,
   -- todo
   
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id)
@@ -1132,7 +1013,6 @@ create table common.organization_transitions (
   organization int unique not null references sc.organizations(id),
   transition_type common.organization_transition_options not null,
   -- todo
-  
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1150,7 +1030,6 @@ create table common.person_to_person_relationships (
   to_person int not null references admin.people(id),
   -- todo
   
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1166,7 +1045,6 @@ create table common.people_transitions (
   person int not null references admin.people(id),
   transition_type common.people_transition_options not null,
   -- todo
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1182,7 +1060,6 @@ create table common.involvements (
 
   organization int not null references common.organizations(id),
   type common.involvement_options not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
