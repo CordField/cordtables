@@ -1,12 +1,9 @@
-package com.seedcompany.cordtables.components.tables.sc.locations
+package com.seedcompany.cordtables.components.tables.common.locations
 
-import com.seedcompany.cordtables.components.tables.common.locations.Create as CommonCreate
-import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsCreateRequest
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -16,27 +13,24 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class ScLocationsCreateRequest(
+data class CommonLocationsCreateRequest(
     val token: String? = null,
-    val location: ScLocationInput,
+    val location: CommonLocationInput,
 )
 
-data class ScLocationsCreateResponse(
+data class CommonLocationsCreateResponse(
     val error: ErrorType,
     val id: Int? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("ScLocationsCreate")
+@Controller("CommonLocationsCreate")
 class Create(
     @Autowired
     val util: Utility,
 
     @Autowired
     val ds: DataSource,
-
-    @Autowired
-    val commonCreate: CommonCreate,
 
     @Autowired
     val update: Update,
@@ -46,34 +40,22 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-locations/create")
+    @PostMapping("common-locations/create")
     @ResponseBody
-    fun createHandler(@RequestBody req: ScLocationsCreateRequest): ScLocationsCreateResponse {
+    fun createHandler(@RequestBody req: CommonLocationsCreateRequest): CommonLocationsCreateResponse {
 
-        if (req.token == null) return ScLocationsCreateResponse(error = ErrorType.InputMissingToken, null)
-        if (req.location.name == null) return ScLocationsCreateResponse(error = ErrorType.InputMissingName, null)
-        if(req.location.type == null) return ScLocationsCreateResponse(error = ErrorType.InputMissingColumn, null)
+        if (req.token == null) return CommonLocationsCreateResponse(error = ErrorType.InputMissingToken, null)
+        if (req.location.name == null) return CommonLocationsCreateResponse(error = ErrorType.InputMissingName, null)
+        if(req.location.type == null) return CommonLocationsCreateResponse(error = ErrorType.InputMissingColumn, null)
 
         // check enums and error out if needed
         if (!enumContains<LocationType>(req.location.type)) {
-            return ScLocationsCreateResponse(
+            return CommonLocationsCreateResponse(
                 error = ErrorType.ValueDoesNotMap
             )
         }
 
         // create row with required fields, use id to update cells afterwards one by one
-
-        var createResponse = commonCreate.createHandler(
-            CommonLocationsCreateRequest(
-              token = req.token,
-              location = req.location as CommonLocationInput,
-            )
-        )
-
-        if (createResponse.error != ErrorType.NoError) {
-          return ScLocationsCreateResponse(createResponse.error)
-        }
-
 
         val id = jdbcTemplate.queryForObject(
             """
@@ -119,17 +101,17 @@ class Create(
         req.location.id = id
 
         val updateResponse = update.updateHandler(
-            ScLocationsUpdateRequest(
+            CommonLocationsUpdateRequest(
                 token = req.token,
                 location = req.location,
             )
         )
 
         if (updateResponse.error != ErrorType.NoError) {
-            return ScLocationsCreateResponse(updateResponse.error)
+            return CommonLocationsCreateResponse(updateResponse.error)
         }
 
-        return ScLocationsCreateResponse(error = ErrorType.NoError, id = id)
+        return CommonLocationsCreateResponse(error = ErrorType.NoError, id = id)
     }
 
 

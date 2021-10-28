@@ -1,9 +1,12 @@
 package com.seedcompany.cordtables.components.tables.sc.locations
 
+import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsUpdateRequest
+import com.seedcompany.cordtables.components.tables.common.locations.Update as CommonUpdate
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
+import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -29,6 +32,9 @@ class Update(
     val util: Utility,
 
     @Autowired
+    val commonUpdate: CommonUpdate,
+
+    @Autowired
     val ds: DataSource,
 ) {
     @PostMapping("sc-locations/update")
@@ -45,6 +51,17 @@ class Update(
             )
         }
 
+        val updateResponse = commonUpdate.updateHandler(
+            CommonLocationsUpdateRequest(
+                token = req.token,
+                location = req.location as CommonLocationInput,
+            )
+        )
+
+        if (updateResponse.error != ErrorType.NoError) {
+            return ScLocationsUpdateResponse(updateResponse.error)
+        }
+
         if (req.location.neo4j_id != null) util.updateField(
             token = req.token,
             table = "sc.locations",
@@ -53,10 +70,18 @@ class Update(
             value = req.location.neo4j_id,
         )
 
-        if (req.location.funding_account != null) util.updateField(
+        if (req.location.name != null) util.updateField(
             token = req.token,
             table = "sc.locations",
             column = "name",
+            id = req.location.id!!,
+            value = req.location.name,
+        )
+
+        if (req.location.funding_account != null) util.updateField(
+            token = req.token,
+            table = "sc.locations",
+            column = "funding_account",
             id = req.location.id!!,
             value = req.location.funding_account,
         )
@@ -77,12 +102,12 @@ class Update(
             value = req.location.iso_alpha_3,
         )
 
-        if (req.location.name != null) util.updateField(
+        if (req.location.funding_account != null) util.updateField(
             token = req.token,
             table = "sc.languages",
             column = "funding_account",
             id = req.location.id!!,
-            value = req.location.name,
+            value = req.location.funding_account,
         )
 
         if (req.location.type != null) util.updateField(
