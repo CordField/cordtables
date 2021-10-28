@@ -289,7 +289,7 @@ create table common.file_versions (
   id serial primary key,
 
   category varchar(255),
-  mime_type mime_type not null,
+  mime_type common.mime_type not null,
   name varchar(255) not null,
   file int not null references common.files(id),
   file_url varchar(255) not null,
@@ -316,21 +316,7 @@ create table common.tickets (
 	id serial primary key,
 
 	ticket_status common.ticket_status not null default 'Open',
-	title varchar(125) not null,
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table common.work_orders(
-	id serial primary key,
-
-	ticket int references common.tickets(id),
+	parent int,
 	content text not null,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -342,11 +328,13 @@ create table common.work_orders(
   peer int references admin.peers(id)
 );
 
+ALTER TABLE common.tickets ADD CONSTRAINT common_tickets_parent_fk foreign key (parent) references common.tickets(id);
+
 create table common.ticket_assignments (
 	id serial primary key,
 
 	ticket int not null references common.tickets(id),
-	person_id int not null references admin.people(id),
+	person int not null references admin.people(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -361,7 +349,11 @@ create table common.work_records(
 	id serial primary key,
 
 	person int not null references admin.people(id),
-	hours decimal not null,
+	hours int not null,
+	minutes int default 0,
+	total_time decimal generated always as (
+	  hours + (minutes / 60)
+	) stored,
 	comment text,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -377,7 +369,11 @@ create table common.work_estimates(
 	id serial primary key,
 
 	person int not null references admin.people(id),
-	hours decimal not null,
+	hours int not null,
+	minutes int default 0,
+	total_time decimal generated always as (
+    hours + (minutes / 60)
+  ) stored,
 	comment text,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -389,11 +385,9 @@ create table common.work_estimates(
   peer int references admin.peers(id)
 );
 
--- expected to be used only by admins
-create table common.ticket_feedback_options (
-  id serial primary key,
-  option text,
-  peer int references admin.peers(id)
+create type common.ticket_feedback_options as enum (
+  'Satisfied',
+  'Unsatisfied'
 );
 
 create table common.ticket_feedback(
@@ -401,7 +395,7 @@ create table common.ticket_feedback(
 
 	ticket int references common.tickets(id),
 	stakeholder int not null references admin.people(id),
-	feedback int not null references common.ticket_feedback_options,
+	feedback common.ticket_feedback_options not null,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -431,7 +425,6 @@ create table common.workflows(
 create table common.stages(
 	id serial primary key,
 
-	workflow int not null references common.workflows(id),
 	title varchar(128) not null,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -443,22 +436,7 @@ create table common.stages(
   peer int references admin.peers(id)
 );
 
-create table common.work_order_templates(
-	id serial primary key,
-
-	stage int not null references common.stages(id),
-	content text not null,
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table common.stage_options(
+create table common.stage_flows(
 	id serial primary key,
 
 	from_stage int not null references common.stages(id),
@@ -473,11 +451,29 @@ create table common.stage_options(
   peer int references admin.peers(id)
 );
 
+create table common.stage_grants(
+	id serial primary key,
+
+	stage int not null references common.stages(id),
+	role int not null references admin.roles(id),
+	group_id int not null references admin.groups(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
 create table common.stage_notifications(
 	id serial primary key,
 
 	stage int not null references common.stages(id),
-	email varchar(64) not null,
+	on_enter bool default false,
+	on_exit bool default false,
+	person int references admin.people(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
