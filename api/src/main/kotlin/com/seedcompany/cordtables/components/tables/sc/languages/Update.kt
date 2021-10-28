@@ -191,6 +191,7 @@ class Update(
                         column = "preset_inventory",
                         id = req.id,
                         value = req.value,
+                        cast = "::boolean"
                 )
             }
 
@@ -201,6 +202,7 @@ class Update(
                         column = "is_dialect",
                         id = req.id,
                         value = req.value,
+                        cast = "::boolean"
                 )
             }
 
@@ -211,6 +213,7 @@ class Update(
                         column = "is_sign_language",
                         id = req.id,
                         value = req.value,
+                        cast = "::boolean"
                 )
             }
 
@@ -221,6 +224,7 @@ class Update(
                         column = "is_least_of_these",
                         id = req.id,
                         value = req.value,
+                        cast = "::boolean"
                 )
             }
             "least_of_these_reason" -> {
@@ -291,6 +295,7 @@ class Update(
                         column = "progress_bible",
                         id = req.id,
                         value = req.value,
+                        cast = "::boolean"
                 )
             }
 
