@@ -97,7 +97,7 @@ class Create(
         )
 
         req.location.id = id
-
+        println("==========> 1 ==================>")
         val updateResponse = update.updateHandler(
             CommonLocationsUpdateRequest(
                 token = req.token,

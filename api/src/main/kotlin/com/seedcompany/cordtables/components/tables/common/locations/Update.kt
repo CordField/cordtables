@@ -53,13 +53,13 @@ class Update(
             value = req.location.name,
         )
 
-
         if (req.location.sensitivity != null) util.updateField(
             token = req.token,
             table = "common.locations",
             column = "sensitivity",
             id = req.location.id!!,
             value = req.location.sensitivity,
+            cast = "::common.sensitivity"
         )
 
         if (req.location.type != null) util.updateField(
@@ -68,6 +68,7 @@ class Update(
             column = "type",
             id = req.location.id!!,
             value = req.location.type,
+            cast = "::common.location_type"
         )
 
 
@@ -94,6 +95,7 @@ class Update(
             id = req.location.id!!,
             value = req.location.peer,
         )
+        println("==========> 2 ==================>")
 
         return CommonLocationsUpdateResponse(ErrorType.NoError)
     }

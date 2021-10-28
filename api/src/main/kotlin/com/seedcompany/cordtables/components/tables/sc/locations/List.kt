@@ -83,8 +83,8 @@ class List(
                 var neo4j_id: String? = jdbcResult.getString("neo4j_id")
                 if (jdbcResult.wasNull()) neo4j_id = null
 
-                var defaultLegion: Int? = jdbcResult.getInt("default_legion")
-                if (jdbcResult.wasNull()) defaultLegion = null
+                var defaultRegion: Int? = jdbcResult.getInt("default_region")
+                if (jdbcResult.wasNull()) defaultRegion = null
 
                 var fundingAccount: Int? = jdbcResult.getInt("funding_account")
                 if (jdbcResult.wasNull()) fundingAccount = null
@@ -120,7 +120,7 @@ class List(
                     ScLocation(
                         id = id,
                         neo4j_id = neo4j_id,
-                        default_region = defaultLegion,
+                        default_region = defaultRegion,
                         name = name,
                         type = if (type == null) null else LocationType.valueOf(type),
                         funding_account = fundingAccount,

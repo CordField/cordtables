@@ -76,6 +76,7 @@ class Update(
             id = req.location.id!!,
             value = req.location.neo4j_id,
         )
+        println("==========> 4 ==================>")
 
         if (req.location.name != null) util.updateField(
             token = req.token,
@@ -85,6 +86,8 @@ class Update(
             value = req.location.name,
         )
 
+        println("==========> 5 ==================>")
+
         if (req.location.funding_account != null) util.updateField(
             token = req.token,
             table = "sc.locations",
@@ -92,6 +95,8 @@ class Update(
             id = req.location.id!!,
             value = req.location.funding_account,
         )
+
+        println("==========> 6 ==================>")
 
         if (req.location.default_region != null) util.updateField(
             token = req.token,
@@ -101,6 +106,8 @@ class Update(
             value = req.location.default_region,
         )
 
+        println("==========> 7 ==================>")
+
         if (req.location.iso_alpha_3 != null) util.updateField(
             token = req.token,
             table = "sc.locations",
@@ -108,14 +115,7 @@ class Update(
             id = req.location.id!!,
             value = req.location.iso_alpha_3,
         )
-
-        if (req.location.funding_account != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "funding_account",
-            id = req.location.id!!,
-            value = req.location.funding_account,
-        )
+        println("==========> 8 ==================>")
 
         if (req.location.type != null) util.updateField(
             token = req.token,
@@ -123,8 +123,10 @@ class Update(
             column = "type",
             id = req.location.id!!,
             value = req.location.type,
+            cast = "::common.location_type"
         )
 
+        println("==========> 9 ==================>")
 
         if (req.location.owning_person != null) util.updateField(
             token = req.token,
@@ -134,6 +136,8 @@ class Update(
             value = req.location.owning_person,
         )
 
+        println("==========> 10 ==================>")
+
         if (req.location.owning_group != null) util.updateField(
             token = req.token,
             table = "sc.locations",
@@ -142,6 +146,8 @@ class Update(
             value = req.location.owning_group,
         )
 
+        println("==========> 10 ==================>")
+
         if (req.location.peer != null) util.updateField(
             token = req.token,
             table = "sc.locations",
@@ -149,6 +155,9 @@ class Update(
             id = req.location.id!!,
             value = req.location.peer,
         )
+
+        println("==========> 12 ==================>")
+
 
         return ScLocationsUpdateResponse(ErrorType.NoError)
     }

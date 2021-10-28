@@ -1,7 +1,9 @@
 package com.seedcompany.cordtables.components.tables.sc.locations
 
+import com.seedcompany.cordtables.components.tables.common.locations.Delete as CommonDelete
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsDeleteRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -26,6 +28,10 @@ data class ScLocationsDeleteResponse(
 class Delete(
     @Autowired
     val util: Utility,
+
+    @Autowired
+    val commonDelete: CommonDelete,
+
     @Autowired
     val ds: DataSource,
 ) {
@@ -63,6 +69,18 @@ class Delete(
                 return ScLocationsDeleteResponse(ErrorType.SQLDeleteError, null)
             }
         }
+
+        val deleteResponse = commonDelete.deleteHandler(
+            CommonLocationsDeleteRequest(
+                token = req.token,
+                id = req.id
+            )
+        )
+
+        if(deleteResponse.error != ErrorType.NoError) {
+            return ScLocationsDeleteResponse(deleteResponse.error, deleteResponse.id)
+        }
+
         return ScLocationsDeleteResponse(ErrorType.NoError,deletedLocationExId)
     }
 }

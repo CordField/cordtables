@@ -211,7 +211,7 @@ export class ScLocations {
     });
 
     if (result.error === ErrorType.NoError) {
-      globals.globalStore.state.editMode = false;
+      // globals.globalStore.state.editMode = false;
       this.getList();
     }
   };
@@ -225,7 +225,7 @@ export class ScLocations {
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
-        {false && globals.globalStore.state.editMode === true && (
+        {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
             <div id="location-name-holder" class="form-input-item form-thing">
               <span class="form-thing">
