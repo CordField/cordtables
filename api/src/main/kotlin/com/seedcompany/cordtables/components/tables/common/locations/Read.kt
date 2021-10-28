@@ -1,5 +1,6 @@
-package com.seedcompany.cordtables.components.tables.sc.locations
+package com.seedcompany.cordtables.components.tables.common.locations
 
+import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -16,18 +17,18 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class ScLocationsReadRequest(
+data class CommonLocationsReadRequest(
     val token: String?,
     val id: Int? = null,
 )
 
-data class ScLocationsReadResponse(
+data class CommonLocationsReadResponse(
     val error: ErrorType,
-    val location: ScLocation? = null,
+    val location: CommonLocation? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("ScLocationsRead")
+@Controller("CommonLocationsRead")
 class Read(
     @Autowired
     val util: Utility,
@@ -40,12 +41,12 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-locations/read")
+    @PostMapping("common-locations/read")
     @ResponseBody
-    fun readHandler(@RequestBody req: ScLocationsReadRequest): ScLocationsReadResponse {
+    fun readHandler(@RequestBody req: CommonLocationsReadRequest): CommonLocationsReadResponse {
 
-        if (req.token == null) return ScLocationsReadResponse(ErrorType.TokenNotFound)
-        if (req.id == null) return ScLocationsReadResponse(ErrorType.MissingId)
+        if (req.token == null) return CommonLocationsReadResponse(ErrorType.TokenNotFound)
+        if (req.id == null) return CommonLocationsReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -53,16 +54,13 @@ class Read(
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "sc.locations",
+                tableName = "common.locations",
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
-                    "default_region",
-                    "funding_account",
-                    "iso_alpha_3",
                     "name",
                     "type",
+                    "sensitivity",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -81,23 +79,14 @@ class Read(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
-
-                var defaultRegion: Int? = jdbcResult.getInt("default_region")
-                if (jdbcResult.wasNull()) defaultRegion = null
-
-                var fundingAccount: Int? = jdbcResult.getInt("funding_account")
-                if (jdbcResult.wasNull()) fundingAccount = null
-
                 var name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) name = null
 
-                var isoAlpha3: String? = jdbcResult.getString("iso_alpha_3")
-                if (jdbcResult.wasNull()) isoAlpha3 = null
-
                 var type: String? = jdbcResult.getString("type")
                 if (jdbcResult.wasNull()) type = null
+
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -118,14 +107,11 @@ class Read(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val location =
-                    ScLocation(
+                    CommonLocation(
                         id = id,
-                        neo4j_id = neo4j_id,
-                        default_region = defaultRegion,
                         name = name,
                         type = if (type == null) null else LocationType.valueOf(type),
-                        funding_account = fundingAccount,
-                        iso_alpha_3 = isoAlpha3,
+                        sensitivity = if (sensitivity == null) null else CommonSensitivity.valueOf(sensitivity),
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,
@@ -134,14 +120,14 @@ class Read(
                         owning_group = owning_group
                     )
 
-                return ScLocationsReadResponse(ErrorType.NoError, location = location)
+                return CommonLocationsReadResponse(ErrorType.NoError, location = location)
 
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return ScLocationsReadResponse(ErrorType.SQLReadError)
+            return CommonLocationsReadResponse(ErrorType.SQLReadError)
         }
 
-        return ScLocationsReadResponse(error = ErrorType.UnknownError)
+        return CommonLocationsReadResponse(error = ErrorType.UnknownError)
     }
 }

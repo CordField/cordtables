@@ -1,9 +1,7 @@
-package com.seedcompany.cordtables.components.tables.sc.locations
+package com.seedcompany.cordtables.components.tables.common.locations
 
-import com.seedcompany.cordtables.components.tables.common.locations.Delete as CommonDelete
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsDeleteRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -13,35 +11,31 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class ScLocationsDeleteRequest(
+data class CommonLocationsDeleteRequest(
     val id: Int,
     val token: String?,
 )
 
-data class ScLocationsDeleteResponse(
+data class CommonLocationsDeleteResponse(
     val error: ErrorType,
     val id: Int?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("ScLocationsDelete")
+@Controller("CommonLocationsDelete")
 class Delete(
     @Autowired
     val util: Utility,
-
-    @Autowired
-    val commonDelete: CommonDelete,
-
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-locations/delete")
+    @PostMapping("common-locations/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: ScLocationsDeleteRequest): ScLocationsDeleteResponse {
+    fun deleteHandler(@RequestBody req: CommonLocationsDeleteRequest): CommonLocationsDeleteResponse {
 
-        if (req.token == null) return ScLocationsDeleteResponse(ErrorType.TokenNotFound, null)
+        if (req.token == null) return CommonLocationsDeleteResponse(ErrorType.TokenNotFound, null)
         if(!util.userHasDeletePermission(req.token, "sc.locations"))
-            return ScLocationsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
+            return CommonLocationsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
         var deletedLocationExId: Int? = null
@@ -50,7 +44,7 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from sc.locations where id = ? returning id"
+                    "delete from common.locations where id = ? returning id"
                 )
                 deleteStatement.setInt(1, req.id)
 
@@ -66,21 +60,9 @@ class Delete(
             catch (e:SQLException ){
                 println(e.message)
 
-                return ScLocationsDeleteResponse(ErrorType.SQLDeleteError, null)
+                return CommonLocationsDeleteResponse(ErrorType.SQLDeleteError, null)
             }
         }
-
-        val deleteResponse = commonDelete.deleteHandler(
-            CommonLocationsDeleteRequest(
-                token = req.token,
-                id = req.id
-            )
-        )
-
-        if(deleteResponse.error != ErrorType.NoError) {
-            return ScLocationsDeleteResponse(deleteResponse.error, deleteResponse.id)
-        }
-
-        return ScLocationsDeleteResponse(ErrorType.NoError,deletedLocationExId)
+        return CommonLocationsDeleteResponse(ErrorType.NoError,deletedLocationExId)
     }
 }
