@@ -6,7 +6,10 @@ import { globals } from '../../../../core/global.store';
 
 class CreateLanguageExRequest {
   token: string;
-  language: ScLanguage;
+  language: {
+    name: string;
+    display_name: string;
+  };
 }
 class CreateLanguageExResponse extends GenericResponse {
   langauge: ScLanguage;
@@ -54,9 +57,9 @@ export class ScLanguages {
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
       token: globals.globalStore.state.token,
-        column: columnName,
-        id: id,
-        value: value !== '' ? value : null,
+      column: columnName,
+      id: id,
+      value: value !== '' ? value : null,
     });
 
     console.log(updateResponse);
