@@ -102,7 +102,7 @@ create table sc.locations (
 	funding_account int references sc.funding_account(account_number),
 	iso_alpha_3 char(3),
 	name varchar(32) unique not null,
-	type location_type not null,
+	type common.location_type not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -121,7 +121,6 @@ create table sc.organizations (
 	neo4j_id varchar(32),
 
 	address varchar(255),
-	base64 varchar(32) unique not null,
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -305,7 +304,7 @@ create table sc.languages(
   least_of_these_reason varchar(255),
   population_override int,
   registry_of_dialects_code varchar(32),
-  sensitivity sensitivity,
+  sensitivity common.sensitivity,
   sign_language_code varchar(32),
   sponsor_estimated_end_date timestamp,
 
@@ -585,7 +584,7 @@ create table sc.periodic_reports (
 
   directory int not null references sc.periodic_reports_directory(id),
   end_at timestamp not null,
-  reportFile int not null references sc.files(id),
+  reportFile int not null references common.files(id),
   start_at timestamp not null,
   type sc.periodic_report_type not null,
   
@@ -617,7 +616,7 @@ create table sc.projects (
 	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	posts_directory int references sc.posts_directory(id),
 	primary_location int references sc.locations(id),
-	root_directory int references sc.directories(id),
+	root_directory int references common.directories(id),
 	status sc.project_status,
 	status_changed_at timestamp,
 	step sc.project_step,
@@ -630,7 +629,7 @@ create table sc.projects (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id),
 
-	unique (base64, change_to_plan)
+	unique (id, change_to_plan)
 );
 
 create table sc.pinned_projects (
@@ -642,12 +641,11 @@ create table sc.pinned_projects (
 create table sc.partnerships (
   id serial primary key,
 
-  base64 varchar(32) unique not null,
   project int not null references sc.projects(id),
   partner int not null references sc.organizations(id),
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
-  agreement int references sc.file_versions(id),
+  agreement int references common.file_versions(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -672,11 +670,11 @@ create type common.budget_status as enum (
 create table sc.budgets (
   id serial primary key,
 
-  base64 varchar(32) not null,
+  neo4j_id varchar(32) not null,
   change_to_plan int not null default 1,
-  project int not null references common.projects(id),
+  project int not null references sc.projects(id),
   status common.budget_status,
-  universal_template int references sc.file_versions(id),
+  universal_template int references common.file_versions(id),
   universal_template_file_url varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -687,13 +685,13 @@ create table sc.budgets (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id),
 
-  unique (base64, change_to_plan)
+  unique (id, change_to_plan)
 );
 
 create table sc.budget_records (
 	id serial primary key,
 
-  base64 varchar(32) not null,
+  neo4j_id varchar(32) not null,
   budget int not null references sc.budgets(id),
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
@@ -752,7 +750,7 @@ create type common.project_engagement_tag as enum (
 create table sc.language_engagements (
   id serial primary key,
 
-  base64 varchar(32) not null,
+  neo4j_id varchar(32) not null,
 	project int not null references sc.projects(id),
 	ethnologue int not null references sil.table_of_languages(id),
 	change_to_plan int not null default 1 references sc.change_to_plans(id),
@@ -770,7 +768,7 @@ create table sc.language_engagements (
 	paratext_registry varchar(32),
 	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	pnp varchar(255),
-	pnp_file int references sc.file_versions(id),
+	pnp_file int references common.file_versions(id),
 	product_engagement_tag common.project_engagement_tag,
 	start_date timestamp,
 	start_date_override timestamp,
@@ -822,7 +820,7 @@ create type common.product_type as enum (
 create table sc.products (
   id serial primary key,
 
-  base64 varchar(32) not null,
+  neo4j_id varchar(32) not null,
   name varchar(64),
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
@@ -839,7 +837,7 @@ create table sc.products (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id),
 
-  unique (base64, change_to_plan)
+  unique (id, change_to_plan)
 );
 
 create table sc.product_scripture_references (
@@ -888,7 +886,7 @@ create table sc.internship_engagements (
 	disbursement_complete_date timestamp,
 	end_date timestamp,
 	end_date_override timestamp,
-	growth_plan int references sc.file_versions(id),
+	growth_plan int references common.file_versions(id),
 	initial_end_date timestamp,
 	intern int references admin.people(id),
 	last_reactivated_at timestamp,
