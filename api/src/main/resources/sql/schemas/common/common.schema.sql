@@ -419,7 +419,9 @@ create table common.workflows(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  peer int references admin.peers(id),
+
+  unique (title, peer)
 );
 
 create table common.stages(
@@ -433,10 +435,12 @@ create table common.stages(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  peer int references admin.peers(id),
+
+  unique (title, peer)
 );
 
-create table common.stage_flows(
+create table common.stage_graph(
 	id serial primary key,
 
 	from_stage int not null references common.stages(id),
@@ -448,23 +452,29 @@ create table common.stage_flows(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  peer int references admin.peers(id),
+
+  unique (from_stage, to_stage, peer)
 );
 
-create table common.stage_grants(
+create table common.stage_role_column_grants(
 	id serial primary key,
 
-	stage int not null references common.stages(id),
+  stage int not null references common.stage_access
 	role int not null references admin.roles(id),
-	group_id int not null references admin.groups(id),
+	table_name admin.table_name not null,
+	column_name varchar(64) not null,
+	access_level admin.access_level not null,
 
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by int not null references admin.people(id),
+	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  peer int references admin.peers(id),
+
+	unique (role, table_name, column_name)
 );
 
 create table common.stage_notifications(

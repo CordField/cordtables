@@ -391,37 +391,6 @@ create table sc.languages(
   peer int references admin.peers(id)
 );
 
--- An extension table, but has a reference to common
--- sc languages may different from other org's language listings
---create table sc.languages (
---    neo4j_id varchar(32) unique,
---	id serial primary key,
---	ethnologue int references sil.table_of_languages(id),
---	name varchar(255) unique not null,
---	display_name varchar(255) unique not null,
---	display_name_pronunciation varchar(255),
---	tags text[],
---	preset_inventory bool,
---	is_dialect bool,
---	is_sign_language bool,
---	is_least_of_these bool,
---	least_of_these_reason varchar(255),
---	population_override int,
---	registry_of_dialects_code varchar(32),
---	sensitivity sensitivity,
---	sign_language_code varchar(32),
---	sponsor_estimated_end_date timestamp,
---
---
---  created_at timestamp not null default CURRENT_TIMESTAMP,
---  created_by int not null references admin.people(id),
---  modified_at timestamp not null default CURRENT_TIMESTAMP,
---  modified_by int not null references admin.people(id),
---  owning_person int not null references admin.people(id),
---  owning_group int not null references admin.groups(id),
---  peer int references admin.peers(id)
---);
-
 create table sc.language_goal_definitions (
 	id serial primary key,
 
