@@ -14,7 +14,9 @@ import javax.sql.DataSource
 
 data class ScLanguagesUpdateRequest(
         val token: String?,
-        val language: LanguageInput? = null,
+        val id: Int? = null,
+        val column: String? = null,
+        val value: Any? = null,
 )
 
 data class ScLanguagesUpdateResponse(
@@ -36,35 +38,35 @@ class Update(
     fun updateHandler(@RequestBody req: ScLanguagesUpdateRequest): ScLanguagesUpdateResponse {
 
         if (req.token == null) return ScLanguagesUpdateResponse(ErrorType.TokenNotFound)
-        if (req.language == null) return ScLanguagesUpdateResponse(ErrorType.MissingId)
-        if (req.language.id == null) return ScLanguagesUpdateResponse(ErrorType.MissingId)
+        if (req.column == null) return ScLanguagesUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return ScLanguagesUpdateResponse(ErrorType.MissingId)
 
-        if (req.language.sensitivity != null && !enumContains<CommonSensitivity>(req.language.sensitivity)) {
+        if (req.column.equals("sensitivity") && req.value != null && !enumContains<CommonSensitivity>(req.value as String)) {
             return ScLanguagesUpdateResponse(
                     error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.language.egids_level != null && !enumContains<EgidsScale>(req.language.egids_level)) {
+        if (req.column.equals("egids_level") && req.value != null && !enumContains<EgidsScale>(req.value as String)) {
             return ScLanguagesUpdateResponse(
                     error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.language.least_reached_progress_jps_level != null && !enumContains<LeastReachedProgressScale>(req.language.least_reached_progress_jps_level)) {
+        if (req.column.equals("least_reached_progress_jps_level") && req.value != null && !enumContains<LeastReachedProgressScale>(req.value as String)) {
             return ScLanguagesUpdateResponse(
                     error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.language.partner_interest_level != null && !enumContains<PartnerInterestScale>(req.language.partner_interest_level)) {
+        if (req.column.equals("partner_interest_level") && req.value != null && !enumContains<PartnerInterestScale>(req.value as String)) {
             return ScLanguagesUpdateResponse(
                     error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.language.multiple_languages_leverage_linguistic_level != null && !enumContains<MultipleLanguagesLeverageLinguisticScale>(
-                        req.language.multiple_languages_leverage_linguistic_level
+        if (req.column.equals("multiple_languages_leverage_linguistic_level") && req.value != null && !enumContains<MultipleLanguagesLeverageLinguisticScale>(
+                        req.value as String
                 )
         ) {
             return ScLanguagesUpdateResponse(
@@ -72,8 +74,8 @@ class Update(
             )
         }
 
-        if (req.language.multiple_languages_leverage_joint_training_level != null && !enumContains<MultipleLanguagesLeverageJointTrainingScale>(
-                        req.language.multiple_languages_leverage_joint_training_level
+        if (req.column.equals("multiple_languages_leverage_joint_training_level") && req.value != null && !enumContains<MultipleLanguagesLeverageJointTrainingScale>(
+                        req.value as String
                 )
         ) {
             return ScLanguagesUpdateResponse(
@@ -81,8 +83,8 @@ class Update(
             )
         }
 
-        if (req.language.lang_comm_int_in_language_development_level != null && !enumContains<LangCommIntInLanguageDevelopmentScale>(
-                        req.language.lang_comm_int_in_language_development_level
+        if (req.column.equals("lang_comm_int_in_language_development_level") && req.value != null && !enumContains<LangCommIntInLanguageDevelopmentScale>(
+                        req.value as String
                 )
         ) {
             return ScLanguagesUpdateResponse(
@@ -90,8 +92,8 @@ class Update(
             )
         }
 
-        if (req.language.lang_comm_int_in_scripture_translation_level != null && !enumContains<LangCommIntInScriptureTranslationScale>(
-                        req.language.lang_comm_int_in_scripture_translation_level
+        if (req.column.equals("lang_comm_int_in_scripture_translation_level") && req.value != null && !enumContains<LangCommIntInScriptureTranslationScale>(
+                        req.value as String
                 )
         ) {
             return ScLanguagesUpdateResponse(
@@ -99,20 +101,20 @@ class Update(
             )
         }
 
-        if (req.language.access_to_scripture_in_lwc_level != null && !enumContains<AccessToScriptureInLwcScale>(req.language.access_to_scripture_in_lwc_level)) {
+        if (req.column.equals("access_to_scripture_in_lwc_level") && req.value != null && !enumContains<AccessToScriptureInLwcScale>(req.value as String)) {
             return ScLanguagesUpdateResponse(
                     error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.language.begin_work_geo_challenges_level != null && !enumContains<BeginWorkGeoChallengesScale>(req.language.begin_work_geo_challenges_level)) {
+        if (req.column.equals("begin_work_geo_challenges_level") && req.value != null && !enumContains<BeginWorkGeoChallengesScale>(req.value as String)) {
             return ScLanguagesUpdateResponse(
                     error = ErrorType.ValueDoesNotMap
             )
         }
 
-        if (req.language.begin_work_rel_pol_obstacles_level != null && !enumContains<BeginWorkRelPolObstaclesScale>(
-                        req.language.begin_work_rel_pol_obstacles_level
+        if (req.column.equals("begin_work_rel_pol_obstacles_level") && req.value != null && !enumContains<BeginWorkRelPolObstaclesScale>(
+                        req.value as String
                 )
         ) {
             return ScLanguagesUpdateResponse(
@@ -120,522 +122,655 @@ class Update(
             )
         }
 
-        if (req.language.neo4j_id != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "neo4j_id",
-                id = req.language.id!!,
-                value = req.language.neo4j_id,
-        )
+        when (req.column) {
+            "neo4j_id" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "neo4j_id",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.ethnologue != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "ethnologue",
-                id = req.language.id!!,
-                value = req.language.ethnologue,
-        )
-
-        if (req.language.name != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "name",
-                id = req.language.id!!,
-                value = req.language.name,
-        )
-
-        if (req.language.display_name != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "display_name",
-                id = req.language.id!!,
-                value = req.language.display_name,
-        )
-
-        if (req.language.display_name_pronunciation != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "display_name_pronunciation",
-                id = req.language.id!!,
-                value = req.language.display_name_pronunciation,
-        )
-
-        if (req.language.tags != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "tags",
-                id = req.language.id!!,
-                value = req.language.tags,
-        )
-
-        if (req.language.preset_inventory is Boolean?) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "preset_inventory",
-                id = req.language.id!!,
-                value = req.language.preset_inventory,
-        )
-
-        if (req.language.is_dialect is Boolean?) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "is_dialect",
-                id = req.language.id!!,
-                value = req.language.is_dialect,
-        )
-
-        if (req.language.is_sign_language is Boolean?) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "is_sign_language",
-                id = req.language.id!!,
-                value = req.language.is_sign_language,
-        )
-
-        if (req.language.is_least_of_these is Boolean?) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "is_least_of_these",
-                id = req.language.id!!,
-                value = req.language.is_least_of_these,
-        )
-
-        if (req.language.least_of_these_reason != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "least_of_these_reason",
-                id = req.language.id!!,
-                value = req.language.least_of_these_reason,
-        )
-
-        if (req.language.population_override != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "population_override",
-                id = req.language.id!!,
-                value = req.language.population_override,
-        )
-
-        if (req.language.registry_of_dialects_code != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "registry_of_dialects_code",
-                id = req.language.id!!,
-                value = req.language.registry_of_dialects_code,
-        )
-
-        if (req.language.sensitivity != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "sensitivity",
-                id = req.language.id!!,
-                value = req.language.sensitivity,
-                cast = "::common.sensitivity"
-        )
-
-        if (req.language.sign_language_code != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "sign_language_code",
-                id = req.language.id!!,
-                value = req.language.sign_language_code,
-        )
-
-        if (req.language.sponsor_estimated_end_date != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "sponsor_estimated_end_date",
-                id = req.language.id!!,
-                value = req.language.sponsor_estimated_end_date,
-        )
-
-        if (req.language.progress_bible is Boolean?) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "progress_bible",
-                id = req.language.id!!,
-                value = req.language.progress_bible,
-        )
-
-        if (req.language.location_long != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "location_long",
-                id = req.language.id!!,
-                value = req.language.location_long,
-        )
-
-        if (req.language.island != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "island",
-                id = req.language.id!!,
-                value = req.language.island,
-        )
-
-        if (req.language.province != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "province",
-                id = req.language.id!!,
-                value = req.language.province,
-        )
-
-        if (req.language.first_language_population != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "first_language_population",
-                id = req.language.id!!,
-                value = req.language.first_language_population,
-        )
-
-        if (req.language.first_language_population != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "population_value",
-                id = req.language.id!!,
-                value = getPopulationValue(req.language.first_language_population),
-        )
-
-        if (req.language.egids_level is String || req.language.egids_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "egids_level",
-                id = req.language.id!!,
-                value = req.language.egids_level,
-                cast = "::sc.egids_scale",
-        )
-
-        if (req.language.egids_level is String || req.language.egids_level.isNullOrBlank())
-            util.updateField(
-                    token = req.token,
-                    table = "sc.languages",
-                    column = "egids_value",
-                    id = req.language.id!!,
-                    value = if (req.language.egids_level.isNullOrBlank()) 0.0 else EgidsScale.valueOf(req.language.egids_level!!).value,
-            )
+            "ethnologue" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "ethnologue",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
 
-        if (req.language.least_reached_progress_jps_level is String || req.language.least_reached_progress_jps_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "least_reached_progress_jps_level",
-                id = req.language.id!!,
-                value = req.language.least_reached_progress_jps_level,
-                cast = "::sc.least_reached_progress_scale"
-        )
+            "name" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "name",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.least_reached_progress_jps_level is String || req.language.least_reached_progress_jps_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "least_reached_value",
-                id = req.language.id!!,
-                value = if (req.language.least_reached_progress_jps_level.isNullOrBlank()) 0.0 else LeastReachedProgressScale.valueOf(req.language.least_reached_progress_jps_level!!).value,
-        )
+            "display_name" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "display_name",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.partner_interest_level is String || req.language.partner_interest_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "partner_interest_level",
-                id = req.language.id!!,
-                value = req.language.partner_interest_level,
-                cast = "::sc.partner_interest_scale",
-        )
+            "display_name_pronunciation" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "display_name_pronunciation",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.partner_interest_level is String || req.language.partner_interest_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "partner_interest_value",
-                id = req.language.id!!,
-                value = if(req.language.partner_interest_level.isNullOrBlank()) 0.0 else PartnerInterestScale.valueOf(req.language.partner_interest_level!!).value,
-        )
+            "tags" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "tags",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.partner_interest_description != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "partner_interest_description",
-                id = req.language.id!!,
-                value = req.language.partner_interest_description,
-        )
+            "preset_inventory" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "preset_inventory",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.partner_interest_source != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "partner_interest_source",
-                id = req.language.id!!,
-                value = req.language.partner_interest_source,
-        )
+            "is_dialect" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "is_dialect",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.multiple_languages_leverage_linguistic_level is String || req.language.multiple_languages_leverage_linguistic_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "multiple_languages_leverage_linguistic_level",
-                id = req.language.id!!,
-                value = req.language.multiple_languages_leverage_linguistic_level,
-                cast = "::sc.multiple_languages_leverage_linguistic_scale",
-        )
+            "is_sign_language" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "is_sign_language",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.multiple_languages_leverage_linguistic_level is String || req.language.multiple_languages_leverage_linguistic_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "multiple_languages_leverage_linguistic_value",
-                id = req.language.id!!,
-                value = if(req.language.multiple_languages_leverage_linguistic_level.isNullOrBlank()) 0.0 else MultipleLanguagesLeverageLinguisticScale.valueOf(req.language.multiple_languages_leverage_linguistic_level!!).value,
-        )
+            "is_least_of_these" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "is_least_of_these",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+            "least_of_these_reason" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "least_of_these_reason",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.multiple_languages_leverage_linguistic_description != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "multiple_languages_leverage_linguistic_description",
-                id = req.language.id!!,
-                value = req.language.multiple_languages_leverage_linguistic_description,
-        )
+            "population_override" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "population_override",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.multiple_languages_leverage_linguistic_source != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "multiple_languages_leverage_linguistic_source",
-                id = req.language.id!!,
-                value = req.language.multiple_languages_leverage_linguistic_source,
-        )
+            "registry_of_dialects_code" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "registry_of_dialects_code",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.multiple_languages_leverage_joint_training_level is String || req.language.multiple_languages_leverage_joint_training_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "multiple_languages_leverage_joint_training_level",
-                id = req.language.id!!,
-                value = req.language.multiple_languages_leverage_joint_training_level,
-                cast = "::sc.multiple_languages_leverage_joint_training_scale",
-        )
+            "sensitivity" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "sensitivity",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::common.sensitivity"
+                )
+            }
 
-        if (req.language.multiple_languages_leverage_joint_training_level is String || req.language.multiple_languages_leverage_joint_training_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "multiple_languages_leverage_joint_training_value",
-                id = req.language.id!!,
-                value = if(req.language.multiple_languages_leverage_joint_training_level.isNullOrBlank()) 0.0 else MultipleLanguagesLeverageJointTrainingScale.valueOf(req.language.multiple_languages_leverage_joint_training_level!!).value,
-        )
+            "sign_language_code" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "sign_language_code",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.multiple_languages_leverage_joint_training_description != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "multiple_languages_leverage_joint_training_description",
-                id = req.language.id!!,
-                value = req.language.multiple_languages_leverage_joint_training_description,
-        )
+            "sponsor_estimated_end_date" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "sponsor_estimated_end_date",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.multiple_languages_leverage_joint_training_source != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "multiple_languages_leverage_joint_training_source",
-                id = req.language.id!!,
-                value = req.language.multiple_languages_leverage_joint_training_source,
-        )
+            "progress_bible" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "progress_bible",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.lang_comm_int_in_language_development_level is String || req.language.lang_comm_int_in_language_development_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "lang_comm_int_in_language_development_level",
-                id = req.language.id!!,
-                value = req.language.lang_comm_int_in_language_development_level,
-                cast = "::sc.lang_comm_int_in_language_development_scale",
-        )
+            "location_long" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "location_long",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.lang_comm_int_in_language_development_level is String || req.language.lang_comm_int_in_language_development_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "lang_comm_int_in_language_development_value",
-                id = req.language.id!!,
-                value = if(req.language.lang_comm_int_in_language_development_level.isNullOrBlank()) 0.0 else LangCommIntInLanguageDevelopmentScale.valueOf(req.language.lang_comm_int_in_language_development_level!!).value,
-        )
+            "island" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "island",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.lang_comm_int_in_language_development_description != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "lang_comm_int_in_language_development_description",
-                id = req.language.id!!,
-                value = req.language.lang_comm_int_in_language_development_description,
-        )
+            "province" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "province",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.lang_comm_int_in_language_development_source != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "lang_comm_int_in_language_development_source",
-                id = req.language.id!!,
-                value = req.language.lang_comm_int_in_language_development_source,
-        )
+            "first_language_population" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "first_language_population",
+                        id = req.id,
+                        value = req.value,
+                )
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "population_value",
+                        id = req.id,
+                        value = getPopulationValue(req.value as Int),
+                )
+            }
 
-        if (req.language.lang_comm_int_in_scripture_translation_level is String || req.language.lang_comm_int_in_scripture_translation_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "lang_comm_int_in_scripture_translation_level",
-                id = req.language.id!!,
-                value = req.language.lang_comm_int_in_scripture_translation_level,
-                cast = "::sc.lang_comm_int_in_scripture_translation_scale",
-        )
 
-        if (req.language.lang_comm_int_in_scripture_translation_level is String || req.language.lang_comm_int_in_scripture_translation_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "lang_comm_int_in_scripture_translation_value",
-                id = req.language.id!!,
-                value = if(req.language.lang_comm_int_in_scripture_translation_level.isNullOrBlank()) 0.0 else LangCommIntInScriptureTranslationScale.valueOf(req.language.lang_comm_int_in_scripture_translation_level!!).value,
-        )
+            "least_reached_progress_jps_level" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "least_reached_progress_jps_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.least_reached_progress_scale",
+                )
 
-        if (req.language.lang_comm_int_in_scripture_translation_description != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "lang_comm_int_in_scripture_translation_description",
-                id = req.language.id!!,
-                value = req.language.lang_comm_int_in_scripture_translation_description,
-        )
 
-        if (req.language.lang_comm_int_in_scripture_translation_source != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "lang_comm_int_in_scripture_translation_source",
-                id = req.language.id!!,
-                value = req.language.lang_comm_int_in_scripture_translation_source,
-        )
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "least_reached_value",
+                        id = req.id,
+                        value = if (req.value !== null) LeastReachedProgressScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
 
-        if (req.language.access_to_scripture_in_lwc_level is String || req.language.access_to_scripture_in_lwc_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "access_to_scripture_in_lwc_level",
-                id = req.language.id!!,
-                value = req.language.access_to_scripture_in_lwc_level,
-                cast = "::sc.access_to_scripture_in_lwc_scale",
-        )
+            "partner_interest_level" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "partner_interest_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.partner_interest_scale",
+                )
 
-        if (req.language.access_to_scripture_in_lwc_level is String || req.language.access_to_scripture_in_lwc_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "access_to_scripture_in_lwc_value",
-                id = req.language.id!!,
-                value = if(req.language.access_to_scripture_in_lwc_level.isNullOrBlank()) 0.0 else AccessToScriptureInLwcScale.valueOf(req.language.access_to_scripture_in_lwc_level!!).value,
-        )
 
-        if (req.language.access_to_scripture_in_lwc_description != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "access_to_scripture_in_lwc_description",
-                id = req.language.id!!,
-                value = req.language.access_to_scripture_in_lwc_description,
-        )
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "partner_interest_value",
+                        id = req.id,
+                        value = if (req.value !== null) PartnerInterestScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
 
-        if (req.language.access_to_scripture_in_lwc_source != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "access_to_scripture_in_lwc_source",
-                id = req.language.id!!,
-                value = req.language.access_to_scripture_in_lwc_source,
-        )
 
-        if (req.language.begin_work_geo_challenges_level is String || req.language.begin_work_geo_challenges_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "begin_work_geo_challenges_level",
-                id = req.language.id!!,
-                value = req.language.begin_work_geo_challenges_level,
-                cast = "::sc.begin_work_geo_challenges_scale",
-        )
+            "partner_interest_description" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "partner_interest_description",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.begin_work_geo_challenges_level is String || req.language.begin_work_geo_challenges_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "begin_work_geo_challenges_value",
-                id = req.language.id!!,
-                value = if(req.language.begin_work_geo_challenges_level.isNullOrBlank()) 0.0 else BeginWorkGeoChallengesScale.valueOf(req.language.begin_work_geo_challenges_level!!).value,
-        )
+            "partner_interest_source" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "partner_interest_source",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.begin_work_geo_challenges_description != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "begin_work_geo_challenges_description",
-                id = req.language.id!!,
-                value = req.language.begin_work_geo_challenges_description,
-        )
 
-        if (req.language.begin_work_geo_challenges_source != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "begin_work_geo_challenges_source",
-                id = req.language.id!!,
-                value = req.language.begin_work_geo_challenges_source,
-        )
+            "multiple_languages_leverage_linguistic_level" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "multiple_languages_leverage_linguistic_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.multiple_languages_leverage_linguistic_scale",
+                )
 
-        if (req.language.begin_work_rel_pol_obstacles_level is String || req.language.begin_work_rel_pol_obstacles_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "begin_work_rel_pol_obstacles_level",
-                id = req.language.id!!,
-                value = req.language.begin_work_rel_pol_obstacles_level,
-                cast = "::sc.begin_work_rel_pol_obstacles_scale",
-        )
 
-        if (req.language.begin_work_rel_pol_obstacles_level is String || req.language.begin_work_rel_pol_obstacles_level.isNullOrBlank()) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "begin_work_rel_pol_obstacles_value",
-                id = req.language.id!!,
-                value = if(req.language.begin_work_rel_pol_obstacles_level.isNullOrBlank()) 0.0 else BeginWorkRelPolObstaclesScale.valueOf(req.language.begin_work_rel_pol_obstacles_level!!).value,
-        )
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "multiple_languages_leverage_linguistic_value",
+                        id = req.id,
+                        value = if (req.value !== null) MultipleLanguagesLeverageLinguisticScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
 
-        if (req.language.begin_work_rel_pol_obstacles_description != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "begin_work_rel_pol_obstacles_description",
-                id = req.language.id!!,
-                value = req.language.begin_work_rel_pol_obstacles_description,
-        )
 
-        if (req.language.begin_work_rel_pol_obstacles_source != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "begin_work_rel_pol_obstacles_source",
-                id = req.language.id!!,
-                value = req.language.begin_work_rel_pol_obstacles_source,
-        )
+            "multiple_languages_leverage_linguistic_description"
+            -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "multiple_languages_leverage_linguistic_description",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.suggested_strategies != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "suggested_strategies",
-                id = req.language.id!!,
-                value = req.language.suggested_strategies,
-        )
+            "multiple_languages_leverage_linguistic_source" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "multiple_languages_leverage_linguistic_source",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
 
-        if (req.language.comments != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "comments",
-                id = req.language.id!!,
-                value = req.language.comments,
-        )
+            "multiple_languages_leverage_joint_training_level" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "multiple_languages_leverage_joint_training_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.multiple_languages_leverage_joint_training_level",
+                )
 
-        if (req.language.owning_person != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "owning_person",
-                id = req.language.id!!,
-                value = req.language.owning_person,
-        )
 
-        if (req.language.owning_group != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "owning_group",
-                id = req.language.id!!,
-                value = req.language.owning_group,
-        )
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "multiple_languages_leverage_joint_training_value",
+                        id = req.id,
+                        value = if (req.value !== null) MultipleLanguagesLeverageJointTrainingScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
 
-        if (req.language.peer != null) util.updateField(
-                token = req.token,
-                table = "sc.languages",
-                column = "peer",
-                id = req.language.id!!,
-                value = req.language.peer,
-        )
+
+            "multiple_languages_leverage_joint_training_description"
+            -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "multiple_languages_leverage_joint_training_description",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "multiple_languages_leverage_joint_training_source" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "multiple_languages_leverage_joint_training_source",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "lang_comm_int_in_language_development_level" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "lang_comm_int_in_language_development_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.lang_comm_int_in_language_development_scale",
+                )
+
+
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "lang_comm_int_in_language_development_value",
+                        id = req.id,
+                        value = if (req.value !== null) LangCommIntInLanguageDevelopmentScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
+
+
+            "lang_comm_int_in_language_development_description"
+            -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "lang_comm_int_in_language_development_description",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "lang_comm_int_in_language_development_source" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "lang_comm_int_in_language_development_source",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "lang_comm_int_in_scripture_translation_level" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "lang_comm_int_in_scripture_translation_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.lang_comm_int_in_scripture_translation_scale",
+                )
+
+
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "lang_comm_int_in_scripture_translation_value",
+                        id = req.id,
+                        value = if (req.value !== null) LangCommIntInScriptureTranslationScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
+
+
+            "lang_comm_int_in_scripture_translation_description"
+            -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "lang_comm_int_in_scripture_translation_description",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "lang_comm_int_in_scripture_translation_source" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "lang_comm_int_in_scripture_translation_source",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "access_to_scripture_in_lwc_level" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "access_to_scripture_in_lwc_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.access_to_scripture_in_lwc_scale",
+                )
+
+
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "access_to_scripture_in_lwc_value",
+                        id = req.id,
+                        value = if (req.value !== null) AccessToScriptureInLwcScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
+
+
+            "access_to_scripture_in_lwc_description"
+            -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "access_to_scripture_in_lwc_description",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "access_to_scripture_in_lwc_source" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "access_to_scripture_in_lwc_source",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+
+            "begin_work_geo_challenges_level" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "begin_work_geo_challenges_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.begin_work_geo_challenges_scale",
+                )
+
+
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "begin_work_geo_challenges_value",
+                        id = req.id,
+                        value = if (req.value !== null) BeginWorkGeoChallengesScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
+
+            "begin_work_geo_challenges_description"
+            -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "begin_work_geo_challenges_description",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "begin_work_geo_challenges_source" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "begin_work_geo_challenges_source",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+
+            "begin_work_rel_pol_obstacles_level" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "begin_work_rel_pol_obstacles_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.begin_work_rel_pol_obstacles_scale",
+                )
+
+
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "begin_work_rel_pol_obstacles_value",
+                        id = req.id,
+                        value = if (req.value !== null) BeginWorkRelPolObstaclesScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
+
+
+            "begin_work_rel_pol_obstacles_description"
+            -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "begin_work_rel_pol_obstacles_description",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "begin_work_rel_pol_obstacles_source" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "begin_work_rel_pol_obstacles_source",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "suggested_strategies" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "suggested_strategies",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "comments" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "comments",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "owning_person" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "owning_person",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "owning_group" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "owning_group",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "peer" -> {
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "peer",
+                        id = req.id,
+                        value = req.value,
+                )
+            }
+
+            "egids_level" -> {
+
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "egids_level",
+                        id = req.id,
+                        value = req.value,
+                        cast = "::sc.egids_scale",
+                )
+
+                util.updateField(
+                        token = req.token,
+                        table = "sc.languages",
+                        column = "egids_value",
+                        id = req.id,
+                        value = if (req.value !== null) EgidsScale.valueOf(req.value as String).value else 0.0,
+                )
+            }
+
+//            else -> null
+        }
 
         return ScLanguagesUpdateResponse(ErrorType.NoError)
     }
