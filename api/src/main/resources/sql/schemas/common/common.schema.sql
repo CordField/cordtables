@@ -224,7 +224,6 @@ create table common.people_to_org_relationships (
 
 	org int not null references common.organizations(id),
 	person int not null references admin.people(id),
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -295,7 +294,6 @@ create table common.file_versions (
   file int not null references common.files(id),
   file_url varchar(255) not null,
   file_size int, -- bytes
-
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
