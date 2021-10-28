@@ -192,7 +192,7 @@ create table common.education_by_person (
 create table common.organizations (
 	id serial primary key,
 
-	name varchar(255) unique not null,
+	name varchar(255),
 	sensitivity common.sensitivity default 'High',
 	primary_location int references common.locations(id),
 

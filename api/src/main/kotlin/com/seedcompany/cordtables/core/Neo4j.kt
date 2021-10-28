@@ -25,7 +25,7 @@ data class Neo4jMigrationResponse(
     val error: ErrorType,
 )
 
-data class Node1(
+data class BaseNode(
     val id: String,
     val labels: List<String>,
 )
@@ -70,7 +70,7 @@ class Neo4j(
 
         neo4j.session().use { session ->
             baseNodeCounter.set(
-                session.run("MATCH (n:Organization) RETURN count(n) as count").single().get("count").asInt()
+                session.run("MATCH (n:BaseNode) RETURN count(n) as count").single().get("count").asInt()
             )
 
             println("count of base nodes is $baseNodeCounter")
@@ -81,69 +81,78 @@ class Neo4j(
             return
         }
 
-        while (baseNodeCounter.get() > 0) {
-            println("loop ${baseNodeCounter.get()}")
-            runBlocking {
-                addBaseNode()
-                addBaseNode()
-                addBaseNode()
-                addBaseNode()
-                addBaseNode()
-                addBaseNode()
-                addBaseNode()
-                addBaseNode()
-                addBaseNode()
-                addBaseNode()
-            }
+        val ticker = AtomicInteger(0)
+
+        for (i in 0 until baseNodeCounter.get()){
+            println("loop $i")
+            createBaseNodeIdempotent(i)
+        }
+
+    }
+
+    suspend fun createBaseNodeIdempotent(skip: Int) {
+        var node: BaseNode? = null
+
+//        val nextNode = baseNodeCounter.decrementAndGet()
+
+//        if (nextNode <= 0) return
+
+        neo4j.session().use { session ->
+            val baseNodeReturn =
+                session.run("MATCH (m:BaseNode) RETURN m skip $skip limit 1")
+                    .single()
+
+            node = BaseNode(
+                id = baseNodeReturn.get("m").asNode().get("id").asString(),
+                labels = baseNodeReturn.get("m").asNode().labels() as List<String>
+            )
+        }
+
+        if (node == null) return
+
+        when {
+            node!!.labels.contains("Organization") -> writeBaseNode(
+                targetTable = "sc.organizations",
+                id = node!!.id,
+                commonTable = "common.organizations",
+            )
+
+            node!!.labels.contains("TranslationProject") -> writeBaseNode(
+                targetTable = "sc.projects",
+                id = node!!.id,
+            )
+            else -> println(node!!.labels)
         }
     }
 
-    suspend fun addBaseNode() {
-        var node1: Node1? = null
+    suspend fun writeBaseNode(targetTable: String, id: String, commonTable: String? = null) {
+        val exists = jdbcTemplate.queryForObject(
+            "select exists(select id from $targetTable where neo4j_id = ?);",
+            Boolean::class.java,
+            id
+        )
 
-        val nextNode = baseNodeCounter.decrementAndGet()
+        if (exists) {
+            println("node $id exists")
+        } else {
+            println("creating $targetTable node $id")
 
-        if (nextNode <= 0) return
-
-        neo4j.session().use { session ->
-            val aasdf =
-                session.run("MATCH (m:Organization) RETURN m skip $nextNode limit 1")
-                    .single()
-
-            node1 = Node1(
-                id = aasdf.get("m").asNode().get("id").asString(),
-                labels = aasdf.get("m").asNode().labels() as List<String>
-            )
-        }
-
-        if (node1 == null) return
-
-        if (node1!!.labels.contains("Organization")) {
-            val exists = jdbcTemplate.queryForObject(
-                "select exists(select id from sc.organizations where neo4j_id = ?);",
-                Boolean::class.java,
-                node1!!.id
-            )
-
-            if (exists) {
-                println("node ${node1!!.id} exists")
-            } else {
-                println("creating node ${node1!!.id} exists")
+            if (commonTable != null) {
                 val commonId = jdbcTemplate.queryForObject(
-                    """
-                            insert into common.organizations(created_by, modified_by, owning_person, owning_group)
-                                values(1, 1, 1, 1) 
-                                returning id;
-                        """.trimIndent(),
+                    "insert into $commonTable(created_by, modified_by, owning_person, owning_group) values(1, 1, 1, 1) returning id;",
                     Int::class.java
                 )
 
                 jdbcTemplate.update(
-                    """
-                    insert into sc.organizations(id, neo4j_id, created_by, modified_by, owning_person, owning_group)
-                        values(?, ?, 1, 1, 1, 1);
-                """.trimIndent(), commonId, node1!!.id,
+                    "insert into $targetTable(id, neo4j_id, created_by, modified_by, owning_person, owning_group) values(?, ?, 1, 1, 1, 1);",
+                    commonId, id,
                 )
+            } else {
+                jdbcTemplate.update(
+                    "insert into $targetTable(neo4j_id, created_by, modified_by, owning_person, owning_group) values(?, 1, 1, 1, 1);",
+                    id,
+                )
+
             }
         }
     }

@@ -571,8 +571,8 @@ create table sc.projects (
   id serial primary key,
   neo4j_id varchar(32),
 
-	name varchar(32) not null,
-	change_to_plan int not null default 1 references sc.change_to_plans(id),
+	name varchar(32),
+	change_to_plan int not null default 1,
 	active bool,
 	department varchar(255),
 	estimated_submission timestamp,
