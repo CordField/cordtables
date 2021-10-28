@@ -32,7 +32,6 @@ create table sc.posts (
   shareability sc.post_shareability not null,
   body text not null,
 
-	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -50,7 +49,6 @@ create table sc.funding_account (
 
 	account_number int unique not null,
 	name varchar(32),
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -69,7 +67,6 @@ create table sc.field_zone (
 
 	director int references admin.people(id),
 	name varchar(32) unique not null,
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -87,7 +84,6 @@ create table sc.field_regions (
 	director int references admin.people(id),
 	name varchar(32) unique not null,
 
-	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -108,7 +104,6 @@ create table sc.locations (
 	name varchar(32) unique not null,
 	type location_type not null,
 
-	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -127,7 +122,6 @@ create table sc.organizations (
 
 	address varchar(255),
 	base64 varchar(32) unique not null,
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -143,7 +137,6 @@ create table sc.organization_locations(
 
 	organization int not null references sc.organizations(id),
 	location int not null references sc.locations(id),
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -194,7 +187,6 @@ create table sc.partners (
 	point_of_contact int references admin.people(id),
 	types sc.partner_types[],
 
-	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -436,7 +428,6 @@ create table sc.language_goal_definitions (
 
 	-- todo
 
-
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -452,7 +443,6 @@ create table sc.language_locations (
 	language int not null references sc.languages(id),
 	location int not null references sc.locations(id),
 	-- todo
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -472,7 +462,6 @@ create table sc.language_goals (
 	goal int not null references sc.language_goal_definitions(id),
 	-- todo
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -492,7 +481,6 @@ create table sc.known_languages_by_person (
 
   person int not null references admin.people(id),
   known_language int not null references sc.languages(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -513,7 +501,6 @@ create table sc.people (
 	skills varchar(32)[],
 	status varchar(32),
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -531,7 +518,6 @@ create table sc.person_unavailabilities (
 	period_end timestamp not null,
 	description text,
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -549,7 +535,6 @@ create table sc.directories (
 	parent int references sc.directories(id),
   name varchar(255),
 	-- todo
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -566,7 +551,6 @@ create table sc.files (
   directory int not null references sc.directories(id),
 	name varchar(255),
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -632,7 +616,6 @@ create table sc.change_to_plans (
   status sc.change_to_plan_status,
   summary text,
   type sc.change_to_plan_type,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -657,7 +640,6 @@ create table sc.periodic_reports (
   reportFile int not null references sc.files(id),
   start_at timestamp not null,
   type sc.periodic_report_type not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -691,7 +673,6 @@ create table sc.projects (
 	status sc.project_status,
 	status_changed_at timestamp,
 	step sc.project_step,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -719,7 +700,6 @@ create table sc.partnerships (
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
   agreement int references sc.file_versions(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -750,7 +730,6 @@ create table sc.budgets (
   status common.budget_status,
   universal_template int references sc.file_versions(id),
   universal_template_file_url varchar(255),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -773,7 +752,6 @@ create table sc.budget_records (
   amount decimal,
   fiscal_year int,
   partnership int references sc.partnerships(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -795,7 +773,6 @@ create table sc.project_locations (
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   location int not null references sc.locations(id),
   project int not null references sc.projects(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -850,7 +827,6 @@ create table sc.language_engagements (
 	start_date timestamp,
 	start_date_override timestamp,
 	status common.engagement_status,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -906,7 +882,6 @@ create table sc.products (
   methodologies common.product_methodologies[],
   purposes common.product_purposes[],
   type common.product_type,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -924,7 +899,6 @@ create table sc.product_scripture_references (
   scripture_reference int not null references common.scripture_references(id),
   change_to_plan int not null default 1 references sc.change_to_plans(id),
   active bool,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -978,7 +952,6 @@ create table sc.internship_engagements (
 	start_date timestamp,
 	start_date_override timestamp,
 	status common.engagement_status,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1000,7 +973,6 @@ create table sc.ceremonies (
 	estimated_date timestamp,
 	is_planned bool,
 	type varchar(255),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1035,7 +1007,6 @@ create table common.organization_relationships (
 
   from_org int not null references sc.organizations(id),
   to_org int not null references sc.organizations(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1053,7 +1024,6 @@ create table sc.partner_performance (
 
   organization int unique not null references sc.organizations(id),
   -- todo
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1070,7 +1040,6 @@ create table sc.partner_finances (
   organization int unique not null references sc.organizations(id),
   -- todo
   
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1086,7 +1055,6 @@ create table sc.partner_reporting (
   organization int unique not null references sc.organizations(id),
   -- todo
   
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1101,7 +1069,6 @@ create table sc.partner_translation_progress (
 
   organization int unique not null references sc.organizations(id),
   -- todo
-  
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1120,7 +1087,6 @@ create table sc.partner_notes (
   note text not null,
   -- todo
   
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id)
@@ -1132,7 +1098,6 @@ create table common.organization_transitions (
   organization int unique not null references sc.organizations(id),
   transition_type common.organization_transition_options not null,
   -- todo
-  
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1150,7 +1115,6 @@ create table common.person_to_person_relationships (
   to_person int not null references admin.people(id),
   -- todo
   
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1166,7 +1130,6 @@ create table common.people_transitions (
   person int not null references admin.people(id),
   transition_type common.people_transition_options not null,
   -- todo
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1182,7 +1145,6 @@ create table common.involvements (
 
   organization int not null references common.organizations(id),
   type common.involvement_options not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),

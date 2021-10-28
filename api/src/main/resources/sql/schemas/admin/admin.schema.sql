@@ -135,7 +135,6 @@ create table admin.people (
   time_zone varchar(32),
   title varchar(255),
 	status varchar(32),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int, -- not null doesn't work here, on startup
@@ -158,7 +157,6 @@ create table admin.groups(
 
   name varchar(64) not null unique,
   parent_group int references admin.groups(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -177,7 +175,6 @@ create table admin.group_row_access(
   group_id int not null references admin.groups(id),
   table_name admin.table_name not null,
   row int not null,
-
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -193,7 +190,6 @@ create table admin.group_memberships(
 
   group_id int not null references admin.groups(id),
   person int not null references admin.people(id),
-
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -240,7 +236,6 @@ create table admin.roles (
 	id serial primary key,
 
 	name varchar(255) not null,
-
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -260,7 +255,6 @@ create table admin.role_column_grants(
 	table_name admin.table_name not null,
 	column_name varchar(64) not null,
 	access_level admin.access_level not null,
-
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -279,7 +273,6 @@ create table admin.role_table_permissions(
   role int not null references admin.roles(id),
   table_name admin.table_name not null,
   table_permission admin.table_permission not null,
-
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -297,7 +290,6 @@ create table admin.role_memberships (
 
 	role int not null references admin.roles(id),
 	person int not null references admin.people(id),
-
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -330,7 +322,6 @@ create table admin.email_tokens (
 -- 	foreign key (email) references users(email)
 );
 
-
 -- USERS ---------------------------------------------------------------------
 
 create table admin.users(
@@ -339,7 +330,6 @@ create table admin.users(
   person int not null references admin.people(id),
   email varchar(255) unique not null,
   password varchar(255),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),

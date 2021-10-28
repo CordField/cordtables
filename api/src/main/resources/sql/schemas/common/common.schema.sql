@@ -177,7 +177,6 @@ create table common.education_by_person (
   person int not null references admin.people(id),
   education int not null references common.education_entries(id),
   graduation_year int,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -197,7 +196,6 @@ create table common.organizations (
 	sensitivity common.sensitivity default 'High',
 	primary_location int references common.locations(id),
 
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -244,7 +242,6 @@ create table common.people_to_org_relationship_type (
 	end_at timestamp,
   people_to_org int not null,
 	relationship_type int not null references common.people_to_org_relationships(id),
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -265,7 +262,6 @@ create table common.projects (
 	primary_org int references common.organizations(id),
 	primary_location int references common.locations(id),
 	sensitivity common.sensitivity default 'High',
-
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -292,7 +288,6 @@ create table common.tickets (
 
 	ticket_status common.ticket_status not null default 'Open',
 	title varchar(125) not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -308,7 +303,6 @@ create table common.work_orders(
 
 	ticket int references common.tickets(id),
 	content text not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -324,7 +318,6 @@ create table common.ticket_assignments (
 
 	ticket int not null references common.tickets(id),
 	person_id int not null references admin.people(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -341,7 +334,6 @@ create table common.work_records(
 	person int not null references admin.people(id),
 	hours decimal not null,
 	comment text,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -358,7 +350,6 @@ create table common.work_estimates(
 	person int not null references admin.people(id),
 	hours decimal not null,
 	comment text,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -382,7 +373,6 @@ create table common.ticket_feedback(
 	ticket int references common.tickets(id),
 	stakeholder int not null references admin.people(id),
 	feedback int not null references common.ticket_feedback_options,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -399,7 +389,6 @@ create table common.workflows(
 	id serial primary key,
 
 	title varchar(128) not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -415,7 +404,6 @@ create table common.stages(
 
 	workflow int not null references common.workflows(id),
 	title varchar(128) not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -431,7 +419,6 @@ create table common.work_order_templates(
 
 	stage int not null references common.stages(id),
 	content text not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -447,7 +434,6 @@ create table common.stage_options(
 
 	from_stage int not null references common.stages(id),
 	to_stage int not null references common.stages(id),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -463,7 +449,6 @@ create table common.stage_notifications(
 
 	stage int not null references common.stages(id),
 	email varchar(64) not null,
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
