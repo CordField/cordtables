@@ -23,7 +23,9 @@ class ScLanguagesListResponse {
 
 class ScLanguagesUpdateRequest {
   token: string;
-  language: ScLanguage;
+  column: string;
+  value: any;
+  id: number;
 }
 
 class ScLanguageUpdateResponse {
@@ -52,10 +54,9 @@ export class ScLanguages {
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
       token: globals.globalStore.state.token,
-      language: {
+        column: columnName,
         id: id,
-        [columnName]: value !== '' ? value : null,
-      },
+        value: value !== '' ? value : null,
     });
 
     console.log(updateResponse);
