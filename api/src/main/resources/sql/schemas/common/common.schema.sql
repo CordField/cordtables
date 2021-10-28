@@ -460,7 +460,7 @@ create table common.stage_graph(
 create table common.stage_role_column_grants(
 	id serial primary key,
 
-  stage int not null references common.stage_access
+  stage int not null references common.stages(id),
 	role int not null references admin.roles(id),
 	table_name admin.table_name not null,
 	column_name varchar(64) not null,
