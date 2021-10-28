@@ -124,7 +124,6 @@ class Create(
         )
 
         req.location.id = id
-        println("==========> 3 ==================>")
 
         val updateResponse = update.updateHandler(
             ScLocationsUpdateRequest(

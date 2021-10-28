@@ -95,7 +95,6 @@ class Update(
             id = req.location.id!!,
             value = req.location.peer,
         )
-        println("==========> 2 ==================>")
 
         return CommonLocationsUpdateResponse(ErrorType.NoError)
     }
