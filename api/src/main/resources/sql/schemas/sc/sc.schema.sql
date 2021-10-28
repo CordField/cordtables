@@ -527,58 +527,6 @@ create table sc.person_unavailabilities (
   peer int references admin.peers(id)
 );
 
--- FILES & DIRECTORIES ----------------------------------------------------------
-
-create table sc.directories (
-  id serial primary key,
-
-	parent int references sc.directories(id),
-  name varchar(255),
-	-- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.files (
-  id serial primary key,
-
-  directory int not null references sc.directories(id),
-	name varchar(255),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.file_versions (
-  id serial primary key,
-
-  category varchar(255),
-  mime_type mime_type not null,
-  name varchar(255) not null,
-  file int not null references sc.files(id),
-  file_url varchar(255) not null,
-  file_size int, -- bytes
-
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
 
 -- PROJECT TABLES ----------------------------------------------------------
 
@@ -652,10 +600,10 @@ create table sc.periodic_reports (
 
 -- extension table to common
 create table sc.projects (
-  id int primary key references common.projects(id),
+  id serial primary key,
   neo4j_id varchar(32),
 
-	base64 varchar(32) not null,
+	name varchar(32) not null,
 	change_to_plan int not null default 1 references sc.change_to_plans(id),
 	active bool,
 	department varchar(255),
