@@ -10,6 +10,8 @@ DECLARE
   vRegionalDirectorsGroupId int;
   vFieldOperationsDirectorRoleId int;
   vFieldOperationsDirectorsGroupId int;
+  vControllerRoleId int;
+  vControllersGroupId int;
 BEGIN
  select count(id)
  from admin.roles
@@ -26,12 +28,16 @@ BEGIN
 
   insert into admin.roles(name, created_by, modified_by, owning_person, owning_group) values ('Field Operations Director', 1, 1, 1, 1) returning id into vFieldOperationsDirectorRoleId;
 
+  insert into admin.roles(name, created_by, modified_by, owning_person, owning_group) values ('Controller', 1, 1, 1, 1) returning id into vControllerRoleId;
+
   -- groups
   insert into admin.groups(name, created_by, modified_by, owning_person, owning_group) values ('Project Managers', 1, 1, 1, 1) returning id into vProjectManagersGroupId;
 
   insert into admin.groups(name, created_by, modified_by, owning_person, owning_group) values ('Regional Director', 1, 1, 1, 1) returning id into vRegionalDirectorsGroupId;
 
   insert into admin.groups(name, created_by, modified_by, owning_person, owning_group) values ('Field Operations Director', 1, 1, 1, 1) returning id into vFieldOperationsDirectorsGroupId;
+
+  insert into admin.groups(name, created_by, modified_by, owning_person, owning_group) values ('Controller', 1, 1, 1, 1) returning id into vControllersGroupId;
 
   -- table grants
   insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vProjectManagerRoleId, 'Create', 'admin.people', 1, 1, 1, 1), (vProjectManagerRoleId, 'Delete', 'admin.people', 1, 1, 1, 1);
@@ -57,6 +63,14 @@ BEGIN
   insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vFieldOperationsDirectorRoleId, 'Create', 'common.organizations', 1, 1, 1, 1), (vFieldOperationsDirectorRoleId, 'Delete', 'common.organizations', 1, 1, 1, 1);
 
   insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vFieldOperationsDirectorRoleId, 'Create', 'sc.languages', 1, 1, 1, 1), (vFieldOperationsDirectorRoleId, 'Delete', 'sc.languages', 1, 1, 1, 1);
+
+  insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vControllerRoleId, 'Create', 'admin.people', 1, 1, 1, 1), (vControllerRoleId, 'Delete', 'admin.people', 1, 1, 1, 1);
+
+  insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vControllerRoleId, 'Create', 'admin.users', 1, 1, 1, 1), (vControllerRoleId, 'Delete', 'admin.users', 1, 1, 1, 1);
+
+  insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vControllerRoleId, 'Create', 'common.organizations', 1, 1, 1, 1), (vControllerRoleId, 'Delete', 'common.organizations', 1, 1, 1, 1);
+
+  insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vControllerRoleId, 'Create', 'sc.languages', 1, 1, 1, 1), (vControllerRoleId, 'Delete', 'sc.languages', 1, 1, 1, 1);
 
   -- column grants
 
@@ -133,6 +147,30 @@ BEGIN
   ('Write', 'title', vFieldOperationsDirectorRoleId, 'admin.people', 1, 1, 1, 1),
   ('Write', 'status', vFieldOperationsDirectorRoleId, 'admin.people', 1, 1, 1, 1);
 
+  insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+  values
+  ('Write', 'id', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'neo4j', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'about', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'created_at', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'created_by', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'modified_at', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'modified_by', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'phone', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'picture', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'primary_org', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'private_first_name', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'private_last_name', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'public_first_name', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'public_last_name', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'primary_location', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'private_full_name', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'public_full_name', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'sensitivity_clearance', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'time_zone', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'title', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'status', vControllerRoleId, 'admin.people', 1, 1, 1, 1);
+
   -- grants on users
   insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
   values
@@ -169,6 +207,18 @@ BEGIN
   ('Write', 'created_by', vFieldOperationsDirectorRoleId, 'admin.users', 1, 1, 1, 1),
   ('Write', 'modified_at', vFieldOperationsDirectorRoleId, 'admin.users', 1, 1, 1, 1),
   ('Write', 'modified_by', vFieldOperationsDirectorRoleId, 'admin.users', 1, 1, 1, 1);
+
+  insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+  values
+  ('Write', 'id', vControllerRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'person', vControllerRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'owning_org', vControllerRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'email', vControllerRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'password', vControllerRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'created_at', vControllerRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'created_by', vControllerRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'modified_at', vControllerRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'modified_by', vControllerRoleId, 'admin.users', 1, 1, 1, 1);
 
   -- grants on sc.languages
   insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
@@ -411,6 +461,86 @@ insert into admin.role_column_grants(access_level, column_name, role, table_name
       ('Write', 'owning_person', vFieldOperationsDirectorRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'owning_group', vFieldOperationsDirectorRoleId, 'sc.languages', 1, 1, 1, 1);
 
+insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'id', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'prioritization', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'progress_bible', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'location_long', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'island', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'province', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'first_language_population', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'population_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'egids_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'egids_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'least_reached_progress_jps_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'least_reached_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'partner_interest_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'partner_interest_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'partner_interest_description', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'partner_interest_source', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'multiple_languages_leverage_linguistic_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_linguistic_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_linguistic_description', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_linguistic_source', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'multiple_languages_leverage_joint_training_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_joint_training_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_joint_training_description', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_joint_training_source', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'lang_comm_int_in_language_development_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_language_development_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_language_development_description', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_language_development_source', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'lang_comm_int_in_scripture_translation_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_scripture_translation_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_scripture_translation_description', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_scripture_translation_source', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'access_to_scripture_in_lwc_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'access_to_scripture_in_lwc_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'access_to_scripture_in_lwc_description', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'access_to_scripture_in_lwc_source', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'begin_work_geo_challenges_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_geo_challenges_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_geo_challenges_description', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_geo_challenges_source', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'begin_work_rel_pol_obstacles_level', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_rel_pol_obstacles_value', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_rel_pol_obstacles_description', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_rel_pol_obstacles_source', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+       values ('Write', 'suggested_strategies', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'comments', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values
+      ('Write', 'created_at', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'created_by', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'modified_at', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'modified_by', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'owning_person', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'owning_group', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
+
 
   -- grants on organizations
   insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
@@ -454,6 +584,20 @@ insert into admin.role_column_grants(access_level, column_name, role, table_name
 
       insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
       values ('Write', 'name', vFieldOperationsDirectorRoleId, 'common.organizations', 1, 1, 1, 1);
+
+  insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'id', vControllerRoleId, 'common.organizations', 1, 1, 1, 1),
+       ('Write', 'neo4j', vControllerRoleId, 'common.organizations', 1, 1, 1, 1),
+       ('Write', 'created_at', vControllerRoleId, 'common.organizations', 1, 1, 1, 1),
+       ('Write', 'created_by', vControllerRoleId, 'common.organizations', 1, 1, 1, 1),
+       ('Write', 'modified_at', vControllerRoleId, 'common.organizations', 1, 1, 1, 1),
+       ('Write', 'modified_by', vControllerRoleId, 'common.organizations', 1, 1, 1, 1),
+       ('Write', 'name', vControllerRoleId, 'common.organizations', 1, 1, 1, 1),
+       ('Write', 'sensitivity', vControllerRoleId, 'common.organizations', 1, 1, 1, 1),
+       ('Write', 'primary_location', vControllerRoleId, 'common.organizations', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'name', vControllerRoleId, 'common.organizations', 1, 1, 1, 1);
 
     error_type := 'NoError';
   end if;
