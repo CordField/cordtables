@@ -53,7 +53,7 @@ class List(
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "sc.locations",
+                tableName = "common.locations",
                 filter = "order by id",
                 columns = arrayOf(
                     "id",

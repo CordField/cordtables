@@ -47,7 +47,7 @@ class Update(
 
         if (req.location.name != null) util.updateField(
             token = req.token,
-            table = "sc.locations",
+            table = "common.locations",
             column = "name",
             id = req.location.id!!,
             value = req.location.name,
@@ -56,7 +56,7 @@ class Update(
 
         if (req.location.sensitivity != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "common.locations",
             column = "sensitivity",
             id = req.location.id!!,
             value = req.location.sensitivity,
@@ -64,7 +64,7 @@ class Update(
 
         if (req.location.type != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "common.locations",
             column = "type",
             id = req.location.id!!,
             value = req.location.type,
@@ -73,7 +73,7 @@ class Update(
 
         if (req.location.owning_person != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "common.locations",
             column = "owning_person",
             id = req.location.id!!,
             value = req.location.owning_person,
@@ -81,7 +81,7 @@ class Update(
 
         if (req.location.owning_group != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "common.locations",
             column = "owning_group",
             id = req.location.id!!,
             value = req.location.owning_group,
@@ -89,7 +89,7 @@ class Update(
 
         if (req.location.peer != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "common.locations",
             column = "peer",
             id = req.location.id!!,
             value = req.location.peer,

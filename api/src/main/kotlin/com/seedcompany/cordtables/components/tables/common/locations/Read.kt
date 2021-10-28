@@ -54,7 +54,7 @@ class Read(
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "sc.locations",
+                tableName = "common.locations",
                 getList = false,
                 columns = arrayOf(
                     "id",

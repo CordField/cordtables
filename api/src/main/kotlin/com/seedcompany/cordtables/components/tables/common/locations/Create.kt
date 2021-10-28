@@ -59,8 +59,7 @@ class Create(
 
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.locations(
-                id,
+            insert into common.locations(
                 name,
                 type,
                 created_by, 
@@ -68,7 +67,6 @@ class Create(
                 owning_person, 
                 owning_group)
             values(
-                ?
                 ?,
                 ?::common.location_type,
                 (

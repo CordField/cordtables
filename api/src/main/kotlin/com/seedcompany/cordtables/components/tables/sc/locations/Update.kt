@@ -54,7 +54,14 @@ class Update(
         val updateResponse = commonUpdate.updateHandler(
             CommonLocationsUpdateRequest(
                 token = req.token,
-                location = req.location as CommonLocationInput,
+                location = CommonLocationInput(
+                    id = req.location.id,
+                    name = req.location.name,
+                    type = req.location.type,
+                    owning_person = req.location.owning_person,
+                    owning_group = req.location.owning_group,
+                    peer = req.location.peer,
+                ),
             )
         )
 
@@ -88,7 +95,7 @@ class Update(
 
         if (req.location.default_region != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "sc.locations",
             column = "default_region",
             id = req.location.id!!,
             value = req.location.default_region,
@@ -96,7 +103,7 @@ class Update(
 
         if (req.location.iso_alpha_3 != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "sc.locations",
             column = "iso_alpha_3",
             id = req.location.id!!,
             value = req.location.iso_alpha_3,
@@ -104,7 +111,7 @@ class Update(
 
         if (req.location.funding_account != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "sc.locations",
             column = "funding_account",
             id = req.location.id!!,
             value = req.location.funding_account,
@@ -112,7 +119,7 @@ class Update(
 
         if (req.location.type != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "sc.locations",
             column = "type",
             id = req.location.id!!,
             value = req.location.type,
@@ -121,7 +128,7 @@ class Update(
 
         if (req.location.owning_person != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "sc.locations",
             column = "owning_person",
             id = req.location.id!!,
             value = req.location.owning_person,
@@ -129,7 +136,7 @@ class Update(
 
         if (req.location.owning_group != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "sc.locations",
             column = "owning_group",
             id = req.location.id!!,
             value = req.location.owning_group,
@@ -137,7 +144,7 @@ class Update(
 
         if (req.location.peer != null) util.updateField(
             token = req.token,
-            table = "sc.languages",
+            table = "sc.locations",
             column = "peer",
             id = req.location.id!!,
             value = req.location.peer,

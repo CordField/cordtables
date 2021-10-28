@@ -65,8 +65,14 @@ class Create(
 
         var createResponse = commonCreate.createHandler(
             CommonLocationsCreateRequest(
-              token = req.token,
-              location = req.location as CommonLocationInput,
+                token = req.token,
+                location = CommonLocationInput(
+                    name = req.location.name,
+                    type = req.location.type,
+                    owning_person = req.location.owning_person,
+                    owning_group = req.location.owning_group,
+                    peer = req.location.peer,
+                ),
             )
         )
 
@@ -86,7 +92,7 @@ class Create(
                 owning_person, 
                 owning_group)
             values(
-                ?
+                ?,
                 ?,
                 ?::common.location_type,
                 (
@@ -109,6 +115,7 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
+            createResponse.id,
             req.location.name,
             req.location.type,
             req.token,
