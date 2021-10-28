@@ -12,6 +12,8 @@ DECLARE
   vFieldOperationsDirectorsGroupId int;
   vControllerRoleId int;
   vControllersGroupId int;
+  vLeadFinancialAnalystRoleId int;
+  vLeadFinancialAnalystsGroupId int;
 BEGIN
  select count(id)
  from admin.roles
@@ -30,6 +32,8 @@ BEGIN
 
   insert into admin.roles(name, created_by, modified_by, owning_person, owning_group) values ('Controller', 1, 1, 1, 1) returning id into vControllerRoleId;
 
+  insert into admin.roles(name, created_by, modified_by, owning_person, owning_group) values ('Lead Financial Analyst', 1, 1, 1, 1) returning id into vLeadFinancialAnalystRoleId;
+
   -- groups
   insert into admin.groups(name, created_by, modified_by, owning_person, owning_group) values ('Project Managers', 1, 1, 1, 1) returning id into vProjectManagersGroupId;
 
@@ -38,6 +42,8 @@ BEGIN
   insert into admin.groups(name, created_by, modified_by, owning_person, owning_group) values ('Field Operations Director', 1, 1, 1, 1) returning id into vFieldOperationsDirectorsGroupId;
 
   insert into admin.groups(name, created_by, modified_by, owning_person, owning_group) values ('Controller', 1, 1, 1, 1) returning id into vControllersGroupId;
+
+  insert into admin.groups(name, created_by, modified_by, owning_person, owning_group) values ('Lead Financial Analyst', 1, 1, 1, 1) returning id into vLeadFinancialAnalystsGroupId;
 
   -- table grants
   insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vProjectManagerRoleId, 'Create', 'admin.people', 1, 1, 1, 1), (vProjectManagerRoleId, 'Delete', 'admin.people', 1, 1, 1, 1);
@@ -71,6 +77,14 @@ BEGIN
   insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vControllerRoleId, 'Create', 'common.organizations', 1, 1, 1, 1), (vControllerRoleId, 'Delete', 'common.organizations', 1, 1, 1, 1);
 
   insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vControllerRoleId, 'Create', 'sc.languages', 1, 1, 1, 1), (vControllerRoleId, 'Delete', 'sc.languages', 1, 1, 1, 1);
+
+  insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vLeadFinancialAnalystRoleId, 'Create', 'admin.people', 1, 1, 1, 1), (vLeadFinancialAnalystRoleId, 'Delete', 'admin.people', 1, 1, 1, 1);
+
+  insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vLeadFinancialAnalystRoleId, 'Create', 'admin.users', 1, 1, 1, 1), (vLeadFinancialAnalystRoleId, 'Delete', 'admin.users', 1, 1, 1, 1);
+
+  insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vLeadFinancialAnalystRoleId, 'Create', 'common.organizations', 1, 1, 1, 1), (vLeadFinancialAnalystRoleId, 'Delete', 'common.organizations', 1, 1, 1, 1);
+
+  insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group) values (vLeadFinancialAnalystRoleId, 'Create', 'sc.languages', 1, 1, 1, 1), (vLeadFinancialAnalystRoleId, 'Delete', 'sc.languages', 1, 1, 1, 1);
 
   -- column grants
 
@@ -171,6 +185,30 @@ BEGIN
   ('Write', 'title', vControllerRoleId, 'admin.people', 1, 1, 1, 1),
   ('Write', 'status', vControllerRoleId, 'admin.people', 1, 1, 1, 1);
 
+  insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+  values
+  ('Write', 'id', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'neo4j', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'about', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'created_at', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'created_by', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'modified_at', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'modified_by', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'phone', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'picture', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'primary_org', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'private_first_name', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'private_last_name', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'public_first_name', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'public_last_name', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'primary_location', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'private_full_name', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'public_full_name', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'sensitivity_clearance', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'time_zone', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'title', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1),
+  ('Write', 'status', vLeadFinancialAnalystRoleId, 'admin.people', 1, 1, 1, 1);
+
   -- grants on users
   insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
   values
@@ -220,8 +258,20 @@ BEGIN
   ('Write', 'modified_at', vControllerRoleId, 'admin.users', 1, 1, 1, 1),
   ('Write', 'modified_by', vControllerRoleId, 'admin.users', 1, 1, 1, 1);
 
-  -- grants on sc.languages
   insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+  values
+  ('Write', 'id', vLeadFinancialAnalystRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'person', vLeadFinancialAnalystRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'owning_org', vLeadFinancialAnalystRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'email', vLeadFinancialAnalystRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'password', vLeadFinancialAnalystRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'created_at', vLeadFinancialAnalystRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'created_by', vLeadFinancialAnalystRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'modified_at', vLeadFinancialAnalystRoleId, 'admin.users', 1, 1, 1, 1),
+  ('Write', 'modified_by', vLeadFinancialAnalystRoleId, 'admin.users', 1, 1, 1, 1);
+
+  -- grants on sc.languages
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
       values ('Write', 'id', vProjectManagerRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'prioritization', vProjectManagerRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'progress_bible', vProjectManagerRoleId, 'sc.languages', 1, 1, 1, 1),
@@ -301,7 +351,7 @@ BEGIN
       ('Write', 'owning_person', vProjectManagerRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'owning_group', vProjectManagerRoleId, 'sc.languages', 1, 1, 1, 1);
 
-insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
       values ('Write', 'id', vRegionalDirectorRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'prioritization', vRegionalDirectorRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'progress_bible', vRegionalDirectorRoleId, 'sc.languages', 1, 1, 1, 1),
@@ -368,7 +418,7 @@ insert into admin.role_column_grants(access_level, column_name, role, table_name
       ('Write', 'begin_work_rel_pol_obstacles_source', vRegionalDirectorRoleId, 'sc.languages', 1, 1, 1, 1);
 
       insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-       values ('Write', 'suggested_strategies', vRegionalDirectorRoleId, 'sc.languages', 1, 1, 1, 1);
+      values ('Write', 'suggested_strategies', vRegionalDirectorRoleId, 'sc.languages', 1, 1, 1, 1);
       insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
       values ('Write', 'comments', vRegionalDirectorRoleId, 'sc.languages', 1, 1, 1, 1);
 
@@ -381,7 +431,7 @@ insert into admin.role_column_grants(access_level, column_name, role, table_name
       ('Write', 'owning_person', vRegionalDirectorRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'owning_group', vRegionalDirectorRoleId, 'sc.languages', 1, 1, 1, 1);
 
-insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
       values ('Write', 'id', vFieldOperationsDirectorRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'prioritization', vFieldOperationsDirectorRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'progress_bible', vFieldOperationsDirectorRoleId, 'sc.languages', 1, 1, 1, 1),
@@ -541,6 +591,86 @@ insert into admin.role_column_grants(access_level, column_name, role, table_name
       ('Write', 'owning_person', vControllerRoleId, 'sc.languages', 1, 1, 1, 1),
       ('Write', 'owning_group', vControllerRoleId, 'sc.languages', 1, 1, 1, 1);
 
+insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'id', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'prioritization', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'progress_bible', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'location_long', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'island', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'province', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'first_language_population', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'population_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'egids_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'egids_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'least_reached_progress_jps_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'least_reached_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'partner_interest_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'partner_interest_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'partner_interest_description', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'partner_interest_source', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'multiple_languages_leverage_linguistic_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_linguistic_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_linguistic_description', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_linguistic_source', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'multiple_languages_leverage_joint_training_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_joint_training_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_joint_training_description', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'multiple_languages_leverage_joint_training_source', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'lang_comm_int_in_language_development_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_language_development_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_language_development_description', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_language_development_source', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'lang_comm_int_in_scripture_translation_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_scripture_translation_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_scripture_translation_description', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'lang_comm_int_in_scripture_translation_source', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'access_to_scripture_in_lwc_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'access_to_scripture_in_lwc_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'access_to_scripture_in_lwc_description', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'access_to_scripture_in_lwc_source', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'begin_work_geo_challenges_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_geo_challenges_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_geo_challenges_description', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_geo_challenges_source', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'begin_work_rel_pol_obstacles_level', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_rel_pol_obstacles_value', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_rel_pol_obstacles_description', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'begin_work_rel_pol_obstacles_source', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+       values ('Write', 'suggested_strategies', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values ('Write', 'comments', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
+      insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+      values
+      ('Write', 'created_at', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'created_by', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'modified_at', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'modified_by', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'owning_person', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1),
+      ('Write', 'owning_group', vLeadFinancialAnalystRoleId, 'sc.languages', 1, 1, 1, 1);
+
 
   -- grants on organizations
   insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
@@ -598,6 +728,20 @@ insert into admin.role_column_grants(access_level, column_name, role, table_name
 
       insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
       values ('Write', 'name', vControllerRoleId, 'common.organizations', 1, 1, 1, 1);
+
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+        values ('Write', 'id', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1),
+         ('Write', 'neo4j', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1),
+         ('Write', 'created_at', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1),
+         ('Write', 'created_by', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1),
+         ('Write', 'modified_at', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1),
+         ('Write', 'modified_by', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1),
+         ('Write', 'name', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1),
+         ('Write', 'sensitivity', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1),
+         ('Write', 'primary_location', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1);
+
+        insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+        values ('Write', 'name', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1);
 
     error_type := 'NoError';
   end if;
