@@ -30,6 +30,10 @@ dependencies {
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.12.0")
 	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.12.0")
 
+	// https://mvnrepository.com/artifact/org.neo4j.driver/neo4j-java-driver-spring-boot-starter
+	implementation("org.neo4j.driver:neo4j-java-driver-spring-boot-starter:4.2.7.0")
+
+
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
