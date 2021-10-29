@@ -333,6 +333,7 @@ class Utility(
                 rowId = id
             )
         ) {
+            println(column)
             jdbcTemplate.update(
                 """
                     update $table 
