@@ -61,7 +61,7 @@ create table sc.funding_account (
 
 -- LOCATION TABLES ----------------------------------------------------------
 
-create table sc.field_zone (
+create table sc.field_zones (
 	id serial primary key,
 	neo4j_id varchar(32),
 
@@ -602,9 +602,17 @@ create table sc.projects (
 );
 
 create table sc.pinned_projects (
+  id serial primary key,
 	person int not null references sc.people(id),
 	project int not null references sc.projects(id),
-	peer int references admin.peers(id)
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
 );
 
 create table sc.partnerships (
