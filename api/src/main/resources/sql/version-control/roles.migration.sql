@@ -13,7 +13,8 @@ DECLARE
   vControllerRoleId int;
   vControllersGroupId int;
   vLeadFinancialAnalystRoleId int;
-  vLeadFinancialAnalystsGroupId int;
+  vLeadFinancialAnalystsGroupId int
+  vRoleCount int;
 BEGIN
  select count(id)
  from admin.roles
