@@ -612,7 +612,7 @@ create table sc.pinned_projects (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
+  peer int references admin.peers(id)
 );
 
 create table sc.partnerships (

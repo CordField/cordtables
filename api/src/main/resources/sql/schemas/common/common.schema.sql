@@ -224,7 +224,7 @@ create table common.people_to_org_relationships (
 
 	org int not null references common.organizations(id),
 	person int not null references admin.people(id),
-	relationship_type common.people_to_org_relationship_type
+	relationship_type common.people_to_org_relationship_type,
   begin_at timestamp,
   end_at timestamp,
 	
