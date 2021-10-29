@@ -90,8 +90,6 @@ export namespace Components {
     }
     interface GroupsTable {
     }
-    interface LanguagesEx {
-    }
     interface OrganizationsPage {
     }
     interface PageRoot {
@@ -259,12 +257,6 @@ declare global {
         prototype: HTMLGroupsTableElement;
         new (): HTMLGroupsTableElement;
     };
-    interface HTMLLanguagesExElement extends Components.LanguagesEx, HTMLStencilElement {
-    }
-    var HTMLLanguagesExElement: {
-        prototype: HTMLLanguagesExElement;
-        new (): HTMLLanguagesExElement;
-    };
     interface HTMLOrganizationsPageElement extends Components.OrganizationsPage, HTMLStencilElement {
     }
     var HTMLOrganizationsPageElement: {
@@ -361,7 +353,6 @@ declare global {
         "groups-page": HTMLGroupsPageElement;
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
-        "languages-ex": HTMLLanguagesExElement;
         "organizations-page": HTMLOrganizationsPageElement;
         "page-root": HTMLPageRootElement;
         "people-table": HTMLPeopleTableElement;
@@ -462,8 +453,6 @@ declare namespace LocalJSX {
     }
     interface GroupsTable {
     }
-    interface LanguagesEx {
-    }
     interface OrganizationsPage {
     }
     interface PageRoot {
@@ -515,7 +504,6 @@ declare namespace LocalJSX {
         "groups-page": GroupsPage;
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
-        "languages-ex": LanguagesEx;
         "organizations-page": OrganizationsPage;
         "page-root": PageRoot;
         "people-table": PeopleTable;
@@ -557,7 +545,6 @@ declare module "@stencil/core" {
             "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
-            "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
             "organizations-page": LocalJSX.OrganizationsPage & JSXBase.HTMLAttributes<HTMLOrganizationsPageElement>;
             "page-root": LocalJSX.PageRoot & JSXBase.HTMLAttributes<HTMLPageRootElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
