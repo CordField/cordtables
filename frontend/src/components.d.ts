@@ -112,7 +112,39 @@ export namespace Components {
     }
     interface ScLocations {
     }
+    interface ScOrganizationLocations {
+    }
+    interface ScOrganizations {
+    }
+    interface ScPartners {
+    }
+    interface ScPartnerships {
+    }
+    interface ScPeople {
+    }
+    interface ScPersonUnavailabilities {
+    }
+    interface ScPinnedProjects {
+    }
+    interface ScPosts {
+    }
+    interface ScProductScriptureReferences {
+    }
+    interface ScProducts {
+    }
+    interface ScProjectLocations {
+    }
+    interface ScProjects {
+    }
     interface ScriptureReferences {
+    }
+    interface SilCountryCodes {
+    }
+    interface SilLanguageIndex {
+    }
+    interface SilLanguagesCodes {
+    }
+    interface SilTableOfLanguages {
     }
     interface TableRoot {
         "match": MatchResults;
@@ -317,11 +349,107 @@ declare global {
         prototype: HTMLScLocationsElement;
         new (): HTMLScLocationsElement;
     };
+    interface HTMLScOrganizationLocationsElement extends Components.ScOrganizationLocations, HTMLStencilElement {
+    }
+    var HTMLScOrganizationLocationsElement: {
+        prototype: HTMLScOrganizationLocationsElement;
+        new (): HTMLScOrganizationLocationsElement;
+    };
+    interface HTMLScOrganizationsElement extends Components.ScOrganizations, HTMLStencilElement {
+    }
+    var HTMLScOrganizationsElement: {
+        prototype: HTMLScOrganizationsElement;
+        new (): HTMLScOrganizationsElement;
+    };
+    interface HTMLScPartnersElement extends Components.ScPartners, HTMLStencilElement {
+    }
+    var HTMLScPartnersElement: {
+        prototype: HTMLScPartnersElement;
+        new (): HTMLScPartnersElement;
+    };
+    interface HTMLScPartnershipsElement extends Components.ScPartnerships, HTMLStencilElement {
+    }
+    var HTMLScPartnershipsElement: {
+        prototype: HTMLScPartnershipsElement;
+        new (): HTMLScPartnershipsElement;
+    };
+    interface HTMLScPeopleElement extends Components.ScPeople, HTMLStencilElement {
+    }
+    var HTMLScPeopleElement: {
+        prototype: HTMLScPeopleElement;
+        new (): HTMLScPeopleElement;
+    };
+    interface HTMLScPersonUnavailabilitiesElement extends Components.ScPersonUnavailabilities, HTMLStencilElement {
+    }
+    var HTMLScPersonUnavailabilitiesElement: {
+        prototype: HTMLScPersonUnavailabilitiesElement;
+        new (): HTMLScPersonUnavailabilitiesElement;
+    };
+    interface HTMLScPinnedProjectsElement extends Components.ScPinnedProjects, HTMLStencilElement {
+    }
+    var HTMLScPinnedProjectsElement: {
+        prototype: HTMLScPinnedProjectsElement;
+        new (): HTMLScPinnedProjectsElement;
+    };
+    interface HTMLScPostsElement extends Components.ScPosts, HTMLStencilElement {
+    }
+    var HTMLScPostsElement: {
+        prototype: HTMLScPostsElement;
+        new (): HTMLScPostsElement;
+    };
+    interface HTMLScProductScriptureReferencesElement extends Components.ScProductScriptureReferences, HTMLStencilElement {
+    }
+    var HTMLScProductScriptureReferencesElement: {
+        prototype: HTMLScProductScriptureReferencesElement;
+        new (): HTMLScProductScriptureReferencesElement;
+    };
+    interface HTMLScProductsElement extends Components.ScProducts, HTMLStencilElement {
+    }
+    var HTMLScProductsElement: {
+        prototype: HTMLScProductsElement;
+        new (): HTMLScProductsElement;
+    };
+    interface HTMLScProjectLocationsElement extends Components.ScProjectLocations, HTMLStencilElement {
+    }
+    var HTMLScProjectLocationsElement: {
+        prototype: HTMLScProjectLocationsElement;
+        new (): HTMLScProjectLocationsElement;
+    };
+    interface HTMLScProjectsElement extends Components.ScProjects, HTMLStencilElement {
+    }
+    var HTMLScProjectsElement: {
+        prototype: HTMLScProjectsElement;
+        new (): HTMLScProjectsElement;
+    };
     interface HTMLScriptureReferencesElement extends Components.ScriptureReferences, HTMLStencilElement {
     }
     var HTMLScriptureReferencesElement: {
         prototype: HTMLScriptureReferencesElement;
         new (): HTMLScriptureReferencesElement;
+    };
+    interface HTMLSilCountryCodesElement extends Components.SilCountryCodes, HTMLStencilElement {
+    }
+    var HTMLSilCountryCodesElement: {
+        prototype: HTMLSilCountryCodesElement;
+        new (): HTMLSilCountryCodesElement;
+    };
+    interface HTMLSilLanguageIndexElement extends Components.SilLanguageIndex, HTMLStencilElement {
+    }
+    var HTMLSilLanguageIndexElement: {
+        prototype: HTMLSilLanguageIndexElement;
+        new (): HTMLSilLanguageIndexElement;
+    };
+    interface HTMLSilLanguagesCodesElement extends Components.SilLanguagesCodes, HTMLStencilElement {
+    }
+    var HTMLSilLanguagesCodesElement: {
+        prototype: HTMLSilLanguagesCodesElement;
+        new (): HTMLSilLanguagesCodesElement;
+    };
+    interface HTMLSilTableOfLanguagesElement extends Components.SilTableOfLanguages, HTMLStencilElement {
+    }
+    var HTMLSilTableOfLanguagesElement: {
+        prototype: HTMLSilTableOfLanguagesElement;
+        new (): HTMLSilTableOfLanguagesElement;
     };
     interface HTMLTableRootElement extends Components.TableRoot, HTMLStencilElement {
     }
@@ -363,7 +491,23 @@ declare global {
         "roles-table": HTMLRolesTableElement;
         "sc-languages": HTMLScLanguagesElement;
         "sc-locations": HTMLScLocationsElement;
+        "sc-organization-locations": HTMLScOrganizationLocationsElement;
+        "sc-organizations": HTMLScOrganizationsElement;
+        "sc-partners": HTMLScPartnersElement;
+        "sc-partnerships": HTMLScPartnershipsElement;
+        "sc-people": HTMLScPeopleElement;
+        "sc-person-unavailabilities": HTMLScPersonUnavailabilitiesElement;
+        "sc-pinned-projects": HTMLScPinnedProjectsElement;
+        "sc-posts": HTMLScPostsElement;
+        "sc-product-scripture-references": HTMLScProductScriptureReferencesElement;
+        "sc-products": HTMLScProductsElement;
+        "sc-project-locations": HTMLScProjectLocationsElement;
+        "sc-projects": HTMLScProjectsElement;
         "scripture-references": HTMLScriptureReferencesElement;
+        "sil-country-codes": HTMLSilCountryCodesElement;
+        "sil-language-index": HTMLSilLanguageIndexElement;
+        "sil-languages-codes": HTMLSilLanguagesCodesElement;
+        "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
         "table-root": HTMLTableRootElement;
     }
 }
@@ -475,7 +619,39 @@ declare namespace LocalJSX {
     }
     interface ScLocations {
     }
+    interface ScOrganizationLocations {
+    }
+    interface ScOrganizations {
+    }
+    interface ScPartners {
+    }
+    interface ScPartnerships {
+    }
+    interface ScPeople {
+    }
+    interface ScPersonUnavailabilities {
+    }
+    interface ScPinnedProjects {
+    }
+    interface ScPosts {
+    }
+    interface ScProductScriptureReferences {
+    }
+    interface ScProducts {
+    }
+    interface ScProjectLocations {
+    }
+    interface ScProjects {
+    }
     interface ScriptureReferences {
+    }
+    interface SilCountryCodes {
+    }
+    interface SilLanguageIndex {
+    }
+    interface SilLanguagesCodes {
+    }
+    interface SilTableOfLanguages {
     }
     interface TableRoot {
         "match"?: MatchResults;
@@ -514,7 +690,23 @@ declare namespace LocalJSX {
         "roles-table": RolesTable;
         "sc-languages": ScLanguages;
         "sc-locations": ScLocations;
+        "sc-organization-locations": ScOrganizationLocations;
+        "sc-organizations": ScOrganizations;
+        "sc-partners": ScPartners;
+        "sc-partnerships": ScPartnerships;
+        "sc-people": ScPeople;
+        "sc-person-unavailabilities": ScPersonUnavailabilities;
+        "sc-pinned-projects": ScPinnedProjects;
+        "sc-posts": ScPosts;
+        "sc-product-scripture-references": ScProductScriptureReferences;
+        "sc-products": ScProducts;
+        "sc-project-locations": ScProjectLocations;
+        "sc-projects": ScProjects;
         "scripture-references": ScriptureReferences;
+        "sil-country-codes": SilCountryCodes;
+        "sil-language-index": SilLanguageIndex;
+        "sil-languages-codes": SilLanguagesCodes;
+        "sil-table-of-languages": SilTableOfLanguages;
         "table-root": TableRoot;
     }
 }
@@ -555,7 +747,23 @@ declare module "@stencil/core" {
             "roles-table": LocalJSX.RolesTable & JSXBase.HTMLAttributes<HTMLRolesTableElement>;
             "sc-languages": LocalJSX.ScLanguages & JSXBase.HTMLAttributes<HTMLScLanguagesElement>;
             "sc-locations": LocalJSX.ScLocations & JSXBase.HTMLAttributes<HTMLScLocationsElement>;
+            "sc-organization-locations": LocalJSX.ScOrganizationLocations & JSXBase.HTMLAttributes<HTMLScOrganizationLocationsElement>;
+            "sc-organizations": LocalJSX.ScOrganizations & JSXBase.HTMLAttributes<HTMLScOrganizationsElement>;
+            "sc-partners": LocalJSX.ScPartners & JSXBase.HTMLAttributes<HTMLScPartnersElement>;
+            "sc-partnerships": LocalJSX.ScPartnerships & JSXBase.HTMLAttributes<HTMLScPartnershipsElement>;
+            "sc-people": LocalJSX.ScPeople & JSXBase.HTMLAttributes<HTMLScPeopleElement>;
+            "sc-person-unavailabilities": LocalJSX.ScPersonUnavailabilities & JSXBase.HTMLAttributes<HTMLScPersonUnavailabilitiesElement>;
+            "sc-pinned-projects": LocalJSX.ScPinnedProjects & JSXBase.HTMLAttributes<HTMLScPinnedProjectsElement>;
+            "sc-posts": LocalJSX.ScPosts & JSXBase.HTMLAttributes<HTMLScPostsElement>;
+            "sc-product-scripture-references": LocalJSX.ScProductScriptureReferences & JSXBase.HTMLAttributes<HTMLScProductScriptureReferencesElement>;
+            "sc-products": LocalJSX.ScProducts & JSXBase.HTMLAttributes<HTMLScProductsElement>;
+            "sc-project-locations": LocalJSX.ScProjectLocations & JSXBase.HTMLAttributes<HTMLScProjectLocationsElement>;
+            "sc-projects": LocalJSX.ScProjects & JSXBase.HTMLAttributes<HTMLScProjectsElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
+            "sil-country-codes": LocalJSX.SilCountryCodes & JSXBase.HTMLAttributes<HTMLSilCountryCodesElement>;
+            "sil-language-index": LocalJSX.SilLanguageIndex & JSXBase.HTMLAttributes<HTMLSilLanguageIndexElement>;
+            "sil-languages-codes": LocalJSX.SilLanguagesCodes & JSXBase.HTMLAttributes<HTMLSilLanguagesCodesElement>;
+            "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
         }
     }
