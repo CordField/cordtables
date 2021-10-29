@@ -1,7 +1,7 @@
 import { Component, Host, h, Listen, State, Prop } from '@stencil/core';
 import { RouterHistory } from '@stencil/router';
-import { GenericResponse } from '../../../common/types';
-import { fetchAs } from '../../../common/utility';
+import { GenericResponse } from '../../../../common/types';
+import { fetchAs } from '../../../../common/utility';
 
 class readAllResponse extends GenericResponse {
   id: number;

@@ -1,75 +1,72 @@
 import { Component, Host, h, State } from '@stencil/core';
-import { ErrorType, GenericResponse } from '../../../common/types';
-import { fetchAs } from '../../../common/utility';
-import { globals } from '../../../core/global.store';
-import { AdminUser } from '../../../common/types';
-import './admin-users.css';
+import { ErrorType, GenericResponse, GlobalRole } from '../../../../common/types';
+import { fetchAs } from '../../../../common/utility';
+import { globals } from '../../../../core/global.store';
 
-type MutableAdminUserFields = Omit<AdminUser, 'id' | 'createdAt' | 'createdBy' | 'modifiedAt' | 'modifiedBy'>;
+type MutableGlobalRoleFields = Omit<GlobalRole, 'id' | 'createdBy' | 'modifiedBy' | 'modifiedAt' | 'createdAt'>;
 
-class CreateAdminUserRequest {
-  insertedFields: MutableAdminUserFields;
+class CreateGlobalRoleRequest {
+  insertedFields: MutableGlobalRoleFields;
   token: string;
 }
-class CreateAdminUserResponse extends GenericResponse {
-  data: AdminUser;
+
+class CreateGlobalRoleResponse extends GenericResponse {
+  data: GlobalRole;
 }
 
-class UpdateAdminUserRequest {
+class UpdateGlobalRoleRequest {
   token: string;
   columnToUpdate: string;
   updatedColumnValue: string | number;
   id: number;
 }
 
-class UpdateAdminUserResponse extends GenericResponse {
-  data: AdminUser;
+class UpdateGlobalRoleResponse extends GenericResponse {
+  data: GlobalRole;
 }
 
-class DeleteAdminUserRequest {
+class DeleteGlobalRoleRequest {
   id: number;
   token: string;
 }
 
-class DeleteAdminUserResponse extends GenericResponse {
+class DeleteGlobalRoleResponse extends GenericResponse {
   id: number;
 }
 
-class ListAdminUserResponse extends GenericResponse {
-  data: AdminUser[];
+class ReadGlobalRoleRequest {
+  token: string;
 }
 
-class ListAdminUserRequest {
-  token: string;
+class ReadGlobalRoleResponse extends GenericResponse {
+  data: GlobalRole[];
 }
 
 @Component({
-  tag: 'admin-users',
-  styleUrl: 'admin-users.css',
+  tag: 'roles-table',
+  styleUrl: 'global-roles.css',
   shadow: true,
 })
-export class AdminUsers {
+export class GlobalRoles {
   defaultFields = {
     id: null,
-    person: null,
-    email: null,
-    password: null,
-    chat: null,
     created_at: null,
     created_by: null,
     modified_at: null,
     modified_by: null,
-    owning_person: null,
+    name: null,
     owning_group: null,
-    peer: null,
+    owning_person: null,
+    chat: null,
   };
   nonEditableColumns = ['id', 'modified_at', 'created_at', 'created_by', 'modified_by'];
-  @State() adminUsers: AdminUser[] = [];
-  @State() insertedFields: MutableAdminUserFields = this.defaultFields;
+  @State() globalRoles: GlobalRole[] = [];
+  @State() insertedFields: MutableGlobalRoleFields = this.defaultFields;
   @State() error: string;
   @State() success: string;
   @State() showNewForm = false;
   insertFieldChange(event, fieldName) {
+    console.log(fieldName, event.target.value);
     this.insertedFields[fieldName] = event.target.value;
   }
   getInputCell(fieldName) {
@@ -82,23 +79,23 @@ export class AdminUsers {
       </td>
     );
   }
-  getEditableCell(columnName: string, adminUser: AdminUser) {
+  getEditableCell(columnName: string, globalRole: GlobalRole) {
     return (
       <td>
         <cf-cell
           key={columnName}
-          rowId={adminUser.id}
+          rowId={globalRole.id}
           propKey={columnName}
-          value={typeof adminUser[columnName] === 'string' ? adminUser[columnName] : adminUser[columnName]?.toString()}
+          value={globalRole[columnName]}
           isEditable={!this.nonEditableColumns.includes(columnName)}
           updateFn={!this.nonEditableColumns.includes(columnName) ? this.handleUpdate : null}
-        />
+        ></cf-cell>
       </td>
     );
   }
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<UpdateAdminUserRequest, UpdateAdminUserResponse>('table/admin-users/update', {
+    const updateResponse = await fetchAs<UpdateGlobalRoleRequest, UpdateGlobalRoleResponse>('role/update', {
       token: globals.globalStore.state.token,
       updatedColumnValue: value,
       columnToUpdate: columnName,
@@ -106,8 +103,8 @@ export class AdminUsers {
     });
 
     if (updateResponse.error == ErrorType.NoError) {
-      const result = await fetchAs<ListAdminUserRequest, ListAdminUserResponse>('table/admin-users/list', { token: globals.globalStore.state.token });
-      this.adminUsers = result.data.sort((a, b) => a.id - b.id);
+      const result = await fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('role/read', { token: globals.globalStore.state.token });
+      this.globalRoles = result.data.sort((a, b) => a.id - b.id);
       return true;
     } else {
       alert(updateResponse.error);
@@ -115,13 +112,13 @@ export class AdminUsers {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteAdminUserRequest, DeleteAdminUserResponse>('table/admin-users/delete', {
+    const result = await fetchAs<DeleteGlobalRoleRequest, DeleteGlobalRoleResponse>('role/delete', {
       id,
       token: globals.globalStore.state.token,
     });
     if (result.error === ErrorType.NoError) {
       this.success = `Row with id ${result.id} deleted successfully!`;
-      this.adminUsers = this.adminUsers.filter(adminUser => adminUser.id !== result.id);
+      this.globalRoles = this.globalRoles.filter(globalRole => globalRole.id !== result.id);
     } else {
       this.error = result.error;
     }
@@ -130,68 +127,64 @@ export class AdminUsers {
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    const result = await fetchAs<CreateAdminUserRequest, CreateAdminUserResponse>('table/admin-users/create', {
+    console.log(this.insertedFields);
+    const result = await fetchAs<CreateGlobalRoleRequest, CreateGlobalRoleResponse>('role/create', {
       insertedFields: this.insertedFields,
       token: globals.globalStore.state.token,
     });
 
+    console.log(result);
     this.showNewForm = false;
     this.insertedFields = this.defaultFields;
     if (result.error === ErrorType.NoError) {
-      this.adminUsers = this.adminUsers.concat(result.data);
+      this.globalRoles = this.globalRoles.concat(result.data);
       this.success = `New Row with id ${result.data.id} inserted successfully`;
     } else {
-      console.error('Failed to create admin user');
+      console.error('Failed to create global role');
       this.error = result.error;
     }
   };
 
   componentWillLoad() {
-    fetchAs<ListAdminUserRequest, ListAdminUserResponse>('table/admin-users/list', {
+    fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('role/read', {
       token: globals.globalStore.state.token,
     }).then(res => {
-      this.adminUsers = res.data.sort((a, b) => a.id - b.id);
+      this.globalRoles = res.data.sort((a, b) => a.id - b.id);
     });
   }
-
   render() {
     return (
       <Host>
         <div>{this.error}</div>
         <header>
-          <h1>Language Ex</h1>
+          <h1>Global Roles</h1>
         </header>
-
         <main>
           <div id="table-wrap">
             <table>
               <thead>
                 <tr>
-                  {globals.globalStore.state.editMode && <th>*</th>}
+                  <th>*</th>
                   {Object.keys(this.defaultFields).map(key => (
-                    <th>{key.replaceAll('_', ' ')}</th>
+                    <th>{key}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {this.adminUsers &&
-                  this.adminUsers.length > 0 &&
-                  this.adminUsers.map(adminUser => (
-                    <tr>
-                      {globals.globalStore.state.editMode && (
-                        <div class="button-parent">
-                          <button class="delete-button" onClick={() => this.handleDelete(adminUser.id)}>
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                      {Object.keys(adminUser).map(key => this.getEditableCell(key, adminUser))}
-                    </tr>
-                  ))}
+                {this.globalRoles.map(globalRole => (
+                  <tr>
+                    <div class="button-parent">
+                      <button class="delete-button" onClick={() => this.handleDelete(globalRole.id)}>
+                        Delete
+                      </button>
+                    </div>
+                    {Object.keys(globalRole).map(key => this.getEditableCell(key, globalRole))}
+                  </tr>
+                ))}
               </tbody>
               {this.showNewForm && (
                 <tr>
-                  {globals.globalStore.state.editMode && <td>&nbsp;</td>}
+                  <td>&nbsp;</td>
                   {Object.keys(this.defaultFields).map(key => this.getInputCell(key))}
                 </tr>
               )}
@@ -205,7 +198,7 @@ export class AdminUsers {
                   this.showNewForm = !this.showNewForm;
                 }}
               >
-                Create New Admin User
+                Create New Global Role
               </button>
             )}
 

@@ -1,8 +1,8 @@
 import { Component, Host, h, State } from '@stencil/core';
-import { ErrorType, GenericResponse } from '../../../common/types';
-import { fetchAs } from '../../../common/utility';
-import { globals } from '../../../core/global.store';
-import { LanguageEx } from '../../../common/types';
+import { ErrorType, GenericResponse } from '../../../../common/types';
+import { fetchAs } from '../../../../common/utility';
+import { globals } from '../../../../core/global.store';
+import { LanguageEx } from '../../../../common/types';
 import './languages-ex.css';
 
 type MutableLanguageExFields = Omit<
