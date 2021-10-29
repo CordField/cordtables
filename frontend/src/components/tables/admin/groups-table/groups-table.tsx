@@ -1,31 +1,30 @@
 import { Component, Host, h, State } from '@stencil/core';
-import { ActionType, ErrorType } from '../../../common/types';
-import { fetchAs } from '../../../common/utility';
-import { globals } from '../../../core/global.store';
-
-class GroupMembershipsListRequest {
+import { ActionType, ErrorType } from '../../../../common/types';
+import { fetchAs } from '../../../../common/utility';
+import { globals } from '../../../../core/global.store';
+class GroupsListRequest {
   token: string;
 }
 
-class GroupMembershipsRow {
+class GroupsRow {
   id: number;
-  group: number;
-  person: number;
+  name: string;
   createdAt: string;
   createdBy: number;
   modifiedAt: string;
   modifiedBy: number;
+  owningPerson: number;
+  owningGroup: number;
 }
 
-class GroupMembershipsListResponse {
+class GroupsListResponse {
   error: ErrorType;
-  groupMemberships: Array<GroupMembershipsRow>;
+  groups: Array<GroupsRow>;
 }
 
 class GroupCreateRequest {
   token: string;
-  group: number;
-  person: number;
+  name: string;
 }
 
 class GroupCreateResponse {
@@ -52,72 +51,63 @@ class GroupDeleteResponse {
 }
 
 @Component({
-  tag: 'group-memberships',
-  styleUrl: 'group-memberships.css',
+  tag: 'groups-table',
+  styleUrl: 'groups-table.css',
   shadow: true,
 })
-export class GroupMemberships {
-  @State() listResponse: GroupMembershipsListResponse;
+export class CfGroups {
+  @State() listResponse: GroupsListResponse;
   @State() showNewForm = false;
 
   createResponse: GroupCreateResponse;
   deleteResponse: GroupDeleteResponse;
 
-  newRowGroup: number;
-  newRowPerson: number;
+  newRowName: string;
 
-  editableKeys = [];
+  editableKeys = ['name'];
 
   async connectedCallback() {
     this.getList();
   }
 
   async getList() {
-    this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('groupmemberships/list', { token: globals.globalStore.state.token });
+    this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('groups/list', { token: globals.globalStore.state.token });
   }
 
   toggleNewForm = () => {
     this.showNewForm = !this.showNewForm;
   };
 
-  inputGroup(event) {
-    this.newRowGroup = +event.target.value;
-  }
-
-  inputPerson(event) {
-    this.newRowPerson = +event.target.value;
+  inputName(event) {
+    this.newRowName = event.target.value;
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('groupmemberships/create', {
-      token: globals.globalStore.state.token,
-      group: this.newRowGroup,
-      person: this.newRowPerson,
-    });
+    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('groups/create', { token: globals.globalStore.state.token, name: this.newRowName });
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('groupmemberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('groups/list', { token: globals.globalStore.state.token });
     } else {
       console.warn('Error creating group');
     }
   };
 
-  updateName = async (id: number, value: string): Promise<boolean> => {
-    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groupmemberships/update', { token: globals.globalStore.state.token, name: value, id });
+  updateName = async (id: number, columnName: string, value: string): Promise<boolean> => {
+    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, name: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('groupmemberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('groups/list', { token: globals.globalStore.state.token });
       return true;
     } else {
     }
   };
 
   clickRemoveRowIcon = async (value: number): Promise<boolean> => {
-    this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groupmemberships/delete', { token: globals.globalStore.state.token, id: value });
+    this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groups/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('groupmemberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('groups/list', { token: globals.globalStore.state.token });
       return true;
     } else {
       return false;
@@ -128,20 +118,17 @@ export class GroupMemberships {
     return (
       <Host>
         <slot></slot>
-        <h3>Group Memberships</h3>
+        <h3>Groups</h3>
         <div id="table-wrap">
           <table>
-            <tr id="header-row">
-              {this.listResponse &&
-                this.listResponse.groupMemberships &&
-                this.listResponse.groupMemberships.length > 0 &&
-                Object.keys(this.listResponse.groupMemberships[0]).map(key => <th>{key}</th>)}
+            <tr>
+              {this.listResponse && this.listResponse.groups && this.listResponse.groups.length > 0 && Object.keys(this.listResponse.groups[0]).map(key => <th>{key}</th>)}
               <th>ACTIONS</th>
             </tr>
 
             {this.listResponse &&
-              this.listResponse.groupMemberships &&
-              this.listResponse.groupMemberships.map(item => (
+              this.listResponse.groups &&
+              this.listResponse.groups.map(item => (
                 <tr>
                   {Object.keys(item).map(key => (
                     <td>
@@ -165,11 +152,10 @@ export class GroupMemberships {
               <tr>
                 <td class="disabled">&nbsp;</td>
                 <td>
-                  <input type="text" id="group-input" name="group" onInput={event => this.inputGroup(event)}></input>
+                  <input type="text" id="name-input" name="name" onInput={event => this.inputName(event)}></input>
                 </td>
-                <td>
-                  <input type="text" id="group-input" name="group" onInput={event => this.inputPerson(event)}></input>
-                </td>
+                <td class="disabled">&nbsp;</td>
+                <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>
@@ -182,7 +168,7 @@ export class GroupMemberships {
         <div id="button-group">
           {!this.showNewForm && (
             <button id="new-button" onClick={this.toggleNewForm}>
-              Create New Group Membership
+              Create New Group
             </button>
           )}
 

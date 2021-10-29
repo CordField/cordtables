@@ -1,7 +1,7 @@
 import { Component, Host, h, State } from '@stencil/core';
-import { ActionType, ErrorType } from '../../../common/types';
-import { fetchAs } from '../../../common/utility';
-import { globals } from '../../../core/global.store';
+import { ActionType, ErrorType } from '../../../../common/types';
+import { fetchAs } from '../../../../common/utility';
+import { globals } from '../../../../core/global.store';
 class GroupRowAccessListRequest {
   token: string;
 }

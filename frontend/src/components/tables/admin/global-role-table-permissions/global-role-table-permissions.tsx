@@ -1,7 +1,7 @@
 import { Component, Host, h, State } from '@stencil/core';
-import { ErrorType, GenericResponse, globalRoleTablePermissions } from '../../../common/types';
-import { fetchAs } from '../../../common/utility';
-import { globals } from '../../../core/global.store';
+import { ErrorType, GenericResponse, globalRoleTablePermissions } from '../../../../common/types';
+import { fetchAs } from '../../../../common/utility';
+import { globals } from '../../../../core/global.store';
 
 type MutablePermissionsFields = Omit<globalRoleTablePermissions, 'id' | 'createdBy' | 'modifiedBy' | 'modifiedAt' | 'createdAt'>;
 class CreateGlobalRoleTablePermissionsRequest {
@@ -60,7 +60,7 @@ export class GlobalRoleTablePermissions {
 
   handleUpdate = async id => {
     const result = await fetchAs<UpdatePermissionsRequest, UpdatePermissionsResponse>('globalrolestablepermissions/update', {
-      table_name: this.updatedFields.tableName,  
+      table_name: this.updatedFields.tableName,
       role: this.updatedFields.globalRole,
       table_permission: this.updatedFields.tablePermission,
       email: globals.globalStore.state.email,
@@ -68,7 +68,7 @@ export class GlobalRoleTablePermissions {
     });
     if (result.error === ErrorType.NoError) {
       this.updatedFields = this.defaultFields;
-      
+
       this.globalRoleTablePermissions = this.globalRoleTablePermissions.map(globalRoleTablePermissions =>
         globalRoleTablePermissions.id === result.globalRolesTablePermissions.id ? result.globalRolesTablePermissions : globalRoleTablePermissions,
       );
@@ -100,7 +100,6 @@ export class GlobalRoleTablePermissions {
       insertedFields: this.insertedFields,
       email: globals.globalStore.state.email,
     });
-
 
     if (result.error === ErrorType.NoError) {
       this.insertedFields = this.defaultFields;
