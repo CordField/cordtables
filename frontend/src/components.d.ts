@@ -6,7 +6,6 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
-import { ActionType } from "./common/types";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
@@ -21,20 +20,7 @@ export namespace Components {
     interface AppRoot {
         "history": RouterHistory;
     }
-    interface CfAction {
-        "actionFn": (value: any) => Promise<boolean>;
-        "actionType": ActionType;
-        "text": any;
-        "value": any;
-    }
-    interface CfCell {
-        "isEditable": boolean;
-        "options"?: Array<string>;
-        "propKey": keyof any;
-        "rowId": number;
-        "type"?: string;
-        "updateFn": (id: number, columnName: any, value: any) => Promise<boolean>;
-        "value": any;
+    interface CellChannels {
     }
     interface CfCell2 {
         "cellType": CellType;
@@ -77,6 +63,18 @@ export namespace Components {
         "isOpen": boolean;
         "modalTitle": String;
     }
+    interface DirectoriesTable {
+    }
+    interface DiscussionChannels {
+    }
+    interface EducationByPerson {
+    }
+    interface EducationEntries {
+    }
+    interface FileVersions {
+    }
+    interface FilesTable {
+    }
     interface GenericTable {
         "columns": Array<any>;
         "name": String;
@@ -90,14 +88,22 @@ export namespace Components {
     }
     interface GroupsTable {
     }
-    interface LanguagesEx {
+    interface LocationsTable {
     }
     interface OrganizationsPage {
+    }
+    interface OrganizationsTable {
     }
     interface PageRoot {
         "match": MatchResults;
     }
+    interface PeersTable {
+    }
     interface PeopleTable {
+    }
+    interface PeopleToOrgRelationships {
+    }
+    interface PostsTable {
     }
     interface RoleColumnGrants {
         "history": RouterHistory;
@@ -110,14 +116,92 @@ export namespace Components {
     }
     interface RolesTable {
     }
+    interface ScBudgetRecords {
+    }
+    interface ScBudgets {
+    }
+    interface ScCeremonies {
+    }
+    interface ScChangeToPlan {
+    }
+    interface ScFieldRegions {
+    }
+    interface ScFieldZones {
+    }
+    interface ScFundingAccounts {
+    }
+    interface ScInternshipEngagements {
+    }
+    interface ScKnownLanguagesByPerson {
+    }
+    interface ScLanguageEngagements {
+    }
     interface ScLanguages {
     }
     interface ScLocations {
     }
+    interface ScOrganizationLocations {
+    }
+    interface ScOrganizations {
+    }
+    interface ScPartners {
+    }
+    interface ScPartnerships {
+    }
+    interface ScPeople {
+    }
+    interface ScPersonUnavailabilities {
+    }
+    interface ScPinnedProjects {
+    }
+    interface ScPosts {
+    }
+    interface ScProductScriptureReferences {
+    }
+    interface ScProducts {
+    }
+    interface ScProjectLocations {
+    }
+    interface ScProjects {
+    }
     interface ScriptureReferences {
+    }
+    interface SilCountryCodes {
+    }
+    interface SilLanguageIndex {
+    }
+    interface SilLanguagesCodes {
+    }
+    interface SilTableOfLanguages {
+    }
+    interface SiteText {
+    }
+    interface StageGraph {
+    }
+    interface StageNotifications {
+    }
+    interface StageRoleColumnGrants {
+    }
+    interface StagesTable {
     }
     interface TableRoot {
         "match": MatchResults;
+    }
+    interface ThreadsTable {
+    }
+    interface TicketAssignments {
+    }
+    interface TicketFeedback {
+    }
+    interface TicketsTable {
+    }
+    interface UsersTable {
+    }
+    interface WorkEstimates {
+    }
+    interface WorkRecords {
+    }
+    interface WorkflowsTable {
     }
 }
 declare global {
@@ -145,17 +229,11 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
-    interface HTMLCfActionElement extends Components.CfAction, HTMLStencilElement {
+    interface HTMLCellChannelsElement extends Components.CellChannels, HTMLStencilElement {
     }
-    var HTMLCfActionElement: {
-        prototype: HTMLCfActionElement;
-        new (): HTMLCfActionElement;
-    };
-    interface HTMLCfCellElement extends Components.CfCell, HTMLStencilElement {
-    }
-    var HTMLCfCellElement: {
-        prototype: HTMLCfCellElement;
-        new (): HTMLCfCellElement;
+    var HTMLCellChannelsElement: {
+        prototype: HTMLCellChannelsElement;
+        new (): HTMLCellChannelsElement;
     };
     interface HTMLCfCell2Element extends Components.CfCell2, HTMLStencilElement {
     }
@@ -229,6 +307,42 @@ declare global {
         prototype: HTMLCreateUpdateModalElement;
         new (): HTMLCreateUpdateModalElement;
     };
+    interface HTMLDirectoriesTableElement extends Components.DirectoriesTable, HTMLStencilElement {
+    }
+    var HTMLDirectoriesTableElement: {
+        prototype: HTMLDirectoriesTableElement;
+        new (): HTMLDirectoriesTableElement;
+    };
+    interface HTMLDiscussionChannelsElement extends Components.DiscussionChannels, HTMLStencilElement {
+    }
+    var HTMLDiscussionChannelsElement: {
+        prototype: HTMLDiscussionChannelsElement;
+        new (): HTMLDiscussionChannelsElement;
+    };
+    interface HTMLEducationByPersonElement extends Components.EducationByPerson, HTMLStencilElement {
+    }
+    var HTMLEducationByPersonElement: {
+        prototype: HTMLEducationByPersonElement;
+        new (): HTMLEducationByPersonElement;
+    };
+    interface HTMLEducationEntriesElement extends Components.EducationEntries, HTMLStencilElement {
+    }
+    var HTMLEducationEntriesElement: {
+        prototype: HTMLEducationEntriesElement;
+        new (): HTMLEducationEntriesElement;
+    };
+    interface HTMLFileVersionsElement extends Components.FileVersions, HTMLStencilElement {
+    }
+    var HTMLFileVersionsElement: {
+        prototype: HTMLFileVersionsElement;
+        new (): HTMLFileVersionsElement;
+    };
+    interface HTMLFilesTableElement extends Components.FilesTable, HTMLStencilElement {
+    }
+    var HTMLFilesTableElement: {
+        prototype: HTMLFilesTableElement;
+        new (): HTMLFilesTableElement;
+    };
     interface HTMLGenericTableElement extends Components.GenericTable, HTMLStencilElement {
     }
     var HTMLGenericTableElement: {
@@ -259,11 +373,11 @@ declare global {
         prototype: HTMLGroupsTableElement;
         new (): HTMLGroupsTableElement;
     };
-    interface HTMLLanguagesExElement extends Components.LanguagesEx, HTMLStencilElement {
+    interface HTMLLocationsTableElement extends Components.LocationsTable, HTMLStencilElement {
     }
-    var HTMLLanguagesExElement: {
-        prototype: HTMLLanguagesExElement;
-        new (): HTMLLanguagesExElement;
+    var HTMLLocationsTableElement: {
+        prototype: HTMLLocationsTableElement;
+        new (): HTMLLocationsTableElement;
     };
     interface HTMLOrganizationsPageElement extends Components.OrganizationsPage, HTMLStencilElement {
     }
@@ -271,17 +385,41 @@ declare global {
         prototype: HTMLOrganizationsPageElement;
         new (): HTMLOrganizationsPageElement;
     };
+    interface HTMLOrganizationsTableElement extends Components.OrganizationsTable, HTMLStencilElement {
+    }
+    var HTMLOrganizationsTableElement: {
+        prototype: HTMLOrganizationsTableElement;
+        new (): HTMLOrganizationsTableElement;
+    };
     interface HTMLPageRootElement extends Components.PageRoot, HTMLStencilElement {
     }
     var HTMLPageRootElement: {
         prototype: HTMLPageRootElement;
         new (): HTMLPageRootElement;
     };
+    interface HTMLPeersTableElement extends Components.PeersTable, HTMLStencilElement {
+    }
+    var HTMLPeersTableElement: {
+        prototype: HTMLPeersTableElement;
+        new (): HTMLPeersTableElement;
+    };
     interface HTMLPeopleTableElement extends Components.PeopleTable, HTMLStencilElement {
     }
     var HTMLPeopleTableElement: {
         prototype: HTMLPeopleTableElement;
         new (): HTMLPeopleTableElement;
+    };
+    interface HTMLPeopleToOrgRelationshipsElement extends Components.PeopleToOrgRelationships, HTMLStencilElement {
+    }
+    var HTMLPeopleToOrgRelationshipsElement: {
+        prototype: HTMLPeopleToOrgRelationshipsElement;
+        new (): HTMLPeopleToOrgRelationshipsElement;
+    };
+    interface HTMLPostsTableElement extends Components.PostsTable, HTMLStencilElement {
+    }
+    var HTMLPostsTableElement: {
+        prototype: HTMLPostsTableElement;
+        new (): HTMLPostsTableElement;
     };
     interface HTMLRoleColumnGrantsElement extends Components.RoleColumnGrants, HTMLStencilElement {
     }
@@ -313,6 +451,66 @@ declare global {
         prototype: HTMLRolesTableElement;
         new (): HTMLRolesTableElement;
     };
+    interface HTMLScBudgetRecordsElement extends Components.ScBudgetRecords, HTMLStencilElement {
+    }
+    var HTMLScBudgetRecordsElement: {
+        prototype: HTMLScBudgetRecordsElement;
+        new (): HTMLScBudgetRecordsElement;
+    };
+    interface HTMLScBudgetsElement extends Components.ScBudgets, HTMLStencilElement {
+    }
+    var HTMLScBudgetsElement: {
+        prototype: HTMLScBudgetsElement;
+        new (): HTMLScBudgetsElement;
+    };
+    interface HTMLScCeremoniesElement extends Components.ScCeremonies, HTMLStencilElement {
+    }
+    var HTMLScCeremoniesElement: {
+        prototype: HTMLScCeremoniesElement;
+        new (): HTMLScCeremoniesElement;
+    };
+    interface HTMLScChangeToPlanElement extends Components.ScChangeToPlan, HTMLStencilElement {
+    }
+    var HTMLScChangeToPlanElement: {
+        prototype: HTMLScChangeToPlanElement;
+        new (): HTMLScChangeToPlanElement;
+    };
+    interface HTMLScFieldRegionsElement extends Components.ScFieldRegions, HTMLStencilElement {
+    }
+    var HTMLScFieldRegionsElement: {
+        prototype: HTMLScFieldRegionsElement;
+        new (): HTMLScFieldRegionsElement;
+    };
+    interface HTMLScFieldZonesElement extends Components.ScFieldZones, HTMLStencilElement {
+    }
+    var HTMLScFieldZonesElement: {
+        prototype: HTMLScFieldZonesElement;
+        new (): HTMLScFieldZonesElement;
+    };
+    interface HTMLScFundingAccountsElement extends Components.ScFundingAccounts, HTMLStencilElement {
+    }
+    var HTMLScFundingAccountsElement: {
+        prototype: HTMLScFundingAccountsElement;
+        new (): HTMLScFundingAccountsElement;
+    };
+    interface HTMLScInternshipEngagementsElement extends Components.ScInternshipEngagements, HTMLStencilElement {
+    }
+    var HTMLScInternshipEngagementsElement: {
+        prototype: HTMLScInternshipEngagementsElement;
+        new (): HTMLScInternshipEngagementsElement;
+    };
+    interface HTMLScKnownLanguagesByPersonElement extends Components.ScKnownLanguagesByPerson, HTMLStencilElement {
+    }
+    var HTMLScKnownLanguagesByPersonElement: {
+        prototype: HTMLScKnownLanguagesByPersonElement;
+        new (): HTMLScKnownLanguagesByPersonElement;
+    };
+    interface HTMLScLanguageEngagementsElement extends Components.ScLanguageEngagements, HTMLStencilElement {
+    }
+    var HTMLScLanguageEngagementsElement: {
+        prototype: HTMLScLanguageEngagementsElement;
+        new (): HTMLScLanguageEngagementsElement;
+    };
     interface HTMLScLanguagesElement extends Components.ScLanguages, HTMLStencilElement {
     }
     var HTMLScLanguagesElement: {
@@ -325,11 +523,137 @@ declare global {
         prototype: HTMLScLocationsElement;
         new (): HTMLScLocationsElement;
     };
+    interface HTMLScOrganizationLocationsElement extends Components.ScOrganizationLocations, HTMLStencilElement {
+    }
+    var HTMLScOrganizationLocationsElement: {
+        prototype: HTMLScOrganizationLocationsElement;
+        new (): HTMLScOrganizationLocationsElement;
+    };
+    interface HTMLScOrganizationsElement extends Components.ScOrganizations, HTMLStencilElement {
+    }
+    var HTMLScOrganizationsElement: {
+        prototype: HTMLScOrganizationsElement;
+        new (): HTMLScOrganizationsElement;
+    };
+    interface HTMLScPartnersElement extends Components.ScPartners, HTMLStencilElement {
+    }
+    var HTMLScPartnersElement: {
+        prototype: HTMLScPartnersElement;
+        new (): HTMLScPartnersElement;
+    };
+    interface HTMLScPartnershipsElement extends Components.ScPartnerships, HTMLStencilElement {
+    }
+    var HTMLScPartnershipsElement: {
+        prototype: HTMLScPartnershipsElement;
+        new (): HTMLScPartnershipsElement;
+    };
+    interface HTMLScPeopleElement extends Components.ScPeople, HTMLStencilElement {
+    }
+    var HTMLScPeopleElement: {
+        prototype: HTMLScPeopleElement;
+        new (): HTMLScPeopleElement;
+    };
+    interface HTMLScPersonUnavailabilitiesElement extends Components.ScPersonUnavailabilities, HTMLStencilElement {
+    }
+    var HTMLScPersonUnavailabilitiesElement: {
+        prototype: HTMLScPersonUnavailabilitiesElement;
+        new (): HTMLScPersonUnavailabilitiesElement;
+    };
+    interface HTMLScPinnedProjectsElement extends Components.ScPinnedProjects, HTMLStencilElement {
+    }
+    var HTMLScPinnedProjectsElement: {
+        prototype: HTMLScPinnedProjectsElement;
+        new (): HTMLScPinnedProjectsElement;
+    };
+    interface HTMLScPostsElement extends Components.ScPosts, HTMLStencilElement {
+    }
+    var HTMLScPostsElement: {
+        prototype: HTMLScPostsElement;
+        new (): HTMLScPostsElement;
+    };
+    interface HTMLScProductScriptureReferencesElement extends Components.ScProductScriptureReferences, HTMLStencilElement {
+    }
+    var HTMLScProductScriptureReferencesElement: {
+        prototype: HTMLScProductScriptureReferencesElement;
+        new (): HTMLScProductScriptureReferencesElement;
+    };
+    interface HTMLScProductsElement extends Components.ScProducts, HTMLStencilElement {
+    }
+    var HTMLScProductsElement: {
+        prototype: HTMLScProductsElement;
+        new (): HTMLScProductsElement;
+    };
+    interface HTMLScProjectLocationsElement extends Components.ScProjectLocations, HTMLStencilElement {
+    }
+    var HTMLScProjectLocationsElement: {
+        prototype: HTMLScProjectLocationsElement;
+        new (): HTMLScProjectLocationsElement;
+    };
+    interface HTMLScProjectsElement extends Components.ScProjects, HTMLStencilElement {
+    }
+    var HTMLScProjectsElement: {
+        prototype: HTMLScProjectsElement;
+        new (): HTMLScProjectsElement;
+    };
     interface HTMLScriptureReferencesElement extends Components.ScriptureReferences, HTMLStencilElement {
     }
     var HTMLScriptureReferencesElement: {
         prototype: HTMLScriptureReferencesElement;
         new (): HTMLScriptureReferencesElement;
+    };
+    interface HTMLSilCountryCodesElement extends Components.SilCountryCodes, HTMLStencilElement {
+    }
+    var HTMLSilCountryCodesElement: {
+        prototype: HTMLSilCountryCodesElement;
+        new (): HTMLSilCountryCodesElement;
+    };
+    interface HTMLSilLanguageIndexElement extends Components.SilLanguageIndex, HTMLStencilElement {
+    }
+    var HTMLSilLanguageIndexElement: {
+        prototype: HTMLSilLanguageIndexElement;
+        new (): HTMLSilLanguageIndexElement;
+    };
+    interface HTMLSilLanguagesCodesElement extends Components.SilLanguagesCodes, HTMLStencilElement {
+    }
+    var HTMLSilLanguagesCodesElement: {
+        prototype: HTMLSilLanguagesCodesElement;
+        new (): HTMLSilLanguagesCodesElement;
+    };
+    interface HTMLSilTableOfLanguagesElement extends Components.SilTableOfLanguages, HTMLStencilElement {
+    }
+    var HTMLSilTableOfLanguagesElement: {
+        prototype: HTMLSilTableOfLanguagesElement;
+        new (): HTMLSilTableOfLanguagesElement;
+    };
+    interface HTMLSiteTextElement extends Components.SiteText, HTMLStencilElement {
+    }
+    var HTMLSiteTextElement: {
+        prototype: HTMLSiteTextElement;
+        new (): HTMLSiteTextElement;
+    };
+    interface HTMLStageGraphElement extends Components.StageGraph, HTMLStencilElement {
+    }
+    var HTMLStageGraphElement: {
+        prototype: HTMLStageGraphElement;
+        new (): HTMLStageGraphElement;
+    };
+    interface HTMLStageNotificationsElement extends Components.StageNotifications, HTMLStencilElement {
+    }
+    var HTMLStageNotificationsElement: {
+        prototype: HTMLStageNotificationsElement;
+        new (): HTMLStageNotificationsElement;
+    };
+    interface HTMLStageRoleColumnGrantsElement extends Components.StageRoleColumnGrants, HTMLStencilElement {
+    }
+    var HTMLStageRoleColumnGrantsElement: {
+        prototype: HTMLStageRoleColumnGrantsElement;
+        new (): HTMLStageRoleColumnGrantsElement;
+    };
+    interface HTMLStagesTableElement extends Components.StagesTable, HTMLStencilElement {
+    }
+    var HTMLStagesTableElement: {
+        prototype: HTMLStagesTableElement;
+        new (): HTMLStagesTableElement;
     };
     interface HTMLTableRootElement extends Components.TableRoot, HTMLStencilElement {
     }
@@ -337,13 +661,60 @@ declare global {
         prototype: HTMLTableRootElement;
         new (): HTMLTableRootElement;
     };
+    interface HTMLThreadsTableElement extends Components.ThreadsTable, HTMLStencilElement {
+    }
+    var HTMLThreadsTableElement: {
+        prototype: HTMLThreadsTableElement;
+        new (): HTMLThreadsTableElement;
+    };
+    interface HTMLTicketAssignmentsElement extends Components.TicketAssignments, HTMLStencilElement {
+    }
+    var HTMLTicketAssignmentsElement: {
+        prototype: HTMLTicketAssignmentsElement;
+        new (): HTMLTicketAssignmentsElement;
+    };
+    interface HTMLTicketFeedbackElement extends Components.TicketFeedback, HTMLStencilElement {
+    }
+    var HTMLTicketFeedbackElement: {
+        prototype: HTMLTicketFeedbackElement;
+        new (): HTMLTicketFeedbackElement;
+    };
+    interface HTMLTicketsTableElement extends Components.TicketsTable, HTMLStencilElement {
+    }
+    var HTMLTicketsTableElement: {
+        prototype: HTMLTicketsTableElement;
+        new (): HTMLTicketsTableElement;
+    };
+    interface HTMLUsersTableElement extends Components.UsersTable, HTMLStencilElement {
+    }
+    var HTMLUsersTableElement: {
+        prototype: HTMLUsersTableElement;
+        new (): HTMLUsersTableElement;
+    };
+    interface HTMLWorkEstimatesElement extends Components.WorkEstimates, HTMLStencilElement {
+    }
+    var HTMLWorkEstimatesElement: {
+        prototype: HTMLWorkEstimatesElement;
+        new (): HTMLWorkEstimatesElement;
+    };
+    interface HTMLWorkRecordsElement extends Components.WorkRecords, HTMLStencilElement {
+    }
+    var HTMLWorkRecordsElement: {
+        prototype: HTMLWorkRecordsElement;
+        new (): HTMLWorkRecordsElement;
+    };
+    interface HTMLWorkflowsTableElement extends Components.WorkflowsTable, HTMLStencilElement {
+    }
+    var HTMLWorkflowsTableElement: {
+        prototype: HTMLWorkflowsTableElement;
+        new (): HTMLWorkflowsTableElement;
+    };
     interface HTMLElementTagNameMap {
         "admin-users": HTMLAdminUsersElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
-        "cf-action": HTMLCfActionElement;
-        "cf-cell": HTMLCfCellElement;
+        "cell-channels": HTMLCellChannelsElement;
         "cf-cell2": HTMLCfCell2Element;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
@@ -356,24 +727,73 @@ declare global {
         "cf-tiny": HTMLCfTinyElement;
         "common-organizations": HTMLCommonOrganizationsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
+        "directories-table": HTMLDirectoriesTableElement;
+        "discussion-channels": HTMLDiscussionChannelsElement;
+        "education-by-person": HTMLEducationByPersonElement;
+        "education-entries": HTMLEducationEntriesElement;
+        "file-versions": HTMLFileVersionsElement;
+        "files-table": HTMLFilesTableElement;
         "generic-table": HTMLGenericTableElement;
         "group-memberships": HTMLGroupMembershipsElement;
         "groups-page": HTMLGroupsPageElement;
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
-        "languages-ex": HTMLLanguagesExElement;
+        "locations-table": HTMLLocationsTableElement;
         "organizations-page": HTMLOrganizationsPageElement;
+        "organizations-table": HTMLOrganizationsTableElement;
         "page-root": HTMLPageRootElement;
+        "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
+        "people-to-org-relationships": HTMLPeopleToOrgRelationshipsElement;
+        "posts-table": HTMLPostsTableElement;
         "role-column-grants": HTMLRoleColumnGrantsElement;
         "role-memberships": HTMLRoleMembershipsElement;
         "role-table-permissions": HTMLRoleTablePermissionsElement;
         "roles-page": HTMLRolesPageElement;
         "roles-table": HTMLRolesTableElement;
+        "sc-budget-records": HTMLScBudgetRecordsElement;
+        "sc-budgets": HTMLScBudgetsElement;
+        "sc-ceremonies": HTMLScCeremoniesElement;
+        "sc-change-to-plan": HTMLScChangeToPlanElement;
+        "sc-field-regions": HTMLScFieldRegionsElement;
+        "sc-field-zones": HTMLScFieldZonesElement;
+        "sc-funding-accounts": HTMLScFundingAccountsElement;
+        "sc-internship-engagements": HTMLScInternshipEngagementsElement;
+        "sc-known-languages-by-person": HTMLScKnownLanguagesByPersonElement;
+        "sc-language-engagements": HTMLScLanguageEngagementsElement;
         "sc-languages": HTMLScLanguagesElement;
         "sc-locations": HTMLScLocationsElement;
+        "sc-organization-locations": HTMLScOrganizationLocationsElement;
+        "sc-organizations": HTMLScOrganizationsElement;
+        "sc-partners": HTMLScPartnersElement;
+        "sc-partnerships": HTMLScPartnershipsElement;
+        "sc-people": HTMLScPeopleElement;
+        "sc-person-unavailabilities": HTMLScPersonUnavailabilitiesElement;
+        "sc-pinned-projects": HTMLScPinnedProjectsElement;
+        "sc-posts": HTMLScPostsElement;
+        "sc-product-scripture-references": HTMLScProductScriptureReferencesElement;
+        "sc-products": HTMLScProductsElement;
+        "sc-project-locations": HTMLScProjectLocationsElement;
+        "sc-projects": HTMLScProjectsElement;
         "scripture-references": HTMLScriptureReferencesElement;
+        "sil-country-codes": HTMLSilCountryCodesElement;
+        "sil-language-index": HTMLSilLanguageIndexElement;
+        "sil-languages-codes": HTMLSilLanguagesCodesElement;
+        "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
+        "site-text": HTMLSiteTextElement;
+        "stage-graph": HTMLStageGraphElement;
+        "stage-notifications": HTMLStageNotificationsElement;
+        "stage-role-column-grants": HTMLStageRoleColumnGrantsElement;
+        "stages-table": HTMLStagesTableElement;
         "table-root": HTMLTableRootElement;
+        "threads-table": HTMLThreadsTableElement;
+        "ticket-assignments": HTMLTicketAssignmentsElement;
+        "ticket-feedback": HTMLTicketFeedbackElement;
+        "tickets-table": HTMLTicketsTableElement;
+        "users-table": HTMLUsersTableElement;
+        "work-estimates": HTMLWorkEstimatesElement;
+        "work-records": HTMLWorkRecordsElement;
+        "workflows-table": HTMLWorkflowsTableElement;
     }
 }
 declare namespace LocalJSX {
@@ -387,20 +807,7 @@ declare namespace LocalJSX {
     interface AppRoot {
         "history"?: RouterHistory;
     }
-    interface CfAction {
-        "actionFn"?: (value: any) => Promise<boolean>;
-        "actionType"?: ActionType;
-        "text"?: any;
-        "value"?: any;
-    }
-    interface CfCell {
-        "isEditable"?: boolean;
-        "options"?: Array<string>;
-        "propKey"?: keyof any;
-        "rowId"?: number;
-        "type"?: string;
-        "updateFn"?: (id: number, columnName: any, value: any) => Promise<boolean>;
-        "value"?: any;
+    interface CellChannels {
     }
     interface CfCell2 {
         "cellType"?: CellType;
@@ -448,6 +855,18 @@ declare namespace LocalJSX {
         "onModalDelete"?: (event: CustomEvent<boolean>) => void;
         "onModalOkay"?: (event: CustomEvent<boolean>) => void;
     }
+    interface DirectoriesTable {
+    }
+    interface DiscussionChannels {
+    }
+    interface EducationByPerson {
+    }
+    interface EducationEntries {
+    }
+    interface FileVersions {
+    }
+    interface FilesTable {
+    }
     interface GenericTable {
         "columns"?: Array<any>;
         "name"?: String;
@@ -462,14 +881,22 @@ declare namespace LocalJSX {
     }
     interface GroupsTable {
     }
-    interface LanguagesEx {
+    interface LocationsTable {
     }
     interface OrganizationsPage {
+    }
+    interface OrganizationsTable {
     }
     interface PageRoot {
         "match"?: MatchResults;
     }
+    interface PeersTable {
+    }
     interface PeopleTable {
+    }
+    interface PeopleToOrgRelationships {
+    }
+    interface PostsTable {
     }
     interface RoleColumnGrants {
         "history"?: RouterHistory;
@@ -482,22 +909,99 @@ declare namespace LocalJSX {
     }
     interface RolesTable {
     }
+    interface ScBudgetRecords {
+    }
+    interface ScBudgets {
+    }
+    interface ScCeremonies {
+    }
+    interface ScChangeToPlan {
+    }
+    interface ScFieldRegions {
+    }
+    interface ScFieldZones {
+    }
+    interface ScFundingAccounts {
+    }
+    interface ScInternshipEngagements {
+    }
+    interface ScKnownLanguagesByPerson {
+    }
+    interface ScLanguageEngagements {
+    }
     interface ScLanguages {
     }
     interface ScLocations {
     }
+    interface ScOrganizationLocations {
+    }
+    interface ScOrganizations {
+    }
+    interface ScPartners {
+    }
+    interface ScPartnerships {
+    }
+    interface ScPeople {
+    }
+    interface ScPersonUnavailabilities {
+    }
+    interface ScPinnedProjects {
+    }
+    interface ScPosts {
+    }
+    interface ScProductScriptureReferences {
+    }
+    interface ScProducts {
+    }
+    interface ScProjectLocations {
+    }
+    interface ScProjects {
+    }
     interface ScriptureReferences {
+    }
+    interface SilCountryCodes {
+    }
+    interface SilLanguageIndex {
+    }
+    interface SilLanguagesCodes {
+    }
+    interface SilTableOfLanguages {
+    }
+    interface SiteText {
+    }
+    interface StageGraph {
+    }
+    interface StageNotifications {
+    }
+    interface StageRoleColumnGrants {
+    }
+    interface StagesTable {
     }
     interface TableRoot {
         "match"?: MatchResults;
+    }
+    interface ThreadsTable {
+    }
+    interface TicketAssignments {
+    }
+    interface TicketFeedback {
+    }
+    interface TicketsTable {
+    }
+    interface UsersTable {
+    }
+    interface WorkEstimates {
+    }
+    interface WorkRecords {
+    }
+    interface WorkflowsTable {
     }
     interface IntrinsicElements {
         "admin-users": AdminUsers;
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
-        "cf-action": CfAction;
-        "cf-cell": CfCell;
+        "cell-channels": CellChannels;
         "cf-cell2": CfCell2;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
@@ -510,24 +1014,73 @@ declare namespace LocalJSX {
         "cf-tiny": CfTiny;
         "common-organizations": CommonOrganizations;
         "create-update-modal": CreateUpdateModal;
+        "directories-table": DirectoriesTable;
+        "discussion-channels": DiscussionChannels;
+        "education-by-person": EducationByPerson;
+        "education-entries": EducationEntries;
+        "file-versions": FileVersions;
+        "files-table": FilesTable;
         "generic-table": GenericTable;
         "group-memberships": GroupMemberships;
         "groups-page": GroupsPage;
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
-        "languages-ex": LanguagesEx;
+        "locations-table": LocationsTable;
         "organizations-page": OrganizationsPage;
+        "organizations-table": OrganizationsTable;
         "page-root": PageRoot;
+        "peers-table": PeersTable;
         "people-table": PeopleTable;
+        "people-to-org-relationships": PeopleToOrgRelationships;
+        "posts-table": PostsTable;
         "role-column-grants": RoleColumnGrants;
         "role-memberships": RoleMemberships;
         "role-table-permissions": RoleTablePermissions;
         "roles-page": RolesPage;
         "roles-table": RolesTable;
+        "sc-budget-records": ScBudgetRecords;
+        "sc-budgets": ScBudgets;
+        "sc-ceremonies": ScCeremonies;
+        "sc-change-to-plan": ScChangeToPlan;
+        "sc-field-regions": ScFieldRegions;
+        "sc-field-zones": ScFieldZones;
+        "sc-funding-accounts": ScFundingAccounts;
+        "sc-internship-engagements": ScInternshipEngagements;
+        "sc-known-languages-by-person": ScKnownLanguagesByPerson;
+        "sc-language-engagements": ScLanguageEngagements;
         "sc-languages": ScLanguages;
         "sc-locations": ScLocations;
+        "sc-organization-locations": ScOrganizationLocations;
+        "sc-organizations": ScOrganizations;
+        "sc-partners": ScPartners;
+        "sc-partnerships": ScPartnerships;
+        "sc-people": ScPeople;
+        "sc-person-unavailabilities": ScPersonUnavailabilities;
+        "sc-pinned-projects": ScPinnedProjects;
+        "sc-posts": ScPosts;
+        "sc-product-scripture-references": ScProductScriptureReferences;
+        "sc-products": ScProducts;
+        "sc-project-locations": ScProjectLocations;
+        "sc-projects": ScProjects;
         "scripture-references": ScriptureReferences;
+        "sil-country-codes": SilCountryCodes;
+        "sil-language-index": SilLanguageIndex;
+        "sil-languages-codes": SilLanguagesCodes;
+        "sil-table-of-languages": SilTableOfLanguages;
+        "site-text": SiteText;
+        "stage-graph": StageGraph;
+        "stage-notifications": StageNotifications;
+        "stage-role-column-grants": StageRoleColumnGrants;
+        "stages-table": StagesTable;
         "table-root": TableRoot;
+        "threads-table": ThreadsTable;
+        "ticket-assignments": TicketAssignments;
+        "ticket-feedback": TicketFeedback;
+        "tickets-table": TicketsTable;
+        "users-table": UsersTable;
+        "work-estimates": WorkEstimates;
+        "work-records": WorkRecords;
+        "workflows-table": WorkflowsTable;
     }
 }
 export { LocalJSX as JSX };
@@ -538,8 +1091,7 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
-            "cf-action": LocalJSX.CfAction & JSXBase.HTMLAttributes<HTMLCfActionElement>;
-            "cf-cell": LocalJSX.CfCell & JSXBase.HTMLAttributes<HTMLCfCellElement>;
+            "cell-channels": LocalJSX.CellChannels & JSXBase.HTMLAttributes<HTMLCellChannelsElement>;
             "cf-cell2": LocalJSX.CfCell2 & JSXBase.HTMLAttributes<HTMLCfCell2Element>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
@@ -552,24 +1104,73 @@ declare module "@stencil/core" {
             "cf-tiny": LocalJSX.CfTiny & JSXBase.HTMLAttributes<HTMLCfTinyElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
+            "directories-table": LocalJSX.DirectoriesTable & JSXBase.HTMLAttributes<HTMLDirectoriesTableElement>;
+            "discussion-channels": LocalJSX.DiscussionChannels & JSXBase.HTMLAttributes<HTMLDiscussionChannelsElement>;
+            "education-by-person": LocalJSX.EducationByPerson & JSXBase.HTMLAttributes<HTMLEducationByPersonElement>;
+            "education-entries": LocalJSX.EducationEntries & JSXBase.HTMLAttributes<HTMLEducationEntriesElement>;
+            "file-versions": LocalJSX.FileVersions & JSXBase.HTMLAttributes<HTMLFileVersionsElement>;
+            "files-table": LocalJSX.FilesTable & JSXBase.HTMLAttributes<HTMLFilesTableElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
             "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
-            "languages-ex": LocalJSX.LanguagesEx & JSXBase.HTMLAttributes<HTMLLanguagesExElement>;
+            "locations-table": LocalJSX.LocationsTable & JSXBase.HTMLAttributes<HTMLLocationsTableElement>;
             "organizations-page": LocalJSX.OrganizationsPage & JSXBase.HTMLAttributes<HTMLOrganizationsPageElement>;
+            "organizations-table": LocalJSX.OrganizationsTable & JSXBase.HTMLAttributes<HTMLOrganizationsTableElement>;
             "page-root": LocalJSX.PageRoot & JSXBase.HTMLAttributes<HTMLPageRootElement>;
+            "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
+            "people-to-org-relationships": LocalJSX.PeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLPeopleToOrgRelationshipsElement>;
+            "posts-table": LocalJSX.PostsTable & JSXBase.HTMLAttributes<HTMLPostsTableElement>;
             "role-column-grants": LocalJSX.RoleColumnGrants & JSXBase.HTMLAttributes<HTMLRoleColumnGrantsElement>;
             "role-memberships": LocalJSX.RoleMemberships & JSXBase.HTMLAttributes<HTMLRoleMembershipsElement>;
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
             "roles-page": LocalJSX.RolesPage & JSXBase.HTMLAttributes<HTMLRolesPageElement>;
             "roles-table": LocalJSX.RolesTable & JSXBase.HTMLAttributes<HTMLRolesTableElement>;
+            "sc-budget-records": LocalJSX.ScBudgetRecords & JSXBase.HTMLAttributes<HTMLScBudgetRecordsElement>;
+            "sc-budgets": LocalJSX.ScBudgets & JSXBase.HTMLAttributes<HTMLScBudgetsElement>;
+            "sc-ceremonies": LocalJSX.ScCeremonies & JSXBase.HTMLAttributes<HTMLScCeremoniesElement>;
+            "sc-change-to-plan": LocalJSX.ScChangeToPlan & JSXBase.HTMLAttributes<HTMLScChangeToPlanElement>;
+            "sc-field-regions": LocalJSX.ScFieldRegions & JSXBase.HTMLAttributes<HTMLScFieldRegionsElement>;
+            "sc-field-zones": LocalJSX.ScFieldZones & JSXBase.HTMLAttributes<HTMLScFieldZonesElement>;
+            "sc-funding-accounts": LocalJSX.ScFundingAccounts & JSXBase.HTMLAttributes<HTMLScFundingAccountsElement>;
+            "sc-internship-engagements": LocalJSX.ScInternshipEngagements & JSXBase.HTMLAttributes<HTMLScInternshipEngagementsElement>;
+            "sc-known-languages-by-person": LocalJSX.ScKnownLanguagesByPerson & JSXBase.HTMLAttributes<HTMLScKnownLanguagesByPersonElement>;
+            "sc-language-engagements": LocalJSX.ScLanguageEngagements & JSXBase.HTMLAttributes<HTMLScLanguageEngagementsElement>;
             "sc-languages": LocalJSX.ScLanguages & JSXBase.HTMLAttributes<HTMLScLanguagesElement>;
             "sc-locations": LocalJSX.ScLocations & JSXBase.HTMLAttributes<HTMLScLocationsElement>;
+            "sc-organization-locations": LocalJSX.ScOrganizationLocations & JSXBase.HTMLAttributes<HTMLScOrganizationLocationsElement>;
+            "sc-organizations": LocalJSX.ScOrganizations & JSXBase.HTMLAttributes<HTMLScOrganizationsElement>;
+            "sc-partners": LocalJSX.ScPartners & JSXBase.HTMLAttributes<HTMLScPartnersElement>;
+            "sc-partnerships": LocalJSX.ScPartnerships & JSXBase.HTMLAttributes<HTMLScPartnershipsElement>;
+            "sc-people": LocalJSX.ScPeople & JSXBase.HTMLAttributes<HTMLScPeopleElement>;
+            "sc-person-unavailabilities": LocalJSX.ScPersonUnavailabilities & JSXBase.HTMLAttributes<HTMLScPersonUnavailabilitiesElement>;
+            "sc-pinned-projects": LocalJSX.ScPinnedProjects & JSXBase.HTMLAttributes<HTMLScPinnedProjectsElement>;
+            "sc-posts": LocalJSX.ScPosts & JSXBase.HTMLAttributes<HTMLScPostsElement>;
+            "sc-product-scripture-references": LocalJSX.ScProductScriptureReferences & JSXBase.HTMLAttributes<HTMLScProductScriptureReferencesElement>;
+            "sc-products": LocalJSX.ScProducts & JSXBase.HTMLAttributes<HTMLScProductsElement>;
+            "sc-project-locations": LocalJSX.ScProjectLocations & JSXBase.HTMLAttributes<HTMLScProjectLocationsElement>;
+            "sc-projects": LocalJSX.ScProjects & JSXBase.HTMLAttributes<HTMLScProjectsElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
+            "sil-country-codes": LocalJSX.SilCountryCodes & JSXBase.HTMLAttributes<HTMLSilCountryCodesElement>;
+            "sil-language-index": LocalJSX.SilLanguageIndex & JSXBase.HTMLAttributes<HTMLSilLanguageIndexElement>;
+            "sil-languages-codes": LocalJSX.SilLanguagesCodes & JSXBase.HTMLAttributes<HTMLSilLanguagesCodesElement>;
+            "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
+            "site-text": LocalJSX.SiteText & JSXBase.HTMLAttributes<HTMLSiteTextElement>;
+            "stage-graph": LocalJSX.StageGraph & JSXBase.HTMLAttributes<HTMLStageGraphElement>;
+            "stage-notifications": LocalJSX.StageNotifications & JSXBase.HTMLAttributes<HTMLStageNotificationsElement>;
+            "stage-role-column-grants": LocalJSX.StageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLStageRoleColumnGrantsElement>;
+            "stages-table": LocalJSX.StagesTable & JSXBase.HTMLAttributes<HTMLStagesTableElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
+            "threads-table": LocalJSX.ThreadsTable & JSXBase.HTMLAttributes<HTMLThreadsTableElement>;
+            "ticket-assignments": LocalJSX.TicketAssignments & JSXBase.HTMLAttributes<HTMLTicketAssignmentsElement>;
+            "ticket-feedback": LocalJSX.TicketFeedback & JSXBase.HTMLAttributes<HTMLTicketFeedbackElement>;
+            "tickets-table": LocalJSX.TicketsTable & JSXBase.HTMLAttributes<HTMLTicketsTableElement>;
+            "users-table": LocalJSX.UsersTable & JSXBase.HTMLAttributes<HTMLUsersTableElement>;
+            "work-estimates": LocalJSX.WorkEstimates & JSXBase.HTMLAttributes<HTMLWorkEstimatesElement>;
+            "work-records": LocalJSX.WorkRecords & JSXBase.HTMLAttributes<HTMLWorkRecordsElement>;
+            "workflows-table": LocalJSX.WorkflowsTable & JSXBase.HTMLAttributes<HTMLWorkflowsTableElement>;
         }
     }
 }

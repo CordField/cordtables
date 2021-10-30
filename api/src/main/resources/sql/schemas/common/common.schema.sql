@@ -205,7 +205,7 @@ create table common.organizations (
   peer int references admin.peers(id)
 );
 
-create type common.person_to_org_relationship_type as enum (
+create type common.people_to_org_relationship_type as enum (
   'Vendor',
   'Customer',
   'Investor',
@@ -224,6 +224,9 @@ create table common.people_to_org_relationships (
 
 	org int not null references common.organizations(id),
 	person int not null references admin.people(id),
+	relationship_type common.people_to_org_relationship_type,
+  begin_at timestamp,
+  end_at timestamp,
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -233,24 +236,6 @@ create table common.people_to_org_relationships (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id)
 );
-
-create table common.people_to_org_relationship_type (
-  id serial primary key,
-
-  begin_at timestamp not null,
-	end_at timestamp,
-  people_to_org int not null,
-	relationship_type int not null references common.people_to_org_relationships(id),
-	
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
 
 -- FILES & DIRECTORIES ----------------------------------------------------------
 
