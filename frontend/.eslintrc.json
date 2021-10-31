@@ -1,32 +1,11 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
   "extends": [
-    "plugin:@stencil/recommended",
-    "standard",
-    "eslint:recommended"
+    "plugin:@stencil/recommended"
   ],
-  // "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json",
-    "tsconfigRootDir": "./",
-    "sourceType": "module"
-    // "ecmaVersion": "latest",
-    // "ecmaFeatures": {
-    //   "jsx": true
-    // },
-    // "sourceType": "module"
+    "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint", "react"],
   "rules": {
-
-    // custom rules
-    
-    "no-extra-semi": "off",
-    "@typescript-eslint/no-extra-semi": ["error"],
-
 
     // stencil recommended rules
 
@@ -57,6 +36,5 @@
     "@stencil/reserved-member-names": "error",
     "@stencil/single-export": "error",
     "@stencil/strict-mutable": "error"
-
   }
 }
