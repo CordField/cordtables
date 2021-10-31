@@ -1,4 +1,4 @@
-import { Component, Host, State } from '@stencil/core'
+import { Component, Host, State, h } from '@stencil/core'
 import { ColumnDescription } from '../../../../common/table-abstractions/types'
 import { ErrorType, GenericResponse } from '../../../../common/types'
 import { fetchAs } from '../../../../common/utility';
