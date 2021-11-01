@@ -12,7 +12,7 @@ import javax.sql.DataSource
 
 data class ScLanguagesCreateReadRequest(
     val token: String? = null,
-    val language: LanguageInput,
+        val language: LanguageInput,
 )
 
 data class ScLanguagesCreateReadResponse(

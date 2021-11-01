@@ -17,15 +17,14 @@ import kotlin.collections.List
 data class CommonOrganizations(
         val id: Int?,
         val name: String? = null,
-        val neo4jID: String? = null,
         val sensitivity: String?,
-        val primaryLocation: Int? = null,
-        val createdAt: String?,
-        val createdBy: Int?,
-        val modifiedAt: String?,
-        val modifiedBy: Int?,
-        val owningPerson: Int?,
-        val owningGroup: Int?,
+        val primary_location: Int? = null,
+        val created_at: String?,
+        val created_by: Int?,
+        val modified_at: String?,
+        val modified_by: Int?,
+        val owning_person: Int?,
+        val owning_group: Int?,
 )
 
 data class CommonOrganizationsRequest(
@@ -34,7 +33,7 @@ data class CommonOrganizationsRequest(
 
 data class CommonOrganizationsReturn(
         val error: ErrorType,
-        val globalRoleMemberships: List<out CommonOrganizations>?,
+        val organizations: List<out CommonOrganizations>?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -100,13 +99,6 @@ class List(
                 then  name
                 else null 
             end as name,
-            case
-                when  'neo4j_id' in (select column_name from column_level_access)
-                then  neo4j_id
-                when (select exists( select person from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1))
-                then  neo4j_id
-                else null
-            end as neo4j_id,
             case 
                 when 'sensitivity' in (select column_name from column_level_access) 
                 then sensitivity 
@@ -178,9 +170,6 @@ class List(
             var name: String? = jdbcResult.getString("name")
             if (jdbcResult.wasNull()) name = null
 
-            var neo4jID: String? = jdbcResult.getString("neo4j_id")
-            if (jdbcResult.wasNull()) neo4jID = null
-
             var sensitivity: String? = jdbcResult.getString("sensitivity")
             if(jdbcResult.wasNull()) sensitivity = null
 
@@ -209,15 +198,14 @@ class List(
                     CommonOrganizations(
                             id = id,
                             name = name,
-                            neo4jID = neo4jID,
                             sensitivity = sensitivity,
-                            primaryLocation = primaryLocation,
-                            createdAt = createdAt,
-                            createdBy = createdBy,
-                            modifiedAt = modifiedAt,
-                            modifiedBy = modifiedBy,
-                            owningPerson = owningPerson,
-                            owningGroup = owningGroup,
+                            primary_location = primaryLocation,
+                            created_at = createdAt,
+                            created_by = createdBy,
+                            modified_at = modifiedAt,
+                            modified_by = modifiedBy,
+                            owning_person = owningPerson,
+                            owning_group = owningGroup,
                     )
             )
         }
