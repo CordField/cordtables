@@ -32,16 +32,17 @@ export class Notif {
   //     } catch (e) {}
   //   };
   clickHandler = id => {
-    globals.globalStore.state.notifications = globals.globalStore.state.notifications.filter(notif => notif.id !== id);
+    globals.globalStore.state.notifications = globals.globalStore.state.notifications.filter(notif => notif.id !== id).reverse();
   };
   render() {
     return (
       <Host>
-        {globals.globalStore.state.notifications.map(notif => {
+        {globals.globalStore.state.notifications.reverse().map(notif => {
           return (
-            <div key={notif.id}>
+            <div key={notif.id} class={notif.type}>
               <span>{notif.text}</span>
               <span
+                class="close-button"
                 onClick={() => {
                   this.clickHandler(notif.id);
                 }}

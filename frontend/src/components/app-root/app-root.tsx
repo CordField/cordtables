@@ -56,11 +56,12 @@ export class AppRoot {
   render() {
     return (
       <div id="root-wrap-outer">
+        <cf-notif />
         <cf-header />
         <div id="root-wrap-inner">
           <div>
             {!globals.globalStore.state.isLoggedIn && <div>Please login or register</div>}
-            <cf-notif />
+
             {globals.globalStore.state.isLoggedIn && this.showSelect && (
               <div id="top-thing">
                 <div id="nav-menu">
