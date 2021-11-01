@@ -1,4 +1,4 @@
-class ScLocation {
+export type ScLocation = {
   id?: number | undefined;
   name?: string | undefined;
 
