@@ -923,7 +923,7 @@ create type common.organization_transition_options as enum (
   'To Other'
 );
 
--- PARTNER CRM STUFF
+-- PARTNER CRM STUFF, VERY WIP
 
 create table common.organization_relationships (
   id serial primary key,
