@@ -64,15 +64,15 @@ class Migrate(
             // iterate over all chats and ensure we have them in postgres
             for (i in 1..total) {
 
-                val langQuery = """
-                        {"query":"query Query { chats(input: { page: $i, count: 1 }) { items { id ethnologue { code { value } } avatarLetters name { value } displayName { value } displayNamePronunciation { value } isDialect { value } populationOverride { value } registryOfDialectsCode { value } leastOfThese { value } leastOfTheseReason { value } signLanguageCode { value } sponsorEstimatedEndDate { value } sensitivity isSignLanguage { value } hasExternalFirstScripture { value } tags { value } presetInventory { value } population { value } } } }"}
+                val chatQuery = """
+                        {"query":"query Query { chats(input: { page: $i, count: 1 }) { items { id channel { value } content { value } } } }"}
                     """.trimIndent()
 
-                val langResponse = cord.post<GResponse>(token, langQuery)
+                val chatResponse = cord.post<GResponse>(token, chatQuery)
 
-                val lang = langResponse?.data?.chats?.items?.get(0)
+                val chat = chatResponse?.data?.chats?.items?.get(0)
 
-                if (lang == null) {
+                if (chat == null) {
                     println("chat entry was null")
                     continue
                 }
@@ -81,50 +81,9 @@ class Migrate(
 
                 this.ds.connection.use { conn ->
                     val migrationStatement = conn.prepareCall("call common.common_migrate_chat(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);")
-                    migrationStatement.setString(1, lang.ethnologue?.code?.value)
-                    migrationStatement.setString(2, lang.id)
-                    migrationStatement.setString(3, lang.name?.value)
-                    migrationStatement.setString(4, lang.displayName?.value)
-                    migrationStatement.setString(5, lang.displayNamePronunciation?.value)
-                    if (lang.isDialect?.value == null)
-                        migrationStatement.setNull(6, java.sql.Types.NULL)
-                    else
-                        migrationStatement.setBoolean(6, lang.isDialect?.value)
-                    if (lang.populationOverride?.value == null) {
-                        migrationStatement.setNull(7, java.sql.Types.NULL)
-                    } else {
-                        migrationStatement.setInt(7, lang.populationOverride?.value)
-                    }
-
-                    migrationStatement.setString(8, lang.registryOfDialectsCode?.value)
-
-                    if(lang.leastOfThese?.value == null )
-                        migrationStatement.setNull(9, java.sql.Types.NULL)
-                    else
-                        migrationStatement.setBoolean(9, lang.leastOfThese?.value)
-
-                    migrationStatement.setString(10, lang.leastOfTheseReason?.value)
-                    migrationStatement.setString(11, lang.signLanguageCode?.value)
-                    migrationStatement.setTimestamp(12, lang.sponsorEstimatedEndDate?.value)
-                    migrationStatement.setObject(13, lang.sensitivity, java.sql.Types.OTHER)
-
-                    if(lang.isSignLanguage?.value == null)
-                        migrationStatement.setNull(14, java.sql.Types.NULL)
-                    else
-                        migrationStatement.setBoolean(14, lang.isSignLanguage?.value)
-                    if(lang.hasExternalFirstScripture?.value == null)
-                        migrationStatement.setNull(15, java.sql.Types.NULL)
-                    else
-                        migrationStatement.setBoolean(15, lang.hasExternalFirstScripture?.value)
-                    migrationStatement.setArray(16, conn.createArrayOf("text", lang.tags?.value))
-                    if(lang.presetInventory?.value == null)
-                        migrationStatement.setNull(17, java.sql.Types.NULL)
-                    else
-                        migrationStatement.setBoolean(17, lang.presetInventory?.value)
-
-                    migrationStatement.setNull(18, java.sql.Types.NULL)
-                    migrationStatement.registerOutParameter(18, java.sql.Types.VARCHAR)
-
+                    migrationStatement.setString(1, chat.id)
+                    migrationStatement.setString(2, chat.channel)
+                    migrationStatement.setString(3, chat.content)
                     migrationStatement.toString()
                     migrationStatement.execute()
 
@@ -141,7 +100,7 @@ class Migrate(
                     migrationStatement.close()
                 }
 
-                println("Migrated chat entry code: '${lang.id}': $errorType")
+                println("Migrated chat entry code: '${chat.id}': $errorType")
 
 
             }
