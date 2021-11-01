@@ -2,8 +2,8 @@ package com.seedcompany.cordtables.components.tables.common.chats
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.common.chat.CommonChatsDeleteRequest
-import com.seedcompany.cordtables.components.tables.common.chat.CommonChatsDeleteResponse
+//import com.seedcompany.cordtables.components.tables.common.chats.CommonChatsDeleteRequest
+//import com.seedcompany.cordtables.components.tables.common.chats.CommonChatsDeleteResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
