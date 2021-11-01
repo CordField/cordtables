@@ -601,6 +601,25 @@ create table sc.projects (
 	unique (id, change_to_plan)
 );
 
+create table sc.project_members (
+  id serial primary key,
+
+	project int not null references sc.projects(id),
+	person int not null references sc.people(id),
+	group_id int not null references admin.groups(id),
+	role int not null references admin.roles(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
+
+  unique (project, person, group_id, role)
+);
+
 create table sc.pinned_projects (
   id serial primary key,
 	person int not null references sc.people(id),
