@@ -1,5 +1,5 @@
 CREATE OR REPLACE PROCEDURE roles_migration(
-  -- add params if needed
+  inout error_type varchar(32)
 )
 LANGUAGE PLPGSQL
 AS $$
@@ -13,7 +13,7 @@ DECLARE
   vControllerRoleId int;
   vControllersGroupId int;
   vLeadFinancialAnalystRoleId int;
-  vLeadFinancialAnalystsGroupId int
+  vLeadFinancialAnalystsGroupId int;
   vRoleCount int;
 BEGIN
  select count(id)
