@@ -41,7 +41,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-languages/read")
+    @PostMapping("sc-partners/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScPartnersReadRequest): ScPartnersReadResponse {
 
@@ -145,7 +145,7 @@ class Read(
 
                                 )
 
-                return ScPartnersReadResponse(ErrorType.NoError, language = language)
+                return ScPartnersReadResponse(ErrorType.NoError, partner = partner)
 
             }
         } catch (e: SQLException) {

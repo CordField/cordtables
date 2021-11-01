@@ -3,6 +3,7 @@ import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
+import { v4 as uuidv4 } from 'uuid';
 
 class CreateLanguageExRequest {
   token: string;
@@ -66,23 +67,61 @@ export class ScLanguages {
 
     if (updateResponse.error == ErrorType.NoError) {
       this.languagesResponse = { error: ErrorType.NoError, languages: this.languagesResponse.languages.map(language => (language.id === id ? updateResponse.language : language)) };
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4() });
       return true;
     } else {
-      alert(updateResponse.error);
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: updateResponse.error, id: uuidv4() });
       return false;
     }
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('sc-languages/delete', {
+    const deleteResponse = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('sc-languages/delete', {
       id,
       token: globals.globalStore.state.token,
     });
-    if (result.error === ErrorType.NoError) {
+    if (deleteResponse.error === ErrorType.NoError) {
       this.getList();
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item deleted successfully', id: uuidv4() });
       return true;
     } else {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: deleteResponse.error, id: uuidv4() });
       return false;
+    }
+  };
+
+  async getList() {
+    this.languagesResponse = await fetchAs<ScLanguagesListRequest, ScLanguagesListResponse>('sc-languages/list', {
+      token: globals.globalStore.state.token,
+    });
+  }
+
+  languageNameChange(event) {
+    this.newLanguageName = event.target.value;
+  }
+
+  displayNameChange(event) {
+    this.newDisplayName = event.target.value;
+  }
+
+  handleInsert = async (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const createResponse = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('sc-languages/create-read', {
+      token: globals.globalStore.state.token,
+      language: {
+        name: this.newLanguageName,
+        display_name: this.newDisplayName,
+      },
+    });
+
+    if (createResponse.error === ErrorType.NoError) {
+      globals.globalStore.state.editMode = false;
+      this.getList();
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item inserted successfully', id: uuidv4() });
+    } else {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4() });
     }
   };
 
@@ -654,37 +693,6 @@ export class ScLanguages {
     await this.getList();
   }
 
-  async getList() {
-    this.languagesResponse = await fetchAs<ScLanguagesListRequest, ScLanguagesListResponse>('sc-languages/list', {
-      token: globals.globalStore.state.token,
-    });
-  }
-
-  languageNameChange(event) {
-    this.newLanguageName = event.target.value;
-  }
-
-  displayNameChange(event) {
-    this.newDisplayName = event.target.value;
-  }
-
-  handleInsert = async (event: MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const result = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('sc-languages/create-read', {
-      token: globals.globalStore.state.token,
-      language: {
-        name: this.newLanguageName,
-        display_name: this.newDisplayName,
-      },
-    });
-
-    if (result.error === ErrorType.NoError) {
-      globals.globalStore.state.editMode = false;
-      this.getList();
-    }
-  };
   render() {
     return (
       <Host>

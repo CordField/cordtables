@@ -23,7 +23,7 @@ data class ScLanguagesUpdateReadResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("ScLanugagesUpdateRead")
+@Controller("ScLanguagesUpdateRead")
 class UpdateRead(
         @Autowired
         val util: Utility,

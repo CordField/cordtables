@@ -9,6 +9,7 @@ export class Globals {
     email: localStorage.getItem('email'),
     readableTables: JSON.parse(localStorage.getItem('readableTables')) ?? [],
     isAdmin: localStorage.getItem('isAdmin'),
+    notifications: JSON.parse(localStorage.getItem('notifications')) ?? [],
     // globalRolesData: localStorage.getItem('globalRolesData'),
   });
 
@@ -55,6 +56,14 @@ export class Globals {
         localStorage.setItem('readableTables', JSON.stringify(newValue));
       } else {
         localStorage.removeItem('readableTables');
+      }
+    });
+    
+    this.globalStore.onChange('notifications', newValue => {
+      if (newValue != null) {
+        localStorage.setItem('notifications', JSON.stringify(newValue));
+      } else {
+        localStorage.removeItem('notifications');
       }
     });
 

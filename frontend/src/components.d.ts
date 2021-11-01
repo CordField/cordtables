@@ -37,6 +37,8 @@ export namespace Components {
     interface CfLogin {
         "history": RouterHistory;
     }
+    interface CfNotif {
+    }
     interface CfRegister {
         "history": RouterHistory;
     }
@@ -258,6 +260,12 @@ declare global {
     var HTMLCfLoginElement: {
         prototype: HTMLCfLoginElement;
         new (): HTMLCfLoginElement;
+    };
+    interface HTMLCfNotifElement extends Components.CfNotif, HTMLStencilElement {
+    }
+    var HTMLCfNotifElement: {
+        prototype: HTMLCfNotifElement;
+        new (): HTMLCfNotifElement;
     };
     interface HTMLCfRegisterElement extends Components.CfRegister, HTMLStencilElement {
     }
@@ -719,6 +727,7 @@ declare global {
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
+        "cf-notif": HTMLCfNotifElement;
         "cf-register": HTMLCfRegisterElement;
         "cf-row": HTMLCfRowElement;
         "cf-table": HTMLCfTableElement;
@@ -824,6 +833,8 @@ declare namespace LocalJSX {
     }
     interface CfLogin {
         "history"?: RouterHistory;
+    }
+    interface CfNotif {
     }
     interface CfRegister {
         "history"?: RouterHistory;
@@ -1006,6 +1017,7 @@ declare namespace LocalJSX {
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
+        "cf-notif": CfNotif;
         "cf-register": CfRegister;
         "cf-row": CfRow;
         "cf-table": CfTable;
@@ -1096,6 +1108,7 @@ declare module "@stencil/core" {
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
+            "cf-notif": LocalJSX.CfNotif & JSXBase.HTMLAttributes<HTMLCfNotifElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
             "cf-row": LocalJSX.CfRow & JSXBase.HTMLAttributes<HTMLCfRowElement>;
             "cf-table": LocalJSX.CfTable & JSXBase.HTMLAttributes<HTMLCfTableElement>;
