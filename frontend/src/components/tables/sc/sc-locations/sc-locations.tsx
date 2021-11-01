@@ -1,8 +1,9 @@
-import { Component, Host, h, State } from '@stencil/core';
-import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { Component, Host, State, h } from '@stencil/core'
+import { ColumnDescription } from '../../../../common/table-abstractions/types'
+import { ErrorType, GenericResponse } from '../../../../common/types'
 import { fetchAs } from '../../../../common/utility';
-import { globals } from '../../../../core/global.store';
+import { globals } from '../../../../core/global.store'
+import { ScLocation } from './types'
 
 class CreateLocationRequest {
   token: string;
