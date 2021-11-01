@@ -90,9 +90,8 @@ create type admin.table_name as enum (
   'sc.language_locations',
   'sc.language_goals',
   'sc.periodic_reports',
-  'sc.project_locations',
   'sc.project_members',
-  'sc.project_member_roles',
+  'sc.project_member_roles'
 );
 
 -- VERSION CONTROL ---------------------------------------------------

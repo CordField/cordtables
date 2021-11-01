@@ -1,5 +1,4 @@
 CREATE OR REPLACE PROCEDURE roles_migration(
-  -- add params if needed
 )
 LANGUAGE PLPGSQL
 AS $$
@@ -13,7 +12,7 @@ DECLARE
   vControllerRoleId int;
   vControllersGroupId int;
   vLeadFinancialAnalystRoleId int;
-  vLeadFinancialAnalystsGroupId int
+  vLeadFinancialAnalystsGroupId int;
   vRoleCount int;
 BEGIN
  select count(id)
@@ -744,7 +743,6 @@ insert into admin.role_column_grants(access_level, column_name, role, table_name
         insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
         values ('Write', 'name', vLeadFinancialAnalystRoleId, 'common.organizations', 1, 1, 1, 1);
 
-    error_type := 'NoError';
   end if;
 
 
