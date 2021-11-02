@@ -17,8 +17,7 @@ CREATE TABLE sil.language_codes (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 CREATE TABLE sil.country_codes (
@@ -33,8 +32,7 @@ CREATE TABLE sil.country_codes (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- L(anguage), LA(lternate),
@@ -57,8 +55,7 @@ CREATE TABLE sil.language_index (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table sil.table_of_languages (
@@ -75,8 +72,7 @@ create table sil.table_of_languages (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 ALTER TABLE common.site_text ADD CONSTRAINT common_site_text_ethnologue_fk foreign key (ethnologue) references sil.table_of_languages(id);
