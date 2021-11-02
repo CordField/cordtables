@@ -94,7 +94,7 @@ create table sc.locations (
 	neo4j_id varchar(32),
 
 	default_region int references sc.field_regions(id),
-	funding_account int references sc.funding_account(account_number),
+	funding_account int references sc.funding_accounts(account_number),
 	iso_alpha_3 char(3),
 	name varchar(32) unique not null,
 	type common.location_type not null,
