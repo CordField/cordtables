@@ -55,7 +55,7 @@ class Neo4j(
 
     var baseNodeCounter = AtomicInteger(0)
     var neo4jIdQueue = ConcurrentLinkedQueue<String>()
-
+    
     @PostMapping("migrate/neo4j")
     @ResponseBody
     suspend fun createHandler(@RequestBody req: Neo4jMigrationRequest): Neo4jMigrationResponse {
@@ -82,9 +82,14 @@ class Neo4j(
             return
         }
 
+
         val currentNode = AtomicInteger(0)
         while (currentNode.get() < baseNodeCounter.get()){
-               
+               if (baseNodeCounter.get() - currentNode.get() > 1000){
+
+               } else {
+
+               }
         }
 
 
@@ -92,16 +97,16 @@ class Neo4j(
 
 
 
-        val ticker = AtomicInteger(0)
-
-        for (i in 0 until baseNodeCounter.get()){
-            println("loop $i")
-            createBaseNodeIdempotent(i)
-        }
+//        val ticker = AtomicInteger(0)
+//
+//        for (i in 0 until baseNodeCounter.get()){
+//            println("loop $i")
+//            createBaseNodeIdempotent(i)
+//        }
 
     }
 
-    suspend fun getNeo4jIds(){
+    suspend fun getNeo4jIds(size: Int){
 
     }
 
