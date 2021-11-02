@@ -36,6 +36,7 @@
     "@ionic/core": "^5.8.0",
     "@stencil/store": "^1.4.1",
     "date-fns": "^2.24.0",
-    "date-fns-tz": "^1.1.6"
+    "date-fns-tz": "^1.1.6",
+    "set-value": ">=4.0.1"
   }
 }
