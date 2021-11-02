@@ -31,6 +31,8 @@ create type admin.table_name as enum (
   'admin.tokens',
   'admin.users',
 
+  'common.blogs',
+  'common.blog_posts',
   'common.cell_channels',
   'common.directories',
   'common.discussion_channels',
@@ -51,6 +53,7 @@ create type admin.table_name as enum (
   'common.threads',
   'common.ticket_assignments',
   'common.ticket_feedback',
+  'common.ticket_graph',
   'common.tickets',
   'common.work_estimates',
   'common.work_records',
@@ -84,14 +87,13 @@ create type admin.table_name as enum (
   'sc.product_scripture_references',
   'sc.products',
   'sc.project_locations',
+  'sc.project_members',
   'sc.projects',
 
   'sc.language_goal_definitions',
   'sc.language_locations',
   'sc.language_goals',
-  'sc.periodic_reports',
-  'sc.project_members',
-  'sc.project_member_roles'
+  'sc.periodic_reports'
 );
 
 -- VERSION CONTROL ---------------------------------------------------

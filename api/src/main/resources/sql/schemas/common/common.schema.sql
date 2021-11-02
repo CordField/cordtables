@@ -123,6 +123,35 @@ create table common.posts (
   peer int references admin.peers(id)
 );
 
+-- BLOGS ---------------
+
+create table common.blogs (
+	id serial primary key,
+
+	title varchar(64) not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.blog_posts (
+	id serial primary key,
+
+  blog int not null references common.blogs(id),
+	content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
 -- LOCATION -----------------------------------------------------------------
 
 create type common.location_type as enum (
@@ -314,6 +343,21 @@ create table common.tickets (
 );
 
 ALTER TABLE common.tickets ADD CONSTRAINT common_tickets_parent_fk foreign key (parent) references common.tickets(id);
+
+create table common.ticket_graph (
+	id serial primary key,
+
+	from_ticket int not null references common.tickets(id),
+	to_ticket int not null references common.tickets(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
 
 create table common.ticket_assignments (
 	id serial primary key,
