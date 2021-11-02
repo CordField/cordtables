@@ -69,8 +69,8 @@ create type admin.table_name as enum (
   'sc.ceremonies'
   'sc.change_to_plans',
   'sc.field_regions',
-  'sc.field_zone',
-  'sc.funding_account',
+  'sc.field_zones',
+  'sc.funding_accounts',
   'sc.internship_engagements',
   'sc.known_languages_by_person',
   'sc.language_engagements',
