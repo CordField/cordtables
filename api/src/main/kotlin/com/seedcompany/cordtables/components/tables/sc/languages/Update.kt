@@ -744,16 +744,6 @@ class Update(
                 )
             }
 
-            "peer" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "peer",
-                        id = req.id,
-                        value = req.value,
-                )
-            }
-
             "egids_level" -> {
 
                 util.updateField(
