@@ -41,7 +41,7 @@ create table sc.posts (
 
 -- ACCOUNTING TABLES --------------------------------------------------------
 
-create table sc.funding_account (
+create table sc.funding_accounts (
   id serial primary key,
   neo4j_id varchar(32),
 
