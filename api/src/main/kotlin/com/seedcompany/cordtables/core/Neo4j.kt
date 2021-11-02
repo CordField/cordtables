@@ -5,7 +5,6 @@ import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.tables.admin.users.Create
 import com.seedcompany.cordtables.components.tables.sc.languages.Read
 import com.seedcompany.cordtables.components.tables.sc.languages.Update
-import kotlinx.coroutines.runBlocking
 import org.neo4j.driver.Driver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
@@ -112,7 +111,7 @@ class Neo4j(
 
         when {
             node!!.labels.contains("Organization") -> writeBaseNode(
-                targetTable = "sc.organizations",
+                targetTable  = "sc.organizations",
                 id = node!!.id,
                 commonTable = "common.organizations",
             )
@@ -121,7 +120,61 @@ class Neo4j(
                 targetTable = "sc.projects",
                 id = node!!.id,
             )
+            node!!.labels.contains("InternshipProject") -> writeBaseNode(
+                targetTable = "sc.projects",
+                id = node!!.id,
+            )
+            node!!.labels.contains("User") -> writeUserNode(
+                personTable = "admin.people",
+                id = node!!.id,
+                userTable = "admin.users",
+            )
+            node!!.labels.contains("ProjectMember") -> writeBaseNode(
+                targetTable = "sc.project_members",
+                id = node!!.id,
+            )
+            node!!.labels.contains("FieldZone") -> writeBaseNode(
+                targetTable = "sc.field_zone",
+                id = node!!.id,
+            )
+            node!!.labels.contains("FieldRegion") -> writeBaseNode(
+                targetTable = "sc.field_regions",
+                id = node!!.id,
+            )
+            node!!.labels.contains("Budget") -> writeBaseNode(
+                targetTable = "sc.budgets",
+                id = node!!.id,
+            )
+            node!!.labels.contains("EthnologueLanguage") -> writeBaseNode(
+                targetTable = "sil.table_of_languages",
+                id = node!!.id,
+            )
             else -> println(node!!.labels)
+
+        }
+    }
+
+    suspend fun writeUserNode(personTable: String, id: String, userTable: String? = null) {
+        val exists = jdbcTemplate.queryForObject(
+            "select exists(select id from $personTable where neo4j_id = ?);",
+            Boolean::class.java,
+            id
+        )
+
+        if (exists) {
+            println("node $id exists")
+        } else {
+            println("creating $personTable node $id")
+
+                val personId = jdbcTemplate.queryForObject(
+                    "insert into $personTable(neo4j_id, created_by, modified_by, owning_person, owning_group) values('$id', 1, 1, 1, 1) returning id;",
+                    Int::class.java
+                )
+
+                jdbcTemplate.update(
+                    "insert into $userTable(person, created_by, modified_by, owning_person, owning_group) values(?, 1, 1, 1, 1);",
+                    personId,
+                )
         }
     }
 
@@ -158,7 +211,6 @@ class Neo4j(
     }
 
     suspend fun migrateBaseNodeToBaseNodeRelationships() {
-
     }
 
     suspend fun migrateBaseNodeProperties() {

@@ -113,6 +113,7 @@ create table admin.database_version_control (
 create table admin.people (
   id serial primary key,
 
+  neo4j_id varchar(32),
   about text,
   phone varchar(32),
   picture varchar(255),
@@ -325,7 +326,7 @@ create table admin.users(
   id serial primary key,
 
   person int not null references admin.people(id),
-  email varchar(255) unique not null,
+  email varchar(255) unique,
   password varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,

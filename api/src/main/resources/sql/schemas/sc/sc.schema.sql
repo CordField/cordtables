@@ -66,7 +66,7 @@ create table sc.field_zone (
 	neo4j_id varchar(32),
 
 	director int references admin.people(id),
-	name varchar(32) unique not null,
+	name varchar(32),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -82,7 +82,7 @@ create table sc.field_regions (
 	neo4j_id varchar(32),
 
 	director int references admin.people(id),
-	name varchar(32) unique not null,
+	name varchar(32),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -601,6 +601,26 @@ create table sc.projects (
 	unique (id, change_to_plan)
 );
 
+create table sc.project_members (
+  id serial primary key,
+    neo4j_id varchar(32),
+	project int references sc.projects(id),
+	person int references sc.people(id),
+	group_id int references admin.groups(id),
+	role int references admin.roles(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id),
+
+  unique (project, person, group_id, role)
+);
+
+
 create table sc.pinned_projects (
 	person int not null references sc.people(id),
 	project int not null references sc.projects(id),
@@ -640,8 +660,8 @@ create table sc.budgets (
   id serial primary key,
 
   neo4j_id varchar(32) not null,
-  change_to_plan int not null default 1,
-  project int not null references sc.projects(id),
+  change_to_plan int default 1,
+  project int references sc.projects(id),
   status common.budget_status,
   universal_template int references common.file_versions(id),
   universal_template_file_url varchar(255),
