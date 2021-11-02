@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
 
@@ -53,6 +54,7 @@ class Neo4j(
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
     var baseNodeCounter = AtomicInteger(0)
+    var neo4jIdQueue = ConcurrentLinkedQueue<String>()
 
     @PostMapping("migrate/neo4j")
     @ResponseBody
@@ -80,12 +82,26 @@ class Neo4j(
             return
         }
 
+        val currentNode = AtomicInteger(0)
+        while (currentNode.get() < baseNodeCounter.get()){
+               
+        }
+
+
+
+
+
+
         val ticker = AtomicInteger(0)
 
         for (i in 0 until baseNodeCounter.get()){
             println("loop $i")
             createBaseNodeIdempotent(i)
         }
+
+    }
+
+    suspend fun getNeo4jIds(){
 
     }
 
