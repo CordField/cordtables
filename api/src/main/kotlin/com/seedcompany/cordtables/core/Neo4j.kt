@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
+import kotlin.concurrent.thread
 
 data class Neo4jMigrationRequest(
     val token: String? = null,
@@ -98,7 +99,7 @@ class Neo4j(
                 while (fetchedNodes < totalBaseNodes) {
                     if (neo4jIdQueue.size < maxQueueSize) {
                         if (totalBaseNodes - fetchedNodes > batchSize) {
-                            println("fetched nodes: $fetchedNodes")
+//                            println("fetched nodes: $fetchedNodes")
                             getNeo4jIds(fetchedNodes, batchSize)
                             fetchedNodes += batchSize
 //                            println("queue size is ${neo4jIdQueue.size}")
@@ -115,40 +116,17 @@ class Neo4j(
             }
 
             // feed nodes into postgres until gone
-            val concurrency = AtomicInteger(0)
-            val maxConcurrency = 4
             val processedNodes = AtomicInteger(0)
 
-            val then = DateTime.now().millis
+//            val then = DateTime.now().millis
 
             launch {
                 println("starting writer 1")
                 while (neo4jIdQueue.size > 0) {
-
-                    if (concurrency.get() < maxConcurrency) {
-
-//                        GlobalScope.launch {
-
-                            concurrency.incrementAndGet()
-                            val node = neo4jIdQueue.remove() ?: return@launch
-                            val lapse = DateTime.now().millis - then
-
-                            val rate =
-                                if (processedNodes.get() == 0) 0F else lapse.toFloat() * 1000F / processedNodes.get()
-                                    .toFloat()
-
-                            val remainingNodes = totalBaseNodes.toFloat() - processedNodes.get().toFloat()
-                            val eta = remainingNodes/rate/60F
-
-                            print("\r${processedNodes}/$totalBaseNodes elapsed: ${(lapse / 1000).toInt()}s rate: $rate records/sec eta: ${eta}m queue: ${neo4jIdQueue.size} concurrency: ${concurrency.get()} node: ${node.id} ${node.labels} ")
-
-                            createBaseNodeIdempotent(node)
-                            processedNodes.incrementAndGet()
-                            concurrency.decrementAndGet()
-
-//                        }
-                        delay(1L) // I don't know why this is needed, but it is.
-                    }
+                    val node = neo4jIdQueue.remove() ?: return@launch
+                    createBaseNodeIdempotent(node)
+                    processedNodes.incrementAndGet()
+                    delay(1L) // I don't know why this is needed, but it is.
                 }
                 println("writer 1 closing")
             }
@@ -156,35 +134,54 @@ class Neo4j(
             launch {
                 println("starting writer 2")
                 while (neo4jIdQueue.size > 0) {
-
-                    if (concurrency.get() < maxConcurrency) {
-
-//                        GlobalScope.launch {
-
-                        concurrency.incrementAndGet()
-                        val node = neo4jIdQueue.remove() ?: return@launch
-                        val lapse = DateTime.now().millis - then
-
-                        val rate =
-                            if (processedNodes.get() == 0) 0F else lapse.toFloat() * 1000F / processedNodes.get()
-                                .toFloat()
-
-                        val remainingNodes = totalBaseNodes.toFloat() - processedNodes.get().toFloat()
-                        val eta = remainingNodes/rate/60F
-
-                        print("\r${processedNodes}/$totalBaseNodes elapsed: ${(lapse / 1000).toInt()}s rate: $rate records/sec eta: ${eta}m queue: ${neo4jIdQueue.size} concurrency: ${concurrency.get()} node: ${node.id} ${node.labels} ")
-
-                        createBaseNodeIdempotent(node)
-                        processedNodes.incrementAndGet()
-                        concurrency.decrementAndGet()
-
-//                        }
-                        delay(1L) // I don't know why this is needed, but it is.
-                    }
+                    val node = neo4jIdQueue.remove() ?: return@launch
+                    createBaseNodeIdempotent(node)
+                    processedNodes.incrementAndGet()
+                    delay(1L) // I don't know why this is needed, but it is.
                 }
                 println("writer 2 closing")
             }
+//
+//            launch {
+//                println("starting writer 3")
+//                while (neo4jIdQueue.size > 0) {
+//                    val node = neo4jIdQueue.remove() ?: return@launch
+//                    createBaseNodeIdempotent(node)
+//                    processedNodes.incrementAndGet()
+//                    delay(1L) // I don't know why this is needed, but it is.
+//                }
+//                println("writer 3 closing")
+//            }
+//
+//            launch {
+//                println("starting writer 4")
+//                while (neo4jIdQueue.size > 0) {
+//                    val node = neo4jIdQueue.remove() ?: return@launch
+//                    createBaseNodeIdempotent(node)
+//                    processedNodes.incrementAndGet()
+//                    delay(1L) // I don't know why this is needed, but it is.
+//                }
+//                println("writer 4 closing")
+//            }
 
+            // progress
+            launch {
+                val then = DateTime.now().millis
+
+                while (true) {
+                    val lapse = DateTime.now().millis - then
+
+                    var rate =
+                        if (processedNodes.get() == 0) 0F else processedNodes.get().toFloat() / lapse.toFloat() * 1000F
+
+                    val remainingNodes = totalBaseNodes.toFloat() - processedNodes.get().toFloat()
+                    val eta = remainingNodes / rate / 60F
+
+                    print("\r${processedNodes}/$totalBaseNodes rate: ${rate.toInt()} records/sec eta: ${eta.toInt()}m queue: ${neo4jIdQueue.size}")
+
+                    delay(1000L)
+                }
+            }
 
         }
 
