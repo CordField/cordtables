@@ -13,3 +13,4 @@ select round(sc.ST_Distance
 	(select coordinates from sc.languages where id = 2)::sc.geography
 )/1000) || ' km' as distance;
 
+select sc.ST_AsLatLonText(coordinates) from sc.languages;

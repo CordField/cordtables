@@ -4,6 +4,8 @@ create schema if not exists common;
 set schema 'common';
 
 CREATE EXTENSION if not exists hstore;
+create extension if not exists postgis with schema sc;
+
 
 create type common.sensitivity as enum (
   'Low',

@@ -271,6 +271,13 @@ export class ScLanguages {
       updateFn: this.handleUpdate,
     },
     {
+      field: 'coordinates',
+      displayName: 'Coordinates',
+      width: 1000,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
       field: 'island',
       displayName: 'Island',
       width: 150,
