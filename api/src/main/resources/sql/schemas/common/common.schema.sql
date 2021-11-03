@@ -242,7 +242,7 @@ create table common.people_to_org_relationships (
 create table common.directories (
   id serial primary key,
 
-	parent int references common.directories(id),
+    parent int references common.directories(id),
   name varchar(255),
 	-- todo
 
