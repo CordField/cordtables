@@ -273,7 +273,7 @@ create table common.directories (
 create table common.files (
   id serial primary key,
 
-  directory int not null references common.directories(id),
+  directory int, --not null references common.directories(id),
 	name varchar(255),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -289,10 +289,10 @@ create table common.file_versions (
   id serial primary key,
 
   category varchar(255),
-  mime_type common.mime_type not null,
-  name varchar(255) not null,
-  file int not null references common.files(id),
-  file_url varchar(255) not null,
+  mime_type common.mime_type,-- not null,
+  name varchar(255),-- not null,
+  file int,-- not null references common.files(id),
+  file_url varchar(255),-- not null,
   file_size int, -- bytes
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
