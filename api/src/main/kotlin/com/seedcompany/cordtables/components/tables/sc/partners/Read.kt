@@ -85,8 +85,8 @@ class Read(
                 if (jdbcResult.wasNull()) organization = null
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
-                var financial_reporting_types: String? = jdbcResult.getString("financial_reporting_types")
-                if (jdbcResult.wasNull()) financial_reporting_types = null
+//                var financial_reporting_types: Array<String>? = jdbcResult.getString("financial_reporting_types")
+//                if (jdbcResult.wasNull()) financial_reporting_types = null
                 var is_innovations_client: Boolean? = jdbcResult.getBoolean("is_innovations_client")
                 if (jdbcResult.wasNull()) is_innovations_client = null
                 var pmc_entity_code: String? = jdbcResult.getString("pmc_entity_code")

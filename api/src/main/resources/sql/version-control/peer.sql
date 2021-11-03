@@ -1,13 +1,13 @@
 -- NOTE: using pg_catalog instead of information_schema might speed up the function
 -- NOTE: if function needs to be extended for multi-dimensional array datatypes for columns - https://stackoverflow.com/questions/39436189/how-to-get-the-dimensionality-of-an-array-column
-create or replace procedure admin.create_history_tables()
+create or replace procedure admin.create_peer_tables()
 language plpgsql
 as $$
 declare
 	rec0 record;
 	rec1 record;
     rec2 record;
-    history_table_name text;
+    peer_table_name text;
 	status text;
 begin
 	-- GETTING ALL NON-SYSTEM SCHEMAS
@@ -20,12 +20,12 @@ begin
         where table_schema = rec0.table_schema and table_name not similar to '%(_peer|_history)'
         order by table_name) loop
 
-            history_table_name := rec1.table_name || '_history';
-            raise info 'history_table_name: % ', history_table_name;
+            peer_table_name := rec1.table_name || '_peer';
+            raise info 'peer_table_name: % ', peer_table_name;
 
             -- HISTORY TABLE CREATION
-            execute format('create table if not exists %I.%I ( _history_id serial primary key,
-            _history_created_at timestamp not null default CURRENT_TIMESTAMP)', rec0.table_schema,history_table_name);
+            execute format('create table if not exists %I.%I ( _peer_id int not null references admin.peers(id),
+            _row_id serial primary key)', rec0.table_schema,peer_table_name);
 
             -- UPDATE BOTH SECURITY AND HISTORY TABLE (IDEMPOTENT MANNER)
             for rec2 in (select column_name,case
@@ -37,12 +37,12 @@ begin
             raise info 'col-name: % | data-type: %', rec2.column_name, rec2.data_type;
 
                 perform column_name from information_schema.columns where table_schema = rec0.table_schema
-                and table_name = history_table_name and column_name = rec2.column_name;
+                and table_name = peer_table_name and column_name = rec2.column_name;
 
                 if not found then
 
-                    raise info 'history table updated';
-                    execute format('alter table ' || rec0.table_schema || '.' || history_table_name || ' add column ' || rec2.column_name || ' ' || rec2.data_type);
+                    raise info 'peer table updated';
+                    execute format('alter table ' || rec0.table_schema || '.' || peer_table_name || ' add column ' || rec2.column_name || ' ' || rec2.data_type);
 
                 end if;
 
@@ -52,4 +52,4 @@ begin
 	raise info 'DONE';
 end; $$;
 
-call admin.create_history_tables();
+call admin.create_peer_tables();
