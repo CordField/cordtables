@@ -68,4 +68,5 @@ class ScLanguage {
   owning_person?: number | undefined;
   owning_group?: number | undefined;
   peer?: number | undefined;
+  coordinates?: string | undefined;
 }
