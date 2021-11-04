@@ -221,9 +221,9 @@ BEGIN
      ('Write', 'begin_work_rel_pol_obstacles_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-     values ('Write', 'suggested_strategies', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'comments', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'suggested_strategies', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+    ('Write', 'comments', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+    ('Write', 'coordinates', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
     values

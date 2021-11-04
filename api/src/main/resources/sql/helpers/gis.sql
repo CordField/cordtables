@@ -1,5 +1,5 @@
-create extension if not exists postgis with schema sc;
-alter table sc.languages add column if not exists coordinates sc.geography;
+create extension if not exists postgis;
+alter table sc.languages add column if not exists coordinates:common.geography;
 delete from sc.languages;
 insert into sc.languages(id,name,display_name,owning_person,owning_group, created_by, modified_by, coordinates)
 values
@@ -7,10 +7,10 @@ values
 (2,'English', 'ENG',1,1,1,1, 'SRID=4326;POINT(-96.1 32.7)');
 
 
-select round(sc.ST_Distance
+select round(common.ST_Distance
 (
-	(select coordinates from sc.languages where id = 1)::sc.geography,
-	(select coordinates from sc.languages where id = 2)::sc.geography
+	(select coordinates from sc.languages where id = 1)::common.geography,
+	(select coordinates from sc.languages where id = 2)::common.geography
 )/1000) || ' km' as distance;
 
-select sc.ST_AsLatLonText(coordinates) from sc.languages;
+select common.ST_AsLatLonText(coordinates::text) from sc.languages;

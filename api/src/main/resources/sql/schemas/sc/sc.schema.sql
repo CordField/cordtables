@@ -370,7 +370,7 @@ create table sc.languages(
   begin_work_rel_pol_obstacles_description text,
   begin_work_rel_pol_obstacles_source text,
 
-    coordinates sc.geography,
+  coordinates common.geography,
 	suggested_strategies text,
 	comments text,
 

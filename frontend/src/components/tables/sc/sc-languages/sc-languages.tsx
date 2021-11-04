@@ -140,6 +140,14 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
     },
+
+    {
+      field: 'coordinates',
+      displayName: 'Coordinates',
+      width: 400,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
     {
       field: 'prioritization',
       displayName: 'Prioritization',
@@ -270,13 +278,7 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
     },
-    {
-      field: 'coordinates',
-      displayName: 'Coordinates',
-      width: 1000,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
+
     {
       field: 'island',
       displayName: 'Island',
@@ -687,12 +689,6 @@ export class ScLanguages {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
-    },
-    {
-      field: 'peer',
-      displayName: 'Peer ID',
-      width: 50,
-      editable: false,
     },
   ];
 
