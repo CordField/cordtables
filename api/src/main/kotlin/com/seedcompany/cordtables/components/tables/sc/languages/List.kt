@@ -124,8 +124,7 @@ class List(
                     "modified_at",
                     "modified_by",
                     "owning_person",
-                    "owning_group",
-                    "peer"
+                    "owning_group"
                 )
             )
         ).query

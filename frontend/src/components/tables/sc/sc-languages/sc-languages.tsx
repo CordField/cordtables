@@ -681,12 +681,6 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
     },
-    {
-      field: 'peer',
-      displayName: 'Peer ID',
-      width: 50,
-      editable: false,
-    },
   ];
 
   async componentWillLoad() {
