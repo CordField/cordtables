@@ -914,6 +914,42 @@ create type common.organization_transition_options as enum (
 
 -- PARTNER CRM STUFF, VERY WIP
 
+create type sc.partner_maturity_scale as enum (
+  'Level 1', -- Non-Existent or Reactive
+  'Level 2', -- Repeatable and Active
+  'Level 3', -- Proactive and Defined
+  'Level 4'  -- Fully Capable and Managed
+);
+
+create table sc.organizational_assessments (
+  id serial primary key,
+
+  partner int not null references sc.organizations(id),
+
+  governance_trans          sc.partner_maturity_scale,
+  director_trans            sc.partner_maturity_scale,
+  identity_trans            sc.partner_maturity_scale,
+  growth_trans              sc.partner_maturity_scale,
+  comm_support_trans        sc.partner_maturity_scale,
+  systems_trans             sc.partner_maturity_scale,
+  fin_management_trans      sc.partner_maturity_scale,
+  hr_trans                  sc.partner_maturity_scale,
+  it_trans                  sc.partner_maturity_scale,
+  program_design_trans      sc.partner_maturity_scale,
+  tech_translation_trans    sc.partner_maturity_scale,
+  director_opp              sc.partner_maturity_scale,
+  financial_management_opp  sc.partner_maturity_scale,
+  program_design_opp        sc.partner_maturity_scale,
+  tech_translation_opp      sc.partner_maturity_scale,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
 create table common.organization_relationships (
   id serial primary key,
 
