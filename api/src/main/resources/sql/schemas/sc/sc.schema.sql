@@ -897,10 +897,6 @@ create table sc.ceremonies (
 
 -- CRM TABLES, WIP ------------------------------------------------------------------
 
-create type common.involvement_options as enum (
-  'CIT',
-  'Engagements'
-);
 
 create type common.people_transition_options as enum (
   'New Org',
@@ -950,69 +946,15 @@ create table sc.organizational_assessments (
   owning_group int not null references admin.groups(id)
 );
 
-create table common.organization_relationships (
-  id serial primary key,
-
-  from_org int not null references sc.organizations(id),
-  to_org int not null references sc.organizations(id),
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-
-  unique (from_org, to_org)
-);
-
 create table sc.partner_performance (
   id serial primary key,
 
   organization int unique not null references sc.organizations(id),
   -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
+  reporting perf [ 1-4]
+  financial perf [ 1-4]
+  trans progress perf [ 1-4]
 
-create table sc.partner_finances (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
-create table sc.partner_reporting (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
-create table sc.partner_translation_progress (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  -- todo
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1034,6 +976,8 @@ create table sc.partner_notes (
   owning_group int not null references admin.groups(id)
 );
 
+-- docs on partners
+
 create table common.organization_transitions (
   id serial primary key,
 
@@ -1049,11 +993,16 @@ create table common.organization_transitions (
   owning_group int not null references admin.groups(id)
 );
 
-create table common.person_to_person_relationships (
+-- org chart
+
+-- position graph
+
+create table common.people_graph (
   id serial primary key,
 
   from_person int not null references admin.people(id),
   to_person int not null references admin.people(id),
+  rel_type varchar(32),
   -- todo
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1064,27 +1013,31 @@ create table common.person_to_person_relationships (
   owning_group int not null references admin.groups(id)
 );
 
-create table common.people_transitions (
-  id serial primary key,
+-- coalitions
 
-  person int not null references admin.people(id),
-  transition_type common.people_transition_options not null,
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+-- coalition memberships
+
+
+create type common.involvement_options as enum (
+  'CIT',
+  'Engagements'
 );
 
-create table common.involvements (
+create table sc.engagements (
+
   id serial primary key,
+
+-- global partner engagements
+  mou dates
+  sc roles
+  global partner roles
+  sc people
+  global partner people
+
 
   organization int not null references common.organizations(id),
   type common.involvement_options not null,
-  
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

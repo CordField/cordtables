@@ -236,6 +236,7 @@ create type common.people_to_org_relationship_type as enum (
   'Board of Directors',
   'Retired',
   'Other'
+  'RoleX',
 );
 
 create table common.people_to_org_relationships (
