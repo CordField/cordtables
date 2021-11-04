@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class CommonChatsCreateRequest(
+data class CommonDiscussionChannelsCreateRequest(
     val token: String? = null,
-    val chat: ChatInput,
+    val discussionchannel: DiscussionChannelInput,
 )
 
-data class CommonChatsCreateResponse(
+data class CommonDiscussionChannelsCreateResponse(
     val error: ErrorType,
     val id: Int? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonChatsCreate")
+@Controller("CommonDiscussionChannelsCreate")
 class Create(
     @Autowired
     val util: Utility,
@@ -40,10 +40,10 @@ class Create(
 
     @PostMapping("common-discussion_channels/create")
     @ResponseBody
-    fun createHandler(@RequestBody req: CommonChatsCreateRequest): CommonChatsCreateResponse {
+    fun createHandler(@RequestBody req: CommonDiscussionChannelsCreateRequest): CommonDiscussionChannelsCreateResponse {
 
-        if (req.token == null) return CommonChatsCreateResponse(error = ErrorType.InputMissingToken, null)
-        if (req.chat == null) return CommonChatsCreateResponse(error = ErrorType.MissingId, null)
+        if (req.token == null) return CommonDiscussionChannelsCreateResponse(error = ErrorType.InputMissingToken, null)
+        if (req.discussionchannel == null) return CommonDiscussionChannelsCreateResponse(error = ErrorType.MissingId, null)
 
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
@@ -75,9 +75,9 @@ class Create(
             req.token,
         )
 
-        req.chat.id = id
+        req.discussionchannel.id = id
 
-        return CommonChatsCreateResponse(error = ErrorType.NoError, id = id)
+        return CommonDiscussionChannelsCreateResponse(error = ErrorType.NoError, id = id)
     }
 
 

@@ -1,6 +1,6 @@
 package com.seedcompany.cordtables.components.tables.common.discussion_channels
 
-data class Chat(
+data class DiscussionChannel(
     var id: Int? = null,
 
     val created_at: String? = null,
@@ -11,7 +11,7 @@ data class Chat(
     val owning_group: Int? = null
 )
 
-data class ChatInput(
+data class DiscussionChannelInput(
     var id: Int? = null,
 
     val created_at: String? = null,
