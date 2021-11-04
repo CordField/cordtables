@@ -10,18 +10,20 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class CommonChatsUpdateReadRequest(
+data class CommonDiscussionChannelsUpdateReadRequest(
     val token: String?,
-    val chat: ChatInput? = null,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
-data class CommonChatsUpdateReadResponse(
+data class CommonDiscussionChannelsUpdateReadResponse(
     val error: ErrorType,
-    val chat: Chat? = null,
+    val discussionchannel: DiscussionChannel? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonChatsUpdateRead")
+@Controller("CommonDiscussionChannelsUpdateRead")
 class UpdateRead(
     @Autowired
     val util: Utility,
@@ -37,26 +39,28 @@ class UpdateRead(
 ) {
     @PostMapping("common-discussion-channels/update-read")
     @ResponseBody
-    fun updateReadHandler(@RequestBody req: CommonChatsUpdateReadRequest): CommonChatsUpdateReadResponse {
+    fun updateReadHandler(@RequestBody req: CommonDiscussionChannelsUpdateReadRequest): CommonDiscussionChannelsUpdateReadResponse {
 
         val updateResponse = update.updateHandler(
-            CommonChatsUpdateRequest(
+            CommonDiscussionChannelsUpdateRequest(
                 token = req.token,
-                chat = req.chat,
+                id = req.id,
+                column = req.column,
+                value = req.value,
             )
         )
 
         if (updateResponse.error != ErrorType.NoError) {
-            return CommonChatsUpdateReadResponse(updateResponse.error)
+            return CommonDiscussionChannelsUpdateReadResponse(updateResponse.error)
         }
 
         val readResponse = read.readHandler(
-            CommonChatsReadRequest(
+            CommonDiscussionChannelsReadRequest(
                 token = req.token,
-                id = req.chat!!.id
+                id = req.id!!
             )
         )
 
-        return CommonChatsUpdateReadResponse(error = readResponse.error, readResponse.chat)
+        return CommonDiscussionChannelsUpdateReadResponse(error = readResponse.error, readResponse.discussionchannel)
     }
 }

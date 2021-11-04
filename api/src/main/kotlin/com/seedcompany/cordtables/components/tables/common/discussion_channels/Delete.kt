@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class CommonChatsDeleteRequest(
+data class CommonDiscussionChannelsDeleteRequest(
     val id: Int,
     val token: String?,
 )
 
-data class CommonChatsDeleteResponse(
+data class CommonDiscussionChannelsDeleteResponse(
     val error: ErrorType,
     val id: Int?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonChatsDelete")
+@Controller("CommonDiscussionChannelsDelete")
 class Delete(
     @Autowired
     val util: Utility,
@@ -31,14 +31,14 @@ class Delete(
 ) {
     @PostMapping("common-discussion_channels/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: CommonChatsDeleteRequest): CommonChatsDeleteResponse {
+    fun deleteHandler(@RequestBody req: CommonDiscussionChannelsDeleteRequest): CommonDiscussionChannelsDeleteResponse {
 
-        if (req.token == null) return CommonChatsDeleteResponse(ErrorType.TokenNotFound, null)
+        if (req.token == null) return CommonDiscussionChannelsDeleteResponse(ErrorType.TokenNotFound, null)
         if(!util.userHasDeletePermission(req.token, "common.discussion_channels"))
-            return CommonChatsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
+            return CommonDiscussionChannelsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
-        var deletedChatExId: Int? = null
+        var deletedDiscussionChannelExId: Int? = null
 
         this.ds.connection.use { conn ->
             try {
@@ -51,15 +51,15 @@ class Delete(
                 val deleteStatementResult = deleteStatement.executeQuery()
 
                 if (deleteStatementResult.next()) {
-                  deletedChatExId  = deleteStatementResult.getInt("id")
+                  deletedDiscussionChannelExId  = deleteStatementResult.getInt("id")
                 }
             }
             catch (e:SQLException ){
                 println(e.message)
 
-                return CommonChatsDeleteResponse(ErrorType.SQLDeleteError, null)
+                return CommonDiscussionChannelsDeleteResponse(ErrorType.SQLDeleteError, null)
             }
         }
-        return CommonChatsDeleteResponse(ErrorType.NoError,deletedChatExId)
+        return CommonDiscussionChannelsDeleteResponse(ErrorType.NoError,deletedDiscussionChannelExId)
     }
 }

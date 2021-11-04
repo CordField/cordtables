@@ -10,18 +10,20 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class CommonChatsUpdateRequest(
+data class CommonDiscussionChannelsUpdateRequest(
     val token: String?,
-    val chat: ChatInput? = null,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
-data class CommonChatsUpdateResponse(
+data class CommonDiscussionChannelsUpdateResponse(
         val error: ErrorType,
 )
 
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonChatsUpdate")
+@Controller("CommonDiscussionChannelsUpdate")
 class Update(
         @Autowired
         val util: Utility,
@@ -31,29 +33,36 @@ class Update(
 ) {
     @PostMapping("common-discussion-channels/update")
     @ResponseBody
-    fun updateHandler(@RequestBody req: CommonChatsUpdateRequest): CommonChatsUpdateResponse {
+    fun updateHandler(@RequestBody req: CommonDiscussionChannelsUpdateRequest): CommonDiscussionChannelsUpdateResponse {
 
-        if (req.token == null) return CommonChatsUpdateResponse(ErrorType.TokenNotFound)
-        if (req.chat == null) return CommonChatsUpdateResponse(ErrorType.MissingId)
-        if (req.chat.id == null) return CommonChatsUpdateResponse(ErrorType.MissingId)
+        if (req.token == null) return CommonDiscussionChannelsUpdateResponse(ErrorType.TokenNotFound)
+        if (req.id == null) return CommonDiscussionChannelsUpdateResponse(ErrorType.MissingId)
+        if (req.column == null) return CommonDiscussionChannelsUpdateResponse(ErrorType.MissingId)
 
-        if (req.chat.owning_person != null) util.updateField(
-                token = req.token,
-                table = "common.discussion_channels",
-                column = "owning_person",
-                id = req.chat.id!!,
-                value = req.chat.owning_person,
-        )
+        when (req.column) {
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.discussionchannels",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
 
-        if (req.chat.owning_group != null) util.updateField(
-                token = req.token,
-                table = "common.discussion_channels",
-                column = "owning_group",
-                id = req.chat.id!!,
-                value = req.chat.owning_group,
-        )
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.discussionchannels",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
 
-        return CommonChatsUpdateResponse(ErrorType.NoError)
+        }
+
+        return CommonDiscussionChannelsUpdateResponse(ErrorType.NoError)
     }
 
 }

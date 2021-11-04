@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class CommonChatsCreateReadRequest(
+data class CommonDiscussionChannelsCreateReadRequest(
     val token: String? = null,
-    val chat: ChatInput,
+    val discussionchannel: DiscussionChannelInput,
 )
 
-data class CommonChatsCreateReadResponse(
+data class CommonDiscussionChannelsCreateReadResponse(
     val error: ErrorType,
-    val chat: Chat? = null,
+    val discussionchannel: DiscussionChannel? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonChatsCreateRead")
+@Controller("CommonDiscussionChannelsCreateRead")
 class CreateRead(
     @Autowired
     val util: Utility,
@@ -37,26 +37,26 @@ class CreateRead(
 ) {
     @PostMapping("common-discussion_channels/create-read")
     @ResponseBody
-    fun createReadHandler(@RequestBody req: CommonChatsCreateReadRequest): CommonChatsCreateReadResponse {
+    fun createReadHandler(@RequestBody req: CommonDiscussionChannelsCreateReadRequest): CommonDiscussionChannelsCreateReadResponse {
 
         val createResponse = create.createHandler(
-            CommonChatsCreateRequest(
+            CommonDiscussionChannelsCreateRequest(
                 token = req.token,
-                chat = req.chat
+                discussionchannel = req.discussionchannel
             )
         )
 
         if (createResponse.error != ErrorType.NoError) {
-            return CommonChatsCreateReadResponse(error = createResponse.error)
+            return CommonDiscussionChannelsCreateReadResponse(error = createResponse.error)
         }
 
         val readResponse = read.readHandler(
-            CommonChatsReadRequest(
+            CommonDiscussionChannelsReadRequest(
                 token = req.token,
                 id = createResponse!!.id
             )
         )
 
-        return CommonChatsCreateReadResponse(error = readResponse.error, chat = readResponse.chat)
+        return CommonDiscussionChannelsCreateReadResponse(error = readResponse.error, discussionchannel = readResponse.discussionchannel)
     }
 }

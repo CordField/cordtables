@@ -15,18 +15,18 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class CommonChatsReadRequest(
+data class CommonDiscussionChannelsReadRequest(
     val token: String?,
     val id: Int? = null,
 )
 
-data class CommonChatsReadResponse(
+data class CommonDiscussionChannelsReadResponse(
     val error: ErrorType,
-    val chat: Chat? = null,
+    val discussionchannel: DiscussionChannel? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonChatsRead")
+@Controller("CommonDiscussionChannelsRead")
 class Read(
     @Autowired
     val util: Utility,
@@ -41,10 +41,10 @@ class Read(
 
     @PostMapping("common-discussion-channels/read")
     @ResponseBody
-    fun readHandler(@RequestBody req: CommonChatsReadRequest): CommonChatsReadResponse {
+    fun readHandler(@RequestBody req: CommonDiscussionChannelsReadRequest): CommonDiscussionChannelsReadResponse {
 
-        if (req.token == null) return CommonChatsReadResponse(ErrorType.TokenNotFound)
-        if (req.id == null) return CommonChatsReadResponse(ErrorType.MissingId)
+        if (req.token == null) return CommonDiscussionChannelsReadResponse(ErrorType.TokenNotFound)
+        if (req.id == null) return CommonDiscussionChannelsReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -91,8 +91,8 @@ class Read(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                val chat =
-                    Chat(
+                val discussionchannel =
+                    DiscussionChannel(
                         id = id,
 
                         created_at = created_at,
@@ -103,14 +103,14 @@ class Read(
                         owning_group = owning_group
                     )
 
-                return CommonChatsReadResponse(ErrorType.NoError, chat = chat)
+                return CommonDiscussionChannelsReadResponse(ErrorType.NoError, discussionchannel = discussionchannel)
 
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return CommonChatsReadResponse(ErrorType.SQLReadError)
+            return CommonDiscussionChannelsReadResponse(ErrorType.SQLReadError)
         }
 
-        return CommonChatsReadResponse(error = ErrorType.UnknownError)
+        return CommonDiscussionChannelsReadResponse(error = ErrorType.UnknownError)
     }
 }

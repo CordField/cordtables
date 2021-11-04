@@ -16,17 +16,17 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 
-data class CommonChatsListRequest(
+data class CommonDiscussionChannelsListRequest(
     val token: String?
 )
 
-data class CommonChatsListResponse(
+data class CommonDiscussionChannelsListResponse(
     val error: ErrorType,
-    val chats: MutableList<Chat>?
+    val chats: MutableList<DiscussionChannel>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonChatsList")
+@Controller("CommonDiscussionChannelsList")
 class List(
     @Autowired
     val util: Utility,
@@ -42,9 +42,9 @@ class List(
 
     @PostMapping("common-discussion-channels/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: CommonChatsListRequest): CommonChatsListResponse {
-        var data: MutableList<Chat> = mutableListOf()
-        if (req.token == null) return CommonChatsListResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun listHandler(@RequestBody req: CommonDiscussionChannelsListRequest): CommonDiscussionChannelsListResponse {
+        var data: MutableList<DiscussionChannel> = mutableListOf()
+        if (req.token == null) return CommonDiscussionChannelsListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -91,7 +91,7 @@ class List(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
-                    Chat(
+                    DiscussionChannel(
                         id = id,
 
                         created_at = created_at,
@@ -105,9 +105,9 @@ class List(
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return CommonChatsListResponse(ErrorType.SQLReadError, mutableListOf())
+            return CommonDiscussionChannelsListResponse(ErrorType.SQLReadError, mutableListOf())
         }
 
-        return CommonChatsListResponse(ErrorType.NoError, data)
+        return CommonDiscussionChannelsListResponse(ErrorType.NoError, data)
     }
 }
