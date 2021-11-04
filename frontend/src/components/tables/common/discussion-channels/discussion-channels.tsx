@@ -175,6 +175,35 @@ columnData: ColumnDescription[] = [
     return (
       <Host>
         <slot></slot>
+        {/* table abstraction */}
+        {this.discussionchannelsResponse && <cf-table rowData={this.discussionchannelsResponse.discussionchannel} columnData={this.columnData}></cf-table>}
+
+        {/* create form - we'll only do creates using the minimum amount of fields
+         and then expect the user to use the update functionality to do the rest*/}
+
+        {globals.globalStore.state.editMode === true && (
+          <form class="form-thing">
+            <div id="discussionchannel-name-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="discussionchannel-name">New Language Name</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="discussionchannel-name" name="language-name" onInput={event => this.languageNameChange(event)} />
+              </span>
+            </div>
+            <div id="display-name-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="display-name">Display Name</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />
+              </span>
+            </div>
+            <span class="form-thing">
+              <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
+            </span>
+          </form>
+        )}
       </Host>
     );
   }

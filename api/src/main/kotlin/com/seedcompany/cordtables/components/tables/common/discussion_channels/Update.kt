@@ -12,7 +12,9 @@ import javax.sql.DataSource
 
 data class CommonDiscussionChannelsUpdateRequest(
     val token: String?,
-    val discussionchannel: DiscussionChannelInput? = null,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
 data class CommonDiscussionChannelsUpdateResponse(
@@ -34,24 +36,31 @@ class Update(
     fun updateHandler(@RequestBody req: CommonDiscussionChannelsUpdateRequest): CommonDiscussionChannelsUpdateResponse {
 
         if (req.token == null) return CommonDiscussionChannelsUpdateResponse(ErrorType.TokenNotFound)
-        if (req.discussionchannel == null) return CommonDiscussionChannelsUpdateResponse(ErrorType.MissingId)
-        if (req.discussionchannel.id == null) return CommonDiscussionChannelsUpdateResponse(ErrorType.MissingId)
+        if (req.id == null) return CommonDiscussionChannelsUpdateResponse(ErrorType.MissingId)
+        if (req.column == null) return CommonDiscussionChannelsUpdateResponse(ErrorType.MissingId)
 
-        if (req.discussionchannel.owning_person != null) util.updateField(
-                token = req.token,
-                table = "common.discussion_channels",
-                column = "owning_person",
-                id = req.discussionchannel.id!!,
-                value = req.discussionchannel.owning_person,
-        )
+        when (req.column) {
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.discussionchannels",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
 
-        if (req.discussionchannel.owning_group != null) util.updateField(
-                token = req.token,
-                table = "common.discussion_channels",
-                column = "owning_group",
-                id = req.discussionchannel.id!!,
-                value = req.discussionchannel.owning_group,
-        )
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.discussionchannels",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+
+        }
 
         return CommonDiscussionChannelsUpdateResponse(ErrorType.NoError)
     }
