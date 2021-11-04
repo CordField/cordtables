@@ -59,6 +59,12 @@ enum class CommonSensitivity {
     High,
 }
 
+enum class CommonTicketStatus{
+    Open,
+    Blocked,
+    Closed
+}
+
 data class GenericResponse (
     val error: ErrorType,
 )
