@@ -30,9 +30,6 @@ class Delete(
     val util: Utility,
 
     @Autowired
-    val commonDelete: CommonDelete,
-
-    @Autowired
     val ds: DataSource,
 ) {
     @PostMapping("common-file-versions/delete")
@@ -50,7 +47,7 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from common.files where id = ? returning id"
+                    "delete from common.file_versions where id = ? returning id"
                 )
                 deleteStatement.setInt(1, req.id)
 
@@ -68,17 +65,6 @@ class Delete(
 
                 return CommonFileVersionsDeleteResponse(ErrorType.SQLDeleteError, null)
             }
-        }
-
-        val deleteResponse = commonDelete.deleteHandler(
-            CommonFileVersionsDeleteRequest(
-                token = req.token,
-                id = req.id
-            )
-        )
-
-        if(deleteResponse.error != ErrorType.NoError) {
-            return CommonFileVersionsDeleteResponse(deleteResponse.error, deleteResponse.id)
         }
 
         return CommonFileVersionsDeleteResponse(ErrorType.NoError,deletedLocationExId)

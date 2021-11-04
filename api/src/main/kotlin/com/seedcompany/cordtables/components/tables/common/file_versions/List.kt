@@ -81,17 +81,29 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var directory: Int? = jdbcResult.getInt("directory")
-                if (jdbcResult.wasNull()) directory = null
+                var category: String? = jdbcResult.getString("category")
+                if (jdbcResult.wasNull()) category = null
+
+                var mime_type: String? = jdbcResult.getString("mime_type")
+                if (jdbcResult.wasNull()) mime_type = null
 
                 var name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) name = null
 
-                var created_at: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) created_at = null
+                var file: Int? = jdbcResult.getInt("file")
+                if (jdbcResult.wasNull()) file = null
+
+                var file_url: String? = jdbcResult.getString("file_url")
+                if (jdbcResult.wasNull()) file_url = null
 
                 var created_by: Int? = jdbcResult.getInt("created_by")
                 if (jdbcResult.wasNull()) created_by = null
+
+                var created_at: String? = jdbcResult.getString("created_at")
+                if (jdbcResult.wasNull()) created_at = null
+
+                var file_size: Int? = jdbcResult.getInt("file_size")
+                if (jdbcResult.wasNull()) file_size = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
@@ -111,8 +123,12 @@ class List(
                 data.add(
                     CommonFileVersion(
                         id = id,
-                        directory = directory,
+                        category = category,
+                        mime_type = mime_type,
                         name = name,
+                        file = file,
+                        file_url = file_url,
+                        file_size = file_size,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

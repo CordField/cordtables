@@ -7,6 +7,7 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
 import com.seedcompany.cordtables.components.tables.common.file_versions.CommonFileVersionInput
+import com.seedcompany.cordtables.components.tables.sc.languages.ScLanguagesUpdateResponse
 import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -18,7 +19,9 @@ import javax.sql.DataSource
 
 data class CommonFileVersionsUpdateRequest(
     val token: String?,
-    val fileVersion: CommonFileVersionInput? = null,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
 data class CommonFileVersionsUpdateResponse(
@@ -33,9 +36,6 @@ class Update(
     val util: Utility,
 
     @Autowired
-    val commonUpdate: CommonUpdate,
-
-    @Autowired
     val ds: DataSource,
 ) {
     @PostMapping("common-file-versions/update")
@@ -43,108 +43,84 @@ class Update(
     fun updateHandler(@RequestBody req: CommonFileVersionsUpdateRequest): CommonFileVersionsUpdateResponse {
 
         if (req.token == null) return CommonFileVersionsUpdateResponse(ErrorType.TokenNotFound)
-        if (req.fileVersion == null) return CommonFileVersionsUpdateResponse(ErrorType.MissingId)
-        if (req.fileVersion.id == null) return CommonFileVersionsUpdateResponse(ErrorType.MissingId)
+        if (req.column == null) return CommonFileVersionsUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return CommonFileVersionsUpdateResponse(ErrorType.MissingId)
 
-//        if (req.file.type != null && !enumContains<LocationType>(req.file.type)) {
-//            return CommonFilesUpdateResponse(
-//                error = ErrorType.ValueDoesNotMap
-//            )
-//        }
 
-        val updateResponse = commonUpdate.updateHandler(
-            CommonFileVersionsUpdateRequest(
-                token = req.token,
-                fileVersion = CommonFileVersionInput(
-                    id = req.fileVersion.id,
-                    category = req.fileVersion.category,
-                    mime_type = req.fileVersion.mime_type,
-                    name = req.fileVersion.name,
-                    file = req.fileVersion.file,
-                    file_url = req.fileVersion.file_url,
-                    file_size = req.fileVersion.file_size,
-                    owning_person = req.fileVersion.owning_person,
-                    owning_group = req.fileVersion.owning_group,
-                    peer = req.fileVersion.peer,
-                ),
-            )
-        )
-
-        if (updateResponse.error != ErrorType.NoError) {
-            return CommonFileVersionsUpdateResponse(updateResponse.error)
+        when (req.column) {
+            "category" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.file_versions",
+                    column = "category",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "mime_type" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.file_versions",
+                    column = "mime_type",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.file_versions",
+                    column = "name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "file" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.file_versions",
+                    column = "file",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "file_url" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.file_versions",
+                    column = "file_url",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "file_size" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.file_versions",
+                    column = "file_size",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.file_versions",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.file_versions",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
         }
-
-        if (req.fileVersion.category != null) util.updateField(
-            token = req.token,
-            table = "common.file_versions",
-            column = "category",
-            id = req.fileVersion.id!!,
-            value = req.fileVersion.category,
-        )
-
-        if (req.fileVersion.mime_type != null) util.updateField(
-            token = req.token,
-            table = "common.file_versions",
-            column = "mime_type",
-            id = req.fileVersion.id!!,
-            value = req.fileVersion.mime_type,
-        )
-
-        if (req.fileVersion.name != null) util.updateField(
-            token = req.token,
-            table = "common.file_versions",
-            column = "name",
-            id = req.fileVersion.id!!,
-            value = req.fileVersion.name,
-        )
-
-        if (req.fileVersion.file != null) util.updateField(
-            token = req.token,
-            table = "common.file_versions",
-            column = "file",
-            id = req.fileVersion.id!!,
-            value = req.fileVersion.file,
-        )
-
-        if (req.fileVersion.file_url != null) util.updateField(
-            token = req.token,
-            table = "common.file_versions",
-            column = "file_url",
-            id = req.fileVersion.id!!,
-            value = req.fileVersion.file_url,
-        )
-
-        if (req.fileVersion.file_size != null) util.updateField(
-            token = req.token,
-            table = "common.file_versions",
-            column = "file_size",
-            id = req.fileVersion.id!!,
-            value = req.fileVersion.file_size,
-        )
-
-        if (req.fileVersion.owning_person != null) util.updateField(
-            token = req.token,
-            table = "common.file_versions",
-            column = "owning_person",
-            id = req.fileVersion.id!!,
-            value = req.fileVersion.owning_person,
-        )
-
-        if (req.fileVersion.owning_group != null) util.updateField(
-            token = req.token,
-            table = "common.file_versions",
-            column = "owning_group",
-            id = req.fileVersion.id!!,
-            value = req.fileVersion.owning_group,
-        )
-
-        if (req.fileVersion.peer != null) util.updateField(
-            token = req.token,
-            table = "common.file_versions",
-            column = "peer",
-            id = req.fileVersion.id!!,
-            value = req.fileVersion.peer,
-        )
 
         return CommonFileVersionsUpdateResponse(ErrorType.NoError)
     }

@@ -1,4 +1,3 @@
-
 package com.seedcompany.cordtables.components.tables.common.directories
 
 import com.seedcompany.cordtables.common.ErrorType
@@ -49,8 +48,9 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into common.directories(name, created_by, modified_by, owning_person, owning_group)
+            insert into common.directories(name, parent, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?,
                     ?,
                     (
                       select person 
@@ -73,6 +73,7 @@ class Create(
         """.trimIndent(),
             Int::class.java,
             req.directory.name,
+            req.directory.parent,
             req.token,
             req.token,
             req.token,

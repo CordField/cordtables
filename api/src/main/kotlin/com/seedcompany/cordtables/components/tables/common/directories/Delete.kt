@@ -1,6 +1,5 @@
 package com.seedcompany.cordtables.components.tables.common.directories
 
-
 import com.seedcompany.cordtables.components.tables.common.directories.Delete as CommonDelete
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -29,9 +28,6 @@ data class CommonDirectoriesDeleteResponse(
 class Delete(
     @Autowired
     val util: Utility,
-
-    @Autowired
-    val commonDelete: CommonDelete,
 
     @Autowired
     val ds: DataSource,
@@ -69,17 +65,6 @@ class Delete(
 
                 return CommonDirectoriesDeleteResponse(ErrorType.SQLDeleteError, null)
             }
-        }
-
-        val deleteResponse = commonDelete.deleteHandler(
-            CommonDirectoriesDeleteRequest(
-                token = req.token,
-                id = req.id
-            )
-        )
-
-        if(deleteResponse.error != ErrorType.NoError) {
-            return CommonDirectoriesDeleteResponse(deleteResponse.error, deleteResponse.id)
         }
 
         return CommonDirectoriesDeleteResponse(ErrorType.NoError,deletedLocationExId)
