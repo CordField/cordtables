@@ -24,6 +24,13 @@ export class TableRoot {
         {this.match.params.table === 'admin-group-membership' && <group-memberships></group-memberships>}
         {this.match.params.table === 'admin-group-row-access' && <groups-row-access></groups-row-access>}
 
+        {this.match.params.table === 'directories-table' && <directories-table></directories-table>}
+        {this.match.params.table === 'files-table' && <files-table></files-table>}
+        {this.match.params.table === 'file-versions' && <file-versions></file-versions>}
+        {this.match.params.table === 'sc-field-regions' && <sc-field-regions></sc-field-regions>}
+        {this.match.params.table === 'sc-field-zones' && <sc-field-zones></sc-field-zones>}
+
+        
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
         {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}

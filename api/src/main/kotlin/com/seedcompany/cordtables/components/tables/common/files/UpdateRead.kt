@@ -17,7 +17,9 @@ import javax.sql.DataSource
 
 data class CommonFilesUpdateReadRequest(
     val token: String?,
-    val file: CommonFileInput? = null,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
 data class CommonFilesUpdateReadResponse(
@@ -47,7 +49,9 @@ class UpdateRead(
         val updateResponse = update.updateHandler(
             CommonFilesUpdateRequest(
                 token = req.token,
-                file = req.file,
+                column = req.column,
+                id = req.id,
+                value = req.value,
             )
         )
 
@@ -58,7 +62,7 @@ class UpdateRead(
         val readResponse = read.readHandler(
             CommonFilesReadRequest(
                 token = req.token,
-                id = req.file!!.id
+                id = req.id!!
             )
         )
 

@@ -31,9 +31,6 @@ class Delete(
     val util: Utility,
 
     @Autowired
-    val commonDelete: CommonDelete,
-
-    @Autowired
     val ds: DataSource,
 ) {
     @PostMapping("common-files/delete")
@@ -69,17 +66,6 @@ class Delete(
 
                 return CommonFilesDeleteResponse(ErrorType.SQLDeleteError, null)
             }
-        }
-
-        val deleteResponse = commonDelete.deleteHandler(
-            CommonFilesDeleteRequest(
-                token = req.token,
-                id = req.id
-            )
-        )
-
-        if(deleteResponse.error != ErrorType.NoError) {
-            return CommonFilesDeleteResponse(deleteResponse.error, deleteResponse.id)
         }
 
         return CommonFilesDeleteResponse(ErrorType.NoError,deletedLocationExId)

@@ -14,7 +14,9 @@ import javax.sql.DataSource
 
 data class CommonDirectoriesUpdateReadRequest(
     val token: String?,
-    val directory: CommonDirectoryInput? = null,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
 data class CommonDirectoriesUpdateReadResponse(
@@ -44,7 +46,9 @@ class UpdateRead(
         val updateResponse = update.updateHandler(
             CommonDirectoriesUpdateRequest(
                 token = req.token,
-                directory = req.directory,
+                column = req.column,
+                id = req.id,
+                value = req.value,
             )
         )
 
@@ -55,7 +59,7 @@ class UpdateRead(
         val readResponse = read.readHandler(
             CommonDirectoriesReadRequest(
                 token = req.token,
-                id = req.directory!!.id
+                id = req.id!!
             )
         )
 

@@ -52,8 +52,9 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into common.files(name, created_by, modified_by, owning_person, owning_group)
+            insert into common.files(name, directory, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?,
                     ?,
                     (
                       select person 
@@ -76,6 +77,7 @@ class Create(
         """.trimIndent(),
             Int::class.java,
             req.file.name,
+            req.file.directory,
             req.token,
             req.token,
             req.token,

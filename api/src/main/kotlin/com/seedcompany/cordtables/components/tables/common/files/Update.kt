@@ -6,6 +6,7 @@ import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
+import com.seedcompany.cordtables.components.tables.common.file_versions.CommonFileVersionsUpdateResponse
 import com.seedcompany.cordtables.components.tables.common.files.CommonFileInput
 import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +19,9 @@ import javax.sql.DataSource
 
 data class CommonFilesUpdateRequest(
     val token: String?,
-    val file: CommonFileInput? = null,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
 data class CommonFilesUpdateResponse(
@@ -33,9 +36,6 @@ class Update(
     val util: Utility,
 
     @Autowired
-    val commonUpdate: CommonUpdate,
-
-    @Autowired
     val ds: DataSource,
 ) {
     @PostMapping("common-files/update")
@@ -43,72 +43,84 @@ class Update(
     fun updateHandler(@RequestBody req: CommonFilesUpdateRequest): CommonFilesUpdateResponse {
 
         if (req.token == null) return CommonFilesUpdateResponse(ErrorType.TokenNotFound)
-        if (req.file == null) return CommonFilesUpdateResponse(ErrorType.MissingId)
-        if (req.file.id == null) return CommonFilesUpdateResponse(ErrorType.MissingId)
+        if (req.column == null) return CommonFilesUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return CommonFilesUpdateResponse(ErrorType.MissingId)
 
-//        if (req.file.type != null && !enumContains<LocationType>(req.file.type)) {
-//            return CommonFilesUpdateResponse(
-//                error = ErrorType.ValueDoesNotMap
-//            )
-//        }
 
-        val updateResponse = commonUpdate.updateHandler(
-            CommonFilesUpdateRequest(
-                token = req.token,
-                file = CommonFileInput(
-                    id = req.file.id,
-                    directory = req.file.directory,
-                    name = req.file.name,
-                    owning_person = req.file.owning_person,
-                    owning_group = req.file.owning_group,
-                    peer = req.file.peer,
-                ),
-            )
-        )
-
-        if (updateResponse.error != ErrorType.NoError) {
-            return CommonFilesUpdateResponse(updateResponse.error)
+        when (req.column) {
+            "directory" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.files",
+                    column = "directory",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.files",
+                    column = "name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "created_at" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.files",
+                    column = "created_at",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "created_by" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.files",
+                    column = "created_by",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "modified_at" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.files",
+                    column = "modified_at",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "modified_by" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.files",
+                    column = "modified_by",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.files",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.files",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
         }
-
-        if (req.file.directory != null) util.updateField(
-            token = req.token,
-            table = "common.files",
-            column = "parent",
-            id = req.file.id!!,
-            value = req.file.directory,
-        )
-
-        if (req.file.name != null) util.updateField(
-            token = req.token,
-            table = "common.files",
-            column = "name",
-            id = req.file.id!!,
-            value = req.file.name,
-        )
-
-        if (req.file.owning_person != null) util.updateField(
-            token = req.token,
-            table = "common.files",
-            column = "owning_person",
-            id = req.file.id!!,
-            value = req.file.owning_person,
-        )
-
-        if (req.file.owning_group != null) util.updateField(
-            token = req.token,
-            table = "common.files",
-            column = "owning_group",
-            id = req.file.id!!,
-            value = req.file.owning_group,
-        )
-
-        if (req.file.peer != null) util.updateField(
-            token = req.token,
-            table = "common.files",
-            column = "peer",
-            id = req.file.id!!,
-            value = req.file.peer,
-        )
 
         return CommonFilesUpdateResponse(ErrorType.NoError)
     }
