@@ -195,6 +195,8 @@ export namespace Components {
     }
     interface TicketFeedback {
     }
+    interface TicketGraph {
+    }
     interface TicketsTable {
     }
     interface UsersTable {
@@ -687,6 +689,12 @@ declare global {
         prototype: HTMLTicketFeedbackElement;
         new (): HTMLTicketFeedbackElement;
     };
+    interface HTMLTicketGraphElement extends Components.TicketGraph, HTMLStencilElement {
+    }
+    var HTMLTicketGraphElement: {
+        prototype: HTMLTicketGraphElement;
+        new (): HTMLTicketGraphElement;
+    };
     interface HTMLTicketsTableElement extends Components.TicketsTable, HTMLStencilElement {
     }
     var HTMLTicketsTableElement: {
@@ -798,6 +806,7 @@ declare global {
         "threads-table": HTMLThreadsTableElement;
         "ticket-assignments": HTMLTicketAssignmentsElement;
         "ticket-feedback": HTMLTicketFeedbackElement;
+        "ticket-graph": HTMLTicketGraphElement;
         "tickets-table": HTMLTicketsTableElement;
         "users-table": HTMLUsersTableElement;
         "work-estimates": HTMLWorkEstimatesElement;
@@ -997,6 +1006,8 @@ declare namespace LocalJSX {
     }
     interface TicketFeedback {
     }
+    interface TicketGraph {
+    }
     interface TicketsTable {
     }
     interface UsersTable {
@@ -1088,6 +1099,7 @@ declare namespace LocalJSX {
         "threads-table": ThreadsTable;
         "ticket-assignments": TicketAssignments;
         "ticket-feedback": TicketFeedback;
+        "ticket-graph": TicketGraph;
         "tickets-table": TicketsTable;
         "users-table": UsersTable;
         "work-estimates": WorkEstimates;
@@ -1179,6 +1191,7 @@ declare module "@stencil/core" {
             "threads-table": LocalJSX.ThreadsTable & JSXBase.HTMLAttributes<HTMLThreadsTableElement>;
             "ticket-assignments": LocalJSX.TicketAssignments & JSXBase.HTMLAttributes<HTMLTicketAssignmentsElement>;
             "ticket-feedback": LocalJSX.TicketFeedback & JSXBase.HTMLAttributes<HTMLTicketFeedbackElement>;
+            "ticket-graph": LocalJSX.TicketGraph & JSXBase.HTMLAttributes<HTMLTicketGraphElement>;
             "tickets-table": LocalJSX.TicketsTable & JSXBase.HTMLAttributes<HTMLTicketsTableElement>;
             "users-table": LocalJSX.UsersTable & JSXBase.HTMLAttributes<HTMLUsersTableElement>;
             "work-estimates": LocalJSX.WorkEstimates & JSXBase.HTMLAttributes<HTMLWorkEstimatesElement>;
