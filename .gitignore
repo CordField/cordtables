@@ -1,1 +1,9 @@
-*.log
+infra/dev/cf-server/static/*
+!infra/dev/cf-server/static/0
+infra/dev/cf-server/cordfield.jar
+infra/local-peer/*.jar
+*.todo
+*.notes
+.idea/*
+todo
+api/src/main/resources/local
