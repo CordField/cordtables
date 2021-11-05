@@ -895,20 +895,7 @@ create table sc.ceremonies (
   owning_group int not null references admin.groups(id)
 );
 
--- CRM TABLES, WIP ------------------------------------------------------------------
-
-
-create type common.people_transition_options as enum (
-  'New Org',
-  'Other'
-);
-
-create type common.organization_transition_options as enum (
-  'To Manager',
-  'To Other'
-);
-
--- PARTNER CRM STUFF, VERY WIP
+-- PARTNER CRM STUFF
 
 create type sc.partner_maturity_scale as enum (
   'Level 1', -- Non-Existent or Reactive
@@ -946,15 +933,18 @@ create table sc.organizational_assessments (
   owning_group int not null references admin.groups(id)
 );
 
+create type sc.partner_performance_options(
+  '1', '2', '3', '4'
+);
+
 create table sc.partner_performance (
   id serial primary key,
 
   organization int unique not null references sc.organizations(id),
-  -- todo
-  reporting perf [ 1-4]
-  financial perf [ 1-4]
-  trans progress perf [ 1-4]
 
+  reporting_performance sc.partner_performance_options,
+  financial_performance sc.partner_performance_options,
+  translation_performance sc.partner_performance_options,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -964,18 +954,20 @@ create table sc.partner_performance (
   owning_group int not null references admin.groups(id)
 );
 
-create table sc.partner_notes (
-  id serial primary key,
+-- todo
+--create table sc.partner_notes (
+--  id serial primary key,
+--
+--  organization int unique not null references sc.organizations(id),
+--  author int not null references admin.people(id),
+--  note text not null,
+--  -- todo
+--
+--  created_at timestamp not null default CURRENT_TIMESTAMP,
+--  owning_group int not null references admin.groups(id)
+--);
 
-  organization int unique not null references sc.organizations(id),
-  author int not null references admin.people(id),
-  note text not null,
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  owning_group int not null references admin.groups(id)
-);
-
+-- todo
 -- docs on partners
 
 create table common.organization_transitions (
