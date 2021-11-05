@@ -3,6 +3,8 @@ package com.seedcompany.cordtables.components.tables.common.discussion_channels
 data class DiscussionChannel(
     var id: Int? = null,
 
+    var name: String? = null,
+
     val created_at: String? = null,
     val created_by: Int? = null,
     val modified_at: String? = null,
@@ -13,6 +15,8 @@ data class DiscussionChannel(
 
 data class DiscussionChannelInput(
     var id: Int? = null,
+
+    var name: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,

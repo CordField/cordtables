@@ -22,7 +22,7 @@ data class CommonDiscussionChannelsListRequest(
 
 data class CommonDiscussionChannelsListResponse(
     val error: ErrorType,
-    val chats: MutableList<DiscussionChannel>?
+    val discussionchannels: MutableList<DiscussionChannel>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -55,6 +55,8 @@ class List(
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
+                    "name",
+
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -71,6 +73,9 @@ class List(
 
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
+
+                var name: String? = jdbcResult.getString("name")
+                if (jdbcResult.wasNull()) name = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -93,6 +98,8 @@ class List(
                 data.add(
                     DiscussionChannel(
                         id = id,
+
+                        name = name,
 
                         created_at = created_at,
                         created_by = created_by,

@@ -66,12 +66,16 @@ create table common.scripture_references (
 create table common.discussion_channels (
 	id serial primary key,
 
+	name varchar(32) not null,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id)
+
+  unique (name, owning_group)
 );
 
 create table common.cell_channels (

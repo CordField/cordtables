@@ -56,6 +56,8 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
+                    "name",
+
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -72,6 +74,9 @@ class Read(
 
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
+
+                var name: String? = jdbcResult.getString("name")
+                if (jdbcResult.wasNull()) name = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -94,6 +99,8 @@ class Read(
                 val discussionchannel =
                     DiscussionChannel(
                         id = id,
+
+                        name = name,
 
                         created_at = created_at,
                         created_by = created_by,

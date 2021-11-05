@@ -40,6 +40,16 @@ class Update(
         if (req.column == null) return CommonDiscussionChannelsUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
+            "name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.discussionchannels",
+                    column = "name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+
             "owning_person" -> {
                 util.updateField(
                     token = req.token,

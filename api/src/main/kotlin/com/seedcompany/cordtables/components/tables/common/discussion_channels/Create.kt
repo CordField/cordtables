@@ -48,8 +48,9 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into common.discussion_channels(created_by, modified_by, owning_person, owning_group)
+            insert into common.discussion_channels(name, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -70,6 +71,7 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
+            req.discussionchannel.name,
             req.token,
             req.token,
             req.token,
