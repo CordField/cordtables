@@ -957,6 +957,10 @@ create table sc.global_partner_performance (
 -- todo
 -- files/documents on partners
 
+--This is related to people transitions (below). Between these two tables we want to provide history for:
+--- when an organization gets transitioned to another Seed Company staff member as a point of contact
+--- when key roles in an organization get filled by a new individual
+
 -- create table common.global_partner_transitions (
 --   id serial primary key,
 
