@@ -1,11 +1,10 @@
 package com.seedcompany.cordtables.components.tables.sc.field_regions
 
-
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.sc.field_regions.fieldRegionInput
-import com.seedcompany.cordtables.components.tables.sc.field_regions.Read
-import com.seedcompany.cordtables.components.tables.sc.field_regions.Update
+import com.seedcompany.cordtables.components.tables.sc.field_zones.fieldZoneInput
+import com.seedcompany.cordtables.components.tables.sc.field_zones.Read
+import com.seedcompany.cordtables.components.tables.sc.field_zones.Update
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -52,8 +51,10 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.field_regions(name, created_by, modified_by, owning_person, owning_group)
+            insert into sc.field_regions(name, neo4j_id, director, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?,
+                    ?,
                     ?,
                     (
                       select person 
@@ -76,6 +77,8 @@ class Create(
         """.trimIndent(),
             Int::class.java,
             req.fieldRegion.name,
+            req.fieldRegion.neo4j_id,
+            req.fieldRegion.director,
             req.token,
             req.token,
             req.token,

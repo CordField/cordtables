@@ -24,9 +24,9 @@ export class TableRoot {
         {this.match.params.table === 'admin-group-membership' && <group-memberships></group-memberships>}
         {this.match.params.table === 'admin-group-row-access' && <groups-row-access></groups-row-access>}
 
-        {this.match.params.table === 'directories-table' && <directories-table></directories-table>}
-        {this.match.params.table === 'files-table' && <files-table></files-table>}
-        {this.match.params.table === 'file-versions' && <file-versions></file-versions>}
+        {this.match.params.table === 'common-directories' && <directories-table></directories-table>}
+        {this.match.params.table === 'common-files' && <files-table></files-table>}
+        {this.match.params.table === 'common-file-versions' && <file-versions></file-versions>}
         {this.match.params.table === 'sc-field-regions' && <sc-field-regions></sc-field-regions>}
         {this.match.params.table === 'sc-field-zones' && <sc-field-zones></sc-field-zones>}
 

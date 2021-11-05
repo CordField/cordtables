@@ -5,7 +5,7 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sc.field_zones.fieldZone
+import com.seedcompany.cordtables.components.tables.sc.field_regions.fieldRegion
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -24,7 +24,7 @@ data class ScFieldZonesListRequest(
 
 data class ScFieldZonesListResponse(
     val error: ErrorType,
-    val fieldZone: MutableList<fieldZone>?
+    val fieldZones: MutableList<fieldZone>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -57,12 +57,9 @@ class List(
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
-                    "category",
-                    "mime_type",
+                    "neo4j_id",
+                    "director",
                     "name",
-                    "file",
-                    "file_url",
-                    "file_size" ,
                     "created_at",
                     "created_by",
                     "modified_at",
