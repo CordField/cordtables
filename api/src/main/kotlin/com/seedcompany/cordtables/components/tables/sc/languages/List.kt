@@ -2050,7 +2050,6 @@ order by id;""".trimIndent()
 
 
         try {
-            println(query)
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
