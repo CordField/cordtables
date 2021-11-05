@@ -88,14 +88,6 @@ class Update(
             value = req.location.owning_group,
         )
 
-        if (req.location.peer != null) util.updateField(
-            token = req.token,
-            table = "common.locations",
-            column = "peer",
-            id = req.location.id!!,
-            value = req.location.peer,
-        )
-
         return CommonLocationsUpdateResponse(ErrorType.NoError)
     }
 

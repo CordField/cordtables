@@ -11,7 +11,6 @@ data class fieldZone(
     val modified_by: Int? = null,
     val owning_person: Int? = null,
     val owning_group: Int? = null,
-    val peer: Int? = null,
 )
 
 data class fieldZoneInput(
@@ -25,5 +24,4 @@ data class fieldZoneInput(
     val modified_by: Int? = null,
     val owning_person: Int? = null,
     val owning_group: Int? = null,
-    val peer: Int? = null,
 )

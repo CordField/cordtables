@@ -66,7 +66,6 @@ class Read(
                     "modified_by",
                     "owning_person",
                     "owning_group",
-                    "peer"
                 ),
             )
         ).query
@@ -102,9 +101,6 @@ class Read(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                var peer: Int? = jdbcResult.getInt("peer")
-                if (jdbcResult.wasNull()) peer = null
-
                 val directory =
                     CommonDirectory(
                         id = id,
@@ -116,7 +112,6 @@ class Read(
                         modified_by = modified_by,
                         owning_person = owning_person,
                         owning_group = owning_group,
-                        peer = peer
                     )
 
                 return CommonDirectoriesReadResponse(ErrorType.NoError, directory = directory)

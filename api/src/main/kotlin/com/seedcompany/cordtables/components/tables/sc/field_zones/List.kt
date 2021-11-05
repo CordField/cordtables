@@ -66,7 +66,6 @@ class List(
                     "modified_by",
                     "owning_person",
                     "owning_group",
-                    "peer"
                 )
             )
         ).query
@@ -105,9 +104,6 @@ class List(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                var peer: Int? = jdbcResult.getInt("peer")
-                if (jdbcResult.wasNull()) peer = null
-
                 data.add(
                     fieldZone(
                         id = id,
@@ -120,7 +116,6 @@ class List(
                         modified_by = modified_by,
                         owning_person = owning_person,
                         owning_group = owning_group,
-                        peer = peer
                     )
                 )
             }

@@ -16,7 +16,6 @@ data class CommonFileVersion(
     val modified_by: Int? = null,
     val owning_person: Int? = null,
     val owning_group: Int? = null,
-    val peer: Int? = null,
 )
 
 data class CommonFileVersionInput(
@@ -33,6 +32,5 @@ data class CommonFileVersionInput(
     val modified_by: Int? = null,
     val owning_person: Int? = null,
     val owning_group: Int? = null,
-    val peer: Int? = null,
 )
 

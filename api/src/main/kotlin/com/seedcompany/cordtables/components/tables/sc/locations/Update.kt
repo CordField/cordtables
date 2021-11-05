@@ -60,7 +60,6 @@ class Update(
                     type = req.location.type,
                     owning_person = req.location.owning_person,
                     owning_group = req.location.owning_group,
-                    peer = req.location.peer,
                 ),
             )
         )
@@ -132,14 +131,6 @@ class Update(
             column = "owning_group",
             id = req.location.id!!,
             value = req.location.owning_group,
-        )
-
-        if (req.location.peer != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "peer",
-            id = req.location.id!!,
-            value = req.location.peer,
         )
 
         return ScLocationsUpdateResponse(ErrorType.NoError)

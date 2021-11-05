@@ -10,7 +10,6 @@ data class CommonDirectory(
     val modified_by: Int? = null,
     val owning_person: Int? = null,
     val owning_group: Int? = null,
-    val peer: Int? = null,
 )
 
 data class CommonDirectoryInput(
@@ -23,5 +22,4 @@ data class CommonDirectoryInput(
     val modified_by: Int? = null,
     val owning_person: Int? = null,
     val owning_group: Int? = null,
-    val peer: Int? = null,
 )

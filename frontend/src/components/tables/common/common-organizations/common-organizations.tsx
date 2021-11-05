@@ -31,7 +31,6 @@ class CommonOrganizationsRow {
   modified_by: number;
   owning_person: number;
   owning_group: number;
-  peer: number;
 }
 
 class CommonOrganizationsListResponse {
@@ -82,9 +81,11 @@ export class ScLanguages {
       value: value !== '' ? value : null,
     });
 
-
     if (updateResponse.error == ErrorType.NoError) {
-      this.commonOrganizationsResponse = { error: ErrorType.NoError, organizations: this.commonOrganizationsResponse.organizations.map(organization => (organization.id === id ? updateResponse.organization : organization)) };
+      this.commonOrganizationsResponse = {
+        error: ErrorType.NoError,
+        organizations: this.commonOrganizationsResponse.organizations.map(organization => (organization.id === id ? updateResponse.organization : organization)),
+      };
       return true;
     } else {
       alert(updateResponse.error);
@@ -139,7 +140,7 @@ export class ScLanguages {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
-    },   
+    },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -178,12 +179,6 @@ export class ScLanguages {
       editable: true,
       updateFn: this.handleUpdate,
     },
-    {
-      field: 'peer',
-      displayName: 'Peer ID',
-      width: 50,
-      editable: false,
-    },
   ];
 
   async componentWillLoad() {
@@ -217,7 +212,7 @@ export class ScLanguages {
       organization: {
         name: this.newOrganizationName,
         sensitivity: this.newSensitivity,
-        primary_location: this.newPrimaryLocation
+        primary_location: this.newPrimaryLocation,
       },
     });
 
@@ -239,7 +234,11 @@ export class ScLanguages {
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
             <div id="organization-name-holder" class="form-input-item form-thing">
-              <label> <strong> New Organization: </strong></label><br/>
+              <label>
+                {' '}
+                <strong> New Organization: </strong>
+              </label>
+              <br />
               <span class="form-thing">
                 <label htmlFor="organization-name">Organization Name:</label>
               </span>
@@ -252,7 +251,7 @@ export class ScLanguages {
                 <label htmlFor="sensitivity">Sensitivity:</label>
               </span>
               <span class="form-thing">
-                <select id="sensitivity" name="sensitivity"  onInput={event => this.sensitivityChange(event)}>
+                <select id="sensitivity" name="sensitivity" onInput={event => this.sensitivityChange(event)}>
                   <option value="-">-</option>
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
