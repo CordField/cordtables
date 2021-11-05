@@ -36,6 +36,8 @@ create type admin.table_name as enum (
   'common.blogs',
   'common.blog_posts',
   'common.cell_channels',
+  'common.coalition_memberships',
+  'common.coalitions',
   'common.directories',
   'common.discussion_channels',
   'common.education_by_person',
@@ -43,7 +45,9 @@ create type admin.table_name as enum (
   'common.file_versions',
   'common.files',
   'common.locations',
+  'common.notes',
   'common.organizations',
+  'common.people_graph',
   'common.people_to_org_relationships',
   'common.posts',
   'common.scripture_references',
@@ -73,6 +77,10 @@ create type admin.table_name as enum (
   'sc.field_regions',
   'sc.field_zones',
   'sc.funding_accounts',
+  'sc.global_partner_assessments'
+  'sc.global_partner_engagements',
+  'sc.global_partner_engagement_people',
+  'sc.global_partner_performance',
   'sc.internship_engagements',
   'sc.known_languages_by_person',
   'sc.language_engagements',
@@ -83,6 +91,7 @@ create type admin.table_name as enum (
   'sc.partners',
   'sc.partnerships',
   'sc.people',
+  'sc.periodic_reports'
   'sc.person_unavailabilities',
   'sc.pinned_projects',
   'sc.posts',
@@ -90,12 +99,11 @@ create type admin.table_name as enum (
   'sc.products',
   'sc.project_locations',
   'sc.project_members',
-  'sc.projects',
+  'sc.projects'
 
-  'sc.language_goal_definitions',
-  'sc.language_locations',
-  'sc.language_goals',
-  'sc.periodic_reports'
+--  'sc.language_goal_definitions',
+--  'sc.language_locations',
+--  'sc.language_goals',
 );
 
 -- VERSION CONTROL ---------------------------------------------------

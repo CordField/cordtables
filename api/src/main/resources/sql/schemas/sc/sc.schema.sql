@@ -895,7 +895,7 @@ create table sc.ceremonies (
   owning_group int not null references admin.groups(id)
 );
 
--- PARTNER CRM STUFF
+-- PARTNER CRM STUFF ---------------------------------------------------------------------------------------------------
 
 create type sc.partner_maturity_scale as enum (
   'Level 1', -- Non-Existent or Reactive
@@ -904,7 +904,7 @@ create type sc.partner_maturity_scale as enum (
   'Level 4'  -- Fully Capable and Managed
 );
 
-create table sc.organizational_assessments (
+create table sc.global_partner_assessments (
   id serial primary key,
 
   partner int not null references sc.organizations(id),
@@ -933,11 +933,11 @@ create table sc.organizational_assessments (
   owning_group int not null references admin.groups(id)
 );
 
-create type sc.partner_performance_options(
+create type sc.partner_performance_options as enum(
   '1', '2', '3', '4'
 );
 
-create table sc.partner_performance (
+create table sc.global_partner_performance (
   id serial primary key,
 
   organization int unique not null references sc.organizations(id),
@@ -945,7 +945,7 @@ create table sc.partner_performance (
   reporting_performance sc.partner_performance_options,
   financial_performance sc.partner_performance_options,
   translation_performance sc.partner_performance_options,
-  
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -955,38 +955,27 @@ create table sc.partner_performance (
 );
 
 -- todo
---create table sc.partner_notes (
---  id serial primary key,
---
---  organization int unique not null references sc.organizations(id),
---  author int not null references admin.people(id),
---  note text not null,
---  -- todo
---
---  created_at timestamp not null default CURRENT_TIMESTAMP,
---  owning_group int not null references admin.groups(id)
---);
+-- files/documents on partners
+
+-- create table common.global_partner_transitions (
+--   id serial primary key,
+
+--   organization int unique not null references sc.organizations(id),
+--   transition_type common.global_partner_transition_options not null,
+--   -- todo
+
+--   created_at timestamp not null default CURRENT_TIMESTAMP,
+--   created_by int not null references admin.people(id),
+--   modified_at timestamp not null default CURRENT_TIMESTAMP,
+--   modified_by int not null references admin.people(id),
+--   owning_person int not null references admin.people(id),
+--   owning_group int not null references admin.groups(id)
+-- );
 
 -- todo
--- docs on partners
-
-create table common.organization_transitions (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  transition_type common.organization_transition_options not null,
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
 -- org chart
 
+-- todo
 -- position graph
 
 create table common.people_graph (
@@ -995,8 +984,7 @@ create table common.people_graph (
   from_person int not null references admin.people(id),
   to_person int not null references admin.people(id),
   rel_type varchar(32),
-  -- todo
-  
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1007,28 +995,54 @@ create table common.people_graph (
 
 -- coalitions
 
+create table common.coalitions(
+  id serial primary key,
+
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
 -- coalition memberships
 
+create table common.coalition_memberships(
+  id serial primary key,
+
+  coalition int not null references common.coalitions(id),
+  organization int not null references common.organizations(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
 
 create type common.involvement_options as enum (
   'CIT',
   'Engagements'
 );
 
-create table sc.engagements (
+create type sc.global_partner_roles as enum (
+  'A',
+  'B'
+);
 
+create table sc.global_partner_engagements (
   id serial primary key,
-
--- global partner engagements
-  mou dates
-  sc roles
-  global partner roles
-  sc people
-  global partner people
-
 
   organization int not null references common.organizations(id),
   type common.involvement_options not null,
+  mou_start timestamp,
+	mou_end timestamp,
+  sc_roles sc.global_partner_roles[],
+  partner_roles sc.global_partner_roles[],
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1038,4 +1052,21 @@ create table sc.engagements (
   owning_group int not null references admin.groups(id),
 
   unique (organization, type)
+);
+
+create table sc.global_partner_engagement_people (
+  id serial primary key,
+
+  engagement int not null references sc.global_partner_engagements(id),
+  person int not null references admin.people(id),
+  role common.people_to_org_relationship_type not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+  unique (engagement, person, role)
 );

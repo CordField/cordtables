@@ -16,20 +16,7 @@ create table common.site_text(
 
   ethnologue int not null,
 
-  cord_tables varchar(32),
-  edit_mode varchar(32),
-  email_address varchar(32),
-  false_ varchar(32),
-  home varchar(32),
-  languages varchar(32),
-  login varchar(32),
-  logout varchar(32),
-  password varchar(32),
-  please_login_or_register varchar(128),
-  profile_page varchar(32),
-  register varchar(32),
-  sc_languages varchar(32),
-  true_ varchar(32),
+  translation_json json,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -146,6 +133,24 @@ create table common.blog_posts (
   owning_group int not null references admin.groups(id)
 );
 
+-- NOTES ----------------------------------------------------
+
+create table common.notes (
+	id serial primary key,
+
+  table_name admin.table_name not null,
+  column_name varchar(64) not null,
+  row int not null,
+	content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
 -- LOCATION -----------------------------------------------------------------
 
 create type common.location_type as enum (
@@ -236,7 +241,6 @@ create type common.people_to_org_relationship_type as enum (
   'Board of Directors',
   'Retired',
   'Other'
-  'RoleX',
 );
 
 create table common.people_to_org_relationships (
