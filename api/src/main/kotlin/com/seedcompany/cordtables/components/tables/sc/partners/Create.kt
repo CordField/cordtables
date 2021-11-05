@@ -51,7 +51,6 @@ class Create(
             insert into sc.partners(organization, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
                     (
                       select person 
                       from admin.tokens 
