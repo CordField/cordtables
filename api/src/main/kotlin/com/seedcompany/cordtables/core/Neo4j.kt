@@ -149,6 +149,46 @@ class Neo4j(
                 targetTable = "sil.table_of_languages",
                 id = node!!.id,
             )
+            node!!.labels.contains("Language") -> writeBaseNode(
+                targetTable = "sc.languages",
+                id = node!!.id,
+            )
+            node!!.labels.contains("LanguageEngagement") -> writeBaseNode(
+                targetTable = "sc.language_engagements",
+                id = node!!.id,
+            )
+            node!!.labels.contains("InternshipEngagement") -> writeBaseNode(
+                targetTable = "sc.internship_engagements",
+                id = node!!.id,
+            )
+            node!!.labels.contains("Ceremony") -> writeBaseNode(
+                targetTable = "sc.ceremonies",
+                id = node!!.id,
+            )
+            node!!.labels.contains("PeriodicReport") -> writeBaseNode(
+                targetTable = "sc.periodic_reports",
+                id = node!!.id,
+            )
+            node!!.labels.contains("Directory") -> writeBaseNode(
+                targetTable = "common.directories",
+                id = node!!.id,
+            )
+            node!!.labels.contains("BaseFile") -> writeBaseNode(
+                targetTable = "common.files",
+                id = node!!.id,
+            )
+            node!!.labels.contains("Partner") -> writeBaseNode(
+                targetTable = "sc.partners",
+                id = node!!.id,
+            )
+            node!!.labels.contains("Partnership") -> writeBaseNode(
+                targetTable = "sc.partnerships",
+                id = node!!.id,
+            )
+            node!!.labels.contains("BudgetRecord") -> writeBaseNode(
+                targetTable = "sc.budget_records",
+                id = node!!.id,
+            )
             else -> println(node!!.labels)
 
         }

@@ -256,7 +256,7 @@ create table common.people_to_org_relationship_type (
 
 create table common.directories (
   id serial primary key,
-
+    neo4j_id varchar(32),
 	parent int references common.directories(id),
   name varchar(255),
 	-- todo
@@ -273,7 +273,8 @@ create table common.directories (
 create table common.files (
   id serial primary key,
 
-  directory int not null references common.directories(id),
+  neo4j_id varchar(32),
+  directory int references common.directories(id),
 	name varchar(255),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,

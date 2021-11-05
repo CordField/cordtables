@@ -64,6 +64,7 @@ CREATE TABLE sil.language_index (
 create table sil.table_of_languages (
   id serial primary key,
 
+  neo4j_id varchar(32),
   iso_639 char(3) unique,
   language_name varchar(64),
   population int,
