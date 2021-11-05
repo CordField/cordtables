@@ -59,7 +59,8 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "directory",
+                    "neo4j_id",
+                    "director",
                     "name",
                     "created_at",
                     "created_by",
@@ -109,7 +110,7 @@ class Read(
                 var peer: Int? = jdbcResult.getInt("peer")
                 if (jdbcResult.wasNull()) peer = null
 
-                val fileVersion =
+                val fieldZone =
                     fieldZone(
                         id = id,
                         neo4j_id = neo4j_id,
@@ -124,9 +125,7 @@ class Read(
                         peer = peer
                     )
 
-
-
-                return ScFieldZonesReadResponse(ErrorType.NoError, fieldZone = fileVersion)
+                return ScFieldZonesReadResponse(ErrorType.NoError, fieldZone = fieldZone)
 
             }
         } catch (e: SQLException) {

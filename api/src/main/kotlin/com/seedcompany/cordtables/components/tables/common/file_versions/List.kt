@@ -1,11 +1,11 @@
 package com.seedcompany.cordtables.components.tables.common.file_versions
 
-import com.seedcompany.cordtables.common.LocationType
+import com.seedcompany.cordtables.common.MimeTypes
+import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.common.file_versions.CommonFileVersion
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -24,7 +24,7 @@ data class CommonFileVersionsListRequest(
 
 data class CommonFileVersionsListResponse(
     val error: ErrorType,
-    val fileVersion: MutableList<CommonFileVersion>?
+    val fileVersions: MutableList<CommonFileVersion>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -124,7 +124,7 @@ class List(
                     CommonFileVersion(
                         id = id,
                         category = category,
-                        mime_type = mime_type,
+                        mime_type = if (mime_type == null) null else MimeTypes.valueOf(mime_type),
                         name = name,
                         file = file,
                         file_url = file_url,

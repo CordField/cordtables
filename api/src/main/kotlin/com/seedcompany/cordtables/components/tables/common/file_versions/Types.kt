@@ -1,9 +1,11 @@
 package com.seedcompany.cordtables.components.tables.common.file_versions
 
+import com.seedcompany.cordtables.common.MimeTypes
+
 data class CommonFileVersion(
     var id: Int? = null,
     val category: String? = null,
-    val mime_type: String? = null,
+    val mime_type: MimeTypes? = null,
     val name: String? = null,
     val file: Int? = null,
     val file_url: String? = null,
@@ -33,3 +35,4 @@ data class CommonFileVersionInput(
     val owning_group: Int? = null,
     val peer: Int? = null,
 )
+

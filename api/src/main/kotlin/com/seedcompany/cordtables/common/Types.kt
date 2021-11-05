@@ -70,3 +70,9 @@ enum class LocationType {
     Country,
     CrossBorderArea,
 }
+
+enum class MimeTypes{
+    A,
+    B,
+    C,
+}

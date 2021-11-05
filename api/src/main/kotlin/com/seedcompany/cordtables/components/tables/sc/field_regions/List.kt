@@ -24,7 +24,7 @@ data class ScFieldRegionsListRequest(
 
 data class ScFieldRegionsListResponse(
     val error: ErrorType,
-    val fieldRegion: MutableList<fieldRegion>?
+    val fieldRegions: MutableList<fieldRegion>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
