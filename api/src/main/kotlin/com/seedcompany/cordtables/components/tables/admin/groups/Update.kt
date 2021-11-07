@@ -1,7 +1,14 @@
 package com.seedcompany.cordtables.components.tables.admin.groups
 
+import com.seedcompany.cordtables.components.tables.admin.groups.AdminGroupsUpdateRequest
+import com.seedcompany.cordtables.components.tables.admin.groups.Update as CommonUpdate
+import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.common.enumContains
+import com.seedcompany.cordtables.components.tables.admin.groups.AdminGroupsUpdateResponse
+import com.seedcompany.cordtables.components.tables.admin.groups.groupInput
+import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -10,18 +17,20 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class GroupUpdateRequest(
-    val token: String? = null,
+data class AdminGroupsUpdateRequest(
+    val token: String?,
     val id: Int? = null,
-    val name: String? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
-data class GroupUpdateResponse(
+data class AdminGroupsUpdateResponse(
     val error: ErrorType,
 )
 
+
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("GroupsUpdate")
+@Controller("AdminGroupsUpdate")
 class Update(
     @Autowired
     val util: Utility,
@@ -29,69 +38,55 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-
-    @PostMapping("groups/update")
+    @PostMapping("admin-groups/update")
     @ResponseBody
-    fun updateHandler(@RequestBody req: GroupUpdateRequest): GroupUpdateResponse {
+    fun updateHandler(@RequestBody req: AdminGroupsUpdateRequest): AdminGroupsUpdateResponse {
 
-        if (req.token == null) return GroupUpdateResponse(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return GroupUpdateResponse(ErrorType.AdminOnly)
-        if (req.id === 1) return GroupUpdateResponse(ErrorType.CannotUpdateAdminGroup)
+        if (req.token == null) return AdminGroupsUpdateResponse(ErrorType.TokenNotFound)
+        if (req.column == null) return AdminGroupsUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return AdminGroupsUpdateResponse(ErrorType.MissingId)
 
-        if (req.name == null) return GroupUpdateResponse(ErrorType.InputMissingName)
-        if (req.name.isEmpty()) return GroupUpdateResponse(ErrorType.NameTooShort)
-        if (req.name.length > 64) return GroupUpdateResponse(ErrorType.NameTooLong)
 
-        if (req.id == null) return GroupUpdateResponse(ErrorType.MissingId)
-
-        this.ds.connection.use { conn ->
-
-            //language=SQL
-            val checkNameStatement = conn.prepareStatement(
-                """
-                select exists(select id from admin.groups where name = ?)
-            """.trimIndent()
-            )
-
-            checkNameStatement.setString(1, req.name)
-
-            val result = checkNameStatement.executeQuery();
-
-            if (result.next()) {
-                val nameFound = result.getBoolean(1)
-
-                if (nameFound) {
-                    return GroupUpdateResponse(ErrorType.NameAlreadyExists)
-                } else {
-
-                    //language=SQL
-                    val statement = conn.prepareStatement(
-                        """
-                        update admin.groups
-                        set 
-                          name = ?, 
-                          modified_by = (
-                                  select person 
-                                  from admin.tokens 
-                                  where token = ?
-                                ), 
-                          modified_at = CURRENT_TIMESTAMP
-                        where id = ?;
-                        """.trimIndent()
-                    )
-
-                    statement.setString(1, req.name)
-                    statement.setString(2, req.token)
-                    statement.setInt(3, req.id)
-
-                    statement.execute()
-
-                }
+        when (req.column) {
+            "name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.groups",
+                    column = "name",
+                    id = req.id,
+                    value = req.value,
+                )
             }
-
+            "parent_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.groups",
+                    column = "parent_group",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.groups",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.groups",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
         }
 
-        return GroupUpdateResponse(ErrorType.NoError)
+        return AdminGroupsUpdateResponse(ErrorType.NoError)
     }
 
 }

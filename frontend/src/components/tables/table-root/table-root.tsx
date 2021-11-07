@@ -27,8 +27,16 @@ export class TableRoot {
         {this.match.params.table === 'common-directories' && <directories-table></directories-table>}
         {this.match.params.table === 'common-files' && <files-table></files-table>}
         {this.match.params.table === 'common-file-versions' && <file-versions></file-versions>}
-        {this.match.params.table === 'sc-field-regions' && <sc-field-regions></sc-field-regions>}
+        {this.match.params.table === 'sc-field-regions' && <sc-field-regions-table></sc-field-regions-table>}
         {this.match.params.table === 'sc-field-zones' && <sc-field-zones></sc-field-zones>}
+
+        {this.match.params.table === 'sc-global-partner-assessments' && <sc-global-partner-assessments></sc-global-partner-assessments>}
+        {this.match.params.table === 'sc-global-partner-engagements' && <sc-global-partner-engagements></sc-global-partner-engagements>}
+        {this.match.params.table === 'sc-global-partner-engagement-people' && <sc-global-partner-engagement-people></sc-global-partner-engagement-people>}
+        {this.match.params.table === 'sc-global-partner-performance' && <sc-global-partner-performance></sc-global-partner-performance>}
+        {this.match.params.table === 'common-coalitions' && <common-coalitions></common-coalitions>}
+        {this.match.params.table === 'common-coalition-memberships' && <common-coalition-memberships></common-coalition-memberships>}
+
 
         
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}

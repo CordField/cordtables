@@ -1,5 +1,5 @@
 package com.seedcompany.cordtables.components.tables.admin.role_column_grants
-
+/*
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +26,7 @@ data class DeleteGlobalRoleColumnGrantsResponse(
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @RestController("globalRoleColumnGrantsDeleteController")
-class Delete(
+class DeleteA(
         @Autowired
         val util: Utility,
 
@@ -80,3 +80,4 @@ class Delete(
         return DeleteGlobalRoleColumnGrantsResponse(ErrorType.NoError,deletedGlobalRole)
     }
 }
+*/

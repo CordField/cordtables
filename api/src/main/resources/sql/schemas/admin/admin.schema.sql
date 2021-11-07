@@ -140,7 +140,7 @@ create table admin.people (
   sensitivity_clearance common.sensitivity default 'Low',
   time_zone varchar(32),
   title varchar(255),
-	status varchar(32),
+    status varchar(32),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int, -- not null doesn't work here, on startup

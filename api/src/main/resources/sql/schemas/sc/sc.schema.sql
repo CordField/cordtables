@@ -1040,7 +1040,7 @@ create table sc.global_partner_engagements (
   organization int not null references common.organizations(id),
   type common.involvement_options not null,
   mou_start timestamp,
-	mou_end timestamp,
+  mou_end timestamp,
   sc_roles sc.global_partner_roles[],
   partner_roles sc.global_partner_roles[],
 

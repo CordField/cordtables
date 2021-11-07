@@ -1,10 +1,10 @@
 package com.seedcompany.cordtables.components.tables.admin.group_row_access
 
-import com.seedcompany.cordtables.common.ErrorType
-import com.seedcompany.cordtables.common.Utility
-import org.springframework.beans.factory.annotation.Autowired
+import com.seedcompany.cordtables.common.*
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
+import com.seedcompany.cordtables.components.tables.admin.group_row_access.groupRowAccess
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
@@ -14,30 +14,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.collections.List
 
-data class GroupRowAccessRow(
-    val id: Int?,
-    val group: Int?,
-    val tableName: String?,
-    val row: Int?,
-    val createdAt: String?,
-    val createdBy: Int?,
-    val modifiedAt: String?,
-    val modifiedBy: Int?,
+
+data class AdminGroupRowAccessListRequest(
+    val token: String?
 )
 
-data class GroupRowAccessListRequest(
-    val token: String? = null,
-)
-
-data class GroupRowAccessListReturn(
+data class AdminGroupRowAccessListResponse(
     val error: ErrorType,
-    val groupRowAccessList: List<out GroupRowAccessRow>?,
+    val groupRowAccesses: MutableList<groupRowAccess>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("GroupRowAccessList")
+@Controller("AdminGroupRowAccessList")
 class List(
     @Autowired
     val util: Utility,
@@ -51,12 +40,11 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("group_row_access/list")
+    @PostMapping("admin-group-row-access/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: GroupRowAccessListRequest): GroupRowAccessListReturn {
-        var items = mutableListOf<GroupRowAccessRow>()
-        if (req.token == null) return GroupRowAccessListReturn(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return GroupRowAccessListReturn(ErrorType.AdminOnly, null)
+    fun listHandler(@RequestBody req:AdminGroupRowAccessListRequest): AdminGroupRowAccessListResponse {
+        var data: MutableList<groupRowAccess> = mutableListOf()
+        if (req.token == null) return AdminGroupRowAccessListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -64,15 +52,18 @@ class List(
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "admin.group_row_access",
+                filter = "order by id",
                 columns = arrayOf(
                     "id",
-                    "group",
-                    "tableName",
+                    "group_id",
+                    "table_name",
                     "row",
-                    "createdAt",
-                    "createdBy",
-                    "modifiedAt",
-                    "modifiedBy"
+                    "created_at",
+                    "created_by",
+                    "modified_at",
+                    "modified_by",
+                    "owning_person",
+                    "owning_group",
                 )
             )
         ).query
@@ -84,71 +75,54 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var group: Int? = jdbcResult.getInt("group")
-                if (jdbcResult.wasNull()) group = null
+                var group_id: Int? = jdbcResult.getInt("group_id")
+                if (jdbcResult.wasNull()) group_id = null
 
-                var tableName: String? = jdbcResult.getString("table_name")
-                if (jdbcResult.wasNull()) tableName = null
+                var table_name: String? = jdbcResult.getString("table_name")
+                if (jdbcResult.wasNull()) table_name = null
 
                 var row: Int? = jdbcResult.getInt("row")
                 if (jdbcResult.wasNull()) row = null
 
-                var createdAt: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) createdAt = null
+                var created_by: Int? = jdbcResult.getInt("created_by")
+                if (jdbcResult.wasNull()) created_by = null
 
-                var createdBy: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) createdBy = null
+                var created_at: String? = jdbcResult.getString("created_at")
+                if (jdbcResult.wasNull()) created_at = null
 
-                var modifiedAt: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modifiedAt = null
+                var modified_at: String? = jdbcResult.getString("modified_at")
+                if (jdbcResult.wasNull()) modified_at = null
 
-                var modifiedBy: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modifiedBy = null
+                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                if (jdbcResult.wasNull()) modified_by = null
 
-                items.add(
-                    GroupRowAccessRow(
+                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                if (jdbcResult.wasNull()) owning_person = null
+
+                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                if (jdbcResult.wasNull()) owning_group = null
+
+                data.add(
+                    groupRowAccess(
                         id = id,
-                        group = group,
-                        tableName = tableName,
+                        group_id = group_id,
+                        table_name = if (table_name == null) null else TableNames.valueOf(table_name),
                         row = row,
-                        createdAt = createdAt,
-                        createdBy = createdBy,
-                        modifiedAt = modifiedAt,
-                        modifiedBy = modifiedBy
-
+                        created_at = created_at,
+                        created_by = created_by,
+                        modified_at = modified_at,
+                        modified_by = modified_by,
+                        owning_person = owning_person,
+                        owning_group = owning_group,
                     )
                 )
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return GroupRowAccessListReturn(ErrorType.SQLReadError, mutableListOf())
+            return AdminGroupRowAccessListResponse(ErrorType.SQLReadError, mutableListOf())
         }
 
-//        this.ds.connection.use { conn ->
-//            //language=SQL
-//            val statement = conn.prepareStatement("""
-//                select * from admin.group_row_access order by id asc;
-//            """.trimIndent())
-//
-//            val result = statement.executeQuery()
-//
-//            while (result.next()){
-//                items.add(
-//                    GroupRowAccessRow(
-//                        id = result.getInt("id"),
-//                        group = result.getInt("group_id"),
-//                        tableName = result.getString("table_name"),
-//                        row = result.getInt("row"),
-//                        createdAt = result.getString("created_at"),
-//                        createdBy = result.getInt("created_by"),
-//                        modifiedAt = result.getString("modified_at"),
-//                        modifiedBy = result.getInt("modified_by"),
-//                    )
-//                )
-//            }
-//        }
-
-        return GroupRowAccessListReturn(ErrorType.NoError, items)
+        return AdminGroupRowAccessListResponse(ErrorType.NoError, data)
     }
-
 }
+

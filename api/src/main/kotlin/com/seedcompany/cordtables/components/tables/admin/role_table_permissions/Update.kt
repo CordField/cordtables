@@ -1,127 +1,97 @@
 package com.seedcompany.cordtables.components.tables.admin.role_table_permissions
 
-import com.seedcompany.cordtables.common.ErrorType
-import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.common.*
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.AdminRoleTablePermissionsUpdateRequest
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.Update as CommonUpdate
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.AdminRoleTablePermissionsUpdateResponse
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.roleTablePermissionInput
+import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.reflect.full.memberProperties
-import kotlin.collections.mutableListOf as mutableListOf
-    
-data class UpdatePermissionsResponse(
-        val error: ErrorType,
-        val globalRolesTablePermissions: GlobalRolesTablePermissions?
+
+data class AdminRoleTablePermissionsUpdateRequest(
+    val token: String?,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
-data class UpdatePermissionsRequest(
-        val table_name: String? = null,
-        val role: Int? = null,
-        val table_permission: String ? = null,
-        val email: String,
-        val id: Int
+data class AdminRoleTablePermissionsUpdateResponse(
+    val error: ErrorType,
 )
+
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("UpdateTablePermissions")
+@Controller("AdminRoleTablePermissionsUpdate")
 class Update(
-        @Autowired
-        val util: Utility,
+    @Autowired
+    val util: Utility,
 
-        @Autowired
-        val ds: DataSource,
+    @Autowired
+    val ds: DataSource,
 ) {
-    @PostMapping("globalrolestablepermissions/update")
+    @PostMapping("admin-role-table-permissions/update")
     @ResponseBody
-    fun UpdateHandler(@RequestBody req: UpdatePermissionsRequest): UpdatePermissionsResponse {
+    fun updateHandler(@RequestBody req: AdminRoleTablePermissionsUpdateRequest): AdminRoleTablePermissionsUpdateResponse {
 
-        println("req: $req")
-        var updatedPermission: GlobalRolesTablePermissions? = null
-        var userId = 0
+        if (req.token == null) return AdminRoleTablePermissionsUpdateResponse(ErrorType.TokenNotFound)
+        if (req.column == null) return AdminRoleTablePermissionsUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return AdminRoleTablePermissionsUpdateResponse(ErrorType.MissingId)
 
-        this.ds.connection.use { conn ->
-            try {
-                val getUserIdStatement = conn.prepareCall("select person from admin.users where email = ?")
-                getUserIdStatement.setString(1, req.email)
-                val getUserIdResult = getUserIdStatement.executeQuery()
-                if (getUserIdResult.next()) {
-                    userId = getUserIdResult.getInt("person")
-                    println("userId: $userId")
-                } else {
-                    throw SQLException("User not found")
-                }
-            } catch(e:SQLException){
-                println(e.message)
-                return UpdatePermissionsResponse(ErrorType.UserNotFound, null)
-            }
-            try {
-
-                var reqValues: MutableList<Any> = mutableListOf()
-                var updateSQL = "update admin.role_table_permissions set"
-                for (prop in UpdatePermissionsRequest::class.memberProperties) {
-                    val propValue = prop.get(req)
-
-                    println("$propValue $(prop.name) = ?,")
-                    if (propValue !== "" && prop.name != "email" && prop.name == "table_name") {
-                        updateSQL = "$updateSQL ${prop.name} = ?::admin.table_name,"
-                        if (propValue != null) {
-                            reqValues.add(propValue)
-                        }
-                    }
-                    if (propValue !== "" && prop.name != "email" && prop.name == "role") {
-                        updateSQL = "$updateSQL ${prop.name} = ?,"
-                        if (propValue != null) {
-                            reqValues.add(propValue)
-                        }
-                    }
-                    if (propValue !== "" && prop.name != "email" && prop.name == "table_permission") {
-                        updateSQL = "$updateSQL ${prop.name} = ?::admin.table_permission,"
-                        if (propValue != null) {
-                            reqValues.add(propValue)
-                        }
-                    }
-
-                }
-                updateSQL = "$updateSQL modified_by = ? where id = ? returning *"
-                println(updateSQL)
-                val updateStatement = conn.prepareCall(
-                        updateSQL
+        when (req.column) {
+            "role" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_table_permissions",
+                    column = "role",
+                    id = req.id,
+                    value = req.value,
                 )
-                var counter = 1
-                reqValues.forEach { value ->
-                    when (value) {
-                        is String -> updateStatement.setString(counter, value)
-                        is Int -> updateStatement.setInt(counter, value)
-                    }
-                    counter += 1
-                }
-
-                updateStatement.setInt(counter, userId)
-                updateStatement.setInt(counter+1, req.id)
-                val updateStatementResult = updateStatement.executeQuery()
-
-                if (updateStatementResult.next()) {
-                    val id = updateStatementResult.getInt("id")
-                    val tableName = updateStatementResult.getString("table_name")
-                    val createdBy = updateStatementResult.getInt("created_by")
-                    val createdAt = updateStatementResult.getString("created_at")
-                    val modifiedBy = updateStatementResult.getInt("modified_by")
-                    val modifiedAt = updateStatementResult.getString("modified_at")
-                    val tablePermission = updateStatementResult.getString("table_permission")
-                    val globalRole = updateStatementResult.getInt("role")
-                    updatedPermission = GlobalRolesTablePermissions(id, modifiedAt , createdBy, createdAt, modifiedBy,  tableName , tablePermission, globalRole)
-                    println("updated row's id: $id")
-                }
-            } catch (e:SQLException){
-                println(e.message)
-                return UpdatePermissionsResponse(ErrorType.SQLUpdateError, null)
+            }
+            "table_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_table_permissions",
+                    column = "table_name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "table_permission" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_table_permissions",
+                    column = "table_permission",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_table_permissions",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_table_permissions",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                )
             }
         }
-        return UpdatePermissionsResponse(ErrorType.NoError, updatedPermission)
 
+        return AdminRoleTablePermissionsUpdateResponse(ErrorType.NoError)
     }
+
 }
