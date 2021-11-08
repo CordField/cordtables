@@ -7,7 +7,7 @@ data class roleColumnGrant(
     var id: Int? = null,
 
     val role: Int? = null,
-    val table_name: TableNames? = null,
+    val table_name: String? = null,
     val column_name: String? = null,
     val access_level: AccessLevels? = null,
 

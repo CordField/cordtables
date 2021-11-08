@@ -54,7 +54,7 @@ create type admin.table_name as enum (
   'common.site_text',
   'common.stage_graph',
   'common.stage_notifications',
-  'common.stage_role_column_grants'
+  'common.stage_role_column_grants',
   'common.stages',
   'common.threads',
   'common.ticket_assignments',
@@ -77,7 +77,7 @@ create type admin.table_name as enum (
   'sc.field_regions',
   'sc.field_zones',
   'sc.funding_accounts',
-  'sc.global_partner_assessments'
+  'sc.global_partner_assessments',
   'sc.global_partner_engagements',
   'sc.global_partner_engagement_people',
   'sc.global_partner_performance',
@@ -91,7 +91,7 @@ create type admin.table_name as enum (
   'sc.partners',
   'sc.partnerships',
   'sc.people',
-  'sc.periodic_reports'
+  'sc.periodic_reports',
   'sc.person_unavailabilities',
   'sc.pinned_projects',
   'sc.posts',
@@ -99,7 +99,7 @@ create type admin.table_name as enum (
   'sc.products',
   'sc.project_locations',
   'sc.project_members',
-  'sc.projects'
+  'sc.projects',
 
 --  'sc.language_goal_definitions',
 --  'sc.language_locations',

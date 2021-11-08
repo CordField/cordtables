@@ -110,7 +110,7 @@ class Read(
                     roleTablePermission(
                         id = id,
                         role = role,
-                        table_name = if (table_name == null) null else TableNames.valueOf(table_name),
+                        table_name = table_name, // if (table_name == null) null else TableNames.valueOf(table_name),
                         table_permission = if (table_permission == null) null else TablePermissionGrantTypes.valueOf(table_permission),
                         created_at = created_at,
                         created_by = created_by,

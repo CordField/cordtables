@@ -81,7 +81,7 @@ class List(
                 var role: Int? = jdbcResult.getInt("role")
                 if (jdbcResult.wasNull()) role = null
 
-                var table_name: String? = jdbcResult.getString("director")
+                var table_name: String? = jdbcResult.getString("table_name")
                 if (jdbcResult.wasNull()) table_name = null
 
                 var column_name: String? = jdbcResult.getString("column_name")
@@ -112,7 +112,7 @@ class List(
                     roleColumnGrant(
                         id = id,
                         role = role,
-                        table_name = if (table_name == null) null else TableNames.valueOf(table_name),
+                        table_name = table_name, // if (table_name == null) null else TableNames.valueOf(table_name),
                         column_name = column_name,
                         access_level = if (access_level == null) null else AccessLevels.valueOf(access_level),
                         created_at = created_at,

@@ -10,6 +10,22 @@ import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
 export namespace Components {
+    interface AdminGroupMemberships {
+    }
+    interface AdminGroupRowAccess {
+    }
+    interface AdminGroups {
+    }
+    interface AdminPeople {
+    }
+    interface AdminRoleColumnGrants {
+    }
+    interface AdminRoleMemberships {
+    }
+    interface AdminRoleTablePermissions {
+    }
+    interface AdminRoles {
+    }
     interface AdminUsers {
     }
     interface AppHome {
@@ -221,6 +237,54 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAdminGroupMembershipsElement extends Components.AdminGroupMemberships, HTMLStencilElement {
+    }
+    var HTMLAdminGroupMembershipsElement: {
+        prototype: HTMLAdminGroupMembershipsElement;
+        new (): HTMLAdminGroupMembershipsElement;
+    };
+    interface HTMLAdminGroupRowAccessElement extends Components.AdminGroupRowAccess, HTMLStencilElement {
+    }
+    var HTMLAdminGroupRowAccessElement: {
+        prototype: HTMLAdminGroupRowAccessElement;
+        new (): HTMLAdminGroupRowAccessElement;
+    };
+    interface HTMLAdminGroupsElement extends Components.AdminGroups, HTMLStencilElement {
+    }
+    var HTMLAdminGroupsElement: {
+        prototype: HTMLAdminGroupsElement;
+        new (): HTMLAdminGroupsElement;
+    };
+    interface HTMLAdminPeopleElement extends Components.AdminPeople, HTMLStencilElement {
+    }
+    var HTMLAdminPeopleElement: {
+        prototype: HTMLAdminPeopleElement;
+        new (): HTMLAdminPeopleElement;
+    };
+    interface HTMLAdminRoleColumnGrantsElement extends Components.AdminRoleColumnGrants, HTMLStencilElement {
+    }
+    var HTMLAdminRoleColumnGrantsElement: {
+        prototype: HTMLAdminRoleColumnGrantsElement;
+        new (): HTMLAdminRoleColumnGrantsElement;
+    };
+    interface HTMLAdminRoleMembershipsElement extends Components.AdminRoleMemberships, HTMLStencilElement {
+    }
+    var HTMLAdminRoleMembershipsElement: {
+        prototype: HTMLAdminRoleMembershipsElement;
+        new (): HTMLAdminRoleMembershipsElement;
+    };
+    interface HTMLAdminRoleTablePermissionsElement extends Components.AdminRoleTablePermissions, HTMLStencilElement {
+    }
+    var HTMLAdminRoleTablePermissionsElement: {
+        prototype: HTMLAdminRoleTablePermissionsElement;
+        new (): HTMLAdminRoleTablePermissionsElement;
+    };
+    interface HTMLAdminRolesElement extends Components.AdminRoles, HTMLStencilElement {
+    }
+    var HTMLAdminRolesElement: {
+        prototype: HTMLAdminRolesElement;
+        new (): HTMLAdminRolesElement;
+    };
     interface HTMLAdminUsersElement extends Components.AdminUsers, HTMLStencilElement {
     }
     var HTMLAdminUsersElement: {
@@ -774,6 +838,14 @@ declare global {
         new (): HTMLWorkflowsTableElement;
     };
     interface HTMLElementTagNameMap {
+        "admin-group-memberships": HTMLAdminGroupMembershipsElement;
+        "admin-group-row-access": HTMLAdminGroupRowAccessElement;
+        "admin-groups": HTMLAdminGroupsElement;
+        "admin-people": HTMLAdminPeopleElement;
+        "admin-role-column-grants": HTMLAdminRoleColumnGrantsElement;
+        "admin-role-memberships": HTMLAdminRoleMembershipsElement;
+        "admin-role-table-permissions": HTMLAdminRoleTablePermissionsElement;
+        "admin-roles": HTMLAdminRolesElement;
         "admin-users": HTMLAdminUsersElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
@@ -869,6 +941,22 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AdminGroupMemberships {
+    }
+    interface AdminGroupRowAccess {
+    }
+    interface AdminGroups {
+    }
+    interface AdminPeople {
+    }
+    interface AdminRoleColumnGrants {
+    }
+    interface AdminRoleMemberships {
+    }
+    interface AdminRoleTablePermissions {
+    }
+    interface AdminRoles {
+    }
     interface AdminUsers {
     }
     interface AppHome {
@@ -1085,6 +1173,14 @@ declare namespace LocalJSX {
     interface WorkflowsTable {
     }
     interface IntrinsicElements {
+        "admin-group-memberships": AdminGroupMemberships;
+        "admin-group-row-access": AdminGroupRowAccess;
+        "admin-groups": AdminGroups;
+        "admin-people": AdminPeople;
+        "admin-role-column-grants": AdminRoleColumnGrants;
+        "admin-role-memberships": AdminRoleMemberships;
+        "admin-role-table-permissions": AdminRoleTablePermissions;
+        "admin-roles": AdminRoles;
         "admin-users": AdminUsers;
         "app-home": AppHome;
         "app-profile": AppProfile;
@@ -1183,6 +1279,14 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "admin-group-memberships": LocalJSX.AdminGroupMemberships & JSXBase.HTMLAttributes<HTMLAdminGroupMembershipsElement>;
+            "admin-group-row-access": LocalJSX.AdminGroupRowAccess & JSXBase.HTMLAttributes<HTMLAdminGroupRowAccessElement>;
+            "admin-groups": LocalJSX.AdminGroups & JSXBase.HTMLAttributes<HTMLAdminGroupsElement>;
+            "admin-people": LocalJSX.AdminPeople & JSXBase.HTMLAttributes<HTMLAdminPeopleElement>;
+            "admin-role-column-grants": LocalJSX.AdminRoleColumnGrants & JSXBase.HTMLAttributes<HTMLAdminRoleColumnGrantsElement>;
+            "admin-role-memberships": LocalJSX.AdminRoleMemberships & JSXBase.HTMLAttributes<HTMLAdminRoleMembershipsElement>;
+            "admin-role-table-permissions": LocalJSX.AdminRoleTablePermissions & JSXBase.HTMLAttributes<HTMLAdminRoleTablePermissionsElement>;
+            "admin-roles": LocalJSX.AdminRoles & JSXBase.HTMLAttributes<HTMLAdminRolesElement>;
             "admin-users": LocalJSX.AdminUsers & JSXBase.HTMLAttributes<HTMLAdminUsersElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;

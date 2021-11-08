@@ -28,6 +28,7 @@ data class people(
 
 data class peopleInput(
     var id: Int? = null,
+
     val about: String? = null,
     val phone: String? = null,
     val picture: String? = null,

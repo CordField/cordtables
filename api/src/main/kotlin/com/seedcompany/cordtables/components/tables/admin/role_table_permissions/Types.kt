@@ -6,7 +6,7 @@ data class roleTablePermission(
     var id: Int? = null,
 
     val role: Int? = null,
-    val table_name: TableNames? = null,
+    val table_name: String? = null,
     val table_permission: TablePermissionGrantTypes? = null,
 
     val created_at: String? = null,

@@ -112,7 +112,7 @@ class Read(
                     roleColumnGrant(
                         id = id,
                         role = role,
-                        table_name = if (table_name == null) null else TableNames.valueOf(table_name),
+                        table_name = table_name, // if (table_name == null) null else TableNames.valueOf(table_name),
                         column_name = column_name,
                         access_level = if (access_level == null) null else AccessLevels.valueOf(access_level),
                         created_at = created_at,
