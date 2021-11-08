@@ -45,7 +45,7 @@ create table sc.funding_accounts (
   id serial primary key,
   neo4j_id varchar(32),
 
-	account_number int unique not null,
+	account_number int unique, -- not null
 	name varchar(32),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -63,7 +63,7 @@ create table sc.field_zones (
 	neo4j_id varchar(32),
 
 	director int references admin.people(id),
-	name varchar(32) unique not null,
+	name varchar(32) unique, -- not null
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -78,7 +78,7 @@ create table sc.field_regions (
 	neo4j_id varchar(32),
 
 	director int references admin.people(id),
-	name varchar(32) unique not null,
+	name varchar(32) unique, -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -96,8 +96,8 @@ create table sc.locations (
 	default_region int references sc.field_regions(id),
 	funding_account int references sc.funding_accounts(account_number),
 	iso_alpha_3 char(3),
-	name varchar(32) unique not null,
-	type common.location_type not null,
+	name varchar(32) unique, -- not null
+	type common.location_type, -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -170,7 +170,7 @@ END; $$;
 create table sc.partners (
 	id serial primary key,
 
-	organization int not null references sc.organizations(id),
+	organization int references sc.organizations(id), -- not null
 	active bool,
 	financial_reporting_types sc.financial_reporting_types[],
 	is_innovations_client bool,
@@ -283,9 +283,9 @@ create table sc.languages(
 	id serial primary key,
   neo4j_id varchar(32) unique,
 
-  ethnologue int references sil.table_of_languages(id),
-  name varchar(255) unique not null,
-  display_name varchar(255) unique not null,
+  ethnologue int references sil.table_of_languages(id), -- not null
+  name varchar(255) unique, -- not null
+  display_name varchar(255) unique, -- not null
   display_name_pronunciation varchar(255),
   tags text[],
   preset_inventory bool,
@@ -534,11 +534,11 @@ create table sc.periodic_reports_directory ( -- security not needed
 create table sc.periodic_reports (
   id serial primary key,
 
-  directory int not null references sc.periodic_reports_directory(id),
-  end_at timestamp not null,
-  reportFile int not null references common.files(id),
-  start_at timestamp not null,
-  type sc.periodic_report_type not null,
+  directory int references sc.periodic_reports_directory(id), -- not null
+  end_at timestamp, -- not null
+  report_file int references common.files(id), -- not null
+  start_at timestamp, -- not null
+  type sc.periodic_report_type, -- not null
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -553,8 +553,8 @@ create table sc.projects (
   id serial primary key,
   neo4j_id varchar(32),
 
-	name varchar(32) not null,
-	change_to_plan int not null default 1 references sc.change_to_plans(id),
+	name varchar(32), -- not null
+	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
 	active bool,
 	department varchar(255),
 	estimated_submission timestamp,
@@ -585,10 +585,10 @@ create table sc.projects (
 create table sc.project_members (
   id serial primary key,
 
-	project int not null references sc.projects(id),
-	person int not null references sc.people(id),
-	group_id int not null references admin.groups(id),
-	role int not null references admin.roles(id),
+	project int references sc.projects(id), -- not null
+	person int references sc.people(id), -- not null
+	group_id int references admin.groups(id), -- not null
+	role int references admin.roles(id), -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -602,8 +602,8 @@ create table sc.project_members (
 
 create table sc.pinned_projects (
   id serial primary key,
-	person int not null references sc.people(id),
-	project int not null references sc.projects(id),
+	person int references sc.people(id), -- not null
+	project int references sc.projects(id), -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -616,9 +616,9 @@ create table sc.pinned_projects (
 create table sc.partnerships (
   id serial primary key,
 
-  project int not null references sc.projects(id),
-  partner int not null references sc.organizations(id),
-  change_to_plan int not null default 1 references sc.change_to_plans(id),
+  project int references sc.projects(id), -- not null
+  partner int references sc.organizations(id), -- not null
+  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
   agreement int references common.file_versions(id),
   
@@ -644,9 +644,9 @@ create type common.budget_status as enum (
 create table sc.budgets (
   id serial primary key,
 
-  neo4j_id varchar(32) not null,
-  change_to_plan int not null default 1,
-  project int not null references sc.projects(id),
+  neo4j_id varchar(32),
+  change_to_plan int default 1, -- not null
+  project int references sc.projects(id), -- not null
   status common.budget_status,
   universal_template int references common.file_versions(id),
   universal_template_file_url varchar(255),
@@ -664,9 +664,9 @@ create table sc.budgets (
 create table sc.budget_records (
 	id serial primary key,
 
-  neo4j_id varchar(32) not null,
-  budget int not null references sc.budgets(id),
-  change_to_plan int not null default 1 references sc.change_to_plans(id),
+  neo4j_id varchar(32),
+  budget int references sc.budgets(id), -- not null
+  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
   amount decimal,
   fiscal_year int,
@@ -688,9 +688,9 @@ create table sc.project_locations (
   id serial primary key,
 
   active bool,
-  change_to_plan int not null default 1 references sc.change_to_plans(id),
-  location int not null references sc.locations(id),
-  project int not null references sc.projects(id),
+  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  location int references sc.locations(id), -- not null
+  project int references sc.projects(id), -- not null
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -721,10 +721,10 @@ create type common.project_engagement_tag as enum (
 create table sc.language_engagements (
   id serial primary key,
 
-  neo4j_id varchar(32) not null,
-	project int not null references sc.projects(id),
-	ethnologue int not null references sil.table_of_languages(id),
-	change_to_plan int not null default 1 references sc.change_to_plans(id),
+  neo4j_id varchar(32),
+	project int references sc.projects(id), -- not null
+	ethnologue int references sil.table_of_languages(id), -- not null
+	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
 	communications_complete_date timestamp,
 	complete_date timestamp,
@@ -790,9 +790,9 @@ create type common.product_type as enum (
 create table sc.products (
   id serial primary key,
 
-  neo4j_id varchar(32) not null,
-  name varchar(64),
-  change_to_plan int not null default 1 references sc.change_to_plans(id),
+  neo4j_id varchar(32),
+  name varchar(64), -- not null
+  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
   mediums common.product_mediums[],
   methodologies common.product_methodologies[],
@@ -810,9 +810,10 @@ create table sc.products (
 );
 
 create table sc.product_scripture_references (
-  product int not null references sc.products(id),
-  scripture_reference int not null references common.scripture_references(id),
-  change_to_plan int not null default 1 references sc.change_to_plans(id),
+  id serial primary key,
+  product int references sc.products(id), -- not null
+  scripture_reference int references common.scripture_references(id), -- not null
+  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -844,9 +845,9 @@ create type common.internship_position as enum (
 create table sc.internship_engagements (
   id serial primary key,
 
-	project int not null references sc.projects(id),
-	ethnologue int not null references sil.table_of_languages(id),
-	change_to_plan int not null default 1 references sc.change_to_plans(id),
+	project int references sc.projects(id), -- not null
+	ethnologue int references sil.table_of_languages(id), -- not null
+	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
 	communications_complete_date timestamp,
 	complete_date timestamp,
@@ -880,8 +881,8 @@ create table sc.internship_engagements (
 create table sc.ceremonies (
   id serial primary key,
 
-  project int not null references sc.projects(id),
-	ethnologue int not null references sil.table_of_languages(id),
+  project int references sc.projects(id), -- not null
+	ethnologue int references sil.table_of_languages(id), -- not null
 	actual_date timestamp,
 	estimated_date timestamp,
 	is_planned bool,

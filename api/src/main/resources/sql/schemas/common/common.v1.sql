@@ -164,9 +164,9 @@ create type common.location_type as enum (
 create table common.locations (
 	id serial primary key,
 
-	name varchar(255) unique not null,
+	name varchar(255) unique, -- not null
 	sensitivity common.sensitivity not null default 'High',
-	type common.location_type not null,
+	type common.location_type, -- not null
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -217,8 +217,8 @@ create table common.education_by_person (
 create table common.organizations (
 	id serial primary key,
 
-	name varchar(255) unique not null,
-	sensitivity common.sensitivity default 'High',
+	name varchar(255) unique, -- not null
+	sensitivity common.sensitivity not null default 'High',
 	primary_location int references common.locations(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -265,9 +265,10 @@ create table common.people_to_org_relationships (
 create table common.directories (
   id serial primary key,
 
-    parent int references common.directories(id),
-  name varchar(255),
+  parent int references common.directories(id),
+  name varchar(255), -- not null
 	-- todo
+	-- add derived data from sub-directories/files
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -280,8 +281,8 @@ create table common.directories (
 create table common.files (
   id serial primary key,
 
-  directory int not null references common.directories(id),
-	name varchar(255),
+  directory int references common.directories(id), -- not null
+	name varchar(255), -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -295,10 +296,10 @@ create table common.file_versions (
   id serial primary key,
 
   category varchar(255),
-  mime_type common.mime_type not null,
-  name varchar(255) not null,
-  file int not null references common.files(id),
-  file_url varchar(255) not null,
+  mime_type common.mime_type, -- not null
+  name varchar(255), -- not null
+  file int references common.files(id), -- not null
+  file_url varchar(255), -- not null
   file_size int, -- bytes
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
