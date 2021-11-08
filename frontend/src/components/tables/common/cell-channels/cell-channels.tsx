@@ -35,7 +35,7 @@ class CommonCellChannelsListRequest {
 
 class CommonCellChannelsListResponse {
   error: ErrorType;
-  cellChannels: CommonCellChannel[];
+  cell_channels: CommonCellChannel[];
 }
 
 class CommonCellChannelsUpdateRequest {
@@ -47,7 +47,7 @@ class CommonCellChannelsUpdateRequest {
 
 class CommonCellChannelsUpdateResponse {
   error: ErrorType;
-  cellChannel: CommonCellChannel | null = null;
+  cell_channel: CommonCellChannel | null = null;
 }
 
 class DeleteCommonCellChannelsRequest {
@@ -81,7 +81,7 @@ export class CellChannelsTable {
     if (updateResponse.error == ErrorType.NoError) {
       this.commonCellChannelsResponse = {
         error: ErrorType.NoError,
-        cellChannels: this.commonCellChannelsResponse.cellChannels.map(cellChannel => (cellChannel.id === id ? updateResponse.cellChannel : cellChannel)),
+        cell_channels: this.commonCellChannelsResponse.cell_channels.map(cellChannel => (cellChannel.id === id ? updateResponse.cell_channel : cellChannel)),
       };
       return true;
     } else {
@@ -231,7 +231,7 @@ export class CellChannelsTable {
       <Host>
         <slot></slot>
         {/* table abstraction */}
-        {this.commonCellChannelsResponse && <cf-table rowData={this.commonCellChannelsResponse.cellChannels} columnData={this.columnData}></cf-table>}
+        {this.commonCellChannelsResponse && <cf-table rowData={this.commonCellChannelsResponse.cell_channels} columnData={this.columnData}></cf-table>}
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
@@ -273,7 +273,7 @@ export class CellChannelsTable {
                 <label htmlFor="row">Row:</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="row" name="row" onInput={event => this.tableNameChange(event)} />
+                <input type="text" id="row" name="row" onInput={event => this.rowChange(event)} />
               </span>
             </div>
             <span class="form-thing">

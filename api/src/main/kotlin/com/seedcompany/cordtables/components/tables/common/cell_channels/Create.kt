@@ -50,7 +50,7 @@ class Create(
                 """
             insert into common.cell_channels(table_name, column_name, row, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::admin.table_name,
                     ?,
                     ?,
                     (

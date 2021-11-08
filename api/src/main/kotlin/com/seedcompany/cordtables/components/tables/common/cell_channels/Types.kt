@@ -16,7 +16,7 @@ data class CellChannel(
 data class CellChannelInput(
         val table_name: String,
         val column_name: String,
-        val row: String
+        val row: Int,
 )
 
 
