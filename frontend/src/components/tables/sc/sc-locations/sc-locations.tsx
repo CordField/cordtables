@@ -1,9 +1,9 @@
-import { Component, Host, State, h } from '@stencil/core'
-import { ColumnDescription } from '../../../../common/table-abstractions/types'
-import { ErrorType, GenericResponse } from '../../../../common/types'
+import { Component, Host, State, h } from '@stencil/core';
+import { ColumnDescription } from '../../../../common/table-abstractions/types';
+import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
-import { globals } from '../../../../core/global.store'
-import { ScLocation } from './types'
+import { globals } from '../../../../core/global.store';
+import { ScLocation } from './types';
 
 class CreateLocationRequest {
   token: string;
@@ -173,12 +173,6 @@ export class ScLocations {
       editable: true,
       updateFn: this.handleUpdate,
     },
-    {
-      field: 'peer',
-      displayName: 'Peer ID',
-      width: 50,
-      editable: false,
-    },
   ];
 
   async componentWillLoad() {
@@ -207,7 +201,7 @@ export class ScLocations {
       token: globals.globalStore.state.token,
       location: {
         name: this.newLocationName,
-        type: this.newLocationType
+        type: this.newLocationType,
       },
     });
 

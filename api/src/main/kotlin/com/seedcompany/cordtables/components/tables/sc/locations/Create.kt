@@ -71,7 +71,6 @@ class Create(
                     type = req.location.type,
                     owning_person = req.location.owning_person,
                     owning_group = req.location.owning_group,
-                    peer = req.location.peer,
                 ),
             )
         )

@@ -61,7 +61,6 @@ export class AdminUsers {
     modified_by: null,
     owning_person: null,
     owning_group: null,
-    peer: null,
   };
   nonEditableColumns = ['id', 'modified_at', 'created_at', 'created_by', 'modified_by'];
   @State() adminUsers: AdminUser[] = [];

@@ -27,7 +27,6 @@ data class Partner(
         val modified_by: Int?,
         val owning_person: Int?,
         val owning_group: Int?,
-        val peer: Int? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
