@@ -20,8 +20,6 @@ export namespace Components {
     interface AppRoot {
         "history": RouterHistory;
     }
-    interface CellChannelsTable {
-    }
     interface CfCell2 {
         "cellType": CellType;
         "columnDescription": ColumnDescription;
@@ -58,6 +56,8 @@ export namespace Components {
     }
     interface CfTiny {
         "uid": number;
+    }
+    interface CommonCellChannels {
     }
     interface CommonOrganizations {
     }
@@ -233,12 +233,6 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
-    interface HTMLCellChannelsTableElement extends Components.CellChannelsTable, HTMLStencilElement {
-    }
-    var HTMLCellChannelsTableElement: {
-        prototype: HTMLCellChannelsTableElement;
-        new (): HTMLCellChannelsTableElement;
-    };
     interface HTMLCfCell2Element extends Components.CfCell2, HTMLStencilElement {
     }
     var HTMLCfCell2Element: {
@@ -304,6 +298,12 @@ declare global {
     var HTMLCfTinyElement: {
         prototype: HTMLCfTinyElement;
         new (): HTMLCfTinyElement;
+    };
+    interface HTMLCommonCellChannelsElement extends Components.CommonCellChannels, HTMLStencilElement {
+    }
+    var HTMLCommonCellChannelsElement: {
+        prototype: HTMLCommonCellChannelsElement;
+        new (): HTMLCommonCellChannelsElement;
     };
     interface HTMLCommonOrganizationsElement extends Components.CommonOrganizations, HTMLStencilElement {
     }
@@ -730,7 +730,6 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
-        "cell-channels-table": HTMLCellChannelsTableElement;
         "cf-cell2": HTMLCfCell2Element;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
@@ -742,6 +741,7 @@ declare global {
         "cf-table-body": HTMLCfTableBodyElement;
         "cf-table-footer": HTMLCfTableFooterElement;
         "cf-tiny": HTMLCfTinyElement;
+        "common-cell-channels": HTMLCommonCellChannelsElement;
         "common-organizations": HTMLCommonOrganizationsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "directories-table": HTMLDirectoriesTableElement;
@@ -825,8 +825,6 @@ declare namespace LocalJSX {
     interface AppRoot {
         "history"?: RouterHistory;
     }
-    interface CellChannelsTable {
-    }
     interface CfCell2 {
         "cellType"?: CellType;
         "columnDescription"?: ColumnDescription;
@@ -865,6 +863,8 @@ declare namespace LocalJSX {
     interface CfTiny {
         "onContentUpdate"?: (event: CustomEvent<TinyUpdateEvent>) => void;
         "uid"?: number;
+    }
+    interface CommonCellChannels {
     }
     interface CommonOrganizations {
     }
@@ -1023,7 +1023,6 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
-        "cell-channels-table": CellChannelsTable;
         "cf-cell2": CfCell2;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
@@ -1035,6 +1034,7 @@ declare namespace LocalJSX {
         "cf-table-body": CfTableBody;
         "cf-table-footer": CfTableFooter;
         "cf-tiny": CfTiny;
+        "common-cell-channels": CommonCellChannels;
         "common-organizations": CommonOrganizations;
         "create-update-modal": CreateUpdateModal;
         "directories-table": DirectoriesTable;
@@ -1115,7 +1115,6 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
-            "cell-channels-table": LocalJSX.CellChannelsTable & JSXBase.HTMLAttributes<HTMLCellChannelsTableElement>;
             "cf-cell2": LocalJSX.CfCell2 & JSXBase.HTMLAttributes<HTMLCfCell2Element>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
@@ -1127,6 +1126,7 @@ declare module "@stencil/core" {
             "cf-table-body": LocalJSX.CfTableBody & JSXBase.HTMLAttributes<HTMLCfTableBodyElement>;
             "cf-table-footer": LocalJSX.CfTableFooter & JSXBase.HTMLAttributes<HTMLCfTableFooterElement>;
             "cf-tiny": LocalJSX.CfTiny & JSXBase.HTMLAttributes<HTMLCfTinyElement>;
+            "common-cell-channels": LocalJSX.CommonCellChannels & JSXBase.HTMLAttributes<HTMLCommonCellChannelsElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "directories-table": LocalJSX.DirectoriesTable & JSXBase.HTMLAttributes<HTMLDirectoriesTableElement>;

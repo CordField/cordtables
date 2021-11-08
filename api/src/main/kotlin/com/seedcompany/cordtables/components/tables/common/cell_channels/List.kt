@@ -27,7 +27,7 @@ data class CommonCellChannelsListResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonTicketsList")
+@Controller("CommonCellChannelsList")
 class List(
         @Autowired
         val util: Utility,
@@ -41,7 +41,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-tickets/list")
+    @PostMapping("common-cell-channels/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonCellChannelsListRequest): CommonCellChannelsListResponse {
         var data: MutableList<CellChannel> = mutableListOf()

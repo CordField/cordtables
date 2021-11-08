@@ -29,7 +29,7 @@ data class CommonCellChannelsReadResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonTicketsList")
+@Controller("CommonCellChannelsRead")
 class Read(
         @Autowired
         val util: Utility,
@@ -43,7 +43,7 @@ class Read(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-tickets/list")
+    @PostMapping("common-cell-channels/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonCellChannelsReadRequest): CommonCellChannelsReadResponse {
         if (req.token == null) return CommonCellChannelsReadResponse(ErrorType.TokenNotFound, null)

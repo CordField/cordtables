@@ -3,6 +3,19 @@ import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
+
+class CommonCellChannel {
+  id?: number | undefined;
+  table_name?: string | undefined;
+  column_name?: string | undefined;
+  row?: number | undefined;
+  created_at?: string | undefined;
+  created_by?: number | undefined;
+  modified_at?: string | undefined;
+  modified_by?: number | undefined;
+  owning_person?: number | undefined;
+  owning_group?: number | undefined;
+}
 class CreateCommonCellChannelsRequest {
   token: string;
   cell_channel: {
@@ -12,66 +25,53 @@ class CreateCommonCellChannelsRequest {
   };
 }
 
-class CommonCellChannelsRow {
-  id: number;
-  table_name: string;
-  column_name: string;
-  row: number;
-  created_at: string;
-  created_by: number;
-  modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
-}
-
 class CreateCommonCellChannelResponse extends GenericResponse {
-  cell_channel: CommonCellChannelsRow;
+  cell_channel: CommonCellChannel;
 }
 
-class CreateCommonCellChannelRequest {
+class CommonCellChannelsListRequest {
   token: string;
 }
 
-class CommonTicketsListResponse {
+class CommonCellChannelsListResponse {
   error: ErrorType;
-  tickets: CommonCellChannelsRow[];
+  tickets: CommonCellChannel[];
 }
 
-class CommonTicketsUpdateRequest {
+class CommonCellChannelsUpdateRequest {
   token: string;
   column: string;
   value: any;
   id: number;
 }
 
-class CommonTicketsUpdateResponse {
+class CommonCellChannelsUpdateResponse {
   error: ErrorType;
-  ticket: CommonCellChannelsRow | null = null;
+  ticket: CommonCellChannel | null = null;
 }
 
-class DeleteTicketRequest {
+class DeleteCommonCellChannelsRequest {
   id: number;
   token: string;
 }
 
-class DeleteTicketResponse extends GenericResponse {
+class DeleteCommonCellChannelsResponse extends GenericResponse {
   id: number;
 }
 
 @Component({
-  tag: 'cell-channels-table',
+  tag: 'common-cell-channels',
   styleUrl: 'cell-channels.css',
   shadow: true,
 })
 export class CellChannelsTable {
-  @State() commonTicketsResponse: CommonTicketsListResponse;
-  @State() newTableName: string;
-  @State() newRow: number;
-  @State() newColumnName: string;
+  @State() commonTicketsResponse: CommonCellChannelsListResponse;
+  newTableName: string;
+  newRow: number;
+  newColumnName: string;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonTicketsUpdateRequest, CommonTicketsUpdateResponse>('common-cell-channels/update-read', {
+    const updateResponse = await fetchAs<CommonCellChannelsUpdateRequest, CommonCellChannelsUpdateResponse>('common-cell-channels/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -88,7 +88,7 @@ export class CellChannelsTable {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common-cell-channels/delete', {
+    const result = await fetchAs<DeleteCommonCellChannelsRequest, DeleteCommonCellChannelsResponse>('common-cell-channels/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -121,6 +121,7 @@ export class CellChannelsTable {
     //     { display: 'Closed', value: 'Closed' },
     //   ],
     // },
+
     {
       field: 'table_name',
       displayName: 'Table Name',
@@ -187,7 +188,7 @@ export class CellChannelsTable {
   }
 
   async getList() {
-    this.commonTicketsResponse = await fetchAs<CreateCommonCellChannelRequest, CommonTicketsListResponse>('common-cell-channels/list', {
+    this.commonTicketsResponse = await fetchAs<CommonCellChannelsListRequest, CommonCellChannelsListResponse>('common-cell-channels/list', {
       token: globals.globalStore.state.token,
     });
   }
