@@ -425,10 +425,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="governance_transtner" name="governance_trans" onInput={event => this.governance_transChange(event)}>
-                    <option value="Level1" selected={this.newGovernance_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newGovernance_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newGovernance_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newGovernance_trans === "Level4"}>Level 4</option>
+                  <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newGovernance_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newGovernance_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newGovernance_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newGovernance_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -439,10 +440,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="director_trans" name="director_trans" onInput={event => this.director_transChange(event)}>
-                    <option value="Level1" selected={this.newDirector_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newDirector_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newDirector_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newDirector_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newDirector_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newDirector_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newDirector_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newDirector_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -453,10 +455,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="identity_trans" name="identity_trans" onInput={event => this.identity_transChange(event)}>
-                    <option value="Level1" selected={this.newIdentity_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newIdentity_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newIdentity_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newIdentity_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newIdentity_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newIdentity_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newIdentity_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newIdentity_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -467,10 +470,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="growth_trans" name="growth_trans" onInput={event => this.growth_transChange(event)}>
-                    <option value="Level1" selected={this.newGrowth_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newGrowth_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newGrowth_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newGrowth_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newGrowth_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newGrowth_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newGrowth_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newGrowth_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -481,10 +485,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="comm_support_trans" name="comm_support_trans" onInput={event => this.comm_support_transChange(event)}>
-                    <option value="Level1" selected={this.newComm_support_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newComm_support_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newComm_support_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newComm_support_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newComm_support_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newComm_support_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newComm_support_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newComm_support_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -495,10 +500,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="systems_trans" name="systems_trans" onInput={event => this.systems_transChange(event)}>
-                    <option value="Level1" selected={this.newSystems_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newSystems_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newSystems_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newSystems_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newSystems_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newSystems_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newSystems_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newSystems_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -509,10 +515,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="fin_management_trans" name="fin_management_trans" onInput={event => this.fin_management_transChange(event)}>
-                    <option value="Level1" selected={this.newFin_management_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newFin_management_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newFin_management_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newFin_management_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newFin_management_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newFin_management_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newFin_management_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newFin_management_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -523,10 +530,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="hr_trans" name="hr_trans" onInput={event => this.hr_transChange(event)}>
-                    <option value="Level1" selected={this.newHr_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newHr_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newHr_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newHr_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newHr_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newHr_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newHr_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newHr_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -537,10 +545,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="it_trans" name="it_trans" onInput={event => this.it_transChange(event)}>
-                    <option value="Level1" selected={this.newIt_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newIt_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newIt_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newIt_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newIt_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newIt_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newIt_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newIt_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -551,10 +560,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="program_design_trans" name="program_design_trans" onInput={event => this.program_design_transChange(event)}>
-                    <option value="Level1" selected={this.newProgram_design_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newProgram_design_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newProgram_design_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newProgram_design_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newProgram_design_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newProgram_design_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newProgram_design_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newProgram_design_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -565,10 +575,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="tech_translation_trans" name="tech_translation_trans" onInput={event => this.tech_translation_transChange(event)}>
-                    <option value="Level1" selected={this.newTech_translation_trans === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newTech_translation_trans === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newTech_translation_trans === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newTech_translation_trans === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newTech_translation_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newTech_translation_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newTech_translation_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newTech_translation_trans === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -579,10 +590,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="director_opp" name="director_opp" onInput={event => this.director_oppChange(event)}>
-                    <option value="Level1" selected={this.newDirector_opp === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newDirector_opp === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newDirector_opp === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newDirector_opp === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newDirector_opp === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newDirector_opp === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newDirector_opp === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newDirector_opp === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -593,10 +605,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="financial_management_opp" name="financial_management_opp" onInput={event => this.financial_management_oppChange(event)}>
-                    <option value="Level1" selected={this.newFinancial_management_opp === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newFinancial_management_opp === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newFinancial_management_opp === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newFinancial_management_opp === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newFinancial_management_opp === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newFinancial_management_opp === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newFinancial_management_opp === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newFinancial_management_opp === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -607,10 +620,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="program_design_opp" name="program_design_opp" onInput={event => this.program_design_oppChange(event)}>
-                    <option value="Level1" selected={this.newProgram_design_opp === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newProgram_design_opp === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newProgram_design_opp === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newProgram_design_opp === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newProgram_design_opp === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newProgram_design_opp === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newProgram_design_opp === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newProgram_design_opp === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>
@@ -621,10 +635,11 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="tech_translation_opp" name="tech_translation_opp" onInput={event => this.tech_translation_oppChange(event)}>
-                    <option value="Level1" selected={this.newTech_translation_opp === "Level1"}>Level 1</option>
-                    <option value="Level2" selected={this.newTech_translation_opp === "Level2"}>Level 2</option>
-                    <option value="Level3" selected={this.newTech_translation_opp === "Level3"}>Level 3</option>
-                    <option value="Level4" selected={this.newTech_translation_opp === "Level4"}>Level 4</option>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newTech_translation_opp === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newTech_translation_opp === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newTech_translation_opp === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newTech_translation_opp === "Level 4"}>Level 4</option>
                   </select>
               </span>
             </div>

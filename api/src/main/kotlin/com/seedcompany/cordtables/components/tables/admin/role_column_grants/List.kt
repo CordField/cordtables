@@ -114,7 +114,7 @@ class List(
                         role = role,
                         table_name = table_name, // if (table_name == null) null else TableNames.valueOf(table_name),
                         column_name = column_name,
-                        access_level = if (access_level == null) null else AccessLevels.valueOf(access_level),
+                        access_level = access_level, //if (access_level == null) null else AccessLevels.valueOf(access_level),
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

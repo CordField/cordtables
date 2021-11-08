@@ -111,7 +111,7 @@ class Read(
                     groupRowAccess(
                         id = id,
                         group_id = group_id,
-                        table_name = if (table_name == null) null else TableNames.valueOf(table_name),
+                        table_name = table_name, //if (table_name == null) null else TableNames.valueOf(table_name),
                         row = row,
                         created_at = created_at,
                         created_by = created_by,

@@ -51,12 +51,12 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.field_regions(organization, reporting_performance, financial_performance, translation_performance, created_by, modified_by, owning_person, owning_group)
+            insert into sc.global_partner_performance(organization, reporting_performance, financial_performance, translation_performance, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::sc.partner_performance_options,
+                    ?::sc.partner_performance_options,
+                    ?::sc.partner_performance_options,
                     (
                       select person 
                       from admin.tokens 

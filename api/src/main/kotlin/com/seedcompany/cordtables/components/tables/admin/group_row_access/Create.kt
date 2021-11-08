@@ -55,7 +55,7 @@ class Create(
             insert into admin.group_row_access(group_id, table_name, row,  created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
+                    ?::admin.table_name,
                     ?,
                     (
                       select person 

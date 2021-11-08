@@ -146,22 +146,8 @@ export class CommonCoalitions {
       deleteFn: this.handleDelete,
     },
     {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
-    },
-    {
-      field: 'director',
-      displayName: 'Director',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
-    },
-    {
       field: 'name',
-      displayName: 'File Version Name',
+      displayName: 'Name',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
@@ -228,7 +214,7 @@ export class CommonCoalitions {
 
             <div id="field-region-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="field-region">New Field Region Name</label>
+                <label htmlFor="field-region">Name</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="field-region-name" name="field-region-name" onInput={event => this.coalitionNameChange(event)} />

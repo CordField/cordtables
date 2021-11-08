@@ -51,14 +51,14 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.field_regions(organization, type, mou_start, mou_end, sc_roles, partner_roles, created_by, modified_by, owning_person, owning_group)
+            insert into sc.global_partner_engagements(organization, type, mou_start, mou_end, sc_roles, partner_roles, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
-                    ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::common.involvement_options,
+                    ?::timestamp,
+                    ?::timestamp,
+                    ?::sc.global_partner_roles[],
+                    ?::sc.global_partner_roles[],
                     (
                       select person 
                       from admin.tokens 

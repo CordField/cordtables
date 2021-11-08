@@ -55,8 +55,8 @@ class Create(
             insert into admin.role_table_permissions(role, table_name, table_permission,  created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
-                    ?,
+                    ?::admin.table_name,
+                    ?::admin.table_permission_grant_type,
                     (
                       select person 
                       from admin.tokens 

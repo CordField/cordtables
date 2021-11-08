@@ -6,7 +6,7 @@ data class groupRowAccess(
     var id: Int? = null,
 
     val group_id: Int? = null,
-    val table_name: TableNames? = null,
+    val table_name: String? = null,
     val row: Int? = null,
 
     val created_at: String? = null,

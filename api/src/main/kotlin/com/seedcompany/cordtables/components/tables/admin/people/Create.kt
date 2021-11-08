@@ -64,7 +64,7 @@ class Create(
                     ?,
                     ?,
                     ?,
-                    ?,
+                    ?::common.sensitivity,
                     ?,
                     ?,
                     ?,

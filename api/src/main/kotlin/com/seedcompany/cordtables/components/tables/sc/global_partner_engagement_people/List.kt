@@ -107,7 +107,7 @@ class List(
                         id = id,
                         engagement = engagement,
                         person = person,
-                        role = if (role == null) null else PeopleToOrgRelationshipType.valueOf(role),
+                        role = role, // if (role == null) null else PeopleToOrgRelationshipType.valueOf(role),
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

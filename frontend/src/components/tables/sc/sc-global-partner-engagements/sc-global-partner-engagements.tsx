@@ -177,14 +177,14 @@ export class ScGlobalPartnerEngagements {
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 50,
+      width: 200,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'type',
       displayName: 'Type',
-      width: 50,
+      width: 200,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -198,7 +198,7 @@ export class ScGlobalPartnerEngagements {
     {
       field: 'mou_end',
       displayName: 'Mou End',
-      width: 50,
+      width: 150,
       editable: false,
       deleteFn: this.handleDelete,
     },

@@ -56,9 +56,9 @@ class Create(
             insert into admin.role_column_grants(role, table_name, column_name, access_level,  created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
+                    ?::admin.table_name,
                     ?,
-                    ?,
-                    ?,
+                    ?::admin.access_level,
                     (
                       select person 
                       from admin.tokens 

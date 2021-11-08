@@ -6,7 +6,7 @@ data class globalPartnerEngagementPeople(
     var id: Int? = null,
     val engagement: Int? = null,
     val person: Int? = null,
-    val role: PeopleToOrgRelationshipType? = null,
+    val role: String? = null,
     val created_at: String? = null,
     val created_by: Int? = null,
     val modified_at: String? = null,

@@ -9,7 +9,7 @@ data class roleColumnGrant(
     val role: Int? = null,
     val table_name: String? = null,
     val column_name: String? = null,
-    val access_level: AccessLevels? = null,
+    val access_level: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,

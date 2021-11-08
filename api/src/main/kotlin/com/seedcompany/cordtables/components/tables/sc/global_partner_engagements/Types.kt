@@ -7,11 +7,11 @@ data class globalPartnerEngagement(
     var id: Int? = null,
 
     val organization: Int? = null,
-    val type: InvolvementOptions? = null,
+    val type: String? = null,
     val mou_start: String? = null,
     val mou_end: String? = null,
-    val sc_roles: GlobalPartnerRoles? = null,
-    val partner_roles: GlobalPartnerRoles? = null,
+    val sc_roles: String? = null,
+    val partner_roles: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
