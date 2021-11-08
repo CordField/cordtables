@@ -35,7 +35,7 @@ class CommonCellChannelsListRequest {
 
 class CommonCellChannelsListResponse {
   error: ErrorType;
-  tickets: CommonCellChannel[];
+  cellChannels: CommonCellChannel[];
 }
 
 class CommonCellChannelsUpdateRequest {
@@ -47,7 +47,7 @@ class CommonCellChannelsUpdateRequest {
 
 class CommonCellChannelsUpdateResponse {
   error: ErrorType;
-  ticket: CommonCellChannel | null = null;
+  cellChannel: CommonCellChannel | null = null;
 }
 
 class DeleteCommonCellChannelsRequest {
@@ -65,7 +65,7 @@ class DeleteCommonCellChannelsResponse extends GenericResponse {
   shadow: true,
 })
 export class CellChannelsTable {
-  @State() commonTicketsResponse: CommonCellChannelsListResponse;
+  @State() commonCellChannelsResponse: CommonCellChannelsListResponse;
   newTableName: string;
   newRow: number;
   newColumnName: string;
@@ -79,7 +79,10 @@ export class CellChannelsTable {
     });
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.commonTicketsResponse = { error: ErrorType.NoError, tickets: this.commonTicketsResponse.tickets.map(ticket => (ticket.id === id ? updateResponse.ticket : ticket)) };
+      this.commonCellChannelsResponse = {
+        error: ErrorType.NoError,
+        cellChannels: this.commonCellChannelsResponse.cellChannels.map(cellChannel => (cellChannel.id === id ? updateResponse.cellChannel : cellChannel)),
+      };
       return true;
     } else {
       alert(updateResponse.error);
@@ -100,6 +103,46 @@ export class CellChannelsTable {
     }
   };
 
+  async componentWillLoad() {
+    await this.getList();
+  }
+
+  async getList() {
+    this.commonCellChannelsResponse = await fetchAs<CommonCellChannelsListRequest, CommonCellChannelsListResponse>('common-cell-channels/list', {
+      token: globals.globalStore.state.token,
+    });
+  }
+
+  columnNameChange(event) {
+    this.newColumnName = event.target.value;
+  }
+
+  rowChange(event) {
+    this.newRow = event.target.value;
+  }
+
+  tableNameChange(event) {
+    this.newTableName = event.target.value;
+  }
+
+  handleInsert = async (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const result = await fetchAs<CreateCommonCellChannelsRequest, CreateCommonCellChannelResponse>('common-cell-channels/create-read', {
+      token: globals.globalStore.state.token,
+      cell_channel: {
+        column_name: this.newColumnName,
+        table_name: this.newTableName,
+        row: this.newRow,
+      },
+    });
+
+    if (result.error === ErrorType.NoError) {
+      globals.globalStore.state.editMode = false;
+      this.getList();
+    }
+  };
   columnData: ColumnDescription[] = [
     {
       field: 'id',
@@ -183,53 +226,12 @@ export class CellChannelsTable {
     },
   ];
 
-  async componentWillLoad() {
-    await this.getList();
-  }
-
-  async getList() {
-    this.commonTicketsResponse = await fetchAs<CommonCellChannelsListRequest, CommonCellChannelsListResponse>('common-cell-channels/list', {
-      token: globals.globalStore.state.token,
-    });
-  }
-
-  columnNameChange(event) {
-    this.newColumnName = event.target.value;
-  }
-
-  rowChange(event) {
-    this.newRow = event.target.value;
-  }
-
-  tableNameChange(event) {
-    this.newTableName = event.target.value;
-  }
-
-  handleInsert = async (event: MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const result = await fetchAs<CreateCommonCellChannelsRequest, CreateCommonCellChannelResponse>('common-cell-channels/create-read', {
-      token: globals.globalStore.state.token,
-      cell_channel: {
-        column_name: this.newColumnName,
-        table_name: this.newTableName,
-        row: this.newRow,
-      },
-    });
-
-    if (result.error === ErrorType.NoError) {
-      globals.globalStore.state.editMode = false;
-      this.getList();
-    }
-  };
-
   render() {
     return (
       <Host>
         <slot></slot>
         {/* table abstraction */}
-        {this.commonTicketsResponse && <cf-table rowData={this.commonTicketsResponse.tickets} columnData={this.columnData}></cf-table>}
+        {this.commonCellChannelsResponse && <cf-table rowData={this.commonCellChannelsResponse.cellChannels} columnData={this.columnData}></cf-table>}
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
