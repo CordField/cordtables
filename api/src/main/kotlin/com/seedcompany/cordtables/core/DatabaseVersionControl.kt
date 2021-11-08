@@ -63,12 +63,12 @@ class DatabaseVersionControl(
     }
 
     private fun toVersion2() {
-        runSqlFile("sql/version-control/toVersion2.sql")
+        runSqlFile("sql/version-control/version2.sql")
         setVersionNumber(2)
     }
 
     private fun toVersion3() {
-        runSqlFile("sql/version-control/toVersion3.sql")
+        runSqlFile("sql/version-control/version3.sql")
         setVersionNumber(3)
     }
 
