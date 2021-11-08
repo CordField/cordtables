@@ -20,7 +20,7 @@ export namespace Components {
     interface AppRoot {
         "history": RouterHistory;
     }
-    interface CellChannels {
+    interface CellChannelsTable {
     }
     interface CfCell2 {
         "cellType": CellType;
@@ -233,11 +233,11 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
-    interface HTMLCellChannelsElement extends Components.CellChannels, HTMLStencilElement {
+    interface HTMLCellChannelsTableElement extends Components.CellChannelsTable, HTMLStencilElement {
     }
-    var HTMLCellChannelsElement: {
-        prototype: HTMLCellChannelsElement;
-        new (): HTMLCellChannelsElement;
+    var HTMLCellChannelsTableElement: {
+        prototype: HTMLCellChannelsTableElement;
+        new (): HTMLCellChannelsTableElement;
     };
     interface HTMLCfCell2Element extends Components.CfCell2, HTMLStencilElement {
     }
@@ -730,7 +730,7 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
-        "cell-channels": HTMLCellChannelsElement;
+        "cell-channels-table": HTMLCellChannelsTableElement;
         "cf-cell2": HTMLCfCell2Element;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
@@ -825,7 +825,7 @@ declare namespace LocalJSX {
     interface AppRoot {
         "history"?: RouterHistory;
     }
-    interface CellChannels {
+    interface CellChannelsTable {
     }
     interface CfCell2 {
         "cellType"?: CellType;
@@ -1023,7 +1023,7 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
-        "cell-channels": CellChannels;
+        "cell-channels-table": CellChannelsTable;
         "cf-cell2": CfCell2;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
@@ -1115,7 +1115,7 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
-            "cell-channels": LocalJSX.CellChannels & JSXBase.HTMLAttributes<HTMLCellChannelsElement>;
+            "cell-channels-table": LocalJSX.CellChannelsTable & JSXBase.HTMLAttributes<HTMLCellChannelsTableElement>;
             "cf-cell2": LocalJSX.CfCell2 & JSXBase.HTMLAttributes<HTMLCfCell2Element>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;

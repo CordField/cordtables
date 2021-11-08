@@ -1,4 +1,9 @@
 import { createStore } from '@stencil/store';
+interface Notification {
+  id: string;
+  text: string;
+  type: 'error' | 'success' | 'info';
+}
 
 export class Globals {
   public globalStore = createStore({
@@ -7,9 +12,9 @@ export class Globals {
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
     token: localStorage.getItem('token'),
     email: localStorage.getItem('email'),
-    readableTables: JSON.parse(localStorage.getItem('readableTables')) ?? [],
+    readableTables: (JSON.parse(localStorage.getItem('readableTables')) ?? []) as string[],
     isAdmin: localStorage.getItem('isAdmin'),
-    notifications: JSON.parse(localStorage.getItem('notifications')) ?? [],
+    notifications: (JSON.parse(localStorage.getItem('notifications')) ?? []) as Notification[],
     // globalRolesData: localStorage.getItem('globalRolesData'),
   });
 
@@ -58,7 +63,7 @@ export class Globals {
         localStorage.removeItem('readableTables');
       }
     });
-    
+
     this.globalStore.onChange('notifications', newValue => {
       if (newValue != null) {
         localStorage.setItem('notifications', JSON.stringify(newValue));
