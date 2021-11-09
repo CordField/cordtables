@@ -249,13 +249,6 @@ BEGIN
      ('Write', 'verse_start', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId),
      ('Write', 'verse_end', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
---    grants on common.cell_channels
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-        values
-         ('Write', 'id', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-         ('Write', 'row', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-         ('Write', 'table_name', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId),
-         ('Write', 'column_name', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
 
 -- creating non-admin user
