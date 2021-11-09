@@ -233,14 +233,14 @@ export class AdminPeoples {
     {
       field: 'about',
       displayName: 'About',
-      width: 50,
+      width: 150,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'phone',
       displayName: 'Phone',
-      width: 50,
+      width: 150,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -254,14 +254,14 @@ export class AdminPeoples {
     {
       field: 'private_first_name',
       displayName: 'Private First Name',
-      width: 50,
+      width: 150,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'private_last_name',
       displayName: 'Private Last Name',
-      width: 50,
+      width: 150,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -296,14 +296,14 @@ export class AdminPeoples {
     {
       field: 'public_full_name',
       displayName: 'Public Full Name',
-      width: 50,
+      width: 150,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'sensitivity_clearance',
       displayName: 'Sensitivity Clearance',
-      width: 50,
+      width:150,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -481,7 +481,12 @@ export class AdminPeoples {
                 <label htmlFor="sensitivity_clearance">Sensitivity Clearance</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="sensitivity_clearance" name="sensitivity_clearance" onInput={event => this.sensitivity_clearanceChange(event)} />
+                <select id="sensitivity_clearance" name="sensitivity_clearance" onInput={event => this.sensitivity_clearanceChange(event)}>
+                    <option value="">Select Sensitivity Clearance</option>
+                    <option value="Low" selected={this.newSensitivity_clearance === "Low"}>Low</option>
+                    <option value="Medium" selected={this.newSensitivity_clearance === "Medium"}>Medium</option>
+                    <option value="High" selected={this.newSensitivity_clearance === "High"}>High</option>
+                </select>
               </span>
             </div>
 

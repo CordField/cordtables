@@ -72,7 +72,7 @@ create type admin.table_name as enum (
 
   'sc.budget_records',
   'sc.budgets',
-  'sc.ceremonies'
+  'sc.ceremonies',
   'sc.change_to_plans',
   'sc.field_regions',
   'sc.field_zones',

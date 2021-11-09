@@ -288,7 +288,11 @@ export class ScGlobalPartnerEngagements {
                 <label htmlFor="type">Type</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="type" name="directypetor" onInput={event => this.typeChange(event)} />
+                <select id="type" name="type" onInput={event => this.typeChange(event)}>
+                    <option value="">Select Type</option>
+                    <option value="CIT" selected={this.newType === "CIT"}>CIT</option>
+                    <option value="Engagements" selected={this.newType === "Engagements"}>Engagements</option>
+                </select>
               </span>
             </div>
 
@@ -315,7 +319,11 @@ export class ScGlobalPartnerEngagements {
                 <label htmlFor="sc_roles">SC Roles</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="sc_roles" name="sc_roles" onInput={event => this.sc_rolesChange(event)} />
+                <select id="sc_roles" multiple name="sc_roles" onInput={event => this.sc_rolesChange(event)}>
+                    <option value="">Select SC Roles</option>
+                    <option value="A" selected={this.newSc_roles === "A"}>A</option>
+                    <option value="B" selected={this.newSc_roles === "B"}>B</option>
+                </select>
               </span>
             </div>
 
@@ -324,7 +332,11 @@ export class ScGlobalPartnerEngagements {
                 <label htmlFor="partner_roles">Partner Roles</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="partner_roles" name="partner_roles" onInput={event => this.partner_rolesChange(event)} />
+                <select id="partner_roles" multiple name="partner_roles" onInput={event => this.partner_rolesChange(event)}>
+                    <option value="">Select Partner Roles</option>
+                    <option value="A" selected={this.newPartner_roles === "A"}>A</option>
+                    <option value="B" selected={this.newPartner_roles === "B"}>B</option>
+                </select>
               </span>
             </div>  
             

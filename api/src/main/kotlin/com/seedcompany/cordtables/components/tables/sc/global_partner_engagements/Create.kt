@@ -57,8 +57,8 @@ class Create(
                     ?::common.involvement_options,
                     ?::timestamp,
                     ?::timestamp,
-                    ?::sc.global_partner_roles[],
-                    ?::sc.global_partner_roles[],
+                    ARRAY[?]::sc.global_partner_roles[],
+                    ARRAY[?]::sc.global_partner_roles[],
                     (
                       select person 
                       from admin.tokens 

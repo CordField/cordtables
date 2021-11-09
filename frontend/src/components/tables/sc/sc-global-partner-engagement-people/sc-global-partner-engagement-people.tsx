@@ -254,7 +254,20 @@ export class ScGlobalPartnerEngagementPeoples {
                 <label htmlFor="role">Role</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="role" name="role" onInput={event => this.roleChange(event)} />
+                <select id="role" name="role" onInput={event => this.roleChange(event)}>
+                    <option value="">Select Role</option>
+                    <option value="Vendor" selected={this.newRole === "Vendor"}>Vendor</option>
+                    <option value="Customer" selected={this.newRole === "Customer"}>Customer</option>
+                    <option value="Investor" selected={this.newRole === "Investor"}>Investor</option>
+                    <option value="Associate" selected={this.newRole === "Associate"}>Associate</option>
+                    <option value="Employee" selected={this.newRole === "Employee"}>Employee</option>
+                    <option value="Member" selected={this.newRole === "Member"}>Member</option>
+                    <option value="Executive" selected={this.newRole === "Executive"}>Executive</option>
+                    <option value="President/CEO" selected={this.newRole === "President/CEO"}>President/CEO</option>
+                    <option value="Board of Directors" selected={this.newRole === "Board of Directors"}>Board of Directors</option>
+                    <option value="Retired" selected={this.newRole === "Retired"}>Retired</option>
+                    <option value="Other" selected={this.newRole === "Other"}>Other</option>
+                </select>
               </span>
             </div>                 
 

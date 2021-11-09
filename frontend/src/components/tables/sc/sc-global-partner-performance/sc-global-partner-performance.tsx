@@ -258,7 +258,13 @@ export class ScGlobalPartnerPerformances {
                 <label htmlFor="reporting_performance">Reporting Performance</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="reporting_performance" name="reporting_performance" onInput={event => this.reporting_performanceChange(event)} />
+                <select id="reporting_performance" name="reporting_performance" onInput={event => this.reporting_performanceChange(event)}>
+                    <option value="">Select Reporting Performance</option>
+                    <option value="1" selected={this.newReporting_performance === "1"}>1</option>
+                    <option value="2" selected={this.newReporting_performance === "2"}>2</option>
+                    <option value="3" selected={this.newReporting_performance === "3"}>3</option>
+                    <option value="4" selected={this.newReporting_performance === "4"}>4</option>
+                </select>
               </span>
             </div>
 
@@ -267,7 +273,13 @@ export class ScGlobalPartnerPerformances {
                 <label htmlFor="financial_performance">Financial Performance</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="financial_performance" name="financial_performance" onInput={event => this.financial_performanceChange(event)} />
+                <select id="financial_performance" name="financial_performance" onInput={event => this.financial_performanceChange(event)}>
+                    <option value="">Select Financial Performance</option>
+                    <option value="1" selected={this.newFinancial_performance === "1"}>1</option>
+                    <option value="2" selected={this.newFinancial_performance === "2"}>2</option>
+                    <option value="3" selected={this.newFinancial_performance === "3"}>3</option>
+                    <option value="4" selected={this.newFinancial_performance === "4"}>4</option>
+                </select>
               </span>
             </div>        
 
@@ -276,7 +288,13 @@ export class ScGlobalPartnerPerformances {
                 <label htmlFor="translation_performance">Translation Performance</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="translation_performance" name="translation_performance" onInput={event => this.translation_performanceChange(event)} />
+                <select id="translation_performance" name="translation_performance" onInput={event => this.translation_performanceChange(event)}>
+                    <option value="">Select Translation Performance</option>
+                    <option value="1" selected={this.newTranslation_performance === "1"}>1</option>
+                    <option value="2" selected={this.newTranslation_performance === "2"}>2</option>
+                    <option value="3" selected={this.newTranslation_performance === "3"}>3</option>
+                    <option value="4" selected={this.newTranslation_performance === "4"}>4</option>
+                </select>
               </span>
             </div>
             
