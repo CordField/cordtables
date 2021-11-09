@@ -1,12 +1,6 @@
 package com.seedcompany.cordtables.components.tables.common.ticket_assignments
 
-import com.seedcompany.cordtables.components.tables.common.ticket_graph.CommonTicketGraph
-
-
-
-
-
-
+import com.seedcompany.cordtables.components.tables.common.ticket_assignments.CommonTicketAssignments
 
 
 import com.seedcompany.cordtables.common.ErrorType
@@ -29,13 +23,13 @@ data class CommonTicketGraphRequest(
         val token: String?
 )
 
-data class CommonTicketGraphListResponse(
+data class CommonTicketAssignmentListResponse(
         val error: ErrorType,
-        val ticket_graph: MutableList<CommonTicketGraph>?
+        val ticket_assignment: MutableList<CommonTicketAssignments>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonTicketGraphList")
+@Controller("CommonTicketAssignmentsList")
 class List(
         @Autowired
         val util: Utility,
@@ -49,23 +43,23 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-ticket-graph/list")
+    @PostMapping("common-ticket-assignments/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: CommonTicketGraphRequest): CommonTicketGraphListResponse{
-        var data: MutableList<CommonTicketGraph> = mutableListOf()
-        if (req.token == null) return CommonTicketGraphListResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun listHandler(@RequestBody req: CommonTicketGraphRequest): CommonTicketAssignmentListResponse{
+        var data: MutableList<CommonTicketAssignments> = mutableListOf()
+        if (req.token == null) return CommonTicketAssignmentListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
 
         val query = secureList.getSecureListQueryHandler(
                 GetSecureListQueryRequest(
-                        tableName = "common.ticket_graph",
+                        tableName = "common.ticket_assignments",
                         filter = "order by id",
                         columns = arrayOf(
                                 "id",
-                                "from_ticket",
-                                "to_ticket",
+                                "ticket",
+                                "person",
                                 "created_at",
                                 "created_by",
                                 "modified_at",
@@ -83,11 +77,11 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var fromTicket: Int? = jdbcResult.getInt("from_ticket")
-                if (jdbcResult.wasNull()) fromTicket = null
+                var ticket: Int? = jdbcResult.getInt("ticket")
+                if (jdbcResult.wasNull()) ticket = null
 
-                var toTicket: Int? = jdbcResult.getInt("to_ticket")
-                if (jdbcResult.wasNull()) toTicket = null
+                var person: Int? = jdbcResult.getInt("person")
+                if (jdbcResult.wasNull()) person = null
 
                 var createdAt: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) createdAt = null
@@ -108,10 +102,10 @@ class List(
                 if (jdbcResult.wasNull()) owningGroup = null
 
                 data.add(
-                        CommonTicketGraph(
+                        CommonTicketAssignments(
                                 id = id,
-                                from_ticket = fromTicket,
-                                to_ticket = toTicket,
+                                ticket = ticket,
+                                person = person,
                                 created_at = createdAt,
                                 created_by = createdBy,
                                 modified_at = modifiedAt,
@@ -123,8 +117,8 @@ class List(
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return CommonTicketGraphListResponse(ErrorType.SQLReadError, mutableListOf())
+            return CommonTicketAssignmentListResponse(ErrorType.SQLReadError, mutableListOf())
         }
-        return CommonTicketGraphListResponse(ErrorType.NoError, data)
+        return CommonTicketAssignmentListResponse(ErrorType.NoError, data)
     }
 }

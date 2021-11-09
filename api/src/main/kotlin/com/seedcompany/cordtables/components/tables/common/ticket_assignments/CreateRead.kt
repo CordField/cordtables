@@ -22,11 +22,11 @@ data class CommonTicketAssignmentCreateReadRequest(
 
 data class CommonTicketAssignmentCreateReadResponse(
         val error: ErrorType,
-        val ticket_assignment: CommonTicketAssignments? = null,
+            val ticket_assignment: CommonTicketAssignments? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonTicketAssignmentCreateRead")
+@Controller("CommonTicketAssignmentsCreateRead")
 class CreateRead(
         @Autowired
         val util: Utility,
@@ -40,7 +40,7 @@ class CreateRead(
         @Autowired
         val read: Read,
 ) {
-    @PostMapping("common-ticket-assignment/create-read")
+    @PostMapping("common-ticket-assignments/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonTicketAssignmentCreateReadRequest): CommonTicketAssignmentCreateReadResponse {
 

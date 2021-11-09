@@ -24,7 +24,7 @@ data class CommonTicketAssignmentCreateResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonTicketAssignmentCreate")
+@Controller("CommonTicketAssignmentsCreate")
 
 class Create(
         @Autowired
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-ticket-assignment/create")
+    @PostMapping("common-ticket-assignments/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonTicketAssignmentCreateRequest): CommonTicketAssignmentCreateResponse {
 
@@ -50,7 +50,7 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
                 """
-            insert into common.ticket_assignment(ticket, person, created_by, modified_by, owning_person, owning_group)
+            insert into common.ticket_assignments(ticket, person, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
                     ?,

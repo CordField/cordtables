@@ -31,7 +31,7 @@ data class CommonTicketAssignmentReadResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonTicketAssignmentRead")
+@Controller("CommonTicketAssignmentsRead")
 class Read(
         @Autowired
         val util: Utility,
@@ -44,7 +44,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-ticket-assignment/read")
+    @PostMapping("common-ticket-assignments/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonTicketAssignmentReadRequest): CommonTicketAssignmentReadResponse {
 
