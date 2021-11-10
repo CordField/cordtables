@@ -205,12 +205,12 @@ export class AdminRoles {
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
 
-            <div id="field-region-holder" class="form-input-item form-thing">
+            <div id="field-role-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="field-region">New Field Region Name</label>
+                <label htmlFor="field-role">New Role Name</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="field-region-name" name="field-region-name" onInput={event => this.nameChange(event)} />
+                <input type="text" id="field-role-name" name="field-role-name" onInput={event => this.nameChange(event)} />
               </span>
             </div>        
             

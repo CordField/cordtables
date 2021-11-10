@@ -155,7 +155,7 @@ export class AdminGroups {
     },
     {
       field: 'name',
-      displayName: 'File Version Name',
+      displayName: 'Group Name',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
@@ -229,7 +229,7 @@ export class AdminGroups {
 
             <div id="field-region-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="field-region">New Field Region Name</label>
+                <label htmlFor="field-region">New Group Name</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="field-region-name" name="field-region-name" onInput={event => this.nameChange(event)} />

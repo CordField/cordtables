@@ -38,12 +38,12 @@ class CommonCoalitionMembershipUpdateResponse {
   coalitionMembership: CommonCoalitionMembership | null = null;
 }
 
-class DeleteFieldRegionExRequest {
+class DeleteCoalitionMembershipExRequest {
   id: number;
   token: string;
 }
 
-class DeleteFieldRegionExResponse extends GenericResponse {
+class DeleteCoalitionMembershipExResponse extends GenericResponse {
   id: number;
 }
 
@@ -80,7 +80,7 @@ export class CommonCoalitionMemberships {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFieldRegionExRequest, DeleteFieldRegionExResponse>('common-coalition-memberships/delete', {
+    const deleteResponse = await fetchAs<DeleteCoalitionMembershipExRequest, DeleteCoalitionMembershipExResponse>('common-coalition-memberships/delete', {
       id,
       token: globals.globalStore.state.token,
     });

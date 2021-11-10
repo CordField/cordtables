@@ -84,7 +84,7 @@ export class AdminPeoples {
   newStatus: string;
   
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminPeopleUpdateRequest, AdminPeopleUpdateResponse>('sc-field-regions/update-read', {
+    const updateResponse = await fetchAs<AdminPeopleUpdateRequest, AdminPeopleUpdateResponse>('admin-people/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
