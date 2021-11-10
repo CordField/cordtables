@@ -8,11 +8,13 @@ import com.seedcompany.cordtables.components.tables.sc.languages.Update
 import org.neo4j.driver.Driver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.queryForObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
 
@@ -54,6 +56,8 @@ class Neo4j(
 
     var baseNodeCounter = AtomicInteger(0)
 
+    var nodePairs = ConcurrentLinkedQueue<Array<BaseNode>>()
+
     @PostMapping("migrate/neo4j")
     @ResponseBody
     suspend fun createHandler(@RequestBody req: Neo4jMigrationRequest): Neo4jMigrationResponse {
@@ -82,7 +86,7 @@ class Neo4j(
 
         val ticker = AtomicInteger(0)
 
-        for (i in 0 until baseNodeCounter.get()){
+        for (i in 0 until baseNodeCounter.get()) {
             println("loop $i")
             createBaseNodeIdempotent(i)
         }
@@ -111,7 +115,7 @@ class Neo4j(
 
         when {
             node!!.labels.contains("Organization") -> writeBaseNode(
-                targetTable  = "sc.organizations",
+                targetTable = "sc.organizations",
                 id = node!!.id,
                 commonTable = "common.organizations",
             )
@@ -206,15 +210,15 @@ class Neo4j(
         } else {
             println("creating $personTable node $id")
 
-                val personId = jdbcTemplate.queryForObject(
-                    "insert into $personTable(neo4j_id, created_by, modified_by, owning_person, owning_group) values('$id', 1, 1, 1, 1) returning id;",
-                    Int::class.java
-                )
+            val personId = jdbcTemplate.queryForObject(
+                "insert into $personTable(neo4j_id, created_by, modified_by, owning_person, owning_group) values('$id', 1, 1, 1, 1) returning id;",
+                Int::class.java
+            )
 
-                jdbcTemplate.update(
-                    "insert into $userTable(person, created_by, modified_by, owning_person, owning_group) values(?, 1, 1, 1, 1);",
-                    personId,
-                )
+            jdbcTemplate.update(
+                "insert into $userTable(person, created_by, modified_by, owning_person, owning_group) values(?, 1, 1, 1, 1);",
+                personId,
+            )
         }
     }
 
@@ -251,6 +255,98 @@ class Neo4j(
     }
 
     suspend fun migrateBaseNodeToBaseNodeRelationships() {
+        getNodePairs()
+
+        while (nodePairs.size > 0) {
+            val (n, m) = nodePairs.remove()
+            when {
+                //checkRelationships(n, m, "Budget", "File") -> writeRelationships(n, m, "sc.budgets", "common.files", "universal_template" )
+                //checkRelationships(n, m,"User","ProjectMember") -> writeRelationships(n, m, "sc.project_members", "admin.people", "person")
+                checkRelationship(n, m,"FieldRegion", "User") -> writeRelationships(n, m, "sc.field_regions", "admin.people", "director")
+                checkRelationship(n, m, "FieldZone", "User") -> writeRelationships(n, m, "sc.field_zone", "admin.people", "director")
+
+                checkRelationship(n, m, "BudgetRecord", "Budget") -> writeRelationships(n, m, "sc.budget_records", "sc.budgets", "budget")
+
+                //checkRelationships(n, m, "BudgetRecord", "Organization") -> writeRelationships(n, m , "sc.budget_records", "sc.organizations", "partnership")
+
+                checkRelationship(n, m, "Budget", "Project") -> writeRelationships(n, m, "sc.budgets", "sc.projects", "project")
+                checkRelationship(n, m, "PeriodicReport", "BaseFile") -> writeRelationships(n, m, "sc.periodic_reports", "common.files", "reportFile")
+
+                checkRelationship(n, m, "Project", "FieldRegion") -> writeRelationships(n, m, "sc.projects", "sc.field_regions", "field_region")
+                checkRelationship(n, m, "Project", "Directory") -> writeRelationships(n, m, "sc.projects", "common.directories", "root_directory")
+                checkRelationship(n, m, "ProjectMember", "Project") -> writeRelationships(n, m, "sc.project_members", "sc.projects", "project")
+
+                checkRelationship(n, m, "Language", "EthnologueLanguage") -> writeRelationships(n, m, "sc.languages", "sil.table_of_languages", "ethnologue")
+                checkRelationship(n, m, "LanguageEngagement", "Project") -> writeRelationships(n, m, "sc.language_engagements", "sc.projects", "project")
+                checkRelationship(n, m, "LanguageEngagement", "Language") -> writeRelationships(n, m, "sc.language_engagements", "sc.languages", "ethnologue")
+
+                checkRelationship(n, m, "InternshipEngagement", "Project") -> writeRelationships(n, m, "sc.internship_engagements", "sc.projects", "project")
+
+                checkRelationship(n, m, "Partner", "Organization") -> writeRelationships(n, m, "sc.partners", "sc.organizations", "organization")
+
+                checkRelationship(n, m, "Partnership", "Partner") -> writeRelationships(n, m, "sc.partnerships", "sc.partners", "partner")
+                checkRelationship(n, m, "Partnership", "Project") -> writeRelationships(n, m, "sc.partnerships", "sc.projects", "project")
+
+                checkRelationship(n, m, "Ceremony", "LanguageEngagement") -> writeRelationships(n, m, "sc.ceremonies", "sc.language_engagements", "ethnologue")
+                checkRelationship(n, m, "Ceremony", "LanguageEngagement") -> writeRelationships(n, m, "sc.ceremonies", "sc.language_engagements", "project")
+                checkRelationship(n, m, "Ceremony", "InternshipEngagement") -> writeRelationships(n, m, "sc.ceremonies", "sc.internship_engagements", "project")
+            }
+        }
+    }
+
+    suspend fun getNodePairs() {
+        neo4j.session().use { session ->
+            session.run("MATCH (n:BaseNode)-[]-(m:BaseNode) RETURN n, m")
+                .list()
+                .forEach {
+                    nodePairs.add(
+                        arrayOf<BaseNode>(
+                            BaseNode(
+                                id = it.get("n").asNode().get("id").asString(),
+                                labels = it.get("n").asNode().labels() as List<String>
+                            ),
+                            BaseNode(
+                                id = it.get("m").asNode().get("id").asString(),
+                                labels = it.get("m").asNode().labels() as List<String>
+                            )
+                        )
+                    )
+                }
+        }
+    }
+
+    suspend fun checkRelationship(n: BaseNode, m: BaseNode, n_label: String, m_label: String): Boolean {
+        return (n.labels.contains(n_label) && m.labels.contains(m_label)) ||
+                (n.labels.contains(m_label) && m.labels.contains(n_label))
+    }
+
+    suspend fun writeRelationships(n: BaseNode, m: BaseNode, targetTable: String, refTable: String, field: String) {
+        val queryField = when {
+            checkRelationship(n, m, "Partnership", "Partner") -> "organization"
+            checkRelationship(n, m, "Language", "LanguageEngagement") -> "ethnologue"
+            checkRelationship(n, m, "Ceremony", "Engagement") -> field
+             else -> "id"
+        }
+
+        val exists = jdbcTemplate.queryForObject("select exists(select ? from $refTable where neo4j_id = ?);",
+            Boolean::class.java,
+            queryField,
+            n.id
+        )
+
+        if (exists) {
+            val id = jdbcTemplate.queryForObject(
+            "select $queryField from $refTable where neo4j_id = ?;",
+            Int::class.java,
+            n.id
+            )
+
+            jdbcTemplate.update(
+            "update $targetTable set $field = ? where neo4j_id = ?;",
+            id,
+            m.id,
+            )
+        }
     }
 
     suspend fun migrateBaseNodeProperties() {
