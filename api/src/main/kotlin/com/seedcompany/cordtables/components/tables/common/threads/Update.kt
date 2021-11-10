@@ -46,7 +46,7 @@ class Update(
                 util.updateField(
                         token = req.token,
                         table = "common.threads",
-                        column = "column_name",
+                        column = "content",
                         id = req.id,
                         value = req.value
                 )

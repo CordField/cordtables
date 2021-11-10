@@ -61,6 +61,8 @@ export namespace Components {
     }
     interface CommonOrganizations {
     }
+    interface CommonThreads {
+    }
     interface CreateUpdateModal {
         "isOpen": boolean;
         "modalTitle": String;
@@ -189,8 +191,6 @@ export namespace Components {
     interface TableRoot {
         "match": MatchResults;
     }
-    interface ThreadsTable {
-    }
     interface TicketAssignments {
     }
     interface TicketFeedback {
@@ -310,6 +310,12 @@ declare global {
     var HTMLCommonOrganizationsElement: {
         prototype: HTMLCommonOrganizationsElement;
         new (): HTMLCommonOrganizationsElement;
+    };
+    interface HTMLCommonThreadsElement extends Components.CommonThreads, HTMLStencilElement {
+    }
+    var HTMLCommonThreadsElement: {
+        prototype: HTMLCommonThreadsElement;
+        new (): HTMLCommonThreadsElement;
     };
     interface HTMLCreateUpdateModalElement extends Components.CreateUpdateModal, HTMLStencilElement {
     }
@@ -671,12 +677,6 @@ declare global {
         prototype: HTMLTableRootElement;
         new (): HTMLTableRootElement;
     };
-    interface HTMLThreadsTableElement extends Components.ThreadsTable, HTMLStencilElement {
-    }
-    var HTMLThreadsTableElement: {
-        prototype: HTMLThreadsTableElement;
-        new (): HTMLThreadsTableElement;
-    };
     interface HTMLTicketAssignmentsElement extends Components.TicketAssignments, HTMLStencilElement {
     }
     var HTMLTicketAssignmentsElement: {
@@ -743,6 +743,7 @@ declare global {
         "cf-tiny": HTMLCfTinyElement;
         "common-cell-channels": HTMLCommonCellChannelsElement;
         "common-organizations": HTMLCommonOrganizationsElement;
+        "common-threads": HTMLCommonThreadsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "directories-table": HTMLDirectoriesTableElement;
         "discussion-channels": HTMLDiscussionChannelsElement;
@@ -803,7 +804,6 @@ declare global {
         "stage-role-column-grants": HTMLStageRoleColumnGrantsElement;
         "stages-table": HTMLStagesTableElement;
         "table-root": HTMLTableRootElement;
-        "threads-table": HTMLThreadsTableElement;
         "ticket-assignments": HTMLTicketAssignmentsElement;
         "ticket-feedback": HTMLTicketFeedbackElement;
         "ticket-graph": HTMLTicketGraphElement;
@@ -867,6 +867,8 @@ declare namespace LocalJSX {
     interface CommonCellChannels {
     }
     interface CommonOrganizations {
+    }
+    interface CommonThreads {
     }
     interface CreateUpdateModal {
         "isOpen"?: boolean;
@@ -1000,8 +1002,6 @@ declare namespace LocalJSX {
     interface TableRoot {
         "match"?: MatchResults;
     }
-    interface ThreadsTable {
-    }
     interface TicketAssignments {
     }
     interface TicketFeedback {
@@ -1036,6 +1036,7 @@ declare namespace LocalJSX {
         "cf-tiny": CfTiny;
         "common-cell-channels": CommonCellChannels;
         "common-organizations": CommonOrganizations;
+        "common-threads": CommonThreads;
         "create-update-modal": CreateUpdateModal;
         "directories-table": DirectoriesTable;
         "discussion-channels": DiscussionChannels;
@@ -1096,7 +1097,6 @@ declare namespace LocalJSX {
         "stage-role-column-grants": StageRoleColumnGrants;
         "stages-table": StagesTable;
         "table-root": TableRoot;
-        "threads-table": ThreadsTable;
         "ticket-assignments": TicketAssignments;
         "ticket-feedback": TicketFeedback;
         "ticket-graph": TicketGraph;
@@ -1128,6 +1128,7 @@ declare module "@stencil/core" {
             "cf-tiny": LocalJSX.CfTiny & JSXBase.HTMLAttributes<HTMLCfTinyElement>;
             "common-cell-channels": LocalJSX.CommonCellChannels & JSXBase.HTMLAttributes<HTMLCommonCellChannelsElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
+            "common-threads": LocalJSX.CommonThreads & JSXBase.HTMLAttributes<HTMLCommonThreadsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "directories-table": LocalJSX.DirectoriesTable & JSXBase.HTMLAttributes<HTMLDirectoriesTableElement>;
             "discussion-channels": LocalJSX.DiscussionChannels & JSXBase.HTMLAttributes<HTMLDiscussionChannelsElement>;
@@ -1188,7 +1189,6 @@ declare module "@stencil/core" {
             "stage-role-column-grants": LocalJSX.StageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLStageRoleColumnGrantsElement>;
             "stages-table": LocalJSX.StagesTable & JSXBase.HTMLAttributes<HTMLStagesTableElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
-            "threads-table": LocalJSX.ThreadsTable & JSXBase.HTMLAttributes<HTMLThreadsTableElement>;
             "ticket-assignments": LocalJSX.TicketAssignments & JSXBase.HTMLAttributes<HTMLTicketAssignmentsElement>;
             "ticket-feedback": LocalJSX.TicketFeedback & JSXBase.HTMLAttributes<HTMLTicketFeedbackElement>;
             "ticket-graph": LocalJSX.TicketGraph & JSXBase.HTMLAttributes<HTMLTicketGraphElement>;
