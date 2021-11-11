@@ -4,6 +4,47 @@ create schema sc;
 
 -- POSTS ----------------------------------------------------------
 
+create table sc.directories (
+  id serial primary key,
+  neo4j_id varchar(32),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table sc.files (
+  id serial primary key,
+  neo4j_id varchar(32),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table sc.file_versions (
+  id serial primary key,
+  neo4j_id varchar(32),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+-- POSTS ----------------------------------------------------------
+
 create table sc.posts_directory ( -- does not need to be secure
   id serial primary key,
   created_at timestamp not null default CURRENT_TIMESTAMP,

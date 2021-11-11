@@ -5,6 +5,8 @@ import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.tables.admin.users.Create
 import com.seedcompany.cordtables.components.tables.sc.languages.Read
 import com.seedcompany.cordtables.components.tables.sc.languages.Update
+import kotlinx.coroutines.*
+import org.joda.time.DateTime
 import org.neo4j.driver.Driver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
+import kotlin.concurrent.thread
 
 data class Neo4jMigrationRequest(
     val token: String? = null,
@@ -52,7 +56,7 @@ class Neo4j(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    var baseNodeCounter = AtomicInteger(0)
+    var neo4jIdQueue = ConcurrentLinkedQueue<BaseNode>()
 
     @PostMapping("migrate/neo4j")
     @ResponseBody
@@ -67,87 +71,182 @@ class Neo4j(
 
     suspend fun migrateBaseNodes() {
 
-        neo4j.session().use { session ->
-            baseNodeCounter.set(
-                session.run("MATCH (n:BaseNode) RETURN count(n) as count").single().get("count").asInt()
-            )
+        println("starting base node migration")
 
-            println("count of base nodes is $baseNodeCounter")
+        var totalBaseNodes = 0
+        neo4j.session().use { session ->
+            totalBaseNodes =
+                session.run("MATCH (n:BaseNode) RETURN count(n) as count").single().get("count").asInt()
+
+            println("count of base nodes is $totalBaseNodes")
         }
 
-        if (baseNodeCounter == null) {
+        if (totalBaseNodes == null) {
             println("failed to count base nodes")
             return
         }
 
-        val ticker = AtomicInteger(0)
+        var fetchedNodes = 0
+        val batchSize = 1000
+        val maxQueueSize = 5000
 
-        for (i in 0 until baseNodeCounter.get()){
-            println("loop $i")
-            createBaseNodeIdempotent(i)
+        coroutineScope {
+
+            // bring neo4j ids into queue as needed until no more left
+            launch {
+                println("starting reader")
+
+                while (fetchedNodes < totalBaseNodes) {
+                    if (neo4jIdQueue.size < maxQueueSize) {
+                        if (totalBaseNodes - fetchedNodes > batchSize) {
+//                            println("fetched nodes: $fetchedNodes")
+                            getNeo4jIds(fetchedNodes, batchSize)
+                            fetchedNodes += batchSize
+//                            println("queue size is ${neo4jIdQueue.size}")
+                        } else {
+                            getNeo4jIds(fetchedNodes, totalBaseNodes - fetchedNodes)
+                            fetchedNodes += totalBaseNodes - fetchedNodes
+                        }
+                    } else {
+                        delay(1000L)
+                    }
+                    delay(1L)
+                }
+                println("reader closing")
+            }
+
+            // feed nodes into postgres until gone
+            val processedNodes = AtomicInteger(0)
+
+//            val then = DateTime.now().millis
+
+            launch {
+                println("starting writer 1")
+                while (neo4jIdQueue.size > 0) {
+                    val node = neo4jIdQueue.remove() ?: return@launch
+                    createBaseNodeIdempotent(node)
+                    processedNodes.incrementAndGet()
+                    delay(1L) // I don't know why this is needed, but it is.
+                }
+                println("writer 1 closing")
+            }
+
+            launch {
+                println("starting writer 2")
+                while (neo4jIdQueue.size > 0) {
+                    val node = neo4jIdQueue.remove() ?: return@launch
+                    createBaseNodeIdempotent(node)
+                    processedNodes.incrementAndGet()
+                    delay(1L) // I don't know why this is needed, but it is.
+                }
+                println("writer 2 closing")
+            }
+//
+//            launch {
+//                println("starting writer 3")
+//                while (neo4jIdQueue.size > 0) {
+//                    val node = neo4jIdQueue.remove() ?: return@launch
+//                    createBaseNodeIdempotent(node)
+//                    processedNodes.incrementAndGet()
+//                    delay(1L) // I don't know why this is needed, but it is.
+//                }
+//                println("writer 3 closing")
+//            }
+//
+//            launch {
+//                println("starting writer 4")
+//                while (neo4jIdQueue.size > 0) {
+//                    val node = neo4jIdQueue.remove() ?: return@launch
+//                    createBaseNodeIdempotent(node)
+//                    processedNodes.incrementAndGet()
+//                    delay(1L) // I don't know why this is needed, but it is.
+//                }
+//                println("writer 4 closing")
+//            }
+
+            // progress
+            launch {
+                val then = DateTime.now().millis
+
+                while (true) {
+                    val lapse = DateTime.now().millis - then
+
+                    var rate =
+                        if (processedNodes.get() == 0) 0F else processedNodes.get().toFloat() / lapse.toFloat() * 1000F
+
+                    val remainingNodes = totalBaseNodes.toFloat() - processedNodes.get().toFloat()
+                    val eta = remainingNodes / rate / 60F
+
+                    print("\r${processedNodes}/$totalBaseNodes rate: ${rate.toInt()} records/sec eta: ${eta.toInt()}m queue: ${neo4jIdQueue.size}")
+
+                    delay(1000L)
+                }
+            }
+
         }
 
+        println("base node migration done")
     }
 
-    suspend fun createBaseNodeIdempotent(skip: Int) {
-        var node: BaseNode? = null
-
-//        val nextNode = baseNodeCounter.decrementAndGet()
-
-//        if (nextNode <= 0) return
-
+    suspend fun getNeo4jIds(skip: Int, size: Int) {
         neo4j.session().use { session ->
-            val baseNodeReturn =
-                session.run("MATCH (m:BaseNode) RETURN m skip $skip limit 1")
-                    .single()
-
-            node = BaseNode(
-                id = baseNodeReturn.get("m").asNode().get("id").asString(),
-                labels = baseNodeReturn.get("m").asNode().labels() as List<String>
-            )
+            session.run("MATCH (n:BaseNode) RETURN n skip $skip limit $size")
+                .list()
+                .forEach {
+                    neo4jIdQueue.add(
+                        BaseNode(
+                            id = it.get("n").asNode().get("id").asString(),
+                            labels = it.get("n").asNode().labels() as List<String>
+                        )
+                    )
+                }
         }
+    }
 
-        if (node == null) return
-
+    suspend fun createBaseNodeIdempotent(node: BaseNode) {
         when {
-            node!!.labels.contains("Organization") -> writeBaseNode(
-                targetTable  = "sc.organizations",
-                id = node!!.id,
+            node.labels.contains("File") -> writeBaseNode(
+                targetTable = "sc.files",
+                id = node.id,
+                commonTable = "common.files",
+            )
+            node.labels.contains("Organization") -> writeBaseNode(
+                targetTable = "sc.organizations",
+                id = node.id,
                 commonTable = "common.organizations",
             )
-
-            node!!.labels.contains("TranslationProject") -> writeBaseNode(
+            node.labels.contains("TranslationProject") -> writeBaseNode(
                 targetTable = "sc.projects",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("InternshipProject") -> writeBaseNode(
+            node.labels.contains("InternshipProject") -> writeBaseNode(
                 targetTable = "sc.projects",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("User") -> writeUserNode(
+            node.labels.contains("User") -> writeUserNode(
                 personTable = "admin.people",
-                id = node!!.id,
+                id = node.id,
                 userTable = "admin.users",
             )
-            node!!.labels.contains("ProjectMember") -> writeBaseNode(
+            node.labels.contains("ProjectMember") -> writeBaseNode(
                 targetTable = "sc.project_members",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("FieldZone") -> writeBaseNode(
+            node.labels.contains("FieldZone") -> writeBaseNode(
                 targetTable = "sc.field_zone",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("FieldRegion") -> writeBaseNode(
+            node.labels.contains("FieldRegion") -> writeBaseNode(
                 targetTable = "sc.field_regions",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("Budget") -> writeBaseNode(
+            node.labels.contains("Budget") -> writeBaseNode(
                 targetTable = "sc.budgets",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("EthnologueLanguage") -> writeBaseNode(
+            node.labels.contains("EthnologueLanguage") -> writeBaseNode(
                 targetTable = "sil.table_of_languages",
-                id = node!!.id,
+                id = node.id,
             )
             node!!.labels.contains("Language") -> writeBaseNode(
                 targetTable = "sc.languages",
@@ -189,8 +288,8 @@ class Neo4j(
                 targetTable = "sc.budget_records",
                 id = node!!.id,
             )
-            else -> println(node!!.labels)
-
+            else -> {
+            }//println("didn't process: ${node.labels}")
         }
     }
 
@@ -202,19 +301,19 @@ class Neo4j(
         )
 
         if (exists) {
-            println("node $id exists")
+//            println("node $id exists")
         } else {
-            println("creating $personTable node $id")
+//            println("creating $personTable node $id")
 
-                val personId = jdbcTemplate.queryForObject(
-                    "insert into $personTable(neo4j_id, created_by, modified_by, owning_person, owning_group) values('$id', 1, 1, 1, 1) returning id;",
-                    Int::class.java
-                )
+            val personId = jdbcTemplate.queryForObject(
+                "insert into $personTable(neo4j_id, created_by, modified_by, owning_person, owning_group) values('$id', 1, 1, 1, 1) returning id;",
+                Int::class.java
+            )
 
-                jdbcTemplate.update(
-                    "insert into $userTable(person, created_by, modified_by, owning_person, owning_group) values(?, 1, 1, 1, 1);",
-                    personId,
-                )
+            jdbcTemplate.update(
+                "insert into $userTable(person, created_by, modified_by, owning_person, owning_group) values(?, 1, 1, 1, 1);",
+                personId,
+            )
         }
     }
 
@@ -226,9 +325,9 @@ class Neo4j(
         )
 
         if (exists) {
-            println("node $id exists")
+//            println("node $id exists")
         } else {
-            println("creating $targetTable node $id")
+//            println("creating $targetTable node $id")
 
             if (commonTable != null) {
                 val commonId = jdbcTemplate.queryForObject(
