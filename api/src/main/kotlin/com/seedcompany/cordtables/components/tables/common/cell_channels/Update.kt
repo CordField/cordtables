@@ -69,7 +69,8 @@ class Update(
                         table = "common.cell_channels",
                         column = "row",
                         id = req.id,
-                        value = req.value
+                        value = req.value,
+                        cast="::integer"
                 )
             }
             "owning_person" -> {
