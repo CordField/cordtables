@@ -136,9 +136,9 @@ create type common.location_type as enum (
 create table common.locations (
 	id serial primary key,
 
-	name varchar(255) unique not null,
+	name varchar(255),
 	sensitivity common.sensitivity not null default 'High',
-	type common.location_type not null,
+	type common.location_type,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),

@@ -142,8 +142,8 @@ create table sc.locations (
 	default_region int references sc.field_regions(id),
 	funding_account int references sc.funding_account(account_number),
 	iso_alpha_3 char(3),
-	name varchar(32) unique not null,
-	type common.location_type not null,
+	name varchar(32),
+	type common.location_type,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -727,7 +727,7 @@ create table sc.budget_records (
   active bool,
   amount decimal,
   fiscal_year int,
-  partnership int references sc.partnerships(id),
+  organization int references sc.organizations(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -737,6 +737,19 @@ create table sc.budget_records (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id)
 
+);
+
+create table sc.budget_records_partnerships (
+  id serial primary key,
+
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );
 
 -- PROJECT LOCATION

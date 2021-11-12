@@ -212,6 +212,10 @@ class Neo4j(
                 id = node.id,
                 commonTable = "common.files",
             )
+            node.labels.contains("FileVersion") -> writeBaseNode(
+                targetTable = "sc.file_versions",
+                id = node.id,
+            )
             node.labels.contains("Organization") -> writeBaseNode(
                 targetTable = "sc.organizations",
                 id = node.id,
@@ -250,45 +254,50 @@ class Neo4j(
                 targetTable = "sil.table_of_languages",
                 id = node.id,
             )
-            node!!.labels.contains("Language") -> writeBaseNode(
+            node.labels.contains("Language") -> writeBaseNode(
                 targetTable = "sc.languages",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("LanguageEngagement") -> writeBaseNode(
+            node.labels.contains("LanguageEngagement") -> writeBaseNode(
                 targetTable = "sc.language_engagements",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("InternshipEngagement") -> writeBaseNode(
+            node.labels.contains("InternshipEngagement") -> writeBaseNode(
                 targetTable = "sc.internship_engagements",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("Ceremony") -> writeBaseNode(
+            node.labels.contains("Ceremony") -> writeBaseNode(
                 targetTable = "sc.ceremonies",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("PeriodicReport") -> writeBaseNode(
+            node.labels.contains("PeriodicReport") -> writeBaseNode(
                 targetTable = "sc.periodic_reports",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("Directory") -> writeBaseNode(
+            node.labels.contains("Directory") -> writeBaseNode(
                 targetTable = "common.directories",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("BaseFile") -> writeBaseNode(
+            node.labels.contains("BaseFile") -> writeBaseNode(
                 targetTable = "common.files",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("Partner") -> writeBaseNode(
+            node.labels.contains("Partner") -> writeBaseNode(
                 targetTable = "sc.partners",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("Partnership") -> writeBaseNode(
+            node.labels.contains("Partnership") -> writeBaseNode(
                 targetTable = "sc.partnerships",
-                id = node!!.id,
+                id = node.id,
             )
-            node!!.labels.contains("BudgetRecord") -> writeBaseNode(
+            node.labels.contains("BudgetRecord") -> writeBaseNode(
                 targetTable = "sc.budget_records",
-                id = node!!.id,
+                id = node.id,
+            )
+            node.labels.contains("Location") -> writeBaseNode(
+                targetTable = "sc.locations",
+                id = node.id,
+                commonTable = "common.locations"
             )
             else -> {
             }//println("didn't process: ${node.labels}")
@@ -320,6 +329,8 @@ class Neo4j(
     }
 
     suspend fun writeBaseNode(targetTable: String, id: String, commonTable: String? = null) {
+
+
         val exists = jdbcTemplate.queryForObject(
             "select exists(select id from $targetTable where neo4j_id = ?);",
             Boolean::class.java,
