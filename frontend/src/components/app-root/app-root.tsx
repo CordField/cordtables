@@ -56,7 +56,8 @@ export class AppRoot {
   render() {
     return (
       <div id="root-wrap-outer">
-        <cf-header></cf-header>
+        <cf-notif />
+        <cf-header />
         <div id="root-wrap-inner">
           <div>
             {!globals.globalStore.state.isLoggedIn && <div>Please login or register</div>}

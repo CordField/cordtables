@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  padding-left: 10px;
+  max-height: 100px;
+  overflow-y: auto;
+}
+div.error {
+  color: #b91c1c;
+}
+
+div.success {
+  color: #047857;
+}
+
+.close-button {
+  color: #374151;
+}

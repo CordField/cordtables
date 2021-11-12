@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
 import kotlin.concurrent.thread
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 data class Neo4jMigrationRequest(
     val token: String? = null,
@@ -396,10 +397,11 @@ class Neo4j(
             )
             prop = PropertyNode(
                 type = baseNodeReturn.get("r").asRelationship().type(),
-                value = baseNodeReturn.get("p").asNode().get("value")
+                value = baseNodeReturn.get("p").asNode().get("value").asObject()
             )
             if (node == null) return
             if (prop?.value == null) return  // postgres assigns values to null by default, so if they're not in neo4j we stop here.
+            if (prop?.type.equals("canDelete")) return  // we're not migrating canDelete
         }
         when {
             node!!.labels.contains("File") -> writeNodeProperty(
@@ -504,9 +506,23 @@ class Neo4j(
             node!!.labels.contains("InternshipEngagement") -> writeNodeProperty(
                 targetTable = "sc.internship_engagements",
                 id = node!!.id,
-                propKey = prop!!.type,
+                propKey =
+                    if (prop!!.type.equals("modifiedAt"))
+                        { "modified_at" }
+                    else if (prop!!.type.equals("growthPlan"))
+                        { "growth_plan" }
+                    else
+                        prop!!.type,
                 propValue = prop!!.value!!,
-                preferredType = if(prop!!.type.equals("status")) { Types. } else null
+                preferredType = if(prop!!.type.equals("status")) { Types.OTHER } else null,
+                foreignKey = if (prop!!.type.equals("growthPlan"))
+                                { "growth_plan" }
+                             else
+                                 null,
+                neo4jIdTable = if (prop!!.type.equals("growthPlan"))
+                                    return
+                             else
+                                null,
             )
             node!!.labels.contains("Ceremony") -> writeNodeProperty(
                 targetTable = "sc.ceremonies",
@@ -563,16 +579,18 @@ class Neo4j(
             id
         )
 
+        println(propValue.javaClass.kotlin)
         var realPropValue =
-                if (preferredType != null)
-                    { SqlParameterValue(preferredType, propValue.toString()) }
-                else if (propValue is org.neo4j.driver.internal.value.StringValue )
+                if (propValue is org.neo4j.driver.internal.value.StringValue )
                     { propValue.asString() }
                 else if (propValue is org.neo4j.driver.internal.value.BooleanValue)
                     { propValue.asBoolean() }
                 else if (propValue is org.neo4j.driver.internal.value.IntegerValue)
                     { propValue.asInt()}
-                else propValue;
+                else if (propValue is java.time.ZonedDateTime)
+                    { java.sql.Timestamp.from(propValue.toInstant()) }
+                else
+                    propValue;
         println("$targetTable\t$id\t$propKey\t$realPropValue")
         if (exists) {
             if (neo4jIdTable != null) {
@@ -583,9 +601,9 @@ class Neo4j(
                     id
                 )
             } else {
+                println("update $targetTable SET $propKey = ? WHERE neo4j_id = ?")
                 jdbcTemplate.update(
-                    "update $targetTable SET $propKey = ? WHERE neo4j_id = ?",
-                    realPropValue,
+                    "update $targetTable SET $propKey = '$realPropValue' WHERE neo4j_id = ?",
                     id
                 )
             }

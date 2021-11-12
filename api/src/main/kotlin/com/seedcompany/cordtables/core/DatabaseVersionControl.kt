@@ -31,6 +31,7 @@ class DatabaseVersionControl(
         updateSchemaIdempotent()
         println("database schema update complete")
         updateHistoryTables()
+        updatePeerTables()
     }
 
     private fun updateSchemaIdempotent() {
@@ -55,6 +56,10 @@ class DatabaseVersionControl(
     private fun updateHistoryTables(){
         // todo
         runSqlFile("sql/version-control/history.sql")
+    }
+
+    private fun updatePeerTables(){
+        runSqlFile("sql/version-control/peer.sql")
     }
 
     private fun toVersion2() {

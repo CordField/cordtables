@@ -7,7 +7,6 @@ declare
 	rec0 record;
 	rec1 record;
     rec2 record;
-    existing_column text;
     history_table_name text;
 	status text;
 begin
@@ -18,7 +17,7 @@ begin
         -- FINDING ALL TABLES THAT NEED A HISTORY AND LOOPING OVER THEM
         for rec1 in (select table_name
         from information_schema.tables
-        where table_schema = rec0.table_schema and table_name not like '%_history'
+        where table_schema = rec0.table_schema and table_name not similar to '%(_peer|_history)'
         order by table_name) loop
 
             history_table_name := rec1.table_name || '_history';
@@ -37,7 +36,7 @@ begin
                         where table_schema = rec0.table_schema and table_name = rec1.table_name) loop
             raise info 'col-name: % | data-type: %', rec2.column_name, rec2.data_type;
 
-                select column_name from information_schema.columns into existing_column where table_schema = rec0.table_schema
+                perform column_name from information_schema.columns where table_schema = rec0.table_schema
                 and table_name = history_table_name and column_name = rec2.column_name;
 
                 if not found then

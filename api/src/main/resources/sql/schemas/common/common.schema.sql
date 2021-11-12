@@ -16,28 +16,14 @@ create table common.site_text(
 
   ethnologue int not null,
 
-  cord_tables varchar(32),
-  edit_mode varchar(32),
-  email_address varchar(32),
-  false_ varchar(32),
-  home varchar(32),
-  languages varchar(32),
-  login varchar(32),
-  logout varchar(32),
-  password varchar(32),
-  please_login_or_register varchar(128),
-  profile_page varchar(32),
-  register varchar(32),
-  sc_languages varchar(32),
-  true_ varchar(32),
+  translation_json json,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
@@ -59,8 +45,7 @@ create table common.scripture_references (
   verse_start int,
   verse_end int,
 
-  unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end),
-  peer int references admin.peers(id)
+  unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
 );
 
 -- CHAT ------------------------------------------------------------
@@ -73,8 +58,7 @@ create table common.discussion_channels (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.cell_channels (
@@ -89,8 +73,7 @@ create table common.cell_channels (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.threads (
@@ -104,8 +87,7 @@ create table common.threads (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.posts (
@@ -119,8 +101,54 @@ create table common.posts (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
+);
+
+-- BLOGS ---------------
+
+create table common.blogs (
+	id serial primary key,
+
+	title varchar(64) not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.blog_posts (
+	id serial primary key,
+
+  blog int not null references common.blogs(id),
+	content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- NOTES ----------------------------------------------------
+
+create table common.notes (
+	id serial primary key,
+
+  table_name admin.table_name not null,
+  column_name varchar(64) not null,
+  row int not null,
+	content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- LOCATION -----------------------------------------------------------------
@@ -145,8 +173,7 @@ create table common.locations (
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 ALTER TABLE admin.people ADD CONSTRAINT common_people_primary_location_fk foreign key (primary_location) references common.locations(id);
@@ -167,8 +194,7 @@ create table common.education_entries (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.education_by_person (
@@ -183,8 +209,7 @@ create table common.education_by_person (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- ORGANIZATIONS ------------------------------------------------------------
@@ -201,11 +226,10 @@ create table common.organizations (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
-create type common.person_to_org_relationship_type as enum (
+create type common.people_to_org_relationship_type as enum (
   'Vendor',
   'Customer',
   'Investor',
@@ -224,40 +248,24 @@ create table common.people_to_org_relationships (
 
 	org int not null references common.organizations(id),
 	person int not null references admin.people(id),
+	relationship_type common.people_to_org_relationship_type,
+  begin_at timestamp,
+  end_at timestamp,
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
-
-create table common.people_to_org_relationship_type (
-  id serial primary key,
-
-  begin_at timestamp not null,
-	end_at timestamp,
-  people_to_org int not null,
-	relationship_type int not null references common.people_to_org_relationships(id),
-	
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
 
 -- FILES & DIRECTORIES ----------------------------------------------------------
 
 create table common.directories (
   id serial primary key,
     neo4j_id varchar(32),
-	parent int references common.directories(id),
+    parent int references common.directories(id),
   name varchar(255),
 	-- todo
 
@@ -266,8 +274,7 @@ create table common.directories (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.files (
@@ -282,8 +289,7 @@ create table common.files (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.file_versions (
@@ -301,8 +307,7 @@ create table common.file_versions (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- TICKETS ----------------------------------------------------------------------
@@ -325,11 +330,24 @@ create table common.tickets (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 ALTER TABLE common.tickets ADD CONSTRAINT common_tickets_parent_fk foreign key (parent) references common.tickets(id);
+
+create table common.ticket_graph (
+	id serial primary key,
+
+	from_ticket int not null references common.tickets(id),
+	to_ticket int not null references common.tickets(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
 
 create table common.ticket_assignments (
 	id serial primary key,
@@ -342,8 +360,7 @@ create table common.ticket_assignments (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.work_records(
@@ -362,8 +379,7 @@ create table common.work_records(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.work_estimates(
@@ -382,8 +398,7 @@ create table common.work_estimates(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create type common.ticket_feedback_options as enum (
@@ -403,8 +418,7 @@ create table common.ticket_feedback(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- WORKFLOW -----------------------------------------------------------------
@@ -412,33 +426,27 @@ create table common.ticket_feedback(
 create table common.workflows(
 	id serial primary key,
 
-	title varchar(128) not null,
+	title varchar(128) not null unique,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
-
-  unique (title, peer)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.stages(
 	id serial primary key,
 
-	title varchar(128) not null,
+	title varchar(128) not null unique,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
-
-  unique (title, peer)
+  owning_group int not null references admin.groups(id)
 );
 
 create table common.stage_graph(
@@ -453,9 +461,8 @@ create table common.stage_graph(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
-  unique (from_stage, to_stage, peer)
+  unique (from_stage, to_stage)
 );
 
 create table common.stage_role_column_grants(
@@ -473,7 +480,6 @@ create table common.stage_role_column_grants(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique (role, table_name, column_name)
 );
@@ -491,6 +497,5 @@ create table common.stage_notifications(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );

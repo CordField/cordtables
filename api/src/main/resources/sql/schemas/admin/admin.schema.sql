@@ -4,6 +4,8 @@ create schema if not exists common;
 set schema 'common';
 
 CREATE EXTENSION if not exists hstore;
+create extension if not exists postgis;
+
 
 create type common.sensitivity as enum (
   'Low',
@@ -19,76 +21,89 @@ create type admin.access_level as enum (
 create type admin.table_name as enum (
   'admin.database_version_control',
   'admin.email_tokens',
+  'admin.group_memberships',
+  'admin.group_row_access',
+  'admin.groups',
+  'admin.peers',
+  'admin.people',
   'admin.role_column_grants',
   'admin.role_memberships',
   'admin.role_table_permissions',
   'admin.roles',
-  'admin.groups',
-  'admin.group_memberships',
-  'admin.group_row_access',
-  'admin.people',
   'admin.tokens',
   'admin.users',
 
+  'common.blogs',
+  'common.blog_posts',
   'common.cell_channels',
+  'common.coalition_memberships',
+  'common.coalitions',
   'common.directories',
   'common.discussion_channels',
   'common.education_by_person',
   'common.education_entries',
-  'common.files',
   'common.file_versions',
+  'common.files',
   'common.locations',
+  'common.notes',
   'common.organizations',
+  'common.people_graph',
   'common.people_to_org_relationships',
-  'common.people_to_org_relationship_type',
   'common.posts',
-  'common.projects',
   'common.scripture_references',
-  'common.stages',
+  'common.site_text',
+  'common.stage_graph',
   'common.stage_notifications',
-  'common.stage_options',
+  'common.stage_role_column_grants'
+  'common.stages',
   'common.threads',
-  'common.tickets',
   'common.ticket_assignments',
   'common.ticket_feedback',
+  'common.ticket_graph',
+  'common.tickets',
   'common.work_estimates',
   'common.work_records',
   'common.workflows',
 
-  'sil.language_codes',
   'sil.country_codes',
+  'sil.language_codes',
   'sil.language_index',
   'sil.table_of_languages',
 
-  'sc.funding_account',
-  'sc.field_zone',
-  'sc.field_regions',
-  'sc.locations',
-  'sc.organizations',
-  'sc.organization_locations',
-  'sc.partners',
-  'sc.language_goal_definitions',
-  'sc.languages',
-  'sc.language_locations',
-  'sc.language_goals',
-  'sc.known_languages_by_person',
-  'sc.people',
-  'sc.person_unavailabilities',
-  'sc.projects',
-  'sc.partnerships',
-  'sc.change_to_plans',
-  'sc.periodic_reports',
-  'sc.posts',
-  'sc.budgets',
   'sc.budget_records',
+  'sc.budgets',
+  'sc.ceremonies'
+  'sc.change_to_plans',
+  'sc.field_regions',
+  'sc.field_zones',
+  'sc.funding_accounts',
+  'sc.global_partner_assessments'
+  'sc.global_partner_engagements',
+  'sc.global_partner_engagement_people',
+  'sc.global_partner_performance',
+  'sc.internship_engagements',
+  'sc.known_languages_by_person',
+  'sc.language_engagements',
+  'sc.languages',
+  'sc.locations',
+  'sc.organization_locations',
+  'sc.organizations',
+  'sc.partners',
+  'sc.partnerships',
+  'sc.people',
+  'sc.periodic_reports'
+  'sc.person_unavailabilities',
+  'sc.pinned_projects',
+  'sc.posts',
+  'sc.product_scripture_references',
+  'sc.products',
   'sc.project_locations',
   'sc.project_members',
-  'sc.project_member_roles',
-  'sc.language_engagements',
-  'sc.products',
-  'sc.product_scripture_references',
-  'sc.internship_engagements',
-  'sc.ceremonies'
+  'sc.projects'
+
+--  'sc.language_goal_definitions',
+--  'sc.language_locations',
+--  'sc.language_goals',
 );
 
 -- VERSION CONTROL ---------------------------------------------------
@@ -104,8 +119,7 @@ create table admin.database_version_control (
   version int not null,
   status admin.db_vc_status default 'In Progress',
   started timestamp not null default CURRENT_TIMESTAMP,
-  completed timestamp,
-  peer int
+  completed timestamp
 );
 
 -- PEOPLE ------------------------------------------------------------
@@ -134,8 +148,7 @@ create table admin.people (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int, -- not null doesn't work here, on startup
   owning_person int, -- not null doesn't work here, on startup
-  owning_group int, -- not null doesn't work here, on startup
-  peer int
+  owning_group int -- not null doesn't work here, on startup
 );
 
 alter table admin.people add constraint admin_people_created_by_fk foreign key (created_by) references admin.people(id);
@@ -156,8 +169,7 @@ create table admin.groups(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int references admin.groups(id), -- not null doesn't work here, on startup
-  peer int
+  owning_group int references admin.groups(id) -- not null doesn't work here, on startup
 );
 
 alter table admin.people add constraint admin_people_owning_group_fk foreign key (owning_group) references admin.groups(id);
@@ -174,8 +186,7 @@ create table admin.group_row_access(
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int
+  owning_group int not null references admin.groups(id)
 );
 
 create table admin.group_memberships(
@@ -189,8 +200,7 @@ create table admin.group_memberships(
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int
+  owning_group int not null references admin.groups(id)
 );
 
 -- PEER to PEER -------------------------------------------------------------
@@ -205,23 +215,14 @@ create table admin.peers (
   source_token varchar(64),
   target_token varchar(64),
   session_token varchar(64),
-
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int
+  owning_group int not null references admin.groups(id)
 );
-
-alter table admin.people add constraint admin_people_peer_fk foreign key (peer) references admin.peers(id);
-alter table admin.groups add constraint admin_groups_peer_fk foreign key (peer) references admin.peers(id);
-alter table admin.group_row_access add constraint admin_group_row_access_peer_fk foreign key (peer) references admin.peers(id);
-alter table admin.group_memberships add constraint admin_group_memberships_peer_fk foreign key (peer) references admin.peers(id);
-alter table admin.peers add constraint admin_peers_peer_fk foreign key (peer) references admin.peers(id);
-alter table admin.database_version_control add constraint admin_db_vc_control_peer_fk foreign key (peer) references admin.peers(id);
 
 -- ROLES --------------------------------------------------------------------
 
@@ -236,7 +237,6 @@ create table admin.roles (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique (owning_group, name)
 );
@@ -255,7 +255,6 @@ create table admin.role_column_grants(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique (role, table_name, column_name)
 );
@@ -278,7 +277,6 @@ create table admin.role_table_permissions(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
   unique (role, table_name, table_permission)
 );
@@ -295,7 +293,6 @@ create table admin.role_memberships (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique(role, person)
 );
@@ -334,6 +331,5 @@ create table admin.users(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );

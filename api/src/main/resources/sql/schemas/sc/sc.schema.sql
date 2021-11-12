@@ -47,8 +47,7 @@ create table sc.file_versions (
 
 create table sc.posts_directory ( -- does not need to be secure
   id serial primary key,
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  peer int references admin.peers(id)
+  created_at timestamp not null default CURRENT_TIMESTAMP
 );
 
 create type sc.post_shareability as enum (
@@ -78,13 +77,12 @@ create table sc.posts (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- ACCOUNTING TABLES --------------------------------------------------------
 
-create table sc.funding_account (
+create table sc.funding_accounts (
   id serial primary key,
   neo4j_id varchar(32),
 
@@ -96,13 +94,12 @@ create table sc.funding_account (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- LOCATION TABLES ----------------------------------------------------------
 
-create table sc.field_zone (
+create table sc.field_zones (
 	id serial primary key,
 	neo4j_id varchar(32),
 
@@ -114,8 +111,7 @@ create table sc.field_zone (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table sc.field_regions (
@@ -130,8 +126,7 @@ create table sc.field_regions (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- extension table from commmon
@@ -140,7 +135,7 @@ create table sc.locations (
 	neo4j_id varchar(32),
 
 	default_region int references sc.field_regions(id),
-	funding_account int references sc.funding_account(account_number),
+	funding_account int references sc.funding_accounts(account_number),
 	iso_alpha_3 char(3),
 	name varchar(32) unique not null,
 	type common.location_type not null,
@@ -150,8 +145,7 @@ create table sc.locations (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- ORGANIZATION TABLES
@@ -168,8 +162,7 @@ create table sc.organizations (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table sc.organization_locations(
@@ -184,7 +177,6 @@ create table sc.organization_locations(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique (organization, location)
 );
@@ -232,8 +224,7 @@ create table sc.partners (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- LANGUAGE TABLES ----------------------------------------------------------
@@ -420,6 +411,7 @@ create table sc.languages(
   begin_work_rel_pol_obstacles_description text,
   begin_work_rel_pol_obstacles_source text,
 
+  coordinates common.geography,
 	suggested_strategies text,
 	comments text,
 
@@ -428,8 +420,7 @@ create table sc.languages(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table sc.language_goal_definitions (
@@ -442,8 +433,7 @@ create table sc.language_goal_definitions (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table sc.language_locations (
@@ -459,7 +449,6 @@ create table sc.language_locations (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique (language, location)
 );
@@ -477,7 +466,6 @@ create table sc.language_goals (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique (language, goal)
 );
@@ -497,7 +485,6 @@ create table sc.known_languages_by_person (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique (person, known_language)
 );
@@ -515,8 +502,7 @@ create table sc.people (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table sc.person_unavailabilities (
@@ -532,8 +518,7 @@ create table sc.person_unavailabilities (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 
@@ -579,14 +564,12 @@ create table sc.change_to_plans (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 create table sc.periodic_reports_directory ( -- security not needed
   id serial primary key,
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  peer int references admin.peers(id)
+  created_at timestamp not null default CURRENT_TIMESTAMP
 );
 
 create table sc.periodic_reports (
@@ -604,8 +587,7 @@ create table sc.periodic_reports (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
 -- extension table to common
@@ -638,18 +620,17 @@ create table sc.projects (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique (id, change_to_plan)
 );
 
 create table sc.project_members (
   id serial primary key,
-    neo4j_id varchar(32),
-	project int references sc.projects(id),
-	person int references sc.people(id),
-	group_id int references admin.groups(id),
-	role int references admin.roles(id),
+
+	project int not null references sc.projects(id),
+	person int not null references sc.people(id),
+	group_id int not null references admin.groups(id),
+	role int not null references admin.roles(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -657,16 +638,21 @@ create table sc.project_members (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
   unique (project, person, group_id, role)
 );
 
-
 create table sc.pinned_projects (
+  id serial primary key,
 	person int not null references sc.people(id),
 	project int not null references sc.projects(id),
-	peer int references admin.peers(id)
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 create table sc.partnerships (
@@ -684,7 +670,6 @@ create table sc.partnerships (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
 
 );
 
@@ -713,7 +698,6 @@ create table sc.budgets (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
   unique (id, change_to_plan)
 );
@@ -735,7 +719,6 @@ create table sc.budget_records (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
 
 );
 
@@ -755,7 +738,6 @@ create table sc.project_locations (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
 	unique (project, location, change_to_plan)
 );
@@ -809,7 +791,8 @@ create table sc.language_engagements (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+
+	unique (project, ethnologue, change_to_plan)
 );
 
 -- PRODUCTS
@@ -862,7 +845,6 @@ create table sc.products (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
   unique (id, change_to_plan)
 );
@@ -879,7 +861,6 @@ create table sc.product_scripture_references (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
   primary key (product, scripture_reference, change_to_plan)
 );
@@ -932,7 +913,6 @@ create table sc.internship_engagements (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
 
 );
 
@@ -951,180 +931,181 @@ create table sc.ceremonies (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
+  owning_group int not null references admin.groups(id)
 );
 
--- CRM TABLES, WIP ------------------------------------------------------------------
+-- PARTNER CRM STUFF ---------------------------------------------------------------------------------------------------
+
+create type sc.partner_maturity_scale as enum (
+  'Level 1', -- Non-Existent or Reactive
+  'Level 2', -- Repeatable and Active
+  'Level 3', -- Proactive and Defined
+  'Level 4'  -- Fully Capable and Managed
+);
+
+create table sc.global_partner_assessments (
+  id serial primary key,
+
+  partner int not null references sc.organizations(id),
+
+  governance_trans          sc.partner_maturity_scale,
+  director_trans            sc.partner_maturity_scale,
+  identity_trans            sc.partner_maturity_scale,
+  growth_trans              sc.partner_maturity_scale,
+  comm_support_trans        sc.partner_maturity_scale,
+  systems_trans             sc.partner_maturity_scale,
+  fin_management_trans      sc.partner_maturity_scale,
+  hr_trans                  sc.partner_maturity_scale,
+  it_trans                  sc.partner_maturity_scale,
+  program_design_trans      sc.partner_maturity_scale,
+  tech_translation_trans    sc.partner_maturity_scale,
+  director_opp              sc.partner_maturity_scale,
+  financial_management_opp  sc.partner_maturity_scale,
+  program_design_opp        sc.partner_maturity_scale,
+  tech_translation_opp      sc.partner_maturity_scale,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create type sc.partner_performance_options as enum(
+  '1', '2', '3', '4'
+);
+
+create table sc.global_partner_performance (
+  id serial primary key,
+
+  organization int unique not null references sc.organizations(id),
+
+  reporting_performance sc.partner_performance_options,
+  financial_performance sc.partner_performance_options,
+  translation_performance sc.partner_performance_options,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- todo
+-- files/documents on partners
+
+-- create table common.global_partner_transitions (
+--   id serial primary key,
+
+--   organization int unique not null references sc.organizations(id),
+--   transition_type common.global_partner_transition_options not null,
+--   -- todo
+
+--   created_at timestamp not null default CURRENT_TIMESTAMP,
+--   created_by int not null references admin.people(id),
+--   modified_at timestamp not null default CURRENT_TIMESTAMP,
+--   modified_by int not null references admin.people(id),
+--   owning_person int not null references admin.people(id),
+--   owning_group int not null references admin.groups(id)
+-- );
+
+-- todo
+-- org chart
+
+-- todo
+-- position graph
+
+create table common.people_graph (
+  id serial primary key,
+
+  from_person int not null references admin.people(id),
+  to_person int not null references admin.people(id),
+  rel_type varchar(32),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- coalitions
+
+create table common.coalitions(
+  id serial primary key,
+
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- coalition memberships
+
+create table common.coalition_memberships(
+  id serial primary key,
+
+  coalition int not null references common.coalitions(id),
+  organization int not null references common.organizations(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
 
 create type common.involvement_options as enum (
   'CIT',
   'Engagements'
 );
 
-create type common.people_transition_options as enum (
-  'New Org',
-  'Other'
+create type sc.global_partner_roles as enum (
+  'A',
+  'B'
 );
 
-create type common.organization_transition_options as enum (
-  'To Manager',
-  'To Other'
-);
-
--- PARTNER CRM STUFF
-
-create table common.organization_relationships (
-  id serial primary key,
-
-  from_org int not null references sc.organizations(id),
-  to_org int not null references sc.organizations(id),
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
-
-  unique (from_org, to_org)
-);
-
-create table sc.partner_performance (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.partner_finances (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.partner_reporting (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.partner_translation_progress (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.partner_notes (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  author int not null references admin.people(id),
-  note text not null,
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table common.organization_transitions (
-  id serial primary key,
-
-  organization int unique not null references sc.organizations(id),
-  transition_type common.organization_transition_options not null,
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table common.person_to_person_relationships (
-  id serial primary key,
-
-  from_person int not null references admin.people(id),
-  to_person int not null references admin.people(id),
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table common.people_transitions (
-  id serial primary key,
-
-  person int not null references admin.people(id),
-  transition_type common.people_transition_options not null,
-  -- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table common.involvements (
+create table sc.global_partner_engagements (
   id serial primary key,
 
   organization int not null references common.organizations(id),
   type common.involvement_options not null,
-  
+  mou_start timestamp,
+	mou_end timestamp,
+  sc_roles sc.global_partner_roles[],
+  partner_roles sc.global_partner_roles[],
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id),
 
   unique (organization, type)
+);
+
+create table sc.global_partner_engagement_people (
+  id serial primary key,
+
+  engagement int not null references sc.global_partner_engagements(id),
+  person int not null references admin.people(id),
+  role common.people_to_org_relationship_type not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+  unique (engagement, person, role)
 );

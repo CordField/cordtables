@@ -59,6 +59,26 @@ enum class CommonSensitivity {
     High,
 }
 
+enum class CommonTicketStatus{
+    Open,
+    Blocked,
+    Closed
+}
+
 data class GenericResponse (
     val error: ErrorType,
 )
+
+enum class LocationType {
+    City,
+    County,
+    State,
+    Country,
+    CrossBorderArea,
+}
+
+enum class MimeTypes{
+    A,
+    B,
+    C,
+}
