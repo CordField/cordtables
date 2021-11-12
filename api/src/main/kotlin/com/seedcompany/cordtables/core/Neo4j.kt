@@ -168,7 +168,7 @@ class Neo4j(
             launch {
                 val then = DateTime.now().millis
 
-                while (true) {
+                while (processedNodes.toInt() < totalBaseNodes) {
                     val lapse = DateTime.now().millis - then
 
                     var rate =
