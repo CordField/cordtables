@@ -17,6 +17,9 @@ server:
   port: ${SERVER_PORT}
   url: ${SERVER_URL}
 spring:
+  mvc:
+    async:
+      request-timeout: -1
   datasource:
     jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:${DB_PORT}/${DB_DATABASE}
     driverClassName: software.aws.rds.jdbc.postgresql.Driver
