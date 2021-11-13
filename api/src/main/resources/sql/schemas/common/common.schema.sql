@@ -16,7 +16,9 @@ create table common.site_text(
 
   ethnologue int not null,
 
-  translation_json json,
+  text_id string(64),
+
+  text_translation string(64),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
