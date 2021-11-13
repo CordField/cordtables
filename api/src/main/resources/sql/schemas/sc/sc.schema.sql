@@ -44,7 +44,6 @@ create table sc.posts (
 create table sc.funding_accounts (
   id serial primary key,
   neo4j_id varchar(32),
-
 	account_number int unique not null,
 	name varchar(32),
 	
@@ -113,7 +112,6 @@ create table sc.locations (
 create table sc.organizations (
 	id int primary key not null references common.organizations(id),
 	neo4j_id varchar(32),
-
 	address varchar(255),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -847,7 +845,7 @@ create table sc.internship_engagements (
 	project int not null references sc.projects(id),
 	ethnologue int not null references sil.table_of_languages(id),
 	change_to_plan int not null default 1 references sc.change_to_plans(id),
-  active bool,
+    active bool,
 	communications_complete_date timestamp,
 	complete_date timestamp,
 	country_of_origin int references common.locations(id),

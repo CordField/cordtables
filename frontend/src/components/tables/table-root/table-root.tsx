@@ -36,6 +36,18 @@ export class TableRoot {
         {this.match.params.table === 'admin-roles' && <admin-roles></admin-roles>}
         {this.match.params.table === 'admin-people' && <admin-people></admin-people>}
 
+        {this.match.params.table === 'sc-funding-accounts' && <sc-funding-accounts></sc-funding-accounts>}
+        {this.match.params.table === 'sc-internship-engagements' && <sc-internship-engagements></sc-internship-engagements>}
+        {this.match.params.table === 'sc-known-languages-by-person' && <sc-known-languages-by-person></sc-known-languages-by-person>}
+        {this.match.params.table === 'sc-language-engagements' && <sc-language-engagements></sc-language-engagements>}
+        {this.match.params.table === 'sc-organization-locations' && <sc-organization-locations></sc-organization-locations>}
+        {this.match.params.table === 'sc-organizations' && <sc-organizations></sc-organizations>}
+        {this.match.params.table === 'sc-partners' && <sc-partners></sc-partners>}
+        {this.match.params.table === 'sc-partnerships' && <sc-partnerships></sc-partnerships>}
+        {this.match.params.table === 'sc-person-unavailabilities' && <sc-person-unavailabilities></sc-person-unavailabilities>}
+        {this.match.params.table === 'sc-pinned-projects' && <sc-pinned-projects></sc-pinned-projects>}
+        {this.match.params.table === 'sc-posts' && <sc-posts></sc-posts>}
+
 
 
 
