@@ -29,7 +29,6 @@ export class TableRoot {
         {this.match.params.table === 'sc-field-regions' && <sc-field-regions></sc-field-regions>}
         {this.match.params.table === 'sc-field-zones' && <sc-field-zones></sc-field-zones>}
 
-        
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
         {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}
@@ -37,6 +36,8 @@ export class TableRoot {
         {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
         {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
         {this.match.params.table === 'common-cell-channels' && <common-cell-channels></common-cell-channels>}
+        {this.match.params.table === 'common-threads' && <common-threads></common-threads>}
+        {this.match.params.table === 'common-posts' && <common-posts></common-posts>}
         {this.match.params.table === 'sc-languages' && <sc-languages></sc-languages>}
         {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
       </Host>

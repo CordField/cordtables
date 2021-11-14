@@ -123,7 +123,7 @@ export class Posts {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateCommonPostsRequest, CreateCommonPostsResponse>('common-cell-channels/create-read', {
+    const result = await fetchAs<CreateCommonPostsRequest, CreateCommonPostsResponse>('common-posts/create-read', {
       token: globals.globalStore.state.token,
       post: {
         content: this.newContent,

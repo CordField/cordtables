@@ -30,7 +30,7 @@ class LanguagesEx(
 
     companion object {
         @Container
-        private val postgreSQLContainer = PostgreSQLContainer<Nothing>("postgres:latest").apply {
+        private val postgreSQLContainer = PostgreSQLContainer<Nothing>("pg_container").apply {
             withUsername("postgres")
             withPassword("asdfasdf")
             withDatabaseName("cordfield")
@@ -63,7 +63,7 @@ class LanguagesEx(
         exposeHostPorts(port);
     }
 
-    @Test
+//    @Test
     fun user() {
         val user1 = register("user1@cordtables.com", userPassword)
 

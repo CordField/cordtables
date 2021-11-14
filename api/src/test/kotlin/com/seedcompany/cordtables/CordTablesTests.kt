@@ -12,37 +12,44 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.Testcontainers.exposeHostPorts
 import org.testcontainers.containers.BrowserWebDriverContainer
+import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.images.builder.ImageFromDockerfile
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import org.testcontainers.utility.DockerImageName
+import kotlin.io.path.Path
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CordTablesTests(
-    @LocalServerPort
-    val port: Int,
+        @LocalServerPort
+        val port: Int,
 
-    @Autowired
-    val rest: TestRestTemplate,
+        @Autowired
+        val rest: TestRestTemplate,
 ) {
     val userPassword = "asdfasdf"
     val url = "http://localhost:$port"
 
     @Container
     private val container: BrowserWebDriverContainer<*> = BrowserWebDriverContainer<Nothing>()
-        .withCapabilities(ChromeOptions().addArguments("no-sandbox").addArguments("headless"))
+            .withCapabilities(ChromeOptions().addArguments("no-sandbox").addArguments("headless"))
 
     companion object {
         @Container
-        private val postgreSQLContainer = PostgreSQLContainer<Nothing>("postgres:latest").apply {
-            withUsername("postgres")
-            withPassword("asdfasdf")
-            withDatabaseName("cordfield")
-        }
+        private val postgreSQLContainer = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(Path("/home/questionreality/cordtables/docker/Dockerfile")))
+//                .withFileFromString("../../../../../docker/Dockerfile")
+                .apply {
+                    withEnv("POSTGRES_USER", "postgres")
+                    withEnv("POSTGRES_PASSWORD", "asdfasdf")
+                    withEnv("POSTGRES_DB", "cordfield")
+                }
 
         @DynamicPropertySource
         @JvmStatic
         fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
+
             System.setProperty("DB_DOMAIN", "host.docker.internal")
             System.setProperty("DB_DATABASE", "cordfield")
             System.setProperty("DB_PORT", "5432")
@@ -57,9 +64,11 @@ class CordTablesTests(
             System.setProperty("SERVER_URL", "http://localhost:8080")
             System.setProperty("SERVER_PORT", "8080")
 
-            registry.add("spring.datasource.jdbcUrl", postgreSQLContainer::getJdbcUrl)
-            registry.add("spring.datasource.username", postgreSQLContainer::getUsername)
-            registry.add("spring.datasource.password", postgreSQLContainer::getPassword)
+//            registry.add("spring.datasource.jdbcUrl", {"jdbc:postgresql://${postgreSQLContainer.host}/postgres"})
+//            { "jdbc:postgresql://localhost:$mappedPort/cordfield" }
+//            do this manually
+//            registry.add("spring.datasource.username", {"postgres"} )
+//            registry.add("spring.datasource.password", {"asdfasdf"})
         }
     }
 
@@ -85,11 +94,11 @@ class CordTablesTests(
     fun register(email: String, password: String): RegisterReturn {
         val newUserResponse = rest.postForEntity("$url/user/register", RegisterRequest("asdf@asdf.asdf", userPassword), RegisterReturn::class.java)
 
-        assert(newUserResponse !== null) {"response was null"}
-        assert(newUserResponse.body !== null) {"response body was null"}
-        assert(!newUserResponse.body!!.isAdmin) {"new user should not be admin"}
-        assert(newUserResponse.body!!.token !== null) {"token should be present"}
-        assert(newUserResponse.body!!.readableTables.size == 0) {"shouldn't be able to read any tables"}
+        assert(newUserResponse !== null) { "response was null" }
+        assert(newUserResponse.body !== null) { "response body was null" }
+        assert(!newUserResponse.body!!.isAdmin) { "new user should not be admin" }
+        assert(newUserResponse.body!!.token !== null) { "token should be present" }
+        assert(newUserResponse.body!!.readableTables.size == 0) { "shouldn't be able to read any tables" }
 
         return newUserResponse.body!!
     }

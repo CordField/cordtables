@@ -257,6 +257,20 @@ BEGIN
          ('Write', 'table_name', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId),
          ('Write', 'column_name', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
+--         grants on common.threads
+         insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+                 values
+                  ('Write', 'id', vAdminRoleId, 'common.threads', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+                  ('Write', 'channel', vAdminRoleId, 'common.threads', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+                  ('Write', 'content', vAdminRoleId, 'common.threads', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+--                  grants on common.posts
+              insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+                          values
+                           ('Write', 'id', vAdminRoleId, 'common.posts', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+                           ('Write', 'thread', vAdminRoleId, 'common.posts', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+                           ('Write', 'content', vAdminRoleId, 'common.posts', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+
+
 
 -- creating non-admin user
     insert into admin.users(email,password, person, created_by, modified_by, owning_person,owning_group)
