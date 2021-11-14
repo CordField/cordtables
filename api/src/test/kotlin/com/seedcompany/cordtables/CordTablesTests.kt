@@ -64,11 +64,13 @@ class CordTablesTests(
             System.setProperty("SERVER_URL", "http://localhost:8080")
             System.setProperty("SERVER_PORT", "8080")
 
-//            registry.add("spring.datasource.jdbcUrl", {"jdbc:postgresql://${postgreSQLContainer.host}/postgres"})
-//            { "jdbc:postgresql://localhost:$mappedPort/cordfield" }
+//            registry.add("spring.datasource.jdbcUrl") { "jdbc:postgresql://localhost:${postgreSQLContainer.getMappedPort(5432)}/cordfield" }
 //            do this manually
-//            registry.add("spring.datasource.username", {"postgres"} )
-//            registry.add("spring.datasource.password", {"asdfasdf"})
+
+            registry.add("spring.datasource.host", postgreSQLContainer::getContainerIpAddress);
+            registry.add("spring.datasource.port") { postgreSQLContainer::getMappedPort };
+//            registry.add("spring.datasource.username") { "postgres" }
+//            registry.add("spring.datasource.password") { "asdfasdf" }
         }
     }
 
