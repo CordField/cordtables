@@ -1,5 +1,6 @@
 package com.seedcompany.cordtables.common
 
+import com.seedcompany.cordtables.CordTablesTests
 import com.seedcompany.cordtables.components.user.RegisterRequest
 import com.seedcompany.cordtables.components.user.RegisterReturn
 import org.junit.jupiter.api.Test
@@ -12,9 +13,12 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.Testcontainers.exposeHostPorts
 import org.testcontainers.containers.BrowserWebDriverContainer
+import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.images.builder.ImageFromDockerfile
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import kotlin.io.path.Path
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,11 +34,14 @@ class Users(
 
     companion object {
         @Container
-        private val postgreSQLContainer = PostgreSQLContainer<Nothing>("postgres:latest").apply {
-            withUsername("postgres")
-            withPassword("asdfasdf")
-            withDatabaseName("cordfield")
-        }
+        private val postgreSQLContainer: GenericContainer<Nothing> = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(Path("/home/questionreality/cordtables/docker/Dockerfile")))
+                .apply {
+                    withEnv("POSTGRES_USER", "postgres")
+                    withEnv("POSTGRES_PASSWORD", "asdfasdf")
+                    withEnv("POSTGRES_DB", "cordfield")
+                    withEnv("POSTGRES_PORT", "5432")
+                }.withExposedPorts(5432)
+
 
         @DynamicPropertySource
         @JvmStatic
@@ -53,9 +60,9 @@ class Users(
             System.setProperty("SERVER_URL", "http://localhost:8080")
             System.setProperty("SERVER_PORT", "8080")
 
-            registry.add("spring.datasource.jdbcUrl", postgreSQLContainer::getJdbcUrl)
-            registry.add("spring.datasource.username", postgreSQLContainer::getUsername)
-            registry.add("spring.datasource.password", postgreSQLContainer::getPassword)
+            registry.add("spring.datasource.username", {"postgres"})
+            registry.add("spring.datasource.password", {"asdfasdf"})
+            registry.add("spring.datasource.jdbcUrl", {"jdbc:postgresql://localhost:${postgreSQLContainer.getMappedPort(5432)}/postgres"})
         }
     }
 

@@ -38,7 +38,7 @@ class CordTablesTests(
 
     companion object {
         @Container
-        private val postgreSQLContainer:GenericContainer<Nothing> = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(Path("/home/questionreality/cordtables/docker/Dockerfile")))
+        val postgreSQLContainer:GenericContainer<Nothing> = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(Path("/home/questionreality/cordtables/docker/Dockerfile")))
                 .apply {
                     withEnv("POSTGRES_USER", "postgres")
                     withEnv("POSTGRES_PASSWORD", "asdfasdf")
@@ -82,7 +82,6 @@ class CordTablesTests(
 
     init {
         exposeHostPorts(port);
-        exposeHostPorts(5432);
     }
 
     @Test
