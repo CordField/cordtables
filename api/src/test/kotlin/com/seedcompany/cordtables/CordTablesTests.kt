@@ -38,13 +38,15 @@ class CordTablesTests(
 
     companion object {
         @Container
-        private val postgreSQLContainer = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(Path("/home/questionreality/cordtables/docker/Dockerfile")))
-//                .withFileFromString("../../../../../docker/Dockerfile")
+        private val postgreSQLContainer:GenericContainer<Nothing> = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(Path("/home/questionreality/cordtables/docker/Dockerfile")))
                 .apply {
                     withEnv("POSTGRES_USER", "postgres")
                     withEnv("POSTGRES_PASSWORD", "asdfasdf")
                     withEnv("POSTGRES_DB", "cordfield")
-                }
+                    withEnv("POSTGRES_PORT", "5432")
+                }.withExposedPorts(5432)
+
+
 
         @DynamicPropertySource
         @JvmStatic
@@ -64,18 +66,23 @@ class CordTablesTests(
             System.setProperty("SERVER_URL", "http://localhost:8080")
             System.setProperty("SERVER_PORT", "8080")
 
-//            registry.add("spring.datasource.jdbcUrl") { "jdbc:postgresql://localhost:${postgreSQLContainer.getMappedPort(5432)}/cordfield" }
+//            registry.add("spring.datasource.jdbcUrl", postgreSQLContainer::getJdbcUrl)
 //            do this manually
 
-            registry.add("spring.datasource.host", postgreSQLContainer::getContainerIpAddress);
-            registry.add("spring.datasource.port") { postgreSQLContainer::getMappedPort };
-//            registry.add("spring.datasource.username") { "postgres" }
-//            registry.add("spring.datasource.password") { "asdfasdf" }
+//            registry.add("spring.datasource.host", postgreSQLContainer::getContainerIpAddress);
+//            registry.add("spring.datasource.port") { postgreSQLContainer::getMappedPort };
+            registry.add("spring.datasource.username", {"postgres"})
+            registry.add("spring.datasource.password", {"asdfasdf"})
+            registry.add("spring.datasource.jdbcUrl", {"jdbc:postgresql://localhost:${postgreSQLContainer.getMappedPort(5432)}/postgres"})
+
+//            registry.add("spring.datasource.password", postgreSQLContainer::getPassword)
+
         }
     }
 
     init {
         exposeHostPorts(port);
+        exposeHostPorts(5432);
     }
 
     @Test
@@ -89,13 +96,11 @@ class CordTablesTests(
     @Test
     fun user() {
         val user1 = register("user1@cordtables.com", userPassword)
-
         assert(true) // temp until we have some legit assert in this test case
     }
 
     fun register(email: String, password: String): RegisterReturn {
         val newUserResponse = rest.postForEntity("$url/user/register", RegisterRequest("asdf@asdf.asdf", userPassword), RegisterReturn::class.java)
-
         assert(newUserResponse !== null) { "response was null" }
         assert(newUserResponse.body !== null) { "response body was null" }
         assert(!newUserResponse.body!!.isAdmin) { "new user should not be admin" }
