@@ -18,6 +18,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.images.builder.ImageFromDockerfile
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.nio.file.Paths
 import kotlin.io.path.Path
 
 @Testcontainers
@@ -33,8 +34,10 @@ class Users(
     val url = "http://localhost:$port"
 
     companion object {
+        val home = Paths.get("").toRealPath()
+
         @Container
-        private val postgreSQLContainer: GenericContainer<Nothing> = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(Path("/home/questionreality/cordtables/docker/Dockerfile")))
+        private val postgreSQLContainer: GenericContainer<Nothing> = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(home.resolve("src/Dockerfile").toAbsolutePath()))
                 .apply {
                     withEnv("POSTGRES_USER", "postgres")
                     withEnv("POSTGRES_PASSWORD", "asdfasdf")

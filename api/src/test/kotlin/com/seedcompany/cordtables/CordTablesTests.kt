@@ -18,6 +18,7 @@ import org.testcontainers.images.builder.ImageFromDockerfile
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
+import java.nio.file.Paths
 import kotlin.io.path.Path
 
 @Testcontainers
@@ -35,10 +36,10 @@ class CordTablesTests(
     @Container
     private val container: BrowserWebDriverContainer<*> = BrowserWebDriverContainer<Nothing>()
             .withCapabilities(ChromeOptions().addArguments("no-sandbox").addArguments("headless"))
-
     companion object {
+        val home = Paths.get("").toRealPath()
         @Container
-        val postgreSQLContainer:GenericContainer<Nothing> = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(Path("/home/questionreality/cordtables/docker/Dockerfile")))
+        val postgreSQLContainer:GenericContainer<Nothing> = GenericContainer<Nothing>(ImageFromDockerfile().withDockerfile(home.resolve("src/Dockerfile").toAbsolutePath()))
                 .apply {
                     withEnv("POSTGRES_USER", "postgres")
                     withEnv("POSTGRES_PASSWORD", "asdfasdf")
@@ -48,10 +49,11 @@ class CordTablesTests(
 
 
 
+
         @DynamicPropertySource
         @JvmStatic
         fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
-
+            println(home)
             System.setProperty("DB_DOMAIN", "host.docker.internal")
             System.setProperty("DB_DATABASE", "cordfield")
             System.setProperty("DB_PORT", "5432")
