@@ -31,9 +31,9 @@ create table common.site_text_translations(
 
   site_text_id int not null references common.site_text(id),
 
-  text_id string(64),
+  text_id varchar(64),
 
-  text_translation string(64),
+  text_translation varchar(64),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
