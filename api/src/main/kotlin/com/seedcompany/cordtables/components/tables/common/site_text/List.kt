@@ -1,119 +1,31 @@
 package com.seedcompany.cordtables.components.tables.common.site_text
 
-import com.seedcompany.cordtables.common.CommonSensitivity
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
-import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
+import com.seedcompany.cordtables.services.SiteTextLanguage
+import com.seedcompany.cordtables.services.SiteTextService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
-import javax.sql.DataSource
 
-
-data class CommonSiteTextListRequest(
-        val token: String?
-)
-
-data class CommonSiteTextListResponse(
+data class CommonSiteTextListResponse (
         val error: ErrorType,
-        val locations: MutableList<CommonSiteText>?
+        val data: MutableList<SiteTextLanguage>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("CommonSiteTextList")
 class List(
         @Autowired
-        val util: Utility,
-
-        @Autowired
-        val ds: DataSource,
-
-        @Autowired
-        val secureList: GetSecureListQuery,
+        val siteTextService: SiteTextService,
 ) {
 
-    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
-
-    @PostMapping("common-site-texts/list")
+    @PostMapping("service/site-text-languages/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: CommonSiteTextListRequest): CommonSiteTextListResponse {
-        var data: MutableList<CommonSiteText> = mutableListOf()
-        if (req.token == null) return CommonSiteTextListResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun listHandler(): CommonSiteTextListResponse {
+        var serviceResponse =  siteTextService.getSiteTextLanguages()
 
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", req.token)
-
-        val query = secureList.getSecureListQueryHandler(
-                GetSecureListQueryRequest(
-                        tableName = "common.site_text",
-                        filter = "order by id",
-                        columns = arrayOf(
-                                "id",
-                                "ethnologue",
-                                "created_at",
-                                "created_by",
-                                "modified_at",
-                                "modified_by",
-                                "owning_person",
-                                "owning_group",
-                        )
-                )
-        ).query
-
-        try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()) {
-
-                var id: Int? = jdbcResult.getInt("id")
-                if (jdbcResult.wasNull()) id = null
-
-                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
-                if (jdbcResult.wasNull()) ethnologue = null
-
-                var created_at: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) created_at = null
-
-                var created_by: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) created_by = null
-
-                var modified_at: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modified_at = null
-
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modified_by = null
-
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owning_person = null
-
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owning_group = null
-
-                data.add(
-                        CommonSiteText(
-                                id = id,
-                                ethnologue = ethnologue,
-                                created_at = created_at,
-                                created_by = created_by,
-                                modified_at = modified_at,
-                                modified_by = modified_by,
-                                owning_person = owning_person,
-                                owning_group = owning_group
-                        )
-                )
-            }
-        } catch (e: SQLException) {
-            println("error while listing ${e.message}")
-            return CommonSiteTextListResponse(ErrorType.SQLReadError, mutableListOf())
-        }
-
-        return CommonSiteTextListResponse(ErrorType.NoError, data)
+        return CommonSiteTextListResponse(serviceResponse.error, serviceResponse.data)
     }
 }
