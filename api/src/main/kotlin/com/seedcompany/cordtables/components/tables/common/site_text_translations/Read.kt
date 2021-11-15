@@ -39,7 +39,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-site-texts/read")
+    @PostMapping("common-site-text-translations/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonSiteTextTranslationReadRequest): CommonSiteTextTranslationReadResponse {
 
@@ -52,7 +52,7 @@ class Read(
 
         val query = secureList.getSecureListQueryHandler(
                 GetSecureListQueryRequest(
-                        tableName = "common.site_text_translation",
+                        tableName = "common.site_text_translations",
                         getList = false,
                         columns = arrayOf(
                                 "id",
