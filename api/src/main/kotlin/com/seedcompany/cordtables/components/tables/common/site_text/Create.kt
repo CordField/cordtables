@@ -40,7 +40,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-site-text/create")
+    @PostMapping("common-site-texts/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonSiteTextCreateRequest): CommonSiteTextCreateResponse {
 

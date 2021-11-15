@@ -17,6 +17,7 @@ data class CommonSiteText(
 )
 
 data class CommonSiteTextInput(
+        var id: Int? = null,
         val ethnologue: Int,
         val text_id: String,
         val text_translation: String,
