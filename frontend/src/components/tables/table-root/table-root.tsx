@@ -35,6 +35,7 @@ export class TableRoot {
         {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}
         {this.match.params.table === 'common-ticket-graph' && <ticket-graph></ticket-graph>}
         {this.match.params.table === 'common-ticket-assignments' && <ticket-assignments></ticket-assignments>}
+        {this.match.params.table === 'common-work-records' && <work-records></work-records>}
         {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
         {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
         {this.match.params.table === 'common-cell-channels' && <common-cell-channels></common-cell-channels>}
