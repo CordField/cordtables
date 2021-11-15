@@ -1,9 +1,9 @@
-package com.seedcompany.cordtables.components.tables.common.site_text
+package com.seedcompany.cordtables.components.tables.common.site_text_translations
 
-data class CommonSiteText(
+data class CommonSiteTextTranslation(
         var id: Int? = null,
 
-        val ethnologue: Int? = null,
+        val site_text_id: Int? = null,
         val text_id: String? = null,
         val text_translation: String? = null,
 
@@ -16,7 +16,9 @@ data class CommonSiteText(
         val coordinates: String? = null,
 )
 
-data class CommonSiteTextInput(
+data class CommonSiteTextTranslationInput(
         var id: Int? = null,
-        val ethnologue: Int,
+        val site_text_id: Int,
+        val text_id: String,
+        val text_translation: String,
 )

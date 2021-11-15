@@ -44,22 +44,6 @@ class Update(
             value = req.site_text.ethnologue,
         )
 
-        if (req.site_text.text_id != null) util.updateField(
-            token = req.token,
-            table = "common.site_text",
-            column = "text_id",
-            id = req.site_text.id!!,
-            value = req.site_text.text_id,
-        )
-
-        if (req.site_text.text_translation != null) util.updateField(
-            token = req.token,
-            table = "common.site_text",
-            column = "text_translation",
-            id = req.site_text.id!!,
-            value = req.site_text.text_translation,
-        )
-
         return CommonSiteTextUpdateResponse(ErrorType.NoError)
     }
 

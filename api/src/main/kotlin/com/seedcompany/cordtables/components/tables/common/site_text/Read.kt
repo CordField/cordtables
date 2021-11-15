@@ -59,8 +59,6 @@ class Read(
                         columns = arrayOf(
                                 "id",
                                 "ethnologue",
-                                "text_id",
-                                "text_translation",
                                 "created_at",
                                 "created_by",
                                 "modified_at",
@@ -80,12 +78,6 @@ class Read(
 
                 var ethnologue: Int? = jdbcResult.getInt("ethnologue")
                 if (jdbcResult.wasNull()) ethnologue = null
-
-                var text_id: String? = jdbcResult.getString("text_id")
-                if (jdbcResult.wasNull()) text_id = null
-
-                var text_translation: String? = jdbcResult.getString("text_translation")
-                if (jdbcResult.wasNull()) text_translation = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -108,8 +100,6 @@ class Read(
                 val site_text = CommonSiteText(
                     id = id,
                     ethnologue = ethnologue,
-                    text_id = text_id,
-                    text_translation = text_translation,
                     created_at = created_at,
                     created_by = created_by,
                     modified_at = modified_at,
