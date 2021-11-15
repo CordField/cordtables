@@ -120,3 +120,9 @@ export interface AdminUser {
   owning_person?: number;
   owning_group?: number;
 }
+
+export type SiteTextLanguage = {
+  id: number;
+  ethnologue: number;
+  language_name: string;
+}
