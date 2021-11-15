@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.common.site_text
+package com.seedcompany.cordtables.components.tables.common.site_text_translations
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -11,31 +11,31 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class CommonSiteTextDeleteRequest(
+data class CommonSiteTextTranslationDeleteRequest(
         val id: Int,
         val token: String?,
 )
 
-data class CommonSiteTextDeleteResponse(
+data class CommonSiteTextTranslationDeleteResponse(
         val error: ErrorType,
         val id: Int?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonSiteTextDelete")
+@Controller("CommonSiteTextTranslationDelete")
 class Delete(
         @Autowired
         val util: Utility,
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common-site-texts/delete")
+    @PostMapping("common-site-text-translations/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: CommonSiteTextDeleteRequest): CommonSiteTextDeleteResponse {
+    fun deleteHandler(@RequestBody req: CommonSiteTextTranslationDeleteRequest): CommonSiteTextTranslationDeleteResponse {
 
-        if (req.token == null) return CommonSiteTextDeleteResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "common.site_text"))
-            return CommonSiteTextDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
+        if (req.token == null) return CommonSiteTextTranslationDeleteResponse(ErrorType.TokenNotFound, null)
+        if(!util.userHasDeletePermission(req.token, "common.site_text_translations"))
+            return CommonSiteTextTranslationDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
         var deletedLocationExId: Int? = null
@@ -44,7 +44,7 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from common.site_text where id = ? returning id"
+                        "delete from common.site_text_translations where id = ? returning id"
                 )
                 deleteStatement.setInt(1, req.id)
 
@@ -60,9 +60,9 @@ class Delete(
             catch (e:SQLException ){
                 println(e.message)
 
-                return CommonSiteTextDeleteResponse(ErrorType.SQLDeleteError, null)
+                return CommonSiteTextTranslationDeleteResponse(ErrorType.SQLDeleteError, null)
             }
         }
-        return CommonSiteTextDeleteResponse(ErrorType.NoError,deletedLocationExId)
+        return CommonSiteTextTranslationDeleteResponse(ErrorType.NoError,deletedLocationExId)
     }
 }

@@ -1,7 +1,5 @@
-package com.seedcompany.cordtables.components.tables.common.site_text
+package com.seedcompany.cordtables.components.tables.common.site_text_translations
 
-import com.seedcompany.cordtables.common.CommonSensitivity
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
@@ -18,46 +16,48 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 
-data class CommonSiteTextListRequest(
-        val token: String?
+data class CommonSiteTextTranslationListRequest(
+    val token: String?
 )
 
-data class CommonSiteTextListResponse(
-        val error: ErrorType,
-        val locations: MutableList<CommonSiteText>?
+data class CommonSiteTextTranslationListResponse(
+    val error: ErrorType,
+    val locations: MutableList<CommonSiteTextTranslation>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonSiteTextList")
+@Controller("CommonSiteTextTranslationList")
 class List(
-        @Autowired
-        val util: Utility,
+    @Autowired
+    val util: Utility,
 
-        @Autowired
-        val ds: DataSource,
+    @Autowired
+    val ds: DataSource,
 
-        @Autowired
-        val secureList: GetSecureListQuery,
+    @Autowired
+    val secureList: GetSecureListQuery,
 ) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
     @PostMapping("common-site-texts/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: CommonSiteTextListRequest): CommonSiteTextListResponse {
-        var data: MutableList<CommonSiteText> = mutableListOf()
-        if (req.token == null) return CommonSiteTextListResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun listHandler(@RequestBody req: CommonSiteTextTranslationListRequest): CommonSiteTextTranslationListResponse {
+        var data: MutableList<CommonSiteTextTranslation> = mutableListOf()
+        if (req.token == null) return CommonSiteTextTranslationListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
 
         val query = secureList.getSecureListQueryHandler(
                 GetSecureListQueryRequest(
-                        tableName = "common.site_text",
+                        tableName = "common.site_text_translations",
                         filter = "order by id",
                         columns = arrayOf(
                                 "id",
-                                "ethnologue",
+                                "site_text_id",
+                                "text_id",
+                                "text_translation",
                                 "created_at",
                                 "created_by",
                                 "modified_at",
@@ -75,8 +75,14 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
-                if (jdbcResult.wasNull()) ethnologue = null
+                var site_text_id: Int? = jdbcResult.getInt("site_text_id")
+                if (jdbcResult.wasNull()) site_text_id = null
+
+                var text_id: String? = jdbcResult.getString("text_id")
+                if (jdbcResult.wasNull()) text_id = null
+
+                var text_translation: String? = jdbcResult.getString("text_translation")
+                if (jdbcResult.wasNull()) text_translation = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -97,23 +103,25 @@ class List(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
-                        CommonSiteText(
-                                id = id,
-                                ethnologue = ethnologue,
-                                created_at = created_at,
-                                created_by = created_by,
-                                modified_at = modified_at,
-                                modified_by = modified_by,
-                                owning_person = owning_person,
-                                owning_group = owning_group
-                        )
+                    CommonSiteTextTranslation(
+                        id = id,
+                        site_text_id = site_text_id,
+                        text_id = text_id,
+                        text_translation = text_translation,
+                        created_at = created_at,
+                        created_by = created_by,
+                        modified_at = modified_at,
+                        modified_by = modified_by,
+                        owning_person = owning_person,
+                        owning_group = owning_group
+                    )
                 )
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return CommonSiteTextListResponse(ErrorType.SQLReadError, mutableListOf())
+            return CommonSiteTextTranslationListResponse(ErrorType.SQLReadError, mutableListOf())
         }
 
-        return CommonSiteTextListResponse(ErrorType.NoError, data)
+        return CommonSiteTextTranslationListResponse(ErrorType.NoError, data)
     }
 }

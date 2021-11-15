@@ -16,6 +16,21 @@ create table common.site_text(
 
   ethnologue int not null,
 
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- SITE TEXT --------------------------------------------------------------------------------
+
+create table common.site_text_translations(
+  id serial primary key,
+
+  site_text_id int not null references common.site_text(id),
+
   text_id string(64),
 
   text_translation string(64),
