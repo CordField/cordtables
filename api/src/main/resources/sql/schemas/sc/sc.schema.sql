@@ -88,7 +88,7 @@ create table sc.funding_account (
   id serial primary key,
   neo4j_id varchar(32),
 
-	account_number int unique not null,
+	account_number int,
 	name varchar(32),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -140,7 +140,7 @@ create table sc.locations (
 	neo4j_id varchar(32),
 
 	default_region int references sc.field_regions(id),
-	funding_account int references sc.funding_account(account_number),
+	funding_account int references sc.funding_account(id),
 	iso_alpha_3 char(3),
 	name varchar(32),
 	type common.location_type,
@@ -704,7 +704,7 @@ create table sc.budgets (
   change_to_plan int default 1,
   project int references sc.projects(id),
   status common.budget_status,
-  universal_template int references common.file_versions(id),
+  universal_template int references common.files(id),
   universal_template_file_url varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -741,7 +741,6 @@ create table sc.budget_records (
 
 create table sc.budget_records_partnerships (
   id serial primary key,
-
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),

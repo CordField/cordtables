@@ -62,10 +62,13 @@ create type admin.table_name as enum (
 
   'sc.funding_account',
   'sc.field_zone',
+  'sc.files',
+  'sc.file_versions',
   'sc.field_regions',
   'sc.locations',
   'sc.organizations',
   'sc.organization_locations',
+  'sc.budget_records_partnerships',
   'sc.partners',
   'sc.language_goal_definitions',
   'sc.languages',
