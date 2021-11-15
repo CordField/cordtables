@@ -61,6 +61,8 @@ export namespace Components {
     }
     interface CommonOrganizations {
     }
+    interface CommonPosts {
+    }
     interface CommonThreads {
     }
     interface CreateUpdateModal {
@@ -106,8 +108,6 @@ export namespace Components {
     interface PeopleTable {
     }
     interface PeopleToOrgRelationships {
-    }
-    interface PostsTable {
     }
     interface RoleColumnGrants {
         "history": RouterHistory;
@@ -311,6 +311,12 @@ declare global {
         prototype: HTMLCommonOrganizationsElement;
         new (): HTMLCommonOrganizationsElement;
     };
+    interface HTMLCommonPostsElement extends Components.CommonPosts, HTMLStencilElement {
+    }
+    var HTMLCommonPostsElement: {
+        prototype: HTMLCommonPostsElement;
+        new (): HTMLCommonPostsElement;
+    };
     interface HTMLCommonThreadsElement extends Components.CommonThreads, HTMLStencilElement {
     }
     var HTMLCommonThreadsElement: {
@@ -430,12 +436,6 @@ declare global {
     var HTMLPeopleToOrgRelationshipsElement: {
         prototype: HTMLPeopleToOrgRelationshipsElement;
         new (): HTMLPeopleToOrgRelationshipsElement;
-    };
-    interface HTMLPostsTableElement extends Components.PostsTable, HTMLStencilElement {
-    }
-    var HTMLPostsTableElement: {
-        prototype: HTMLPostsTableElement;
-        new (): HTMLPostsTableElement;
     };
     interface HTMLRoleColumnGrantsElement extends Components.RoleColumnGrants, HTMLStencilElement {
     }
@@ -743,6 +743,7 @@ declare global {
         "cf-tiny": HTMLCfTinyElement;
         "common-cell-channels": HTMLCommonCellChannelsElement;
         "common-organizations": HTMLCommonOrganizationsElement;
+        "common-posts": HTMLCommonPostsElement;
         "common-threads": HTMLCommonThreadsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "directories-table": HTMLDirectoriesTableElement;
@@ -763,7 +764,6 @@ declare global {
         "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
         "people-to-org-relationships": HTMLPeopleToOrgRelationshipsElement;
-        "posts-table": HTMLPostsTableElement;
         "role-column-grants": HTMLRoleColumnGrantsElement;
         "role-memberships": HTMLRoleMembershipsElement;
         "role-table-permissions": HTMLRoleTablePermissionsElement;
@@ -868,6 +868,8 @@ declare namespace LocalJSX {
     }
     interface CommonOrganizations {
     }
+    interface CommonPosts {
+    }
     interface CommonThreads {
     }
     interface CreateUpdateModal {
@@ -917,8 +919,6 @@ declare namespace LocalJSX {
     interface PeopleTable {
     }
     interface PeopleToOrgRelationships {
-    }
-    interface PostsTable {
     }
     interface RoleColumnGrants {
         "history"?: RouterHistory;
@@ -1036,6 +1036,7 @@ declare namespace LocalJSX {
         "cf-tiny": CfTiny;
         "common-cell-channels": CommonCellChannels;
         "common-organizations": CommonOrganizations;
+        "common-posts": CommonPosts;
         "common-threads": CommonThreads;
         "create-update-modal": CreateUpdateModal;
         "directories-table": DirectoriesTable;
@@ -1056,7 +1057,6 @@ declare namespace LocalJSX {
         "peers-table": PeersTable;
         "people-table": PeopleTable;
         "people-to-org-relationships": PeopleToOrgRelationships;
-        "posts-table": PostsTable;
         "role-column-grants": RoleColumnGrants;
         "role-memberships": RoleMemberships;
         "role-table-permissions": RoleTablePermissions;
@@ -1128,6 +1128,7 @@ declare module "@stencil/core" {
             "cf-tiny": LocalJSX.CfTiny & JSXBase.HTMLAttributes<HTMLCfTinyElement>;
             "common-cell-channels": LocalJSX.CommonCellChannels & JSXBase.HTMLAttributes<HTMLCommonCellChannelsElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
+            "common-posts": LocalJSX.CommonPosts & JSXBase.HTMLAttributes<HTMLCommonPostsElement>;
             "common-threads": LocalJSX.CommonThreads & JSXBase.HTMLAttributes<HTMLCommonThreadsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "directories-table": LocalJSX.DirectoriesTable & JSXBase.HTMLAttributes<HTMLDirectoriesTableElement>;
@@ -1148,7 +1149,6 @@ declare module "@stencil/core" {
             "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "people-to-org-relationships": LocalJSX.PeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLPeopleToOrgRelationshipsElement>;
-            "posts-table": LocalJSX.PostsTable & JSXBase.HTMLAttributes<HTMLPostsTableElement>;
             "role-column-grants": LocalJSX.RoleColumnGrants & JSXBase.HTMLAttributes<HTMLRoleColumnGrantsElement>;
             "role-memberships": LocalJSX.RoleMemberships & JSXBase.HTMLAttributes<HTMLRoleMembershipsElement>;
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
