@@ -744,16 +744,6 @@ class Update(
                 )
             }
 
-            "peer" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "peer",
-                        id = req.id,
-                        value = req.value,
-                )
-            }
-
             "egids_level" -> {
 
                 util.updateField(
@@ -773,6 +763,43 @@ class Update(
                         value = if (req.value !== null) EgidsScale.valueOf(req.value as String).value else 0.0,
                 )
             }
+
+            "coordinates" -> {
+                    var coordinatesValue:String?;
+                    var longLatValue: String = ""
+                    if(req.value == null) {
+                        coordinatesValue = null
+                    }
+                    else {
+                        longLatValue = (req.value as String)
+                                // remove spaces and degree symbol
+                                .replace("\\s".toRegex(), "")
+                                .replace("\\u00B0".toRegex(), "")
+                                .split(",")
+                                // reverse the position of latitude and longitude
+                                .reversed()
+                                .joinToString(separator = " ") {
+                                    when (it.last()) {
+                                        'E' -> it.dropLast(1)
+                                        'N' -> it.dropLast(1)
+                                        else -> "-${it.dropLast(1)}"
+                                    }
+                                }
+                        println(longLatValue)
+                        coordinatesValue =
+                                "SRID=4326;POINT(${longLatValue})"
+                    }
+
+                    util.updateField(
+                            token = req.token,
+                            table = "sc.languages",
+                            column = "coordinates",
+                            id = req.id,
+                            value = coordinatesValue,
+                            cast = "::common.geography",
+                    )
+            }
+
 
 //            else -> null
         }

@@ -1,26 +1,30 @@
 package com.seedcompany.cordtables.components.tables.admin.people
 
+import com.seedcompany.cordtables.components.tables.admin.people.Delete as CommonDelete
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.people.AdminPeopleDeleteRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import java.sql.SQLException
 import javax.sql.DataSource
 
-data class PeopleDeleteRequest(
-    val token: String? = null,
-    val id: Int? = null,
+data class AdminPeopleDeleteRequest(
+    val id: Int,
+    val token: String?,
 )
 
-data class PeopleDeleteResponse(
+data class AdminPeopleDeleteResponse(
     val error: ErrorType,
+    val id: Int?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("PeopleDelete")
+@Controller("AdminPeopleDelete")
 class Delete(
     @Autowired
     val util: Utility,
@@ -28,31 +32,41 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-
-    @PostMapping("people/delete")
+    @PostMapping("admin-people/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: PeopleDeleteRequest): PeopleDeleteResponse {
+    fun deleteHandler(@RequestBody req: AdminPeopleDeleteRequest): AdminPeopleDeleteResponse {
 
-        if (req.token == null) return PeopleDeleteResponse(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return PeopleDeleteResponse(ErrorType.AdminOnly)
+        if (req.token == null) return AdminPeopleDeleteResponse(ErrorType.TokenNotFound, null)
+        if(!util.userHasDeletePermission(req.token, "admin.people"))
+            return AdminPeopleDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-        if (req.id == null) return PeopleDeleteResponse(ErrorType.MissingId)
+        println("req: $req")
+        var deletedLocationExId: Int? = null
 
         this.ds.connection.use { conn ->
+            try {
 
-            //language=SQL
-            val deleteStatement = conn.prepareStatement(
-                """
-                delete from admin.people where id = ?;
-            """.trimIndent()
-            )
+                val deleteStatement = conn.prepareCall(
+                    "delete from admin.people where id = ? returning id"
+                )
+                deleteStatement.setInt(1, req.id)
 
-            deleteStatement.setInt(1, req.id)
+                deleteStatement.setInt(1,req.id)
 
-            deleteStatement.execute()
+
+                val deleteStatementResult = deleteStatement.executeQuery()
+
+                if (deleteStatementResult.next()) {
+                    deletedLocationExId  = deleteStatementResult.getInt("id")
+                }
+            }
+            catch (e:SQLException ){
+                println(e.message)
+
+                return AdminPeopleDeleteResponse(ErrorType.SQLDeleteError, null)
+            }
         }
 
-        return PeopleDeleteResponse(ErrorType.NoError)
+        return AdminPeopleDeleteResponse(ErrorType.NoError,deletedLocationExId)
     }
-
 }

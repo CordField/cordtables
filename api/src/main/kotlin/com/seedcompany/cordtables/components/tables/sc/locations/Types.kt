@@ -18,7 +18,6 @@ data class ScLocation(
     val modified_by: Int? = null,
     val owning_person: Int? = null,
     val owning_group: Int? = null,
-    val peer: Int? = null,
 )
 
 data class ScLocationInput(
@@ -37,5 +36,4 @@ data class ScLocationInput(
     val modified_by: Int? = null,
     val owning_person: Int? = null,
     val owning_group: Int? = null,
-    val peer: Int? = null,
 )

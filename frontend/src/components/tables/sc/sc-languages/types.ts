@@ -67,5 +67,5 @@ class ScLanguage {
   modified_by?: number | undefined;
   owning_person?: number | undefined;
   owning_group?: number | undefined;
-  peer?: number | undefined;
+  coordinates?: string | undefined;
 }

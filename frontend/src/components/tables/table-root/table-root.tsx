@@ -15,19 +15,61 @@ export class TableRoot {
       <Host>
         <slot></slot>
         {this.match.params.table === 'admin-users' && <admin-users></admin-users>}
-        {this.match.params.table === 'admin-roles' && <roles-table></roles-table>}
+
+        {/* {this.match.params.table === 'admin-roles' && <roles-table></roles-table>}
         {this.match.params.table === 'admin-role-column-grants' && <role-column-grants></role-column-grants>}
         {this.match.params.table === 'admin-role-membership' && <role-memberships></role-memberships>}
         {this.match.params.table === 'admin-role-table-permissions' && <role-table-permissions></role-table-permissions>}
-
         {this.match.params.table === 'admin-groups' && <groups-table></groups-table>}
         {this.match.params.table === 'admin-group-membership' && <group-memberships></group-memberships>}
-        {this.match.params.table === 'admin-group-row-access' && <groups-row-access></groups-row-access>}
+        {this.match.params.table === 'admin-group-row-access' && <groups-row-access></groups-row-access>} */}
+
+        {this.match.params.table === 'admin-group-memberships' && <admin-group-memberships></admin-group-memberships>}
+        {this.match.params.table === 'admin-group-row-access' && <admin-group-row-access></admin-group-row-access>}
+        {this.match.params.table === 'admin-groups' && <admin-groups></admin-groups>}
+        {this.match.params.table === 'admin-role-column-grants' && <admin-role-column-grants></admin-role-column-grants>}
+
+        {this.match.params.table === 'admin-role-memberships' && <admin-role-memberships></admin-role-memberships>}
+        {this.match.params.table === 'admin-role-table-permissions' && <admin-role-table-permissions></admin-role-table-permissions>}
+        {this.match.params.table === 'admin-roles' && <admin-roles></admin-roles>}
+        {this.match.params.table === 'admin-people' && <admin-people></admin-people>}
+
+        {this.match.params.table === 'sc-funding-accounts' && <sc-funding-accounts></sc-funding-accounts>}
+        {this.match.params.table === 'sc-internship-engagements' && <sc-internship-engagements></sc-internship-engagements>}
+        {this.match.params.table === 'sc-known-languages-by-person' && <sc-known-languages-by-person></sc-known-languages-by-person>}
+        {this.match.params.table === 'sc-language-engagements' && <sc-language-engagements></sc-language-engagements>}
+        {this.match.params.table === 'sc-organization-locations' && <sc-organization-locations></sc-organization-locations>}
+        {this.match.params.table === 'sc-organizations' && <sc-organizations></sc-organizations>}
+        {this.match.params.table === 'sc-partners' && <sc-partners></sc-partners>}
+        {this.match.params.table === 'sc-partnerships' && <sc-partnerships></sc-partnerships>}
+        {this.match.params.table === 'sc-person-unavailabilities' && <sc-person-unavailabilities></sc-person-unavailabilities>}
+        {this.match.params.table === 'sc-pinned-projects' && <sc-pinned-projects></sc-pinned-projects>}
+        {this.match.params.table === 'sc-posts' && <sc-posts></sc-posts>}
+
+        {this.match.params.table === 'common-directories' && <directories-table></directories-table>}
+        {this.match.params.table === 'common-files' && <files-table></files-table>}
+        {this.match.params.table === 'common-file-versions' && <file-versions></file-versions>}
+        {this.match.params.table === 'sc-field-regions' && <sc-field-regions-table></sc-field-regions-table>}
+        {this.match.params.table === 'sc-field-zones' && <sc-field-zones></sc-field-zones>}
+
+        {this.match.params.table === 'sc-global-partner-assessments' && <sc-global-partner-assessments></sc-global-partner-assessments>}
+        {this.match.params.table === 'sc-global-partner-engagements' && <sc-global-partner-engagements></sc-global-partner-engagements>}
+        {this.match.params.table === 'sc-global-partner-engagement-people' && <sc-global-partner-engagement-people></sc-global-partner-engagement-people>}
+        {this.match.params.table === 'sc-global-partner-performance' && <sc-global-partner-performance></sc-global-partner-performance>}
+        {this.match.params.table === 'common-coalitions' && <common-coalitions></common-coalitions>}
+        {this.match.params.table === 'common-coalition-memberships' && <common-coalition-memberships></common-coalition-memberships>}
 
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
+        {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}
+        {this.match.params.table === 'common-ticket-graph' && <ticket-graph></ticket-graph>}
+        {this.match.params.table === 'common-ticket-assignments' && <ticket-assignments></ticket-assignments>}
+        {this.match.params.table === 'common-work-records' && <work-records></work-records>}
         {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
-
+        {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
+        {this.match.params.table === 'common-cell-channels' && <common-cell-channels></common-cell-channels>}
+        {this.match.params.table === 'common-threads' && <common-threads></common-threads>}
+        {this.match.params.table === 'common-posts' && <common-posts></common-posts>}
         {this.match.params.table === 'sc-languages' && <sc-languages></sc-languages>}
         {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
       </Host>

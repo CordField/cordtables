@@ -16,20 +16,7 @@ create table common.site_text(
 
   ethnologue int not null,
 
-  cord_tables varchar(32),
-  edit_mode varchar(32),
-  email_address varchar(32),
-  false_ varchar(32),
-  home varchar(32),
-  languages varchar(32),
-  login varchar(32),
-  logout varchar(32),
-  password varchar(32),
-  please_login_or_register varchar(128),
-  profile_page varchar(32),
-  register varchar(32),
-  sc_languages varchar(32),
-  true_ varchar(32),
+  translation_json json,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -140,6 +127,24 @@ create table common.blog_posts (
 	id serial primary key,
 
   blog int not null references common.blogs(id),
+	content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- NOTES ----------------------------------------------------
+
+create table common.notes (
+	id serial primary key,
+
+  table_name admin.table_name not null,
+  column_name varchar(64) not null,
+  row int not null,
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -264,7 +269,7 @@ create table common.people_to_org_relationships (
 create table common.directories (
   id serial primary key,
 
-	parent int references common.directories(id),
+    parent int references common.directories(id),
   name varchar(255),
 	-- todo
 
@@ -490,6 +495,36 @@ create table common.stage_notifications(
 	on_exit bool default false,
 	person int references admin.people(id),
   
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- PRAYER --------------------------------------------------------------
+
+create table common.prayer_requests(
+	id serial primary key,
+
+  parent int references common.prayer_requests(id),
+  content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.prayer_notifications(
+	id serial primary key,
+
+  request int references common.prayer_requests(id),
+  person int references admin.people(id),
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

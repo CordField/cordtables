@@ -221,9 +221,9 @@ BEGIN
      ('Write', 'begin_work_rel_pol_obstacles_source', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-     values ('Write', 'suggested_strategies', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
-    values ('Write', 'comments', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values ('Write', 'suggested_strategies', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+    ('Write', 'comments', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+    ('Write', 'coordinates', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
     values
@@ -248,6 +248,27 @@ BEGIN
      ('Write', 'chapter_end', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId),
      ('Write', 'verse_start', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId),
      ('Write', 'verse_end', vAdminRoleId, 'common.scripture_references', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+
+--    grants on common.cell_channels
+    insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+        values
+         ('Write', 'id', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+         ('Write', 'row', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+         ('Write', 'table_name', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+         ('Write', 'column_name', vAdminRoleId, 'common.cell_channels', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+
+--         grants on common.threads
+         insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+                 values
+                  ('Write', 'id', vAdminRoleId, 'common.threads', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+                  ('Write', 'channel', vAdminRoleId, 'common.threads', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+                  ('Write', 'content', vAdminRoleId, 'common.threads', vPersonId, vPersonId, vPersonId, vAdminGroupId);
+--                  grants on common.posts
+              insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
+                          values
+                           ('Write', 'id', vAdminRoleId, 'common.posts', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+                           ('Write', 'thread', vAdminRoleId, 'common.posts', vPersonId, vPersonId, vPersonId, vAdminGroupId),
+                           ('Write', 'content', vAdminRoleId, 'common.posts', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
 
 

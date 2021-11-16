@@ -73,7 +73,7 @@ data class Language(
     val modified_by: Int? = null,
     val owning_person: Int? = null,
     val owning_group: Int? = null,
-    val peer: Int? = null,
+    val coordinates: String? = null,
 )
 
 data class LanguageInput(
