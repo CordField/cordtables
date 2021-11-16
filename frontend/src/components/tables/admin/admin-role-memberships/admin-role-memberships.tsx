@@ -149,9 +149,9 @@ export class AdminRoleMemberships {
     {
       field: 'role',
       displayName: 'Role',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'person',

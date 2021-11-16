@@ -162,16 +162,16 @@ export class AdminRoleColumnGrants {
     {
       field: 'role',
       displayName: 'Role',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'table_name',
       displayName: 'Table Name',
       width: 200,
-      editable: false,
-      deleteFn: this.handleDelete,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'column_name',

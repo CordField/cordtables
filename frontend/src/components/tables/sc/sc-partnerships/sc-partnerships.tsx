@@ -169,9 +169,9 @@ export class ScPartnerships {
     {
       field: 'project',
       displayName: 'Project',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'partner',
@@ -183,9 +183,9 @@ export class ScPartnerships {
     {
       field: 'change_to_plan',
       displayName: 'Change To Plan',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'active',
@@ -197,9 +197,9 @@ export class ScPartnerships {
     {
       field: 'agreement',
       displayName: 'Agreement',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     
     {

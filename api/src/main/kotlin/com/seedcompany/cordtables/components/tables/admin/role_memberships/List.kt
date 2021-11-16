@@ -71,6 +71,7 @@ class List(
 
         try {
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
+            println(jdbcResult.row)
             while (jdbcResult.next()) {
 
                 var id: Int? = jdbcResult.getInt("id")

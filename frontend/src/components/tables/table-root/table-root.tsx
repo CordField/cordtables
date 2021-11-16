@@ -46,6 +46,11 @@ export class TableRoot {
         {this.match.params.table === 'sc-pinned-projects' && <sc-pinned-projects></sc-pinned-projects>}
         {this.match.params.table === 'sc-posts' && <sc-posts></sc-posts>}
 
+        {this.match.params.table === 'sc-product-scripture-references' && <sc-product-scripture-references></sc-product-scripture-references>}
+        {this.match.params.table === 'sc-products' && <sc-products></sc-products>}
+        {this.match.params.table === 'sc-project-locations' && <sc-project-locations></sc-project-locations>}
+        {this.match.params.table === 'sc-projects' && <sc-projects></sc-projects>}
+
         {this.match.params.table === 'common-directories' && <directories-table></directories-table>}
         {this.match.params.table === 'common-files' && <files-table></files-table>}
         {this.match.params.table === 'common-file-versions' && <file-versions></file-versions>}

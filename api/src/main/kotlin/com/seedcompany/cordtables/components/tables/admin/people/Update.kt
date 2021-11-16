@@ -117,6 +117,7 @@ class Update(
                     column = "primary_location",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "private_full_name" -> {
@@ -144,6 +145,7 @@ class Update(
                     column = "sensitivity_clearance",
                     id = req.id,
                     value = req.value,
+                    cast = "::common.sensitivity"
                 )
             }
             "time_zone" -> {
@@ -180,6 +182,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -189,6 +192,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

@@ -157,9 +157,9 @@ export class ScOrganizations {
     {
       field: 'neo4j_id',
       displayName: 'neo4j_id',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'address',

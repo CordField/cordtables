@@ -54,6 +54,7 @@ class Update(
                     column = "person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "period_start" -> {
@@ -63,6 +64,7 @@ class Update(
                     column = "period_start",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "period_end" -> {
@@ -72,6 +74,7 @@ class Update(
                     column = "period_end",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "description" -> {
@@ -91,6 +94,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -100,6 +104,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

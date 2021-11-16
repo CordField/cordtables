@@ -3,10 +3,6 @@ package com.seedcompany.cordtables.components.tables.sc.language_engagements
 data class languageEngagement(
     var id: Int? = null,
 
-    val group_id: Int? = null,
-    val person: Int? = null,
-
-
 
 
     val neo4j_id: String? = null, // varchar(32) not null,

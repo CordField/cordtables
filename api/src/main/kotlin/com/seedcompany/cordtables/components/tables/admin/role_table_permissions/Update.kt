@@ -51,6 +51,7 @@ class Update(
                     column = "role",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "table_name" -> {
@@ -60,6 +61,7 @@ class Update(
                     column = "table_name",
                     id = req.id,
                     value = req.value,
+                    cast = "::admin.table_name"
                 )
             }
             "table_permission" -> {
@@ -69,6 +71,7 @@ class Update(
                     column = "table_permission",
                     id = req.id,
                     value = req.value,
+                    cast = "::admin.table_permission_grant_type"
                 )
             }
             "owning_person" -> {
@@ -78,6 +81,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -87,6 +91,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

@@ -152,8 +152,8 @@ export class ScKnownLanguagesByPersons {
       field: 'person',
       displayName: 'Person',
       width: 200,
-      editable: false,
-      deleteFn: this.handleDelete,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'known_language',
