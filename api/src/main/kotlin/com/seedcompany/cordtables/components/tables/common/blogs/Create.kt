@@ -1,10 +1,7 @@
-package com.seedcompany.cordtables.components.tables.sc.partners
+package com.seedcompany.cordtables.components.tables.common.blogs
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.sc.partners.partnerInput
-import com.seedcompany.cordtables.components.tables.sc.partners.Read
-import com.seedcompany.cordtables.components.tables.sc.partners.Update
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -14,18 +11,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class ScPartnersCreateRequest(
+data class CommonBlogsCreateRequest(
     val token: String? = null,
-    val partner: partnerInput,
+    val blog: BlogInput,
 )
 
-data class ScPartnersCreateResponse(
+data class CommonBlogsCreateResponse(
     val error: ErrorType,
     val id: Int? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("ScPartnersCreate")
+@Controller("CommonBlogsCreate")
 class Create(
     @Autowired
     val util: Utility,
@@ -41,17 +38,17 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-partners/create")
+    @PostMapping("common-blogs/create")
     @ResponseBody
-    fun createHandler(@RequestBody req: ScPartnersCreateRequest): ScPartnersCreateResponse {
+    fun createHandler(@RequestBody req: CommonBlogsCreateRequest): CommonBlogsCreateResponse {
 
-        // if (req.partner.name == null) return ScPartnersCreateResponse(error = ErrorType.InputMissingToken, null)
+        if (req.token == null) return CommonBlogsCreateResponse(error = ErrorType.InputMissingToken, null)
+
 
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.partners(organization, active, financial_reporting_types,  is_innovations_client, pmc_entity_code, point_of_contact,
-             types, created_by, modified_by, owning_person, owning_group)
+            insert into common.blogs(name, display_name, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
                     ?,
@@ -75,21 +72,17 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
-            req.partner.organization,
-            req.partner.active,
-            req.partner.financial_reporting_types,
-            req.partner.is_innovations_client,
-            req.partner.pmc_entity_code,
-            req.partner.point_of_contact,
-            req.partner.types,
+            req.blog.name,
+            req.blog.display_name,
             req.token,
             req.token,
             req.token,
         )
 
-//        req.language.id = id
+//        req.blog.id = id
 
-        return ScPartnersCreateResponse(error = ErrorType.NoError, id = id)
+        return CommonBlogsCreateResponse(error = ErrorType.NoError, id = id)
     }
+
 
 }
