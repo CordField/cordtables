@@ -11,12 +11,37 @@ create type common.mime_type as enum (
 
 -- SITE TEXT --------------------------------------------------------------------------------
 
-create table common.site_text(
+-- talk to Michael about why this table exists
+create table common.languages(
   id serial primary key,
 
-  ethnologue int not null,
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
 
-  translation_json json,
+create table common.site_text_strings(
+  id serial primary key,
+
+  english varchar(64) not null, -- US English, all translations including other English locales will be in the translation table
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.site_text_translations(
+  id serial primary key,
+
+  language int not null references common.languages(id),
+  site_text int not null references common.site_text_strings(id),
+  translation varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
