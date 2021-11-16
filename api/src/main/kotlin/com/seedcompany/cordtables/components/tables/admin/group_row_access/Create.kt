@@ -1,8 +1,13 @@
-    package com.seedcompany.cordtables.components.tables.admin.group_row_access
+package com.seedcompany.cordtables.components.tables.admin.group_row_access
 
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.TableNames
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.group_row_access.groupRowAccessInput
+import com.seedcompany.cordtables.components.tables.admin.group_row_access.Read
+import com.seedcompany.cordtables.components.tables.admin.group_row_access.Update
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -10,106 +15,79 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class GroupRowAccessCreateRequest(
+data class AdminGroupRowAccessCreateRequest(
     val token: String? = null,
-    val group: Int? = null,
-    val tableName: String? = null,
-    val row: Int? = null,
+    val groupRowAccess: groupRowAccessInput,
 )
 
-data class GroupRowAccessCreateReturn(
+data class AdminGroupRowAccessCreateResponse(
     val error: ErrorType,
+    val id: Int? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("GroupRowAccessCreate")
+@Controller("AdminGroupRowAccessCreate")
 class Create(
     @Autowired
     val util: Utility,
 
     @Autowired
     val ds: DataSource,
+
+    @Autowired
+    val update: Update,
+
+    @Autowired
+    val read: Read,
 ) {
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("grouprowaccess/create")
+    @PostMapping("admin-group-row-access/create")
     @ResponseBody
-    fun createHandler(@RequestBody req: GroupRowAccessCreateRequest): GroupRowAccessCreateReturn {
+    fun createHandler(@RequestBody req: AdminGroupRowAccessCreateRequest): AdminGroupRowAccessCreateResponse {
 
-        if (req.token == null) return GroupRowAccessCreateReturn(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return GroupRowAccessCreateReturn(ErrorType.AdminOnly)
-
-        if (req.group == null) return GroupRowAccessCreateReturn(ErrorType.InputMissingGroup)
-        if (req.tableName == null || req.tableName.isEmpty()) return GroupRowAccessCreateReturn(ErrorType.InputMissingTableName)
-        if (req.row == null) return GroupRowAccessCreateReturn(ErrorType.InputMissingRow)
-
-        this.ds.connection.use { conn ->
-
-            //language=SQL
-            val checkRowStatement = conn.prepareStatement(
-                """
-                select exists(select id from admin.group_row_access where group_id = ? and table_name = ? and row = ?)
-            """.trimIndent()
-            )
-
-            checkRowStatement.setInt(1, req.group)
-            checkRowStatement.setObject(2, req.tableName, java.sql.Types.OTHER)
-            checkRowStatement.setInt(3, req.row)
-
-            val result = checkRowStatement.executeQuery();
-
-            if (result.next()) {
-                val rowFound = result.getBoolean(1)
-
-                if (rowFound) {
-                    return GroupRowAccessCreateReturn(ErrorType.MembershipAlreadyExists)
-                } else {
-
-                    //language=SQL
-                    val statement = conn.prepareStatement(
-                        """
-                        insert into admin.group_row_access(group_id, table_name, row, created_by, modified_by, owning_person, owning_group) 
-                            values(?, ?, ?,
-                                (
-                                  select person 
-                                  from admin.tokens 
-                                  where token = ?
-                                ),
-                                (
-                                  select person 
-                                  from admin.tokens 
-                                  where token = ?
-                                ),
-                                (
-                                  select person 
-                                  from admin.tokens 
-                                  where token = ?
-                                ),
-                                (
-                                  select person 
-                                  from admin.tokens 
-                                  where token = ?
-                                )
-                        );
-                        """.trimIndent()
-                    )
-
-                    statement.setInt(1, req.group)
-                    statement.setObject(2, req.tableName, java.sql.Types.OTHER)
-                    statement.setInt(3, req.row)
-                    statement.setString(4, req.token)
-                    statement.setString(5, req.token)
-                    statement.setString(6, req.token)
-                    statement.setString(7, req.token)
-
-                    statement.execute()
-
-                }
-            }
+        // if (req.groupRowAccess.name == null) return AdminGroupRowAccessCreateResponse(error = ErrorType.InputMissingToken, null)
 
 
-        }
+        // create row with required fields, use id to update cells afterwards one by one
+        val id = jdbcTemplate.queryForObject(
+            """
+            insert into admin.group_row_access(group_id, table_name, row,  created_by, modified_by, owning_person, owning_group)
+                values(
+                    ?,
+                    ?::admin.table_name,
+                    ?,
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    1
+                )
+            returning id;
+        """.trimIndent(),
+            Int::class.java,
+            req.groupRowAccess.group_id,
+            req.groupRowAccess.table_name,
+            req.groupRowAccess.row,
+            req.token,
+            req.token,
+            req.token,
+        )
 
-        return GroupRowAccessCreateReturn(ErrorType.NoError)
+//        req.language.id = id
+
+        return AdminGroupRowAccessCreateResponse(error = ErrorType.NoError, id = id)
     }
 
 }

@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class CommonFileVersionsUpdateReadRequest(
+data class ScFieldZonesUpdateReadRequest(
     val token: String?,
     val id: Int? = null,
     val column: String? = null,
     val value: Any? = null,
 )
 
-data class CommonFileVersionsUpdateReadResponse(
+data class ScFieldZonesUpdateReadResponse(
     val error: ErrorType,
     val fieldZone: fieldZone? = null,
 )
@@ -44,7 +44,7 @@ class UpdateRead(
 ) {
     @PostMapping("sc-field-zones/update-read")
     @ResponseBody
-    fun updateReadHandler(@RequestBody req: CommonFileVersionsUpdateReadRequest): CommonFileVersionsUpdateReadResponse {
+    fun updateReadHandler(@RequestBody req: ScFieldZonesUpdateReadRequest): ScFieldZonesUpdateReadResponse {
 
         val updateResponse = update.updateHandler(
             ScFieldZonesUpdateRequest(
@@ -56,7 +56,7 @@ class UpdateRead(
         )
 
         if (updateResponse.error != ErrorType.NoError) {
-            return CommonFileVersionsUpdateReadResponse(updateResponse.error)
+            return ScFieldZonesUpdateReadResponse(updateResponse.error)
         }
 
         val readResponse = read.readHandler(
@@ -66,6 +66,6 @@ class UpdateRead(
             )
         )
 
-        return CommonFileVersionsUpdateReadResponse(error = readResponse.error, readResponse.fieldZone)
+        return ScFieldZonesUpdateReadResponse(error = readResponse.error, readResponse.fieldZone)
     }
 }

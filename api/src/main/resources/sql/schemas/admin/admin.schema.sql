@@ -54,7 +54,7 @@ create type admin.table_name as enum (
   'common.site_text',
   'common.stage_graph',
   'common.stage_notifications',
-  'common.stage_role_column_grants'
+  'common.stage_role_column_grants',
   'common.stages',
   'common.threads',
   'common.ticket_assignments',
@@ -72,12 +72,12 @@ create type admin.table_name as enum (
 
   'sc.budget_records',
   'sc.budgets',
-  'sc.ceremonies'
+  'sc.ceremonies',
   'sc.change_to_plans',
   'sc.field_regions',
   'sc.field_zones',
   'sc.funding_accounts',
-  'sc.global_partner_assessments'
+  'sc.global_partner_assessments',
   'sc.global_partner_engagements',
   'sc.global_partner_engagement_people',
   'sc.global_partner_performance',
@@ -91,7 +91,7 @@ create type admin.table_name as enum (
   'sc.partners',
   'sc.partnerships',
   'sc.people',
-  'sc.periodic_reports'
+  'sc.periodic_reports',
   'sc.person_unavailabilities',
   'sc.pinned_projects',
   'sc.posts',
@@ -140,7 +140,7 @@ create table admin.people (
   sensitivity_clearance common.sensitivity default 'Low',
   time_zone varchar(32),
   title varchar(255),
-	status varchar(32),
+    status varchar(32),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int, -- not null doesn't work here, on startup

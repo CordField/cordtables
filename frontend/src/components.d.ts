@@ -150,7 +150,7 @@ export namespace Components {
     }
     interface ScChangeToPlan {
     }
-    interface ScFieldRegions {
+    interface ScFieldRegionsTable {
     }
     interface ScFieldZones {
     }
@@ -589,11 +589,11 @@ declare global {
         prototype: HTMLScChangeToPlanElement;
         new (): HTMLScChangeToPlanElement;
     };
-    interface HTMLScFieldRegionsElement extends Components.ScFieldRegions, HTMLStencilElement {
+    interface HTMLScFieldRegionsTableElement extends Components.ScFieldRegionsTable, HTMLStencilElement {
     }
-    var HTMLScFieldRegionsElement: {
-        prototype: HTMLScFieldRegionsElement;
-        new (): HTMLScFieldRegionsElement;
+    var HTMLScFieldRegionsTableElement: {
+        prototype: HTMLScFieldRegionsTableElement;
+        new (): HTMLScFieldRegionsTableElement;
     };
     interface HTMLScFieldZonesElement extends Components.ScFieldZones, HTMLStencilElement {
     }
@@ -912,7 +912,7 @@ declare global {
         "sc-budgets": HTMLScBudgetsElement;
         "sc-ceremonies": HTMLScCeremoniesElement;
         "sc-change-to-plan": HTMLScChangeToPlanElement;
-        "sc-field-regions": HTMLScFieldRegionsElement;
+        "sc-field-regions-table": HTMLScFieldRegionsTableElement;
         "sc-field-zones": HTMLScFieldZonesElement;
         "sc-funding-accounts": HTMLScFundingAccountsElement;
         "sc-global-partner-assessments": HTMLScGlobalPartnerAssessmentsElement;
@@ -1105,7 +1105,7 @@ declare namespace LocalJSX {
     }
     interface ScChangeToPlan {
     }
-    interface ScFieldRegions {
+    interface ScFieldRegionsTable {
     }
     interface ScFieldZones {
     }
@@ -1253,7 +1253,7 @@ declare namespace LocalJSX {
         "sc-budgets": ScBudgets;
         "sc-ceremonies": ScCeremonies;
         "sc-change-to-plan": ScChangeToPlan;
-        "sc-field-regions": ScFieldRegions;
+        "sc-field-regions-table": ScFieldRegionsTable;
         "sc-field-zones": ScFieldZones;
         "sc-funding-accounts": ScFundingAccounts;
         "sc-global-partner-assessments": ScGlobalPartnerAssessments;
@@ -1361,7 +1361,7 @@ declare module "@stencil/core" {
             "sc-budgets": LocalJSX.ScBudgets & JSXBase.HTMLAttributes<HTMLScBudgetsElement>;
             "sc-ceremonies": LocalJSX.ScCeremonies & JSXBase.HTMLAttributes<HTMLScCeremoniesElement>;
             "sc-change-to-plan": LocalJSX.ScChangeToPlan & JSXBase.HTMLAttributes<HTMLScChangeToPlanElement>;
-            "sc-field-regions": LocalJSX.ScFieldRegions & JSXBase.HTMLAttributes<HTMLScFieldRegionsElement>;
+            "sc-field-regions-table": LocalJSX.ScFieldRegionsTable & JSXBase.HTMLAttributes<HTMLScFieldRegionsTableElement>;
             "sc-field-zones": LocalJSX.ScFieldZones & JSXBase.HTMLAttributes<HTMLScFieldZonesElement>;
             "sc-funding-accounts": LocalJSX.ScFundingAccounts & JSXBase.HTMLAttributes<HTMLScFundingAccountsElement>;
             "sc-global-partner-assessments": LocalJSX.ScGlobalPartnerAssessments & JSXBase.HTMLAttributes<HTMLScGlobalPartnerAssessmentsElement>;
