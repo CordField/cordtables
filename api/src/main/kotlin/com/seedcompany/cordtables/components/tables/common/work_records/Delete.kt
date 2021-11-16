@@ -34,7 +34,7 @@ class Delete(
     fun deleteHandler(@RequestBody req: CommonWorkRecordsDeleteRequest): CommonWorkRecordsDeleteResponse {
 
         if (req.token == null) return CommonWorkRecordsDeleteResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "common.ticket_assignments"))
+        if(!util.userHasDeletePermission(req.token, "common.work_records"))
             return CommonWorkRecordsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         var deletedTicketId: Int? = null
