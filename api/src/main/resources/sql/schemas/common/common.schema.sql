@@ -26,7 +26,7 @@ create table common.languages(
 create table common.site_text_strings(
   id serial primary key,
 
-  english varchar(64) not null,
+  english varchar(64) not null, -- US English, all translations including other English locales will be in the translation table
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
