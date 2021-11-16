@@ -54,6 +54,7 @@ class Update(
                     column = "directory",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "type" -> {
@@ -63,6 +64,7 @@ class Update(
                     column = "type",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.post_type"
                 )
             }
             "shareability" -> {
@@ -72,6 +74,7 @@ class Update(
                     column = "shareability",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.post_shareability"
                 )
             }
             "body" -> {
@@ -91,6 +94,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -100,6 +104,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

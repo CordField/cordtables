@@ -63,6 +63,7 @@ class Update(
                     column = "account_number",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "name" -> {
@@ -81,6 +82,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -90,6 +92,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

@@ -162,9 +162,9 @@ export class ScPosts {
     {
       field: 'directory',
       displayName: 'Directory',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'type',
@@ -176,9 +176,9 @@ export class ScPosts {
     {
       field: 'shareability',
       displayName: 'Shareability',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'body',

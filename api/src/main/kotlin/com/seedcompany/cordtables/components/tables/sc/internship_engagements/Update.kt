@@ -54,6 +54,7 @@ class Update(
                     column = "project",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "ethnologue" -> {
@@ -63,6 +64,7 @@ class Update(
                     column = "ethnologue",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "change_to_plan" -> {
@@ -72,6 +74,7 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "active" -> {
@@ -81,6 +84,7 @@ class Update(
                     column = "active",
                     id = req.id,
                     value = req.value,
+                    cast = "::BOOLEAN"
                 )
             }
             "communications_complete_date" -> {
@@ -90,6 +94,7 @@ class Update(
                     column = "communications_complete_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "complete_date" -> {
@@ -99,6 +104,7 @@ class Update(
                     column = "complete_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "country_of_origin" -> {
@@ -108,6 +114,7 @@ class Update(
                     column = "country_of_origin",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "disbursement_complete_date" -> {
@@ -117,6 +124,7 @@ class Update(
                     column = "disbursement_complete_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "end_date" -> {
@@ -126,6 +134,7 @@ class Update(
                     column = "end_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "end_date_override" -> {
@@ -135,6 +144,7 @@ class Update(
                     column = "end_date_override",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "growth_plan" -> {
@@ -144,6 +154,7 @@ class Update(
                     column = "growth_plan",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "initial_end_date" -> {
@@ -153,6 +164,7 @@ class Update(
                     column = "initial_end_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "intern" -> {
@@ -162,6 +174,7 @@ class Update(
                     column = "intern",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "last_reactivated_at" -> {
@@ -171,6 +184,7 @@ class Update(
                     column = "last_reactivated_at",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "mentor" -> {
@@ -180,6 +194,7 @@ class Update(
                     column = "mentor",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "methodology" -> {
@@ -189,6 +204,7 @@ class Update(
                     column = "methodology",
                     id = req.id,
                     value = req.value,
+                    cast = "::common.internship_methodology"
                 )
             }
             "paratext_registry" -> {
@@ -207,6 +223,7 @@ class Update(
                     column = "periodic_reports_directory",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "position" -> {
@@ -216,6 +233,7 @@ class Update(
                     column = "position",
                     id = req.id,
                     value = req.value,
+                    cast = "::common.internship_position"
                 )
             }
             "start_date" -> {
@@ -225,6 +243,7 @@ class Update(
                     column = "start_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "start_date_override" -> {
@@ -234,6 +253,7 @@ class Update(
                     column = "start_date_override",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "status" -> {
@@ -243,6 +263,7 @@ class Update(
                     column = "status",
                     id = req.id,
                     value = req.value,
+                    cast = "::common.engagement_status"
                 )
             }
             "owning_person" -> {
@@ -252,6 +273,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -261,6 +283,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }
