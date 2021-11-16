@@ -10,6 +10,22 @@ import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
 export namespace Components {
+    interface AdminGroupMemberships {
+    }
+    interface AdminGroupRowAccess {
+    }
+    interface AdminGroups {
+    }
+    interface AdminPeople {
+    }
+    interface AdminRoleColumnGrants {
+    }
+    interface AdminRoleMemberships {
+    }
+    interface AdminRoleTablePermissions {
+    }
+    interface AdminRoles {
+    }
     interface AdminUsers {
     }
     interface AppHome {
@@ -58,6 +74,10 @@ export namespace Components {
         "uid": number;
     }
     interface CommonCellChannels {
+    }
+    interface CommonCoalitionMemberships {
+    }
+    interface CommonCoalitions {
     }
     interface CommonOrganizations {
     }
@@ -109,6 +129,8 @@ export namespace Components {
     }
     interface PeopleToOrgRelationships {
     }
+    interface PostsTable {
+    }
     interface RoleColumnGrants {
         "history": RouterHistory;
     }
@@ -133,6 +155,14 @@ export namespace Components {
     interface ScFieldZones {
     }
     interface ScFundingAccounts {
+    }
+    interface ScGlobalPartnerAssessments {
+    }
+    interface ScGlobalPartnerEngagementPeople {
+    }
+    interface ScGlobalPartnerEngagements {
+    }
+    interface ScGlobalPartnerPerformance {
     }
     interface ScInternshipEngagements {
     }
@@ -191,6 +221,8 @@ export namespace Components {
     interface TableRoot {
         "match": MatchResults;
     }
+    interface ThreadsTable {
+    }
     interface TicketAssignments {
     }
     interface TicketFeedback {
@@ -209,6 +241,54 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAdminGroupMembershipsElement extends Components.AdminGroupMemberships, HTMLStencilElement {
+    }
+    var HTMLAdminGroupMembershipsElement: {
+        prototype: HTMLAdminGroupMembershipsElement;
+        new (): HTMLAdminGroupMembershipsElement;
+    };
+    interface HTMLAdminGroupRowAccessElement extends Components.AdminGroupRowAccess, HTMLStencilElement {
+    }
+    var HTMLAdminGroupRowAccessElement: {
+        prototype: HTMLAdminGroupRowAccessElement;
+        new (): HTMLAdminGroupRowAccessElement;
+    };
+    interface HTMLAdminGroupsElement extends Components.AdminGroups, HTMLStencilElement {
+    }
+    var HTMLAdminGroupsElement: {
+        prototype: HTMLAdminGroupsElement;
+        new (): HTMLAdminGroupsElement;
+    };
+    interface HTMLAdminPeopleElement extends Components.AdminPeople, HTMLStencilElement {
+    }
+    var HTMLAdminPeopleElement: {
+        prototype: HTMLAdminPeopleElement;
+        new (): HTMLAdminPeopleElement;
+    };
+    interface HTMLAdminRoleColumnGrantsElement extends Components.AdminRoleColumnGrants, HTMLStencilElement {
+    }
+    var HTMLAdminRoleColumnGrantsElement: {
+        prototype: HTMLAdminRoleColumnGrantsElement;
+        new (): HTMLAdminRoleColumnGrantsElement;
+    };
+    interface HTMLAdminRoleMembershipsElement extends Components.AdminRoleMemberships, HTMLStencilElement {
+    }
+    var HTMLAdminRoleMembershipsElement: {
+        prototype: HTMLAdminRoleMembershipsElement;
+        new (): HTMLAdminRoleMembershipsElement;
+    };
+    interface HTMLAdminRoleTablePermissionsElement extends Components.AdminRoleTablePermissions, HTMLStencilElement {
+    }
+    var HTMLAdminRoleTablePermissionsElement: {
+        prototype: HTMLAdminRoleTablePermissionsElement;
+        new (): HTMLAdminRoleTablePermissionsElement;
+    };
+    interface HTMLAdminRolesElement extends Components.AdminRoles, HTMLStencilElement {
+    }
+    var HTMLAdminRolesElement: {
+        prototype: HTMLAdminRolesElement;
+        new (): HTMLAdminRolesElement;
+    };
     interface HTMLAdminUsersElement extends Components.AdminUsers, HTMLStencilElement {
     }
     var HTMLAdminUsersElement: {
@@ -304,6 +384,18 @@ declare global {
     var HTMLCommonCellChannelsElement: {
         prototype: HTMLCommonCellChannelsElement;
         new (): HTMLCommonCellChannelsElement;
+    };
+    interface HTMLCommonCoalitionMembershipsElement extends Components.CommonCoalitionMemberships, HTMLStencilElement {
+    }
+    var HTMLCommonCoalitionMembershipsElement: {
+        prototype: HTMLCommonCoalitionMembershipsElement;
+        new (): HTMLCommonCoalitionMembershipsElement;
+    };
+    interface HTMLCommonCoalitionsElement extends Components.CommonCoalitions, HTMLStencilElement {
+    }
+    var HTMLCommonCoalitionsElement: {
+        prototype: HTMLCommonCoalitionsElement;
+        new (): HTMLCommonCoalitionsElement;
     };
     interface HTMLCommonOrganizationsElement extends Components.CommonOrganizations, HTMLStencilElement {
     }
@@ -437,6 +529,12 @@ declare global {
         prototype: HTMLPeopleToOrgRelationshipsElement;
         new (): HTMLPeopleToOrgRelationshipsElement;
     };
+    interface HTMLPostsTableElement extends Components.PostsTable, HTMLStencilElement {
+    }
+    var HTMLPostsTableElement: {
+        prototype: HTMLPostsTableElement;
+        new (): HTMLPostsTableElement;
+    };
     interface HTMLRoleColumnGrantsElement extends Components.RoleColumnGrants, HTMLStencilElement {
     }
     var HTMLRoleColumnGrantsElement: {
@@ -508,6 +606,30 @@ declare global {
     var HTMLScFundingAccountsElement: {
         prototype: HTMLScFundingAccountsElement;
         new (): HTMLScFundingAccountsElement;
+    };
+    interface HTMLScGlobalPartnerAssessmentsElement extends Components.ScGlobalPartnerAssessments, HTMLStencilElement {
+    }
+    var HTMLScGlobalPartnerAssessmentsElement: {
+        prototype: HTMLScGlobalPartnerAssessmentsElement;
+        new (): HTMLScGlobalPartnerAssessmentsElement;
+    };
+    interface HTMLScGlobalPartnerEngagementPeopleElement extends Components.ScGlobalPartnerEngagementPeople, HTMLStencilElement {
+    }
+    var HTMLScGlobalPartnerEngagementPeopleElement: {
+        prototype: HTMLScGlobalPartnerEngagementPeopleElement;
+        new (): HTMLScGlobalPartnerEngagementPeopleElement;
+    };
+    interface HTMLScGlobalPartnerEngagementsElement extends Components.ScGlobalPartnerEngagements, HTMLStencilElement {
+    }
+    var HTMLScGlobalPartnerEngagementsElement: {
+        prototype: HTMLScGlobalPartnerEngagementsElement;
+        new (): HTMLScGlobalPartnerEngagementsElement;
+    };
+    interface HTMLScGlobalPartnerPerformanceElement extends Components.ScGlobalPartnerPerformance, HTMLStencilElement {
+    }
+    var HTMLScGlobalPartnerPerformanceElement: {
+        prototype: HTMLScGlobalPartnerPerformanceElement;
+        new (): HTMLScGlobalPartnerPerformanceElement;
     };
     interface HTMLScInternshipEngagementsElement extends Components.ScInternshipEngagements, HTMLStencilElement {
     }
@@ -677,6 +799,12 @@ declare global {
         prototype: HTMLTableRootElement;
         new (): HTMLTableRootElement;
     };
+    interface HTMLThreadsTableElement extends Components.ThreadsTable, HTMLStencilElement {
+    }
+    var HTMLThreadsTableElement: {
+        prototype: HTMLThreadsTableElement;
+        new (): HTMLThreadsTableElement;
+    };
     interface HTMLTicketAssignmentsElement extends Components.TicketAssignments, HTMLStencilElement {
     }
     var HTMLTicketAssignmentsElement: {
@@ -726,6 +854,14 @@ declare global {
         new (): HTMLWorkflowsTableElement;
     };
     interface HTMLElementTagNameMap {
+        "admin-group-memberships": HTMLAdminGroupMembershipsElement;
+        "admin-group-row-access": HTMLAdminGroupRowAccessElement;
+        "admin-groups": HTMLAdminGroupsElement;
+        "admin-people": HTMLAdminPeopleElement;
+        "admin-role-column-grants": HTMLAdminRoleColumnGrantsElement;
+        "admin-role-memberships": HTMLAdminRoleMembershipsElement;
+        "admin-role-table-permissions": HTMLAdminRoleTablePermissionsElement;
+        "admin-roles": HTMLAdminRolesElement;
         "admin-users": HTMLAdminUsersElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
@@ -742,6 +878,8 @@ declare global {
         "cf-table-footer": HTMLCfTableFooterElement;
         "cf-tiny": HTMLCfTinyElement;
         "common-cell-channels": HTMLCommonCellChannelsElement;
+        "common-coalition-memberships": HTMLCommonCoalitionMembershipsElement;
+        "common-coalitions": HTMLCommonCoalitionsElement;
         "common-organizations": HTMLCommonOrganizationsElement;
         "common-posts": HTMLCommonPostsElement;
         "common-threads": HTMLCommonThreadsElement;
@@ -764,6 +902,7 @@ declare global {
         "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
         "people-to-org-relationships": HTMLPeopleToOrgRelationshipsElement;
+        "posts-table": HTMLPostsTableElement;
         "role-column-grants": HTMLRoleColumnGrantsElement;
         "role-memberships": HTMLRoleMembershipsElement;
         "role-table-permissions": HTMLRoleTablePermissionsElement;
@@ -776,6 +915,10 @@ declare global {
         "sc-field-regions": HTMLScFieldRegionsElement;
         "sc-field-zones": HTMLScFieldZonesElement;
         "sc-funding-accounts": HTMLScFundingAccountsElement;
+        "sc-global-partner-assessments": HTMLScGlobalPartnerAssessmentsElement;
+        "sc-global-partner-engagement-people": HTMLScGlobalPartnerEngagementPeopleElement;
+        "sc-global-partner-engagements": HTMLScGlobalPartnerEngagementsElement;
+        "sc-global-partner-performance": HTMLScGlobalPartnerPerformanceElement;
         "sc-internship-engagements": HTMLScInternshipEngagementsElement;
         "sc-known-languages-by-person": HTMLScKnownLanguagesByPersonElement;
         "sc-language-engagements": HTMLScLanguageEngagementsElement;
@@ -804,6 +947,7 @@ declare global {
         "stage-role-column-grants": HTMLStageRoleColumnGrantsElement;
         "stages-table": HTMLStagesTableElement;
         "table-root": HTMLTableRootElement;
+        "threads-table": HTMLThreadsTableElement;
         "ticket-assignments": HTMLTicketAssignmentsElement;
         "ticket-feedback": HTMLTicketFeedbackElement;
         "ticket-graph": HTMLTicketGraphElement;
@@ -815,6 +959,22 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AdminGroupMemberships {
+    }
+    interface AdminGroupRowAccess {
+    }
+    interface AdminGroups {
+    }
+    interface AdminPeople {
+    }
+    interface AdminRoleColumnGrants {
+    }
+    interface AdminRoleMemberships {
+    }
+    interface AdminRoleTablePermissions {
+    }
+    interface AdminRoles {
+    }
     interface AdminUsers {
     }
     interface AppHome {
@@ -865,6 +1025,10 @@ declare namespace LocalJSX {
         "uid"?: number;
     }
     interface CommonCellChannels {
+    }
+    interface CommonCoalitionMemberships {
+    }
+    interface CommonCoalitions {
     }
     interface CommonOrganizations {
     }
@@ -920,6 +1084,8 @@ declare namespace LocalJSX {
     }
     interface PeopleToOrgRelationships {
     }
+    interface PostsTable {
+    }
     interface RoleColumnGrants {
         "history"?: RouterHistory;
     }
@@ -944,6 +1110,14 @@ declare namespace LocalJSX {
     interface ScFieldZones {
     }
     interface ScFundingAccounts {
+    }
+    interface ScGlobalPartnerAssessments {
+    }
+    interface ScGlobalPartnerEngagementPeople {
+    }
+    interface ScGlobalPartnerEngagements {
+    }
+    interface ScGlobalPartnerPerformance {
     }
     interface ScInternshipEngagements {
     }
@@ -1002,6 +1176,8 @@ declare namespace LocalJSX {
     interface TableRoot {
         "match"?: MatchResults;
     }
+    interface ThreadsTable {
+    }
     interface TicketAssignments {
     }
     interface TicketFeedback {
@@ -1019,6 +1195,14 @@ declare namespace LocalJSX {
     interface WorkflowsTable {
     }
     interface IntrinsicElements {
+        "admin-group-memberships": AdminGroupMemberships;
+        "admin-group-row-access": AdminGroupRowAccess;
+        "admin-groups": AdminGroups;
+        "admin-people": AdminPeople;
+        "admin-role-column-grants": AdminRoleColumnGrants;
+        "admin-role-memberships": AdminRoleMemberships;
+        "admin-role-table-permissions": AdminRoleTablePermissions;
+        "admin-roles": AdminRoles;
         "admin-users": AdminUsers;
         "app-home": AppHome;
         "app-profile": AppProfile;
@@ -1035,6 +1219,8 @@ declare namespace LocalJSX {
         "cf-table-footer": CfTableFooter;
         "cf-tiny": CfTiny;
         "common-cell-channels": CommonCellChannels;
+        "common-coalition-memberships": CommonCoalitionMemberships;
+        "common-coalitions": CommonCoalitions;
         "common-organizations": CommonOrganizations;
         "common-posts": CommonPosts;
         "common-threads": CommonThreads;
@@ -1057,6 +1243,7 @@ declare namespace LocalJSX {
         "peers-table": PeersTable;
         "people-table": PeopleTable;
         "people-to-org-relationships": PeopleToOrgRelationships;
+        "posts-table": PostsTable;
         "role-column-grants": RoleColumnGrants;
         "role-memberships": RoleMemberships;
         "role-table-permissions": RoleTablePermissions;
@@ -1069,6 +1256,10 @@ declare namespace LocalJSX {
         "sc-field-regions": ScFieldRegions;
         "sc-field-zones": ScFieldZones;
         "sc-funding-accounts": ScFundingAccounts;
+        "sc-global-partner-assessments": ScGlobalPartnerAssessments;
+        "sc-global-partner-engagement-people": ScGlobalPartnerEngagementPeople;
+        "sc-global-partner-engagements": ScGlobalPartnerEngagements;
+        "sc-global-partner-performance": ScGlobalPartnerPerformance;
         "sc-internship-engagements": ScInternshipEngagements;
         "sc-known-languages-by-person": ScKnownLanguagesByPerson;
         "sc-language-engagements": ScLanguageEngagements;
@@ -1097,6 +1288,7 @@ declare namespace LocalJSX {
         "stage-role-column-grants": StageRoleColumnGrants;
         "stages-table": StagesTable;
         "table-root": TableRoot;
+        "threads-table": ThreadsTable;
         "ticket-assignments": TicketAssignments;
         "ticket-feedback": TicketFeedback;
         "ticket-graph": TicketGraph;
@@ -1111,6 +1303,14 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "admin-group-memberships": LocalJSX.AdminGroupMemberships & JSXBase.HTMLAttributes<HTMLAdminGroupMembershipsElement>;
+            "admin-group-row-access": LocalJSX.AdminGroupRowAccess & JSXBase.HTMLAttributes<HTMLAdminGroupRowAccessElement>;
+            "admin-groups": LocalJSX.AdminGroups & JSXBase.HTMLAttributes<HTMLAdminGroupsElement>;
+            "admin-people": LocalJSX.AdminPeople & JSXBase.HTMLAttributes<HTMLAdminPeopleElement>;
+            "admin-role-column-grants": LocalJSX.AdminRoleColumnGrants & JSXBase.HTMLAttributes<HTMLAdminRoleColumnGrantsElement>;
+            "admin-role-memberships": LocalJSX.AdminRoleMemberships & JSXBase.HTMLAttributes<HTMLAdminRoleMembershipsElement>;
+            "admin-role-table-permissions": LocalJSX.AdminRoleTablePermissions & JSXBase.HTMLAttributes<HTMLAdminRoleTablePermissionsElement>;
+            "admin-roles": LocalJSX.AdminRoles & JSXBase.HTMLAttributes<HTMLAdminRolesElement>;
             "admin-users": LocalJSX.AdminUsers & JSXBase.HTMLAttributes<HTMLAdminUsersElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
@@ -1127,6 +1327,8 @@ declare module "@stencil/core" {
             "cf-table-footer": LocalJSX.CfTableFooter & JSXBase.HTMLAttributes<HTMLCfTableFooterElement>;
             "cf-tiny": LocalJSX.CfTiny & JSXBase.HTMLAttributes<HTMLCfTinyElement>;
             "common-cell-channels": LocalJSX.CommonCellChannels & JSXBase.HTMLAttributes<HTMLCommonCellChannelsElement>;
+            "common-coalition-memberships": LocalJSX.CommonCoalitionMemberships & JSXBase.HTMLAttributes<HTMLCommonCoalitionMembershipsElement>;
+            "common-coalitions": LocalJSX.CommonCoalitions & JSXBase.HTMLAttributes<HTMLCommonCoalitionsElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "common-posts": LocalJSX.CommonPosts & JSXBase.HTMLAttributes<HTMLCommonPostsElement>;
             "common-threads": LocalJSX.CommonThreads & JSXBase.HTMLAttributes<HTMLCommonThreadsElement>;
@@ -1149,6 +1351,7 @@ declare module "@stencil/core" {
             "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "people-to-org-relationships": LocalJSX.PeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLPeopleToOrgRelationshipsElement>;
+            "posts-table": LocalJSX.PostsTable & JSXBase.HTMLAttributes<HTMLPostsTableElement>;
             "role-column-grants": LocalJSX.RoleColumnGrants & JSXBase.HTMLAttributes<HTMLRoleColumnGrantsElement>;
             "role-memberships": LocalJSX.RoleMemberships & JSXBase.HTMLAttributes<HTMLRoleMembershipsElement>;
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
@@ -1161,6 +1364,10 @@ declare module "@stencil/core" {
             "sc-field-regions": LocalJSX.ScFieldRegions & JSXBase.HTMLAttributes<HTMLScFieldRegionsElement>;
             "sc-field-zones": LocalJSX.ScFieldZones & JSXBase.HTMLAttributes<HTMLScFieldZonesElement>;
             "sc-funding-accounts": LocalJSX.ScFundingAccounts & JSXBase.HTMLAttributes<HTMLScFundingAccountsElement>;
+            "sc-global-partner-assessments": LocalJSX.ScGlobalPartnerAssessments & JSXBase.HTMLAttributes<HTMLScGlobalPartnerAssessmentsElement>;
+            "sc-global-partner-engagement-people": LocalJSX.ScGlobalPartnerEngagementPeople & JSXBase.HTMLAttributes<HTMLScGlobalPartnerEngagementPeopleElement>;
+            "sc-global-partner-engagements": LocalJSX.ScGlobalPartnerEngagements & JSXBase.HTMLAttributes<HTMLScGlobalPartnerEngagementsElement>;
+            "sc-global-partner-performance": LocalJSX.ScGlobalPartnerPerformance & JSXBase.HTMLAttributes<HTMLScGlobalPartnerPerformanceElement>;
             "sc-internship-engagements": LocalJSX.ScInternshipEngagements & JSXBase.HTMLAttributes<HTMLScInternshipEngagementsElement>;
             "sc-known-languages-by-person": LocalJSX.ScKnownLanguagesByPerson & JSXBase.HTMLAttributes<HTMLScKnownLanguagesByPersonElement>;
             "sc-language-engagements": LocalJSX.ScLanguageEngagements & JSXBase.HTMLAttributes<HTMLScLanguageEngagementsElement>;
@@ -1189,6 +1396,7 @@ declare module "@stencil/core" {
             "stage-role-column-grants": LocalJSX.StageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLStageRoleColumnGrantsElement>;
             "stages-table": LocalJSX.StagesTable & JSXBase.HTMLAttributes<HTMLStagesTableElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
+            "threads-table": LocalJSX.ThreadsTable & JSXBase.HTMLAttributes<HTMLThreadsTableElement>;
             "ticket-assignments": LocalJSX.TicketAssignments & JSXBase.HTMLAttributes<HTMLTicketAssignmentsElement>;
             "ticket-feedback": LocalJSX.TicketFeedback & JSXBase.HTMLAttributes<HTMLTicketFeedbackElement>;
             "ticket-graph": LocalJSX.TicketGraph & JSXBase.HTMLAttributes<HTMLTicketGraphElement>;
