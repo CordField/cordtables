@@ -135,7 +135,6 @@ create type common.location_type as enum (
 
 create table common.locations (
 	id serial primary key,
-    neo4j_id varchar(32),
 	name varchar(255),
 	sensitivity common.sensitivity not null default 'High',
 	type common.location_type,

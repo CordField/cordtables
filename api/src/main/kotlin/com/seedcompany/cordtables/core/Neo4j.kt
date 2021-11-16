@@ -33,6 +33,10 @@ data class BaseNode(
     val labels: List<String>,
 )
 
+data class Relation(
+    val type: String,
+)
+
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("Neo4jMigration")
 class Neo4j(
@@ -58,7 +62,7 @@ class Neo4j(
 
     var neo4jIdQueue = ConcurrentLinkedQueue<BaseNode>()
 
-    var nodePairs = ConcurrentLinkedQueue<Array<BaseNode>>()
+    var nodePairs = ConcurrentLinkedQueue<Array<Any>>()
 
     @PostMapping("migrate/neo4j")
     @ResponseBody
@@ -210,7 +214,7 @@ class Neo4j(
             node.labels.contains("File") -> {
                 writeBaseNode(
                     targetTable = "sc.files",
-                    id = node.id
+                    id = node.id,
                 )
                 writeBaseNode(
                     targetTable = "common.files",
@@ -286,10 +290,16 @@ class Neo4j(
                 targetTable = "sc.periodic_reports",
                 id = node.id,
             )
-            node.labels.contains("Directory") -> writeBaseNode(
-                targetTable = "common.directories",
-                id = node.id,
-            )
+            node.labels.contains("Directory") -> {
+                writeBaseNode(
+                    targetTable = "common.directories",
+                    id = node.id,
+                )
+                writeBaseNode(
+                    targetTable = "sc.directories",
+                    id = node.id
+                )
+            }
             node.labels.contains("Partner") -> writeBaseNode(
                 targetTable = "sc.partners",
                 id = node.id,
@@ -309,6 +319,15 @@ class Neo4j(
             )
             node.labels.contains("FundingAccount") -> writeBaseNode(
                 targetTable = "sc.funding_account",
+                id = node.id
+            )
+            node.labels.contains("Unavailability") -> writeBaseNode(
+                targetTable = "sc.person_unavailabilities",
+                id = node.id,
+
+            )
+            node.labels.contains("Post") -> writeBaseNode(
+                targetTable = "sc.posts",
                 id = node.id
             )
             else -> {
@@ -426,8 +445,8 @@ class Neo4j(
             launch {
                 println("starting writer 1")
                 while (nodePairs.size > 0) {
-                    val (n, m) = nodePairs.remove()
-                    createRelationship(n, m)
+                    val (n, r, m) = nodePairs.remove()
+                    createRelationship(n as BaseNode, r as Relation, m as BaseNode)
                     processedBaseNodeRels.incrementAndGet()
                     delay(1L)
                 }
@@ -437,8 +456,8 @@ class Neo4j(
             launch {
                 println("starting writer 2")
                 while (nodePairs.size > 0) {
-                    val (n, m) = nodePairs.remove()
-                    createRelationship(n, m)
+                    val (n, r, m) = nodePairs.remove()
+                    createRelationship(n as BaseNode, r as Relation, m as BaseNode)
                     processedBaseNodeRels.incrementAndGet()
                     delay(1L)
                 }
@@ -468,9 +487,10 @@ class Neo4j(
 
         println("base node to base node relationships migration done")
     }
+
     suspend fun getNodePairs(skip: Int, size: Int) {
         neo4j.session().use { session ->
-            session.run("MATCH (n:BaseNode)-[]-(m:BaseNode) RETURN n, m SKIP $skip LIMIT $size")
+            session.run("MATCH (n:BaseNode)-[r]-(m:BaseNode) RETURN n, r, m SKIP $skip LIMIT $size")
                 .list()
                 .forEach {
                     nodePairs.add(
@@ -478,6 +498,9 @@ class Neo4j(
                             BaseNode(
                                 id = it.get("n").asNode().get("id").asString(),
                                 labels = it.get("n").asNode().labels() as List<String>
+                            ),
+                            Relation(
+                                type = it.get("r").asRelationship().type()
                             ),
                             BaseNode(
                                 id = it.get("m").asNode().get("id").asString(),
@@ -490,13 +513,20 @@ class Neo4j(
         }
     }
 
-    suspend fun checkRelationship(n: BaseNode, m: BaseNode, n_label: String, m_label: String): Boolean {
-        return (n.labels.contains(n_label) && m.labels.contains(m_label))
+    suspend fun checkRelationship(
+        n: BaseNode,
+        r: Relation,
+        m: BaseNode,
+        n_label: String,
+        r_label: String,
+        m_label: String
+    ): Boolean {
+        return (n.labels.contains(n_label) && r.type == r_label && m.labels.contains(m_label))
     }
 
-    suspend fun createRelationship(n: BaseNode, m: BaseNode) {
+    suspend fun createRelationship(n: BaseNode, r: Relation, m: BaseNode) {
         when {
-            checkRelationship(n, m, "User", "ProjectMember") -> writeRelationships(
+            checkRelationship(n, r, m, "User", "user", "ProjectMember") -> writeRelationship(
                 n,
                 m,
                 "sc.project_members",
@@ -504,7 +534,7 @@ class Neo4j(
                 "person",
                 "id"
             )
-            checkRelationship(n, m, "User", "FieldRegion") -> writeRelationships(
+            checkRelationship(n, r, m, "User", "director", "FieldRegion") -> writeRelationship(
                 n,
                 m,
                 "sc.field_regions",
@@ -512,7 +542,7 @@ class Neo4j(
                 "director",
                 "id"
             )
-            checkRelationship(n, m, "User", "FieldZone") -> writeRelationships(
+            checkRelationship(n, r, m, "User", "director", "FieldZone") -> writeRelationship(
                 n,
                 m,
                 "sc.field_zone",
@@ -520,7 +550,7 @@ class Neo4j(
                 "director",
                 "id"
             )
-            checkRelationship(n, m, "Budget", "File") -> writeRelationships(
+            checkRelationship(n, r, m, "Budget", "universalTemplateFileNode", "File") -> writeRelationship(
                 m,
                 n,
                 "sc.budgets",
@@ -528,7 +558,7 @@ class Neo4j(
                 "universal_template",
                 "id"
             )
-            checkRelationship(n, m, "Budget", "BudgetRecord") -> writeRelationships(
+            checkRelationship(n, r, m, "Budget", "record", "BudgetRecord") -> writeRelationship(
                 n,
                 m,
                 "sc.budget_records",
@@ -536,7 +566,7 @@ class Neo4j(
                 "budget",
                 "id"
             )
-            checkRelationship(n, m, "Organization", "BudgetRecord") -> writeRelationships(
+            checkRelationship(n, r, m, "Organization", "organization", "BudgetRecord") -> writeRelationship(
                 n,
                 m,
                 "sc.budget_records",
@@ -544,7 +574,7 @@ class Neo4j(
                 "organization",
                 "id"
             )
-            checkRelationship(n, m, "Project", "Budget") -> writeRelationships(
+            checkRelationship(n, r, m, "Project", "budget", "Budget") -> writeRelationship(
                 n,
                 m,
                 "sc.budgets",
@@ -552,7 +582,7 @@ class Neo4j(
                 "project",
                 "id"
             )
-            checkRelationship(n, m, "Project", "ProjectMember") -> writeRelationships(
+            checkRelationship(n, r, m, "Project", "member", "ProjectMember") -> writeRelationship(
                 n,
                 m,
                 "sc.project_members",
@@ -560,7 +590,7 @@ class Neo4j(
                 "project",
                 "id"
             )
-            checkRelationship(n, m, "Project", "Partnership") -> writeRelationships(
+            checkRelationship(n, r, m, "Project", "partnership", "Partnership") -> writeRelationship(
                 n,
                 m,
                 "sc.partnerships",
@@ -568,7 +598,7 @@ class Neo4j(
                 "project",
                 "id"
             )
-            checkRelationship(n, m, "BaseFile", "PeriodicReport") -> writeRelationships(
+            checkRelationship(n, r, m, "BaseFile", "reportFileNode", "PeriodicReport") -> writeRelationship(
                 n,
                 m,
                 "sc.periodic_reports",
@@ -576,7 +606,7 @@ class Neo4j(
                 "reportFile",
                 "id"
             )
-            checkRelationship(n, m, "FieldRegion", "Project") -> writeRelationships(
+            checkRelationship(n, r, m, "FieldRegion", "fieldRegion", "Project") -> writeRelationship(
                 n,
                 m,
                 "sc.projects",
@@ -584,7 +614,7 @@ class Neo4j(
                 "field_region",
                 "id"
             )
-            checkRelationship(n, m, "Directory", "Project") -> writeRelationships(
+            checkRelationship(n, r, m, "Directory", "rootDirectory", "Project") -> writeRelationship(
                 n,
                 m,
                 "sc.projects",
@@ -592,7 +622,7 @@ class Neo4j(
                 "root_directory",
                 "id"
             )
-            checkRelationship(n, m, "EthnologueLanguage", "Language") -> writeRelationships(
+            checkRelationship(n, r, m, "EthnologueLanguage", "ethnologue", "Language") -> writeRelationship(
                 n,
                 m,
                 "sc.languages",
@@ -600,7 +630,7 @@ class Neo4j(
                 "ethnologue",
                 "id"
             )
-            checkRelationship(n, m, "Project", "LanguageEngagement") -> writeRelationships(
+            checkRelationship(n, r, m, "Project", "engagement", "LanguageEngagement") -> writeRelationship(
                 n,
                 m,
                 "sc.language_engagements",
@@ -608,7 +638,7 @@ class Neo4j(
                 "project",
                 "id"
             )
-            checkRelationship(n, m, "Language", "LanguageEngagement") -> writeRelationships(
+            checkRelationship(n, r, m, "Language", "language", "LanguageEngagement") -> writeRelationship(
                 n,
                 m,
                 "sc.language_engagements",
@@ -616,7 +646,7 @@ class Neo4j(
                 "ethnologue",
                 "ethnologue"
             )
-            checkRelationship(n, m, "Project", "InternshipEngagement") -> writeRelationships(
+            checkRelationship(n, r, m, "Project", "engagement", "InternshipEngagement") -> writeRelationship(
                 n,
                 m,
                 "sc.internship_engagements",
@@ -624,7 +654,7 @@ class Neo4j(
                 "project",
                 "id"
             )
-            checkRelationship(n, m, "Organization", "Partner") -> writeRelationships(
+            checkRelationship(n, r, m, "Organization", "organization", "Partner") -> writeRelationship(
                 n,
                 m,
                 "sc.partners",
@@ -632,7 +662,7 @@ class Neo4j(
                 "organization",
                 "id"
             )
-            checkRelationship(n, m, "Partner", "Partnership") -> writeRelationships(
+            checkRelationship(n, r, m, "Partner", "partner", "Partnership") -> writeRelationship(
                 n,
                 m,
                 "sc.partnerships",
@@ -640,7 +670,15 @@ class Neo4j(
                 "partner",
                 "organization"
             )
-            checkRelationship(n, m, "InternshipEngagement", "Ceremony") -> writeRelationships(
+            checkRelationship(n, r, m, "User", "pointOfContact", "Partner") -> writeRelationship(
+                n,
+                m,
+                "sc.partners",
+                "admin.people",
+                "point_of_contact",
+                "id"
+            )
+            checkRelationship(n, r, m, "InternshipEngagement", "ceremony", "Ceremony") -> writeRelationship(
                 n,
                 m,
                 "sc.ceremonies",
@@ -648,11 +686,11 @@ class Neo4j(
                 "project",
                 "project"
             )
-            checkRelationship(n, m, "LanguageEngagement", "Ceremony") -> {
-                writeRelationships(n, m, "sc.ceremonies", "sc.language_engagements", "project", "project")
-                writeRelationships(n, m, "sc.ceremonies", "sc.language_engagements", "ethnologue", "ethnologue")
+            checkRelationship(n, r, m, "LanguageEngagement", "ceremony", "Ceremony") -> {
+                writeRelationship(n, m, "sc.ceremonies", "sc.language_engagements", "project", "project")
+                writeRelationship(n, m, "sc.ceremonies", "sc.language_engagements", "ethnologue", "ethnologue")
             }
-            checkRelationship(n, m, "FundingAccount", "Location") -> writeRelationships(
+            checkRelationship(n, r, m, "FundingAccount", "fundingAccount", "Location") -> writeRelationship(
                 n,
                 m,
                 "sc.locations",
@@ -660,7 +698,7 @@ class Neo4j(
                 "funding_account",
                 "id"
             )
-            checkRelationship(n, m, "FieldRegion", "Location") -> writeRelationships(
+            checkRelationship(n, r, m, "FieldRegion", "defaultFieldRegion", "Location") -> writeRelationship(
                 n,
                 m,
                 "sc.locations",
@@ -668,11 +706,67 @@ class Neo4j(
                 "default_region",
                 "id"
             )
+            checkRelationship(n, r, m, "Location", "countryOfOrigin", "InternshipEngagement") -> writeRelationship(
+                n,
+                m,
+                "sc.internship_engagements",
+                "sc.locations",
+                "country_of_origin",
+                "id"
+            )
+            checkRelationship(n, r, m, "User", "mentor", "InternshipEngagement") -> writeRelationship(
+                n,
+                m,
+                "sc.internship_engagements",
+                "admin.people",
+                "mentor",
+                "id"
+            )
+            checkRelationship(n, r, m, "User", "intern", "InternshipEngagement") -> writeRelationship(
+                n,
+                m,
+                "sc.internship_engagements",
+                "admin.people",
+                "intern",
+                "id"
+            )
+            checkRelationship(n, r, m, "BaseFile", "pnpNode", "LanguageEngagement") -> writeRelationship(
+                n,
+                m,
+                "sc.language_engagements",
+                "common.files",
+                "pnp_file",
+                "id"
+            )
+            checkRelationship(n, r, m, "Location", "primaryLocation", "Project") -> writeRelationship(
+                n,
+                m,
+                "sc.projects",
+                "sc.locations",
+                "primary_location",
+                "id"
+            )
+            checkRelationship(n, r, m, "Location", "marketingLocation", "Project") -> writeRelationship(
+                n,
+                m,
+                "sc.projects",
+                "sc.locations",
+                "marketing_location",
+                "id"
+            )
+            checkRelationship(n, r, m, "User", "unavailability", "Unavailability") -> writeRelationship(
+                n,
+                m,
+                "sc.person_unavailabilities",
+                "admin.people",
+                "person",
+                "id"
+            )
         }
 
     }
 
-    suspend fun writeRelationships(
+    suspend fun writeRelationship(
         n: BaseNode,
         m: BaseNode,
         targetTable: String,

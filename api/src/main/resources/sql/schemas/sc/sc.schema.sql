@@ -67,11 +67,12 @@ create type sc.post_type as enum (
 
 create table sc.posts (
   id serial primary key,
+  neo4j_id varchar(32),
 
-  directory int not null references sc.posts_directory(id),
-  type sc.post_type not null,
-  shareability sc.post_shareability not null,
-  body text not null,
+  directory int, --not null references sc.posts_directory(id),
+  type sc.post_type, --not null,
+  shareability sc.post_shareability, --not null,
+  body text, --not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -521,10 +522,11 @@ create table sc.people (
 
 create table sc.person_unavailabilities (
   id serial primary key,
+  neo4j_id varchar(32),
 
   person int references admin.people(id),
-	period_start timestamp not null,
-	period_end timestamp not null,
+	period_start timestamp not null default CURRENT_TIMESTAMP,
+	period_end timestamp not null default CURRENT_TIMESTAMP,
 	description text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -741,6 +743,8 @@ create table sc.budget_records (
 
 create table sc.budget_records_partnerships (
   id serial primary key,
+  budget_record int not null references sc.budget_records(id),
+  partnership int not null references sc.partnerships(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -809,7 +813,7 @@ create table sc.language_engagements (
 	paratext_registry varchar(32),
 	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	pnp varchar(255),
-	pnp_file int references common.file_versions(id),
+	pnp_file int references common.files(id),
 	product_engagement_tag common.project_engagement_tag,
 	start_date timestamp,
 	start_date_override timestamp,
