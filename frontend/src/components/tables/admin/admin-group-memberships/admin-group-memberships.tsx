@@ -148,16 +148,16 @@ export class AdminGroupMemberships {
     {
       field: 'group_id',
       displayName: 'Group ID',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'person',
       displayName: 'person',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'created_at',

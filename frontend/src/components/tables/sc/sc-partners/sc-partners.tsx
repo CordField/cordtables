@@ -179,22 +179,22 @@ export class ScPartners {
       field: 'organization',
       displayName: 'Organization',
       width: 200,
-      editable: false,
-      deleteFn: this.handleDelete,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'active',
       displayName: 'Active',
-      width: 100,
+      width: 200,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'financial_reporting_types',
       displayName: 'Financial Reporting Types',
-      width: 250,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'is_innovations_client',
@@ -206,9 +206,9 @@ export class ScPartners {
     {
       field: 'pmc_entity_code',
       displayName: 'PMC Entity Code',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'point_of_contact',
@@ -220,9 +220,9 @@ export class ScPartners {
     {
       field: 'types',
       displayName: 'Types',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     
 

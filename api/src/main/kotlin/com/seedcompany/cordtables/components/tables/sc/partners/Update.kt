@@ -54,6 +54,7 @@ class Update(
                     column = "organization",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "active" -> {
@@ -63,6 +64,7 @@ class Update(
                     column = "active",
                     id = req.id,
                     value = req.value,
+                    cast = "::BOOLEAN"
                 )
             }
             "financial_reporting_types" -> {
@@ -72,6 +74,7 @@ class Update(
                     column = "financial_reporting_types",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.financial_reporting_types"
                 )
             }
             "is_innovations_client" -> {
@@ -81,6 +84,7 @@ class Update(
                     column = "is_innovations_client",
                     id = req.id,
                     value = req.value,
+                    cast = "::BOOLEAN"
                 )
             }
             "pmc_entity_code" -> {
@@ -99,6 +103,7 @@ class Update(
                     column = "point_of_contact",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "types" -> {
@@ -108,6 +113,7 @@ class Update(
                     column = "types",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_types[]"
                 )
             }
 
@@ -118,6 +124,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -127,6 +134,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

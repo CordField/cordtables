@@ -148,16 +148,16 @@ export class CommonCoalitionMemberships {
     {
       field: 'coalition',
       displayName: 'Coalition',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'created_at',

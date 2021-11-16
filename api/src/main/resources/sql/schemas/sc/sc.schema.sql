@@ -549,8 +549,8 @@ create table sc.periodic_reports (
 -- extension table to common
 create table sc.projects (
   id serial primary key,
-  neo4j_id varchar(32),
 
+  neo4j_id varchar(32),
 	name varchar(32) not null,
 	change_to_plan int not null default 1 references sc.change_to_plans(id),
 	active bool,
@@ -808,6 +808,7 @@ create table sc.products (
 );
 
 create table sc.product_scripture_references (
+    id serial primary key,
   product int not null references sc.products(id),
   scripture_reference int not null references common.scripture_references(id),
   change_to_plan int not null default 1 references sc.change_to_plans(id),
@@ -820,7 +821,7 @@ create table sc.product_scripture_references (
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
 
-  primary key (product, scripture_reference, change_to_plan)
+  unique (id)
 );
 
 -- INTERNSHIP ENGAGEMENTS

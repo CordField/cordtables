@@ -54,6 +54,7 @@ class Update(
                     column = "partner",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "governance_trans" -> {
@@ -63,6 +64,7 @@ class Update(
                     column = "governance_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "director_trans" -> {
@@ -72,6 +74,7 @@ class Update(
                     column = "director_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "identity_trans" -> {
@@ -81,6 +84,7 @@ class Update(
                     column = "identity_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "growth_trans" -> {
@@ -90,6 +94,7 @@ class Update(
                     column = "growth_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "comm_support_trans" -> {
@@ -99,6 +104,7 @@ class Update(
                     column = "comm_support_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "systems_trans" -> {
@@ -108,6 +114,7 @@ class Update(
                     column = "systems_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "fin_management_trans" -> {
@@ -117,6 +124,7 @@ class Update(
                     column = "fin_management_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "hr_trans" -> {
@@ -126,6 +134,7 @@ class Update(
                     column = "hr_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "it_trans" -> {
@@ -135,6 +144,7 @@ class Update(
                     column = "it_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "program_design_trans" -> {
@@ -144,6 +154,7 @@ class Update(
                     column = "program_design_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "tech_translation_trans" -> {
@@ -153,6 +164,7 @@ class Update(
                     column = "tech_translation_trans",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "director_opp" -> {
@@ -162,6 +174,7 @@ class Update(
                     column = "director_opp",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "financial_management_opp" -> {
@@ -171,6 +184,7 @@ class Update(
                     column = "financial_management_opp",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "program_design_opp" -> {
@@ -182,13 +196,14 @@ class Update(
                     value = req.value,
                 )
             }
-            "director" -> {
+            "director_opp" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.global_partner_assessments",
-                    column = "director",
+                    column = "director_opp",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "tech_translation_opp" -> {
@@ -198,6 +213,7 @@ class Update(
                     column = "tech_translation_opp",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_maturity_scale"
                 )
             }
             "owning_person" -> {
@@ -207,6 +223,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -216,6 +233,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

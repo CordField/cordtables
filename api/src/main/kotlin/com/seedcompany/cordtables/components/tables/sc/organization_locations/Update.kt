@@ -55,6 +55,7 @@ class Update(
                     column = "organization",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "location" -> {
@@ -64,6 +65,7 @@ class Update(
                     column = "location",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_person" -> {

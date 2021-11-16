@@ -54,6 +54,7 @@ class Update(
                     column = "engagement",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "person" -> {
@@ -63,6 +64,7 @@ class Update(
                     column = "person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "role" -> {
@@ -72,6 +74,7 @@ class Update(
                     column = "role",
                     id = req.id,
                     value = req.value,
+                    cast = "::common.people_to_org_relationship_type"
                 )
             }
             "owning_person" -> {
@@ -81,6 +84,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -90,6 +94,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

@@ -54,6 +54,7 @@ class Update(
                     column = "project",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "partner" -> {
@@ -63,6 +64,7 @@ class Update(
                     column = "partner",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "change_to_plan" -> {
@@ -72,6 +74,7 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "active" -> {
@@ -81,6 +84,7 @@ class Update(
                     column = "active",
                     id = req.id,
                     value = req.value,
+                    cast = "::BOOLEAN"
                 )
             }
             "agreement" -> {
@@ -90,6 +94,7 @@ class Update(
                     column = "agreement",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
 
@@ -101,6 +106,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -110,6 +116,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

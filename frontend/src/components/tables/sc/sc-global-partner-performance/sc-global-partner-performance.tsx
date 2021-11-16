@@ -161,16 +161,16 @@ export class ScGlobalPartnerPerformances {
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 150,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'reporting_performance',
       displayName: 'Reporting Performance',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'financial_performance',

@@ -54,6 +54,7 @@ class Update(
                     column = "organization",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "reporting_performance" -> {
@@ -63,6 +64,7 @@ class Update(
                     column = "reporting_performance",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_performance_options"
                 )
             }
             "financial_performance" -> {
@@ -72,6 +74,7 @@ class Update(
                     column = "financial_performance",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_performance_options"
                 )
             }
             "translation_performance" -> {
@@ -81,6 +84,7 @@ class Update(
                     column = "translation_performance",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.partner_performance_options"
                 )
             }
             "owning_person" -> {
@@ -90,6 +94,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -99,6 +104,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }
