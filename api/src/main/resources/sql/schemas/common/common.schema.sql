@@ -60,7 +60,7 @@ create table common.discussion_channels (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
 
   unique (name, owning_group)
 );
