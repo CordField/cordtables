@@ -67,11 +67,12 @@ create type sc.post_type as enum (
 
 create table sc.posts (
   id serial primary key,
+  neo4j_id varchar(32),
 
-  directory int not null references sc.posts_directory(id),
-  type sc.post_type not null,
-  shareability sc.post_shareability not null,
-  body text not null,
+  directory int, --not null references sc.posts_directory(id),
+  type sc.post_type, --not null,
+  shareability sc.post_shareability, --not null,
+  body text, --not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -88,7 +89,7 @@ create table sc.funding_account (
   id serial primary key,
   neo4j_id varchar(32),
 
-	account_number int unique not null,
+	account_number int,
 	name varchar(32),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -140,10 +141,10 @@ create table sc.locations (
 	neo4j_id varchar(32),
 
 	default_region int references sc.field_regions(id),
-	funding_account int references sc.funding_account(account_number),
+	funding_account int references sc.funding_account(id),
 	iso_alpha_3 char(3),
-	name varchar(32) unique not null,
-	type common.location_type not null,
+	name varchar(32),
+	type common.location_type,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -521,10 +522,11 @@ create table sc.people (
 
 create table sc.person_unavailabilities (
   id serial primary key,
+  neo4j_id varchar(32),
 
   person int references admin.people(id),
-	period_start timestamp not null,
-	period_end timestamp not null,
+	period_start timestamp not null default CURRENT_TIMESTAMP,
+	period_end timestamp not null default CURRENT_TIMESTAMP,
 	description text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -704,7 +706,7 @@ create table sc.budgets (
   change_to_plan int default 1,
   project int references sc.projects(id),
   status common.budget_status,
-  universal_template int references common.file_versions(id),
+  universal_template int references common.files(id),
   universal_template_file_url varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -727,7 +729,7 @@ create table sc.budget_records (
   active bool,
   amount decimal,
   fiscal_year int,
-  partnership int references sc.partnerships(id),
+  organization int references sc.organizations(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -737,6 +739,20 @@ create table sc.budget_records (
   owning_group int not null references admin.groups(id),
   peer int references admin.peers(id)
 
+);
+
+create table sc.budget_records_partnerships (
+  id serial primary key,
+  budget_record int not null references sc.budget_records(id),
+  partnership int not null references sc.partnerships(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 );
 
 -- PROJECT LOCATION
@@ -797,7 +813,7 @@ create table sc.language_engagements (
 	paratext_registry varchar(32),
 	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	pnp varchar(255),
-	pnp_file int references common.file_versions(id),
+	pnp_file int references common.files(id),
 	product_engagement_tag common.project_engagement_tag,
 	start_date timestamp,
 	start_date_override timestamp,
