@@ -59,6 +59,11 @@ enum class CommonSensitivity {
     High,
 }
 
+enum class CommonTicketFeedbackOptions {
+    Satisfied,
+    Unsatisfied,
+}
+
 enum class CommonTicketStatus{
     Open,
     Blocked,
