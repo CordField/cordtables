@@ -289,39 +289,51 @@ class Utility(
 
     }
 
-    fun getReadableTables(token: String): MutableList<String> {
+    fun getReadableTables(token: String): List<String> {
         val tableNames = mutableListOf<String>()
+
         if (isAdmin(token)) {
             this.ds.connection.use { conn ->
                 val statement = conn.prepareCall(
-                    "select table_schema || '.' || table_name as table_name " +
-                            "from information_schema.tables where table_schema in ('admin', 'common', 'sc', 'sil') order by table_name asc"
+                    """
+                        select table_schema || '.' || table_name as table_name 
+                        from information_schema.tables 
+                        where table_schema in ('admin', 'common', 'sc', 'sil')
+                        order by table_name asc;
+                    """.trimIndent()
                 )
+
                 val result = statement.executeQuery()
                 while (result.next()) {
-                    tableNames.add(result.getString("table_name").replace('_', '-'))
+                    tableNames.add(result.getString("table_name"))
                 }
             }
-            return tableNames;
+        } else {
+            this.ds.connection.use { conn ->
+                val statement = conn.prepareCall(
+                    """
+                        select distinct table_name
+                        from admin.role_column_grants as a
+                        inner join admin.role_memberships as b
+                        on a.role = b.role
+                        inner join admin.tokens as c
+                        on b.person = c.person
+                        where c.token = ? order by table_name asc;
+                    """.trimIndent()
+                )
+                statement.setString(1, token)
+                val result = statement.executeQuery()
+                while (result.next()) {
+                    tableNames.add(result.getString("table_name"))
+                }
+            }
+
         }
 
-        this.ds.connection.use { conn ->
-            val statement = conn.prepareCall(
-                "select distinct table_name \n" +
-                        "from admin.role_column_grants as a \n" +
-                        "inner join admin.role_memberships as b \n" +
-                        "on a.role = b.role \n" +
-                        "inner join admin.tokens as c \n" +
-                        "on b.person = c.person \n" +
-                        "where c.token = ? order by table_name asc"
-            )
-            statement.setString(1, token)
-            val result = statement.executeQuery()
-            while (result.next()) {
-                tableNames.add(result.getString("table_name").replace('_', '-'))
-            }
-        }
-        return tableNames;
+        return tableNames
+            .filter { !it.contains("_history") }
+            .filter { !it.contains("_peer") }
+            .map { it.replace('_', '-') };
     }
 
     fun updateField(token: String, table: String, column: String, id: Int, value: Any?, cast: String? = "") {
