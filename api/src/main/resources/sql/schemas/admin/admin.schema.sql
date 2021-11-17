@@ -139,7 +139,7 @@ create table admin.people (
   private_full_name varchar(64),
   public_full_name varchar(64),
   sensitivity_clearance common.sensitivity default 'Low',
-  time_zone varchar(32),
+  timezone varchar(32),
   title varchar(255),
 	status varchar(32),
   
@@ -234,9 +234,9 @@ create table admin.roles (
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+    modified_by int not null references admin.people(id),
+    owning_person int not null references admin.people(id),
+    owning_group int not null references admin.groups(id),
 
 	unique (owning_group, name)
 );
