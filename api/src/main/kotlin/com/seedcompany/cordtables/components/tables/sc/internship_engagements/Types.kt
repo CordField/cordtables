@@ -72,7 +72,7 @@ data class internshipEngagementInput(
 )
 
 //project int not null references sc.projects(id),
-//ethnologue int not null references sil.table_of_languages(id),
+//ethnologue int not null references sc.ethnologue(id),
 //change_to_plan int not null default 1 references sc.change_to_plans(id),
 //active bool,
 //communications_complete_date timestamp,

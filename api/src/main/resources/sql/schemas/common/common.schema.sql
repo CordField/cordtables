@@ -11,7 +11,7 @@ create type common.mime_type as enum (
 
 -- SITE TEXT --------------------------------------------------------------------------------
 
--- talk to Michael about why this table exists
+-- meant to be extended by all orgs, so everyone has a unique id to reference within their language lists
 create table common.languages(
   id serial primary key,
 

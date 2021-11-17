@@ -203,13 +203,13 @@ BEGIN
   -- update the "relationship" props.
   SELECT ethnologue INTO l_eth FROM sc.languages WHERE ethnologue IS NULL and neo4j_id = pNeo4j_id;
   if found then
-      WITH eth AS (select id from sil.table_of_languages where iso_639 = pIso_639)
+      WITH eth AS (select id from sc.ethnologue where iso_639 = pIso_639)
     update sc.languages
       set ethnologue = eth.id
     FROM eth
     WHERE neo4j_id = pNeo4j_id;
   else
-      WITH eth AS (select id from sil.table_of_languages where iso_639 = pIso_639)
+      WITH eth AS (select id from sc.ethnologue where iso_639 = pIso_639)
     update sc.languages
       set ethnologue = eth.id
     FROM eth
