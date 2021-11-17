@@ -35,8 +35,10 @@
   "dependencies": {
     "@ionic/core": "^5.8.0",
     "@stencil/store": "^1.4.1",
+    "@types/mapbox-gl": "^2.4.2",
     "date-fns": "^2.24.0",
     "date-fns-tz": "^1.1.6",
+    "mapbox-gl": "^2.6.0",
     "set-value": ">=4.0.1"
   }
 }
