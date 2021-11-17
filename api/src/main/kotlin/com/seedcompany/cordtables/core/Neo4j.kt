@@ -10,19 +10,15 @@ import org.joda.time.DateTime
 import org.neo4j.driver.Driver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.SqlParameterValue
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLType
-import java.sql.Types
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
-import kotlin.concurrent.thread
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
+import kotlin.math.roundToInt
 
 data class Neo4jMigrationRequest(
     val token: String? = null,
@@ -39,6 +35,10 @@ data class BaseNode(
 data class PropertyNode(
     val type: String,
     val value: Any? = null,
+)
+data class BaseAndPropertyNode(
+    val baseNode: BaseNode,
+    val propNode: PropertyNode
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -65,6 +65,8 @@ class Neo4j(
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
     var neo4jIdQueue = ConcurrentLinkedQueue<BaseNode>()
+    var nodeAndPropertyQueue = ConcurrentLinkedQueue<BaseAndPropertyNode>()
+    var errorOutput = mutableMapOf<String, Exception>()
 
     @PostMapping("migrate/neo4j")
     @ResponseBody
@@ -211,12 +213,32 @@ class Neo4j(
         }
     }
 
+    suspend fun getNodeAndProperties(skip: Int, size: Int) {
+        neo4j.session().use { session ->
+            session.run("MATCH (m:BaseNode) -[r]-> (p:Property) RETURN m, r, p skip $skip limit $size")
+                .list()
+                .forEach {
+                    nodeAndPropertyQueue.add(
+                         BaseAndPropertyNode(
+                            baseNode = BaseNode (
+                                        id = it.get("m").asNode().get("id").asString(),
+                                        labels = it.get("m").asNode().labels() as List<String>
+                            ),
+                             propNode = PropertyNode(
+                                 type = it.get("r").asRelationship().type(),
+                                 value = it.get("p").asNode().get("value").asObject()
+                             )
+                        )
+                    )
+                }
+        }
+    }
+
     suspend fun createBaseNodeIdempotent(node: BaseNode) {
         when {
             node.labels.contains("File") -> writeBaseNode(
-                targetTable = "sc.files",
+                targetTable = "common.files",
                 id = node.id,
-                commonTable = "common.files",
             )
             node.labels.contains("Organization") -> writeBaseNode(
                 targetTable = "sc.organizations",
@@ -241,7 +263,7 @@ class Neo4j(
                 id = node.id,
             )
             node.labels.contains("FieldZone") -> writeBaseNode(
-                targetTable = "sc.field_zone",
+                targetTable = "sc.field_zones",
                 id = node.id,
             )
             node.labels.contains("FieldRegion") -> writeBaseNode(
@@ -280,10 +302,10 @@ class Neo4j(
                 targetTable = "common.directories",
                 id = node!!.id,
             )
-            node!!.labels.contains("BaseFile") -> writeBaseNode(
-                targetTable = "common.files",
+            node!!.labels.contains("FileVersion") -> { println("FOUND!"); writeBaseNode(
+                targetTable = "common.file_versions",
                 id = node!!.id,
-            )
+            ) }
             node!!.labels.contains("Partner") -> writeBaseNode(
                 targetTable = "sc.partners",
                 id = node!!.id,
@@ -296,8 +318,21 @@ class Neo4j(
                 targetTable = "sc.budget_records",
                 id = node!!.id,
             )
+            node!!.labels.contains("Location") -> writeBaseNode(
+                targetTable = "common.locations",
+                id = node!!.id,
+            )
+            node!!.labels.contains("FundingAccount") -> writeBaseNode(
+                targetTable = "sc.funding_accounts",
+                id = node!!.id,
+            )
+            node!!.labels.contains("Product") -> writeBaseNode(
+                targetTable = "sc.products",
+                id = node!!.id,
+            )
             else -> {
-            }//println("didn't process: ${node.labels}")
+                println("didn't process: ${node.labels}")
+            }
         }
     }
 
@@ -325,7 +360,7 @@ class Neo4j(
         }
     }
 
-    suspend fun writeBaseNode(targetTable: String, id: String, commonTable: String? = null) {
+    suspend fun writeBaseNode(targetTable: String, id: String, commonTable: String? = null, foreignKey: String? = null, neo4jIdTable: String? = null,) {
         val exists = jdbcTemplate.queryForObject(
             "select exists(select id from $targetTable where neo4j_id = ?);",
             Boolean::class.java,
@@ -363,73 +398,174 @@ class Neo4j(
     suspend fun migrateBaseNodeProperties() {
         println("starting base nodes' property migration")
 
-        var totalPropertyNodes = AtomicInteger(0)
+        var totalPropNodes = 0
         neo4j.session().use { session ->
-            totalPropertyNodes.set(
-                session.run("MATCH (n:BaseNode) --> (p:Property) RETURN count(p) as count").single().get("count").asInt())
+            totalPropNodes =
+                session.run("MATCH (n:BaseNode) --> (p:Property) RETURN count(p) as count").single().get("count").asInt()
 
-            println("total count of property nodes is $totalPropertyNodes")
+            println("count of property nodes is $totalPropNodes")
         }
 
-        if (totalPropertyNodes == null) {
+        if (totalPropNodes == null) {
             println("failed to count property nodes")
             return
         }
 
-        for( i in 0 until totalPropertyNodes.get()){
-            println("loop $i")
-            createPropertyNode(i)
+        var fetchedNodes = 0
+        val batchSize = 1000
+        val maxQueueSize = 5000
+
+        coroutineScope {
+
+            // bring neo4j ids into queue as needed until no more left
+            launch {
+                println("starting reader")
+
+                while (fetchedNodes < totalPropNodes) {
+                    if (nodeAndPropertyQueue.size < maxQueueSize) {
+                        if (totalPropNodes - fetchedNodes > batchSize) {
+//                            println("fetched nodes: $fetchedNodes")
+                            getNodeAndProperties(fetchedNodes, batchSize)
+                            fetchedNodes += batchSize
+//                            println("queue size is ${neo4jIdQueue.size}")
+                        } else {
+                            getNodeAndProperties(fetchedNodes, totalPropNodes - fetchedNodes)
+                            fetchedNodes += totalPropNodes - fetchedNodes
+                        }
+                    } else {
+                        delay(1000L)
+                    }
+                    delay(1L)
+                }
+                println("reader closing")
+            }
+
+            // feed nodes into postgres until gone
+            val processedNodes = AtomicInteger(0)
+
+//            val then = DateTime.now().millis
+
+            launch {
+                println("starting writer 1")
+                while (nodeAndPropertyQueue.size > 0) {
+                    val node = nodeAndPropertyQueue.remove() ?: return@launch
+                    errorOutput += createPropertyNode(node.baseNode, node.propNode)
+                    processedNodes.incrementAndGet()
+                    delay(1L) // I don't know why this is needed, but it is.
+                }
+                println("writer 1 closing")
+            }
+
+            launch {
+                println("starting writer 2")
+                while (nodeAndPropertyQueue.size > 0) {
+                    val node = nodeAndPropertyQueue.remove() ?: return@launch
+                    errorOutput += createPropertyNode(node.baseNode, node.propNode)
+                    processedNodes.incrementAndGet()
+                    delay(1L) // I don't know why this is needed, but it is.
+                }
+                println("writer 2 closing")
+            }
+
+
+            // progress
+            launch {
+                val then = DateTime.now().millis
+
+                while (processedNodes.toInt() < totalPropNodes) {
+                    val lapse = DateTime.now().millis - then
+
+                    var rate =
+                        if (processedNodes.get() == 0) 0F else processedNodes.get().toFloat() / lapse.toFloat() * 1000F
+
+                    val remainingNodes = totalPropNodes.toFloat() - processedNodes.get().toFloat()
+                    val eta = remainingNodes / rate / 60F
+
+                    print("\r${processedNodes}/$totalPropNodes rate: ${rate.toInt()} records/sec eta: ${eta.toInt()}m queue: ${nodeAndPropertyQueue.size}")
+
+                    delay(1000L)
+                }
+            }
+
         }
+
+        if (errorOutput.isNotEmpty()) {
+            throw Exception("There were errors in property migration: \n$errorOutput")
+        }
+        println("property migration done")
 
     }
 
-    suspend fun createPropertyNode(skip: Int) {
-        var node: BaseNode? = null
-        var prop: PropertyNode? = null
-        neo4j.session().use { session ->
-            val baseNodeReturn =
-                session.run("MATCH (m:BaseNode) -[r]-> (p:Property) RETURN m, r, p skip $skip limit 1")
-                    .single()
+    suspend fun createPropertyNode(node: BaseNode, prop: PropertyNode): MutableMap<String, Exception> {
+        var err = mutableMapOf<String, Exception>();
 
-            node = BaseNode(
-                id = baseNodeReturn.get("m").asNode().get("id").asString(),
-                labels = baseNodeReturn.get("m").asNode().labels() as List<String>
-            )
-            prop = PropertyNode(
-                type = baseNodeReturn.get("r").asRelationship().type(),
-                value = baseNodeReturn.get("p").asNode().get("value").asObject()
-            )
-            if (node == null) return
-            if (prop?.value == null) return  // postgres assigns values to null by default, so if they're not in neo4j we stop here.
-            if (prop?.type.equals("canDelete")) return  // we're not migrating canDelete
-        }
+        if (node == null) {return err;}
+        if (prop?.value == null) {return err;}  // postgres assigns values to null by default, so if they're not in neo4j we stop here.
+        if (prop?.type.equals("canDelete")) { return err;}  // we're not migrating canDelete
+        if (prop?.type.equals("roles")) {return err;} // skipping roles for now
+
         when {
-            node!!.labels.contains("File") -> writeNodeProperty(
-                targetTable = "sc.files",
+            node!!.labels.contains("File") -> err = writeNodeProperty(
+                targetTable = "common.files",
                 id = node!!.id,
                 propKey = prop!!.type,
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("Organization") -> writeNodeProperty(
+            node!!.labels.contains("FileVersion") -> err = writeNodeProperty(
+                targetTable = "common.file_versions",
+                id = node!!.id,
+                propKey = if (prop!!.type.equals("size"))
+                                {"file_size"}
+                          else
+                                {prop!!.type},
+                propValue = if (prop!!.type.equals("size"))                   // should be an integer, but saved in neo4j as integers with trailing '.0'
+                                { (prop!!.value!! as Double).roundToInt() }
+                            else
+                                { prop!!.value!! }
+            )
+            node!!.labels.contains("Organization") -> err = writeNodeProperty(
                 targetTable = "sc.organizations",
                 id = node!!.id,
                 propKey = prop!!.type,
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("TranslationProject") -> writeNodeProperty(
+            node!!.labels.contains("TranslationProject") -> err = writeNodeProperty(
                 targetTable = "sc.projects",
                 id = node!!.id,
-                propKey = prop!!.type,
-                propValue = prop!!.value!!
+                propKey = if (prop!!.type.equals("departmentId"))
+                                {"department"}
+                          else prop!!.type,
+                propValue = prop!!.value!!,
+                foreignKey = if (prop!!.type.equals("primaryLocation"))
+                                { "primary_location" }
+                            else if (prop!!.type.equals("marketingLocation"))
+                                {"marketing_location"}
+                            else if (prop!!.type.equals("fieldRegion"))
+                                {"field_region"}
+                            else if (prop!!.type.equals("owningOrganization"))
+                                {"owning_organization"}
+                            else
+                                null,
+                foreignTable = if (prop!!.type.equals("primaryLocation") || prop!!.type.equals("marketingLocation"))
+                                    { "sc.locations" }
+                               else if (prop!!.type.equals("fieldRegion"))
+                                    { "sc.field_regions" }
+                               else if (prop!!.type.equals("owningOrganization"))
+                                    { "sc.organizations" }
+                               else
+                                    null,
             )
-            node!!.labels.contains("InternshipProject") -> writeNodeProperty(
+            node!!.labels.contains("InternshipProject") -> err =  writeNodeProperty(
                 targetTable = "sc.projects",
                 id = node!!.id,
-                propKey = prop!!.type,
+                propKey = if (prop!!.type.equals("departmentId"))
+                            {"department" }
+                          else
+                            { prop!!.type },
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("RootUser") -> return      // skip the root user
-            node!!.labels.contains("User") -> writeNodeProperty(
+            node!!.labels.contains("RootUser") -> {return err;}      // skip the root user
+            node!!.labels.contains("User") -> err = writeNodeProperty(
                 targetTable =
                     if (prop!!.type.equals("email"))
                         {"admin.users"}
@@ -460,129 +596,212 @@ class Neo4j(
                              else
                                  null,
             )
-            node!!.labels.contains("ProjectMember") -> writeNodeProperty(
+            node!!.labels.contains("ProjectMember") -> err = writeNodeProperty(
                 targetTable = "sc.project_members",
                 id = node!!.id,
                 propKey = prop!!.type,
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("FieldZone") -> writeNodeProperty(
-                targetTable = "sc.field_zone",
+            node!!.labels.contains("FieldZone") -> err = writeNodeProperty(
+                targetTable = "sc.field_zones",
                 id = node!!.id,
                 propKey = prop!!.type,
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("FieldRegion") -> writeNodeProperty(
+            node!!.labels.contains("FieldRegion") -> err =  writeNodeProperty(
                 targetTable = "sc.field_regions",
                 id = node!!.id,
                 propKey = prop!!.type,
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("Budget") -> writeNodeProperty(
+            node!!.labels.contains("Budget") -> err = writeNodeProperty(
                 targetTable = "sc.budgets",
                 id = node!!.id,
-                propKey = prop!!.type,
-                propValue = prop!!.value!!
+                propKey = if (prop!!.type.equals("universalTemplateFile"))
+                            { "universal_template" }
+                          else prop!!.type,
+                propValue = prop!!.value!!,
+                foreignKey = if (prop!!.type.equals("universalTemplateFile"))
+                                { "universal_template" }
+                            else
+                                null,
+                foreignTable = if (prop!!.type.equals("universalTemplateFile"))
+                                   { "common.files" }
+                               else
+                                   null,
             )
-            node!!.labels.contains("EthnologueLanguage") -> writeNodeProperty(
+            node!!.labels.contains("EthnologueLanguage") -> err = writeNodeProperty(
                 targetTable = "sil.table_of_languages",
                 id = node!!.id,
-                propKey = prop!!.type,
-                propValue = prop!!.value!!
+                propKey = if (prop!!.type.equals("name"))
+                            {"language_name"}
+                          else
+                            { prop!!.type },
+                propValue = if (prop!!.type.equals("population"))                   // should be an integer, but saved in neo4j as integers with trailing '.0'
+                                 { (prop!!.value!! as Double).roundToInt() }
+                            else
+                                { prop!!.value!! }
             )
-            node!!.labels.contains("Language") -> writeNodeProperty(
+            node!!.labels.contains("Language") -> err = writeNodeProperty(
                 targetTable = "sc.languages",
                 id = node!!.id,
-                propKey = prop!!.type,
-                propValue = prop!!.value!!
+                propKey =  if (prop!!.type.equals("leastOfThese"))
+                            { "is_least_of_these" }
+                          else if (prop!!.type.equals("isSignLanguage"))
+                            { "is_sign_language" }
+                          else
+                            { prop!!.type },
+                propValue = if (prop!!.type.equals("populationOverride"))                   // should be an integer, but saved in neo4j as integers with trailing '.0'
+                                { (prop!!.value!! as Double).roundToInt() }
+                            else
+                                prop!!.value!!
             )
-            node!!.labels.contains("LanguageEngagement") -> writeNodeProperty(
+            node!!.labels.contains("LanguageEngagement") -> err = writeNodeProperty(
                 targetTable = "sc.language_engagements",
                 id = node!!.id,
-                propKey = prop!!.type,
+                propKey = if (prop!!.type.equals("firstScripture"))
+                            { "is_first_scripture" }
+                          else if (prop!!.type.equals("lukePartnership"))
+                            { "is_luke_partnership" }
+                          else if (prop!!.type.equals("paratextRegistryId"))
+                            { "paratext_registry" }
+                          else if (prop!!.type.equals("pnp"))                       //neo4j doesn't have pnp and pnp file, but pnp references a file, so putting in pnp_file
+                            { "pnp_file" }
+                          else
+                            { prop!!.type },
                 propValue = prop!!.value!!,
-                preferredType = if(prop!!.type.equals("status")) { Types.OTHER } else null
+                foreignKey = if (prop!!.type.equals("pnp"))
+                                { "pnp_file" }
+                             else
+                                null,
+                foreignTable = if (prop!!.type.equals("pnp"))
+                                    { "common.files" }
+                             else
+                                 null,
             )
-            node!!.labels.contains("InternshipEngagement") -> writeNodeProperty(
+            node!!.labels.contains("InternshipEngagement") -> err = writeNodeProperty(
                 targetTable = "sc.internship_engagements",
                 id = node!!.id,
-                propKey =
-                    if (prop!!.type.equals("modifiedAt"))
-                        { "modified_at" }
-                    else if (prop!!.type.equals("growthPlan"))
-                        { "growth_plan" }
-                    else
-                        prop!!.type,
+                propKey = prop!!.type,
                 propValue = prop!!.value!!,
-                preferredType = if(prop!!.type.equals("status")) { Types.OTHER } else null,
                 foreignKey = if (prop!!.type.equals("growthPlan"))
                                 { "growth_plan" }
                              else
                                  null,
-                neo4jIdTable = if (prop!!.type.equals("growthPlan"))
-                                    return
-                             else
-                                null,
+                foreignTable = if (prop!!.type.equals("growthPlan"))
+                                    { "common.files" }
+                               else
+                                    null,
             )
-            node!!.labels.contains("Ceremony") -> writeNodeProperty(
+            node!!.labels.contains("Ceremony") -> err = writeNodeProperty(
                 targetTable = "sc.ceremonies",
                 id = node!!.id,
-                propKey = prop!!.type,
+                propKey = if (prop!!.type.equals("planned"))
+                                {"is_planned"}
+                          else prop!!.type,
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("PeriodicReport") -> writeNodeProperty(
+            node!!.labels.contains("PeriodicReport") ->err = writeNodeProperty(
                 targetTable = "sc.periodic_reports",
                 id = node!!.id,
-                propKey = prop!!.type,
-                propValue = prop!!.value!!
+                propKey = if (prop!!.type.equals("start"))
+                            { "start_at" }
+                        else if (prop!!.type.equals("end"))
+                            { "end_at" }
+                        else
+                            prop!!.type,
+                propValue = prop!!.value!!,
+                foreignKey =
+                        if (prop!!.type.equals("reportFile"))
+                            { "report_file" }
+                        else
+                            null,
+                foreignTable = if (prop!!.type.equals("reportFile"))
+                                    { "common.files" }
+                               else
+                                    null,
             )
-            node!!.labels.contains("Directory") -> writeNodeProperty(
+            node!!.labels.contains("Directory") -> err = writeNodeProperty(
                 targetTable = "common.directories",
                 id = node!!.id,
                 propKey = prop!!.type,
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("BaseFile") -> writeNodeProperty(
-                targetTable = "common.files",
-                id = node!!.id,
-                propKey = prop!!.type,
-                propValue = prop!!.value!!
-            )
-            node!!.labels.contains("Partner") -> writeNodeProperty(
+            node!!.labels.contains("Partner") ->  err = writeNodeProperty(
                 targetTable = "sc.partners",
                 id = node!!.id,
-                propKey = prop!!.type,
+                propKey =  if (prop!!.type.equals("globalInnovationsClient"))
+                                {"is_innovations_client" }
+                          else
+                                {prop!!.type},
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("Partnership") -> writeNodeProperty(
+            node!!.labels.contains("Partnership") -> err = writeNodeProperty(
                 targetTable = "sc.partnerships",
+                id = node!!.id,
+                propKey = if(prop!!.type.equals("primary"))
+                            {"is_primary"}
+                          else prop!!.type,
+                propValue = prop!!.value!!,
+                foreignKey = if (prop!!.type.equals("agreement"))
+                                { "agreement" }
+                             else if (prop!!.type.equals("mou"))
+                                { "mou" }
+                             else
+                                null,
+                foreignTable = if (prop!!.type.equals("agreement") || prop!!.type.equals("mou"))
+                                        { "common.files" }
+                               else
+                                    null,
+            )
+            node!!.labels.contains("BudgetRecord") -> err = writeNodeProperty(
+                targetTable = "sc.budget_records",
+                id = node!!.id,
+                propKey = prop!!.type,
+                propValue = if (prop!!.type.equals("fiscalYear"))                   // should be an integer, but saved in neo4j as integers with trailing '.0'
+                                { (prop!!.value!! as Double).roundToInt() }
+                            else
+                                { prop!!.value!! }
+            )
+            node!!.labels.contains("Location") -> err = writeNodeProperty(
+                targetTable = "common.locations",
                 id = node!!.id,
                 propKey = prop!!.type,
                 propValue = prop!!.value!!
             )
-            node!!.labels.contains("BudgetRecord") -> writeNodeProperty(
-                targetTable = "sc.budget_records",
+            node!!.labels.contains("FundingAccount") -> err = writeNodeProperty(
+                targetTable = "sc.funding_accounts",
+                id = node!!.id,
+                propKey = prop!!.type,
+                propValue = if (prop!!.type.equals("accountNumber"))                   // should be an integer, but saved in neo4j as integers with trailing '.0'
+                                { (prop!!.value!! as Double).roundToInt() }
+                            else
+                                { prop!!.value!! }
+            )
+            node!!.labels.contains("Product") -> err = writeNodeProperty(
+                targetTable = "sc.products",
                 id = node!!.id,
                 propKey = prop!!.type,
                 propValue = prop!!.value!!
             )
             else -> {
-            }//println("didn't process: ${node.labels}")
+                err["\nnode: $node \tprop: $prop"] = Exception("Node Not Processed")
+            }
 
         }
+        return err;
     }
-    suspend fun writeNodeProperty(targetTable: String, id: String, propKey: String, propValue: Any, foreignKey: String? = null, neo4jIdTable: String? = null, preferredType: Int? = null) {
+    suspend fun writeNodeProperty(targetTable: String, id: String, propKey: String, propValue: Any, foreignKey: String? = null, foreignTable: String? = null, neo4jIdTable: String? = null): MutableMap<String, Exception> {
+        var err = mutableMapOf<String, Exception>();
+        //println(propValue.javaClass)
 
-        val exists = jdbcTemplate.queryForObject(
-            "select exists(select id from ${neo4jIdTable ?: targetTable} where neo4j_id = ?);",
-            Boolean::class.java,
-            id
-        )
+        val cleanedPropKey = propKey.toSnakeCase()
 
-        println(propValue.javaClass.kotlin)
         var realPropValue =
                 if (propValue is org.neo4j.driver.internal.value.StringValue )
-                    { propValue.asString() }
+                    { propValue.asString().replace("'", "''") }
+                else if (propValue is kotlin.String)
+                    { propValue.replace("'", "''") }
                 else if (propValue is org.neo4j.driver.internal.value.BooleanValue)
                     { propValue.asBoolean() }
                 else if (propValue is org.neo4j.driver.internal.value.IntegerValue)
@@ -590,27 +809,50 @@ class Neo4j(
                 else if (propValue is java.time.ZonedDateTime)
                     { java.sql.Timestamp.from(propValue.toInstant()) }
                 else
-                    propValue;
-        println("$targetTable\t$id\t$propKey\t$realPropValue")
-        if (exists) {
-            if (neo4jIdTable != null) {
-                println("update $targetTable SET $propKey = ? WHERE $foreignKey = (SELECT id from $neo4jIdTable where neo4j_id = ?)")
-                jdbcTemplate.update(
-                    "update $targetTable SET $propKey = ? WHERE $foreignKey = (SELECT id from $neo4jIdTable where neo4j_id = ?)",
-                    realPropValue,
-                    id
-                )
-            } else {
-                println("update $targetTable SET $propKey = ? WHERE neo4j_id = ?")
-                jdbcTemplate.update(
-                    "update $targetTable SET $propKey = '$realPropValue' WHERE neo4j_id = ?",
-                    id
-                )
+                    propValue.toString().replace('[','{').replace(']','}');
+        //System.out.format("%-32s%-32s%-32s%-32s%-32s\n%-32s%-32s%-32s%-32s%-32s\n", "TargetTable","Neo4JIdTable","id","propKey", "realPropValue", targetTable, foreignTable, id, cleanedPropKey, realPropValue)
+
+        try {
+            val exists = jdbcTemplate.queryForObject(
+                "select exists(select id from ${foreignTable ?: neo4jIdTable ?: targetTable} where neo4j_id = ?);",
+                Boolean::class.java,
+                if (foreignTable != null) realPropValue else id
+            )
+            if (exists) {
+                if (foreignTable != null) {
+                    jdbcTemplate.update(
+                        "update $targetTable SET $foreignKey = (SELECT id from $foreignTable where neo4j_id = ?) WHERE neo4j_id = ?",
+                        realPropValue,
+                        id
+                    )
+                } else if (neo4jIdTable != null) {
+                    jdbcTemplate.update(
+                        "update $targetTable SET $cleanedPropKey = '$realPropValue' WHERE $foreignKey = (SELECT id from $neo4jIdTable WHERE neo4j_id = '${id}')"
+                    )
+                } else {
+                    //println("update $targetTable SET $cleanedPropKey = ? WHERE neo4j_id = ?")
+                    jdbcTemplate.update(
+                        "update $targetTable SET $cleanedPropKey = '$realPropValue' WHERE neo4j_id = ?",
+                        id
+                    )
+                }
             }
-
-        } else {
-            throw Exception("A BaseNode is not created for this Property yet.")
+        } catch (e: Exception) {
+            err["\n\nERROR:\n\tTargetTable: $targetTable\n" +
+                    "\tNeo4JIdTable: $neo4jIdTable\n" +
+                    "\tid:$id\n\tpropKey:$propKey\n" +
+                    "\trealPropValue: $realPropValue\n" +
+                    "\tforeignTable:$foreignTable\n" +
+                    "\tforeignKey:$foreignKey\n"]= Exception(e);
         }
+        //println(err)
+        return err;
+    }
 
+    fun String.toSnakeCase(): String{
+        val regex = "(?<=[a-zA-Z])[A-Z]".toRegex();
+        return regex.replace(this) {
+            "_${it.value}"
+        }.toLowerCase();
     }
 }
