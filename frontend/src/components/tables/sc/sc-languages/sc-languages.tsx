@@ -5,6 +5,8 @@ import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
 import mapboxgl from 'mapbox-gl';
+// import 'https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css';
+// import 'mapbox-gl/dist/mapbox-gl.css';
 // import {mapbox} from 'mapbox-gl'
 
 class CreateLanguageExRequest {
@@ -54,16 +56,12 @@ class DeleteLanguageExResponse extends GenericResponse {
 })
 export class ScLanguages {
   @State() languagesResponse: ScLanguagesListResponse;
+  // @State() lng: number = 32.7;
+  // @State() lat: number = -114.76;
+  // @State() zoom: number = 1;
   newLanguageName: string;
   newDisplayName: string;
   mapbox!: HTMLElement;
-
-  @Watch('mapbox')
-  watchMapboxHandler(newValue) {
-    console.log(newValue);
-    if (newValue !== null) {
-    }
-  }
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
@@ -709,23 +707,42 @@ export class ScLanguages {
   componentDidLoad() {
     const map = new mapboxgl.Map({
       container: this.mapbox, // container ID
-      style: 'mapbox://styles/mapbox/streets-v11', // style URL
-      center: [-74.5, 40], // starting position [lng, lat]
-      zoom: 9, // starting zoom
+      style: 'mapbox://styles/mapbox/dark-v10', // style URL
+      center: [-28, -14], // starting position [lng, lat]
+      zoom: 1, // starting zoom
+    });
+    map.on('load', () => {
+      console.log('languagesResponse', this.languagesResponse);
+      this.languagesResponse.languages
+        .filter(language => language.coordinates_json != null && language.coordinates_json != undefined)
+        .map(language => {
+          const parsedJson = JSON.parse(language.coordinates_json) as {
+            type: string;
+            coordinates: [number, number];
+          };
+          const coordinates = parsedJson.coordinates;
+          console.log(coordinates);
+          const markerNode = document.createElement('div');
+          // document.querySelector('.sc-languages').append(markerNode);
+          markerNode.className = 'marker';
+          console.log(markerNode);
+          new mapboxgl.Marker(markerNode).setLngLat(coordinates).addTo(map);
+          // type: 'Feature',
+          // geometry: ,
+          // properties: {
+          //   message: language.display_name ?? 'Unknown',
+          //   iconSize: [20, 20],
+          // },
+        });
+      map.resize();
     });
   }
 
   render() {
     return (
-      <Host>
+      <Host class="sc-languages">
         <slot></slot>
         {/* table abstraction */}
-        {this.languagesResponse && <cf-table rowData={this.languagesResponse.languages} columnData={this.columnData}></cf-table>}
-        <div id="mapbox" class="mapbox" ref={mapbox => (this.mapbox = mapbox)}></div>
-
-        {/* create form - we'll only do creates using the minimum amount of fields
-         and then expect the user to use the update functionality to do the rest*/}
-
         {globals.globalStore.state.editMode === true && (
           <div>
             <form class="form-thing">
@@ -751,6 +768,11 @@ export class ScLanguages {
             </form>
           </div>
         )}
+        {this.languagesResponse && <cf-table rowData={this.languagesResponse.languages} columnData={this.columnData}></cf-table>}
+        <div id="map" class="mapbox" ref={mapbox => (this.mapbox = mapbox)}></div>
+
+        {/* create form - we'll only do creates using the minimum amount of fields
+         and then expect the user to use the update functionality to do the rest*/}
       </Host>
     );
   }
