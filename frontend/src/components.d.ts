@@ -129,8 +129,6 @@ export namespace Components {
     }
     interface PeopleToOrgRelationships {
     }
-    interface PostsTable {
-    }
     interface RoleColumnGrants {
         "history": RouterHistory;
     }
@@ -220,8 +218,6 @@ export namespace Components {
     }
     interface TableRoot {
         "match": MatchResults;
-    }
-    interface ThreadsTable {
     }
     interface TicketAssignments {
     }
@@ -529,12 +525,6 @@ declare global {
         prototype: HTMLPeopleToOrgRelationshipsElement;
         new (): HTMLPeopleToOrgRelationshipsElement;
     };
-    interface HTMLPostsTableElement extends Components.PostsTable, HTMLStencilElement {
-    }
-    var HTMLPostsTableElement: {
-        prototype: HTMLPostsTableElement;
-        new (): HTMLPostsTableElement;
-    };
     interface HTMLRoleColumnGrantsElement extends Components.RoleColumnGrants, HTMLStencilElement {
     }
     var HTMLRoleColumnGrantsElement: {
@@ -799,12 +789,6 @@ declare global {
         prototype: HTMLTableRootElement;
         new (): HTMLTableRootElement;
     };
-    interface HTMLThreadsTableElement extends Components.ThreadsTable, HTMLStencilElement {
-    }
-    var HTMLThreadsTableElement: {
-        prototype: HTMLThreadsTableElement;
-        new (): HTMLThreadsTableElement;
-    };
     interface HTMLTicketAssignmentsElement extends Components.TicketAssignments, HTMLStencilElement {
     }
     var HTMLTicketAssignmentsElement: {
@@ -902,7 +886,6 @@ declare global {
         "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
         "people-to-org-relationships": HTMLPeopleToOrgRelationshipsElement;
-        "posts-table": HTMLPostsTableElement;
         "role-column-grants": HTMLRoleColumnGrantsElement;
         "role-memberships": HTMLRoleMembershipsElement;
         "role-table-permissions": HTMLRoleTablePermissionsElement;
@@ -947,7 +930,6 @@ declare global {
         "stage-role-column-grants": HTMLStageRoleColumnGrantsElement;
         "stages-table": HTMLStagesTableElement;
         "table-root": HTMLTableRootElement;
-        "threads-table": HTMLThreadsTableElement;
         "ticket-assignments": HTMLTicketAssignmentsElement;
         "ticket-feedback": HTMLTicketFeedbackElement;
         "ticket-graph": HTMLTicketGraphElement;
@@ -1084,8 +1066,6 @@ declare namespace LocalJSX {
     }
     interface PeopleToOrgRelationships {
     }
-    interface PostsTable {
-    }
     interface RoleColumnGrants {
         "history"?: RouterHistory;
     }
@@ -1176,8 +1156,6 @@ declare namespace LocalJSX {
     interface TableRoot {
         "match"?: MatchResults;
     }
-    interface ThreadsTable {
-    }
     interface TicketAssignments {
     }
     interface TicketFeedback {
@@ -1243,7 +1221,6 @@ declare namespace LocalJSX {
         "peers-table": PeersTable;
         "people-table": PeopleTable;
         "people-to-org-relationships": PeopleToOrgRelationships;
-        "posts-table": PostsTable;
         "role-column-grants": RoleColumnGrants;
         "role-memberships": RoleMemberships;
         "role-table-permissions": RoleTablePermissions;
@@ -1288,7 +1265,6 @@ declare namespace LocalJSX {
         "stage-role-column-grants": StageRoleColumnGrants;
         "stages-table": StagesTable;
         "table-root": TableRoot;
-        "threads-table": ThreadsTable;
         "ticket-assignments": TicketAssignments;
         "ticket-feedback": TicketFeedback;
         "ticket-graph": TicketGraph;
@@ -1351,7 +1327,6 @@ declare module "@stencil/core" {
             "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "people-to-org-relationships": LocalJSX.PeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLPeopleToOrgRelationshipsElement>;
-            "posts-table": LocalJSX.PostsTable & JSXBase.HTMLAttributes<HTMLPostsTableElement>;
             "role-column-grants": LocalJSX.RoleColumnGrants & JSXBase.HTMLAttributes<HTMLRoleColumnGrantsElement>;
             "role-memberships": LocalJSX.RoleMemberships & JSXBase.HTMLAttributes<HTMLRoleMembershipsElement>;
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
@@ -1396,7 +1371,6 @@ declare module "@stencil/core" {
             "stage-role-column-grants": LocalJSX.StageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLStageRoleColumnGrantsElement>;
             "stages-table": LocalJSX.StagesTable & JSXBase.HTMLAttributes<HTMLStagesTableElement>;
             "table-root": LocalJSX.TableRoot & JSXBase.HTMLAttributes<HTMLTableRootElement>;
-            "threads-table": LocalJSX.ThreadsTable & JSXBase.HTMLAttributes<HTMLThreadsTableElement>;
             "ticket-assignments": LocalJSX.TicketAssignments & JSXBase.HTMLAttributes<HTMLTicketAssignmentsElement>;
             "ticket-feedback": LocalJSX.TicketFeedback & JSXBase.HTMLAttributes<HTMLTicketFeedbackElement>;
             "ticket-graph": LocalJSX.TicketGraph & JSXBase.HTMLAttributes<HTMLTicketGraphElement>;

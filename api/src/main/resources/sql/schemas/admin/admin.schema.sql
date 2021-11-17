@@ -68,7 +68,7 @@ create type admin.table_name as enum (
   'sil.country_codes',
   'sil.language_codes',
   'sil.language_index',
-  'sil.table_of_languages',
+  'sc.ethnologue',
 
   'sc.budget_records',
   'sc.budgets',

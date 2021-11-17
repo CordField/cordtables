@@ -45,6 +45,7 @@ create type sil.language_name_type as enum (
 CREATE TABLE sil.language_index (
   id serial primary key,
 
+  common_id int not null references common.languages(id),
   lang char(3) not null,      -- Three-letter code for language
   country char(2) not null,   -- Country where this name is used
   name_type sil.language_name_type not null,
@@ -58,19 +59,3 @@ CREATE TABLE sil.language_index (
   owning_group int not null references admin.groups(id)
 );
 
-create table sil.table_of_languages (
-  id serial primary key,
-
-  iso_639 char(3) unique,
-  language_name varchar(64),
-  population int,
-  provisional_code varchar(32),
-  sensitivity common.sensitivity not null default 'High',
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
