@@ -49,7 +49,7 @@ class DeleteFieldRegionExResponse extends GenericResponse {
 }
 
 @Component({
-  tag: 'sc-field-regions',
+  tag: 'sc-field-regions-table',
   styleUrl: 'sc-field-regions.css',
   shadow: true,
 })

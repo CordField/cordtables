@@ -10,6 +10,22 @@ import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
 export namespace Components {
+    interface AdminGroupMemberships {
+    }
+    interface AdminGroupRowAccess {
+    }
+    interface AdminGroups {
+    }
+    interface AdminPeople {
+    }
+    interface AdminRoleColumnGrants {
+    }
+    interface AdminRoleMemberships {
+    }
+    interface AdminRoleTablePermissions {
+    }
+    interface AdminRoles {
+    }
     interface AdminUsers {
     }
     interface AppHome {
@@ -58,6 +74,10 @@ export namespace Components {
         "uid": number;
     }
     interface CommonCellChannels {
+    }
+    interface CommonCoalitionMemberships {
+    }
+    interface CommonCoalitions {
     }
     interface CommonOrganizations {
     }
@@ -128,11 +148,19 @@ export namespace Components {
     }
     interface ScChangeToPlan {
     }
-    interface ScFieldRegions {
+    interface ScFieldRegionsTable {
     }
     interface ScFieldZones {
     }
     interface ScFundingAccounts {
+    }
+    interface ScGlobalPartnerAssessments {
+    }
+    interface ScGlobalPartnerEngagementPeople {
+    }
+    interface ScGlobalPartnerEngagements {
+    }
+    interface ScGlobalPartnerPerformance {
     }
     interface ScInternshipEngagements {
     }
@@ -209,6 +237,54 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAdminGroupMembershipsElement extends Components.AdminGroupMemberships, HTMLStencilElement {
+    }
+    var HTMLAdminGroupMembershipsElement: {
+        prototype: HTMLAdminGroupMembershipsElement;
+        new (): HTMLAdminGroupMembershipsElement;
+    };
+    interface HTMLAdminGroupRowAccessElement extends Components.AdminGroupRowAccess, HTMLStencilElement {
+    }
+    var HTMLAdminGroupRowAccessElement: {
+        prototype: HTMLAdminGroupRowAccessElement;
+        new (): HTMLAdminGroupRowAccessElement;
+    };
+    interface HTMLAdminGroupsElement extends Components.AdminGroups, HTMLStencilElement {
+    }
+    var HTMLAdminGroupsElement: {
+        prototype: HTMLAdminGroupsElement;
+        new (): HTMLAdminGroupsElement;
+    };
+    interface HTMLAdminPeopleElement extends Components.AdminPeople, HTMLStencilElement {
+    }
+    var HTMLAdminPeopleElement: {
+        prototype: HTMLAdminPeopleElement;
+        new (): HTMLAdminPeopleElement;
+    };
+    interface HTMLAdminRoleColumnGrantsElement extends Components.AdminRoleColumnGrants, HTMLStencilElement {
+    }
+    var HTMLAdminRoleColumnGrantsElement: {
+        prototype: HTMLAdminRoleColumnGrantsElement;
+        new (): HTMLAdminRoleColumnGrantsElement;
+    };
+    interface HTMLAdminRoleMembershipsElement extends Components.AdminRoleMemberships, HTMLStencilElement {
+    }
+    var HTMLAdminRoleMembershipsElement: {
+        prototype: HTMLAdminRoleMembershipsElement;
+        new (): HTMLAdminRoleMembershipsElement;
+    };
+    interface HTMLAdminRoleTablePermissionsElement extends Components.AdminRoleTablePermissions, HTMLStencilElement {
+    }
+    var HTMLAdminRoleTablePermissionsElement: {
+        prototype: HTMLAdminRoleTablePermissionsElement;
+        new (): HTMLAdminRoleTablePermissionsElement;
+    };
+    interface HTMLAdminRolesElement extends Components.AdminRoles, HTMLStencilElement {
+    }
+    var HTMLAdminRolesElement: {
+        prototype: HTMLAdminRolesElement;
+        new (): HTMLAdminRolesElement;
+    };
     interface HTMLAdminUsersElement extends Components.AdminUsers, HTMLStencilElement {
     }
     var HTMLAdminUsersElement: {
@@ -304,6 +380,18 @@ declare global {
     var HTMLCommonCellChannelsElement: {
         prototype: HTMLCommonCellChannelsElement;
         new (): HTMLCommonCellChannelsElement;
+    };
+    interface HTMLCommonCoalitionMembershipsElement extends Components.CommonCoalitionMemberships, HTMLStencilElement {
+    }
+    var HTMLCommonCoalitionMembershipsElement: {
+        prototype: HTMLCommonCoalitionMembershipsElement;
+        new (): HTMLCommonCoalitionMembershipsElement;
+    };
+    interface HTMLCommonCoalitionsElement extends Components.CommonCoalitions, HTMLStencilElement {
+    }
+    var HTMLCommonCoalitionsElement: {
+        prototype: HTMLCommonCoalitionsElement;
+        new (): HTMLCommonCoalitionsElement;
     };
     interface HTMLCommonOrganizationsElement extends Components.CommonOrganizations, HTMLStencilElement {
     }
@@ -491,11 +579,11 @@ declare global {
         prototype: HTMLScChangeToPlanElement;
         new (): HTMLScChangeToPlanElement;
     };
-    interface HTMLScFieldRegionsElement extends Components.ScFieldRegions, HTMLStencilElement {
+    interface HTMLScFieldRegionsTableElement extends Components.ScFieldRegionsTable, HTMLStencilElement {
     }
-    var HTMLScFieldRegionsElement: {
-        prototype: HTMLScFieldRegionsElement;
-        new (): HTMLScFieldRegionsElement;
+    var HTMLScFieldRegionsTableElement: {
+        prototype: HTMLScFieldRegionsTableElement;
+        new (): HTMLScFieldRegionsTableElement;
     };
     interface HTMLScFieldZonesElement extends Components.ScFieldZones, HTMLStencilElement {
     }
@@ -508,6 +596,30 @@ declare global {
     var HTMLScFundingAccountsElement: {
         prototype: HTMLScFundingAccountsElement;
         new (): HTMLScFundingAccountsElement;
+    };
+    interface HTMLScGlobalPartnerAssessmentsElement extends Components.ScGlobalPartnerAssessments, HTMLStencilElement {
+    }
+    var HTMLScGlobalPartnerAssessmentsElement: {
+        prototype: HTMLScGlobalPartnerAssessmentsElement;
+        new (): HTMLScGlobalPartnerAssessmentsElement;
+    };
+    interface HTMLScGlobalPartnerEngagementPeopleElement extends Components.ScGlobalPartnerEngagementPeople, HTMLStencilElement {
+    }
+    var HTMLScGlobalPartnerEngagementPeopleElement: {
+        prototype: HTMLScGlobalPartnerEngagementPeopleElement;
+        new (): HTMLScGlobalPartnerEngagementPeopleElement;
+    };
+    interface HTMLScGlobalPartnerEngagementsElement extends Components.ScGlobalPartnerEngagements, HTMLStencilElement {
+    }
+    var HTMLScGlobalPartnerEngagementsElement: {
+        prototype: HTMLScGlobalPartnerEngagementsElement;
+        new (): HTMLScGlobalPartnerEngagementsElement;
+    };
+    interface HTMLScGlobalPartnerPerformanceElement extends Components.ScGlobalPartnerPerformance, HTMLStencilElement {
+    }
+    var HTMLScGlobalPartnerPerformanceElement: {
+        prototype: HTMLScGlobalPartnerPerformanceElement;
+        new (): HTMLScGlobalPartnerPerformanceElement;
     };
     interface HTMLScInternshipEngagementsElement extends Components.ScInternshipEngagements, HTMLStencilElement {
     }
@@ -726,6 +838,14 @@ declare global {
         new (): HTMLWorkflowsTableElement;
     };
     interface HTMLElementTagNameMap {
+        "admin-group-memberships": HTMLAdminGroupMembershipsElement;
+        "admin-group-row-access": HTMLAdminGroupRowAccessElement;
+        "admin-groups": HTMLAdminGroupsElement;
+        "admin-people": HTMLAdminPeopleElement;
+        "admin-role-column-grants": HTMLAdminRoleColumnGrantsElement;
+        "admin-role-memberships": HTMLAdminRoleMembershipsElement;
+        "admin-role-table-permissions": HTMLAdminRoleTablePermissionsElement;
+        "admin-roles": HTMLAdminRolesElement;
         "admin-users": HTMLAdminUsersElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
@@ -742,6 +862,8 @@ declare global {
         "cf-table-footer": HTMLCfTableFooterElement;
         "cf-tiny": HTMLCfTinyElement;
         "common-cell-channels": HTMLCommonCellChannelsElement;
+        "common-coalition-memberships": HTMLCommonCoalitionMembershipsElement;
+        "common-coalitions": HTMLCommonCoalitionsElement;
         "common-organizations": HTMLCommonOrganizationsElement;
         "common-posts": HTMLCommonPostsElement;
         "common-threads": HTMLCommonThreadsElement;
@@ -773,9 +895,13 @@ declare global {
         "sc-budgets": HTMLScBudgetsElement;
         "sc-ceremonies": HTMLScCeremoniesElement;
         "sc-change-to-plan": HTMLScChangeToPlanElement;
-        "sc-field-regions": HTMLScFieldRegionsElement;
+        "sc-field-regions-table": HTMLScFieldRegionsTableElement;
         "sc-field-zones": HTMLScFieldZonesElement;
         "sc-funding-accounts": HTMLScFundingAccountsElement;
+        "sc-global-partner-assessments": HTMLScGlobalPartnerAssessmentsElement;
+        "sc-global-partner-engagement-people": HTMLScGlobalPartnerEngagementPeopleElement;
+        "sc-global-partner-engagements": HTMLScGlobalPartnerEngagementsElement;
+        "sc-global-partner-performance": HTMLScGlobalPartnerPerformanceElement;
         "sc-internship-engagements": HTMLScInternshipEngagementsElement;
         "sc-known-languages-by-person": HTMLScKnownLanguagesByPersonElement;
         "sc-language-engagements": HTMLScLanguageEngagementsElement;
@@ -815,6 +941,22 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AdminGroupMemberships {
+    }
+    interface AdminGroupRowAccess {
+    }
+    interface AdminGroups {
+    }
+    interface AdminPeople {
+    }
+    interface AdminRoleColumnGrants {
+    }
+    interface AdminRoleMemberships {
+    }
+    interface AdminRoleTablePermissions {
+    }
+    interface AdminRoles {
+    }
     interface AdminUsers {
     }
     interface AppHome {
@@ -865,6 +1007,10 @@ declare namespace LocalJSX {
         "uid"?: number;
     }
     interface CommonCellChannels {
+    }
+    interface CommonCoalitionMemberships {
+    }
+    interface CommonCoalitions {
     }
     interface CommonOrganizations {
     }
@@ -939,11 +1085,19 @@ declare namespace LocalJSX {
     }
     interface ScChangeToPlan {
     }
-    interface ScFieldRegions {
+    interface ScFieldRegionsTable {
     }
     interface ScFieldZones {
     }
     interface ScFundingAccounts {
+    }
+    interface ScGlobalPartnerAssessments {
+    }
+    interface ScGlobalPartnerEngagementPeople {
+    }
+    interface ScGlobalPartnerEngagements {
+    }
+    interface ScGlobalPartnerPerformance {
     }
     interface ScInternshipEngagements {
     }
@@ -1019,6 +1173,14 @@ declare namespace LocalJSX {
     interface WorkflowsTable {
     }
     interface IntrinsicElements {
+        "admin-group-memberships": AdminGroupMemberships;
+        "admin-group-row-access": AdminGroupRowAccess;
+        "admin-groups": AdminGroups;
+        "admin-people": AdminPeople;
+        "admin-role-column-grants": AdminRoleColumnGrants;
+        "admin-role-memberships": AdminRoleMemberships;
+        "admin-role-table-permissions": AdminRoleTablePermissions;
+        "admin-roles": AdminRoles;
         "admin-users": AdminUsers;
         "app-home": AppHome;
         "app-profile": AppProfile;
@@ -1035,6 +1197,8 @@ declare namespace LocalJSX {
         "cf-table-footer": CfTableFooter;
         "cf-tiny": CfTiny;
         "common-cell-channels": CommonCellChannels;
+        "common-coalition-memberships": CommonCoalitionMemberships;
+        "common-coalitions": CommonCoalitions;
         "common-organizations": CommonOrganizations;
         "common-posts": CommonPosts;
         "common-threads": CommonThreads;
@@ -1066,9 +1230,13 @@ declare namespace LocalJSX {
         "sc-budgets": ScBudgets;
         "sc-ceremonies": ScCeremonies;
         "sc-change-to-plan": ScChangeToPlan;
-        "sc-field-regions": ScFieldRegions;
+        "sc-field-regions-table": ScFieldRegionsTable;
         "sc-field-zones": ScFieldZones;
         "sc-funding-accounts": ScFundingAccounts;
+        "sc-global-partner-assessments": ScGlobalPartnerAssessments;
+        "sc-global-partner-engagement-people": ScGlobalPartnerEngagementPeople;
+        "sc-global-partner-engagements": ScGlobalPartnerEngagements;
+        "sc-global-partner-performance": ScGlobalPartnerPerformance;
         "sc-internship-engagements": ScInternshipEngagements;
         "sc-known-languages-by-person": ScKnownLanguagesByPerson;
         "sc-language-engagements": ScLanguageEngagements;
@@ -1111,6 +1279,14 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "admin-group-memberships": LocalJSX.AdminGroupMemberships & JSXBase.HTMLAttributes<HTMLAdminGroupMembershipsElement>;
+            "admin-group-row-access": LocalJSX.AdminGroupRowAccess & JSXBase.HTMLAttributes<HTMLAdminGroupRowAccessElement>;
+            "admin-groups": LocalJSX.AdminGroups & JSXBase.HTMLAttributes<HTMLAdminGroupsElement>;
+            "admin-people": LocalJSX.AdminPeople & JSXBase.HTMLAttributes<HTMLAdminPeopleElement>;
+            "admin-role-column-grants": LocalJSX.AdminRoleColumnGrants & JSXBase.HTMLAttributes<HTMLAdminRoleColumnGrantsElement>;
+            "admin-role-memberships": LocalJSX.AdminRoleMemberships & JSXBase.HTMLAttributes<HTMLAdminRoleMembershipsElement>;
+            "admin-role-table-permissions": LocalJSX.AdminRoleTablePermissions & JSXBase.HTMLAttributes<HTMLAdminRoleTablePermissionsElement>;
+            "admin-roles": LocalJSX.AdminRoles & JSXBase.HTMLAttributes<HTMLAdminRolesElement>;
             "admin-users": LocalJSX.AdminUsers & JSXBase.HTMLAttributes<HTMLAdminUsersElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
@@ -1127,6 +1303,8 @@ declare module "@stencil/core" {
             "cf-table-footer": LocalJSX.CfTableFooter & JSXBase.HTMLAttributes<HTMLCfTableFooterElement>;
             "cf-tiny": LocalJSX.CfTiny & JSXBase.HTMLAttributes<HTMLCfTinyElement>;
             "common-cell-channels": LocalJSX.CommonCellChannels & JSXBase.HTMLAttributes<HTMLCommonCellChannelsElement>;
+            "common-coalition-memberships": LocalJSX.CommonCoalitionMemberships & JSXBase.HTMLAttributes<HTMLCommonCoalitionMembershipsElement>;
+            "common-coalitions": LocalJSX.CommonCoalitions & JSXBase.HTMLAttributes<HTMLCommonCoalitionsElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "common-posts": LocalJSX.CommonPosts & JSXBase.HTMLAttributes<HTMLCommonPostsElement>;
             "common-threads": LocalJSX.CommonThreads & JSXBase.HTMLAttributes<HTMLCommonThreadsElement>;
@@ -1158,9 +1336,13 @@ declare module "@stencil/core" {
             "sc-budgets": LocalJSX.ScBudgets & JSXBase.HTMLAttributes<HTMLScBudgetsElement>;
             "sc-ceremonies": LocalJSX.ScCeremonies & JSXBase.HTMLAttributes<HTMLScCeremoniesElement>;
             "sc-change-to-plan": LocalJSX.ScChangeToPlan & JSXBase.HTMLAttributes<HTMLScChangeToPlanElement>;
-            "sc-field-regions": LocalJSX.ScFieldRegions & JSXBase.HTMLAttributes<HTMLScFieldRegionsElement>;
+            "sc-field-regions-table": LocalJSX.ScFieldRegionsTable & JSXBase.HTMLAttributes<HTMLScFieldRegionsTableElement>;
             "sc-field-zones": LocalJSX.ScFieldZones & JSXBase.HTMLAttributes<HTMLScFieldZonesElement>;
             "sc-funding-accounts": LocalJSX.ScFundingAccounts & JSXBase.HTMLAttributes<HTMLScFundingAccountsElement>;
+            "sc-global-partner-assessments": LocalJSX.ScGlobalPartnerAssessments & JSXBase.HTMLAttributes<HTMLScGlobalPartnerAssessmentsElement>;
+            "sc-global-partner-engagement-people": LocalJSX.ScGlobalPartnerEngagementPeople & JSXBase.HTMLAttributes<HTMLScGlobalPartnerEngagementPeopleElement>;
+            "sc-global-partner-engagements": LocalJSX.ScGlobalPartnerEngagements & JSXBase.HTMLAttributes<HTMLScGlobalPartnerEngagementsElement>;
+            "sc-global-partner-performance": LocalJSX.ScGlobalPartnerPerformance & JSXBase.HTMLAttributes<HTMLScGlobalPartnerPerformanceElement>;
             "sc-internship-engagements": LocalJSX.ScInternshipEngagements & JSXBase.HTMLAttributes<HTMLScInternshipEngagementsElement>;
             "sc-known-languages-by-person": LocalJSX.ScKnownLanguagesByPerson & JSXBase.HTMLAttributes<HTMLScKnownLanguagesByPersonElement>;
             "sc-language-engagements": LocalJSX.ScLanguageEngagements & JSXBase.HTMLAttributes<HTMLScLanguageEngagementsElement>;

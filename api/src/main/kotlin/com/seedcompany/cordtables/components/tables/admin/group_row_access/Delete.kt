@@ -1,26 +1,30 @@
 package com.seedcompany.cordtables.components.tables.admin.group_row_access
 
+import com.seedcompany.cordtables.components.tables.admin.group_row_access.Delete as CommonDelete
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.group_row_access.AdminGroupRowAccessDeleteRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import java.sql.SQLException
 import javax.sql.DataSource
 
-data class GroupRowAccessDeleteRequest(
-    val token: String? = null,
-    val id: Int? = null,
+data class AdminGroupRowAccessDeleteRequest(
+    val id: Int,
+    val token: String?,
 )
 
-data class GroupRowAccessDeleteResponse(
+data class AdminGroupRowAccessDeleteResponse(
     val error: ErrorType,
+    val id: Int?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("GroupRowAccessDelete")
+@Controller("AdminGroupRowAccessDelete")
 class Delete(
     @Autowired
     val util: Utility,
@@ -28,31 +32,41 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-
-    @PostMapping("grouprowaccess/delete")
+    @PostMapping("admin-group-row-access/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: GroupRowAccessDeleteRequest): GroupRowAccessDeleteResponse {
+    fun deleteHandler(@RequestBody req: AdminGroupRowAccessDeleteRequest): AdminGroupRowAccessDeleteResponse {
 
-        if (req.token == null) return GroupRowAccessDeleteResponse(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return GroupRowAccessDeleteResponse(ErrorType.AdminOnly)
+        if (req.token == null) return AdminGroupRowAccessDeleteResponse(ErrorType.TokenNotFound, null)
+        if(!util.userHasDeletePermission(req.token, "admin.group_row_access"))
+            return AdminGroupRowAccessDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-        if (req.id == null) return GroupRowAccessDeleteResponse(ErrorType.MissingId)
+        println("req: $req")
+        var deletedLocationExId: Int? = null
 
         this.ds.connection.use { conn ->
+            try {
 
-            //language=SQL
-            val deleteStatement = conn.prepareStatement(
-                """
-                delete from admin.group_row_access where id = ?;
-            """.trimIndent()
-            )
+                val deleteStatement = conn.prepareCall(
+                    "delete from admin.group_row_access where id = ? returning id"
+                )
+                deleteStatement.setInt(1, req.id)
 
-            deleteStatement.setInt(1, req.id)
+                deleteStatement.setInt(1,req.id)
 
-            deleteStatement.execute()
+
+                val deleteStatementResult = deleteStatement.executeQuery()
+
+                if (deleteStatementResult.next()) {
+                    deletedLocationExId  = deleteStatementResult.getInt("id")
+                }
+            }
+            catch (e:SQLException ){
+                println(e.message)
+
+                return AdminGroupRowAccessDeleteResponse(ErrorType.SQLDeleteError, null)
+            }
         }
 
-        return GroupRowAccessDeleteResponse(ErrorType.NoError)
+        return AdminGroupRowAccessDeleteResponse(ErrorType.NoError,deletedLocationExId)
     }
-
 }

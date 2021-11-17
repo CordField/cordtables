@@ -123,7 +123,7 @@ export class Threads {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common-cell-channels/create-read', {
+    const result = await fetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common-threads/create-read', {
       token: globals.globalStore.state.token,
       thread: {
         content: this.newContent,

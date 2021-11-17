@@ -50,7 +50,7 @@ class List(
         paramSource.addValue("token", req.token)
         val query = secureList.getSecureListQueryHandler(
                 GetSecureListQueryRequest(
-                        tableName = "common.postss",
+                        tableName = "common.posts",
                         filter = "order by id",
                         columns = arrayOf(
                                 "id",

@@ -11,10 +11,9 @@ create type common.mime_type as enum (
 
 -- SITE TEXT --------------------------------------------------------------------------------
 
-create table common.site_text(
+-- talk to Michael about why this table exists
+create table common.languages(
   id serial primary key,
-
-  ethnologue int not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -24,16 +23,26 @@ create table common.site_text(
   owning_group int not null references admin.groups(id)
 );
 
--- SITE TEXT --------------------------------------------------------------------------------
+create table common.site_text_strings(
+  id serial primary key,
+
+  english varchar(64) not null, -- US English, all translations including other English locales will be in the translation table
+  comment text,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
 
 create table common.site_text_translations(
   id serial primary key,
 
-  site_text_id int not null references common.site_text(id),
-
-  text_id varchar(64),
-
-  text_translation varchar(64),
+  language int not null references common.languages(id),
+  site_text int not null references common.site_text_strings(id),
+  translation varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -70,12 +79,16 @@ create table common.scripture_references (
 create table common.discussion_channels (
 	id serial primary key,
 
+	name varchar(32) not null,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (name, owning_group)
 );
 
 create table common.cell_channels (
@@ -508,6 +521,36 @@ create table common.stage_notifications(
 	on_exit bool default false,
 	person int references admin.people(id),
   
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- PRAYER --------------------------------------------------------------
+
+create table common.prayer_requests(
+	id serial primary key,
+
+  parent int references common.prayer_requests(id),
+  content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.prayer_notifications(
+	id serial primary key,
+
+  request int references common.prayer_requests(id),
+  person int references admin.people(id),
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

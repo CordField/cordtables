@@ -74,5 +74,3 @@ create table sil.table_of_languages (
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id)
 );
-
-ALTER TABLE common.site_text ADD CONSTRAINT common_site_text_ethnologue_fk foreign key (ethnologue) references sil.table_of_languages(id);
