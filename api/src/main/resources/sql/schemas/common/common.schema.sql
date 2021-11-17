@@ -259,35 +259,42 @@ create table common.organizations (
   owning_group int not null references admin.groups(id)
 );
 
-create type common.people_to_org_relationship_type as enum (
-  'Vendor',
-  'Customer',
-  'Investor',
-  'Associate',
-  'Employee',
-  'Member',
-  'Executive',
-  'President/CEO',
-  'Board of Directors',
-  'Retired',
-  'Other'
-);
-
-create table common.people_to_org_relationships (
+create table common.org_chart_positions(
   id serial primary key,
 
-	org int not null references common.organizations(id),
-	person int not null references admin.people(id),
-	relationship_type common.people_to_org_relationship_type,
-  begin_at timestamp,
-  end_at timestamp,
-	
+  organization int not null references common.organizations(id),
+  name varchar(64) not null,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (organization, name)
+);
+
+create type common.position_relationship_types as enum (
+  'Reports To',
+  'Works With'
+);
+
+create table common.org_chart_position_graph(
+  id serial primary key,
+
+  from_position int not null references common.org_chart_positions(id),
+  to_position int not null references common.org_chart_positions(id),
+  relationship_type common.position_relationship_types,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+  unique (from_position, to_position, relationship_type)
 );
 
 -- COALITIONS ----------------------------------------------------------
@@ -331,7 +338,7 @@ create table common.coalition_memberships(
 create table common.directories (
   id serial primary key,
 
-    parent int references common.directories(id),
+  parent int references common.directories(id),
   name varchar(255),
 	-- todo
 
@@ -587,6 +594,60 @@ create table common.prayer_notifications(
 
   request int references common.prayer_requests(id),
   person int references admin.people(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- SOCIAL GRAPH ----------------------------------------------------
+
+create type common.people_to_org_relationship_type as enum (
+  'Vendor',
+  'Customer',
+  'Investor',
+  'Associate',
+  'Employee',
+  'Member',
+  'Executive',
+  'President/CEO',
+  'Board of Directors',
+  'Retired',
+  'Other'
+);
+
+create table common.people_to_org_relationships (
+  id serial primary key,
+
+	org int not null references common.organizations(id),
+	person int not null references admin.people(id),
+	relationship_type common.people_to_org_relationship_type,
+  begin_at timestamp,
+  end_at timestamp,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create type common.people_to_people_relationship_types as enum (
+  'Friend',
+  'Colleague',
+  'Other'
+);
+
+create table common.people_graph (
+  id serial primary key,
+
+  from_person int not null references admin.people(id),
+  to_person int not null references admin.people(id),
+  rel_type common.people_to_people_relationship_types not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),

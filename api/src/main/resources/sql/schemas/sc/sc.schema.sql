@@ -113,6 +113,7 @@ create table sc.organizations (
 	id int primary key not null references common.organizations(id),
 	neo4j_id varchar(32),
 	address varchar(255),
+	root_directory int references common.directories(id),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -970,50 +971,29 @@ create table sc.global_partner_performance (
   owning_group int not null references admin.groups(id)
 );
 
--- todo
--- files/documents on partners
-
--- create table common.global_partner_transitions (
---   id serial primary key,
-
---   organization int unique not null references sc.organizations(id),
---   transition_type common.global_partner_transition_options not null,
---   -- todo
-
---   created_at timestamp not null default CURRENT_TIMESTAMP,
---   created_by int not null references admin.people(id),
---   modified_at timestamp not null default CURRENT_TIMESTAMP,
---   modified_by int not null references admin.people(id),
---   owning_person int not null references admin.people(id),
---   owning_group int not null references admin.groups(id)
--- );
-
--- todo
--- org chart
-
--- todo
--- position graph
-
-create table common.people_graph (
-  id serial primary key,
-
-  from_person int not null references admin.people(id),
-  to_person int not null references admin.people(id),
-  rel_type varchar(32),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+create type sc.global_partner_transition_options as enum(
+  'Transition 1',
+  'Transition 2'
 );
 
+ create table common.global_partner_transitions (
+   id serial primary key,
 
+   organization int unique not null references sc.organizations(id),
+   transition_type sc.global_partner_transition_options not null,
+   effective_date timestamp,
+
+   created_at timestamp not null default CURRENT_TIMESTAMP,
+   created_by int not null references admin.people(id),
+   modified_at timestamp not null default CURRENT_TIMESTAMP,
+   modified_by int not null references admin.people(id),
+   owning_person int not null references admin.people(id),
+   owning_group int not null references admin.groups(id)
+ );
 
 create type sc.global_partner_roles as enum (
-  'Role A',
-  'Role B'
+  'A',
+  'B'
 );
 
 create table sc.global_partner_engagements (
