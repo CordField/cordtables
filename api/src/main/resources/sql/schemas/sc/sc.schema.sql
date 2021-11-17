@@ -972,11 +972,11 @@ create table sc.global_partner_performance (
 );
 
 create type sc.global_partner_transition_options as enum(
-  'Transition 1',
-  'Transition 2'
+  'Organization Assessment',
+  'Development'
 );
 
- create table common.global_partner_transitions (
+ create table sc.global_partner_transitions (
    id serial primary key,
 
    organization int unique not null references sc.organizations(id),
