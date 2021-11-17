@@ -85,6 +85,7 @@ create type admin.table_name as enum (
   'sc.global_partner_engagements',
   'sc.global_partner_engagement_people',
   'sc.global_partner_performance',
+  'sc.global_partner_transitions',
   'sc.internship_engagements',
   'sc.known_languages_by_person',
   'sc.language_engagements',
