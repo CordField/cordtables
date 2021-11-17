@@ -290,6 +290,42 @@ create table common.people_to_org_relationships (
   owning_group int not null references admin.groups(id)
 );
 
+-- COALITIONS ----------------------------------------------------------
+
+create type common.involvement_options as enum (
+  'CIT',
+  'Engagements'
+);
+
+create table common.coalitions(
+  id serial primary key,
+
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- coalition memberships
+
+create table common.coalition_memberships(
+  id serial primary key,
+
+  coalition int not null references common.coalitions(id),
+  organization int not null references common.organizations(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
 -- FILES & DIRECTORIES ----------------------------------------------------------
 
 create table common.directories (
@@ -396,6 +432,7 @@ create table common.work_records(
 	id serial primary key,
 
 	person int not null references admin.people(id),
+	ticket int not null references common.tickets(id),
 	hours int not null,
 	minutes int default 0,
 	total_time decimal generated always as (

@@ -1009,45 +1009,11 @@ create table common.people_graph (
   owning_group int not null references admin.groups(id)
 );
 
--- coalitions
 
-create table common.coalitions(
-  id serial primary key,
-
-  name varchar(64),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
--- coalition memberships
-
-create table common.coalition_memberships(
-  id serial primary key,
-
-  coalition int not null references common.coalitions(id),
-  organization int not null references common.organizations(id),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
-create type common.involvement_options as enum (
-  'CIT',
-  'Engagements'
-);
 
 create type sc.global_partner_roles as enum (
-  'A',
-  'B'
+  'Role A',
+  'Role B'
 );
 
 create table sc.global_partner_engagements (
