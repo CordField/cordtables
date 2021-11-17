@@ -68,7 +68,8 @@ export class TableRoot {
         {this.match.params.table === 'common-coalitions' && <common-coalitions></common-coalitions>}
         {this.match.params.table === 'common-coalition-memberships' && <common-coalition-memberships></common-coalition-memberships>}
 
-
+        {this.match.params.table === 'common-prayer-requests' && <common-prayer-requests></common-prayer-requests>}
+        {this.match.params.table === 'common-prayer-notifications' && <common-prayer-notifications></common-prayer-notifications>}
         
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}

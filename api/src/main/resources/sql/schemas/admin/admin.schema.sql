@@ -99,7 +99,10 @@ create type admin.table_name as enum (
   'sc.products',
   'sc.project_locations',
   'sc.project_members',
-  'sc.projects'
+  'sc.projects',
+
+  'common.prayer_requests',
+  'common.prayer_notifications',
 
 --  'sc.language_goal_definitions',
 --  'sc.language_locations',
