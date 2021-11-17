@@ -163,10 +163,11 @@ create type common.location_type as enum (
 
 create table common.locations (
 	id serial primary key,
-
-	name varchar(255) unique not null,
+    neo4j_id varchar(32),
+	name varchar(255), -- unique not null,
 	sensitivity common.sensitivity not null default 'High',
-	type common.location_type not null,
+	type common.location_type, -- not null,
+	iso_alpha3 char(3),
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -281,7 +282,7 @@ create table common.files (
   id serial primary key,
 
   neo4j_id varchar(32),
-  directory int, --not null references common.directories(id),
+  directory int references common.directories(id), --not null ,
 	name varchar(255),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -295,8 +296,9 @@ create table common.files (
 create table common.file_versions (
   id serial primary key,
 
+  neo4j_id varchar(32),
   category varchar(255),
-  mime_type common.mime_type,-- not null,
+  mime_type varchar(32), --todo: common.mime_type filled in, but neo4j just has a dumb 'ole string. -- not null,
   name varchar(255),-- not null,
   file int,-- not null references common.files(id),
   file_url varchar(255),-- not null,

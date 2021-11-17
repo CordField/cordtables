@@ -66,6 +66,7 @@ create table sil.table_of_languages (
   language_name varchar(64),
   population int,
   provisional_code varchar(32),
+  code varchar(32),
   sensitivity common.sensitivity default 'High',
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
