@@ -217,6 +217,7 @@ create table common.education_by_person (
 
 create table common.organizations (
 	id serial primary key,
+	neo4j_id varchar(32),
 
 	name varchar(255),
 	sensitivity common.sensitivity default 'High',

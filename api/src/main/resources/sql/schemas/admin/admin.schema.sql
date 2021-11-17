@@ -74,6 +74,10 @@ create type admin.table_name as enum (
   'sc.budgets',
   'sc.ceremonies'
   'sc.change_to_plans',
+  'sc.funding_account',
+  'sc.field_zone',
+  'sc.files',
+  'sc.file_versions',
   'sc.field_regions',
   'sc.field_zones',
   'sc.funding_accounts',
@@ -87,6 +91,7 @@ create type admin.table_name as enum (
   'sc.languages',
   'sc.locations',
   'sc.organization_locations',
+  'sc.budget_records_partnerships',
   'sc.organizations',
   'sc.partners',
   'sc.partnerships',
