@@ -14,7 +14,7 @@ create type common.mime_type as enum (
 -- talk to Michael about why this table exists
 create table common.languages(
   id serial primary key,
-
+  ethnologue int not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

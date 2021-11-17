@@ -74,3 +74,5 @@ create table sil.table_of_languages (
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id)
 );
+
+alter table common.languages add constraint common_languages_ethnologue_by_fk foreign key (ethnologue) references sil.table_of_languages(id);
