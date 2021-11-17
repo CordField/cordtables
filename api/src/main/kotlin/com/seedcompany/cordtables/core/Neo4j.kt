@@ -211,26 +211,16 @@ class Neo4j(
 
     suspend fun createBaseNodeIdempotent(node: BaseNode) {
         when {
-            node.labels.contains("File") -> {
-                writeBaseNode(
-                    targetTable = "sc.files",
-                    id = node.id,
-                )
-                writeBaseNode(
-                    targetTable = "common.files",
-                    id = node.id,
-                )
-            }
-            node.labels.contains("FileVersion") -> {
-                writeBaseNode(
-                    targetTable = "sc.file_versions",
-                    id = node.id,
-                )
-                writeBaseNode(
-                    targetTable = "common.file_versions",
-                    id = node.id,
-                )
-            }
+            node.labels.contains("File") -> writeBaseNode(
+                targetTable = "sc.files",
+                id = node.id,
+                commonTable = "common.files"
+            )
+            node.labels.contains("FileVersion") -> writeBaseNode(
+                targetTable = "sc.file_versions",
+                id = node.id,
+                commonTable = "common.file_versions"
+            )
             node.labels.contains("Organization") -> writeBaseNode(
                 targetTable = "sc.organizations",
                 id = node.id,
@@ -290,16 +280,11 @@ class Neo4j(
                 targetTable = "sc.periodic_reports",
                 id = node.id,
             )
-            node.labels.contains("Directory") -> {
-                writeBaseNode(
-                    targetTable = "common.directories",
-                    id = node.id,
-                )
-                writeBaseNode(
-                    targetTable = "sc.directories",
-                    id = node.id
-                )
-            }
+            node.labels.contains("Directory") -> writeBaseNode(
+                targetTable = "sc.directories",
+                id = node.id,
+                commonTable = "common.directories"
+            )
             node.labels.contains("Partner") -> writeBaseNode(
                 targetTable = "sc.partners",
                 id = node.id,
@@ -381,7 +366,7 @@ class Neo4j(
 
             if (commonTable != null) {
                 val commonId = jdbcTemplate.queryForObject(
-                    "insert into $commonTable(created_by, modified_by, owning_person, owning_group) values(1, 1, 1, 1) returning id;",
+                    "insert into $commonTable(neo4j_id, created_by, modified_by, owning_person, owning_group) values('$id', 1, 1, 1, 1) returning id;",
                     Int::class.java
                 )
 
