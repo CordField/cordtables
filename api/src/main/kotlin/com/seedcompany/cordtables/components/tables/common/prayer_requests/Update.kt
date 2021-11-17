@@ -54,6 +54,7 @@ class Update(
                     column = "parent",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "content" -> {
@@ -72,6 +73,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -81,6 +83,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }
