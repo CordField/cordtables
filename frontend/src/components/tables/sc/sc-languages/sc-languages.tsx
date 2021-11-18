@@ -62,6 +62,7 @@ export class ScLanguages {
   newLanguageName: string;
   newDisplayName: string;
   mapbox!: HTMLElement;
+  map: mapboxgl.Map;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
@@ -75,6 +76,9 @@ export class ScLanguages {
 
     if (updateResponse.error == ErrorType.NoError) {
       this.languagesResponse = { error: ErrorType.NoError, languages: this.languagesResponse.languages.map(language => (language.id === id ? updateResponse.language : language)) };
+      if (columnName === 'coordinates') {
+        this.convertJsonToMarker(updateResponse.language.coordinates_json);
+      }
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -88,6 +92,10 @@ export class ScLanguages {
       id,
       token: globals.globalStore.state.token,
     });
+    // let coordinates_json = this.languagesResponse.languages.find(language => language.id === id).coordinates_json;
+    // if (coordinates_json !== null && coordinates_json !== undefined) {
+    //   this.removeMarker(coordinates_json);
+    // }
     if (deleteResponse.error === ErrorType.NoError) {
       this.getList();
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item deleted successfully', id: uuidv4(), type: 'success' });
@@ -704,38 +712,48 @@ export class ScLanguages {
     await this.getList();
     mapboxgl.accessToken = process.env.MAPBOX_KEY;
   }
+  // removeMarker(coordinates_json) {
+  //   const parsedJson = JSON.parse(coordinates_json) as {
+  //     type: string;
+  //     coordinates: [number, number];
+  //   };
+  //   const coordinates = parsedJson.coordinates;
+  //   console.log(coordinates);
+  //   const marker = this.mapbox.querySelector(`#${coordinates[0]}-${coordinates[1]}`);
+  //   console.log(marker);
+  // }
+  convertJsonToMarker(coordinates_json) {
+    const parsedJson = JSON.parse(coordinates_json) as {
+      type: string;
+      coordinates: [number, number];
+    };
+    const coordinates = parsedJson.coordinates;
+    console.log(coordinates);
+    const markerNode = document.createElement('div');
+    // document.querySelector('.sc-languages').append(markerNode);
+    markerNode.className = 'marker';
+    markerNode.id = `${coordinates[0]}-${coordinates[1]}`;
+    console.log(markerNode);
+    new mapboxgl.Marker(markerNode).setLngLat(coordinates).addTo(this.map);
+  }
   componentDidLoad() {
-    const map = new mapboxgl.Map({
+    this.map = new mapboxgl.Map({
       container: this.mapbox, // container ID
       style: 'mapbox://styles/mapbox/dark-v10', // style URL
       center: [-28, -14], // starting position [lng, lat]
       zoom: 1, // starting zoom
     });
-    map.on('load', () => {
+
+    this.map.on('load', () => {
       console.log('languagesResponse', this.languagesResponse);
       this.languagesResponse.languages
         .filter(language => language.coordinates_json != null && language.coordinates_json != undefined)
-        .map(language => {
-          const parsedJson = JSON.parse(language.coordinates_json) as {
-            type: string;
-            coordinates: [number, number];
-          };
-          const coordinates = parsedJson.coordinates;
-          console.log(coordinates);
-          const markerNode = document.createElement('div');
-          // document.querySelector('.sc-languages').append(markerNode);
-          markerNode.className = 'marker';
-          console.log(markerNode);
-          new mapboxgl.Marker(markerNode).setLngLat(coordinates).addTo(map);
-          // type: 'Feature',
-          // geometry: ,
-          // properties: {
-          //   message: language.display_name ?? 'Unknown',
-          //   iconSize: [20, 20],
-          // },
-        });
-      map.resize();
+        .map(language => this.convertJsonToMarker(language.coordinates_json));
+      this.map.resize();
     });
+  }
+  disconnectedCallback() {
+    this.map.remove();
   }
 
   render() {
