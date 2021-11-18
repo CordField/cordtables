@@ -59,6 +59,11 @@ enum class CommonSensitivity {
     High,
 }
 
+enum class CommonTicketFeedbackOptions {
+    Satisfied,
+    Unsatisfied,
+}
+
 enum class CommonTicketStatus{
     Open,
     Blocked,
@@ -157,7 +162,7 @@ enum class TableNames(val value: String)  {
     SilCountryCodes("sil.country_codes"),
     SilLanguageCodes("sil.language_codes"),
     SilLanguageIndex("sil.language_index"),
-    SilTableOfLanguages("sil.table_of_languages"),
+    ScEthnologue("sc.ethnologue"),
 
     ScBudgetRecords("sc.budget_records"),
     ScBudgets("sc.budgets"),

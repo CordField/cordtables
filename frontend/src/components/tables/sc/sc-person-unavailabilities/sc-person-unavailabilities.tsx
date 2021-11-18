@@ -162,9 +162,9 @@ export class ScPersonUnavailabilities {
     {
       field: 'person',
       displayName: 'Person',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'period_start',
@@ -176,9 +176,9 @@ export class ScPersonUnavailabilities {
     {
       field: 'period_end',
       displayName: 'Period End',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'description',

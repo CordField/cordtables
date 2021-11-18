@@ -156,9 +156,9 @@ export class ScPinnedProjects {
     {
       field: 'project',
       displayName: 'Project',
-      width: 150,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'created_at',

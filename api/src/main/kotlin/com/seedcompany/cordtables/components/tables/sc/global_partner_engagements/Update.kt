@@ -54,6 +54,7 @@ class Update(
                     column = "organization",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "type" -> {
@@ -63,6 +64,7 @@ class Update(
                     column = "type",
                     id = req.id,
                     value = req.value,
+                    cast = "::common.involvement_options"
                 )
             }
             "mou_start" -> {
@@ -72,6 +74,7 @@ class Update(
                     column = "mou_start",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "mou_end" -> {
@@ -81,6 +84,7 @@ class Update(
                     column = "mou_end",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "sc_roles" -> {
@@ -90,6 +94,7 @@ class Update(
                     column = "sc_roles",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.global_partner_roles[]"
                 )
             }
             "partner_roles" -> {
@@ -99,6 +104,7 @@ class Update(
                     column = "partner_roles",
                     id = req.id,
                     value = req.value,
+                    cast = "::sc.global_partner_roles[]"
                 )
             }
             "owning_person" -> {
@@ -108,6 +114,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -117,6 +124,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

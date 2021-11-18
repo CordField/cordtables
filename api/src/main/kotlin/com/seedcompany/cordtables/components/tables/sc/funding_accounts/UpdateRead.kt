@@ -20,6 +20,7 @@ data class ScFundingAccountsUpdateReadRequest(
     val id: Int? = null,
     val column: String? = null,
     val value: Any? = null,
+    val fundingAccount: fundingAccountInput? = null,
 )
 
 data class ScFundingAccountsUpdateReadResponse(

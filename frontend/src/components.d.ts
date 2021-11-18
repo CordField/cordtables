@@ -83,6 +83,10 @@ export namespace Components {
     }
     interface CommonPosts {
     }
+    interface CommonPrayerNotifications {
+    }
+    interface CommonPrayerRequests {
+    }
     interface CommonThreads {
     }
     interface CreateUpdateModal {
@@ -404,6 +408,18 @@ declare global {
     var HTMLCommonPostsElement: {
         prototype: HTMLCommonPostsElement;
         new (): HTMLCommonPostsElement;
+    };
+    interface HTMLCommonPrayerNotificationsElement extends Components.CommonPrayerNotifications, HTMLStencilElement {
+    }
+    var HTMLCommonPrayerNotificationsElement: {
+        prototype: HTMLCommonPrayerNotificationsElement;
+        new (): HTMLCommonPrayerNotificationsElement;
+    };
+    interface HTMLCommonPrayerRequestsElement extends Components.CommonPrayerRequests, HTMLStencilElement {
+    }
+    var HTMLCommonPrayerRequestsElement: {
+        prototype: HTMLCommonPrayerRequestsElement;
+        new (): HTMLCommonPrayerRequestsElement;
     };
     interface HTMLCommonThreadsElement extends Components.CommonThreads, HTMLStencilElement {
     }
@@ -866,6 +882,8 @@ declare global {
         "common-coalitions": HTMLCommonCoalitionsElement;
         "common-organizations": HTMLCommonOrganizationsElement;
         "common-posts": HTMLCommonPostsElement;
+        "common-prayer-notifications": HTMLCommonPrayerNotificationsElement;
+        "common-prayer-requests": HTMLCommonPrayerRequestsElement;
         "common-threads": HTMLCommonThreadsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "directories-table": HTMLDirectoriesTableElement;
@@ -1015,6 +1033,10 @@ declare namespace LocalJSX {
     interface CommonOrganizations {
     }
     interface CommonPosts {
+    }
+    interface CommonPrayerNotifications {
+    }
+    interface CommonPrayerRequests {
     }
     interface CommonThreads {
     }
@@ -1201,6 +1223,8 @@ declare namespace LocalJSX {
         "common-coalitions": CommonCoalitions;
         "common-organizations": CommonOrganizations;
         "common-posts": CommonPosts;
+        "common-prayer-notifications": CommonPrayerNotifications;
+        "common-prayer-requests": CommonPrayerRequests;
         "common-threads": CommonThreads;
         "create-update-modal": CreateUpdateModal;
         "directories-table": DirectoriesTable;
@@ -1307,6 +1331,8 @@ declare module "@stencil/core" {
             "common-coalitions": LocalJSX.CommonCoalitions & JSXBase.HTMLAttributes<HTMLCommonCoalitionsElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
             "common-posts": LocalJSX.CommonPosts & JSXBase.HTMLAttributes<HTMLCommonPostsElement>;
+            "common-prayer-notifications": LocalJSX.CommonPrayerNotifications & JSXBase.HTMLAttributes<HTMLCommonPrayerNotificationsElement>;
+            "common-prayer-requests": LocalJSX.CommonPrayerRequests & JSXBase.HTMLAttributes<HTMLCommonPrayerRequestsElement>;
             "common-threads": LocalJSX.CommonThreads & JSXBase.HTMLAttributes<HTMLCommonThreadsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "directories-table": LocalJSX.DirectoriesTable & JSXBase.HTMLAttributes<HTMLDirectoriesTableElement>;

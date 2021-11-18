@@ -46,6 +46,11 @@ export class TableRoot {
         {this.match.params.table === 'sc-pinned-projects' && <sc-pinned-projects></sc-pinned-projects>}
         {this.match.params.table === 'sc-posts' && <sc-posts></sc-posts>}
 
+        {this.match.params.table === 'sc-product-scripture-references' && <sc-product-scripture-references></sc-product-scripture-references>}
+        {this.match.params.table === 'sc-products' && <sc-products></sc-products>}
+        {this.match.params.table === 'sc-project-locations' && <sc-project-locations></sc-project-locations>}
+        {this.match.params.table === 'sc-projects' && <sc-projects></sc-projects>}
+
         {this.match.params.table === 'common-directories' && <directories-table></directories-table>}
         {this.match.params.table === 'common-files' && <files-table></files-table>}
         {this.match.params.table === 'common-file-versions' && <file-versions></file-versions>}
@@ -59,12 +64,17 @@ export class TableRoot {
         {this.match.params.table === 'common-coalitions' && <common-coalitions></common-coalitions>}
         {this.match.params.table === 'common-coalition-memberships' && <common-coalition-memberships></common-coalition-memberships>}
 
+        {this.match.params.table === 'common-prayer-requests' && <common-prayer-requests></common-prayer-requests>}
+        {this.match.params.table === 'common-prayer-notifications' && <common-prayer-notifications></common-prayer-notifications>}
+
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
         {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}
         {this.match.params.table === 'common-ticket-graph' && <ticket-graph></ticket-graph>}
         {this.match.params.table === 'common-ticket-assignments' && <ticket-assignments></ticket-assignments>}
         {this.match.params.table === 'common-work-records' && <work-records></work-records>}
+        {this.match.params.table === 'common-work-estimates' && <work-estimates></work-estimates>}
+        {this.match.params.table === 'common-ticket-feedback' && <ticket-feedback></ticket-feedback>}
         {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
         {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
         {this.match.params.table === 'common-cell-channels' && <common-cell-channels></common-cell-channels>}

@@ -150,8 +150,8 @@ export class AdminGroups {
       field: 'parent_group',
       displayName: 'Parent Group',
       width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'name',

@@ -46,7 +46,6 @@ class Update(
         if (req.column == null) return AdminGroupsUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return AdminGroupsUpdateResponse(ErrorType.MissingId)
 
-
         when (req.column) {
             "name" -> {
                 util.updateField(
@@ -64,6 +63,7 @@ class Update(
                     column = "parent_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_person" -> {
@@ -73,6 +73,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -82,6 +83,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }

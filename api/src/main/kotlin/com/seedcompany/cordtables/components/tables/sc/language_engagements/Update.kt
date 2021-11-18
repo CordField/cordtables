@@ -63,6 +63,7 @@ class Update(
                     column = "project",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "ethnologue" -> {
@@ -72,6 +73,7 @@ class Update(
                     column = "ethnologue",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "change_to_plan" -> {
@@ -81,6 +83,7 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "active" -> {
@@ -90,6 +93,7 @@ class Update(
                     column = "active",
                     id = req.id,
                     value = req.value,
+                    cast = "::BOOLEAN"
                 )
             }
             "communications_complete_date" -> {
@@ -99,6 +103,7 @@ class Update(
                     column = "communications_complete_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "complete_date" -> {
@@ -108,6 +113,7 @@ class Update(
                     column = "complete_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "disbursement_complete_date" -> {
@@ -117,6 +123,7 @@ class Update(
                     column = "disbursement_complete_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "end_date" -> {
@@ -126,6 +133,7 @@ class Update(
                     column = "end_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "end_date_override" -> {
@@ -135,6 +143,7 @@ class Update(
                     column = "end_date_override",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "initial_end_date" -> {
@@ -144,6 +153,7 @@ class Update(
                     column = "initial_end_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "is_first_scripture" -> {
@@ -153,6 +163,7 @@ class Update(
                     column = "is_first_scripture",
                     id = req.id,
                     value = req.value,
+                    cast = "::BOOLEAN"
                 )
             }
             "is_luke_partnership" -> {
@@ -162,6 +173,7 @@ class Update(
                     column = "is_luke_partnership",
                     id = req.id,
                     value = req.value,
+                    cast = "::BOOLEAN"
                 )
             }
             "is_sent_printing" -> {
@@ -171,6 +183,7 @@ class Update(
                     column = "is_sent_printing",
                     id = req.id,
                     value = req.value,
+                    cast = "::BOOLEAN"
                 )
             }
             "last_reactivated_at" -> {
@@ -180,6 +193,7 @@ class Update(
                     column = "last_reactivated_at",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "paratext_registry" -> {
@@ -199,6 +213,7 @@ class Update(
                     column = "periodic_reports_directory",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "pnp" -> {
@@ -217,6 +232,7 @@ class Update(
                     column = "pnp_file",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "product_engagement_tag" -> {
@@ -226,6 +242,7 @@ class Update(
                     column = "product_engagement_tag",
                     id = req.id,
                     value = req.value,
+                    cast = "::common.project_engagement_tag"
                 )
             }
             "start_date" -> {
@@ -235,6 +252,7 @@ class Update(
                     column = "start_date",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "start_date_override" -> {
@@ -244,6 +262,7 @@ class Update(
                     column = "start_date_override",
                     id = req.id,
                     value = req.value,
+                    cast = "::timestamp"
                 )
             }
             "status" -> {
@@ -253,6 +272,7 @@ class Update(
                     column = "status",
                     id = req.id,
                     value = req.value,
+                    cast = "::common.engagement_status"
                 )
             }
 
@@ -265,6 +285,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -274,6 +295,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::INTEGER"
                 )
             }
         }
