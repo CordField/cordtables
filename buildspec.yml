@@ -27,7 +27,7 @@ phases:
 
       - echo Building the Docker image...
       - cd infra/dev/cf-server
-      - docker build -f Dockerfile -t $REPOSITORY_URI:latest . --progress plain
+      - docker build --no-cache -f Dockerfile -t $REPOSITORY_URI:latest . --progress plain
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
