@@ -2020,7 +2020,35 @@ select
                                   select column_name
                                   from   public_column_level_access) then common.ST_AsLatLonText(coordinates::text)
                   else null
-         end as coordinates
+         end as coordinates,
+                   case
+                  when 'coordinates' in
+                           (
+                                  select column_name
+                                  from   column_level_access) then common.ST_AsGeoJSON(coordinates)
+                  when
+                           (
+                                  select exists
+                                         (
+                                                select id
+                                                from   admin.role_memberships
+                                                where  person =
+                                                       (
+                                                              select person
+                                                              from   admin.tokens
+                                                              where  token = :token)
+                                                and    role = 1)) then common.ST_AsGeoJSON(coordinates)
+                  when owning_person =
+                           (
+                                  select person
+                                  from   admin.tokens
+                                  where  token = :token) then common.ST_AsGeoJSON(coordinates)
+                  when 'coordinates' in
+                           (
+                                  select column_name
+                                  from   public_column_level_access) then common.ST_AsGeoJSON(coordinates)
+                  else null
+         end as coordinates_json
 from     sc.languages
  where
                 id = :id and
@@ -2261,6 +2289,9 @@ from     sc.languages
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
+                var coordinates_json: String? = jdbcResult.getString("coordinates_json")
+                if(jdbcResult.wasNull()) coordinates_json = null
+
                 val language =
                         Language(
                                 id = id,
@@ -2345,6 +2376,7 @@ from     sc.languages
                                 suggested_strategies = suggested_strategies,
                                 comments = comments,
                                 coordinates = coordinates,
+                                coordinates_json=coordinates_json,
                                 created_at = created_at,
                                 created_by = created_by,
                                 modified_at = modified_at,
