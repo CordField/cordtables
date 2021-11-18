@@ -309,7 +309,7 @@ class Neo4j(
                 targetTable = "common.directories",
                 id = node!!.id,
             )
-            node!!.labels.contains("FileVersion") -> { println("FOUND!"); writeBaseNode(
+            node!!.labels.contains("FileVersion") -> { writeBaseNode(
                 targetTable = "common.file_versions",
                 id = node!!.id,
             ) }
@@ -562,7 +562,7 @@ class Neo4j(
             checkRelationship(n, r, m, "User", "director", "FieldZone") -> writeRelationship(
                 n,
                 m,
-                "sc.field_zone",
+                "sc.field_zones",
                 "admin.people",
                 "director",
                 "id"
@@ -620,7 +620,7 @@ class Neo4j(
                 m,
                 "sc.periodic_reports",
                 "common.files",
-                "reportFile",
+                "report_file",
                 "id"
             )
             checkRelationship(n, r, m, "FieldRegion", "fieldRegion", "Project") -> writeRelationship(
@@ -711,7 +711,7 @@ class Neo4j(
                 n,
                 m,
                 "sc.locations",
-                "sc.funding_account",
+                "sc.funding_accounts",
                 "funding_account",
                 "id"
             )
