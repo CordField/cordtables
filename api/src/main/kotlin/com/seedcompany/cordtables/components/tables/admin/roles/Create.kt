@@ -2,150 +2,87 @@ package com.seedcompany.cordtables.components.tables.admin.roles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.admin.role_column_grants.CreateGlobalRoleColumnGrantsResponse
+import com.seedcompany.cordtables.components.tables.admin.roles.roleInput
+import com.seedcompany.cordtables.components.tables.admin.roles.Read
+import com.seedcompany.cordtables.components.tables.admin.roles.Update
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.reflect.full.memberProperties
 
-
-data class InsertableGlobalRoleFields(
-    val name: String ,
-    val org: Int
+data class AdminRolesCreateRequest(
+    val token: String? = null,
+    val role: roleInput,
 )
 
-data class CreateGlobalRoleResponse(
+data class AdminRolesCreateResponse(
     val error: ErrorType,
-    val data: Role?
+    val id: Int? = null,
 )
-data class CreateGlobalRoleRequest(
-        val insertedFields: Role,
-        val token: String,
-)
-
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("GlobalRoleCreate")
+@Controller("AdminRolesCreate")
 class Create(
     @Autowired
     val util: Utility,
-    @Autowired
-    val globalRoleUtil: RoleUtil,
+
     @Autowired
     val ds: DataSource,
+
+    @Autowired
+    val update: Update,
+
+    @Autowired
+    val read: Read,
 ) {
-    @PostMapping("role/create")
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+
+    @PostMapping("admin-roles/create")
     @ResponseBody
-    fun CreateHandler(@RequestBody req: CreateGlobalRoleRequest): CreateGlobalRoleResponse {
+    fun createHandler(@RequestBody req: AdminRolesCreateRequest): AdminRolesCreateResponse {
 
-        if (!util.isAdmin(req.token)) return CreateGlobalRoleResponse(ErrorType.AdminOnly, null)
-        println("req: $req")
-        var errorType = ErrorType.UnknownError
-        var insertedRole: Role? = null
-        var userId = 0
-        val reqValues: MutableList<Any> = mutableListOf()
+        if (req.role.name == null) return AdminRolesCreateResponse(error = ErrorType.InputMissingToken, null)
 
-        if (req.token == null) return CreateGlobalRoleResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasCreatePermission(req.token, "admin.roles"))
-            return CreateGlobalRoleResponse(ErrorType.DoesNotHaveCreatePermission, null)
 
-        this.ds.connection.use { conn ->
-            try {
-                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
-                getUserIdStatement.setString(1, req.token)
-                val getUserIdResult = getUserIdStatement.executeQuery()
-                if (getUserIdResult.next()) {
-                    userId = getUserIdResult.getInt("person")
-                    println("userId: $userId")
-                }
-                else {
-                    throw SQLException("User not found")
-                }
-            }
-            catch(e:SQLException){
-                println(e.message)
-                errorType = ErrorType.UserNotFound
-                return CreateGlobalRoleResponse(errorType, null)
-            }
-            try {
-                var insertStatementKeys = "insert into admin.roles("
-                var insertStatementValues = " values("
-                for (prop in Role::class.memberProperties) {
-                    val propValue = prop.get(req.insertedFields)
-                    println("$propValue ${prop.name}")
-                    if (propValue != null && prop.name !in globalRoleUtil.nonMutableColumns) {
-                        insertStatementKeys = "$insertStatementKeys ${prop.name},"
-                        insertStatementValues = "$insertStatementValues ?,"
-                        reqValues.add(propValue)
-                    }
-                }
-                insertStatementKeys = "$insertStatementKeys modified_by,created_by)"
-                insertStatementValues = "$insertStatementValues ?,?) returning *;"
-                val insertStatementSQL = "$insertStatementKeys $insertStatementValues"
-                println(insertStatementSQL)
-
-                val insertStatement = conn.prepareCall(
-                        insertStatementSQL
+        // create row with required fields, use id to update cells afterwards one by one
+        val id = jdbcTemplate.queryForObject(
+            """
+            insert into admin.roles(name, created_by, modified_by, owning_person, owning_group)
+                values(
+                    ?,
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    1
                 )
+            returning id;
+        """.trimIndent(),
+            Int::class.java,
+            req.role.name,
+            req.token,
+            req.token,
+            req.token,
+        )
 
-                var counter = 1
-                reqValues.forEach { value ->
-                    when (value) {
-                        is Int -> insertStatement.setInt(counter, value)
-                        is String -> insertStatement.setString(counter, value)
-                        is Double -> insertStatement.setDouble(counter, value)
-                        else -> insertStatement.setObject(counter, value, java.sql.Types.OTHER)
-                    }
-                    counter += 1
-                }
-                insertStatement.setInt(counter, userId)
-                insertStatement.setInt(counter + 1, userId)
+//        req.language.id = id
 
-                val insertStatementResult = insertStatement.executeQuery()
-
-                if (insertStatementResult.next()) {
-                    var id: Int? = insertStatementResult.getInt("id")
-                    if(insertStatementResult.wasNull()) id = null
-                    var name: String? = insertStatementResult.getString("name")
-                    if(insertStatementResult.wasNull()) name = null
-                    var created_by: Int? = insertStatementResult.getInt("created_by")
-                    if(insertStatementResult.wasNull()) created_by = null
-                    var modified_by: Int? = insertStatementResult.getInt("modified_by")
-                    if(insertStatementResult.wasNull()) modified_by = null
-                    var owning_group: Int? = insertStatementResult.getInt("owning_group")
-                    if(insertStatementResult.wasNull()) owning_group = null
-                    var owning_person: Int? = insertStatementResult.getInt("owning_person")
-                    if(insertStatementResult.wasNull()) owning_person = null
-                    var chat: Int? = insertStatementResult.getInt("chat")
-                    if(insertStatementResult.wasNull()) chat = null
-                    var created_at: String? = insertStatementResult.getString("created_at")
-                    if(insertStatementResult.wasNull()) created_at = null
-                    var modified_at: String? = insertStatementResult.getString("modified_at")
-                    if(insertStatementResult.wasNull()) modified_at = null
-                    insertedRole = Role(
-                            id = id,
-                            created_at = created_at,
-                            created_by = created_by,
-                            modified_at = modified_at,
-                            modified_by = modified_by,
-                            name = name,
-                            owning_group = owning_group,
-                            owning_person = owning_person,
-                            chat = chat)
-                    println("newly inserted id: $id")
-                }
-            }
-            catch (e:SQLException ){
-                println(e.message)
-                errorType = ErrorType.SQLInsertError
-                return CreateGlobalRoleResponse(errorType, null)
-            }
-        }
-       return CreateGlobalRoleResponse(ErrorType.NoError,insertedRole)
+        return AdminRolesCreateResponse(error = ErrorType.NoError, id = id)
     }
+
 }

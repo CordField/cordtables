@@ -11,25 +11,38 @@ create type common.mime_type as enum (
 
 -- SITE TEXT --------------------------------------------------------------------------------
 
-create table common.site_text(
+-- meant to be extended by all orgs, so everyone has a unique id to reference within their language lists
+create table common.languages(
   id serial primary key,
 
-  ethnologue int not null,
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
 
-  cord_tables varchar(32),
-  edit_mode varchar(32),
-  email_address varchar(32),
-  false_ varchar(32),
-  home varchar(32),
-  languages varchar(32),
-  login varchar(32),
-  logout varchar(32),
-  password varchar(32),
-  please_login_or_register varchar(128),
-  profile_page varchar(32),
-  register varchar(32),
-  sc_languages varchar(32),
-  true_ varchar(32),
+create table common.site_text_strings(
+  id serial primary key,
+
+  english varchar(64) not null, -- US English, all translations including other English locales will be in the translation table
+  comment text,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.site_text_translations(
+  id serial primary key,
+
+  language int not null references common.languages(id),
+  site_text int not null references common.site_text_strings(id),
+  translation varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -66,12 +79,16 @@ create table common.scripture_references (
 create table common.discussion_channels (
 	id serial primary key,
 
+	name varchar(32) not null,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (name, owning_group)
 );
 
 create table common.cell_channels (
@@ -136,6 +153,24 @@ create table common.blog_posts (
 	id serial primary key,
 
   blog int not null references common.blogs(id),
+	content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- NOTES ----------------------------------------------------
+
+create table common.notes (
+	id serial primary key,
+
+  table_name admin.table_name not null,
+  column_name varchar(64) not null,
+  row int not null,
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -224,29 +259,72 @@ create table common.organizations (
   owning_group int not null references admin.groups(id)
 );
 
-create type common.people_to_org_relationship_type as enum (
-  'Vendor',
-  'Customer',
-  'Investor',
-  'Associate',
-  'Employee',
-  'Member',
-  'Executive',
-  'President/CEO',
-  'Board of Directors',
-  'Retired',
-  'Other'
-);
-
-create table common.people_to_org_relationships (
+create table common.org_chart_positions(
   id serial primary key,
 
-	org int not null references common.organizations(id),
-	person int not null references admin.people(id),
-	relationship_type common.people_to_org_relationship_type,
-  begin_at timestamp,
-  end_at timestamp,
-	
+  organization int not null references common.organizations(id),
+  name varchar(64) not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+  unique (organization, name)
+);
+
+create type common.position_relationship_types as enum (
+  'Reports To',
+  'Works With'
+);
+
+create table common.org_chart_position_graph(
+  id serial primary key,
+
+  from_position int not null references common.org_chart_positions(id),
+  to_position int not null references common.org_chart_positions(id),
+  relationship_type common.position_relationship_types,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+  unique (from_position, to_position, relationship_type)
+);
+
+-- COALITIONS ----------------------------------------------------------
+
+create type common.involvement_options as enum (
+  'CIT',
+  'Engagements'
+);
+
+create table common.coalitions(
+  id serial primary key,
+
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- coalition memberships
+
+create table common.coalition_memberships(
+  id serial primary key,
+
+  coalition int not null references common.coalitions(id),
+  organization int not null references common.organizations(id),
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -260,7 +338,7 @@ create table common.people_to_org_relationships (
 create table common.directories (
   id serial primary key,
 
-	parent int references common.directories(id),
+  parent int references common.directories(id),
   name varchar(255),
 	-- todo
 
@@ -361,6 +439,7 @@ create table common.work_records(
 	id serial primary key,
 
 	person int not null references admin.people(id),
+	ticket int not null references common.tickets(id),
 	hours int not null,
 	minutes int default 0,
 	total_time decimal generated always as (
@@ -486,6 +565,90 @@ create table common.stage_notifications(
 	on_exit bool default false,
 	person int references admin.people(id),
   
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- PRAYER --------------------------------------------------------------
+
+create table common.prayer_requests(
+	id serial primary key,
+
+  parent int references common.prayer_requests(id),
+  content text not null,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table common.prayer_notifications(
+	id serial primary key,
+
+  request int references common.prayer_requests(id),
+  person int references admin.people(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+-- SOCIAL GRAPH ----------------------------------------------------
+
+create type common.people_to_org_relationship_type as enum (
+  'Vendor',
+  'Customer',
+  'Investor',
+  'Associate',
+  'Employee',
+  'Member',
+  'Executive',
+  'President/CEO',
+  'Board of Directors',
+  'Retired',
+  'Other'
+);
+
+create table common.people_to_org_relationships (
+  id serial primary key,
+
+	org int not null references common.organizations(id),
+	person int not null references admin.people(id),
+	relationship_type common.people_to_org_relationship_type,
+  begin_at timestamp,
+  end_at timestamp,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create type common.people_to_people_relationship_types as enum (
+  'Friend',
+  'Colleague',
+  'Other'
+);
+
+create table common.people_graph (
+  id serial primary key,
+
+  from_person int not null references admin.people(id),
+  to_person int not null references admin.people(id),
+  rel_type common.people_to_people_relationship_types not null,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

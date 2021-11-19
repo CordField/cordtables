@@ -63,7 +63,6 @@ class List(
                     "modified_by",
                     "owning_person",
                     "owning_group",
-                    "peer"
                 )
             )
         ).query
@@ -102,9 +101,6 @@ class List(
                 var owningGroup: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owningGroup = null
 
-                var peer: Int? = jdbcResult.getInt("peer")
-                if (jdbcResult.wasNull()) peer = null
-
                 data.add(
                     AdminUser(
                         id= id,
@@ -118,7 +114,6 @@ class List(
                         modified_by = modifiedBy,
                         owning_person= owningPerson,
                         owning_group =  owningGroup,
-                        peer = peer,
                     )
                 )
             }

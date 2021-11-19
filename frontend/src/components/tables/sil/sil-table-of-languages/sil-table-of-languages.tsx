@@ -5,8 +5,7 @@ import { Component, Host, h } from '@stencil/core';
   styleUrl: 'sil-table-of-languages.css',
   shadow: true,
 })
-export class SilTableOfLanguages {
-
+export class ScEthnologue {
   render() {
     return (
       <Host>
@@ -14,5 +13,4 @@ export class SilTableOfLanguages {
       </Host>
     );
   }
-
 }

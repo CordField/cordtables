@@ -98,16 +98,6 @@ class Update(
                         value = req.value,
                 )
             }
-
-            "peer" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "common.organizations",
-                        column = "peer",
-                        id = req.id,
-                        value = req.value,
-                )
-            }
         }
 
         return CommonOrganizationsUpdateResponse(ErrorType.NoError)

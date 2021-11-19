@@ -69,7 +69,6 @@ class Read(
                     "modified_by",
                     "owning_person",
                     "owning_group",
-                    "peer"
                 ),
             )
         ).query

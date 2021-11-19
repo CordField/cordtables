@@ -13,13 +13,13 @@ DECLARE
 BEGIN
   -- look up the iso, create if not found
   select id
-  from sil.table_of_languages
+  from sc.ethnologue
   into vLangId
   where iso_639 = pIso_639;
 
   if found then
     -- update each cell only if there is a diff
-    update sil.table_of_languages
+    update sc.ethnologue
     set language_name = pLanguage_name,
       modified_at = CURRENT_TIMESTAMP
     where iso_639 = pIso_639 and
@@ -31,7 +31,7 @@ BEGIN
          (language_name IS NOT NULL AND pLanguage_name IS NULL)
       );
 
-    update sil.table_of_languages
+    update sc.ethnologue
     set population = pPopulation,
       modified_at = CURRENT_TIMESTAMP
     where iso_639 = pIso_639 and
@@ -43,7 +43,7 @@ BEGIN
          (population IS NOT NULL AND pPopulation IS NULL)
       );
 
-    update sil.table_of_languages
+    update sc.ethnologue
     set provisional_code = pProvisional_code,
       modified_at = CURRENT_TIMESTAMP
     where iso_639 = pIso_639 and
@@ -55,7 +55,7 @@ BEGIN
          (provisional_code IS NOT NULL AND pProvisional_code IS NULL)
       );
 
-    update sil.table_of_languages
+    update sc.ethnologue
     set sensitivity = pSensitivity,
       modified_at = CURRENT_TIMESTAMP
     where iso_639 = pIso_639 and
@@ -64,7 +64,7 @@ BEGIN
     error_type := 'NoError';
 
   else
-    insert into sil.table_of_languages(
+    insert into sc.ethnologue(
       iso_639,
       language_name,
       population,

@@ -1,9 +1,13 @@
-import { Component, Host, h, State } from '@stencil/core';
+import { Component, Host, h, State, Prop, Watch } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
+import mapboxgl from 'mapbox-gl';
+// import 'https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css';
+// import 'mapbox-gl/dist/mapbox-gl.css';
+// import {mapbox} from 'mapbox-gl'
 
 class CreateLanguageExRequest {
   token: string;
@@ -52,8 +56,13 @@ class DeleteLanguageExResponse extends GenericResponse {
 })
 export class ScLanguages {
   @State() languagesResponse: ScLanguagesListResponse;
+  // @State() lng: number = 32.7;
+  // @State() lat: number = -114.76;
+  // @State() zoom: number = 1;
   newLanguageName: string;
   newDisplayName: string;
+  mapbox!: HTMLElement;
+  map: mapboxgl.Map;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
@@ -67,6 +76,9 @@ export class ScLanguages {
 
     if (updateResponse.error == ErrorType.NoError) {
       this.languagesResponse = { error: ErrorType.NoError, languages: this.languagesResponse.languages.map(language => (language.id === id ? updateResponse.language : language)) };
+      if (columnName === 'coordinates') {
+        this.convertJsonToMarker(updateResponse.language.coordinates_json);
+      }
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -80,6 +92,10 @@ export class ScLanguages {
       id,
       token: globals.globalStore.state.token,
     });
+    // let coordinates_json = this.languagesResponse.languages.find(language => language.id === id).coordinates_json;
+    // if (coordinates_json !== null && coordinates_json !== undefined) {
+    //   this.removeMarker(coordinates_json);
+    // }
     if (deleteResponse.error === ErrorType.NoError) {
       this.getList();
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item deleted successfully', id: uuidv4(), type: 'success' });
@@ -694,41 +710,87 @@ export class ScLanguages {
 
   async componentWillLoad() {
     await this.getList();
+    mapboxgl.accessToken = process.env.MAPBOX_KEY;
+  }
+  // removeMarker(coordinates_json) {
+  //   const parsedJson = JSON.parse(coordinates_json) as {
+  //     type: string;
+  //     coordinates: [number, number];
+  //   };
+  //   const coordinates = parsedJson.coordinates;
+  //   console.log(coordinates);
+  //   const marker = this.mapbox.querySelector(`#${coordinates[0]}-${coordinates[1]}`);
+  //   console.log(marker);
+  // }
+  convertJsonToMarker(coordinates_json) {
+    const parsedJson = JSON.parse(coordinates_json) as {
+      type: string;
+      coordinates: [number, number];
+    };
+    const coordinates = parsedJson.coordinates;
+    console.log(coordinates);
+    const markerNode = document.createElement('div');
+    // document.querySelector('.sc-languages').append(markerNode);
+    markerNode.className = 'marker';
+    markerNode.id = `${coordinates[0]}-${coordinates[1]}`;
+    console.log(markerNode);
+    new mapboxgl.Marker(markerNode).setLngLat(coordinates).addTo(this.map);
+  }
+  componentDidLoad() {
+    this.map = new mapboxgl.Map({
+      container: this.mapbox, // container ID
+      style: 'mapbox://styles/mapbox/dark-v10', // style URL
+      center: [-28, -14], // starting position [lng, lat]
+      zoom: 1, // starting zoom
+    });
+
+    this.map.on('load', () => {
+      console.log('languagesResponse', this.languagesResponse);
+      this.languagesResponse.languages
+        .filter(language => language.coordinates_json != null && language.coordinates_json != undefined)
+        .map(language => this.convertJsonToMarker(language.coordinates_json));
+      this.map.resize();
+    });
+  }
+  disconnectedCallback() {
+    this.map.remove();
   }
 
   render() {
     return (
-      <Host>
+      <Host class="sc-languages">
         <slot></slot>
         {/* table abstraction */}
+        {globals.globalStore.state.editMode === true && (
+          <div>
+            <form class="form-thing">
+              <div id="language-name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="language-name">New Language Name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="language-name" name="language-name" onInput={event => this.languageNameChange(event)} />
+                </span>
+              </div>
+              <div id="display-name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="display-name">Display Name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />
+                </span>
+              </div>
+              <span class="form-thing">
+                <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
+              </span>
+            </form>
+          </div>
+        )}
         {this.languagesResponse && <cf-table rowData={this.languagesResponse.languages} columnData={this.columnData}></cf-table>}
+        <div id="map" class="mapbox" ref={mapbox => (this.mapbox = mapbox)}></div>
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
-
-        {globals.globalStore.state.editMode === true && (
-          <form class="form-thing">
-            <div id="language-name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="language-name">New Language Name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="language-name" name="language-name" onInput={event => this.languageNameChange(event)} />
-              </span>
-            </div>
-            <div id="display-name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="display-name">Display Name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />
-              </span>
-            </div>
-            <span class="form-thing">
-              <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
-            </span>
-          </form>
-        )}
       </Host>
     );
   }

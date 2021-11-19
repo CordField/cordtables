@@ -1,10 +1,12 @@
 package com.seedcompany.cordtables.components.tables.admin.people
 
-import com.seedcompany.cordtables.common.CommonSensitivity
+import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.TableNames
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
+import com.seedcompany.cordtables.components.tables.admin.people.people
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -15,43 +17,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.collections.List
 
-data class People(
-    val id: Int?,
-    val phone: String?,
-    val picture: String?,
-    val privateFirstName: String?,
-    val privateLastName: String?,
-    val publicFirstName: String?,
-    val publicLastName: String?,
-    val primaryLocation: Int?,
-    val privateFullName: String?,
-    val publicFullName: String?,
-    val sensitivityClearance: CommonSensitivity?,
-    val timeZone: String?,
-    val title: String?,
-    val status: String?,
-    val createdAt: String?,
-    val createdBy: Int?,
-    val modifiedAt: String?,
-    val modifiedBy: Int?,
-    val owningPerson: Int?,
-    val owningGroup: Int?,
 
+data class AdminPeopleListRequest(
+    val token: String?
 )
 
-data class PeopleListRequest(
-    val token: String? = null,
-)
-
-data class PeopleListResponse(
+data class AdminPeopleListResponse(
     val error: ErrorType,
-    val people: List<People>?,
+    val peoples: MutableList<people>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("PeopleList")
+@Controller("AdminPeopleList")
 class List(
     @Autowired
     val util: Utility,
@@ -65,14 +43,11 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("people/list")
+    @PostMapping("admin-people/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: PeopleListRequest): PeopleListResponse {
-
-        if (req.token == null) return PeopleListResponse(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return PeopleListResponse(ErrorType.AdminOnly, null)
-
-        val items = mutableListOf<People>()
+    fun listHandler(@RequestBody req:AdminPeopleListRequest): AdminPeopleListResponse {
+        var data: MutableList<people> = mutableListOf()
+        if (req.token == null) return AdminPeopleListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -80,38 +55,42 @@ class List(
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "admin.people",
+                filter = "order by id",
                 columns = arrayOf(
                     "id",
+                    "about",
                     "phone",
                     "picture",
-                    "privateFirstName",
-                    "privateLastName",
-                    "publicFirstName",
-                    "publicLastName",
-                    "primaryLocation",
-                    "privateFullName",
-                    "publicFullName",
-                    "sensitivityClearance",
-                    "timeZone",
+                    "private_first_name",
+                    "private_last_name",
+                    "public_first_name",
+                    "public_last_name",
+                    "primary_location",
+                    "private_full_name",
+                    "public_full_name",
+                    "sensitivity_clearance",
+                    "time_zone",
                     "title",
                     "status",
-                    "createdAt",
-                    "createdBy",
-                    "modifiedAt",
-                    "modifiedBy",
-                    "owningPerson",
-                    "owningGroup"
+                    "created_at",
+                    "created_by",
+                    "modified_at",
+                    "modified_by",
+                    "owning_person",
+                    "owning_group",
                 )
             )
         ).query
 
-        try{
-
+        try {
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
+
+                var about: String? = jdbcResult.getString("about")
+                if (jdbcResult.wasNull()) about = null
 
                 var phone: String? = jdbcResult.getString("phone")
                 if (jdbcResult.wasNull()) phone = null
@@ -119,32 +98,32 @@ class List(
                 var picture: String? = jdbcResult.getString("picture")
                 if (jdbcResult.wasNull()) picture = null
 
-                var privateFirstName: String? = jdbcResult.getString("private_first_name")
-                if (jdbcResult.wasNull()) privateFirstName = null
+                var private_first_name: String? = jdbcResult.getString("private_first_name")
+                if (jdbcResult.wasNull()) private_first_name = null
 
-                var privateLastName: String? = jdbcResult.getString("private_last_name")
-                if (jdbcResult.wasNull()) privateLastName = null
+                var private_last_name: String? = jdbcResult.getString("private_last_name")
+                if (jdbcResult.wasNull()) private_last_name = null
 
-                var publicFirstName: String? = jdbcResult.getString("public_first_name")
-                if (jdbcResult.wasNull()) publicFirstName = null
+                var public_first_name: String? = jdbcResult.getString("public_first_name")
+                if (jdbcResult.wasNull()) public_first_name = null
 
-                var publicLastName: String? = jdbcResult.getString("public_last_name")
-                if (jdbcResult.wasNull()) publicLastName = null
+                var public_last_name: String? = jdbcResult.getString("public_last_name")
+                if (jdbcResult.wasNull()) public_last_name = null
 
-                var primaryLocation: Int? = jdbcResult.getInt("primary_location")
-                if (jdbcResult.wasNull()) primaryLocation = null
+                var primary_location: Int? = jdbcResult.getInt("primary_location")
+                if (jdbcResult.wasNull()) primary_location = null
 
-                var privateFullName: String? = jdbcResult.getString("private_full_name")
-                if (jdbcResult.wasNull()) privateFullName = null
+                var private_full_name: String? = jdbcResult.getString("private_full_name")
+                if (jdbcResult.wasNull()) private_full_name = null
 
-                var publicFullName: String? = jdbcResult.getString("public_full_name")
-                if (jdbcResult.wasNull()) publicFullName = null
+                var public_full_name: String? = jdbcResult.getString("public_full_name")
+                if (jdbcResult.wasNull()) public_full_name = null
 
-                var sensitivityClearance: String? = jdbcResult.getString("CommonSensitivity")
-                if (jdbcResult.wasNull()) sensitivityClearance = null
+                var sensitivity_clearance: String? = jdbcResult.getString("sensitivity_clearance")
+                if (jdbcResult.wasNull()) sensitivity_clearance = null
 
-                var timeZone: String? = jdbcResult.getString("time_zone")
-                if (jdbcResult.wasNull()) timeZone = null
+                var time_zone: String? = jdbcResult.getString("time_zone")
+                if (jdbcResult.wasNull()) time_zone = null
 
                 var title: String? = jdbcResult.getString("title")
                 if (jdbcResult.wasNull()) title = null
@@ -152,57 +131,55 @@ class List(
                 var status: String? = jdbcResult.getString("status")
                 if (jdbcResult.wasNull()) status = null
 
-                var createdAt: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) createdAt = null
+                var created_by: Int? = jdbcResult.getInt("created_by")
+                if (jdbcResult.wasNull()) created_by = null
 
-                var createdBy: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) createdBy = null
+                var created_at: String? = jdbcResult.getString("created_at")
+                if (jdbcResult.wasNull()) created_at = null
 
-                var modifiedAt: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modifiedAt = null
+                var modified_at: String? = jdbcResult.getString("modified_at")
+                if (jdbcResult.wasNull()) modified_at = null
 
-                var modifiedBy: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modifiedBy = null
+                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                if (jdbcResult.wasNull()) modified_by = null
 
-                var owningPerson: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owningPerson = null
+                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                if (jdbcResult.wasNull()) owning_person = null
 
-                var owningGroup: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owningGroup = null
+                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                if (jdbcResult.wasNull()) owning_group = null
 
-                items.add(
-                    People(
+                data.add(
+                    people(
                         id = id,
+                        about = about,
                         phone = phone,
                         picture = picture,
-                        privateFirstName = privateFirstName,
-                        privateLastName = privateLastName,
-                        publicFirstName = publicFirstName,
-                        publicLastName = publicLastName,
-                        primaryLocation = primaryLocation,
-                        privateFullName = privateFullName,
-                        publicFullName = publicFullName,
-                        sensitivityClearance = if(sensitivityClearance == null) null else CommonSensitivity.valueOf("sensitivityClearance"),
-                        timeZone = timeZone,
+                        private_first_name = private_first_name,
+                        private_last_name = private_last_name,
+                        public_first_name = public_first_name,
+                        public_last_name = public_last_name,
+                        primary_location = primary_location,
+                        private_full_name = private_full_name,
+                        public_full_name = public_full_name,
+                        sensitivity_clearance = if (sensitivity_clearance == null) null else Sensitivities.valueOf(sensitivity_clearance),
+                        time_zone = time_zone,
                         title = title,
                         status = status,
-                        createdAt = createdAt,
-                        createdBy = createdBy,
-                        modifiedAt = modifiedAt,
-                        modifiedBy = modifiedBy,
-                        owningPerson = owningPerson,
-                        owningGroup = owningGroup,
-
+                        created_at = created_at,
+                        created_by = created_by,
+                        modified_at = modified_at,
+                        modified_by = modified_by,
+                        owning_person = owning_person,
+                        owning_group = owning_group,
+                    )
                 )
-            )
-
-        }
+            }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return PeopleListResponse(ErrorType.SQLReadError, mutableListOf())
+            return AdminPeopleListResponse(ErrorType.SQLReadError, mutableListOf())
         }
 
-        return PeopleListResponse(ErrorType.NoError, items)
+        return AdminPeopleListResponse(ErrorType.NoError, data)
     }
-
 }
