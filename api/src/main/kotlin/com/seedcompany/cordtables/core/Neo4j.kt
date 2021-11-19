@@ -80,7 +80,7 @@ class Neo4j(
 
         migrateBaseNodes()
         migrateBaseNodeToBaseNodeRelationships()
-        migrateBaseNodeProperties()
+        //migrateBaseNodeProperties()
 
         return Neo4jMigrationResponse(ErrorType.NoError)
     }
@@ -498,8 +498,6 @@ class Neo4j(
                     delay(1000L)
                 }
             }
-
-
         }
 
         println("base node to base node relationships migration done")
@@ -526,7 +524,6 @@ class Neo4j(
                         )
                     )
                 }
-
         }
     }
 
@@ -779,8 +776,25 @@ class Neo4j(
                 "person",
                 "id"
             )
+            checkRelationship(n, r, m, "User", "createdBy", "BaseFile") -> {
+                writeRelationship(
+                    n,
+                    m,
+                    "common.files",
+                    "admin.people",
+                    "created_by",
+                    "id"
+                )
+            }
+            checkRelationship(n, r, m, "User", "createdBy", "Directory") -> writeRelationship(
+                n,
+                m,
+                "common.directories",
+                "admin.people",
+                "created_by",
+                "id"
+            )
         }
-
     }
 
     suspend fun writeRelationship(
