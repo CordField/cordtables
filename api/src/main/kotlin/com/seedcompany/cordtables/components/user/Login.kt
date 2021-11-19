@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import java.io.File
+import java.nio.file.Paths
 import java.sql.SQLException
 import javax.sql.DataSource
 
@@ -21,7 +23,7 @@ data class LoginRequest(
 data class LoginReturn(
     val error: ErrorType,
     val token: String? = null,
-    val readableTables: MutableList<String> = mutableListOf(),
+    val readableTables: List<String> = listOf(),
     val isAdmin: Boolean = false
 )
 
@@ -49,7 +51,9 @@ class Login (
         var response = LoginReturn(ErrorType.UnknownError)
         var token: String? = null
         var errorType = ErrorType.UnknownError
-
+//        val path = context.filesDir.absolutePath
+//
+//        println(home.resolve("src/Dockerfile").toAbsolutePath())
         this.ds.connection.use { conn ->
             try {
                 val pashStatement = conn.prepareCall("select password from admin.users where email = ?;")

@@ -109,15 +109,14 @@ export interface ScriptureReference {
 }
 
 export interface AdminUser {
-  id?: number,
-  person?: number,
-  email?: string,
-  chat?: number,
-  created_at?: string,
-  created_by?: number,
-  modified_at?: string,
-  modified_by?: number,
-  owning_person?: number,
-  owning_group?: number,
-  peer: number,
+  id?: number;
+  person?: number;
+  email?: string;
+  chat?: number;
+  created_at?: string;
+  created_by?: number;
+  modified_at?: string;
+  modified_by?: number;
+  owning_person?: number;
+  owning_group?: number;
 }

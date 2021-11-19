@@ -4,7 +4,6 @@ import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -23,7 +22,7 @@ data class ScLanguagesListRequest(
 
 data class ScLanguagesListResponse(
         val error: ErrorType,
-        val languages: MutableList<Language>?
+        val languages: MutableList<Language>?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -2019,7 +2018,35 @@ select
                                   select column_name
                                   from   public_column_level_access) then common.ST_AsLatLonText(coordinates::text)
                   else null
-         end as coordinates
+         end as coordinates,
+          case
+                  when 'coordinates' in
+                           (
+                                  select column_name
+                                  from   column_level_access) then common.ST_AsGeoJSON(coordinates)
+                  when
+                           (
+                                  select exists
+                                         (
+                                                select id
+                                                from   admin.role_memberships
+                                                where  person =
+                                                       (
+                                                              select person
+                                                              from   admin.tokens
+                                                              where  token = :token)
+                                                and    role = 1)) then common.ST_AsGeoJSON(coordinates)
+                  when owning_person =
+                           (
+                                  select person
+                                  from   admin.tokens
+                                  where  token = :token) then common.ST_AsGeoJSON(coordinates)
+                  when 'coordinates' in
+                           (
+                                  select column_name
+                                  from   public_column_level_access) then common.ST_AsGeoJSON(coordinates)
+                  else null
+         end as coordinates_json
 from     sc.languages
 where    id in
          (
@@ -2050,7 +2077,6 @@ order by id;""".trimIndent()
 
 
         try {
-            println(query)
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
@@ -2281,11 +2307,15 @@ order by id;""".trimIndent()
                 var coordinates: String? = jdbcResult.getString("coordinates")
                 if(jdbcResult.wasNull()) coordinates = null
 
+                var coordinates_json: String? = jdbcResult.getString("coordinates_json")
+                if(jdbcResult.wasNull()) coordinates_json = null
+
                 data.add(
                         Language(
                                 id = id,
                                 neo4j_id = neo4j_id,
                                 coordinates = coordinates,
+                                coordinates_json = coordinates_json,
                                 ethnologue = ethnologue,
                                 name = name,
                                 display_name = display_name,

@@ -2,7 +2,11 @@ package com.seedcompany.cordtables.components.tables.admin.group_memberships
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.group_memberships.groupMembershipInput
+import com.seedcompany.cordtables.components.tables.admin.group_memberships.Read
+import com.seedcompany.cordtables.components.tables.admin.group_memberships.Update
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -10,90 +14,77 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class GroupMembershipCreateRequest(
+data class AdminGroupMembershipsCreateRequest(
     val token: String? = null,
-    val group: Int? = null,
-    val person: Int? = null,
+    val groupMembership: groupMembershipInput,
 )
 
-data class GroupMembershipCreateReturn(
+data class AdminGroupMembershipsCreateResponse(
     val error: ErrorType,
+    val id: Int? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("GroupMembershipsCreate")
+@Controller("AdminGroupMembershipsCreate")
 class Create(
     @Autowired
     val util: Utility,
 
     @Autowired
     val ds: DataSource,
+
+    @Autowired
+    val update: Update,
+
+    @Autowired
+    val read: Read,
 ) {
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("groupmemberships/create")
+    @PostMapping("admin-group-memberships/create")
     @ResponseBody
-    fun createHandler(@RequestBody req: GroupMembershipCreateRequest): GroupMembershipCreateReturn {
+    fun createHandler(@RequestBody req: AdminGroupMembershipsCreateRequest): AdminGroupMembershipsCreateResponse {
 
-        if (req.token == null) return GroupMembershipCreateReturn(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return GroupMembershipCreateReturn(ErrorType.AdminOnly)
-
-        if (req.group == null) return GroupMembershipCreateReturn(ErrorType.InputMissingGroup)
-        if (req.person == null) return GroupMembershipCreateReturn(ErrorType.InputMissingPerson)
-
-        this.ds.connection.use { conn ->
-
-            //language=SQL
-            val checkRowStatement = conn.prepareStatement(
-                """
-                select exists(select id from admin.group_memberships where group_id = ? and person = ?)
-            """.trimIndent()
-            )
-
-            checkRowStatement.setInt(1, req.group)
-            checkRowStatement.setInt(2, req.person)
-
-            val result = checkRowStatement.executeQuery();
-
-            if (result.next()) {
-                val rowFound = result.getBoolean(1)
-
-                if (rowFound) {
-                    return GroupMembershipCreateReturn(ErrorType.MembershipAlreadyExists)
-                } else {
-
-                    //language=SQL
-                    val statement = conn.prepareStatement(
-                        """
-                        insert into admin.group_memberships(group_id, person, created_by, modified_by) 
-                            values(?, ?,
-                                (
-                                  select person 
-                                  from admin.tokens 
-                                  where token = ?
-                                ),
-                                (
-                                  select person 
-                                  from admin.tokens 
-                                  where token = ?
-                                )
-                        );
-                        """.trimIndent()
-                                )
-
-                    statement.setInt(1, req.group)
-                    statement.setInt(2, req.person)
-                    statement.setString(3, req.token)
-                    statement.setString(4, req.token)
-
-                    statement.execute()
-
-                }
-            }
+        // if (req.groupMembership.name == null) return AdminGroupMembershipsCreateResponse(error = ErrorType.InputMissingToken, null)
 
 
-        }
+        // create row with required fields, use id to update cells afterwards one by one
+        val id = jdbcTemplate.queryForObject(
+            """
+            insert into admin.group_memberships(group_id, person,  created_by, modified_by, owning_person, owning_group)
+                values(
+                    ?,
+                    ?,
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    1
+                )
+            returning id;
+        """.trimIndent(),
+            Int::class.java,
+            req.groupMembership.group_id,
+            req.groupMembership.person,
+            req.token,
+            req.token,
+            req.token,
+        )
 
-        return GroupMembershipCreateReturn(ErrorType.NoError)
+//        req.language.id = id
+
+        return AdminGroupMembershipsCreateResponse(error = ErrorType.NoError, id = id)
     }
 
 }

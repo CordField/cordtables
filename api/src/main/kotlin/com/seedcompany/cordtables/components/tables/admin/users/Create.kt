@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.users
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.admin.roles.CreateGlobalRoleResponse
+// import com.seedcompany.cordtables.components.tables.admin.roles.CreateGlobalRoleResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -36,7 +36,6 @@ data class AdminUser(
   val modified_by: Int?,
   val owning_person: Int?,
   val owning_group: Int?,
-  val peer: Int?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -138,8 +137,6 @@ class Create(
                     if (insertStatementResult.wasNull()) owningPerson = null
                     var owningGroup: Int? = insertStatementResult.getInt("owning_group")
                     if (insertStatementResult.wasNull()) owningGroup = null
-                    var peer: Int? = insertStatementResult.getInt("peer")
-                    if (insertStatementResult.wasNull()) peer = null
 
                     insertedAdminUser = AdminUser(
                         id= id,
@@ -153,7 +150,6 @@ class Create(
                         modified_by = modifiedBy,
                         owning_person= owningPerson,
                         owning_group =  owningGroup,
-                        peer = peer,
                     )
                     println("newly inserted id: $id")
                 }
