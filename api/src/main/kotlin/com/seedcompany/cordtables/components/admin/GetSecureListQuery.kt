@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 data class GetSecureListQueryRequest(
     val tableName: String,
     val columns: Array<String>,
+    val custom_columns: String? = null,
     val filter: String = "",
     val getList: Boolean = true, // get read if false
 )
@@ -88,6 +89,10 @@ class GetSecureListQuery() {
         }
 
         response.query += columns.joinToString()
+        if(req.custom_columns!=null) {
+            response.query += ','
+            response.query += req.custom_columns.replace('\n', ' ')
+        }
 
         if (req.getList) {
 
