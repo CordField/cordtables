@@ -9,8 +9,7 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class SiteTextLanguage(
-    val id: Int,
-    val ethnologue: Int,
+    val common_id: Int,
     val language_name: String? = null,
 )
 
@@ -33,26 +32,26 @@ class SiteTextService(
         val paramSource = MapSqlParameterSource()
 
         val query = """
-            select st.id, st.ethnologue, tol.language_name
-            from common.site_text st
-            left join sil.table_of_languages tol on st.ethnologue = tol.id
+            select li.common_id, li.name
+            from (
+                select distinct(stt.language) as common_id
+                from common.site_text_translations stt
+            ) as stl
+            inner join sil.language_index li on li.common_id = stl.common_id
         """.replace('\n', ' ')
 
         try {
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int = jdbcResult.getInt("id")
+                var common_id: Int = jdbcResult.getInt("common_id")
 
-                var ethnologue: Int = jdbcResult.getInt("ethnologue")
-
-                var language_name: String? = jdbcResult.getString("language_name")
+                var language_name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) language_name = null
 
                 data.add(
                         SiteTextLanguage(
-                                id = id,
-                                ethnologue = ethnologue,
+                                common_id = common_id,
                                 language_name = language_name
                         )
                 )
