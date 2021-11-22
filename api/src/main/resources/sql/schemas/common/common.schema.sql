@@ -14,7 +14,6 @@ create type common.mime_type as enum (
 -- meant to be extended by all orgs, so everyone has a unique id to reference within their language lists
 create table common.languages(
   id serial primary key,
-  ethnologue int not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

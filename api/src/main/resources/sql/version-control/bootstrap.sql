@@ -299,28 +299,6 @@ BEGIN
       -- giving row membership to only one row
       insert into admin.group_row_access(group_id,table_name,row,created_by,modified_by,owning_person,owning_group)
       values(vPublicGroupId,'sc.languages',1,vPersonId,vPersonId,vPersonId,vAdminGroupId);
-
--- creating table_of_languages rows
-      insert into sil.table_of_languages(iso_639, language_name, created_by,modified_by,owning_person,owning_group)
-      values ('spa', 'Spanish' ,vPersonId, vPersonId, vPersonId, vAdminGroupId)
-      returning id
-      into vTableOfLanguagesId;
-
----- creating common.languages rows
-      insert into common.languages(ethnologue, created_by, modified_by, owning_person, owning_group)
-      values (vTableOfLanguagesId, vPersonId, vPersonId, vPersonId, vAdminGroupId)
-      returning id
-      into vCommonLanguagesId;
------- creating common.site_text_strings rows
-      insert into common.site_text_strings(english, created_by, modified_by, owning_person, owning_group)
-      values ('table', vPersonId, vPersonId, vPersonId, vAdminGroupId)
-      returning id
-      into vCommonSiteTextStringsId;
-
------- creating common.site_text_translations rows
-      insert into common.site_text_translations(language, site_text, translation, created_by,modified_by, owning_person, owning_group)
-      values (vCommonLanguagesId, vCommonSiteTextStringsId, 'mesa', vPersonId, vPersonId, vPersonId, vAdminGroupId);
-
   end if;
 
 END; $$;
