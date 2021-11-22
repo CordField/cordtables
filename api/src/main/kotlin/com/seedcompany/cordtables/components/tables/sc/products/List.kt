@@ -95,12 +95,12 @@ class List<T>(
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
-
-                var mediums: String? =  jdbcResult.getString("mediums")
-                if (jdbcResult.wasNull()) mediums = null
-
-//                var mediums: String? = jdbcResult.getString("mediums")
+//
+//                var mediums: String? =  jdbcResult.getString("mediums")
 //                if (jdbcResult.wasNull()) mediums = null
+
+                var mediums: SerialArray? = jdbcResult.getObject("mediums") as SerialArray
+                if (jdbcResult.wasNull()) mediums = null
 
                 var methodologies: String? = jdbcResult.getString("methodologies")
                 if (jdbcResult.wasNull()) methodologies = null
@@ -132,7 +132,7 @@ class List<T>(
                 if (jdbcResult.wasNull()) owning_group = null
 
 
-                println(mediums.toString())
+                println(mediums)
                 data.add(
                     product(
                         id = id,
@@ -141,7 +141,7 @@ class List<T>(
                         name = name,
                         change_to_plan = change_to_plan,
                         active = active,
-                        mediums = mediums, // (if (mediums == null) null else ProductMediums.split(",") ),
+                        mediums = mediums , // (if (mediums == null) null else ProductMediums.split(",") ),
                         methodologies = methodologies,
                         purposes = purposes,
                         type = type,

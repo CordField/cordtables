@@ -64,6 +64,9 @@ export class TableRoot {
         {this.match.params.table === 'common-coalitions' && <common-coalitions></common-coalitions>}
         {this.match.params.table === 'common-coalition-memberships' && <common-coalition-memberships></common-coalition-memberships>}
 
+        {this.match.params.table === 'common-prayer-requests' && <common-prayer-requests></common-prayer-requests>}
+        {this.match.params.table === 'common-prayer-notifications' && <common-prayer-notifications></common-prayer-notifications>}
+
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
         {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}
@@ -71,6 +74,7 @@ export class TableRoot {
         {this.match.params.table === 'common-ticket-assignments' && <ticket-assignments></ticket-assignments>}
         {this.match.params.table === 'common-work-records' && <work-records></work-records>}
         {this.match.params.table === 'common-work-estimates' && <work-estimates></work-estimates>}
+        {this.match.params.table === 'common-ticket-feedback' && <ticket-feedback></ticket-feedback>}
         {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
         {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
         {this.match.params.table === 'common-cell-channels' && <common-cell-channels></common-cell-channels>}

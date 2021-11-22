@@ -7,7 +7,7 @@ data class languageEngagement(
 
     val neo4j_id: String? = null, // varchar(32) not null,
     val project: Int? = null, // int not null references sc.projects(id),
-    val ethnologue: Int? = null, // int not null references sil.table_of_languages(id),
+    val ethnologue: Int? = null, // int not null references sc.ethnologue(id),
     val change_to_plan: Int? = null, // int not null default 1 references sc.change_to_plans(id),
     val active: Boolean? = null, // bool,
     val communications_complete_date: String? = null, // timestamp,
@@ -45,7 +45,7 @@ data class languageEngagementInput(
 
     val neo4j_id: String? = null, // varchar(32) not null,
     val project: Int? = null, // int not null references sc.projects(id),
-    val ethnologue: Int? = null, // int not null references sil.table_of_languages(id),
+    val ethnologue: Int? = null, // int not null references sc.ethnologue(id),
     val change_to_plan: Int? = null, // int not null default 1 references sc.change_to_plans(id),
     val active: Boolean? = null, // bool,
     val communications_complete_date: String? = null, // timestamp,

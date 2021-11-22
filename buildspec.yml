@@ -13,7 +13,7 @@ phases:
       - echo Build started on `date`
       - dockerd &
       - cd frontend
-      - printf 'SERVER_URL=$SERVER_URL' > .env
+      - printf 'SERVER_URL=$SERVER_URL;MAPBOX_KEY=pk.eyJ1IjoicXVlc3RyZWFsIiwiYSI6ImNrZzg4cHQwZTBiNDUyeG8zNGFtZ3FxMjIifQ.0TFOmPhph1P1IOd8jaWF6Q' > .env
       - yarn
       - yarn build
       - cd ..
@@ -27,7 +27,8 @@ phases:
 
       - echo Building the Docker image...
       - cd infra/dev/cf-server
-      - docker build -f Dockerfile -t $REPOSITORY_URI:latest . --progress plain
+      - docker build --no-cache -f Dockerfile -t $REPOSITORY_URI:latest . --progress plain
+      - docker builder prune -af
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
