@@ -217,11 +217,11 @@ class DatabaseVersionControl(
 
         try {
             runSqlString(languageCodesQuery)
-            println("languageCodes.tab load success")
+            println("LanguageCodes.tab load success")
         } catch(ex: Exception) {
             println(ex)
 
-            println("languageCodes.tab load filed")
+            println("LanguageCodes.tab load filed")
         }
 
         // ====================  LanguageIndex.tab load ===========================
@@ -230,7 +230,7 @@ class DatabaseVersionControl(
 
         count = 0
         text = readBuffer.readLines()
-
+        var languageIndexQuery = ""
         for(line in text){
             val splitArray = line.split("\t")
             val lang = splitArray[0]
@@ -240,26 +240,18 @@ class DatabaseVersionControl(
 
             count++
             if(count == 1) continue
-            this.ds.connection.use { conn ->
-                try {
-
-                    val migrationStatement = conn.prepareCall("""call sil.sil_migrate_language_index(?, ?, ?, ?);""".trimIndent())
-                    migrationStatement.setString(1, lang)
-                    migrationStatement.setString(2, country)
-                    migrationStatement.setString(3, nameType)
-                    migrationStatement.setString(4, name)
-                    migrationStatement.toString()
-                    migrationStatement.execute()
-                    migrationStatement.close()
-//                    println("language index create success")
-                } catch (ex: Exception) {
-                    println(ex)
-//                    println("language index create failed")
-                }
-            }
+            languageIndexQuery += """
+                call sil.sil_migrate_language_index('${lang}', '${country}', '${nameType}', '$name'); 
+            """.trimIndent()
         }
 
-        println("LanguageIndex.tab load end")
+        try {
+            runSqlString(languageIndexQuery)
+            println("LanguageIndex.tab load success")
+        } catch(ex: Exception) {
+            println(ex)
+            println("LanguageIndex.tab load filed")
+        }
 
         // ====================  LanguageIndex.tab load end ===========================
 
