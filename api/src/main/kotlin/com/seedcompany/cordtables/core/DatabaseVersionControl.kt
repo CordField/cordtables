@@ -13,8 +13,6 @@ import java.io.InputStreamReader
 import java.io.UncheckedIOException
 import javax.sql.DataSource
 import java.io.BufferedReader
-import java.sql.SQLException
-
 
 @Component
 class DatabaseVersionControl(
@@ -109,6 +107,7 @@ class DatabaseVersionControl(
 
         // sil
         runSqlFile("sql/schemas/sil/sil.schema.sql")
+        runSqlFile("sql/schemas/sil/language_index.migration.sql")
 
         // sc
         runSqlFile("sql/schemas/sc/sc.schema.sql")
@@ -174,7 +173,7 @@ class DatabaseVersionControl(
 
         var countryCodesQuery = "insert into sil.country_codes(country, name, area, created_by, modified_by, owning_person, owning_group) values "
 
-        var count = 0;
+        var count = 0
         var text:List<String> = readBuffer.readLines()
         for(line in text){
             val splitArray = line.split("\t")
@@ -201,7 +200,7 @@ class DatabaseVersionControl(
         readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageCodes.tab").inputStream))
 
         var languageCodesQuery = "insert into sil.language_codes(lang, country, lang_status, name, created_by, modified_by, owning_person, owning_group) values "
-        count = 0;
+        count = 0
         text = readBuffer.readLines()
 
         for(line in text){
@@ -229,7 +228,7 @@ class DatabaseVersionControl(
 
         readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageIndex.tab").inputStream))
 
-        count = 0;
+        count = 0
         text = readBuffer.readLines()
 
         for(line in text){
@@ -244,32 +243,14 @@ class DatabaseVersionControl(
             this.ds.connection.use { conn ->
                 try {
 
-                    val getCommonIdStatement = conn.prepareCall("""
-                        insert into common.languages(created_by, modified_by, owning_person, owning_group)
-                        values (${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId})
-                        returning id;
-                        """.trimIndent()
-                        )
-
-                    var result = getCommonIdStatement.executeQuery()
-                    var commonId: Int = 0;
-                    if(result.next()) {
-                        commonId = result.getInt("id")
-                    } else {
-                        throw SQLException("common.languages row create failed")
-                    }
-
-                    getCommonIdStatement.close()
-
-                    val languageIndexStatement = conn.prepareCall("""
-                        insert into sil.language_index(common_id, lang, country, name_type, name, created_by, modified_by, owning_person, owning_group)
-                        values (${commonId}, '${lang}', '${country}', '${nameType}'::sil.language_name_type, '${name}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId})
-                        returning id;
-                        """.trimIndent()
-                    )
-
-                    languageIndexStatement.executeQuery()
-                    languageIndexStatement.close()
+                    val migrationStatement = conn.prepareCall("""call sil.sil_migrate_language_index(?, ?, ?, ?);""".trimIndent())
+                    migrationStatement.setString(1, lang)
+                    migrationStatement.setString(2, country)
+                    migrationStatement.setString(3, nameType)
+                    migrationStatement.setString(4, name)
+                    migrationStatement.toString()
+                    migrationStatement.execute()
+                    migrationStatement.close()
 //                    println("language index create success")
                 } catch (ex: Exception) {
                     println(ex)
@@ -277,6 +258,9 @@ class DatabaseVersionControl(
                 }
             }
         }
+
+        println("LanguageIndex.tab load end")
+
         // ====================  LanguageIndex.tab load end ===========================
 
         if (appConfig.thisServerUrl == "http://localhost:8080"){
@@ -325,8 +309,6 @@ class DatabaseVersionControl(
     }
 
     private fun runSqlString(sql: String) {
-        if (sql !== null) {
-            jdbcTemplate.execute(sql)
-        }
+        jdbcTemplate.execute(sql)
     }
 }
