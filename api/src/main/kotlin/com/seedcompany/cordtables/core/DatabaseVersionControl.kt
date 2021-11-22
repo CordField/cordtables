@@ -12,6 +12,9 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.io.UncheckedIOException
 import javax.sql.DataSource
+import java.io.BufferedReader
+import java.sql.SQLException
+
 
 @Component
 class DatabaseVersionControl(
@@ -148,7 +151,130 @@ class DatabaseVersionControl(
             bootstrapStatement.close()
         }
 
-        // todo - add language data from resources/data folder
+        var adminPeopleId = 0
+
+        this.ds.connection.use { conn ->
+            try {
+
+                val getAdminIdStatement = conn.prepareCall("select id from admin.people where sensitivity_clearance = 'High'")
+
+                val result = getAdminIdStatement.executeQuery()
+                if(result.next()) {
+                    adminPeopleId = result.getInt("id")
+                }
+                getAdminIdStatement.close()
+            } catch (ex: IllegalArgumentException) {
+                println("admin people not found!")
+            }
+        }
+
+        // ====================  CountryCodes.tab load ===========================
+
+        var readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/CountryCodes.tab").inputStream))
+
+        var strRead = ""
+        var countryCodesQuery = "insert into sil.country_codes(country, name, area, created_by, modified_by, owning_person, owning_group) values "
+
+        var count = 0;
+        while (readBuffer.readLine().also { strRead = it } != null) {
+         val splitArray = strRead.split("\t")
+            val countryIdEntry = splitArray[0]
+            val nameEntry = splitArray[1]
+            val areaEntry = splitArray[2]
+            count++
+            if(count == 1) continue
+            countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+        }
+        countryCodesQuery = countryCodesQuery.dropLast(2) + ";"
+
+        try {
+            runSqlString(countryCodesQuery)
+            println("CountryCodes.tab load success")
+        } catch(ex: Exception) {
+            println(ex)
+            println("CountryCodes.tab load filed")
+        }
+
+        // ====================  LanguageCodes.tab load ===========================
+
+        readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageCodes.tab").inputStream))
+
+        strRead = ""
+        var languageCodesQuery = "insert into sil.language_codes(lang, country, lang_status, name, created_by, modified_by, owning_person, owning_group) values "
+        count = 0;
+        while (readBuffer.readLine().also { strRead = it } != null) {
+            val splitArray = strRead.split("\t")
+            val lang = splitArray[0]
+            val country = splitArray[1]
+            val langStatus = splitArray[2]
+            val name = splitArray[3]
+            count++
+            if(count == 1) continue
+            languageCodesQuery += "('${lang}', '${country}', '${langStatus}', '${name}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+        }
+        languageCodesQuery = languageCodesQuery.dropLast(2)+ ";"
+
+        try {
+            runSqlString(languageCodesQuery)
+            println("languageCodes.tab load success")
+        } catch(ex: Exception) {
+            println(ex)
+
+            println("languageCodes.tab load filed")
+        }
+
+        // ====================  LanguageIndex.tab load ===========================
+
+        readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageCodes.tab").inputStream))
+
+        strRead = ""
+
+        count = 0;
+        while (readBuffer.readLine().also { strRead = it } != null) {
+            val splitArray = strRead.split("\t")
+            val lang = splitArray[0]
+            val country = splitArray[1]
+            val nameType = splitArray[2]
+            val name = splitArray[3]
+            count++
+            if(count == 1) continue
+            this.ds.connection.use { conn ->
+                try {
+
+                    val getCommonIdStatement = conn.prepareCall("""
+                        insert into common.languages(created_by, modified_by, owning_person, owning_group)
+                        values (${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId})
+                        returning id;
+                        """.trimIndent()
+                        )
+
+                    var result = getCommonIdStatement.executeQuery()
+                    var commonId: Int = 0;
+                    if(result.next()) {
+                        commonId = result.getInt("id")
+                    } else {
+                        throw SQLException("common.languages row create failed")
+                    }
+
+                    getCommonIdStatement.close()
+
+                    val languageIndexStatement = conn.prepareCall("""
+                        insert into sil.language_index(common_id, lang, country, name_type, name, created_by, modified_by, owning_person, owning_group)
+                        values (${commonId}, '${lang}', '${country}', '${nameType}'::sil.language_name_type, '${name}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId})
+                        returning id;
+                        """.trimIndent()
+                    )
+
+                    languageIndexStatement.executeQuery()
+                    languageIndexStatement.close()
+//                    println("language index create success")
+                } catch (ex: Exception) {
+                    println(ex)
+//                    println("language index create failed")
+                }
+            }
+        }
+        // ====================  LanguageIndex.tab load end ===========================
 
         if (appConfig.thisServerUrl == "http://localhost:8080"){
             runSqlFile("sql/dummy.data.sql")
@@ -192,6 +318,12 @@ class DatabaseVersionControl(
         if (sql !== null) {
             jdbcTemplate.execute(sql)
             println("$fileName successfully run")
+        }
+    }
+
+    private fun runSqlString(sql: String) {
+        if (sql !== null) {
+            jdbcTemplate.execute(sql)
         }
     }
 }
