@@ -13,9 +13,20 @@ data class SiteTextLanguage(
     val language_name: String? = null,
 )
 
+data class SiteTextString(
+    val id: Int,
+    val english: String,
+    val comment: String?
+)
+
 open class SiteTextLanguageResponse(
     val error: ErrorType,
     val data: MutableList<SiteTextLanguage>?,
+)
+
+open class SiteTextStringResponse(
+    val error: ErrorType,
+    val data: MutableList<SiteTextString>?,
 )
 
 @Service
@@ -61,5 +72,42 @@ class SiteTextService(
             return SiteTextLanguageResponse(ErrorType.SQLReadError, mutableListOf())
         }
         return SiteTextLanguageResponse(ErrorType.NoError, data)
+    }
+
+    fun getSiteTextStrings(): SiteTextStringResponse {
+        var data: MutableList<SiteTextString> = mutableListOf()
+
+        val paramSource = MapSqlParameterSource()
+
+        val query = """
+            select sts.id, sts.english, sts.comment
+            from common.site_text_strings sts
+        """.replace('\n', ' ')
+
+        try {
+            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
+            while (jdbcResult.next()) {
+
+                var id: Int = jdbcResult.getInt("id")
+
+                var english: String? = jdbcResult.getString("english")
+                if (jdbcResult.wasNull()) english = null
+
+                var comment: String? = jdbcResult.getString("comment")
+                if (jdbcResult.wasNull()) comment = null
+
+                data.add(
+                        SiteTextString(
+                            id = id,
+                            english = english!!,
+                            comment = comment
+                        )
+                )
+            }
+        } catch (e: SQLException) {
+            println("error while listing ${e.message}")
+            return SiteTextStringResponse(ErrorType.SQLReadError, mutableListOf())
+        }
+        return SiteTextStringResponse(ErrorType.NoError, data)
     }
 }
