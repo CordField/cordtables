@@ -172,12 +172,12 @@ class DatabaseVersionControl(
 
         var readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/CountryCodes.tab").inputStream))
 
-        var strRead = ""
         var countryCodesQuery = "insert into sil.country_codes(country, name, area, created_by, modified_by, owning_person, owning_group) values "
 
         var count = 0;
-        while (readBuffer.readLine().also { strRead = it } != null) {
-         val splitArray = strRead.split("\t")
+        var text:List<String> = readBuffer.readLines()
+        for(line in text){
+            val splitArray = line.split("\t")
             val countryIdEntry = splitArray[0]
             val nameEntry = splitArray[1]
             val areaEntry = splitArray[2]
@@ -185,6 +185,7 @@ class DatabaseVersionControl(
             if(count == 1) continue
             countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
         }
+
         countryCodesQuery = countryCodesQuery.dropLast(2) + ";"
 
         try {
@@ -199,11 +200,12 @@ class DatabaseVersionControl(
 
         readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageCodes.tab").inputStream))
 
-        strRead = ""
         var languageCodesQuery = "insert into sil.language_codes(lang, country, lang_status, name, created_by, modified_by, owning_person, owning_group) values "
         count = 0;
-        while (readBuffer.readLine().also { strRead = it } != null) {
-            val splitArray = strRead.split("\t")
+        text = readBuffer.readLines()
+
+        for(line in text){
+            val splitArray = line.split("\t")
             val lang = splitArray[0]
             val country = splitArray[1]
             val langStatus = splitArray[2]
@@ -225,17 +227,18 @@ class DatabaseVersionControl(
 
         // ====================  LanguageIndex.tab load ===========================
 
-        readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageCodes.tab").inputStream))
-
-        strRead = ""
+        readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageIndex.tab").inputStream))
 
         count = 0;
-        while (readBuffer.readLine().also { strRead = it } != null) {
-            val splitArray = strRead.split("\t")
+        text = readBuffer.readLines()
+
+        for(line in text){
+            val splitArray = line.split("\t")
             val lang = splitArray[0]
             val country = splitArray[1]
             val nameType = splitArray[2]
             val name = splitArray[3]
+
             count++
             if(count == 1) continue
             this.ds.connection.use { conn ->
