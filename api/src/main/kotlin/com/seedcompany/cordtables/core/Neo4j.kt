@@ -157,28 +157,28 @@ class Neo4j(
                 }
                 println("writer 2 closing")
             }
-//
-//            launch {
-//                println("starting writer 3")
-//                while (neo4jIdQueue.size > 0) {
-//                    val node = neo4jIdQueue.remove() ?: return@launch
-//                    createBaseNodeIdempotent(node)
-//                    processedNodes.incrementAndGet()
-//                    delay(1L) // I don't know why this is needed, but it is.
-//                }
-//                println("writer 3 closing")
-//            }
-//
-//            launch {
-//                println("starting writer 4")
-//                while (neo4jIdQueue.size > 0) {
-//                    val node = neo4jIdQueue.remove() ?: return@launch
-//                    createBaseNodeIdempotent(node)
-//                    processedNodes.incrementAndGet()
-//                    delay(1L) // I don't know why this is needed, but it is.
-//                }
-//                println("writer 4 closing")
-//            }
+
+            launch {
+                println("starting writer 3")
+                while (neo4jIdQueue.size > 0) {
+                    val node = neo4jIdQueue.remove() ?: return@launch
+                    createBaseNodeIdempotent(node)
+                    processedNodes.incrementAndGet()
+                    delay(1L) // I don't know why this is needed, but it is.
+                }
+                println("writer 3 closing")
+            }
+
+            launch {
+                println("starting writer 4")
+                while (neo4jIdQueue.size > 0) {
+                    val node = neo4jIdQueue.remove() ?: return@launch
+                    createBaseNodeIdempotent(node)
+                    processedNodes.incrementAndGet()
+                    delay(1L) // I don't know why this is needed, but it is.
+                }
+                println("writer 4 closing")
+            }
 
             // progress
             launch {
