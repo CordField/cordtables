@@ -46,6 +46,13 @@ create table common.scripture_references (
   verse_start int,
   verse_end int,
 
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+    created_by int not null references admin.people(id),
+    modified_at timestamp not null default CURRENT_TIMESTAMP,
+    modified_by int not null references admin.people(id),
+    owning_person int not null references admin.people(id),
+    owning_group int not null references admin.groups(id),
+
   unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
 );
 
