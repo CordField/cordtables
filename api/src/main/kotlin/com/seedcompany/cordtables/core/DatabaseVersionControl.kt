@@ -150,107 +150,115 @@ class DatabaseVersionControl(
             bootstrapStatement.close()
         }
 
-        var adminPeopleId = 0
+        if (appConfig.loadLanguageData) {
 
-        this.ds.connection.use { conn ->
-            try {
 
-                val getAdminIdStatement = conn.prepareCall("select id from admin.people where sensitivity_clearance = 'High'")
+            var adminPeopleId = 0
 
-                val result = getAdminIdStatement.executeQuery()
-                if(result.next()) {
-                    adminPeopleId = result.getInt("id")
+            this.ds.connection.use { conn ->
+                try {
+
+                    val getAdminIdStatement =
+                        conn.prepareCall("select id from admin.people where sensitivity_clearance = 'High'")
+
+                    val result = getAdminIdStatement.executeQuery()
+                    if (result.next()) {
+                        adminPeopleId = result.getInt("id")
+                    }
+                    getAdminIdStatement.close()
+                } catch (ex: IllegalArgumentException) {
+                    println("admin people not found!")
                 }
-                getAdminIdStatement.close()
-            } catch (ex: IllegalArgumentException) {
-                println("admin people not found!")
             }
-        }
 
-        // ====================  CountryCodes.tab load ===========================
+            // ====================  CountryCodes.tab load ===========================
 
-        var readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/CountryCodes.tab").inputStream))
+            var readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/CountryCodes.tab").inputStream))
 
-        var countryCodesQuery = "insert into sil.country_codes(country, name, area, created_by, modified_by, owning_person, owning_group) values "
+            var countryCodesQuery =
+                "insert into sil.country_codes(country, name, area, created_by, modified_by, owning_person, owning_group) values "
 
-        var count = 0
-        var text:List<String> = readBuffer.readLines()
-        for(line in text){
-            val splitArray = line.split("\t")
-            val countryIdEntry = splitArray[0]
-            val nameEntry = splitArray[1]
-            val areaEntry = splitArray[2]
-            count++
-            if(count == 1) continue
-            countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
-        }
+            var count = 0
+            var text: List<String> = readBuffer.readLines()
+            for (line in text) {
+                val splitArray = line.split("\t")
+                val countryIdEntry = splitArray[0]
+                val nameEntry = splitArray[1]
+                val areaEntry = splitArray[2]
+                count++
+                if (count == 1) continue
+                countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+            }
 
-        countryCodesQuery = countryCodesQuery.dropLast(2) + ";"
+            countryCodesQuery = countryCodesQuery.dropLast(2) + ";"
 
-        try {
-            runSqlString(countryCodesQuery)
-            println("CountryCodes.tab load success")
-        } catch(ex: Exception) {
-            println(ex)
-            println("CountryCodes.tab load filed")
-        }
+            try {
+                runSqlString(countryCodesQuery)
+                println("CountryCodes.tab load success")
+            } catch (ex: Exception) {
+                println(ex)
+                println("CountryCodes.tab load filed")
+            }
 
-        // ====================  LanguageCodes.tab load ===========================
+            // ====================  LanguageCodes.tab load ===========================
 
-        readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageCodes.tab").inputStream))
+            readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageCodes.tab").inputStream))
 
-        var languageCodesQuery = "insert into sil.language_codes(lang, country, lang_status, name, created_by, modified_by, owning_person, owning_group) values "
-        count = 0
-        text = readBuffer.readLines()
+            var languageCodesQuery =
+                "insert into sil.language_codes(lang, country, lang_status, name, created_by, modified_by, owning_person, owning_group) values "
+            count = 0
+            text = readBuffer.readLines()
 
-        for(line in text){
-            val splitArray = line.split("\t")
-            val lang = splitArray[0]
-            val country = splitArray[1]
-            val langStatus = splitArray[2]
-            val name = splitArray[3]
-            count++
-            if(count == 1) continue
-            languageCodesQuery += "('${lang}', '${country}', '${langStatus}', '${name}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
-        }
-        languageCodesQuery = languageCodesQuery.dropLast(2)+ ";"
+            for (line in text) {
+                val splitArray = line.split("\t")
+                val lang = splitArray[0]
+                val country = splitArray[1]
+                val langStatus = splitArray[2]
+                val name = splitArray[3]
+                count++
+                if (count == 1) continue
+                languageCodesQuery += "('${lang}', '${country}', '${langStatus}', '${name}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+            }
+            languageCodesQuery = languageCodesQuery.dropLast(2) + ";"
 
-        try {
-            runSqlString(languageCodesQuery)
-            println("LanguageCodes.tab load success")
-        } catch(ex: Exception) {
-            println(ex)
+            try {
+                runSqlString(languageCodesQuery)
+                println("LanguageCodes.tab load success")
+            } catch (ex: Exception) {
+                println(ex)
 
-            println("LanguageCodes.tab load filed")
-        }
+                println("LanguageCodes.tab load filed")
+            }
 
-        // ====================  LanguageIndex.tab load ===========================
+            // ====================  LanguageIndex.tab load ===========================
 
-        readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageIndex.tab").inputStream))
+            readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageIndex.tab").inputStream))
 
-        count = 0
-        text = readBuffer.readLines()
-        var languageIndexQuery = ""
-        for(line in text){
-            val splitArray = line.split("\t")
-            val lang = splitArray[0]
-            val country = splitArray[1]
-            val nameType = splitArray[2]
-            val name = splitArray[3]
+            count = 0
+            text = readBuffer.readLines()
+            var languageIndexQuery = ""
+            for (line in text) {
+                val splitArray = line.split("\t")
+                val lang = splitArray[0]
+                val country = splitArray[1]
+                val nameType = splitArray[2]
+                val name = splitArray[3]
 
-            count++
-            if(count == 1) continue
-            languageIndexQuery += """
+                count++
+                if (count == 1) continue
+                languageIndexQuery += """
                 call sil.sil_migrate_language_index('${lang}', '${country}', '${nameType}', '$name'); 
             """.trimIndent()
-        }
+            }
 
-        try {
-            runSqlString(languageIndexQuery)
-            println("LanguageIndex.tab load success")
-        } catch(ex: Exception) {
-            println(ex)
-            println("LanguageIndex.tab load filed")
+            try {
+                runSqlString(languageIndexQuery)
+                println("LanguageIndex.tab load success")
+            } catch (ex: Exception) {
+                println(ex)
+                println("LanguageIndex.tab load filed")
+            }
+
         }
 
         // ====================  LanguageIndex.tab load end ===========================
