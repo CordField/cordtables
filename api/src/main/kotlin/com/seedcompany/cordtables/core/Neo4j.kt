@@ -246,6 +246,10 @@ class Neo4j(
                 targetTable = "common.files",
                 id = node.id,
             )
+            node.labels.contains("Education") -> writeBaseNode(
+                targetTable = "common.education_entries",
+                id = node.id,
+            )
             node.labels.contains("Organization") -> writeBaseNode(
                 targetTable = "sc.organizations",
                 id = node.id,
@@ -344,6 +348,22 @@ class Neo4j(
             )
             node!!.labels.contains("Product") -> writeBaseNode(
                 targetTable = "sc.products",
+                id = node!!.id,
+            )
+            node!!.labels.contains("Film") -> writeBaseNode(
+                targetTable = "sc.films",
+                id = node!!.id,
+            )
+            node!!.labels.contains("Story") -> writeBaseNode(
+                targetTable = "sc.stories",
+                id = node!!.id,
+            )
+            node!!.labels.contains("EthnoArt") -> writeBaseNode(
+                targetTable = "sc.ethno_arts",
+                id = node!!.id,
+            )
+            node!!.labels.contains("ScriptureRange") -> writeBaseNode(
+                targetTable = "common.scripture_references",
                 id = node!!.id,
             )
             else -> {

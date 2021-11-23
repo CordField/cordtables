@@ -996,6 +996,50 @@ create table sc.product_scripture_references (
   primary key (product, scripture_reference, change_to_plan)
 );
 
+-- FILM
+create table sc.films (
+  id serial primary key,
+
+  neo4j_id varchar(32) unique,
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+);
+create table sc.stories (
+  id serial primary key,
+
+  neo4j_id varchar(32) unique,
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+);
+create table sc.ethno_arts (
+  id serial primary key,
+
+  neo4j_id varchar(32) unique,
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+
+);
+
 -- INTERNSHIP ENGAGEMENTS
 
 -- todo

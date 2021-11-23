@@ -38,6 +38,7 @@ create type common.book_name as enum (
 create table common.scripture_references (
   id serial primary key,
 
+  neo4j_id varchar(32) unique,
   book_start common.book_name,
   book_end common.book_name,
   chapter_start int,
@@ -185,6 +186,7 @@ ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk fore
 
 create table common.education_entries (
   id serial primary key,
+  neo4j_id varchar(32) unique,
 
   degree varchar(64),
   institution varchar(64),
