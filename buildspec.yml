@@ -13,7 +13,7 @@ phases:
       - echo Build started on `date`
       - dockerd &
       - cd frontend
-      - printf 'SERVER_URL=$SERVER_URL;MAPBOX_KEY=pk.eyJ1IjoicXVlc3RyZWFsIiwiYSI6ImNrZzg4cHQwZTBiNDUyeG8zNGFtZ3FxMjIifQ.0TFOmPhph1P1IOd8jaWF6Q' > .env
+      - printf 'SERVER_URL=$SERVER_URL;MAPBOX_KEY=$MAPBOX_KEY;TINY_KEY=$TINY_KEY;' > .env
       - yarn
       - yarn build
       - cd ..
