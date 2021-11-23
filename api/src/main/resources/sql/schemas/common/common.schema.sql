@@ -437,7 +437,7 @@ create table common.ticket_assignments (
 
 create table common.work_records(
 	id serial primary key,
-    ticket int references common.tickets(id),
+
 	person int not null references admin.people(id),
 	ticket int not null references common.tickets(id),
 	hours int not null,
