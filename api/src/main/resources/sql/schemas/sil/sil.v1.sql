@@ -156,3 +156,101 @@ CREATE TABLE sil.iso_639_3_retirements (
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id)
 );
+
+CREATE TABLE sil.table_of_countries (
+  id serial primary key,
+
+  country_code char(2),
+  country_name varchar(40),
+  languages int,
+  indigenous int,
+  established int,
+  unestablished int,
+  diversity decimal,
+  included int,
+  sum_of_populations int,
+  mean int,
+  median int,
+  population int,
+  literacy_rate decimal,
+  conventions int,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+CREATE TABLE sil.table_of_languages (
+  id serial primary key,
+
+  iso_639 char(3),
+  language_name varchar(50),
+  uninverted_name varchar(50),
+  country_code char(2),
+  country_name varchar(40),
+  region_code char(3),
+  region_name varchar(30),
+  area varchar(8),
+  l1_users int,
+  digits int,
+  all_users int,
+  countries int,
+  family varchar(30),
+  classification varchar(250),
+  latitude decimal,
+  longitude decimal,
+  egids varchar(3),
+  is_written char(1),
+  institutional int,
+  developing int,
+  vigorous int,
+  in_trouble int,
+  dying int,
+  extinct int,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+CREATE TABLE sil.table_of_languages_in_country (
+  id serial primary key,
+
+  iso_639 char(3),
+  language_name varchar(50),
+  uninverted_name varchar(50),
+  country_code char(2),
+  country_name varchar(40),
+  region_code char(3),
+  region_name varchar(30),
+  area varchar(8),
+  is_primary char(1),
+  is_indigenous char(1),
+  is_established char(1),
+  all_users int,
+  l1_users int,
+  l2_users int,
+  family varchar(30),
+  egids varchar(3),
+  function_code varchar(3),
+  function_label varchar(42),
+  institutional int,
+  developing int,
+  vigorous int,
+  in_trouble int,
+  dying int,
+  extinct int,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
