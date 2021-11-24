@@ -80,12 +80,20 @@ create type common.book_name as enum (
 create table common.scripture_references (
   id serial primary key,
 
+  neo4j_id varchar(32) unique,
   book_start common.book_name,
   book_end common.book_name,
   chapter_start int,
   chapter_end int,
   verse_start int,
   verse_end int,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+    created_by int not null references admin.people(id),
+    modified_at timestamp not null default CURRENT_TIMESTAMP,
+    modified_by int not null references admin.people(id),
+    owning_person int not null references admin.people(id),
+    owning_group int not null references admin.groups(id),
 
   unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
 );
@@ -210,9 +218,11 @@ create type common.location_type as enum (
 create table common.locations (
 	id serial primary key,
 
-	name varchar(255) unique, -- not null
+  neo4j_id varchar(32),
+	name varchar(255), -- unique not null,
 	sensitivity common.sensitivity not null default 'High',
-	type common.location_type, -- not null
+	type common.location_type, -- not null,
+	iso_alpha3 char(3),
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -230,6 +240,7 @@ ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk fore
 
 create table common.education_entries (
   id serial primary key,
+  neo4j_id varchar(32) unique,
 
   degree varchar(64),
   institution varchar(64),
@@ -262,9 +273,10 @@ create table common.education_by_person (
 
 create table common.organizations (
 	id serial primary key,
+	neo4j_id varchar(32),
 
-	name varchar(255) unique, -- not null
-	sensitivity common.sensitivity not null default 'High',
+	name varchar(255), -- not null
+	sensitivity common.sensitivity default 'High',
 	primary_location int references common.locations(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -353,9 +365,11 @@ create table common.coalition_memberships(
 
 create table common.directories (
   id serial primary key,
-
+  
+  neo4j_id varchar(32),
   parent int references common.directories(id),
   name varchar(255), -- not null
+  
 	-- todo
 	-- add derived data from sub-directories/files
 
@@ -370,8 +384,11 @@ create table common.directories (
 create table common.files (
   id serial primary key,
 
-  directory int references common.directories(id), -- not null
+  neo4j_id varchar(32),
+  directory int references common.directories(id), --not null 
 	name varchar(255), -- not null
+
+  -- todo, derived data
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -384,11 +401,12 @@ create table common.files (
 create table common.file_versions (
   id serial primary key,
 
+  neo4j_id varchar(32),
   category varchar(255),
-  mime_type common.mime_type, -- not null
-  name varchar(255), -- not null
+  mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
+  name varchar(255), -- not null,
   file int references common.files(id), -- not null
-  file_url varchar(255), -- not null
+  file_url varchar(255), -- not null,
   file_size int, -- bytes
 
   created_at timestamp not null default CURRENT_TIMESTAMP,

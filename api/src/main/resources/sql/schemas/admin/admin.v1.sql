@@ -78,6 +78,10 @@ create type admin.table_name as enum (
   'sc.budgets',
   'sc.ceremonies',
   'sc.change_to_plans',
+  'sc.funding_account',
+  'sc.field_zone',
+  'sc.files',
+  'sc.file_versions',
   'sc.field_regions',
   'sc.field_zones',
   'sc.funding_accounts',
@@ -92,6 +96,7 @@ create type admin.table_name as enum (
   'sc.languages',
   'sc.locations',
   'sc.organization_locations',
+  'sc.budget_records_partnerships',
   'sc.organizations',
   'sc.partners',
   'sc.partnerships',
@@ -132,6 +137,7 @@ create table admin.database_version_control (
 create table admin.people (
   id serial primary key,
 
+  neo4j_id varchar(32),
   about text,
   phone varchar(32),
   picture varchar(255),
@@ -143,7 +149,7 @@ create table admin.people (
   private_full_name varchar(64),
   public_full_name varchar(64),
   sensitivity_clearance common.sensitivity default 'Low',
-  time_zone varchar(32),
+  timezone varchar(32),
   title varchar(255),
   status varchar(32),
   
@@ -238,9 +244,9 @@ create table admin.roles (
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+    modified_by int not null references admin.people(id),
+    owning_person int not null references admin.people(id),
+    owning_group int not null references admin.groups(id),
 
 	unique (owning_group, name)
 );

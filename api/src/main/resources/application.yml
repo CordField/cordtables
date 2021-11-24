@@ -1,3 +1,11 @@
+
+org:
+  neo4j:
+    driver:
+      uri: ${NEO4J_URL}
+      authentication:
+        username: ${NEO4J_USERNAME}
+        password: ${NEO4J_PASSWORD}
 cord:
   admin:
     password: ${CORD_ADMIN_PASSWORD}
@@ -11,6 +19,9 @@ server:
   port: ${SERVER_PORT}
   url: ${SERVER_URL}
 spring:
+  mvc:
+    async:
+      request-timeout: -1
   datasource:
     jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:${DB_PORT}/${DB_DATABASE}
     driverClassName: software.aws.rds.jdbc.postgresql.Driver
