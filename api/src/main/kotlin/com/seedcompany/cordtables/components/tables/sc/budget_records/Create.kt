@@ -1,8 +1,7 @@
-package com.seedcompany.cordtables.components.tables.sc.budgetrecords
+package com.seedcompany.cordtables.components.tables.sc.budget_records
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.sc.budget_records.BudgetRecordInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -49,10 +48,8 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.budgetrecords(budget, change_to_plan, fiscal_year, partnership, created_by, modified_by, owning_person, owning_group)
+            insert into sc.budgetrecords(budget, change_to_plan, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
                     ?,
                     ?,
                     (
@@ -77,8 +74,6 @@ class Create(
             Int::class.java,
             req.budgetrecord.budget,
             req.budgetrecord.change_to_plan,
-            req.budgetrecord.fiscal_year,
-            req.budgetrecord.partnership,
             req.token,
             req.token,
             req.token,

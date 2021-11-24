@@ -1,10 +1,9 @@
-package com.seedcompany.cordtables.components.tables.sc.budgetrecords
+package com.seedcompany.cordtables.components.tables.sc.budget_records
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sc.budget_records.BudgetRecord
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate

@@ -16,10 +16,11 @@ data class BudgetRecord(
     val modified_at: String? = null,
     val modified_by: Int? = null,
     val owning_person: Int? = null,
-    val owning_group: Int? = null,
-    val peer: Int? = null,
+    val owning_group: Int? = null
 )
 
 data class BudgetRecordInput(
-    var id: Int? = null,
+//    var id: Int? = null,
+    var budget: Int,
+    var change_to_plan: Int,
 )
