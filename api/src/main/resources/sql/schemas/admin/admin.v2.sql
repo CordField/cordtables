@@ -1,1 +1,1 @@
-alter table admin.users add not null constraint on person;
+alter table admin.users alter column person set not null;

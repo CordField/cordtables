@@ -11,7 +11,23 @@ create type common.mime_type as enum (
 
 -- SITE TEXT --------------------------------------------------------------------------------
 
--- meant to be extended by all orgs, so everyone has a unique id to reference within their language lists
+create type common.egids_scale as enum (
+		'0',
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6a',
+		'6b',
+		'7',
+		'8a',
+		'8b',
+		'9',
+		'10'
+);
+
+-- meant to be extended by all orgs, so everyone has a globally unique id to reference within their language lists
 create table common.languages(
   id serial primary key,
 

@@ -752,7 +752,7 @@ class Update(
                         column = "egids_level",
                         id = req.id,
                         value = req.value,
-                        cast = "::sc.egids_scale",
+                        cast = "::common.egids_scale",
                 )
 
                 util.updateField(

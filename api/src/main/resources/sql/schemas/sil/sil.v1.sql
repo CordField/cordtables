@@ -79,7 +79,7 @@ create type sil.iso_639_3_type_options as enum (
 CREATE TABLE sil.iso_639_3 (
   id serial primary key,
 
-  id char(3) not null, -- three letter 639-3 identifier
+  _id char(3) not null, -- three letter 639-3 identifier
   part_2b char(3), -- equivalent 639-2 identifier of the bibliographic applications code set, if there is one
   part_2t char(3), -- equivalent 639-2 identifier of the terminology applications code set, if there is one
   part_1 char(2), -- equivalent 639-1 identifier, if there is one
@@ -99,7 +99,7 @@ CREATE TABLE sil.iso_639_3 (
 CREATE TABLE sil.iso_639_3_names (
   id serial primary key,
 
-  id char(3) not null, -- three letter 639-3 identifier
+  _id char(3) not null, -- three letter 639-3 identifier
   print_name varchar(75) not null, -- one of the names associated with this identifier
   inverted_name varchar(75) not null, -- the inverted form of this print_name form
 
@@ -142,7 +142,7 @@ create type sil.iso_639_3_retirement_reason_options as enum (
 CREATE TABLE sil.iso_639_3_retirements (
   id serial primary key,
 
-  id char(3) not null, -- three letter 639-3 identifier
+  _id char(3) not null, -- three letter 639-3 identifier
   ref_name varchar(150) not null, -- reference name of the language
   ret_reason sil.iso_639_3_retirement_reason_options not null, -- code for retirement
   change_to char(3), -- in the cases of C, D, and M, the identifier to which all instances of this id should be changed

@@ -205,22 +205,6 @@ create table sc.ethnologue (
   owning_group int not null references admin.groups(id)
 );
 
-create type sc.egids_scale as enum (
-		'0',
-		'1',
-		'2',
-		'3',
-		'4',
-		'5',
-		'6a',
-		'6b',
-		'7',
-		'8a',
-		'8b',
-		'9',
-		'10'
-);
-
 create type sc.least_reached_progress_scale as enum (
     '0',
 		'1',
@@ -300,7 +284,7 @@ create table sc.languages(
 	id serial primary key,
   neo4j_id varchar(32) unique,
 
-  ethnologue int references sil.table_of_languages(id), -- not null
+  ethnologue int references sc.ethnologue(id), -- not null
   name varchar(255) unique, -- not null
   display_name varchar(255) unique, -- not null
   display_name_pronunciation varchar(255),
@@ -341,7 +325,7 @@ create table sc.languages(
 	first_language_population int,
 	population_value decimal default 0, -- calculated from first_language_population
 
-	egids_level sc.egids_scale,
+	egids_level common.egids_scale,
 	egids_value decimal default 0, -- calculated from _level
 
 	least_reached_progress_jps_level sc.least_reached_progress_scale,
@@ -739,7 +723,7 @@ create table sc.language_engagements (
 
   neo4j_id varchar(32),
 	project int references sc.projects(id), -- not null
-	ethnologue int references sil.table_of_languages(id), -- not null
+	ethnologue int references sc.ethnologue(id), -- not null
 	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
 	communications_complete_date timestamp,
@@ -862,7 +846,7 @@ create table sc.internship_engagements (
   id serial primary key,
 
 	project int references sc.projects(id), -- not null
-	ethnologue int references sil.table_of_languages(id), -- not null
+	ethnologue int references sc.ethnologue(id), -- not null
 	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
 	communications_complete_date timestamp,
@@ -898,7 +882,7 @@ create table sc.ceremonies (
   id serial primary key,
 
   project int references sc.projects(id), -- not null
-	ethnologue int references sil.table_of_languages(id), -- not null
+	ethnologue int references sc.ethnologue(id), -- not null
 	actual_date timestamp,
 	estimated_date timestamp,
 	is_planned bool,

@@ -1,8 +1,8 @@
-alter table common.locations add not null constraint (name);
-alter table common.locations add not null constraint (type);
-alter table common.organizations add not null constraint (name);
-alter table common.files add not null constraint (name);
-alter table common.file_versions add not null constraint (mime_type);
-alter table common.file_versions add not null constraint (name);
-alter table common.file_versions add not null constraint (file);
-alter table common.file_versions add not null constraint (file_url);
+alter table common.locations alter column name set not null;
+alter table common.locations alter column type set not null;
+alter table common.organizations alter column name set not null;
+alter table common.files alter column name set not null;
+alter table common.file_versions alter column name set not null;
+alter table common.file_versions alter column mime_type set not null;
+alter table common.file_versions alter column file set not null;
+alter table common.file_versions alter column file_url set not null;
