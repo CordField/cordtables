@@ -35,11 +35,13 @@ CREATE TABLE sil.country_codes (
   owning_group int not null references admin.groups(id)
 );
 
--- L(anguage), LA(lternate),
--- D(ialect), DA(lternate)
--- LP,DP (a pejorative alternate)
 create type sil.language_name_type as enum (
-  'L', 'LA', 'D', 'DA', 'LP', 'DP'
+  'L', -- L(anguage)
+  'LA', -- LA(lternate)
+  'D', -- D(ialect)
+  'DA', -- DA(lternate)
+  'LP', -- LP (a pejorative alternate)
+  'DP' -- DP (a pejorative alternate)
 );
 
 CREATE TABLE sil.language_index (
@@ -59,3 +61,98 @@ CREATE TABLE sil.language_index (
   owning_group int not null references admin.groups(id)
 );
 
+create type sil.iso_639_3_scope_options as enum (
+  'I', -- Individual
+  'M', -- Macrolanguage
+  'S' -- Special
+);
+
+create type sil.iso_639_3_type_options as enum (
+  'A', -- Ancient
+  'C', -- Constructed
+  'E', -- Extinct
+  'H', -- Historical
+  'L', -- Living
+  'S' -- Special
+);
+
+CREATE TABLE sil.iso_639_3 (
+  id serial primary key,
+
+  id char(3) not null, -- three letter 639-3 identifier
+  part_2b char(3), -- equivalent 639-2 identifier of the bibliographic applications code set, if there is one
+  part_2t char(3), -- equivalent 639-2 identifier of the terminology applications code set, if there is one
+  part_1 char(2), -- equivalent 639-1 identifier, if there is one
+  scope sil.iso_639_3_scope_options not null,
+  type sil.iso_639_3_type_options not null,
+  ref_name varchar(150) not null, -- reference language name
+  comment varchar(150), -- comment relating to one or more of the columns
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+CREATE TABLE sil.iso_639_3_names (
+  id serial primary key,
+
+  id char(3) not null, -- three letter 639-3 identifier
+  print_name varchar(75) not null, -- one of the names associated with this identifier
+  inverted_name varchar(75) not null, -- the inverted form of this print_name form
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create type sil.iso_639_3_status_options as enum (
+  'A', -- Active
+  'R' -- Retired
+);
+
+CREATE TABLE sil.iso_639_3_macrolanguages (
+  id serial primary key,
+
+  m_id char(3) not null, -- the identifier for a macrolanguage
+  i_id char(3) not null, -- the identifier for an individual language that is a member of the macrolanguage
+  i_status sil.iso_639_3_status_options not null, -- indicating the status of the individual code element
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create type sil.iso_639_3_retirement_reason_options as enum (
+  'C', -- Change
+  'D', -- Duplicate
+  'N', -- Non-existent
+  'S', -- Split
+  'M' -- Merge
+);
+
+CREATE TABLE sil.iso_639_3_retirements (
+  id serial primary key,
+
+  id char(3) not null, -- three letter 639-3 identifier
+  ref_name varchar(150) not null, -- reference name of the language
+  ret_reason sil.iso_639_3_retirement_reason_options not null, -- code for retirement
+  change_to char(3), -- in the cases of C, D, and M, the identifier to which all instances of this id should be changed
+  ret_remedy varchar(300), -- the instructions for updating an instance of the retired (split) identifier
+  effective timestamp not null, -- the date the retirement became effective
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
