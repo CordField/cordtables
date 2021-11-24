@@ -2,8 +2,6 @@ package com.seedcompany.cordtables.components.tables.sc.languages
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.sc.budget_records.ScLanguagesUpdateRequest
-import com.seedcompany.cordtables.components.tables.sc.budget_records.Update
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -27,16 +25,16 @@ data class ScLanguagesUpdateReadResponse(
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("ScLanguagesUpdateRead")
 class UpdateRead(
-    @Autowired
+        @Autowired
         val util: Utility,
 
-    @Autowired
+        @Autowired
         val ds: DataSource,
 
-    @Autowired
+        @Autowired
         val update: Update,
 
-    @Autowired
+        @Autowired
         val read: Read,
 ) {
     @PostMapping("sc-languages/update-read")
