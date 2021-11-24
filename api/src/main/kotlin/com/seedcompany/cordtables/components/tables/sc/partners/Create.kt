@@ -2,11 +2,6 @@ package com.seedcompany.cordtables.components.tables.sc.partners
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.sc.partners.partnerInput
-import com.seedcompany.cordtables.components.tables.sc.partners.Read
-import com.seedcompany.cordtables.components.tables.sc.partners.Update
-import com.seedcompany.cordtables.components.tables.sc.languages.Read
-import com.seedcompany.cordtables.components.tables.sc.budget_records.Update
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller

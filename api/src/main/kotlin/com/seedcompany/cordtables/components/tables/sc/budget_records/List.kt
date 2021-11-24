@@ -91,10 +91,10 @@ class List(
                 var change_to_plan: Int? = jdbcResult.getInt("change_to_plan")
                 if (jdbcResult.wasNull()) change_to_plan = null
 
-                var active: Boolean? = jdbcResult.getInt("active")
+                var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
 
-                var amount: Double? = jdbcResult.getInt("amount")
+                var amount: Double? = jdbcResult.getDouble("amount")
                 if (jdbcResult.wasNull()) amount = null
 
                 var fiscal_year: Int? = jdbcResult.getInt("fiscal_year")
