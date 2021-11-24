@@ -38,14 +38,10 @@ class DatabaseVersionControl(
     private fun updateSchemaIdempotent() {
         while (true) {
             when (getSchemaVersion()) {
-//                1 -> {
-//                    println("upgrading schema to version 2")
-//                    toVersion2()
-//                }
-//                2 -> {
-//                    println("upgrading schema to version 3")
-//                    toVersion3()
-//                }
+                1 -> {
+                    println("upgrading schema to version 2")
+                    toVersion2()
+                }
                 else -> {
                     break
                 }
@@ -64,13 +60,18 @@ class DatabaseVersionControl(
     }
 
     private fun toVersion2() {
-        runSqlFile("sql/version-control/toVersion2.sql")
-        setVersionNumber(2)
-    }
+        // admin
+        runSqlFile("sql/schemas/admin/admin.v2.sql")
 
-    private fun toVersion3() {
-        runSqlFile("sql/version-control/toVersion3.sql")
-        setVersionNumber(3)
+        // common
+        runSqlFile("sql/schemas/common/common.v2.sql")
+
+        // sil
+        runSqlFile("sql/schemas/sil/sil.v2.sql")
+
+        // sc
+        runSqlFile("sql/schemas/sc/sc.v2.sql")
+        setVersionNumber(2)
     }
 
     private fun getSchemaVersion(): Int? {
@@ -100,24 +101,24 @@ class DatabaseVersionControl(
         println("version 1 not found. creating schema.")
 
         // admin
-        runSqlFile("sql/schemas/admin/admin.schema.sql")
+        runSqlFile("sql/schemas/admin/admin.v1.sql")
 
         // common
-        runSqlFile("sql/schemas/common/common.schema.sql")
+        runSqlFile("sql/schemas/common/common.v1.sql")
 
         // sil
-        runSqlFile("sql/schemas/sil/sil.schema.sql")
+        runSqlFile("sql/schemas/sil/sil.v1.sql")
         runSqlFile("sql/schemas/sil/language_index.migration.sql")
 
         // sc
-        runSqlFile("sql/schemas/sc/sc.schema.sql")
+        runSqlFile("sql/schemas/sc/sc.v1.sql")
         runSqlFile("sql/schemas/sc/ethnologue.migration.sql")
 
         // bootstrap
-        runSqlFile("sql/version-control/bootstrap.sql")
+        runSqlFile("sql/data/bootstrap.data.sql")
 
         // db version control
-        runSqlFile("sql/version-control/roles.migration.sql")
+        runSqlFile("sql/data/roles.data.sql")
 
         // user
         runSqlFile("sql/modules/user/register.sql")
@@ -264,7 +265,7 @@ class DatabaseVersionControl(
         // ====================  LanguageIndex.tab load end ===========================
 
         if (appConfig.thisServerUrl == "http://localhost:8080"){
-            runSqlFile("sql/dummy.data.sql")
+            runSqlFile("sql/data/dummy.data.sql")
         }
 
         jdbcTemplate.execute(

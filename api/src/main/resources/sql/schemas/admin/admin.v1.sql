@@ -326,7 +326,7 @@ create table admin.email_tokens (
 create table admin.users(
   id serial primary key,
 
-  person int not null references admin.people(id),
+  person int references admin.people(id), -- required
   email varchar(255) unique not null,
   password varchar(255),
   
