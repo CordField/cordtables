@@ -311,24 +311,6 @@ create table admin.role_memberships (
 	unique(role, person)
 );
 
--- AUTHENTICATION ------------------------------------------------------------
-
-create table if not exists admin.tokens (
-	id serial primary key,
-	token varchar(64) unique not null,
-	person int references admin.people(id),
-	created_at timestamp not null default CURRENT_TIMESTAMP
-);
-
--- email tokens
-
-create table admin.email_tokens (
-	id serial primary key,
-	token varchar(512) unique not null,
-	user int not null references admin.users(id),
-	created_at timestamp not null default CURRENT_TIMESTAMP
-);
-
 -- USERS ---------------------------------------------------------------------
 
 create table admin.users(
@@ -344,4 +326,22 @@ create table admin.users(
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id)
+);
+
+-- AUTHENTICATION ------------------------------------------------------------
+
+create table if not exists admin.tokens (
+	id serial primary key,
+	token varchar(64) unique not null,
+	person int references admin.people(id),
+	created_at timestamp not null default CURRENT_TIMESTAMP
+);
+
+-- email tokens
+
+create table admin.email_tokens (
+	id serial primary key,
+	token varchar(512) unique not null,
+	user_id int not null references admin.users(id),
+	created_at timestamp not null default CURRENT_TIMESTAMP
 );
