@@ -137,7 +137,6 @@ create table admin.database_version_control (
 create table admin.people (
   id serial primary key,
 
-  neo4j_id varchar(32),
   about text,
   phone varchar(32),
   picture varchar(255),
@@ -151,7 +150,6 @@ create table admin.people (
   sensitivity_clearance common.sensitivity default 'Low',
   timezone varchar(32),
   title varchar(255),
-  status varchar(32),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int, -- not null doesn't work here, on startup
@@ -171,7 +169,7 @@ alter table admin.people add constraint admin_people_owning_person_fk foreign ke
 create table admin.groups(
   id serial primary key,
 
-  name varchar(64) not null unique,
+  name varchar(64) not null,
   parent_group int references admin.groups(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -179,7 +177,9 @@ create table admin.groups(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int references admin.groups(id) -- not null doesn't work here, on startup
+  owning_group int references admin.groups(id), -- not null doesn't work here, on startup
+
+  unique (name, owning_group)
 );
 
 alter table admin.people add constraint admin_people_owning_group_fk foreign key (owning_group) references admin.groups(id);
@@ -196,7 +196,9 @@ create table admin.group_row_access(
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (group_id, table_name, row)
 );
 
 create table admin.group_memberships(
@@ -210,7 +212,9 @@ create table admin.group_memberships(
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (group_id, person)
 );
 
 -- PEER to PEER -------------------------------------------------------------
@@ -218,13 +222,13 @@ create table admin.group_memberships(
 create table admin.peers (
   id serial primary key,
 
-  person int references admin.people(id),
-  url varchar(128) not null unique,
+  person int unique not null references admin.people(id),
+  url varchar(128) unique not null,
   peer_approved bool not null default false,
   url_confirmed bool not null default false,
-  source_token varchar(64),
-  target_token varchar(64),
-  session_token varchar(64),
+  source_token varchar(64) unique,
+  target_token varchar(64) unique,
+  session_token varchar(64) unique,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -244,11 +248,11 @@ create table admin.roles (
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-    modified_by int not null references admin.people(id),
-    owning_person int not null references admin.people(id),
-    owning_group int not null references admin.groups(id),
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
 
-	unique (owning_group, name)
+	unique (name, owning_group)
 );
 
 create table admin.role_column_grants(
@@ -311,7 +315,7 @@ create table admin.role_memberships (
 
 create table if not exists admin.tokens (
 	id serial primary key,
-	token varchar(64) unique,
+	token varchar(64) unique not null,
 	person int references admin.people(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP
 );
@@ -320,11 +324,9 @@ create table if not exists admin.tokens (
 
 create table admin.email_tokens (
 	id serial primary key,
-	token varchar(512),
-	email varchar(255),
-	unique(token),
+	token varchar(512) unique not null,
+	user int not null references admin.users(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP
--- 	foreign key (email) references users(email)
 );
 
 -- USERS ---------------------------------------------------------------------
@@ -332,7 +334,7 @@ create table admin.email_tokens (
 create table admin.users(
   id serial primary key,
 
-  person int references admin.people(id), -- required
+  person int references admin.people(id) unique, -- not null added in v2
   email varchar(255) unique not null,
   password varchar(255),
   

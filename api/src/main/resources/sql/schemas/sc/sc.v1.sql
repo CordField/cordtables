@@ -154,7 +154,7 @@ create table sc.locations (
 -- extension table from commmon
 create table sc.organizations (
 	id int primary key not null references common.organizations(id),
-	neo4j_id varchar(32),
+	neo4j_id varchar(32) unique,
   
 	address varchar(255),
 	root_directory int references common.directories(id),
@@ -736,7 +736,7 @@ create table sc.partnerships (
 create type common.budget_status as enum (
 		'Pending',
 		'Current',
-		'Superceded',
+		'Superseded',
 		'Rejected'
 );
 
