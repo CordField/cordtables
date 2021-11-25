@@ -1,4 +1,4 @@
-import { Component, Host, h, State } from '@stencil/core';
+import { Component, Host, h, State, Prop } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
@@ -62,6 +62,7 @@ class DeleteTicketResponse extends GenericResponse {
 })
 export class TicketAssignment{
 
+  @Prop() onlyShowCreate: boolean = false;
   @State() commonTicketAssignmentResponse: CommonTicketAssignmentResponse;
   newTicketAssignment: number;
   newPerson: number;
@@ -201,13 +202,11 @@ handleInsert = async (event: MouseEvent) => {
     return (
       <Host>
         <slot></slot>
-        {/* table abstraction */}
-        {this.commonTicketAssignmentResponse && <cf-table rowData={this.commonTicketAssignmentResponse.ticket_assignment} columnData={this.columnData}></cf-table>}
-        
+
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
-{globals.globalStore.state.editMode === true && (
+{(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
              <div id="ticket-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -229,7 +228,10 @@ handleInsert = async (event: MouseEvent) => {
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>
           </form>
-        )}
+        )}  
+        {/* table abstraction */}
+        {this.commonTicketAssignmentResponse && this.onlyShowCreate ===  false && <cf-table rowData={this.commonTicketAssignmentResponse.ticket_assignment} columnData={this.columnData}></cf-table>}
+        
       </Host>
     );
   }

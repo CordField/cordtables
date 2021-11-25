@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+#main{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+  margin-left: 1%;
+}
