@@ -1,9 +1,9 @@
-import { Component, Host, State, h } from '@stencil/core'
-import { ColumnDescription } from '../../../../common/table-abstractions/types'
-import { ErrorType, GenericResponse } from '../../../../common/types'
+import { Component, Host, State, h } from '@stencil/core';
+import { ColumnDescription } from '../../../../common/table-abstractions/types';
+import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
-import { globals } from '../../../../core/global.store'
-import { ScBudgetRecord } from './types'
+import { globals } from '../../../../core/global.store';
+import { ScBudgetRecord } from './types';
 
 class CreateBudgetRecordRequest {
   token: string;
@@ -41,10 +41,9 @@ class DeleteBudgetRecordResponse extends GenericResponse {
   id: number;
 }
 
-
 @Component({
   tag: 'sc-budgetrecords',
-  styleUrl: 'sc-budgetrecords.css',
+  styleUrl: 'sc-budget-records.css',
   shadow: true,
 })
 export class ScBudgetRecords {
@@ -192,18 +191,18 @@ export class ScBudgetRecords {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateBudgetRecordRequest, CreateBudgetRecordResponse>('sc-budgetrecords/create-read', {
-      token: globals.globalStore.state.token,
-      budgetrecord: {
-        name: this.newBudgetRecordName,
-        type: this.newBudgetRecordType
-      },
-    });
+    // const result = await fetchAs<CreateBudgetRecordRequest, CreateBudgetRecordResponse>('sc-budgetrecords/create-read', {
+    //   token: globals.globalStore.state.token,
+    //   budgetrecord: {
+    //     name: this.newBudgetRecordName,
+    //     type: this.newBudgetRecordType
+    //   },
+    // });
 
-    if (result.error === ErrorType.NoError) {
-      // globals.globalStore.state.editMode = false;
-      this.getList();
-    }
+    // if (result.error === ErrorType.NoError) {
+    //   // globals.globalStore.state.editMode = false;
+    //   this.getList();
+    // }
   };
   render() {
     return (
@@ -221,9 +220,9 @@ export class ScBudgetRecords {
               <span class="form-thing">
                 <label htmlFor="budgetrecord-budget">New BudgetRecord Budget</label>
               </span>
-              <span class="form-thing">
+              {/* <span class="form-thing">
                 <input id="budgetrecord-name" budget="budgetrecord-budget" onInput={event => this.budgetrecordBudgetChange(event)} />
-              </span>
+              </span> */}
             </div>
             <div id="budgetrecord-change_to_plan-holder" class="form-input-item form-thing">
               <span class="form-thing">
