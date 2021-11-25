@@ -329,6 +329,10 @@ export class ScLanguageEngagements {
       displayName: 'Active',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -378,6 +382,10 @@ export class ScLanguageEngagements {
       displayName: 'Is First Scripture',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -385,6 +393,10 @@ export class ScLanguageEngagements {
       displayName: 'Is Luke Partnership',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -392,6 +404,10 @@ export class ScLanguageEngagements {
       displayName: 'Is Sent Printing',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -434,6 +450,11 @@ export class ScLanguageEngagements {
       displayName: 'Product Engagement Tag',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -455,6 +476,11 @@ export class ScLanguageEngagements {
       displayName: 'Status',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -640,7 +666,7 @@ export class ScLanguageEngagements {
               </span>
               <span class="form-thing">
                 <select id="is_luke_partnership" name="is_luke_partnership" onInput={event => this.is_luke_partnershipChange(event)}>
-                  <option value="">Select Active</option>
+                  <option value="">Select Is Luke Partnership</option>
                   <option value="true" selected={this.newIs_luke_partnership === true}>True</option>
                    <option value="false" selected={this.newIs_luke_partnership === false}>False</option>
                 </select>
@@ -653,7 +679,7 @@ export class ScLanguageEngagements {
               </span>
               <span class="form-thing">
                 <select id="is_sent_printing" name="is_sent_printing" onInput={event => this.is_sent_printingChange(event)}>
-                  <option value="">Select Active</option>
+                  <option value="">Select Is Sent Printing</option>
                   <option value="true" selected={this.newIs_sent_printing === true}>True</option>
                    <option value="false" selected={this.newIs_sent_printing === false}>False</option>
                 </select>

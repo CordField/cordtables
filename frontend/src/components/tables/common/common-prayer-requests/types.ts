@@ -3,6 +3,7 @@ class CommonPrayerRequest {
     id?: number | undefined;
 
     parent?: number | undefined;
+    subject?: string | undefined;
     content?: string | undefined;
 
     created_at?: string | undefined;

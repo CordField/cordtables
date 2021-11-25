@@ -314,6 +314,10 @@ export class ScInternshipEngagements {
       displayName: 'Active',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -419,6 +423,11 @@ export class ScInternshipEngagements {
       displayName: 'Position',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -440,6 +449,11 @@ export class ScInternshipEngagements {
       displayName: 'Status',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
 

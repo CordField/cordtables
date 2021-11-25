@@ -187,6 +187,10 @@ export class ScPartners {
       displayName: 'Active',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -194,6 +198,12 @@ export class ScPartners {
       displayName: 'Financial Reporting Types',
       width: 200,
       editable: true,
+      isMulti: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -201,6 +211,10 @@ export class ScPartners {
       displayName: 'Is Innovations Client',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -222,6 +236,12 @@ export class ScPartners {
       displayName: 'Types',
       width: 200,
       editable: true,
+      isMulti: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
     

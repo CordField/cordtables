@@ -185,6 +185,10 @@ export class ScProductScriptureReferences {
       displayName: 'Active',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {

@@ -626,6 +626,7 @@ create table common.prayer_requests(
 	id serial primary key,
 
   parent int references common.prayer_requests(id),
+  subject varchar(255) default null,
   content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,

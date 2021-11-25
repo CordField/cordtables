@@ -9,6 +9,7 @@ class CreatePrayerRequestExRequest {
   token: string;
   prayerRequest: {
     parent: number;
+    subject: string;
     content: string;
   };
 }
@@ -57,6 +58,7 @@ export class CommonPrayerRequests {
   @State() prayerRequestsResponse: CommonPrayerRequestListResponse;
 
   newParent: number;
+  newSubject: string;
   newContent: string;
   
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
@@ -111,6 +113,10 @@ export class CommonPrayerRequests {
     this.newParent = event.target.value;
   }
 
+  subjectChange(event){
+    this.newSubject = event.target.value;
+  }
+
   contentChange(event) {
     this.newContent = event.target.value;
   }
@@ -123,6 +129,7 @@ export class CommonPrayerRequests {
       token: globals.globalStore.state.token,
       prayerRequest: {
         parent: this.newParent,
+        subject: this.newSubject,
         content: this.newContent,
       },
     });
@@ -148,6 +155,13 @@ export class CommonPrayerRequests {
     {
       field: 'parent',
       displayName: 'Parent',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'subject',
+      displayName: 'Subject',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
@@ -224,6 +238,15 @@ export class CommonPrayerRequests {
               </span>
               <span class="form-thing">
                 <input type="number" id="parent" name="parent" onInput={event => this.parentChange(event)} />
+              </span>
+            </div>
+
+            <div id="subject-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="subject">Subject</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="subject" name="subject" onInput={event => this.subjectChange(event)} />
               </span>
             </div>
 
