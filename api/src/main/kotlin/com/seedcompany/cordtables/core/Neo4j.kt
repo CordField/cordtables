@@ -8,6 +8,8 @@ import com.seedcompany.cordtables.components.tables.sc.languages.Update
 import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.neo4j.driver.Driver
+import org.neo4j.driver.Record
+import org.neo4j.driver.types.Node
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -210,10 +212,7 @@ class Neo4j(
                 .list()
                 .forEach {
                     neo4jIdQueue.add(
-                        BaseNode(
-                            id = it.get("n").asNode().get("id").asString(),
-                            labels = it.get("n").asNode().labels() as List<String>
-                        )
+                        createBaseNode(it, "n")
                     )
                 }
         }
@@ -339,8 +338,9 @@ class Neo4j(
                 id = node.id
             )
             node!!.labels.contains("Location") -> writeBaseNode(
-                targetTable = "common.locations",
+                targetTable = "sc.locations",
                 id = node!!.id,
+                commonTable = "common.locations"
             )
             node!!.labels.contains("FundingAccount") -> writeBaseNode(
                 targetTable = "sc.funding_accounts",
@@ -514,13 +514,29 @@ class Neo4j(
                     val remainingNodes = totalBaseNodeRels.toFloat() - processedBaseNodeRels.get().toFloat()
                     val eta = remainingNodes / rate / 60F
 
-                    print("\r${processedBaseNodeRels}/$totalBaseNodeRels rate: ${rate.toInt()} records/sec eta: ${eta.toInt()}r queue: ${nodePairs.size}")
+                    print("\r${processedBaseNodeRels}/$totalBaseNodeRels rate: ${rate.toInt()} records/sec eta: ${eta.toInt()}m queue: ${nodePairs.size}")
                     delay(1000L)
                 }
             }
         }
 
         println("base node to base node relationships migration done")
+    }
+
+    suspend fun createBaseNode(node: Record, nodeVariable: String): BaseNode {
+        /* Since ScriptureRange BaseNodes doesn't have an id property
+        it's needed to use its neo4j identity */
+        if (node.get(nodeVariable).asNode().labels().contains("ScriptureRange")) {
+            return BaseNode(
+                id = node.get(nodeVariable).asNode().id().toString(),
+                labels = node.get(nodeVariable).asNode().labels() as List<String>
+            )
+        } else {
+            return BaseNode(
+                id = node.get(nodeVariable).asNode().get("id").asString(),
+                labels = node.get(nodeVariable).asNode().labels() as List<String>
+            )
+        }
     }
 
     suspend fun getNodePairs(skip: Int, size: Int) {
@@ -530,17 +546,9 @@ class Neo4j(
                 .forEach {
                     nodePairs.add(
                         arrayOf(
-                            BaseNode(
-                                id = it.get("n").asNode().get("id").asString(),
-                                labels = it.get("n").asNode().labels() as List<String>
-                            ),
-                            Relation(
-                                type = it.get("r").asRelationship().type()
-                            ),
-                            BaseNode(
-                                id = it.get("m").asNode().get("id").asString(),
-                                labels = it.get("m").asNode().labels() as List<String>
-                            )
+                            createBaseNode(it, "n"),
+                            Relation(type = it.get("r").asRelationship().type()),
+                            createBaseNode(it, "m")
                         )
                     )
                 }
@@ -812,6 +820,30 @@ class Neo4j(
                 "common.directories",
                 "admin.people",
                 "created_by",
+                "id"
+            )
+            checkRelationship(n, r, m, "ScriptureRange", "scriptureReferences", "Film") -> writeRelationship(
+                n,
+                m,
+                "sc.films",
+                "common.scripture_references",
+                "scripture_references",
+                "id"
+            )
+            checkRelationship(n, r, m, "ScriptureRange", "scriptureReferences", "Story") -> writeRelationship(
+                n,
+                m,
+                "sc.stories",
+                "common.scripture_references",
+                "scripture_references",
+                "id"
+            )
+            checkRelationship(n, r, m, "ScriptureRange", "scriptureReferences", "EthnoArt") -> writeRelationship(
+                n,
+                m,
+                "sc.ethno_arts",
+                "common.scripture_references",
+                "scripture_references",
                 "id"
             )
         }

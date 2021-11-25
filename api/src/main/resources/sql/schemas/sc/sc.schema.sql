@@ -1002,6 +1002,7 @@ create table sc.films (
 
   neo4j_id varchar(32) unique,
   name varchar(64),
+  scripture_references int references common.scripture_references(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1016,6 +1017,7 @@ create table sc.stories (
 
   neo4j_id varchar(32) unique,
   name varchar(64),
+  scripture_references int references common.scripture_references(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -1030,6 +1032,7 @@ create table sc.ethno_arts (
 
   neo4j_id varchar(32) unique,
   name varchar(64),
+  scripture_references int references common.scripture_references(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
