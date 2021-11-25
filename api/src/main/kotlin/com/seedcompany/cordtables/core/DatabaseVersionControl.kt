@@ -104,11 +104,11 @@ class DatabaseVersionControl(
 
         // sil
         runSqlFile("sql/schemas/sil/sil.v1.sql")
-        runSqlFile("sql/schemas/sil/language_index.migration.sql")
+        runSqlFile("sql/migration/language_index.migration.sql")
 
         // sc
         runSqlFile("sql/schemas/sc/sc.v1.sql")
-        runSqlFile("sql/schemas/sc/ethnologue.migration.sql")
+        runSqlFile("sql/migration/ethnologue.migration.sql")
 
         // load data functions
         runSqlFile("sql/data/bootstrap.data.sql")
