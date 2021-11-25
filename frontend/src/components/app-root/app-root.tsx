@@ -99,7 +99,8 @@ export class AppRoot {
                 <stencil-route url="/login" component="cf-login" />
 
                 <stencil-route url="/table/:table" component="table-root" />
-                <stencil-route url="/page/:page" component="page-root" />
+                
+                <stencil-route url="/page/:page/:requestId?" component="page-root" />
               </stencil-route-switch>
             </stencil-router>
           </main>

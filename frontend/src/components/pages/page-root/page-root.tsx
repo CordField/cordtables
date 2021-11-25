@@ -4,13 +4,12 @@ import { MatchResults } from '@stencil/router';
 @Component({
   tag: 'page-root',
   styleUrl: 'page-root.css',
-  shadow: true,
+  scoped: true,
 })
 export class PageRoot {
   @Prop() match: MatchResults;
 
   render() {
-    console.log('Page: ', this.match.params.page);
     return (
       <Host>
         <slot></slot>
@@ -18,6 +17,11 @@ export class PageRoot {
         {this.match.params.page === 'organizations' && <organizations-page></organizations-page>}
         {this.match.params.page === 'roles' && <roles-page></roles-page>}
         {this.match.params.page === 'tickets' && <tickets-page></tickets-page>}
+        {this.match.params.page === 'not-found' && <page-not-found></page-not-found>}
+        {this.match.params.page === 'prayer-requests' && <page-prayer-requests></page-prayer-requests>}
+        {this.match.params.page === 'request-prayer' && <request-prayer-page></request-prayer-page>}
+        {this.match.params.page === 'prayer-request-edit' && <prayer-request-edit-page requestId={this.match.params.requestId} ></prayer-request-edit-page>}
+
       </Host>
     );
   }

@@ -38,14 +38,10 @@ class DatabaseVersionControl(
     private fun updateSchemaIdempotent() {
         while (true) {
             when (getSchemaVersion()) {
-//                1 -> {
-//                    println("upgrading schema to version 2")
-//                    toVersion2()
-//                }
-//                2 -> {
-//                    println("upgrading schema to version 3")
-//                    toVersion3()
-//                }
+                1 -> {
+                    println("upgrading schema to version 2")
+                    toVersion2()
+                }
                 else -> {
                     break
                 }
@@ -55,7 +51,6 @@ class DatabaseVersionControl(
     }
 
     private fun updateHistoryTables(){
-        // todo
         runSqlFile("sql/version-control/history.sql")
     }
 
@@ -64,13 +59,15 @@ class DatabaseVersionControl(
     }
 
     private fun toVersion2() {
-        runSqlFile("sql/version-control/toVersion2.sql")
-        setVersionNumber(2)
-    }
+        // admin
+        runSqlFile("sql/schemas/admin/admin.v2.sql")
 
-    private fun toVersion3() {
-        runSqlFile("sql/version-control/toVersion3.sql")
-        setVersionNumber(3)
+        // common
+        runSqlFile("sql/schemas/common/common.v2.sql")
+
+        // sc
+        runSqlFile("sql/schemas/sc/sc.v2.sql")
+        setVersionNumber(2)
     }
 
     private fun getSchemaVersion(): Int? {
@@ -100,30 +97,28 @@ class DatabaseVersionControl(
         println("version 1 not found. creating schema.")
 
         // admin
-        runSqlFile("sql/schemas/admin/admin.schema.sql")
+        runSqlFile("sql/schemas/admin/admin.v1.sql")
 
         // common
-        runSqlFile("sql/schemas/common/common.schema.sql")
+        runSqlFile("sql/schemas/common/common.v1.sql")
 
         // sil
-        runSqlFile("sql/schemas/sil/sil.schema.sql")
-        runSqlFile("sql/schemas/sil/language_index.migration.sql")
+        runSqlFile("sql/schemas/sil/sil.v1.sql")
+        runSqlFile("sql/migration/language_index.migration.sql")
 
         // sc
-        runSqlFile("sql/schemas/sc/sc.schema.sql")
-        runSqlFile("sql/schemas/sc/ethnologue.migration.sql")
+        runSqlFile("sql/schemas/sc/sc.v1.sql")
+        runSqlFile("sql/migration/ethnologue.migration.sql")
 
-        // bootstrap
-        runSqlFile("sql/version-control/bootstrap.sql")
-
-        // db version control
-        runSqlFile("sql/version-control/roles.migration.sql")
+        // load data functions
+        runSqlFile("sql/data/bootstrap.data.sql")
+        runSqlFile("sql/data/roles.data.sql")
 
         // user
         runSqlFile("sql/modules/user/register.sql")
         runSqlFile("sql/modules/user/login.sql")
 
-        // bootstrap
+        // prep and bootstrap the db
         val pash = util.encoder.encode(appConfig.cordAdminPassword)
 
         var errorType = ErrorType.UnknownError
@@ -150,123 +145,17 @@ class DatabaseVersionControl(
             bootstrapStatement.close()
         }
 
-        if (appConfig.loadLanguageData) {
+        // load roles
+        jdbcTemplate.execute("call roles_migration();")
 
-
-            var adminPeopleId = 0
-
-            this.ds.connection.use { conn ->
-                try {
-
-                    val getAdminIdStatement =
-                        conn.prepareCall("select id from admin.people where sensitivity_clearance = 'High'")
-
-                    val result = getAdminIdStatement.executeQuery()
-                    if (result.next()) {
-                        adminPeopleId = result.getInt("id")
-                    }
-                    getAdminIdStatement.close()
-                } catch (ex: IllegalArgumentException) {
-                    println("admin people not found!")
-                }
-            }
-
-            // ====================  CountryCodes.tab load ===========================
-
-            var readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/CountryCodes.tab").inputStream))
-
-            var countryCodesQuery =
-                "insert into sil.country_codes(country, name, area, created_by, modified_by, owning_person, owning_group) values "
-
-            var count = 0
-            var text: List<String> = readBuffer.readLines()
-            for (line in text) {
-                val splitArray = line.split("\t")
-                val countryIdEntry = splitArray[0]
-                val nameEntry = splitArray[1]
-                val areaEntry = splitArray[2]
-                count++
-                if (count == 1) continue
-                countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
-            }
-
-            countryCodesQuery = countryCodesQuery.dropLast(2) + ";"
-
-            try {
-                runSqlString(countryCodesQuery)
-                println("CountryCodes.tab load success")
-            } catch (ex: Exception) {
-                println(ex)
-                println("CountryCodes.tab load filed")
-            }
-
-            // ====================  LanguageCodes.tab load ===========================
-
-            readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageCodes.tab").inputStream))
-
-            var languageCodesQuery =
-                "insert into sil.language_codes(lang, country, lang_status, name, created_by, modified_by, owning_person, owning_group) values "
-            count = 0
-            text = readBuffer.readLines()
-
-            for (line in text) {
-                val splitArray = line.split("\t")
-                val lang = splitArray[0]
-                val country = splitArray[1]
-                val langStatus = splitArray[2]
-                val name = splitArray[3]
-                count++
-                if (count == 1) continue
-                languageCodesQuery += "('${lang}', '${country}', '${langStatus}', '${name}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
-            }
-            languageCodesQuery = languageCodesQuery.dropLast(2) + ";"
-
-            try {
-                runSqlString(languageCodesQuery)
-                println("LanguageCodes.tab load success")
-            } catch (ex: Exception) {
-                println(ex)
-
-                println("LanguageCodes.tab load filed")
-            }
-
-            // ====================  LanguageIndex.tab load ===========================
-
-            readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageIndex.tab").inputStream))
-
-            count = 0
-            text = readBuffer.readLines()
-            var languageIndexQuery = ""
-            for (line in text) {
-                val splitArray = line.split("\t")
-                val lang = splitArray[0]
-                val country = splitArray[1]
-                val nameType = splitArray[2]
-                val name = splitArray[3]
-
-                count++
-                if (count == 1) continue
-                languageIndexQuery += """
-                call sil.sil_migrate_language_index('${lang}', '${country}', '${nameType}', '$name'); 
-            """.trimIndent()
-            }
-
-            try {
-                runSqlString(languageIndexQuery)
-                println("LanguageIndex.tab load success")
-            } catch (ex: Exception) {
-                println(ex)
-                println("LanguageIndex.tab load filed")
-            }
-
-        }
-
-        // ====================  LanguageIndex.tab load end ===========================
+        // load sil data if requested
+        if (appConfig.loadLanguageData) loadSilData()
 
         if (appConfig.thisServerUrl == "http://localhost:8080"){
-            runSqlFile("sql/dummy.data.sql")
+           // runSqlFile("sql/data/dummy.data.sql")
         }
 
+        // update version control table
         jdbcTemplate.execute(
             """
             insert into admin.database_version_control(version, status, started, completed)
@@ -274,7 +163,114 @@ class DatabaseVersionControl(
             """.trimIndent()
         )
 
-        jdbcTemplate.execute("call roles_migration();")
+    }
+
+    private fun loadSilData(){
+        var adminPeopleId = 0
+
+        this.ds.connection.use { conn ->
+            try {
+
+                val getAdminIdStatement =
+                    conn.prepareCall("select id from admin.people where sensitivity_clearance = 'High'")
+
+                val result = getAdminIdStatement.executeQuery()
+                if (result.next()) {
+                    adminPeopleId = result.getInt("id")
+                }
+                getAdminIdStatement.close()
+            } catch (ex: IllegalArgumentException) {
+                println("admin people not found!")
+            }
+        }
+
+        // ====================  CountryCodes.tab load ===========================
+
+        var readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/CountryCodes.tab").inputStream))
+
+        var countryCodesQuery =
+            "insert into sil.country_codes(country, name, area, created_by, modified_by, owning_person, owning_group) values "
+
+        var count = 0
+        var text: List<String> = readBuffer.readLines()
+        for (line in text) {
+            val splitArray = line.split("\t")
+            val countryIdEntry = splitArray[0]
+            val nameEntry = splitArray[1]
+            val areaEntry = splitArray[2]
+            count++
+            if (count == 1) continue
+            countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+        }
+
+        countryCodesQuery = countryCodesQuery.dropLast(2) + ";"
+
+        try {
+            runSqlString(countryCodesQuery)
+            println("CountryCodes.tab load success")
+        } catch (ex: Exception) {
+            println(ex)
+            println("CountryCodes.tab load filed")
+        }
+
+        // ====================  LanguageCodes.tab load ===========================
+
+        readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageCodes.tab").inputStream))
+
+        var languageCodesQuery =
+            "insert into sil.language_codes(lang, country, lang_status, name, created_by, modified_by, owning_person, owning_group) values "
+        count = 0
+        text = readBuffer.readLines()
+
+        for (line in text) {
+            val splitArray = line.split("\t")
+            val lang = splitArray[0]
+            val country = splitArray[1]
+            val langStatus = splitArray[2]
+            val name = splitArray[3]
+            count++
+            if (count == 1) continue
+            languageCodesQuery += "('${lang}', '${country}', '${langStatus}', '${name}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+        }
+        languageCodesQuery = languageCodesQuery.dropLast(2) + ";"
+
+        try {
+            runSqlString(languageCodesQuery)
+            println("LanguageCodes.tab load success")
+        } catch (ex: Exception) {
+            println(ex)
+
+            println("LanguageCodes.tab load filed")
+        }
+
+        // ====================  LanguageIndex.tab load ===========================
+
+        readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/LanguageIndex.tab").inputStream))
+
+        count = 0
+        text = readBuffer.readLines()
+        var languageIndexQuery = ""
+        for (line in text) {
+            val splitArray = line.split("\t")
+            val lang = splitArray[0]
+            val country = splitArray[1]
+            val nameType = splitArray[2]
+            val name = splitArray[3]
+
+            count++
+            if (count == 1) continue
+            languageIndexQuery += """
+                call sil.sil_migrate_language_index('${lang}', '${country}', '${nameType}', '$name'); 
+            """.trimIndent()
+        }
+
+        try {
+            runSqlString(languageIndexQuery)
+            println("LanguageIndex.tab load success")
+        } catch (ex: Exception) {
+            println(ex)
+            println("LanguageIndex.tab load filed")
+        }
     }
 
     private fun setVersionNumber(newVersion: Int) {

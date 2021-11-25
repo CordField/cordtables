@@ -170,6 +170,12 @@ export class ScGlobalPartnerPerformances {
       displayName: 'Reporting Performance',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "1", value: "1"},
+        {display: "2", value: "2"},
+        {display: "3", value: "3"},
+        {display: "4", value: "4"},       
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -177,6 +183,12 @@ export class ScGlobalPartnerPerformances {
       displayName: 'Financial Performance',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "1", value: "1"},
+        {display: "2", value: "2"},
+        {display: "3", value: "3"},
+        {display: "4", value: "4"},       
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -184,6 +196,12 @@ export class ScGlobalPartnerPerformances {
       displayName: 'Translation Performance',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "1", value: "1"},
+        {display: "2", value: "2"},
+        {display: "3", value: "3"},
+        {display: "4", value: "4"},       
+      ],
       updateFn: this.handleUpdate,
     },
     {

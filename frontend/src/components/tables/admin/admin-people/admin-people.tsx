@@ -305,6 +305,11 @@ export class AdminPeoples {
       displayName: 'Sensitivity Clearance',
       width:200,
       editable: true,
+      selectOptions: [
+        {display: "Low", value: "Low"},
+        {display: "Medium", value: "Medium"},
+        {display: "High", value: "High"},
+      ],
       updateFn: this.handleUpdate,
     },
     {

@@ -2,7 +2,7 @@ cord:
   admin:
     password: ${CORD_ADMIN_PASSWORD}
   init:
-    load-language-data: true
+    load-language-data: false
 cord-api:
   url: ${CORD_API_GRAPHQL_URL}
   email: ${CORD_API_EMAIL}

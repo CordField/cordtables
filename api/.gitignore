@@ -38,3 +38,4 @@ out/
 
 src/main/resources/static
 src/main/resources/local
+src/main/resources/data/*.tab

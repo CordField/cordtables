@@ -37,8 +37,23 @@ export class CfCell {
     this.newValue = event.target.value;
   };
 
-  handleSelect(event) {
-    this.newValue = event.target.value;
+  handleSelect(event, isArray) {
+    if(isArray){
+      var options = event.target.options;
+      var value = [];
+      for (var i = 0, l = options.length; i < l; i++) {
+        if (options[i].selected) {
+          value.push(options[i].value);
+          //console.log(options[i].value);
+        }
+      }
+      console.log(value);
+      this.newValue = "{"+value.toString()+"}";
+      console.log(this.newValue);
+    }
+    else{
+      this.newValue = event.target.value;
+    }
   }
 
   handleDelete = event => {
@@ -48,7 +63,7 @@ export class CfCell {
   submit = async () => {
     if (this.columnDescription.selectOptions !== null && this.columnDescription.selectOptions !== undefined) {
       const select = this.el.shadowRoot.getElementById('select') as any;
-      this.newValue = select.value;
+      //this.newValue = select.value;
     }
 
     if (this.newValue === undefined) return;
@@ -136,7 +151,7 @@ export class CfCell {
               <span>
                 {/* might be a select menu or a text input */}
                 {this.columnDescription.selectOptions != null || this.columnDescription.selectOptions != undefined ? (
-                  <select id="select" onInput={event => this.handleSelect(event)}>
+                  <select id="select" multiple={this.columnDescription.isMulti} onInput={event => this.handleSelect(event, this.columnDescription.isMulti)}>
                     {this.columnDescription.selectOptions &&
                       this.columnDescription.selectOptions.length > 0 &&
                       this.columnDescription.selectOptions.map(option => (

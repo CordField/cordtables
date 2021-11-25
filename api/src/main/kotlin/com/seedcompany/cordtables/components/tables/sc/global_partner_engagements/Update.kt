@@ -93,7 +93,7 @@ class Update(
                     table = "sc.global_partner_engagements",
                     column = "sc_roles",
                     id = req.id,
-                    value = req.value,
+                    value =  req.value,
                     cast = "::sc.global_partner_roles[]"
                 )
             }

@@ -124,6 +124,12 @@ export namespace Components {
     }
     interface OrganizationsTable {
     }
+    interface PageNotFound {
+        "history": RouterHistory;
+    }
+    interface PagePrayerRequests {
+        "history": RouterHistory;
+    }
     interface PageRoot {
         "match": MatchResults;
     }
@@ -132,6 +138,13 @@ export namespace Components {
     interface PeopleTable {
     }
     interface PeopleToOrgRelationships {
+    }
+    interface PrayerRequestEditPage {
+        "history": RouterHistory;
+        "requestId": any;
+    }
+    interface RequestPrayerPage {
+        "history": RouterHistory;
     }
     interface RoleColumnGrants {
         "history": RouterHistory;
@@ -144,7 +157,7 @@ export namespace Components {
     }
     interface RolesTable {
     }
-    interface ScBudgetRecords {
+    interface ScBudgetrecords {
     }
     interface ScBudgets {
     }
@@ -525,6 +538,18 @@ declare global {
         prototype: HTMLOrganizationsTableElement;
         new (): HTMLOrganizationsTableElement;
     };
+    interface HTMLPageNotFoundElement extends Components.PageNotFound, HTMLStencilElement {
+    }
+    var HTMLPageNotFoundElement: {
+        prototype: HTMLPageNotFoundElement;
+        new (): HTMLPageNotFoundElement;
+    };
+    interface HTMLPagePrayerRequestsElement extends Components.PagePrayerRequests, HTMLStencilElement {
+    }
+    var HTMLPagePrayerRequestsElement: {
+        prototype: HTMLPagePrayerRequestsElement;
+        new (): HTMLPagePrayerRequestsElement;
+    };
     interface HTMLPageRootElement extends Components.PageRoot, HTMLStencilElement {
     }
     var HTMLPageRootElement: {
@@ -548,6 +573,18 @@ declare global {
     var HTMLPeopleToOrgRelationshipsElement: {
         prototype: HTMLPeopleToOrgRelationshipsElement;
         new (): HTMLPeopleToOrgRelationshipsElement;
+    };
+    interface HTMLPrayerRequestEditPageElement extends Components.PrayerRequestEditPage, HTMLStencilElement {
+    }
+    var HTMLPrayerRequestEditPageElement: {
+        prototype: HTMLPrayerRequestEditPageElement;
+        new (): HTMLPrayerRequestEditPageElement;
+    };
+    interface HTMLRequestPrayerPageElement extends Components.RequestPrayerPage, HTMLStencilElement {
+    }
+    var HTMLRequestPrayerPageElement: {
+        prototype: HTMLRequestPrayerPageElement;
+        new (): HTMLRequestPrayerPageElement;
     };
     interface HTMLRoleColumnGrantsElement extends Components.RoleColumnGrants, HTMLStencilElement {
     }
@@ -579,11 +616,11 @@ declare global {
         prototype: HTMLRolesTableElement;
         new (): HTMLRolesTableElement;
     };
-    interface HTMLScBudgetRecordsElement extends Components.ScBudgetRecords, HTMLStencilElement {
+    interface HTMLScBudgetrecordsElement extends Components.ScBudgetrecords, HTMLStencilElement {
     }
-    var HTMLScBudgetRecordsElement: {
-        prototype: HTMLScBudgetRecordsElement;
-        new (): HTMLScBudgetRecordsElement;
+    var HTMLScBudgetrecordsElement: {
+        prototype: HTMLScBudgetrecordsElement;
+        new (): HTMLScBudgetrecordsElement;
     };
     interface HTMLScBudgetsElement extends Components.ScBudgets, HTMLStencilElement {
     }
@@ -914,16 +951,20 @@ declare global {
         "locations-table": HTMLLocationsTableElement;
         "organizations-page": HTMLOrganizationsPageElement;
         "organizations-table": HTMLOrganizationsTableElement;
+        "page-not-found": HTMLPageNotFoundElement;
+        "page-prayer-requests": HTMLPagePrayerRequestsElement;
         "page-root": HTMLPageRootElement;
         "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
         "people-to-org-relationships": HTMLPeopleToOrgRelationshipsElement;
+        "prayer-request-edit-page": HTMLPrayerRequestEditPageElement;
+        "request-prayer-page": HTMLRequestPrayerPageElement;
         "role-column-grants": HTMLRoleColumnGrantsElement;
         "role-memberships": HTMLRoleMembershipsElement;
         "role-table-permissions": HTMLRoleTablePermissionsElement;
         "roles-page": HTMLRolesPageElement;
         "roles-table": HTMLRolesTableElement;
-        "sc-budget-records": HTMLScBudgetRecordsElement;
+        "sc-budgetrecords": HTMLScBudgetrecordsElement;
         "sc-budgets": HTMLScBudgetsElement;
         "sc-ceremonies": HTMLScCeremoniesElement;
         "sc-change-to-plan": HTMLScChangeToPlanElement;
@@ -1094,6 +1135,12 @@ declare namespace LocalJSX {
     }
     interface OrganizationsTable {
     }
+    interface PageNotFound {
+        "history"?: RouterHistory;
+    }
+    interface PagePrayerRequests {
+        "history"?: RouterHistory;
+    }
     interface PageRoot {
         "match"?: MatchResults;
     }
@@ -1102,6 +1149,13 @@ declare namespace LocalJSX {
     interface PeopleTable {
     }
     interface PeopleToOrgRelationships {
+    }
+    interface PrayerRequestEditPage {
+        "history"?: RouterHistory;
+        "requestId"?: any;
+    }
+    interface RequestPrayerPage {
+        "history"?: RouterHistory;
     }
     interface RoleColumnGrants {
         "history"?: RouterHistory;
@@ -1114,7 +1168,7 @@ declare namespace LocalJSX {
     }
     interface RolesTable {
     }
-    interface ScBudgetRecords {
+    interface ScBudgetrecords {
     }
     interface ScBudgets {
     }
@@ -1264,16 +1318,20 @@ declare namespace LocalJSX {
         "locations-table": LocationsTable;
         "organizations-page": OrganizationsPage;
         "organizations-table": OrganizationsTable;
+        "page-not-found": PageNotFound;
+        "page-prayer-requests": PagePrayerRequests;
         "page-root": PageRoot;
         "peers-table": PeersTable;
         "people-table": PeopleTable;
         "people-to-org-relationships": PeopleToOrgRelationships;
+        "prayer-request-edit-page": PrayerRequestEditPage;
+        "request-prayer-page": RequestPrayerPage;
         "role-column-grants": RoleColumnGrants;
         "role-memberships": RoleMemberships;
         "role-table-permissions": RoleTablePermissions;
         "roles-page": RolesPage;
         "roles-table": RolesTable;
-        "sc-budget-records": ScBudgetRecords;
+        "sc-budgetrecords": ScBudgetrecords;
         "sc-budgets": ScBudgets;
         "sc-ceremonies": ScCeremonies;
         "sc-change-to-plan": ScChangeToPlan;
@@ -1373,16 +1431,20 @@ declare module "@stencil/core" {
             "locations-table": LocalJSX.LocationsTable & JSXBase.HTMLAttributes<HTMLLocationsTableElement>;
             "organizations-page": LocalJSX.OrganizationsPage & JSXBase.HTMLAttributes<HTMLOrganizationsPageElement>;
             "organizations-table": LocalJSX.OrganizationsTable & JSXBase.HTMLAttributes<HTMLOrganizationsTableElement>;
+            "page-not-found": LocalJSX.PageNotFound & JSXBase.HTMLAttributes<HTMLPageNotFoundElement>;
+            "page-prayer-requests": LocalJSX.PagePrayerRequests & JSXBase.HTMLAttributes<HTMLPagePrayerRequestsElement>;
             "page-root": LocalJSX.PageRoot & JSXBase.HTMLAttributes<HTMLPageRootElement>;
             "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "people-to-org-relationships": LocalJSX.PeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLPeopleToOrgRelationshipsElement>;
+            "prayer-request-edit-page": LocalJSX.PrayerRequestEditPage & JSXBase.HTMLAttributes<HTMLPrayerRequestEditPageElement>;
+            "request-prayer-page": LocalJSX.RequestPrayerPage & JSXBase.HTMLAttributes<HTMLRequestPrayerPageElement>;
             "role-column-grants": LocalJSX.RoleColumnGrants & JSXBase.HTMLAttributes<HTMLRoleColumnGrantsElement>;
             "role-memberships": LocalJSX.RoleMemberships & JSXBase.HTMLAttributes<HTMLRoleMembershipsElement>;
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
             "roles-page": LocalJSX.RolesPage & JSXBase.HTMLAttributes<HTMLRolesPageElement>;
             "roles-table": LocalJSX.RolesTable & JSXBase.HTMLAttributes<HTMLRolesTableElement>;
-            "sc-budget-records": LocalJSX.ScBudgetRecords & JSXBase.HTMLAttributes<HTMLScBudgetRecordsElement>;
+            "sc-budgetrecords": LocalJSX.ScBudgetrecords & JSXBase.HTMLAttributes<HTMLScBudgetrecordsElement>;
             "sc-budgets": LocalJSX.ScBudgets & JSXBase.HTMLAttributes<HTMLScBudgetsElement>;
             "sc-ceremonies": LocalJSX.ScCeremonies & JSXBase.HTMLAttributes<HTMLScCeremoniesElement>;
             "sc-change-to-plan": LocalJSX.ScChangeToPlan & JSXBase.HTMLAttributes<HTMLScChangeToPlanElement>;

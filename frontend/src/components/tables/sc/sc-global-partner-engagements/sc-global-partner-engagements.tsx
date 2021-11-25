@@ -186,6 +186,10 @@ export class ScGlobalPartnerEngagements {
       displayName: 'Type',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "CIT", value: "CIT"},
+        {display: "Engagements", value: "Engagements"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -206,7 +210,12 @@ export class ScGlobalPartnerEngagements {
       field: 'sc_roles',
       displayName: 'Sc Roles',
       width: 50,
-      editable: false,
+      editable: true,
+      isMulti: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -214,6 +223,10 @@ export class ScGlobalPartnerEngagements {
       displayName: 'Partner Roles',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
