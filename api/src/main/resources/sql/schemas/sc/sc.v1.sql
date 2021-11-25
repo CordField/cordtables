@@ -4,47 +4,6 @@ create schema sc;
 
 -- POSTS ----------------------------------------------------------
 
-create table sc.directories (
-  id serial primary key,
-  neo4j_id varchar(32),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.files (
-  id serial primary key,
-  neo4j_id varchar(32),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
-create table sc.file_versions (
-  id serial primary key,
-  neo4j_id varchar(32),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-  peer int references admin.peers(id)
-);
-
--- POSTS ----------------------------------------------------------
-
 create table sc.posts_directory ( -- does not need to be secure
   id serial primary key,
   created_at timestamp not null default CURRENT_TIMESTAMP
@@ -66,9 +25,9 @@ create type sc.post_type as enum (
 
 create table sc.posts (
   id serial primary key,
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
 
-  directory int, --not null references sc.posts_directory(id),
+  directory int references sc.posts_directory(id), -- not null
   type sc.post_type, --not null,
   shareability sc.post_shareability, --not null,
   body text, --not null,
@@ -85,9 +44,9 @@ create table sc.posts (
 
 create table sc.funding_accounts (
   id serial primary key,
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
 
-	account_number int, -- unique not null,
+	account_number int unique, -- not null,
 	name varchar(255),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -102,7 +61,7 @@ create table sc.funding_accounts (
 
 create table sc.field_zones (
 	id serial primary key,
-	neo4j_id varchar(32),
+	neo4j_id varchar(32) unique,
 
 	director int references admin.people(id),
 	name varchar(32) unique, -- not null
@@ -117,7 +76,7 @@ create table sc.field_zones (
 
 create table sc.field_regions (
 	id serial primary key,
-	neo4j_id varchar(32),
+	neo4j_id varchar(32) unique,
 
 	director int references admin.people(id),
 	name varchar(32) unique, -- not null
@@ -133,7 +92,7 @@ create table sc.field_regions (
 -- extension table from commmon
 create table sc.locations (
 	id int primary key not null references common.locations(id),
-	neo4j_id varchar(32),
+	neo4j_id varchar(32) unique,
 
 	default_region int references sc.field_regions(id),
 	funding_account int references sc.funding_accounts(id),
@@ -215,7 +174,7 @@ END; $$;
 create table sc.partners (
 	id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
 	organization int references sc.organizations(id), -- not null
 	active bool,
 	financial_reporting_types sc.financial_reporting_types[],
@@ -238,7 +197,7 @@ create table sc.partners (
 create table sc.ethnologue (
   id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
   language_index int not null references sil.language_index(id),
   code varchar(32),
   language_name varchar(64), -- override for language_index
@@ -517,7 +476,7 @@ create table sc.people (
 
 create table sc.person_unavailabilities (
   id serial primary key,
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
 
   person int references admin.people(id),
 	period_start timestamp not null default CURRENT_TIMESTAMP,
@@ -611,7 +570,7 @@ create table sc.periodic_reports_directory ( -- security not needed
 create table sc.periodic_reports (
   id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
   directory int references sc.periodic_reports_directory(id), -- not null
   end_at timestamp, -- not null
   report_file int references common.files(id), -- not null
@@ -666,7 +625,7 @@ create table sc.projects (
 create table sc.project_members (
   id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
 	person int references sc.people(id), -- not null
 	group_id int references admin.groups(id), -- not null
@@ -704,7 +663,7 @@ create type sc.partnership_agreement_status as enum (
 create table sc.partnerships (
   id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
   project int references sc.projects(id), -- not null
   partner int references sc.organizations(id), -- not null
   change_to_plan int default 1 references sc.change_to_plans(id), -- not null
@@ -743,7 +702,7 @@ create type common.budget_status as enum (
 create table sc.budgets (
   id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
   change_to_plan int default 1, -- not null
   project int references sc.projects(id), -- not null
   status common.budget_status,
@@ -763,7 +722,7 @@ create table sc.budgets (
 create table sc.budget_records (
 	id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
   budget int references sc.budgets(id), -- not null
   change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
@@ -847,7 +806,7 @@ create type common.project_engagement_tag as enum (
 create table sc.language_engagements (
   id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
 	ethnologue int references sc.ethnologue(id), -- not null
 	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
@@ -964,7 +923,7 @@ create type common.product_methodology_step as enum (
 create table sc.products (
   id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
   name varchar(64), -- not null
   change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
@@ -1079,7 +1038,7 @@ create type common.internship_position as enum (
 create table sc.internship_engagements (
   id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
 	ethnologue int references sc.ethnologue(id), -- not null
 	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
@@ -1122,7 +1081,7 @@ create type common.ceremony_type as enum (
 create table sc.ceremonies (
   id serial primary key,
 
-  neo4j_id varchar(32),
+  neo4j_id varchar(32) unique,
   project int references sc.projects(id), -- not null
 	ethnologue int references sc.ethnologue(id), -- not null
 	actual_date timestamp,
