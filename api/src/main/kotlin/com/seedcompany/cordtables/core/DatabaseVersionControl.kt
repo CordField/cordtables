@@ -165,9 +165,9 @@ class DatabaseVersionControl(
 
     }
 
-    private fun loadSilData(){
+    public fun loadSilData(){
         var adminPeopleId = 0
-
+        println("here loadSil Data")
         this.ds.connection.use { conn ->
             try {
 
