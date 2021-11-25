@@ -1,11 +1,10 @@
-/*package com.seedcompany.cordtables.components.tables.common.workflows
+package com.seedcompany.cordtables.components.tables.common.workflows
 
-import com.seedcompany.cordtables.components.tables.common.work_records.CommonWorkRecords
+import com.seedcompany.cordtables.common.CommonTicketStatus
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -28,7 +27,7 @@ data class CommonWorkflowsListResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonWorkRecordsList")
+@Controller("CommonWorkflowsList")
 class List(
         @Autowired
         val util: Utility,
@@ -42,7 +41,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-work-records/list")
+    @PostMapping("common-workflows/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonWorkflowsListRequest): CommonWorkflowsListResponse{
         var data: MutableList<CommonWorkflowsRecords> = mutableListOf()
@@ -51,89 +50,88 @@ class List(
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
 
-        val query = secureList.getSecureListQueryHandler(
-                GetSecureListQueryRequest(
-                        tableName = "common.work_records",
-                        filter = "order by id",
-                        columns = arrayOf(
-                                "id",
-                                "person",
-                                "hours",
-                                "minutes",
-                                "total_time",
-                                "comment",
-                                "created_at",
-                                "created_by",
-                                "modified_at",
-                                "modified_by",
-                                "owning_person",
-                                "owning_group",
-                        )
-                )
-        ).query
 
-        try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()) {
+        this.ds.connection.use { conn ->
+            //language=SQL
+            val statement = conn.prepareStatement("""
+                select
+	                common.tickets.id,
+                    common.tickets.ticket_status,
+	                common.tickets.parent,
+	                common.tickets.content,
+	                common.work_estimates.total_time as estimated_total_time,
+	                common.ticket_graph.from_ticket as blocked_by,
+                    common.ticket_assignments.person as assigned_person,
+	                common.work_records.total_time as total_time_worked,
+                    common.work_records.comment,
+                    common.ticket_feedback.feedback
+                from
+	                common.tickets
+	            left join common.work_estimates on (common.work_estimates.id = common.tickets.id)
+	            left join common.ticket_graph on (common.ticket_graph.to_ticket = common.tickets.id)
+	            left join common.ticket_assignments on (common.ticket_assignments.ticket = tickets.id)
+	            left join common.work_records on (common.work_records.ticket = common.tickets.id)
+	            left join common.ticket_feedback on (common.ticket_feedback.ticket = common.tickets.id)
+            """.trimIndent())
+
+            try {
+
+            val jdbcResult = statement.executeQuery()
+
+            while (jdbcResult.next()){
 
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var person: Int? = jdbcResult.getInt("person")
-                if (jdbcResult.wasNull()) person = null
+                var ticket_status: String? = jdbcResult.getString("ticket_status")
+                if (jdbcResult.wasNull()) ticket_status = null
 
-                var hours: Int? = jdbcResult.getInt("hours")
-                if (jdbcResult.wasNull()) hours = null
+                var parent: Int? = jdbcResult.getInt("parent")
+                if (jdbcResult.wasNull()) parent = null
 
-                var minutes : Int? = jdbcResult.getInt("minutes")
-                if (jdbcResult.wasNull()) minutes = null
+                var content: String? = jdbcResult.getString("content")
+                if(jdbcResult.wasNull()) content = null
 
-                var totalTime : Number? = jdbcResult.getFloat("total_time")
-                if (jdbcResult.wasNull()) totalTime = null
+                var estimatedTotalTime: Number? = jdbcResult.getFloat("estimated_total_time")
+                if (jdbcResult.wasNull()) estimatedTotalTime = null
+
+                var blockedBy : Int? = jdbcResult.getInt("blocked_by")
+                if (jdbcResult.wasNull()) blockedBy = null
+
+                var assignedPerson: Int? = jdbcResult.getInt("assigned_person")
+                if (jdbcResult.wasNull()) assignedPerson = null
+
+                var totalTimeWorked : Number? = jdbcResult.getFloat("total_time_worked")
+                if (jdbcResult.wasNull()) totalTimeWorked = null
 
                 var comment : String? = jdbcResult.getString("comment")
                 if (jdbcResult.wasNull()) comment = null
 
-                var createdAt: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) createdAt = null
+                var feedback : String? = jdbcResult.getString("feedback")
+                if (jdbcResult.wasNull()) feedback = null
 
-                var createdBy: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) createdBy = null
-
-                var modifiedAt: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modifiedAt = null
-
-                var modifiedBy: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modifiedBy = null
-
-                var owningPerson: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owningPerson = null
-
-                var owningGroup: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owningGroup = null
 
                 data.add(
                         CommonWorkflowsRecords(
                                 id = id,
-                                person = person,
-                                hours = hours,
-                                minutes = minutes,
-                                total_time = totalTime,
+                                ticket_status = if(ticket_status == null) null else CommonTicketStatus.valueOf(ticket_status),
+                                parent = parent,
+                                content = content,
+                                estimated_total_time = estimatedTotalTime,
+                                blocked_by = blockedBy,
+                                assigned_person = assignedPerson,
+                                total_time_worked = totalTimeWorked,
                                 comment = comment,
-                                created_at = createdAt,
-                                created_by = createdBy,
-                                modified_at = modifiedAt,
-                                modified_by = modifiedBy,
-                                owning_person = owningPerson,
-                                owning_group = owningGroup
+                                feedback = feedback,
                         )
                 )
             }
-        } catch (e: SQLException) {
-            println("error while listing ${e.message}")
-            return CommonWorkflowsListResponse(ErrorType.SQLReadError, mutableListOf())
+            } catch (e: SQLException) {
+                println("error while listing ${e.message}")
+                return CommonWorkflowsListResponse(ErrorType.SQLReadError, mutableListOf())
+            }
         }
+
         return CommonWorkflowsListResponse(ErrorType.NoError, data)
     }
 }
-*/

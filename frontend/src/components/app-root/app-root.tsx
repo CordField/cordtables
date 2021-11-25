@@ -86,7 +86,7 @@ export class AppRoot {
                   </div>
                 </div>
 
-                <button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>
+                {this.path != '/page/tickets' && (<button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>)}
               </div>
             )}
           </div>

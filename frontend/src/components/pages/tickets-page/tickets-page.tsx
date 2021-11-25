@@ -1,5 +1,32 @@
 import { Component, Host, h, State, Watch } from '@stencil/core';
 import { globals } from '../../../core/global.store';
+import { ColumnDescription } from '../../../common/table-abstractions/types';
+import { ErrorType, GenericResponse } from '../../../common/types';
+import { fetchAs } from '../../../common/utility';
+
+
+class CommonTicketsPageListRequest{
+  token: string;
+}
+
+class CommonTicketsPageRow{
+  id : number;
+  ticket_status : string;
+  parent : number;
+  content : string;
+  estimated_total_time : number;
+  blocked_by: number;
+  assigned_person: number;
+  total_time_worked : number;
+  comment: string;
+  feedback: string;
+}
+
+
+class CommonTicketsPageResponse {
+  error: ErrorType;
+  workflow: CommonTicketsPageRow[];
+}
 
 @Component({
   tag: 'tickets-page',
@@ -14,6 +41,86 @@ export class WorkflowsTable {
   @State() isBlockATicketVisible: boolean = false;
   @State() isAddAWorkRecordVisible: boolean = false;
   @State() isAddFeedBacktoTicketVisible: boolean = false;
+  @State() commonTicketsPageResponse: CommonTicketsPageResponse;
+
+  columnData: ColumnDescription[] = [
+    {
+      field: 'id',
+      displayName: 'ID',
+      width: 50,
+      editable: false,
+    },
+    {
+      field: 'ticket_status',
+      displayName: 'Ticket Status',
+      width: 100,
+      editable: false,
+      selectOptions: [
+        { display: `-`, value: '' },
+        { display: `Open`, value: 'Open' },
+        { display: 'Blocked', value: 'Blocked' },
+        { display: 'Closed', value: 'Closed' },
+      ],
+    },
+    {
+      field: 'parent',
+      displayName: 'Parent',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'content',
+      displayName: 'Content',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'estimated_total_time',
+      displayName: 'Total Time Estimated',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'blocked_by',
+      displayName: 'Blocked By',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'assigned_person',
+      displayName: 'Assigned Person',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'total_time_worked',
+      displayName: 'Total Time Worked',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'comment',
+      displayName: 'Comment',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'feedback',
+      displayName: 'Feedback',
+      width: 100,
+      editable: false,
+    },
+  ];
+  
+  async componentWillLoad() {
+    await this.getList();
+  }
+  
+  async getList() {
+    this.commonTicketsPageResponse = await fetchAs<CommonTicketsPageListRequest, CommonTicketsPageResponse>('common-workflows/list', {
+      token: globals.globalStore.state.token,
+    });
+  }
 
   createNewTicket = () => {
     if (globals.globalStore.state.editMode === false) this.isCreateNewTicketVisible = !this.isCreateNewTicketVisible;
@@ -51,7 +158,9 @@ export class WorkflowsTable {
           <button onClick={this.addWorkRecord}>Add a Work Record</button>
           <button onClick={this.addFeedbackToTicket}>Add Feedback to Ticket</button>
         </div>
+
         {/*Beggining of conditional rendering*/}
+
         { this.isCreateNewTicketVisible  === true && (
         <div id="contentTickets">
           <tickets-table onlyShowCreate={this.isCreateNewTicketVisible}></tickets-table> 
@@ -83,11 +192,10 @@ export class WorkflowsTable {
         </div>)}
         
         {/*End of conditional rendering*/}
-        <h2> Tickets List </h2>
-        <tickets-table onlyShowCreate={false}></tickets-table> 
-
         
-       
+        <h2> Tickets List </h2>
+        {/* table abstraction */}
+        {<cf-table rowData={this.commonTicketsPageResponse.workflow} columnData={this.columnData}></cf-table>}
       </Host>
     );
   }

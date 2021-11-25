@@ -220,7 +220,6 @@ handleInsert = async (event: MouseEvent) => {
 };
 
   render() {
-    console.log('Test: ', this.onlyShowCreate);
     return (
       <Host>
         <slot></slot>
