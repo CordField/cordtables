@@ -16,6 +16,7 @@ export class PageRoot {
         {this.match.params.page === 'groups' && <groups-page></groups-page>}
         {this.match.params.page === 'organizations' && <organizations-page></organizations-page>}
         {this.match.params.page === 'roles' && <roles-page></roles-page>}
+        {this.match.params.page === 'slack' && <slack-page></slack-page>}
       </Host>
     );
   }

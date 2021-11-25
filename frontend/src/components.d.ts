@@ -9,6 +9,7 @@ import { MatchResults, RouterHistory } from "@stencil/router";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
+import { CommonDiscussionChannel, CommonDiscussionChannelListResponse } from "./components/tables/common/discussion-channels/types";
 export namespace Components {
     interface AdminGroupMemberships {
     }
@@ -211,6 +212,13 @@ export namespace Components {
     interface SilTableOfLanguages {
     }
     interface SiteText {
+    }
+    interface SlackContent {
+    }
+    interface SlackPage {
+    }
+    interface SlackSidebar {
+        "discussionChannels": CommonDiscussionChannelListResponse;
     }
     interface StageGraph {
     }
@@ -775,6 +783,24 @@ declare global {
         prototype: HTMLSiteTextElement;
         new (): HTMLSiteTextElement;
     };
+    interface HTMLSlackContentElement extends Components.SlackContent, HTMLStencilElement {
+    }
+    var HTMLSlackContentElement: {
+        prototype: HTMLSlackContentElement;
+        new (): HTMLSlackContentElement;
+    };
+    interface HTMLSlackPageElement extends Components.SlackPage, HTMLStencilElement {
+    }
+    var HTMLSlackPageElement: {
+        prototype: HTMLSlackPageElement;
+        new (): HTMLSlackPageElement;
+    };
+    interface HTMLSlackSidebarElement extends Components.SlackSidebar, HTMLStencilElement {
+    }
+    var HTMLSlackSidebarElement: {
+        prototype: HTMLSlackSidebarElement;
+        new (): HTMLSlackSidebarElement;
+    };
     interface HTMLStageGraphElement extends Components.StageGraph, HTMLStencilElement {
     }
     var HTMLStageGraphElement: {
@@ -943,6 +969,9 @@ declare global {
         "sil-languages-codes": HTMLSilLanguagesCodesElement;
         "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
         "site-text": HTMLSiteTextElement;
+        "slack-content": HTMLSlackContentElement;
+        "slack-page": HTMLSlackPageElement;
+        "slack-sidebar": HTMLSlackSidebarElement;
         "stage-graph": HTMLStageGraphElement;
         "stage-notifications": HTMLStageNotificationsElement;
         "stage-role-column-grants": HTMLStageRoleColumnGrantsElement;
@@ -1167,6 +1196,14 @@ declare namespace LocalJSX {
     }
     interface SiteText {
     }
+    interface SlackContent {
+    }
+    interface SlackPage {
+    }
+    interface SlackSidebar {
+        "discussionChannels"?: CommonDiscussionChannelListResponse;
+        "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
+    }
     interface StageGraph {
     }
     interface StageNotifications {
@@ -1284,6 +1321,9 @@ declare namespace LocalJSX {
         "sil-languages-codes": SilLanguagesCodes;
         "sil-table-of-languages": SilTableOfLanguages;
         "site-text": SiteText;
+        "slack-content": SlackContent;
+        "slack-page": SlackPage;
+        "slack-sidebar": SlackSidebar;
         "stage-graph": StageGraph;
         "stage-notifications": StageNotifications;
         "stage-role-column-grants": StageRoleColumnGrants;
@@ -1392,6 +1432,9 @@ declare module "@stencil/core" {
             "sil-languages-codes": LocalJSX.SilLanguagesCodes & JSXBase.HTMLAttributes<HTMLSilLanguagesCodesElement>;
             "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
             "site-text": LocalJSX.SiteText & JSXBase.HTMLAttributes<HTMLSiteTextElement>;
+            "slack-content": LocalJSX.SlackContent & JSXBase.HTMLAttributes<HTMLSlackContentElement>;
+            "slack-page": LocalJSX.SlackPage & JSXBase.HTMLAttributes<HTMLSlackPageElement>;
+            "slack-sidebar": LocalJSX.SlackSidebar & JSXBase.HTMLAttributes<HTMLSlackSidebarElement>;
             "stage-graph": LocalJSX.StageGraph & JSXBase.HTMLAttributes<HTMLStageGraphElement>;
             "stage-notifications": LocalJSX.StageNotifications & JSXBase.HTMLAttributes<HTMLStageNotificationsElement>;
             "stage-role-column-grants": LocalJSX.StageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLStageRoleColumnGrantsElement>;
