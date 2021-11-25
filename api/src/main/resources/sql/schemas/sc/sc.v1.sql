@@ -4,6 +4,47 @@ create schema sc;
 
 -- POSTS ----------------------------------------------------------
 
+create table sc.directories (
+  id serial primary key,
+  neo4j_id varchar(32),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table sc.files (
+  id serial primary key,
+  neo4j_id varchar(32),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+create table sc.file_versions (
+  id serial primary key,
+  neo4j_id varchar(32),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
+);
+
+-- POSTS ----------------------------------------------------------
+
 create table sc.posts_directory ( -- does not need to be secure
   id serial primary key,
   created_at timestamp not null default CURRENT_TIMESTAMP
@@ -25,11 +66,12 @@ create type sc.post_type as enum (
 
 create table sc.posts (
   id serial primary key,
+  neo4j_id varchar(32),
 
-  directory int not null references sc.posts_directory(id),
-  type sc.post_type not null,
-  shareability sc.post_shareability not null,
-  body text not null,
+  directory int, --not null references sc.posts_directory(id),
+  type sc.post_type, --not null,
+  shareability sc.post_shareability, --not null,
+  body text, --not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -45,8 +87,8 @@ create table sc.funding_accounts (
   id serial primary key,
   neo4j_id varchar(32),
 
-	account_number int unique, -- not null
-	name varchar(32),
+	account_number int, -- unique not null,
+	name varchar(255),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -94,7 +136,7 @@ create table sc.locations (
 	neo4j_id varchar(32),
 
 	default_region int references sc.field_regions(id),
-	funding_account int references sc.funding_accounts(account_number),
+	funding_account int references sc.funding_accounts(id),
 	iso_alpha_3 char(3),
 	name varchar(32) unique, -- not null
 	type common.location_type, -- not null
@@ -112,7 +154,8 @@ create table sc.locations (
 -- extension table from commmon
 create table sc.organizations (
 	id int primary key not null references common.organizations(id),
-	neo4j_id varchar(32),
+	neo4j_id varchar(32) unique,
+  
 	address varchar(255),
 	root_directory int references common.directories(id),
 	
@@ -143,25 +186,27 @@ create table sc.organization_locations(
 
 create type sc.periodic_report_type as enum (
   'Financial',
-  'Narrative'
+  'Narrative',
+  'Progress'
 );
 
 DO $$ BEGIN
     create type sc.financial_reporting_types as enum (
-		'A',
-		'B',
-		'C'
+		'Funded',
+		'FieldEngaged'
 	);
 	EXCEPTION
 	WHEN duplicate_object THEN null;
 END; $$;
 
--- todo
+
 DO $$ BEGIN
     create type sc.partner_types as enum (
-		'A',
-		'B',
-		'C'
+		'Managing',
+		'Funding',
+		'Impact',
+		'Technical',
+		'Resource'
 	);
 	EXCEPTION
 	WHEN duplicate_object THEN null;
@@ -170,6 +215,7 @@ END; $$;
 create table sc.partners (
 	id serial primary key,
 
+  neo4j_id varchar(32),
 	organization int references sc.organizations(id), -- not null
 	active bool,
 	financial_reporting_types sc.financial_reporting_types[],
@@ -177,6 +223,7 @@ create table sc.partners (
 	pmc_entity_code varchar(32),
 	point_of_contact int references admin.people(id),
 	types sc.partner_types[],
+	address varchar(255),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -191,7 +238,9 @@ create table sc.partners (
 create table sc.ethnologue (
   id serial primary key,
 
+  neo4j_id varchar(32),
   language_index int not null references sil.language_index(id),
+  code varchar(32),
   language_name varchar(64), -- override for language_index
   population int,
   provisional_code varchar(32),
@@ -299,6 +348,7 @@ create table sc.languages(
   sensitivity common.sensitivity,
   sign_language_code varchar(32),
   sponsor_estimated_end_date timestamp,
+  has_external_first_scripture bool,
 
 --	language_name varchar(32),
 --	iso varchar(4),
@@ -467,10 +517,11 @@ create table sc.people (
 
 create table sc.person_unavailabilities (
   id serial primary key,
+  neo4j_id varchar(32),
 
   person int references admin.people(id),
-	period_start timestamp not null,
-	period_end timestamp not null,
+	period_start timestamp not null default CURRENT_TIMESTAMP,
+	period_end timestamp not null default CURRENT_TIMESTAMP,
 	description text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -484,18 +535,43 @@ create table sc.person_unavailabilities (
 
 -- PROJECT TABLES ----------------------------------------------------------
 
--- todo
 create type sc.project_step as enum (
-		'A',
-		'B',
-		'C'
+		'EarlyConversations',
+		'PendingConceptApproval',
+		'PrepForConsultantEndorsement',
+		'PendingConsultantEndorsement',
+		'PrepForFinancialEndorsement',
+		'PendingFinancialEndorsement',
+		'FinalizingProposal',
+		'PendingRegionalDirectorApproval',
+		'PendingZoneDirectorApproval',
+		'PendingFinanceConfirmation',
+		'OnHoldFinanceConfirmation',
+		'DidNotDevelop',
+		'Rejected',
+		'Active',
+		'ActiveChangedPlan',
+		'DiscussingChangeToPlan',
+		'PendingChangeToPlanApproval',
+		'PendingChangeToPlanConfirmation',
+		'DiscussingSuspension',
+		'PendingSuspensionApproval',
+		'Suspended',
+		'DiscussingReactivation',
+		'PendingReactivationApproval',
+		'DiscussingTermination',
+		'PendingTerminationApproval',
+		'FinalizingCompletion',
+		'Terminated',
+		'Completed'
 );
 
--- todo
 create type sc.project_status as enum (
-		'A',
-		'B',
-		'C'
+		'InDevelopment',
+		'Active',
+		'Terminated',
+		'Completed',
+		'DidNotDevelop'
 );
 
 -- todo
@@ -535,6 +611,7 @@ create table sc.periodic_reports_directory ( -- security not needed
 create table sc.periodic_reports (
   id serial primary key,
 
+  neo4j_id varchar(32),
   directory int references sc.periodic_reports_directory(id), -- not null
   end_at timestamp, -- not null
   report_file int references common.files(id), -- not null
@@ -571,7 +648,11 @@ create table sc.projects (
 	status sc.project_status,
 	status_changed_at timestamp,
 	step sc.project_step,
-  
+	step_changed_at timestamp,
+	sensitivity common.sensitivity,
+	tags text[],
+	preset_inventory bool,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -585,6 +666,7 @@ create table sc.projects (
 create table sc.project_members (
   id serial primary key,
 
+  neo4j_id varchar(32),
 	project int references sc.projects(id), -- not null
 	person int references sc.people(id), -- not null
 	group_id int references admin.groups(id), -- not null
@@ -613,32 +695,49 @@ create table sc.pinned_projects (
   owning_group int not null references admin.groups(id)
 );
 
+create type sc.partnership_agreement_status as enum (
+		'NotAttached',
+		'AwaitingSignature',
+		'Signed'
+);
+
 create table sc.partnerships (
   id serial primary key,
 
+  neo4j_id varchar(32),
   project int references sc.projects(id), -- not null
   partner int references sc.organizations(id), -- not null
   change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
-  agreement int references common.file_versions(id),
+  agreement_status sc.partnership_agreement_status,
+  mou int references common.files(id),
+  agreement int references common.files(id),
+  mou_status sc.partnership_agreement_status,
+  mou_start timestamp,
+  mou_end timestamp,
+  mou_start_override timestamp,
+  mou_end_override timestamp,
+  financial_reporting_type sc.financial_reporting_types,
+  is_primary bool,
+
+  types sc.partner_types[],  -- added because exists in neo4j
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-	unique (project, partner, change_to_plan)
 );
 
 -- PROJECT BUDGETS
 
--- todo
 create type common.budget_status as enum (
-		'A',
-		'B',
-		'C'
+		'Pending',
+		'Current',
+		'Superseded',
+		'Rejected'
 );
 
 create table sc.budgets (
@@ -648,7 +747,7 @@ create table sc.budgets (
   change_to_plan int default 1, -- not null
   project int references sc.projects(id), -- not null
   status common.budget_status,
-  universal_template int references common.file_versions(id),
+  universal_template int references common.files(id),
   universal_template_file_url varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -670,7 +769,7 @@ create table sc.budget_records (
   active bool,
   amount decimal,
   fiscal_year int,
-  partnership int references sc.partnerships(id),
+  organization int references sc.organizations(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -678,8 +777,22 @@ create table sc.budget_records (
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
+  peer int references admin.peers(id)
 
-	unique (budget, change_to_plan)
+);
+
+create table sc.budget_records_partnerships (
+  id serial primary key,
+  budget_record int not null references sc.budget_records(id),
+  partnership int not null references sc.partnerships(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+
 );
 
 -- PROJECT LOCATION
@@ -704,11 +817,24 @@ create table sc.project_locations (
 
 -- LANGUAGE ENGAGEMENTS
 
--- todo
 create type common.engagement_status as enum (
-		'A',
-		'B',
-		'C'
+		'InDevelopment',
+		'DidNotDevelop',
+		'Active',
+		'DiscussingTermination',
+		'DiscussingReactivation',
+		'DiscussingChangeToPlan',
+		'DiscussingSuspension',
+		'FinalizingCompletion',
+		'ActiveChangedPlan',
+		'Suspended',
+		'Terminated',
+		'Completed',
+		'Converted',
+		'Unapproved',
+		'Transferred',
+		'NotRenewed',
+		'Rejected'
 );
 
 -- todo
@@ -735,16 +861,19 @@ create table sc.language_engagements (
 	is_first_scripture bool,
 	is_luke_partnership bool,
 	is_sent_printing bool,
+	last_suspended_at timestamp,
 	last_reactivated_at timestamp,
 	paratext_registry varchar(32),
 	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	pnp varchar(255),
-	pnp_file int references common.file_versions(id),
+	pnp_file int references common.files(id),
 	product_engagement_tag common.project_engagement_tag,
 	start_date timestamp,
 	start_date_override timestamp,
 	status common.engagement_status,
-  
+	status_modified_at timestamp,
+	historic_goal varchar(255),
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -757,34 +886,79 @@ create table sc.language_engagements (
 
 -- PRODUCTS
 
--- todo
 create type common.product_mediums as enum (
-  'A',
-  'B',
-  'C'
+  'Print',
+  'Web',
+  'EBook',
+  'App',
+  'TrainedStoryTellers',
+  'Audio',
+  'Video',
+  'Other'
 );
 
--- todo
+
 create type common.product_methodologies as enum (
-  'A',
-  'B',
-  'C'
-);
-
--- todo
-create type common.product_purposes as enum (
-  'A',
-  'B',
-  'C'
-);
-
--- todo
-create type common.product_type as enum (
+  'Paratext',
+  'OtherWritten',
+  'Render',
+  'Audacity',
+  'AdobeAudition',
+  'OtherOralTranslation',
+  'StoryTogether',
+  'SeedCompanyMethod',
+  'OneStory',
+  'Craft2Tell',
+  'OtherOralStories',
   'Film',
-  'Literacy Material',
-  'Scripture',
-  'Song',
-  'Story'
+  'SignLanguage',
+  'OtherVisual'
+ );
+
+
+create type common.product_purposes as enum (
+  'EvangelismChurchPlanting',
+  'ChurchLife',
+  'ChurchMaturity',
+  'SocialIssues',
+  'Discipleship'
+);
+
+
+create type common.product_type as enum (
+  'BibleStories',
+  'JesusFilm',
+  'Songs',
+  'LiteracyMaterials',
+  'EthnoArts',
+  'OldTestamentPortions',
+  'OldTestamentFull',
+  'Gospel',
+  'NewTestamentFull',
+  'FullBible',
+  'IndividualBooks',
+  'Genesis'
+);
+create type common.progress_measurement as enum (
+  'Percent',
+  'Number',
+  'Boolean'
+);
+
+create type common.product_methodology_step as enum (
+    'ExegesisAndFirstDraft',
+    'TeamCheck',
+    'CommunityTesting',
+    'BackTranslation',
+    'ConsultantCheck',
+    'InternalizationAndDrafting',
+    'PeerRevision',
+    'ConsistencyCheckAndFinalEdits',
+    'Craft',
+    'Test',
+    'Check',
+    'Record',
+    'Completed'
 );
 
 create table sc.products (
@@ -795,10 +969,13 @@ create table sc.products (
   change_to_plan int default 1 references sc.change_to_plans(id), -- not null
   active bool,
   mediums common.product_mediums[],
-  methodologies common.product_methodologies[],
+  methodology common.product_methodologies,
   purposes common.product_purposes[],
+  steps common.product_methodology_step[],
   type common.product_type,
-  
+  progress_step_measurement common.progress_measurement,
+  progress_target decimal,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -826,6 +1003,50 @@ create table sc.product_scripture_references (
   unique (id)
 );
 
+-- FILM
+create table sc.films (
+  id serial primary key,
+
+  neo4j_id varchar(32) unique,
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+
+);
+create table sc.stories (
+  id serial primary key,
+
+  neo4j_id varchar(32) unique,
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+
+);
+create table sc.ethno_arts (
+  id serial primary key,
+
+  neo4j_id varchar(32) unique,
+  name varchar(64),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+
+);
+
 -- INTERNSHIP ENGAGEMENTS
 
 -- todo
@@ -835,16 +1056,30 @@ create type common.internship_methodology as enum (
   'C'
 );
 
--- todo
 create type common.internship_position as enum (
-  'A',
-  'B',
-  'C'
+  'ConsultantInTraining',
+  'ExegeticalFacilitator',
+  'LeadershipDevelopment',
+  'Mobilization',
+  'Personnel',
+  'Communication',
+  'Administration',
+  'Technology',
+  'Finance',
+  'LanguageProgramManager',
+  'Literacy',
+  'TranslationFacilitator',
+  'OralityFacilitator',
+  'ScriptureEngagement',
+  'OtherAttached',
+  'OtherTranslationCapacity',
+  'OtherPartnershipCapacity'
 );
 
 create table sc.internship_engagements (
   id serial primary key,
 
+  neo4j_id varchar(32),
 	project int references sc.projects(id), -- not null
 	ethnologue int references sc.ethnologue(id), -- not null
 	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
@@ -855,38 +1090,45 @@ create table sc.internship_engagements (
 	disbursement_complete_date timestamp,
 	end_date timestamp,
 	end_date_override timestamp,
-	growth_plan int references common.file_versions(id),
+	growth_plan int references common.files(id), --references files, not file-versions in neo4j
 	initial_end_date timestamp,
 	intern int references admin.people(id),
 	last_reactivated_at timestamp,
 	mentor int references admin.people(id),
-	methodology common.internship_methodology,
+	methodologies common.product_methodologies[],
 	paratext_registry varchar(32),
 	periodic_reports_directory int references sc.periodic_reports_directory(id),
 	position common.internship_position,
 	start_date timestamp,
 	start_date_override timestamp,
 	status common.engagement_status,
-  
+	status_modified_at timestamp,
+	last_suspended_at timestamp,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-	unique (project, ethnologue, change_to_plan)
+);
+
+create type common.ceremony_type as enum (
+  'Dedication',
+  'Certification'
 );
 
 create table sc.ceremonies (
   id serial primary key,
 
+  neo4j_id varchar(32),
   project int references sc.projects(id), -- not null
 	ethnologue int references sc.ethnologue(id), -- not null
 	actual_date timestamp,
 	estimated_date timestamp,
 	is_planned bool,
-	type varchar(255),
+	type common.ceremony_type,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
