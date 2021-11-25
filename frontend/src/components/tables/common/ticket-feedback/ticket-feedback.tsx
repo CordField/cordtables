@@ -1,4 +1,4 @@
-import { Component, Host, h, State } from '@stencil/core';
+import { Component, Host, h, State, Prop } from '@stencil/core';
 import { isThisMinute } from 'date-fns';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
@@ -67,8 +67,9 @@ class DeleteTicketFeedbackResponse extends GenericResponse {
   styleUrl: 'ticket-feedback.css',
   shadow: true,
 })
-export class TicketGraph {
-
+export class TicketFeedback {
+  
+  @Prop() onlyShowCreate: boolean = false;
   @State() CommonTicketFeedbackResponse: CommonTicketFeedbackResponse;
   newTicket: number;
   newStakeHolder: number;
@@ -226,13 +227,11 @@ handleInsert = async (event: MouseEvent) => {
     return (
       <Host>
         <slot></slot>
-        {/* table abstraction */}
-        {this.CommonTicketFeedbackResponse && <cf-table rowData={this.CommonTicketFeedbackResponse.ticket_feedback} columnData={this.columnData}></cf-table>}
-        
+
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
-{globals.globalStore.state.editMode === true && (
+{(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
              <div id="ticket-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -267,6 +266,9 @@ handleInsert = async (event: MouseEvent) => {
             </span>
           </form>
         )}
+        {/* table abstraction */}
+        {this.CommonTicketFeedbackResponse && this.onlyShowCreate === false && <cf-table rowData={this.CommonTicketFeedbackResponse.ticket_feedback} columnData={this.columnData}></cf-table>}
+        
       </Host>
     );
   }

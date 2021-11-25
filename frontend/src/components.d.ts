@@ -224,18 +224,26 @@ export namespace Components {
         "match": MatchResults;
     }
     interface TicketAssignments {
+        "onlyShowCreate": boolean;
     }
     interface TicketFeedback {
+        "onlyShowCreate": boolean;
     }
     interface TicketGraph {
+        "onlyShowCreate": boolean;
+    }
+    interface TicketsPage {
     }
     interface TicketsTable {
+        "onlyShowCreate": boolean;
     }
     interface UsersTable {
     }
     interface WorkEstimates {
+        "onlyShowCreate": boolean;
     }
     interface WorkRecords {
+        "onlyShowCreate": boolean;
     }
     interface WorkflowsTable {
     }
@@ -823,6 +831,12 @@ declare global {
         prototype: HTMLTicketGraphElement;
         new (): HTMLTicketGraphElement;
     };
+    interface HTMLTicketsPageElement extends Components.TicketsPage, HTMLStencilElement {
+    }
+    var HTMLTicketsPageElement: {
+        prototype: HTMLTicketsPageElement;
+        new (): HTMLTicketsPageElement;
+    };
     interface HTMLTicketsTableElement extends Components.TicketsTable, HTMLStencilElement {
     }
     var HTMLTicketsTableElement: {
@@ -951,6 +965,7 @@ declare global {
         "ticket-assignments": HTMLTicketAssignmentsElement;
         "ticket-feedback": HTMLTicketFeedbackElement;
         "ticket-graph": HTMLTicketGraphElement;
+        "tickets-page": HTMLTicketsPageElement;
         "tickets-table": HTMLTicketsTableElement;
         "users-table": HTMLUsersTableElement;
         "work-estimates": HTMLWorkEstimatesElement;
@@ -1179,18 +1194,26 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface TicketAssignments {
+        "onlyShowCreate"?: boolean;
     }
     interface TicketFeedback {
+        "onlyShowCreate"?: boolean;
     }
     interface TicketGraph {
+        "onlyShowCreate"?: boolean;
+    }
+    interface TicketsPage {
     }
     interface TicketsTable {
+        "onlyShowCreate"?: boolean;
     }
     interface UsersTable {
     }
     interface WorkEstimates {
+        "onlyShowCreate"?: boolean;
     }
     interface WorkRecords {
+        "onlyShowCreate"?: boolean;
     }
     interface WorkflowsTable {
     }
@@ -1292,6 +1315,7 @@ declare namespace LocalJSX {
         "ticket-assignments": TicketAssignments;
         "ticket-feedback": TicketFeedback;
         "ticket-graph": TicketGraph;
+        "tickets-page": TicketsPage;
         "tickets-table": TicketsTable;
         "users-table": UsersTable;
         "work-estimates": WorkEstimates;
@@ -1400,6 +1424,7 @@ declare module "@stencil/core" {
             "ticket-assignments": LocalJSX.TicketAssignments & JSXBase.HTMLAttributes<HTMLTicketAssignmentsElement>;
             "ticket-feedback": LocalJSX.TicketFeedback & JSXBase.HTMLAttributes<HTMLTicketFeedbackElement>;
             "ticket-graph": LocalJSX.TicketGraph & JSXBase.HTMLAttributes<HTMLTicketGraphElement>;
+            "tickets-page": LocalJSX.TicketsPage & JSXBase.HTMLAttributes<HTMLTicketsPageElement>;
             "tickets-table": LocalJSX.TicketsTable & JSXBase.HTMLAttributes<HTMLTicketsTableElement>;
             "users-table": LocalJSX.UsersTable & JSXBase.HTMLAttributes<HTMLUsersTableElement>;
             "work-estimates": LocalJSX.WorkEstimates & JSXBase.HTMLAttributes<HTMLWorkEstimatesElement>;
