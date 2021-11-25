@@ -52,11 +52,6 @@ class Create(
                 values(
                     ?,
                     ?,
-                    ARRAY[?]::sc.financial_reporting_types[],
-                    ?,
-                    ?,
-                    ?,
-                    ARRAY[?]::sc.partner_types[],
                     (
                       select person 
                       from admin.tokens 
