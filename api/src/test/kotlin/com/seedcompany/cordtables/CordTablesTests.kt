@@ -65,6 +65,10 @@ class CordTablesTests(
             System.setProperty("CORD_API_EMAIL", "asdfasdf")
             System.setProperty("CORD_API_PASSWORD", "asdfasdf")
 
+            System.setProperty("NEO4J_URL", "asdfasdf")
+            System.setProperty("NEO4J_USERNAME", "asdfasdf")
+            System.setProperty("NEO4J_PASSWORD", "asdfasdf")
+
             System.setProperty("SERVER_URL", "http://localhost:8080")
             System.setProperty("SERVER_PORT", "8080")
 
