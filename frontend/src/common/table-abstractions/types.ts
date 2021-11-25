@@ -3,6 +3,7 @@ export class ColumnDescription {
   displayName: string;
   width: number;
   editable: boolean;
+  isMulti?: boolean;
   updateFn?: (id: number, columnName: any, value: any) => Promise<boolean>;
   deleteFn?: (id: number) => Promise<boolean>;
   selectOptions?: Array<{ display: string; value: any }> | null = null;

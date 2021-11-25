@@ -171,6 +171,11 @@ export class ScPosts {
       displayName: 'Type',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Note", value: "Note"},
+        {display: "Story", value: "Story"},
+        {display: "Prayer", value: "Prayer"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -178,6 +183,12 @@ export class ScPosts {
       displayName: 'Shareability',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Project Team", value: "Project Team"},
+        {display: "Internal", value: "Internal"},
+        {display: "Ask to Share Externally", value: "Ask to Share Externally"},
+        {display: "External", value: "External"},
+      ],
       updateFn: this.handleUpdate,
     },
     {

@@ -1,8 +1,11 @@
 package com.seedcompany.cordtables.components.tables.common.prayer_requests
 
+import javax.security.auth.Subject
+
 data class prayerRequest(
     var id: Int? = null,
 
+    val subject: String? = null,
     val parent: Int? = null,
     val content: String? = null,
 
@@ -17,6 +20,7 @@ data class prayerRequest(
 data class prayerRequestInput(
     var id: Int? = null,
 
+    val subject: String? = null,
     val parent: Int? = null,
     val content: String? = null,
 
