@@ -47,6 +47,8 @@ dependencies {
 	implementation("com.amazonaws:aws-java-sdk-ses:1.12.62")
 
 	implementation("org.springdoc:springdoc-openapi-ui:1.5.12")
+	implementation("org.springdoc:springdoc-openapi-kotlin:1.5.12")
+	implementation("org.springdoc:springdoc-openapi-javadoc:1.5.12")
 
 
 

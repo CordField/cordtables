@@ -295,6 +295,10 @@ export class ScProjects {
       displayName: 'Active',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -386,6 +390,12 @@ export class ScProjects {
       displayName: 'Status',
       width: 200,
       editable: true,
+      isMulti: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -400,6 +410,12 @@ export class ScProjects {
       displayName: 'Step',
       width: 250,
       editable: true,
+      isMulti: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
 

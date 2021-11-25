@@ -11,7 +11,23 @@ create type common.mime_type as enum (
 
 -- SITE TEXT --------------------------------------------------------------------------------
 
--- meant to be extended by all orgs, so everyone has a unique id to reference within their language lists
+create type common.egids_scale as enum (
+		'0',
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6a',
+		'6b',
+		'7',
+		'8a',
+		'8b',
+		'9',
+		'10'
+);
+
+-- meant to be extended by all orgs, so everyone has a globally unique id to reference within their language lists
 create table common.languages(
   id serial primary key,
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -48,7 +64,9 @@ create table common.site_text_translations(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (language, site_text)
 );
 
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
@@ -62,6 +80,7 @@ create type common.book_name as enum (
 
 create table common.scripture_references (
   id serial primary key,
+  neo4j_id varchar(32) unique,
 
   book_start common.book_name,
   book_end common.book_name,
@@ -69,6 +88,13 @@ create table common.scripture_references (
   chapter_end int,
   verse_start int,
   verse_end int,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
 
   unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
 );
@@ -102,7 +128,9 @@ create table common.cell_channels (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (table_name, column_name, row)
 );
 
 create table common.threads (
@@ -145,7 +173,9 @@ create table common.blogs (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (title, owning_group)
 );
 
 create table common.blog_posts (
@@ -193,9 +223,10 @@ create type common.location_type as enum (
 create table common.locations (
 	id serial primary key,
 
-	name varchar(255) unique not null,
+	name varchar(255) unique, -- not null,
 	sensitivity common.sensitivity not null default 'High',
-	type common.location_type not null,
+	type common.location_type, -- not null,
+	iso_alpha3 char(3) unique,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -214,6 +245,7 @@ ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk fore
 create table common.education_entries (
   id serial primary key,
 
+  neo4j_id varchar(32) unique,
   degree varchar(64),
   institution varchar(64),
   major varchar(64),
@@ -223,7 +255,9 @@ create table common.education_entries (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (degree, institution, major)
 );
 
 create table common.education_by_person (
@@ -238,7 +272,9 @@ create table common.education_by_person (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (person, education)
 );
 
 -- ORGANIZATIONS ------------------------------------------------------------
@@ -246,7 +282,7 @@ create table common.education_by_person (
 create table common.organizations (
 	id serial primary key,
 
-	name varchar(255) unique not null,
+	name varchar(255) unique, -- not null
 	sensitivity common.sensitivity default 'High',
 	primary_location int references common.locations(id),
 
@@ -306,7 +342,7 @@ create type common.involvement_options as enum (
 create table common.coalitions(
   id serial primary key,
 
-  name varchar(64),
+  name varchar(64) unique not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -329,17 +365,22 @@ create table common.coalition_memberships(
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (coalition, organization)
 );
 
 -- FILES & DIRECTORIES ----------------------------------------------------------
 
 create table common.directories (
   id serial primary key,
+  neo4j_id varchar(32) unique,
 
   parent int references common.directories(id),
-  name varchar(255),
+  name varchar(255), -- not null
+  
 	-- todo
+	-- add derived data from sub-directories/files
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -351,26 +392,32 @@ create table common.directories (
 
 create table common.files (
   id serial primary key,
+  neo4j_id varchar(32),
 
-  directory int not null references common.directories(id),
-	name varchar(255),
+  directory int references common.directories(id), --not null
+	name varchar(255), -- not null
+
+  -- todo, derived data
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  owning_group int not null references admin.groups(id),
+
+  unique (directory, name)
 );
 
 create table common.file_versions (
   id serial primary key,
+  neo4j_id varchar(32),
 
   category varchar(255),
-  mime_type common.mime_type not null,
-  name varchar(255) not null,
-  file int not null references common.files(id),
-  file_url varchar(255) not null,
+  mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
+  name varchar(255), -- not null,
+  file int references common.files(id), -- not null
+  file_url varchar(255), -- not null,
   file_size int, -- bytes
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -456,7 +503,7 @@ create table common.work_records(
 
 create table common.work_estimates(
 	id serial primary key,
-
+    ticket int references common.tickets(id),
 	person int not null references admin.people(id),
 	hours int not null,
 	minutes int default 0,
@@ -578,6 +625,7 @@ create table common.prayer_requests(
 	id serial primary key,
 
   parent int references common.prayer_requests(id),
+  subject varchar(255) default null,
   content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,

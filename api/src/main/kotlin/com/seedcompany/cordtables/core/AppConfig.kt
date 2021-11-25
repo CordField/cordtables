@@ -51,6 +51,9 @@ class AppConfig(
     @Value("\${server.url}")
     val thisServerUrl: String,
 
+    @Value("\${cord.init.load-language-data}")
+    val loadLanguageData: Boolean = false,
+
 ) {
     @get:Bean
     val appConfig: AppConfig

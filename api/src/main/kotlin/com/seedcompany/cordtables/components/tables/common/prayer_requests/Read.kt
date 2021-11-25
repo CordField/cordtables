@@ -60,6 +60,7 @@ class Read(
                 columns = arrayOf(
                     "id",
                     "parent",
+                    "subject",
                     "content",
                     "created_at",
                     "created_by",
@@ -80,6 +81,9 @@ class Read(
 
                 var parent: Int? = jdbcResult.getInt("parent")
                 if (jdbcResult.wasNull()) parent = null
+
+                var subject: String? = jdbcResult.getString("subject")
+                if (jdbcResult.wasNull()) subject = null
 
                 var content: String? = jdbcResult.getString("content")
                 if (jdbcResult.wasNull()) content = null
@@ -106,6 +110,7 @@ class Read(
                     prayerRequest(
                         id = id,
                         parent = parent,
+                        subject = subject,
                         content = content,
                         created_at = created_at,
                         created_by = created_by,
