@@ -214,6 +214,7 @@ export namespace Components {
     interface SiteText {
     }
     interface SlackContent {
+        "selectedDiscussionChannel": CommonDiscussionChannel;
     }
     interface SlackPage {
     }
@@ -1197,6 +1198,7 @@ declare namespace LocalJSX {
     interface SiteText {
     }
     interface SlackContent {
+        "selectedDiscussionChannel"?: CommonDiscussionChannel;
     }
     interface SlackPage {
     }

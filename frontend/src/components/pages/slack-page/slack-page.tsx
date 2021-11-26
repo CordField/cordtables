@@ -37,7 +37,7 @@ export class SlackPage {
       <Host>
         <slot></slot>
         <slack-sidebar discussionChannels={this.discussionChannelsResponse} />
-        <slack-content />
+        <slack-content selectedDiscussionChannel={this.selectedDiscussionChannel} />
       </Host>
     );
   }
