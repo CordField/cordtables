@@ -6,10 +6,10 @@ type SiteTextLanguageRequest = {};
 type SiteTextLanguageResponse = GenericResponse & { data: SiteTextLanguage }
 
 export class SiteTextService {
-  public async loadSiteTextLanguages(): Promise<void> {
+  // public async loadSiteTextLanguages(): Promise<void> {
     // const result = await fetchAs<SiteTextLanguageRequest, SiteTextLanguageResponse>
     //   ('common/site-texts/languages/list', {});
-  }
+  // }
 
   public loadSiteTextTranslations(): void {}
 }
