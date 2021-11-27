@@ -53,6 +53,13 @@ export namespace Components {
     }
     interface CfNotif {
     }
+    interface CfPagination {
+        "currentPage": number;
+        "history": RouterHistory;
+        "pageUrl": string;
+        "resultsPerPage": number;
+        "totalRows": number;
+    }
     interface CfRegister {
         "history": RouterHistory;
     }
@@ -355,6 +362,12 @@ declare global {
     var HTMLCfNotifElement: {
         prototype: HTMLCfNotifElement;
         new (): HTMLCfNotifElement;
+    };
+    interface HTMLCfPaginationElement extends Components.CfPagination, HTMLStencilElement {
+    }
+    var HTMLCfPaginationElement: {
+        prototype: HTMLCfPaginationElement;
+        new (): HTMLCfPaginationElement;
     };
     interface HTMLCfRegisterElement extends Components.CfRegister, HTMLStencilElement {
     }
@@ -908,6 +921,7 @@ declare global {
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-notif": HTMLCfNotifElement;
+        "cf-pagination": HTMLCfPaginationElement;
         "cf-register": HTMLCfRegisterElement;
         "cf-row": HTMLCfRowElement;
         "cf-table": HTMLCfTableElement;
@@ -1043,6 +1057,14 @@ declare namespace LocalJSX {
         "history"?: RouterHistory;
     }
     interface CfNotif {
+    }
+    interface CfPagination {
+        "currentPage"?: number;
+        "history"?: RouterHistory;
+        "onPageChanged"?: (event: CustomEvent<number>) => void;
+        "pageUrl"?: string;
+        "resultsPerPage"?: number;
+        "totalRows"?: number;
     }
     interface CfRegister {
         "history"?: RouterHistory;
@@ -1266,6 +1288,7 @@ declare namespace LocalJSX {
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-notif": CfNotif;
+        "cf-pagination": CfPagination;
         "cf-register": CfRegister;
         "cf-row": CfRow;
         "cf-table": CfTable;
@@ -1378,6 +1401,7 @@ declare module "@stencil/core" {
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-notif": LocalJSX.CfNotif & JSXBase.HTMLAttributes<HTMLCfNotifElement>;
+            "cf-pagination": LocalJSX.CfPagination & JSXBase.HTMLAttributes<HTMLCfPaginationElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
             "cf-row": LocalJSX.CfRow & JSXBase.HTMLAttributes<HTMLCfRowElement>;
             "cf-table": LocalJSX.CfTable & JSXBase.HTMLAttributes<HTMLCfTableElement>;

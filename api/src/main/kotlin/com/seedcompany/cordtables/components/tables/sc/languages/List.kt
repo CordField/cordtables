@@ -17,12 +17,15 @@ import javax.sql.DataSource
 
 
 data class ScLanguagesListRequest(
-        val token: String?
+        val token: String?,
+        val page: Int,
+        val resultsPerPage: Int
 )
 
 data class ScLanguagesListResponse(
         val error: ErrorType,
-        val languages: MutableList<Language>?
+        val size: Int,
+        val languages: MutableList<Language>?,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -39,15 +42,21 @@ class List(
 ) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
+    var totalRows: Int = 0;
 
     @PostMapping("sc-languages/list")
     @ResponseBody
     fun listHandler(@RequestBody req: ScLanguagesListRequest): ScLanguagesListResponse {
         var data: MutableList<Language> = mutableListOf()
-        if (req.token == null) return ScLanguagesListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return ScLanguagesListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
+
+        var offset = (req.page-1)*req.resultsPerPage
+
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+        paramSource.addValue("limit", req.resultsPerPage)
+        paramSource.addValue("offset", offset)
         //language=SQL
         val query = """with row_level_access as
 (
@@ -2045,11 +2054,22 @@ or       id in
          (
                 select row
                 from   public_row_level_access)
-order by id;""".trimIndent()
+order by id
+""".trimIndent()
+
+        var limitQuery = "$query LIMIT :limit OFFSET :offset ";
 
 
         try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
+            // var countQuery = "$query return id ";
+
+            val resultRows = jdbcTemplate.queryForRowSet(query, paramSource)
+            resultRows.last();
+            totalRows = resultRows.getRow();
+
+            //println(totalRows)
+
+            val jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)
             while (jdbcResult.next()) {
 
                 var id: Int? = jdbcResult.getInt("id")
@@ -2373,9 +2393,9 @@ order by id;""".trimIndent()
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return ScLanguagesListResponse(ErrorType.SQLReadError, mutableListOf())
+            return ScLanguagesListResponse(ErrorType.SQLReadError, size=0, mutableListOf())
         }
 
-        return ScLanguagesListResponse(ErrorType.NoError, data)
+        return ScLanguagesListResponse(ErrorType.NoError, size=totalRows, data)
     }
 }
