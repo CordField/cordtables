@@ -10,6 +10,8 @@ import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
 import { CommonDiscussionChannel, CommonDiscussionChannelListResponse } from "./components/tables/common/discussion-channels/types";
+import { CommonPost } from "./components/tables/common/posts/types";
+import { CommonThread } from "./components/tables/common/threads/types";
 export namespace Components {
     interface AdminGroupMemberships {
     }
@@ -220,6 +222,10 @@ export namespace Components {
     }
     interface SlackSidebar {
         "discussionChannels": CommonDiscussionChannelListResponse;
+    }
+    interface SlackThread {
+        "thread": CommonThread;
+        "threadPosts": CommonPost[];
     }
     interface StageGraph {
     }
@@ -802,6 +808,12 @@ declare global {
         prototype: HTMLSlackSidebarElement;
         new (): HTMLSlackSidebarElement;
     };
+    interface HTMLSlackThreadElement extends Components.SlackThread, HTMLStencilElement {
+    }
+    var HTMLSlackThreadElement: {
+        prototype: HTMLSlackThreadElement;
+        new (): HTMLSlackThreadElement;
+    };
     interface HTMLStageGraphElement extends Components.StageGraph, HTMLStencilElement {
     }
     var HTMLStageGraphElement: {
@@ -973,6 +985,7 @@ declare global {
         "slack-content": HTMLSlackContentElement;
         "slack-page": HTMLSlackPageElement;
         "slack-sidebar": HTMLSlackSidebarElement;
+        "slack-thread": HTMLSlackThreadElement;
         "stage-graph": HTMLStageGraphElement;
         "stage-notifications": HTMLStageNotificationsElement;
         "stage-role-column-grants": HTMLStageRoleColumnGrantsElement;
@@ -1206,6 +1219,10 @@ declare namespace LocalJSX {
         "discussionChannels"?: CommonDiscussionChannelListResponse;
         "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
     }
+    interface SlackThread {
+        "thread"?: CommonThread;
+        "threadPosts"?: CommonPost[];
+    }
     interface StageGraph {
     }
     interface StageNotifications {
@@ -1326,6 +1343,7 @@ declare namespace LocalJSX {
         "slack-content": SlackContent;
         "slack-page": SlackPage;
         "slack-sidebar": SlackSidebar;
+        "slack-thread": SlackThread;
         "stage-graph": StageGraph;
         "stage-notifications": StageNotifications;
         "stage-role-column-grants": StageRoleColumnGrants;
@@ -1437,6 +1455,7 @@ declare module "@stencil/core" {
             "slack-content": LocalJSX.SlackContent & JSXBase.HTMLAttributes<HTMLSlackContentElement>;
             "slack-page": LocalJSX.SlackPage & JSXBase.HTMLAttributes<HTMLSlackPageElement>;
             "slack-sidebar": LocalJSX.SlackSidebar & JSXBase.HTMLAttributes<HTMLSlackSidebarElement>;
+            "slack-thread": LocalJSX.SlackThread & JSXBase.HTMLAttributes<HTMLSlackThreadElement>;
             "stage-graph": LocalJSX.StageGraph & JSXBase.HTMLAttributes<HTMLStageGraphElement>;
             "stage-notifications": LocalJSX.StageNotifications & JSXBase.HTMLAttributes<HTMLStageNotificationsElement>;
             "stage-role-column-grants": LocalJSX.StageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLStageRoleColumnGrantsElement>;
