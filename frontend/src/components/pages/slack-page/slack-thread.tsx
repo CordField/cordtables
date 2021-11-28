@@ -32,7 +32,11 @@ export class SlackThread {
           onClick={() => {
             this.showPosts = !this.showPosts;
           }}
+          class="slack-thread-content"
         >
+          <span class="post-indicator">
+            {this.threadPosts.length > 0 ? this.showPosts ? <span>&#128071;</span> : <span>&#x261e;</span> : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>}
+          </span>
           {this.thread.content}
         </div>
         {/* add button here to toggle visibility */}

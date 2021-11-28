@@ -54,15 +54,20 @@ export class SlackContent {
     const jsx =
       this.channelThreads === null ? (
         <div>Loading..</div>
-      ) : (
+      ) : this.channelThreads.length > 0 ? (
         <div>
           {this.channelThreads.map(thread => (
             <slack-thread threadPosts={this.channelPosts.filter(post => post.thread === thread.id)} thread={thread} />
           ))}
         </div>
+      ) : this.selectedDiscussionChannel !== null ? (
+        <div>No threads in this channel yet!</div>
+      ) : (
+        <div>No channels found!</div>
       );
+
     return (
-      <Host class="slack-content">
+      <Host>
         <slot></slot>
         {jsx}
       </Host>

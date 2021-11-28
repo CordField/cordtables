@@ -36,8 +36,10 @@ export class SlackPage {
     return (
       <Host>
         <slot></slot>
-        <slack-sidebar discussionChannels={this.discussionChannelsResponse} />
-        <slack-content selectedDiscussionChannel={this.selectedDiscussionChannel} />
+        <div class="slack-page">
+          <slack-sidebar discussionChannels={this.discussionChannelsResponse} />
+          <slack-content selectedDiscussionChannel={this.selectedDiscussionChannel} />
+        </div>
       </Host>
     );
   }
