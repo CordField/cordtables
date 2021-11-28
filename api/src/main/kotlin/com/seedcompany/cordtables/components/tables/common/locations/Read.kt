@@ -59,8 +59,9 @@ class Read(
                 columns = arrayOf(
                     "id",
                     "name",
-                    "type",
                     "sensitivity",
+                    "type",
+                    "iso_alpha3",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -81,11 +82,14 @@ class Read(
                 var name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) name = null
 
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
+
                 var type: String? = jdbcResult.getString("type")
                 if (jdbcResult.wasNull()) type = null
 
-                var sensitivity: String? = jdbcResult.getString("sensitivity")
-                if (jdbcResult.wasNull()) sensitivity = null
+                var iso_alpha3: String? = jdbcResult.getString("iso_alpha3")
+                if (jdbcResult.wasNull()) iso_alpha3 = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -109,8 +113,9 @@ class Read(
                     CommonLocation(
                         id = id,
                         name = name,
-                        type = if (type == null) null else LocationType.valueOf(type),
-                        sensitivity = if (sensitivity == null) null else CommonSensitivity.valueOf(sensitivity),
+                        sensitivity = sensitivity,
+                        type = type,
+                        iso_alpha3 = iso_alpha3,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

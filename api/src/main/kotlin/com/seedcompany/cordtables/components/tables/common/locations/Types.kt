@@ -6,9 +6,11 @@ import com.seedcompany.cordtables.common.CommonSensitivity
 data class CommonLocation(
     var id: Int? = null,
 
-    val sensitivity: CommonSensitivity? = null,
+
     val name: String? = null,
-    val type: LocationType? = null,
+    val sensitivity: String? = null,
+    val type: String? = null,
+    val iso_alpha3: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -24,6 +26,7 @@ data class CommonLocationInput(
     val sensitivity: CommonSensitivity? = null,
     val name: String? = null,
     val type: String? = null,
+    val iso_alpha3: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,

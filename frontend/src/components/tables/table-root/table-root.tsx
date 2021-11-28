@@ -81,7 +81,28 @@ export class TableRoot {
         {this.match.params.table === 'common-threads' && <common-threads></common-threads>}
         {this.match.params.table === 'common-posts' && <common-posts></common-posts>}
         {this.match.params.table === 'sc-languages' && <sc-languages></sc-languages>}
-        {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
+        
+
+
+        {/* {this.match.params.table === 'admin-users' && <admin-users></admin-users>} */}
+        {this.match.params.table === 'common-locations' && <common-locations></common-locations>}
+        {this.match.params.table === 'common-notes' && <common-notes></common-notes>}
+        {this.match.params.table === 'common-org-chart-positions' && <common-org-chart-positions></common-org-chart-positions>}
+        {this.match.params.table === 'common-org-chart-position-graph' && <common-org-chart-position-graph></common-org-chart-position-graph>}
+        {this.match.params.table === 'common-people-graph' && <common-people-graph></common-people-graph>}
+        {this.match.params.table === 'common-people-to-org-relationships' && <common-people-to-org-relationships></common-people-to-org-relationships>}
+        {this.match.params.table === 'common-stage-graph' && <common-stage-graph></common-stage-graph>}
+        {this.match.params.table === 'common-stage-notifications' && <common-stage-notifications></common-stage-notifications>}
+        {this.match.params.table === 'common-stage-role-column-grants' && <common-stage-role-column-grants></common-stage-role-column-grants>}
+        {this.match.params.table === 'common-stages' && <common-stages></common-stages>}
+        {this.match.params.table === 'common-workflows' && <common-workflows></common-workflows>}
+        {this.match.params.table === 'sc-ethnologue' && <sc-ethnologue></sc-ethnologue>} 
+        {this.match.params.table === 'sc-global-partner-transitions' && <sc-global-partner-transitions></sc-global-partner-transitions>}
+        {this.match.params.table === 'sc-people' && <sc-people></sc-people>}
+        
+
+
+
       </Host>
     );
   }

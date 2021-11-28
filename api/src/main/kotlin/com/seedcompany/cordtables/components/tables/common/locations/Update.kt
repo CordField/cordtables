@@ -71,6 +71,14 @@ class Update(
             cast = "::common.location_type"
         )
 
+        if (req.location.iso_alpha3 != null) util.updateField(
+            token = req.token,
+            table = "common.locations",
+            column = "iso_alpha3",
+            id = req.location.id!!,
+            value = req.location.iso_alpha3,
+        )
+
 
         if (req.location.owning_person != null) util.updateField(
             token = req.token,

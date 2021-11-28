@@ -2,162 +2,96 @@ package com.seedcompany.cordtables.components.tables.admin.users
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-// import com.seedcompany.cordtables.components.tables.admin.roles.CreateGlobalRoleResponse
+import com.seedcompany.cordtables.components.tables.admin.users.userInput
+import com.seedcompany.cordtables.components.tables.admin.users.Read
+import com.seedcompany.cordtables.components.tables.admin.users.Update
+import com.seedcompany.cordtables.components.user.RegisterReturn
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.reflect.full.memberProperties
 
-
-data class AdminUserCreateResponse(
-  val error: ErrorType,
-  val data: AdminUser?
+data class AdminUsersCreateRequest(
+    val token: String? = null,
+    val user: userInput,
 )
 
-data class AdminUserCreateRequest(
-  val insertedFields: AdminUser,
-  val token: String?,
-)
-
-data class AdminUser(
-  val id: Int?,
-  val person: Int?,
-  val email: String?,
-  val password: String?,
-  val chat: Int?,
-  val created_at: String?,
-  val created_by: Int?,
-  val modified_at: String?,
-  val modified_by: Int?,
-  val owning_person: Int?,
-  val owning_group: Int?,
+data class AdminUsersCreateResponse(
+    val error: ErrorType,
+    val id: Int? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("AdminUserCreate")
+@Controller("AdminUsersCreate")
 class Create(
-  @Autowired
+    @Autowired
     val util: Utility,
-    val adminUserUtil: AdminUserUtil,
 
-  @Autowired
+    @Autowired
     val ds: DataSource,
+
+    @Autowired
+    val update: Update,
+
+    @Autowired
+    val read: Read,
 ) {
-    @PostMapping("table/admin-users/create")
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+
+    @PostMapping("admin-users/create")
     @ResponseBody
-    fun createHandler(@RequestBody req: AdminUserCreateRequest): AdminUserCreateResponse {
+    fun createHandler(@RequestBody req: AdminUsersCreateRequest): AdminUsersCreateResponse {
 
-        if (req.token == null) return AdminUserCreateResponse(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return AdminUserCreateResponse(ErrorType.AdminOnly, null)
+        // if (req.user.name == null) return usersCreateResponse(error = ErrorType.InputMissingToken, null)
+        if (req.user.email == null || !util.isEmailValid(req.user.email)) return AdminUsersCreateResponse(ErrorType.InvalidEmail)
+        if (req.user.password == null || req.user.password.length < 8) return AdminUsersCreateResponse(ErrorType.PasswordTooShort)
+        if (req.user.password.length > 32) return AdminUsersCreateResponse(ErrorType.PasswordTooLong)
 
-        if (!util.userHasCreatePermission(req.token, "admin.users"))
-            return AdminUserCreateResponse(ErrorType.DoesNotHaveCreatePermission, null)
+        val pash = util.encoder.encode(req.user.password)
 
-        println("req: $req")
-        var insertedAdminUser: AdminUser? = null
-        var userId = 0
-        val reqValues: MutableList<Any> = mutableListOf()
-        this.ds.connection.use { conn ->
-            try {
-                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
-                getUserIdStatement.setString(1, req.token)
-                val getUserIdResult = getUserIdStatement.executeQuery()
-                if (getUserIdResult.next()) {
-                    userId = getUserIdResult.getInt("person")
-                    println("userId: $userId")
-                } else {
-                    throw SQLException("User not found")
-                }
-            } catch (e: SQLException) {
-                println(e.message)
-                return AdminUserCreateResponse(ErrorType.UserNotFound, null)
-            }
-            try {
-                var insertStatementKeys = "insert into admin.users("
-                var insertStatementValues = " values("
-                for (prop in AdminUser::class.memberProperties) {
-                    var propValue = prop.get(req.insertedFields)
-                    println("$propValue ${prop.name}")
-                    if (propValue != null && prop.name !in adminUserUtil.nonMutableColumns) {
-                        insertStatementKeys = "$insertStatementKeys ${prop.name},"
-                        insertStatementValues = "$insertStatementValues ?,"
-                        if(prop.name == "password") propValue = util.encoder.encode(propValue as String)
-                        reqValues.add(propValue as Any)
-                    }
-                }
-                insertStatementKeys = "$insertStatementKeys modified_by,created_by)"
-                insertStatementValues = "$insertStatementValues ?,?) returning *;"
-                val insertStatementSQL = "$insertStatementKeys $insertStatementValues"
-                println(insertStatementSQL)
-
-                val insertStatement = conn.prepareCall(
-                        insertStatementSQL
+        // create row with required fields, use id to update cells afterwards one by one
+        val id = jdbcTemplate.queryForObject(
+            """
+            insert into admin.users(person, email, password, created_by, modified_by, owning_person, owning_group)
+                values(
+                    ?,
+                    ?,
+                    ?,
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    1
                 )
+            returning id;
+        """.trimIndent(),
+            Int::class.java,
+            req.user.person,
+            req.user.email,
+            pash,
+            req.token,
+            req.token,
+            req.token,
+        )
 
-                var counter = 1
-                reqValues.forEach { value ->
-                    when (value) {
-                        is Int -> insertStatement.setInt(counter, value)
-                        is String -> insertStatement.setString(counter, value)
-                        is Double -> insertStatement.setDouble(counter, value)
-                        else -> insertStatement.setObject(counter, value, java.sql.Types.OTHER)
-                    }
-                    counter += 1
-                }
-                insertStatement.setInt(counter, userId)
-                insertStatement.setInt(counter + 1, userId)
+//        req.language.id = id
 
-
-                val insertStatementResult = insertStatement.executeQuery()
-
-
-                if (insertStatementResult.next()) {
-                    var id: Int? = insertStatementResult.getInt("id")
-                    if (insertStatementResult.wasNull()) id = null
-                    var person: Int? = insertStatementResult.getInt("person")
-                    if (insertStatementResult.wasNull()) person = null
-                    var email: String? = insertStatementResult.getString("email")
-                    if (insertStatementResult.wasNull()) email = null
-                    var chat: Int? = insertStatementResult.getInt("chat")
-                    if (insertStatementResult.wasNull()) chat = null
-                    var createdAt: String? = insertStatementResult.getString("created_at")
-                    if (insertStatementResult.wasNull()) createdAt = null
-                    var createdBy: Int? = insertStatementResult.getInt("created_by")
-                    if (insertStatementResult.wasNull()) createdBy = null
-                    var modifiedAt: String? = insertStatementResult.getString("modified_at")
-                    if (insertStatementResult.wasNull()) modifiedAt = null
-                    var modifiedBy: Int? = insertStatementResult.getInt("modified_by")
-                    if (insertStatementResult.wasNull()) modifiedBy = null
-                    var owningPerson: Int? = insertStatementResult.getInt("owning_person")
-                    if (insertStatementResult.wasNull()) owningPerson = null
-                    var owningGroup: Int? = insertStatementResult.getInt("owning_group")
-                    if (insertStatementResult.wasNull()) owningGroup = null
-
-                    insertedAdminUser = AdminUser(
-                        id= id,
-                        person = person,
-                        email = email,
-                        chat = chat,
-                        password = null,
-                        created_at = createdAt,
-                        created_by = createdBy,
-                        modified_at = modifiedAt,
-                        modified_by = modifiedBy,
-                        owning_person= owningPerson,
-                        owning_group =  owningGroup,
-                    )
-                    println("newly inserted id: $id")
-                }
-            } catch (e: SQLException) {
-                println(e.message)
-                return AdminUserCreateResponse(ErrorType.SQLInsertError, null)
-            }
-        }
-        return AdminUserCreateResponse(ErrorType.NoError, insertedAdminUser)
+        return AdminUsersCreateResponse(error = ErrorType.NoError, id = id)
     }
+
 }
