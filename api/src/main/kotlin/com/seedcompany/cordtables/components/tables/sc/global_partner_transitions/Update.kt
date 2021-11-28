@@ -71,7 +71,7 @@ class Update(
                 util.updateField(
                     token = req.token,
                     table = "sc.global_partner_transitions",
-                    column = "organization",
+                    column = "effective_date",
                     id = req.id,
                     value = req.value,
                     cast = "::timestamp"

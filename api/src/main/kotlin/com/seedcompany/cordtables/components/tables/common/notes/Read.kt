@@ -5,7 +5,7 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.common.notes.commonNote
+import com.seedcompany.cordtables.components.tables.common.notes.note
 import com.seedcompany.cordtables.components.tables.sc.locations.ScLocation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -25,7 +25,7 @@ data class CommonNotesReadRequest(
 
 data class CommonNotesReadResponse(
     val error: ErrorType,
-    val commonNote: commonNote? = null,
+    val note: note? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -110,8 +110,8 @@ class Read(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                val commonNote =
-                    commonNote(
+                val note =
+                    note(
                         id = id,
                         table_name = table_name,
                         column_name = column_name,
@@ -125,7 +125,7 @@ class Read(
                         owning_group = owning_group,
                     )
 
-                return CommonNotesReadResponse(ErrorType.NoError, commonNote = commonNote)
+                return CommonNotesReadResponse(ErrorType.NoError, note = note)
 
             }
         } catch (e: SQLException) {

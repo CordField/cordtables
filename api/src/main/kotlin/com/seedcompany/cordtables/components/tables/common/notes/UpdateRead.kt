@@ -4,8 +4,8 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.tables.common.notes.CommonNotesReadRequest
 import com.seedcompany.cordtables.components.tables.common.notes.CommonNotesUpdateRequest
-import com.seedcompany.cordtables.components.tables.common.notes.commonNote
-import com.seedcompany.cordtables.components.tables.common.notes.commonNoteInput
+import com.seedcompany.cordtables.components.tables.common.notes.note
+import com.seedcompany.cordtables.components.tables.common.notes.noteInput
 import com.seedcompany.cordtables.components.tables.sc.locations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -24,7 +24,7 @@ data class CommonNotesUpdateReadRequest(
 
 data class CommonNotesUpdateReadResponse(
     val error: ErrorType,
-    val commonNote: commonNote? = null,
+    val note: note? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -66,6 +66,6 @@ class UpdateRead(
             )
         )
 
-        return CommonNotesUpdateReadResponse(error = readResponse.error, readResponse.commonNote)
+        return CommonNotesUpdateReadResponse(error = readResponse.error, readResponse.note)
     }
 }

@@ -54,7 +54,7 @@ class Create(
             insert into sc.people(neo4j_id, skills, status, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
+                    ARRAY[?],
                     ?,
                     (
                       select person 

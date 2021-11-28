@@ -1,6 +1,6 @@
 package com.seedcompany.cordtables.components.tables.common.notes
 
-data class commonNote(
+data class note(
     var id: Int? = null,
 
     val table_name: String? = null,
@@ -16,7 +16,7 @@ data class commonNote(
     val owning_group: Int? = null,
 )
 
-data class commonNoteInput(
+data class noteInput(
     var id: Int? = null,
     val table_name: String? = null,
     val column_name: String? = null,

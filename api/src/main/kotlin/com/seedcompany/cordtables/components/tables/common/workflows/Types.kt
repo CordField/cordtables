@@ -1,5 +1,4 @@
 package com.seedcompany.cordtables.components.tables.common.workflows
-
 data class workflow(
     var id: Int? = null,
     val title: String? = null,

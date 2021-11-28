@@ -23,7 +23,7 @@ data class LoginRequest(
 data class LoginReturn(
     val error: ErrorType,
     val token: String? = null,
-    val readableTables: MutableList<String> = mutableListOf(),
+    val readableTables: List<String> = listOf(),
     val isAdmin: Boolean = false
 )
 

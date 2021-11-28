@@ -15,12 +15,12 @@ import javax.sql.DataSource
 
 data class CommonNotesCreateReadRequest(
     val token: String? = null,
-    val commonNote: commonNoteInput,
+    val note: noteInput,
 )
 
 data class CommonNotesCreateReadResponse(
     val error: ErrorType,
-    val commonNote: commonNote? = null,
+    val note: note? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -45,7 +45,7 @@ class CreateRead(
         val createResponse = create.createHandler(
             CommonNotesCreateRequest(
                 token = req.token,
-                commonNote = req.commonNote
+                note = req.note
             )
         )
 
@@ -60,6 +60,6 @@ class CreateRead(
             )
         )
 
-        return CommonNotesCreateReadResponse(error = readResponse.error, commonNote = readResponse.commonNote)
+        return CommonNotesCreateReadResponse(error = readResponse.error, note = readResponse.note)
     }
 }

@@ -24,7 +24,7 @@ data class CommonLocationsReadRequest(
 
 data class CommonLocationsReadResponse(
     val error: ErrorType,
-    val location: CommonLocation? = null,
+    val location: location? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -110,7 +110,7 @@ class Read(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val location =
-                    CommonLocation(
+                    location(
                         id = id,
                         name = name,
                         sensitivity = sensitivity,

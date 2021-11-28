@@ -5,7 +5,7 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.common.notes.commonNote
+import com.seedcompany.cordtables.components.tables.common.notes.note
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -24,7 +24,7 @@ data class CommonNotesListRequest(
 
 data class CommonNotesListResponse(
     val error: ErrorType,
-    val commonNotes: MutableList<commonNote>?
+    val notes: MutableList<note>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -45,7 +45,7 @@ class List(
     @PostMapping("common-notes/list")
     @ResponseBody
     fun listHandler(@RequestBody req:CommonNotesListRequest): CommonNotesListResponse {
-        var data: MutableList<commonNote> = mutableListOf()
+        var data: MutableList<note> = mutableListOf()
         if (req.token == null) return CommonNotesListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
@@ -109,7 +109,7 @@ class List(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
-                    commonNote(
+                    note(
                         id = id,
                         table_name = table_name,
                         column_name = column_name,

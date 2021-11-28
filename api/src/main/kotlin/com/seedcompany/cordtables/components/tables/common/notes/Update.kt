@@ -7,7 +7,7 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
 import com.seedcompany.cordtables.components.tables.common.notes.CommonNotesUpdateResponse
-import com.seedcompany.cordtables.components.tables.common.notes.commonNoteInput
+import com.seedcompany.cordtables.components.tables.common.notes.noteInput
 import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller

@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import io.swagger.v3.oas.annotations.Hidden
 
+@Hidden
 @RestController
 class IndexController(
 

@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.common.notes
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.common.notes.commonNoteInput
+import com.seedcompany.cordtables.components.tables.common.notes.noteInput
 import com.seedcompany.cordtables.components.tables.common.notes.Read
 import com.seedcompany.cordtables.components.tables.common.notes.Update
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +16,7 @@ import javax.sql.DataSource
 
 data class CommonNotesCreateRequest(
     val token: String? = null,
-    val commonNote: commonNoteInput,
+    val note: noteInput,
 )
 
 data class CommonNotesCreateResponse(
@@ -45,7 +45,7 @@ class Create(
     @ResponseBody
     fun createHandler(@RequestBody req: CommonNotesCreateRequest): CommonNotesCreateResponse {
 
-        // if (req.commonNote.name == null) return CommonNotesCreateResponse(error = ErrorType.InputMissingToken, null)
+        // if (req.note.name == null) return CommonNotesCreateResponse(error = ErrorType.InputMissingToken, null)
 
 
         // create row with required fields, use id to update cells afterwards one by one
@@ -77,10 +77,10 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
-            req.commonNote.table_name,
-            req.commonNote.column_name,
-            req.commonNote.row,
-            req.commonNote.content,
+            req.note.table_name,
+            req.note.column_name,
+            req.note.row,
+            req.note.content,
             req.token,
             req.token,
             req.token,

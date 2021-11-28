@@ -24,7 +24,7 @@ data class CommonLocationsListRequest(
 
 data class CommonLocationsListResponse(
     val error: ErrorType,
-    val locations: MutableList<CommonLocation>?
+    val locations: MutableList<location>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -45,7 +45,7 @@ class List(
     @PostMapping("common-locations/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonLocationsListRequest): CommonLocationsListResponse {
-        var data: MutableList<CommonLocation> = mutableListOf()
+        var data: MutableList<location> = mutableListOf()
         if (req.token == null) return CommonLocationsListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
@@ -110,7 +110,7 @@ class List(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
-                    CommonLocation(
+                    location(
                         id = id,
                         name = name,
                         sensitivity = sensitivity,

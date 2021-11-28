@@ -71,7 +71,7 @@ class Update(
                 util.updateField(
                     token = req.token,
                     table = "common.stage_role_column_grants",
-                    column = "role",
+                    column = "table_name",
                     id = req.id,
                     value = req.value,
                     cast = "::admin.table_name"
