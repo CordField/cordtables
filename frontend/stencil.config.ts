@@ -7,7 +7,7 @@ export const config: Config = {
     reloadStrategy: 'hmr',
     port: 3333,
   },
-  namespace: "Cordtable",
+  // namespace: "Cordtable",
   globalStyle: 'src/global/app.css',
   globalScript: 'src/global/app.ts',
   taskQueue: 'async',
