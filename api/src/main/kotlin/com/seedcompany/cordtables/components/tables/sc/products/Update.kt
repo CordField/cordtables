@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.jdbc.core.JdbcTemplate
 import javax.sql.DataSource
 
 data class ScProductsUpdateRequest(
@@ -38,6 +39,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
     @PostMapping("sc-products/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScProductsUpdateRequest): ScProductsUpdateResponse {
@@ -45,6 +47,69 @@ class Update(
         if (req.token == null) return ScProductsUpdateResponse(ErrorType.TokenNotFound)
         if (req.column == null) return ScProductsUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return ScProductsUpdateResponse(ErrorType.MissingId)
+
+        if (req.column == "mediums"){
+            jdbcTemplate.update(
+                """
+                    update sc.products
+                    set 
+                        mediums = ?::common.product_mediums[],
+                        modified_by = 
+                            (
+                              select person 
+                              from admin.tokens 
+                              where token = ?
+                            ),
+                        modified_at = CURRENT_TIMESTAMP
+                    where id = ?;
+                """.trimIndent(),
+                req.value,
+                req.token,
+                req.id,
+            )
+        }
+
+        if (req.column == "methodologies"){
+            jdbcTemplate.update(
+                """
+                    update sc.products
+                    set 
+                        methodologies = ?::common.product_methodologies[],
+                        modified_by = 
+                            (
+                              select person 
+                              from admin.tokens 
+                              where token = ?
+                            ),
+                        modified_at = CURRENT_TIMESTAMP
+                    where id = ?;
+                """.trimIndent(),
+                req.value,
+                req.token,
+                req.id,
+            )
+        }
+
+        if (req.column == "purposes"){
+            jdbcTemplate.update(
+                """
+                    update sc.products
+                    set 
+                        purposes = ?::common.product_purposes[],
+                        modified_by = 
+                            (
+                              select person 
+                              from admin.tokens 
+                              where token = ?
+                            ),
+                        modified_at = CURRENT_TIMESTAMP
+                    where id = ?;
+                """.trimIndent(),
+                req.value,
+                req.token,
+                req.id,
+            )
+        }
 
         when (req.column) {
             "neo4j_id" -> {
@@ -83,36 +148,6 @@ class Update(
                     id = req.id,
                     value = req.value,
                     cast = "::BOOLEAN"
-                )
-            }
-            "mediums" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.products",
-                    column = "mediums",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::common.product_mediums[]"
-                )
-            }
-            "methodologies" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.products",
-                    column = "methodologies",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::common.product_methodologies[]"
-                )
-            }
-            "purposes" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.products",
-                    column = "purposes",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::common.product_purposes[]"
                 )
             }
             "type" -> {

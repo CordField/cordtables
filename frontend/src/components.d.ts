@@ -147,7 +147,7 @@ export namespace Components {
     }
     interface RolesTable {
     }
-    interface ScBudgetRecords {
+    interface ScBudgetrecords {
     }
     interface ScBudgets {
     }
@@ -244,18 +244,26 @@ export namespace Components {
         "match": MatchResults;
     }
     interface TicketAssignments {
+        "onlyShowCreate": boolean;
     }
     interface TicketFeedback {
+        "onlyShowCreate": boolean;
     }
     interface TicketGraph {
+        "onlyShowCreate": boolean;
+    }
+    interface TicketsPage {
     }
     interface TicketsTable {
+        "onlyShowCreate": boolean;
     }
     interface UsersTable {
     }
     interface WorkEstimates {
+        "onlyShowCreate": boolean;
     }
     interface WorkRecords {
+        "onlyShowCreate": boolean;
     }
     interface WorkflowsTable {
     }
@@ -591,11 +599,11 @@ declare global {
         prototype: HTMLRolesTableElement;
         new (): HTMLRolesTableElement;
     };
-    interface HTMLScBudgetRecordsElement extends Components.ScBudgetRecords, HTMLStencilElement {
+    interface HTMLScBudgetrecordsElement extends Components.ScBudgetrecords, HTMLStencilElement {
     }
-    var HTMLScBudgetRecordsElement: {
-        prototype: HTMLScBudgetRecordsElement;
-        new (): HTMLScBudgetRecordsElement;
+    var HTMLScBudgetrecordsElement: {
+        prototype: HTMLScBudgetrecordsElement;
+        new (): HTMLScBudgetrecordsElement;
     };
     interface HTMLScBudgetsElement extends Components.ScBudgets, HTMLStencilElement {
     }
@@ -873,6 +881,12 @@ declare global {
         prototype: HTMLTicketGraphElement;
         new (): HTMLTicketGraphElement;
     };
+    interface HTMLTicketsPageElement extends Components.TicketsPage, HTMLStencilElement {
+    }
+    var HTMLTicketsPageElement: {
+        prototype: HTMLTicketsPageElement;
+        new (): HTMLTicketsPageElement;
+    };
     interface HTMLTicketsTableElement extends Components.TicketsTable, HTMLStencilElement {
     }
     var HTMLTicketsTableElement: {
@@ -959,7 +973,7 @@ declare global {
         "role-table-permissions": HTMLRoleTablePermissionsElement;
         "roles-page": HTMLRolesPageElement;
         "roles-table": HTMLRolesTableElement;
-        "sc-budget-records": HTMLScBudgetRecordsElement;
+        "sc-budgetrecords": HTMLScBudgetrecordsElement;
         "sc-budgets": HTMLScBudgetsElement;
         "sc-ceremonies": HTMLScCeremoniesElement;
         "sc-change-to-plan": HTMLScChangeToPlanElement;
@@ -1006,6 +1020,7 @@ declare global {
         "ticket-assignments": HTMLTicketAssignmentsElement;
         "ticket-feedback": HTMLTicketFeedbackElement;
         "ticket-graph": HTMLTicketGraphElement;
+        "tickets-page": HTMLTicketsPageElement;
         "tickets-table": HTMLTicketsTableElement;
         "users-table": HTMLUsersTableElement;
         "work-estimates": HTMLWorkEstimatesElement;
@@ -1154,7 +1169,7 @@ declare namespace LocalJSX {
     }
     interface RolesTable {
     }
-    interface ScBudgetRecords {
+    interface ScBudgetrecords {
     }
     interface ScBudgets {
     }
@@ -1254,18 +1269,26 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface TicketAssignments {
+        "onlyShowCreate"?: boolean;
     }
     interface TicketFeedback {
+        "onlyShowCreate"?: boolean;
     }
     interface TicketGraph {
+        "onlyShowCreate"?: boolean;
+    }
+    interface TicketsPage {
     }
     interface TicketsTable {
+        "onlyShowCreate"?: boolean;
     }
     interface UsersTable {
     }
     interface WorkEstimates {
+        "onlyShowCreate"?: boolean;
     }
     interface WorkRecords {
+        "onlyShowCreate"?: boolean;
     }
     interface WorkflowsTable {
     }
@@ -1325,7 +1348,7 @@ declare namespace LocalJSX {
         "role-table-permissions": RoleTablePermissions;
         "roles-page": RolesPage;
         "roles-table": RolesTable;
-        "sc-budget-records": ScBudgetRecords;
+        "sc-budgetrecords": ScBudgetrecords;
         "sc-budgets": ScBudgets;
         "sc-ceremonies": ScCeremonies;
         "sc-change-to-plan": ScChangeToPlan;
@@ -1372,6 +1395,7 @@ declare namespace LocalJSX {
         "ticket-assignments": TicketAssignments;
         "ticket-feedback": TicketFeedback;
         "ticket-graph": TicketGraph;
+        "tickets-page": TicketsPage;
         "tickets-table": TicketsTable;
         "users-table": UsersTable;
         "work-estimates": WorkEstimates;
@@ -1438,7 +1462,7 @@ declare module "@stencil/core" {
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
             "roles-page": LocalJSX.RolesPage & JSXBase.HTMLAttributes<HTMLRolesPageElement>;
             "roles-table": LocalJSX.RolesTable & JSXBase.HTMLAttributes<HTMLRolesTableElement>;
-            "sc-budget-records": LocalJSX.ScBudgetRecords & JSXBase.HTMLAttributes<HTMLScBudgetRecordsElement>;
+            "sc-budgetrecords": LocalJSX.ScBudgetrecords & JSXBase.HTMLAttributes<HTMLScBudgetrecordsElement>;
             "sc-budgets": LocalJSX.ScBudgets & JSXBase.HTMLAttributes<HTMLScBudgetsElement>;
             "sc-ceremonies": LocalJSX.ScCeremonies & JSXBase.HTMLAttributes<HTMLScCeremoniesElement>;
             "sc-change-to-plan": LocalJSX.ScChangeToPlan & JSXBase.HTMLAttributes<HTMLScChangeToPlanElement>;
@@ -1485,6 +1509,7 @@ declare module "@stencil/core" {
             "ticket-assignments": LocalJSX.TicketAssignments & JSXBase.HTMLAttributes<HTMLTicketAssignmentsElement>;
             "ticket-feedback": LocalJSX.TicketFeedback & JSXBase.HTMLAttributes<HTMLTicketFeedbackElement>;
             "ticket-graph": LocalJSX.TicketGraph & JSXBase.HTMLAttributes<HTMLTicketGraphElement>;
+            "tickets-page": LocalJSX.TicketsPage & JSXBase.HTMLAttributes<HTMLTicketsPageElement>;
             "tickets-table": LocalJSX.TicketsTable & JSXBase.HTMLAttributes<HTMLTicketsTableElement>;
             "users-table": LocalJSX.UsersTable & JSXBase.HTMLAttributes<HTMLUsersTableElement>;
             "work-estimates": LocalJSX.WorkEstimates & JSXBase.HTMLAttributes<HTMLWorkEstimatesElement>;

@@ -171,6 +171,20 @@ export class ScGlobalPartnerEngagementPeoples {
       displayName: 'Role',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Vendor", value: "Vendor"},
+        {display: "Customer", value: "Customer"},
+        {display: "Investor", value: "Investor"},
+        {display: "Associate", value: "Associate"},
+        {display: "Employee", value: "Employee"},
+        {display: "Member", value: "Member"},
+        {display: "Executive", value: "Executive"},
+        {display: "President/CEO", value: "President/CEO"},
+        {display: "Board of Directors", value: "Board of Directors"},
+        {display: "Retired", value: "Retired"},
+        {display: "Other", value: "Other"},
+        
+      ],
       updateFn: this.handleUpdate,
     },
     {

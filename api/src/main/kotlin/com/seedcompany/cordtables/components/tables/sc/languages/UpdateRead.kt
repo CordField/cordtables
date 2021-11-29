@@ -25,16 +25,16 @@ data class ScLanguagesUpdateReadResponse(
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("ScLanguagesUpdateRead")
 class UpdateRead(
-        @Autowired
+    @Autowired
         val util: Utility,
 
-        @Autowired
+    @Autowired
         val ds: DataSource,
 
-        @Autowired
+    @Autowired
         val update: Update,
 
-        @Autowired
+    @Autowired
         val read: Read,
 ) {
     @PostMapping("sc-languages/update-read")

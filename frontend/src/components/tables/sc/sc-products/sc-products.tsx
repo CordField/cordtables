@@ -222,6 +222,10 @@ export class ScProducts {
       displayName: 'Active',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -229,6 +233,12 @@ export class ScProducts {
       displayName: 'Mediums',
       width: 200,
       editable: true,
+      isMulti: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -236,6 +246,12 @@ export class ScProducts {
       displayName: 'Methodologies',
       width: 250,
       editable: true,
+      isMulti: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -243,6 +259,12 @@ export class ScProducts {
       displayName: 'Purposes',
       width: 250,
       editable: true,
+      isMulti: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -250,6 +272,13 @@ export class ScProducts {
       displayName: 'Type',
       width: 250,
       editable: true,
+      selectOptions: [
+        {display: "Film", value: "Film"},
+        {display: "Literacy Material", value: "Literacy Material"},
+        {display: "Scripture", value: "Scripture"},
+        {display: "Song", value: "Song"},
+        {display: "Story", value: "Story"},
+      ],
       updateFn: this.handleUpdate,
     },
 

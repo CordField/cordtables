@@ -244,6 +244,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Governance Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -251,6 +257,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Director Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -258,6 +270,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Identity Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -265,6 +283,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Growth Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -272,6 +296,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Comm Support Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -279,6 +309,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Systems Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -286,6 +322,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Fin Management Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -293,6 +335,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Hr Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -300,6 +348,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'It Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -307,6 +361,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Program Design Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -314,6 +374,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Tech Translation Trans',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -321,6 +387,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Director Opp',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -328,6 +400,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Financial Management Opp',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -335,6 +413,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Program Design Opp',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -342,6 +426,12 @@ export class ScGlobalPartnerAssessments {
       displayName: 'Tech Translation Opp',
       width: 200,
       editable: true,
+      selectOptions: [
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
+      ],
       updateFn: this.handleUpdate,
     },
     {

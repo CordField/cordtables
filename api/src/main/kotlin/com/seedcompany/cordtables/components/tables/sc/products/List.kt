@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
-import javax.sql.rowset.serial.SerialArray
-import kotlin.collections.List
+import  javax.sql.rowset.serial.SerialArray;
+
+import org.springframework.jdbc.core.RowMapper
+import java.sql.ResultSet
 
 
 data class ScProductsListRequest(
@@ -26,6 +28,8 @@ data class ScProductsListResponse(
     val error: ErrorType,
     val products: MutableList<product>?
 )
+
+data class Beer(val mediums: String)
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("ScProductsList")
@@ -50,6 +54,16 @@ class List<T>(
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+
+        var rowMapper: RowMapper<Beer> = RowMapper<Beer> { resultSet: ResultSet, rowIndex: Int ->
+            Beer(resultSet.getString("mediums"))
+        }
+
+        var results = jdbcTemplate.query("SELECT mediums FROM sc.products", rowMapper)
+
+        println("Original rows:")
+        results.forEach { rec -> println(rec.mediums) }
+
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
@@ -77,9 +91,18 @@ class List<T>(
             )
         ).query
 
+
+        println(query)
+        val q2 = "select mediums from sc.products"
+
         try {
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
+
+
             while (jdbcResult.next()) {
+
+                 //.getString("mediums")
+
 
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
@@ -96,11 +119,14 @@ class List<T>(
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
 //
-//                var mediums: String? =  jdbcResult.getString("mediums")
-//                if (jdbcResult.wasNull()) mediums = null
-
-                var mediums: SerialArray? = jdbcResult.getObject("mediums") as SerialArray
+                var mediums: String? =  jdbcResult.getString("mediums")
                 if (jdbcResult.wasNull()) mediums = null
+
+                println(mediums)
+//                var mediums: SerialArray? = jdbcResult.getObject("mediums") as SerialArray
+//                if (jdbcResult.wasNull()) mediums = null
+                // var mediumsar:Byte = jdbcResult.getByte("mediums")
+                //println(mediums.getArray())
 
                 var methodologies: String? = jdbcResult.getString("methodologies")
                 if (jdbcResult.wasNull()) methodologies = null
@@ -132,7 +158,7 @@ class List<T>(
                 if (jdbcResult.wasNull()) owning_group = null
 
 
-                println(mediums)
+               // println(mediums)
                 data.add(
                     product(
                         id = id,
@@ -141,7 +167,7 @@ class List<T>(
                         name = name,
                         change_to_plan = change_to_plan,
                         active = active,
-                        mediums = mediums , // (if (mediums == null) null else ProductMediums.split(",") ),
+                        mediums =   mediums , // (if (mediums == null) null else ProductMediums.split(",") ),
                         methodologies = methodologies,
                         purposes = purposes,
                         type = type,

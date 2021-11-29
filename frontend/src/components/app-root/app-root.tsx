@@ -14,7 +14,7 @@ export class AppRoot {
 
   @State() showSelect = false;
 
-  pages = ['Groups', 'Roles', 'Organizations', 'Slack'];
+  pages = ['Groups', 'Roles', 'Organizations', 'Slack', 'Tickets'];
 
   selectChange(event) {
     const table = event.target.value;
@@ -86,7 +86,7 @@ export class AppRoot {
                   </div>
                 </div>
 
-                <button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>
+                {this.path != '/page/tickets' && (<button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>)}
               </div>
             )}
           </div>
@@ -99,7 +99,8 @@ export class AppRoot {
                 <stencil-route url="/login" component="cf-login" />
 
                 <stencil-route url="/table/:table" component="table-root" />
-                <stencil-route url="/page/:page" component="page-root" />
+                
+                <stencil-route url="/page/:page/:requestId?" component="page-root" />
               </stencil-route-switch>
             </stencil-router>
           </main>
