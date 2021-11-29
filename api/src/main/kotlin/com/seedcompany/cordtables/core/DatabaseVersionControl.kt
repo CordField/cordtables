@@ -12,6 +12,10 @@ import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 import java.sql.PreparedStatement
+import java.sql.Timestamp
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.sql.DataSource
 
@@ -368,36 +372,53 @@ class DatabaseVersionControl(
                             urlConnection.inputStream)
             );
 
-            var query =
-                    "insert into sil.iso-639-3(_id, part_2b, part_2t, part_1, scope, type, ref_name, comment, created_by, modified_by, owning_person, owning_group) values "
             var count = 0
             var text:List<String>  = readBuffer.readLines()
 
-            for (line in text) {
-                val splitArray = line.split("\t")
-                val id = splitArray[0]
-                val part2b = splitArray[1]
-                val part2t = splitArray[2]
-                val part1 = splitArray[3]
-                val scope = splitArray[4]
-                val type = splitArray[5]
-                val refName = splitArray[6]
-                val comment = splitArray[7]
-                count++
-                if (count == 1) continue
-                query += "('${id}', '${part2b}', '${part2t}', '${part1}', '${scope}'::sil.iso_639_3_scope_options, '${type}'::sil.iso_639_3_type_options, '${refName}', '${comment}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+            this.ds.connection.use { conn ->
+                try {
+
+                    val insertSQL = """
+                        insert into sil.iso_639_3(_id, part_2b, part_2t, part_1, scope, type, ref_name, comment, created_by, modified_by, owning_person, owning_group)
+                        values  (?, ?, ?, ?, ?::sil.iso_639_3_scope_options, ?::sil.iso_639_3_type_options, ?, ?, ?, ?, ?, ?)"""
+                    val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
+
+                    for (line in text) {
+                        val splitArray = line.split("\t")
+                        val id = splitArray[0]
+                        val part2b = splitArray[1]
+                        val part2t = splitArray[2]
+                        val part1 = splitArray[3]
+                        val scope = splitArray[4]
+                        val type = splitArray[5]
+                        val refName = splitArray[6]
+                        val comment = splitArray[7]
+
+                        count++
+                        if (count == 1) continue
+                        insertStmt.setString(1, id)
+                        insertStmt.setString(2, part2b)
+                        insertStmt.setString(3, part2t)
+                        insertStmt.setString(4, part1)
+                        insertStmt.setString(5, scope)
+                        insertStmt.setString(6, type)
+                        insertStmt.setString(7, refName)
+                        insertStmt.setString(8, comment)
+                        insertStmt.setInt(9, adminPeopleId)
+                        insertStmt.setInt(10, adminPeopleId)
+                        insertStmt.setInt(11, adminPeopleId)
+                        insertStmt.setInt(12, adminPeopleId)
+
+                        insertStmt.addBatch()
+                    }
+                    insertStmt.executeBatch()
+
+                    println("iso-639-3.tab load success")
+                } catch (ex: Exception) {
+                    println(ex)
+                    println("iso-639-3.tab load filed")
+                }
             }
-            query = query.dropLast(2) + ";"
-
-            try {
-                runSqlString(query)
-                println("iso-639-3.tab load success")
-            } catch (ex: Exception) {
-                println(ex)
-
-                println("iso-639-3.tab load filed")
-            }
-
         } catch(ex: Exception) {
             println("exception ${ex}")
         }
@@ -418,34 +439,55 @@ class DatabaseVersionControl(
                             urlConnection.inputStream)
             );
 
-            var query =
-                    "insert into sil.iso-639-3_retirements(_id, ref_Name, ret_Reason, change_to, ret_remedy, effective, created_by, modified_by, owning_person, owning_group) values "
             var count = 0
             var text:List<String>  = readBuffer.readLines()
 
-            for (line in text) {
-                val splitArray = line.split("\t")
-                val id = splitArray[0]
-                val refName = splitArray[1]
-                val retReason = splitArray[2]
-                val changeTo = splitArray[3]
-                val retRemedy = splitArray[4]
-                val effective = splitArray[5]
-                count++
-                if (count == 1) continue
-                query += "('${id}', '${refName}', '${retReason}'::sil.iso_639_3_retirement_reason_options, '${changeTo}', '${retRemedy}', '${effective}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+            this.ds.connection.use { conn ->
+                try {
+
+                    val insertSQL = "insert into sil.iso_639_3_retirements(_id, ref_name, ret_reason, change_to, ret_remedy, effective, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_retirement_reason_options, ?, ?, ?, ?, ?, ?, ?)"
+                    val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
+
+                    for (line in text) {
+                        val splitArray = line.split("\t")
+                        count++
+                        if (count == 1) continue
+
+                        val id = splitArray[0]
+                        val refName = splitArray[1]
+                        var retReason: String? = splitArray[2]
+                        if(retReason!!.isEmpty()) retReason = null
+                        val changeTo = splitArray[3]
+                        val retRemedy = splitArray[4]
+                        val effective = splitArray[5]
+                        val pattern = "yyyy-MM-dd"
+                        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
+                        val localDate: LocalDate = LocalDate.from(formatter.parse(effective))
+                        val timestamp = Timestamp.valueOf(localDate.atStartOfDay())
+
+                        insertStmt.setString(1, id)
+                        insertStmt.setString(2, refName)
+                        insertStmt.setString(3, retReason)
+                        insertStmt.setString(4, changeTo)
+                        insertStmt.setString(5, retRemedy)
+                        insertStmt.setTimestamp(6, timestamp)
+                        insertStmt.setInt(7, adminPeopleId)
+                        insertStmt.setInt(8, adminPeopleId)
+                        insertStmt.setInt(9, adminPeopleId)
+                        insertStmt.setInt(10, adminPeopleId)
+
+                        insertStmt.addBatch()
+
+                    }
+                    insertStmt.executeBatch()
+
+                    println("iso-639-3_Retirements.tab load success")
+                } catch (ex: Exception) {
+                    println(ex)
+
+                    println("iso-639-3_Retirements.tab load filed")
+                }
             }
-            query = query.dropLast(2) + ";"
-
-            try {
-                runSqlString(query)
-                println("iso-639-3_Retirements.tab load success")
-            } catch (ex: Exception) {
-                println(ex)
-
-                println("iso-639-3_Retirements.tab load filed")
-            }
-
         } catch(ex: Exception) {
             println("exception ${ex}")
         }
@@ -464,31 +506,45 @@ class DatabaseVersionControl(
             val readBuffer = BufferedReader(
                     InputStreamReader(
                             urlConnection.inputStream)
-            );
+            )
 
-            var query =
-                    "insert into sil.iso_639_3_macrolanguages(m_id, i_id, i_status, created_by, modified_by, owning_person, owning_group) values "
             var count = 0
             var text:List<String>  = readBuffer.readLines()
 
-            for (line in text) {
-                val splitArray = line.split("\t")
-                val m_id = splitArray[0]
-                val i_id = splitArray[1]
-                val i_status = splitArray[2]
-                count++
-                if (count == 1) continue
-                query += "('${m_id}', '${i_id}', '${i_status}'::sil.iso_639_3_status_options, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
-            }
-            query = query.dropLast(2) + ";"
+            this.ds.connection.use { conn ->
+                try {
 
-            try {
-                runSqlString(query)
-                println("iso-639-3-macrolanguages.tab load success")
-            } catch (ex: Exception) {
-                println(ex)
+                    val insertSQL = "insert into sil.iso_639_3_macrolanguages(m_id, i_id, i_status, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_status_options, ?, ?, ?, ?)"
+                    val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
-                println("iso-639-3-macrolanguages.tab load filed")
+                    for (line in text) {
+                        val splitArray = line.split("\t")
+                        val m_id = splitArray[0]
+                        val i_id = splitArray[1]
+                        var i_status: String? = splitArray[2]
+                        if(i_status!!.isEmpty()) i_status = null
+
+                        count++
+                        if (count == 1) continue
+                        insertStmt.setString(1, m_id)
+                        insertStmt.setString(2, i_id)
+                        insertStmt.setString(3, i_status)
+                        insertStmt.setInt(4, adminPeopleId)
+                        insertStmt.setInt(5, adminPeopleId)
+                        insertStmt.setInt(6, adminPeopleId)
+                        insertStmt.setInt(7, adminPeopleId)
+
+                        insertStmt.addBatch()
+
+                    }
+                    insertStmt.executeBatch()
+
+                    println("iso-639-3-macrolanguages.tab load success")
+                } catch (ex: Exception) {
+                    println(ex)
+
+                    println("iso-639-3-macrolanguages.tab load filed")
+                }
             }
 
         } catch(ex: Exception) {
@@ -519,25 +575,25 @@ class DatabaseVersionControl(
             }
         }
 
-//        loadCountryCodes(adminPeopleId)
+        loadCountryCodes(adminPeopleId)
 
-//        loadLanguageCodes(adminPeopleId)
+        loadLanguageCodes(adminPeopleId)
 
-//        loadLanguageIndexes(adminPeopleId)
+        loadLanguageIndexes(adminPeopleId)
 
         loadIso_639_3_Name_Index(adminPeopleId)
 
-//        loadIso_639_3(adminPeopleId)
-//
-//        loadIso_639_3_Retirements(adminPeopleId)
-//
-//        loadIso_639_3_Macrolanguages(adminPeopleId)
+        loadIso_639_3(adminPeopleId)
+
+        loadIso_639_3_Retirements(adminPeopleId)
+
+        loadIso_639_3_Macrolanguages(adminPeopleId)
 
     }
 
     private fun setVersionNumber(newVersion: Int) {
         jdbcTemplate.update(
-            """country_codes
+            """
                 insert into admin.database_version_control(version, status, started, completed)
                     values(?, 'Completed', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
             """.trimIndent(),
