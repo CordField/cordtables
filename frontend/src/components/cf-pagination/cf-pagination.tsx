@@ -7,7 +7,6 @@ import { injectHistory, RouterHistory } from '@stencil/router';
   styleUrl: 'cf-pagination.css',
   shadow: true,
 })
-
 export class CfPagination {
   @Prop() history: RouterHistory;
   @Prop() currentPage: number;
