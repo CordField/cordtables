@@ -12,12 +12,12 @@ import javax.sql.DataSource
 
 data class CommonDiscussionChannelsCreateReadRequest(
     val token: String? = null,
-    val discussionchannel: DiscussionChannelInput,
+    val discussion_channel: DiscussionChannelInput,
 )
 
 data class CommonDiscussionChannelsCreateReadResponse(
     val error: ErrorType,
-    val discussionchannel: DiscussionChannel? = null,
+    val discussion_channel: DiscussionChannel? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -42,7 +42,7 @@ class CreateRead(
         val createResponse = create.createHandler(
             CommonDiscussionChannelsCreateRequest(
                 token = req.token,
-                discussionchannel = req.discussionchannel
+                discussion_channel = req.discussion_channel
             )
         )
 
@@ -57,6 +57,6 @@ class CreateRead(
             )
         )
 
-        return CommonDiscussionChannelsCreateReadResponse(error = readResponse.error, discussionchannel = readResponse.discussionchannel)
+        return CommonDiscussionChannelsCreateReadResponse(error = readResponse.error, discussion_channel = readResponse.discussion_channel)
     }
 }

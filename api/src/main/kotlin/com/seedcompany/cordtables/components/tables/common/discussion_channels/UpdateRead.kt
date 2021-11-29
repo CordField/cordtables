@@ -19,7 +19,7 @@ data class CommonDiscussionChannelsUpdateReadRequest(
 
 data class CommonDiscussionChannelsUpdateReadResponse(
     val error: ErrorType,
-    val discussionchannel: DiscussionChannel? = null,
+    val discussion_channel: DiscussionChannel? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -61,6 +61,6 @@ class UpdateRead(
             )
         )
 
-        return CommonDiscussionChannelsUpdateReadResponse(error = readResponse.error, readResponse.discussionchannel)
+        return CommonDiscussionChannelsUpdateReadResponse(error = readResponse.error, readResponse.discussion_channel)
     }
 }

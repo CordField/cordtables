@@ -13,7 +13,7 @@ import javax.sql.DataSource
 
 data class CommonDiscussionChannelsCreateRequest(
     val token: String? = null,
-    val discussionchannel: DiscussionChannelInput,
+    val discussion_channel: DiscussionChannelInput,
 )
 
 data class CommonDiscussionChannelsCreateResponse(
@@ -43,7 +43,7 @@ class Create(
     fun createHandler(@RequestBody req: CommonDiscussionChannelsCreateRequest): CommonDiscussionChannelsCreateResponse {
 
         if (req.token == null) return CommonDiscussionChannelsCreateResponse(error = ErrorType.InputMissingToken, null)
-        if (req.discussionchannel == null) return CommonDiscussionChannelsCreateResponse(error = ErrorType.MissingId, null)
+        if (req.discussion_channel == null) return CommonDiscussionChannelsCreateResponse(error = ErrorType.MissingId, null)
 
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
@@ -71,13 +71,13 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
-            req.discussionchannel.name,
+            req.discussion_channel.name,
             req.token,
             req.token,
             req.token,
         )
 
-        req.discussionchannel.id = id
+        req.discussion_channel.id = id
 
         return CommonDiscussionChannelsCreateResponse(error = ErrorType.NoError, id = id)
     }

@@ -9,6 +9,9 @@ import { MatchResults, RouterHistory } from "@stencil/router";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
+import { CommonDiscussionChannel, CommonDiscussionChannelListResponse } from "./components/tables/common/discussion-channels/types";
+import { CommonThread } from "./components/tables/common/threads/types";
+import { CommonPost } from "./components/tables/common/posts/types";
 export namespace Components {
     interface AdminGroupMemberships {
     }
@@ -124,12 +127,6 @@ export namespace Components {
     }
     interface OrganizationsTable {
     }
-    interface PageNotFound {
-        "history": RouterHistory;
-    }
-    interface PagePrayerRequests {
-        "history": RouterHistory;
-    }
     interface PageRoot {
         "match": MatchResults;
     }
@@ -138,13 +135,6 @@ export namespace Components {
     interface PeopleTable {
     }
     interface PeopleToOrgRelationships {
-    }
-    interface PrayerRequestEditPage {
-        "history": RouterHistory;
-        "requestId": any;
-    }
-    interface RequestPrayerPage {
-        "history": RouterHistory;
     }
     interface RoleColumnGrants {
         "history": RouterHistory;
@@ -224,6 +214,23 @@ export namespace Components {
     interface SilTableOfLanguages {
     }
     interface SiteText {
+    }
+    interface SlackContent {
+        "selectedDiscussionChannel": CommonDiscussionChannel;
+    }
+    interface SlackForm {
+        "selectedChannelId": number;
+        "selectedThreadId": number;
+        "type": 'thread' | 'post';
+    }
+    interface SlackPage {
+    }
+    interface SlackSidebar {
+        "discussionChannels": CommonDiscussionChannelListResponse;
+    }
+    interface SlackThread {
+        "thread": CommonThread;
+        "threadPosts": CommonPost[];
     }
     interface StageGraph {
     }
@@ -538,18 +545,6 @@ declare global {
         prototype: HTMLOrganizationsTableElement;
         new (): HTMLOrganizationsTableElement;
     };
-    interface HTMLPageNotFoundElement extends Components.PageNotFound, HTMLStencilElement {
-    }
-    var HTMLPageNotFoundElement: {
-        prototype: HTMLPageNotFoundElement;
-        new (): HTMLPageNotFoundElement;
-    };
-    interface HTMLPagePrayerRequestsElement extends Components.PagePrayerRequests, HTMLStencilElement {
-    }
-    var HTMLPagePrayerRequestsElement: {
-        prototype: HTMLPagePrayerRequestsElement;
-        new (): HTMLPagePrayerRequestsElement;
-    };
     interface HTMLPageRootElement extends Components.PageRoot, HTMLStencilElement {
     }
     var HTMLPageRootElement: {
@@ -573,18 +568,6 @@ declare global {
     var HTMLPeopleToOrgRelationshipsElement: {
         prototype: HTMLPeopleToOrgRelationshipsElement;
         new (): HTMLPeopleToOrgRelationshipsElement;
-    };
-    interface HTMLPrayerRequestEditPageElement extends Components.PrayerRequestEditPage, HTMLStencilElement {
-    }
-    var HTMLPrayerRequestEditPageElement: {
-        prototype: HTMLPrayerRequestEditPageElement;
-        new (): HTMLPrayerRequestEditPageElement;
-    };
-    interface HTMLRequestPrayerPageElement extends Components.RequestPrayerPage, HTMLStencilElement {
-    }
-    var HTMLRequestPrayerPageElement: {
-        prototype: HTMLRequestPrayerPageElement;
-        new (): HTMLRequestPrayerPageElement;
     };
     interface HTMLRoleColumnGrantsElement extends Components.RoleColumnGrants, HTMLStencilElement {
     }
@@ -820,6 +803,36 @@ declare global {
         prototype: HTMLSiteTextElement;
         new (): HTMLSiteTextElement;
     };
+    interface HTMLSlackContentElement extends Components.SlackContent, HTMLStencilElement {
+    }
+    var HTMLSlackContentElement: {
+        prototype: HTMLSlackContentElement;
+        new (): HTMLSlackContentElement;
+    };
+    interface HTMLSlackFormElement extends Components.SlackForm, HTMLStencilElement {
+    }
+    var HTMLSlackFormElement: {
+        prototype: HTMLSlackFormElement;
+        new (): HTMLSlackFormElement;
+    };
+    interface HTMLSlackPageElement extends Components.SlackPage, HTMLStencilElement {
+    }
+    var HTMLSlackPageElement: {
+        prototype: HTMLSlackPageElement;
+        new (): HTMLSlackPageElement;
+    };
+    interface HTMLSlackSidebarElement extends Components.SlackSidebar, HTMLStencilElement {
+    }
+    var HTMLSlackSidebarElement: {
+        prototype: HTMLSlackSidebarElement;
+        new (): HTMLSlackSidebarElement;
+    };
+    interface HTMLSlackThreadElement extends Components.SlackThread, HTMLStencilElement {
+    }
+    var HTMLSlackThreadElement: {
+        prototype: HTMLSlackThreadElement;
+        new (): HTMLSlackThreadElement;
+    };
     interface HTMLStageGraphElement extends Components.StageGraph, HTMLStencilElement {
     }
     var HTMLStageGraphElement: {
@@ -951,14 +964,10 @@ declare global {
         "locations-table": HTMLLocationsTableElement;
         "organizations-page": HTMLOrganizationsPageElement;
         "organizations-table": HTMLOrganizationsTableElement;
-        "page-not-found": HTMLPageNotFoundElement;
-        "page-prayer-requests": HTMLPagePrayerRequestsElement;
         "page-root": HTMLPageRootElement;
         "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
         "people-to-org-relationships": HTMLPeopleToOrgRelationshipsElement;
-        "prayer-request-edit-page": HTMLPrayerRequestEditPageElement;
-        "request-prayer-page": HTMLRequestPrayerPageElement;
         "role-column-grants": HTMLRoleColumnGrantsElement;
         "role-memberships": HTMLRoleMembershipsElement;
         "role-table-permissions": HTMLRoleTablePermissionsElement;
@@ -998,6 +1007,11 @@ declare global {
         "sil-languages-codes": HTMLSilLanguagesCodesElement;
         "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
         "site-text": HTMLSiteTextElement;
+        "slack-content": HTMLSlackContentElement;
+        "slack-form": HTMLSlackFormElement;
+        "slack-page": HTMLSlackPageElement;
+        "slack-sidebar": HTMLSlackSidebarElement;
+        "slack-thread": HTMLSlackThreadElement;
         "stage-graph": HTMLStageGraphElement;
         "stage-notifications": HTMLStageNotificationsElement;
         "stage-role-column-grants": HTMLStageRoleColumnGrantsElement;
@@ -1135,12 +1149,6 @@ declare namespace LocalJSX {
     }
     interface OrganizationsTable {
     }
-    interface PageNotFound {
-        "history"?: RouterHistory;
-    }
-    interface PagePrayerRequests {
-        "history"?: RouterHistory;
-    }
     interface PageRoot {
         "match"?: MatchResults;
     }
@@ -1149,13 +1157,6 @@ declare namespace LocalJSX {
     interface PeopleTable {
     }
     interface PeopleToOrgRelationships {
-    }
-    interface PrayerRequestEditPage {
-        "history"?: RouterHistory;
-        "requestId"?: any;
-    }
-    interface RequestPrayerPage {
-        "history"?: RouterHistory;
     }
     interface RoleColumnGrants {
         "history"?: RouterHistory;
@@ -1235,6 +1236,26 @@ declare namespace LocalJSX {
     interface SilTableOfLanguages {
     }
     interface SiteText {
+    }
+    interface SlackContent {
+        "selectedDiscussionChannel"?: CommonDiscussionChannel;
+    }
+    interface SlackForm {
+        "onPostAdded"?: (event: CustomEvent<CommonPost>) => void;
+        "onThreadAdded"?: (event: CustomEvent<CommonThread>) => void;
+        "selectedChannelId"?: number;
+        "selectedThreadId"?: number;
+        "type"?: 'thread' | 'post';
+    }
+    interface SlackPage {
+    }
+    interface SlackSidebar {
+        "discussionChannels"?: CommonDiscussionChannelListResponse;
+        "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
+    }
+    interface SlackThread {
+        "thread"?: CommonThread;
+        "threadPosts"?: CommonPost[];
     }
     interface StageGraph {
     }
@@ -1318,14 +1339,10 @@ declare namespace LocalJSX {
         "locations-table": LocationsTable;
         "organizations-page": OrganizationsPage;
         "organizations-table": OrganizationsTable;
-        "page-not-found": PageNotFound;
-        "page-prayer-requests": PagePrayerRequests;
         "page-root": PageRoot;
         "peers-table": PeersTable;
         "people-table": PeopleTable;
         "people-to-org-relationships": PeopleToOrgRelationships;
-        "prayer-request-edit-page": PrayerRequestEditPage;
-        "request-prayer-page": RequestPrayerPage;
         "role-column-grants": RoleColumnGrants;
         "role-memberships": RoleMemberships;
         "role-table-permissions": RoleTablePermissions;
@@ -1365,6 +1382,11 @@ declare namespace LocalJSX {
         "sil-languages-codes": SilLanguagesCodes;
         "sil-table-of-languages": SilTableOfLanguages;
         "site-text": SiteText;
+        "slack-content": SlackContent;
+        "slack-form": SlackForm;
+        "slack-page": SlackPage;
+        "slack-sidebar": SlackSidebar;
+        "slack-thread": SlackThread;
         "stage-graph": StageGraph;
         "stage-notifications": StageNotifications;
         "stage-role-column-grants": StageRoleColumnGrants;
@@ -1431,14 +1453,10 @@ declare module "@stencil/core" {
             "locations-table": LocalJSX.LocationsTable & JSXBase.HTMLAttributes<HTMLLocationsTableElement>;
             "organizations-page": LocalJSX.OrganizationsPage & JSXBase.HTMLAttributes<HTMLOrganizationsPageElement>;
             "organizations-table": LocalJSX.OrganizationsTable & JSXBase.HTMLAttributes<HTMLOrganizationsTableElement>;
-            "page-not-found": LocalJSX.PageNotFound & JSXBase.HTMLAttributes<HTMLPageNotFoundElement>;
-            "page-prayer-requests": LocalJSX.PagePrayerRequests & JSXBase.HTMLAttributes<HTMLPagePrayerRequestsElement>;
             "page-root": LocalJSX.PageRoot & JSXBase.HTMLAttributes<HTMLPageRootElement>;
             "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "people-to-org-relationships": LocalJSX.PeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLPeopleToOrgRelationshipsElement>;
-            "prayer-request-edit-page": LocalJSX.PrayerRequestEditPage & JSXBase.HTMLAttributes<HTMLPrayerRequestEditPageElement>;
-            "request-prayer-page": LocalJSX.RequestPrayerPage & JSXBase.HTMLAttributes<HTMLRequestPrayerPageElement>;
             "role-column-grants": LocalJSX.RoleColumnGrants & JSXBase.HTMLAttributes<HTMLRoleColumnGrantsElement>;
             "role-memberships": LocalJSX.RoleMemberships & JSXBase.HTMLAttributes<HTMLRoleMembershipsElement>;
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
@@ -1478,6 +1496,11 @@ declare module "@stencil/core" {
             "sil-languages-codes": LocalJSX.SilLanguagesCodes & JSXBase.HTMLAttributes<HTMLSilLanguagesCodesElement>;
             "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
             "site-text": LocalJSX.SiteText & JSXBase.HTMLAttributes<HTMLSiteTextElement>;
+            "slack-content": LocalJSX.SlackContent & JSXBase.HTMLAttributes<HTMLSlackContentElement>;
+            "slack-form": LocalJSX.SlackForm & JSXBase.HTMLAttributes<HTMLSlackFormElement>;
+            "slack-page": LocalJSX.SlackPage & JSXBase.HTMLAttributes<HTMLSlackPageElement>;
+            "slack-sidebar": LocalJSX.SlackSidebar & JSXBase.HTMLAttributes<HTMLSlackSidebarElement>;
+            "slack-thread": LocalJSX.SlackThread & JSXBase.HTMLAttributes<HTMLSlackThreadElement>;
             "stage-graph": LocalJSX.StageGraph & JSXBase.HTMLAttributes<HTMLStageGraphElement>;
             "stage-notifications": LocalJSX.StageNotifications & JSXBase.HTMLAttributes<HTMLStageNotificationsElement>;
             "stage-role-column-grants": LocalJSX.StageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLStageRoleColumnGrantsElement>;
