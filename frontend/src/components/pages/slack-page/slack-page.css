@@ -52,6 +52,29 @@ slack-thread {
 .post-indicator {
   margin-right: 3px;
 }
+.post-count {
+  color: #9ca3af;
+}
+
+.slack-form-button {
+  color: #3c6a29;
+  background-color: #f0f7ec;
+  border: none;
+  margin-left: 3px;
+  outline: none;
+}
+.slack-form-button:hover,
+.slack-form-button:focus {
+  background-color: #3c6a29;
+  color: #f0f7ec;
+}
+
+.slack-form {
+  margin-top: 2px;
+}
+.slack-form-last {
+  margin-top: 2.5rem;
+}
 
 /* 
 .discussion-channel {

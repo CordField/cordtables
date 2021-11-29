@@ -19,6 +19,7 @@ export class SlackPage {
 
   async componentWillLoad() {
     await this.getDiscussionChannels();
+    this.selectedDiscussionChannel = this.discussionChannelsResponse.discussion_channels[0];
   }
   async getDiscussionChannels() {
     this.discussionChannelsResponse = await fetchAs<CommonDiscussionChannelListRequest, CommonDiscussionChannelListResponse>('common-discussion-channels/list', {

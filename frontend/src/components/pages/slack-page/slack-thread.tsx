@@ -13,19 +13,21 @@ import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse } fro
   shadow: true,
 })
 export class SlackThread {
-  @Prop() threadPosts: CommonPost[];
+  @Prop({ mutable: true }) threadPosts: CommonPost[];
   @Prop() thread: CommonThread;
   @State() showPosts: Boolean = false;
+  // @State() showForm: Boolean = false;
   componentDidLoad() {
     console.log('slackthread', this.thread);
   }
-  // togglePostsVisibility() {
-  //   console.log(this.showPosts);
-  //   if (this.showPosts === true) this.showPosts = false;
-  //   else this.showPosts = true;
-  // }
+  @Listen('postAdded')
+  postAddedHandler(event: CustomEvent<CommonPost>) {
+    console.log('event received', event);
+    this.threadPosts = this.threadPosts.concat(event.detail);
+  }
 
   render() {
+    // figure out a way to make this cleaner code
     const jsx = (
       <div>
         <div
@@ -34,11 +36,12 @@ export class SlackThread {
           }}
           class="slack-thread-content"
         >
-          <span class="post-indicator">
-            {this.threadPosts.length > 0 ? this.showPosts ? <span>&#128071;</span> : <span>&#x261e;</span> : <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>}
-          </span>
-          {this.thread.content}
+          <span class="post-indicator">{this.showPosts ? <span>&#128071;</span> : <span>&#x261e;</span>}</span>
+          {this.thread.content} <span class="post-count">{this.threadPosts.length}</span>
         </div>
+        {/* <span class="form-indicator" onClick={() => (this.showForm = !this.showForm)}>
+          {this.showForm === false ? <span>&#43;</span> : <span>&#8722;</span>}
+        </span> */}
         {/* add button here to toggle visibility */}
         <div class="thread-posts">{this.showPosts && this.threadPosts.map(post => <div>{post.content}</div>)}</div>
       </div>
@@ -48,6 +51,7 @@ export class SlackThread {
       <Host class="slack-thread">
         <slot></slot>
         {jsx}
+        {this.showPosts && <slack-form type="post" selectedThreadId={this.thread.id} />}
       </Host>
     );
   }

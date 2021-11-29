@@ -28,6 +28,12 @@ export class SlackContent {
       this.channelPosts = this.postListResponse.posts.filter(post => this.channelThreads.findIndex(thread => thread.id === post.thread) !== -1);
     }
   }
+  @Listen('threadAdded')
+  handleThreadAddedChange(event: CustomEvent<CommonThread>) {
+    if (this.threadListResponse.error === ErrorType.NoError) {
+      this.channelThreads = this.channelThreads.concat(event.detail);
+    }
+  }
   async componentWillLoad() {
     this.threadListResponse = await this.getThreads();
     if (this.selectedDiscussionChannel && this.threadListResponse.error === ErrorType.NoError) {
@@ -51,7 +57,7 @@ export class SlackContent {
   }
 
   render() {
-    const jsx =
+    const threadsJsx =
       this.channelThreads === null ? (
         <div>Loading..</div>
       ) : this.channelThreads.length > 0 ? (
@@ -69,7 +75,8 @@ export class SlackContent {
     return (
       <Host>
         <slot></slot>
-        {jsx}
+        {threadsJsx}
+        <slack-form selectedChannelId={this.selectedDiscussionChannel?.id} type="thread" />
       </Host>
     );
   }
