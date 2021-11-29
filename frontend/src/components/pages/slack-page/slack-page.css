@@ -1,0 +1,82 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+}
+
+.slack-page {
+  margin: 5px 0px;
+  display: flex;
+  width: 100%;
+}
+slack-sidebar {
+  display: flex;
+  width: 25%;
+  flex-direction: column;
+  padding: 0 1.25rem;
+}
+.discussion-channel {
+  user-select: none;
+  padding: 5px 5px;
+}
+.discussion-channel:hover {
+  cursor: pointer;
+}
+
+.selected-discussion-channel {
+  /* font-size: 400px; */
+  color: #3c6a29;
+  background-color: #f0f7ec;
+  width: fit-content;
+}
+
+slack-content {
+  /* display: flex; */
+  margin-left: auto;
+  width: calc(75% - 5rem);
+  padding: 0 2.5rem;
+}
+
+slack-thread {
+  padding: 0px 1rem 1.5rem 1rem;
+}
+.slack-thread-content {
+  user-select: none;
+}
+.slack-thread-content:hover {
+  cursor: pointer;
+}
+
+.thread-posts {
+  margin-left: 2.5rem;
+}
+.post-indicator {
+  margin-right: 3px;
+}
+.post-count {
+  color: #9ca3af;
+}
+
+.slack-form-button {
+  color: #3c6a29;
+  background-color: #f0f7ec;
+  border: none;
+  margin-left: 3px;
+  outline: none;
+}
+.slack-form-button:hover,
+.slack-form-button:focus {
+  background-color: #3c6a29;
+  color: #f0f7ec;
+}
+
+.slack-form {
+  margin-top: 2px;
+}
+.slack-form-last {
+  margin-top: 2.5rem;
+}
+
+/* 
+.discussion-channel {
+  color: red;
+} */
