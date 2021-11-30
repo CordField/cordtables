@@ -44,7 +44,7 @@ class DeleteBudgetRecordResponse extends GenericResponse {
 }
 
 @Component({
-  tag: 'sc-budgetrecords',
+  tag: 'sc-budget-records',
   styleUrl: 'sc-budget-records.css',
   shadow: true,
 })

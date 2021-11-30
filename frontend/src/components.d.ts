@@ -147,7 +147,7 @@ export namespace Components {
     }
     interface RolesTable {
     }
-    interface ScBudgetrecords {
+    interface ScBudgetRecords {
     }
     interface ScBudgets {
     }
@@ -599,11 +599,11 @@ declare global {
         prototype: HTMLRolesTableElement;
         new (): HTMLRolesTableElement;
     };
-    interface HTMLScBudgetrecordsElement extends Components.ScBudgetrecords, HTMLStencilElement {
+    interface HTMLScBudgetRecordsElement extends Components.ScBudgetRecords, HTMLStencilElement {
     }
-    var HTMLScBudgetrecordsElement: {
-        prototype: HTMLScBudgetrecordsElement;
-        new (): HTMLScBudgetrecordsElement;
+    var HTMLScBudgetRecordsElement: {
+        prototype: HTMLScBudgetRecordsElement;
+        new (): HTMLScBudgetRecordsElement;
     };
     interface HTMLScBudgetsElement extends Components.ScBudgets, HTMLStencilElement {
     }
@@ -973,7 +973,7 @@ declare global {
         "role-table-permissions": HTMLRoleTablePermissionsElement;
         "roles-page": HTMLRolesPageElement;
         "roles-table": HTMLRolesTableElement;
-        "sc-budgetrecords": HTMLScBudgetrecordsElement;
+        "sc-budget-records": HTMLScBudgetRecordsElement;
         "sc-budgets": HTMLScBudgetsElement;
         "sc-ceremonies": HTMLScCeremoniesElement;
         "sc-change-to-plan": HTMLScChangeToPlanElement;
@@ -1169,7 +1169,7 @@ declare namespace LocalJSX {
     }
     interface RolesTable {
     }
-    interface ScBudgetrecords {
+    interface ScBudgetRecords {
     }
     interface ScBudgets {
     }
@@ -1348,7 +1348,7 @@ declare namespace LocalJSX {
         "role-table-permissions": RoleTablePermissions;
         "roles-page": RolesPage;
         "roles-table": RolesTable;
-        "sc-budgetrecords": ScBudgetrecords;
+        "sc-budget-records": ScBudgetRecords;
         "sc-budgets": ScBudgets;
         "sc-ceremonies": ScCeremonies;
         "sc-change-to-plan": ScChangeToPlan;
@@ -1462,7 +1462,7 @@ declare module "@stencil/core" {
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
             "roles-page": LocalJSX.RolesPage & JSXBase.HTMLAttributes<HTMLRolesPageElement>;
             "roles-table": LocalJSX.RolesTable & JSXBase.HTMLAttributes<HTMLRolesTableElement>;
-            "sc-budgetrecords": LocalJSX.ScBudgetrecords & JSXBase.HTMLAttributes<HTMLScBudgetrecordsElement>;
+            "sc-budget-records": LocalJSX.ScBudgetRecords & JSXBase.HTMLAttributes<HTMLScBudgetRecordsElement>;
             "sc-budgets": LocalJSX.ScBudgets & JSXBase.HTMLAttributes<HTMLScBudgetsElement>;
             "sc-ceremonies": LocalJSX.ScCeremonies & JSXBase.HTMLAttributes<HTMLScCeremoniesElement>;
             "sc-change-to-plan": LocalJSX.ScChangeToPlan & JSXBase.HTMLAttributes<HTMLScChangeToPlanElement>;
