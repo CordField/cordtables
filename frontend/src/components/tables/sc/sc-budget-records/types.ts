@@ -1,14 +1,11 @@
 export type ScBudgetRecord = {
     id?: number | undefined;
-    neo4j_id?: string | undefined;
-  
-    budget?: number | undefined;
+    budget?: number;
     change_to_plan?: number | undefined;
     active?: boolean | undefined;
     amount?: number | undefined;
     fiscal_year?: number | undefined;
     partnership?: number | undefined;
-  
     created_at?: string | undefined;
     created_by?: number | undefined;
     modified_at?: string | undefined;
