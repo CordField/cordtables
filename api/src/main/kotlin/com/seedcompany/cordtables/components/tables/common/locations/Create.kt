@@ -15,7 +15,7 @@ import javax.sql.DataSource
 
 data class CommonLocationsCreateRequest(
     val token: String? = null,
-    val location: CommonLocationInput,
+    val location: locationInput,
 )
 
 data class CommonLocationsCreateResponse(
@@ -61,14 +61,18 @@ class Create(
             """
             insert into common.locations(
                 name,
+                sensitivity,
                 type,
+                iso_alpha3,
                 created_by, 
                 modified_by, 
                 owning_person, 
                 owning_group)
             values(
                 ?,
+                ?::common.sensitivity,
                 ?::common.location_type,
+                ?,
                 (
                   select person 
                   from admin.tokens 
@@ -90,23 +94,13 @@ class Create(
         """.trimIndent(),
             Int::class.java,
             req.location.name,
+            req.location.sensitivity,
             req.location.type,
+            req.location.iso_alpha3,
             req.token,
             req.token,
             req.token,
         )
-
-        req.location.id = id
-        val updateResponse = update.updateHandler(
-            CommonLocationsUpdateRequest(
-                token = req.token,
-                location = req.location,
-            )
-        )
-
-        if (updateResponse.error != ErrorType.NoError) {
-            return CommonLocationsCreateResponse(updateResponse.error)
-        }
 
         return CommonLocationsCreateResponse(error = ErrorType.NoError, id = id)
     }

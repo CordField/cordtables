@@ -1,46 +1,51 @@
 import { Component, Host, h, State } from '@stencil/core';
+import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
-import { AdminUser } from '../../../../common/types';
-import './admin-users.css';
+import { v4 as uuidv4 } from 'uuid';
 
-type MutableAdminUserFields = Omit<AdminUser, 'id' | 'createdAt' | 'createdBy' | 'modifiedAt' | 'modifiedBy'>;
+class CreateUserExRequest {
+  token: string;
+  user: {
+    person?: number;
+    email?: string;
+    password?: string;
+  };
+}
+class CreateUserExResponse extends GenericResponse {
+  user: AdminUser;
+}
 
-class CreateAdminUserRequest {
-  insertedFields: MutableAdminUserFields;
+class AdminUserListRequest {
   token: string;
 }
-class CreateAdminUserResponse extends GenericResponse {
-  data: AdminUser;
+
+class AdminUserListResponse {
+  error: ErrorType;
+  users: AdminUser[];
 }
 
-class UpdateAdminUserRequest {
+
+class AdminUserUpdateRequest {
   token: string;
-  columnToUpdate: string;
-  updatedColumnValue: string | number;
+  column: string;
+  value: any;
   id: number;
 }
 
-class UpdateAdminUserResponse extends GenericResponse {
-  data: AdminUser;
+class AdminUserUpdateResponse {
+  error: ErrorType;
+  user: AdminUser | null = null;
 }
 
-class DeleteAdminUserRequest {
+class DeleteUserExRequest {
   id: number;
   token: string;
 }
 
-class DeleteAdminUserResponse extends GenericResponse {
+class DeleteUserExResponse extends GenericResponse {
   id: number;
-}
-
-class ListAdminUserResponse extends GenericResponse {
-  data: AdminUser[];
-}
-
-class ListAdminUserRequest {
-  token: string;
 }
 
 @Component({
@@ -49,183 +54,213 @@ class ListAdminUserRequest {
   shadow: true,
 })
 export class AdminUsers {
-  defaultFields = {
-    id: null,
-    person: null,
-    email: null,
-    password: null,
-    chat: null,
-    created_at: null,
-    created_by: null,
-    modified_at: null,
-    modified_by: null,
-    owning_person: null,
-    owning_group: null,
-  };
-  nonEditableColumns = ['id', 'modified_at', 'created_at', 'created_by', 'modified_by'];
-  @State() adminUsers: AdminUser[] = [];
-  @State() insertedFields: MutableAdminUserFields = this.defaultFields;
-  @State() error: string;
-  @State() success: string;
-  @State() showNewForm = false;
-  insertFieldChange(event, fieldName) {
-    this.insertedFields[fieldName] = event.target.value;
-  }
-  getInputCell(fieldName) {
-    if (this.nonEditableColumns.includes(fieldName)) {
-      return <td>&nbsp;</td>;
-    }
-    return (
-      <td>
-        <input type="text" id={`input-${fieldName}`} name={fieldName} onInput={event => this.insertFieldChange(event, fieldName)}></input>
-      </td>
-    );
-  }
-  getEditableCell(columnName: string, adminUser: AdminUser) {
-    return (
-      <td>
-        <cf-cell
-          key={columnName}
-          rowId={adminUser.id}
-          propKey={columnName}
-          value={typeof adminUser[columnName] === 'string' ? adminUser[columnName] : adminUser[columnName]?.toString()}
-          isEditable={!this.nonEditableColumns.includes(columnName)}
-          updateFn={!this.nonEditableColumns.includes(columnName) ? this.handleUpdate : null}
-        />
-      </td>
-    );
-  }
 
+  @State() usersResponse: AdminUserListResponse;
+
+  newPerson: number;
+  newEmail?: string;
+  newPassword?: string;
+  
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<UpdateAdminUserRequest, UpdateAdminUserResponse>('table/admin-users/update', {
+    const updateResponse = await fetchAs<AdminUserUpdateRequest, AdminUserUpdateResponse>('admin-users/update-read', {
       token: globals.globalStore.state.token,
-      updatedColumnValue: value,
-      columnToUpdate: columnName,
-      id,
+      column: columnName,
+      id: id,
+      value: value !== '' ? value : null,
     });
 
+    console.log(updateResponse);
+
     if (updateResponse.error == ErrorType.NoError) {
-      const result = await fetchAs<ListAdminUserRequest, ListAdminUserResponse>('table/admin-users/list', { token: globals.globalStore.state.token });
-      this.adminUsers = result.data.sort((a, b) => a.id - b.id);
+      this.usersResponse = { error: ErrorType.NoError, users: this.usersResponse.users.map(user => (user.id === id ? updateResponse.user : user)) };
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
-      alert(updateResponse.error);
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: updateResponse.error, id: uuidv4(), type: 'error' });
+      return false;
     }
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteAdminUserRequest, DeleteAdminUserResponse>('table/admin-users/delete', {
+    const deleteResponse = await fetchAs<DeleteUserExRequest, DeleteUserExResponse>('admin-users/delete', {
       id,
       token: globals.globalStore.state.token,
     });
-    if (result.error === ErrorType.NoError) {
-      this.success = `Row with id ${result.id} deleted successfully!`;
-      this.adminUsers = this.adminUsers.filter(adminUser => adminUser.id !== result.id);
+    if (deleteResponse.error === ErrorType.NoError) {
+      this.getList();
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item deleted successfully', id: uuidv4(), type: 'success' });
+      return true;
     } else {
-      this.error = result.error;
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: deleteResponse.error, id: uuidv4(), type: 'error' });
+      return false;
     }
   };
+
+  async getList() {
+    this.usersResponse = await fetchAs<AdminUserListRequest, AdminUserListResponse>('admin-users/list', {
+      token: globals.globalStore.state.token,
+    });
+  }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
+
+  personChange(event) {
+    this.newPerson = event.target.value;
+  }
+
+  emailChange(event) {
+    this.newEmail = event.target.value;
+  }
+
+  passwordChange(event) {
+    this.newPassword = event.target.value;
+  }
 
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    const result = await fetchAs<CreateAdminUserRequest, CreateAdminUserResponse>('table/admin-users/create', {
-      insertedFields: this.insertedFields,
+
+    const createResponse = await fetchAs<CreateUserExRequest, CreateUserExResponse>('admin-users/create-read', {
       token: globals.globalStore.state.token,
+      user: {
+        person: this.newPerson,
+        email: this.newEmail,
+        password: this.newPassword
+      },
     });
 
-    this.showNewForm = false;
-    this.insertedFields = this.defaultFields;
-    if (result.error === ErrorType.NoError) {
-      this.adminUsers = this.adminUsers.concat(result.data);
-      this.success = `New Row with id ${result.data.id} inserted successfully`;
+    if (createResponse.error === ErrorType.NoError) {
+      globals.globalStore.state.editMode = false;
+      this.getList();
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item inserted successfully', id: uuidv4(), type: 'success' });
     } else {
-      console.error('Failed to create admin user');
-      this.error = result.error;
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
 
-  componentWillLoad() {
-    fetchAs<ListAdminUserRequest, ListAdminUserResponse>('table/admin-users/list', {
-      token: globals.globalStore.state.token,
-    }).then(res => {
-      this.adminUsers = res.data.sort((a, b) => a.id - b.id);
-    });
+  columnData: ColumnDescription[] = [
+    {
+      field: 'id',
+      displayName: 'ID',
+      width: 50,
+      editable: false,
+      deleteFn: this.handleDelete,
+    },
+    {
+      field: 'person',
+      displayName: 'Person',
+      width: 200,
+      editable: false,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'email',
+      displayName: 'Email',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'created_at',
+      displayName: 'Created At',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'created_by',
+      displayName: 'Created By',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'modified_at',
+      displayName: 'Last Modified',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'modified_by',
+      displayName: 'Last Modified By',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'owning_person',
+      displayName: 'Owning Person ID',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'owning_group',
+      displayName: 'Owning Group ID',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+  ];
+
+  async componentWillLoad() {
+    await this.getList();
+    // await this.getFilesList();
   }
+
 
   render() {
     return (
       <Host>
-        <div>{this.error}</div>
-        <header>
-          <h1>Language Ex</h1>
-        </header>
+        <slot></slot>
+        {/* table abstraction */}
+        {this.usersResponse && <cf-table rowData={this.usersResponse.users} columnData={this.columnData}></cf-table>}
 
-        <main>
-          <div id="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  {globals.globalStore.state.editMode && <th>*</th>}
-                  {Object.keys(this.defaultFields).map(key => (
-                    <th>{key.replaceAll('_', ' ')}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {this.adminUsers &&
-                  this.adminUsers.length > 0 &&
-                  this.adminUsers.map(adminUser => (
-                    <tr>
-                      {globals.globalStore.state.editMode && (
-                        <div class="button-parent">
-                          <button class="delete-button" onClick={() => this.handleDelete(adminUser.id)}>
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                      {Object.keys(adminUser).map(key => this.getEditableCell(key, adminUser))}
-                    </tr>
-                  ))}
-              </tbody>
-              {this.showNewForm && (
-                <tr>
-                  {globals.globalStore.state.editMode && <td>&nbsp;</td>}
-                  {Object.keys(this.defaultFields).map(key => this.getInputCell(key))}
-                </tr>
-              )}
-            </table>
-          </div>
-          <div id="button-group">
-            {!this.showNewForm && (
-              <button
-                id="new-button"
-                onClick={() => {
-                  this.showNewForm = !this.showNewForm;
-                }}
-              >
-                Create New Admin User
-              </button>
-            )}
+        {/* create form - we'll only do creates using the minimum amount of fields
+         and then expect the user to use the update functionality to do the rest*/}
 
-            {this.showNewForm && (
-              <div>
-                <button
-                  id="cancel-button"
-                  onClick={() => {
-                    this.showNewForm = !this.showNewForm;
-                  }}
-                >
-                  Cancel
-                </button>
-                <button id="submit-button" onClick={this.handleInsert}>
-                  Submit
-                </button>
-              </div>
-            )}
-          </div>
-        </main>
+        {globals.globalStore.state.editMode === true && (
+          <form class="form-thing">
+
+            <div id="person-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="person">Person</label>
+              </span>
+              <span class="form-thing">
+                <input type="number" id="person" name="person" onInput={event => this.personChange(event)} />
+              </span>
+            </div>
+
+            <div id="email-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="email">Email</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="email" name="email" onInput={event => this.emailChange(event)} />
+              </span>
+            </div>        
+
+            <div id="password-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="password">Password</label>
+              </span>
+              <span class="form-thing">
+                <input type="password" id="password" name="password" onInput={event => this.passwordChange(event)} />
+              </span>
+            </div>       
+            
+
+            <span class="form-thing">
+              <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
+            </span>
+          </form>
+        )}
       </Host>
     );
   }
+
 }
+
