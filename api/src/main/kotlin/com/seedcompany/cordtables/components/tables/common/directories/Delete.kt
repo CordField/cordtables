@@ -23,7 +23,7 @@ data class CommonDirectoriesDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonDirectoriesDelete")
 class Delete(
     @Autowired

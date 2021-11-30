@@ -16,7 +16,7 @@ import java.sql.ResultSet
 import javax.sql.DataSource
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("PrayerRequestsController")
 class Controller (
     @Autowired
@@ -31,7 +31,7 @@ class Controller (
     // var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+    
     @PostMapping("prayer-requests/list")
     @ResponseBody
     fun list(@RequestBody req: CommonPrayerRequestsListRequest): CommonPrayerRequestsListResponse {
@@ -75,7 +75,7 @@ class Controller (
         return CommonPrayerRequestsListResponse(ErrorType.NoError, data)
     }
 
-    @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+    
     @PostMapping("prayer-requests/create")
     @ResponseBody
     fun create(@RequestBody req: CommonPrayerRequestsCreateRequest): CommonPrayerRequestsCreateResponse{
@@ -116,7 +116,7 @@ class Controller (
         return CommonPrayerRequestsCreateResponse(error = ErrorType.NoError, id = id)
     }
 
-    @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+    
     @PostMapping("prayer-requests/update")
     @ResponseBody
     fun update(@RequestBody req: CommonPrayerRequestsUpdateRequest): CommonPrayerRequestsCreateResponse{
@@ -138,7 +138,7 @@ class Controller (
         return CommonPrayerRequestsCreateResponse(error = ErrorType.NoError, id = id)
     }
 
-    @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+    
     @PostMapping("prayer-requests/get")
     @ResponseBody
     fun get(@RequestBody req: PrayerRequestGetRequest): PrayerRequestsGetResponse{
@@ -174,7 +174,7 @@ class Controller (
         }
     }
 
-    @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+    
     @PostMapping("prayer-requests/notify")
     @ResponseBody
     fun notify(@RequestBody req: PrayerRequestNotifyRequest): CommonPrayerRequestsCreateResponse{
@@ -244,7 +244,7 @@ class Controller (
         return CommonPrayerRequestsCreateResponse(error = ErrorType.NoError, id = id)
     }
 
-    @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+    
     @PostMapping("prayer-requests/notifications")
     @ResponseBody
     fun notifications(@RequestBody req: PrayerRequestNotifyRequest): CommonPrayerRequestsCreateResponse{

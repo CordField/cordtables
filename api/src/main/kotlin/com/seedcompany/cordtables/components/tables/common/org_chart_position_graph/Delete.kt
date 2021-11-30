@@ -23,7 +23,7 @@ data class CommonOrgChartPositionGraphDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonOrgChartPositionGraphDelete")
 class Delete(
     @Autowired

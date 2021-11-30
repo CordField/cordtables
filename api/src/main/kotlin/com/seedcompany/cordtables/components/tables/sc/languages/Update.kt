@@ -24,7 +24,7 @@ data class ScLanguagesUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScLanguagesUpdate")
 class Update(
     @Autowired

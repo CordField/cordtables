@@ -27,7 +27,7 @@ data class CommonFileVersionsUpdateReadResponse(
     val roleTablePermission: roleTablePermission? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("AdminRoleTablePermissionsUpdateRead")
 class UpdateRead(
     @Autowired

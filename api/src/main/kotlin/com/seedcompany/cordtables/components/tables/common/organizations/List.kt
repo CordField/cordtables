@@ -36,7 +36,7 @@ data class CommonOrganizationsReturn(
         val organizations: List<out CommonOrganizations>?,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonOrganizationsList")
 class List(
         @Autowired

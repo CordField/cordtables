@@ -27,7 +27,7 @@ data class ScInternshipEngagementsListResponse(
     val internshipEngagements: MutableList<internshipEngagement>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScInternshipEngagementsList")
 class List(
     @Autowired

@@ -23,7 +23,7 @@ data class CommonCoalitionsDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonCoalitionsDelete")
 class Delete(
     @Autowired

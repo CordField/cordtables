@@ -27,7 +27,7 @@ data class CommonLocationsListResponse(
     val locations: MutableList<location>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonLocationsList")
 class List(
     @Autowired

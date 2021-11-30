@@ -25,7 +25,7 @@ data class ScGlobalPartnerAssessmentsListResponse(
     val globalPartnerAssessments: MutableList<globalPartnerAssessment>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScGlobalPartnerAssessmentsList")
 class List(
     @Autowired

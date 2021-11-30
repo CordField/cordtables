@@ -23,7 +23,7 @@ data class CommonStagesDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonStagesDelete")
 class Delete(
     @Autowired

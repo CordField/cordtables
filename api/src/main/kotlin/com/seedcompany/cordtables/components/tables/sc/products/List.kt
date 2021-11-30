@@ -31,7 +31,7 @@ data class ScProductsListResponse(
 
 data class Beer(val mediums: String)
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScProductsList")
 class List<T>(
     @Autowired

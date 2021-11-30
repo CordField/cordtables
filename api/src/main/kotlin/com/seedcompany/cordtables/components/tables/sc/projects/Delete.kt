@@ -23,7 +23,7 @@ data class ScProjectsDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScProjectsDelete")
 class Delete(
     @Autowired

@@ -26,7 +26,7 @@ data class ScLocationsListResponse(
     val locations: MutableList<ScLocation>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScLocationsList")
 class List(
     @Autowired

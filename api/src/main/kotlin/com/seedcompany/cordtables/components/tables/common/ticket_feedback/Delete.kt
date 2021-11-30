@@ -21,7 +21,7 @@ data class CommonTicketFeedbackDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonTicketFeedbackDelete")
 class Delete(
     @Autowired

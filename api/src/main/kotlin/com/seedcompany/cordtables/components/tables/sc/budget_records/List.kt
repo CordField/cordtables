@@ -25,7 +25,7 @@ data class ScBudgetRecordsListResponse(
     val budget_records: MutableList<BudgetRecord>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScBudgetRecordsList")
 class List(
     @Autowired

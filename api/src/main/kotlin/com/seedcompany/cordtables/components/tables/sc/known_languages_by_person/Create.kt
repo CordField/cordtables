@@ -24,7 +24,7 @@ data class ScKnownLanguagesByPersonCreateResponse(
     val id: Int? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScKnownLanguagesByPersonCreate")
 class Create(
     @Autowired

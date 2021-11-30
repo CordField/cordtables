@@ -22,7 +22,7 @@ data class CommonDiscussionChannelsUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonDiscussionChannelsUpdate")
 class Update(
         @Autowired

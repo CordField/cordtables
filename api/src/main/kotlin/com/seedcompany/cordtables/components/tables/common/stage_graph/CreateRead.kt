@@ -23,7 +23,7 @@ data class CommonStageGraphCreateReadResponse(
     val stageGraph: stageGraph? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonStageGraphCreateRead")
 class CreateRead(
     @Autowired

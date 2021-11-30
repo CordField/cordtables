@@ -27,7 +27,7 @@ data class CommonStageRoleColumnGrantsListResponse(
     val stageRoleColumnGrants: MutableList<stageRoleColumnGrant>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonStageRoleColumnGrantsList")
 class List(
     @Autowired

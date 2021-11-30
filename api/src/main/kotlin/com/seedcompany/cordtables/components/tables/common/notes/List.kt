@@ -27,7 +27,7 @@ data class CommonNotesListResponse(
     val notes: MutableList<note>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonNotesList")
 class List(
     @Autowired

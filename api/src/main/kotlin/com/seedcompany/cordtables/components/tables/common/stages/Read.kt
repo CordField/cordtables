@@ -28,7 +28,7 @@ data class CommonStagesReadResponse(
     val stage: stage? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonStagesRead")
 class Read(
     @Autowired
