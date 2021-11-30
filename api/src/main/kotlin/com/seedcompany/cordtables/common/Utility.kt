@@ -366,6 +366,40 @@ class Utility(
         }
     }
 
+    // Char -> Decimal -> Hex
+    fun convertStringToHex(str: String): String? {
+        val hex = StringBuffer()
+
+        // loop chars one by one
+        for (temp in str.toCharArray()) {
+
+            // convert char to int, for char `a` decimal 97
+            val decimal = temp.code
+
+            // convert int to hex, for decimal 97 hex 61
+            hex.append(Integer.toHexString(decimal))
+        }
+        return hex.toString()
+    }
+
+    // Hex -> Decimal -> Char
+    fun convertHexToString(hex: String): String? {
+        val result = StringBuilder()
+
+        // split into two chars per loop, hex, 0A, 0B, 0C...
+        var i = 0
+        while (i < hex.length - 1) {
+            val tempInHex = hex.substring(i, i + 2)
+
+            //convert hex to decimal
+            val decimal = tempInHex.toInt(16)
+
+            // convert the decimal to char
+            result.append(decimal.toChar())
+            i += 2
+        }
+        return result.toString()
+    }
 }
 
 inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {

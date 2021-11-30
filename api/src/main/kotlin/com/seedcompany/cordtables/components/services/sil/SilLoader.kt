@@ -14,10 +14,6 @@ data class SilLoaderResponse(
     val error: ErrorType
 )
 
-data class DummyResponse(
-    val list: List<String>?
-)
-
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("SilLoaderService")
 class SilLoader (
@@ -33,13 +29,5 @@ class SilLoader (
             return SilLoaderResponse(ErrorType.SQLUpdateError)
         }
         return SilLoaderResponse(ErrorType.NoError)
-    }
-
-    @GetMapping("/")
-    @ResponseBody
-    fun getHandler(): DummyResponse {
-        return DummyResponse(
-                list = mutableListOf("okay", "whatabout", "shit", "shit", "sdfdf")
-        )
     }
 }
