@@ -10,6 +10,7 @@ export class PageRoot {
   @Prop() match: MatchResults;
 
   render() {
+    // console.log(this.match.params)
     return (
       <Host>
         <slot></slot>
@@ -19,6 +20,7 @@ export class PageRoot {
         {this.match.params.page === 'slack' && <slack-page></slack-page>}
         {this.match.params.page === 'tickets' && <tickets-page></tickets-page>}
         {this.match.params.page === 'not-found' && <page-not-found></page-not-found>}
+
         {this.match.params.page === 'prayer-requests' && <page-prayer-requests></page-prayer-requests>}
         {this.match.params.page === 'request-prayer' && <request-prayer-page></request-prayer-page>}
         {this.match.params.page === 'prayer-request-edit' && <prayer-request-edit-page requestId={this.match.params.requestId}></prayer-request-edit-page>}

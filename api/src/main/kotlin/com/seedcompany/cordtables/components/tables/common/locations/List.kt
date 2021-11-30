@@ -24,7 +24,7 @@ data class CommonLocationsListRequest(
 
 data class CommonLocationsListResponse(
     val error: ErrorType,
-    val locations: MutableList<CommonLocation>?
+    val locations: MutableList<location>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -45,7 +45,7 @@ class List(
     @PostMapping("common-locations/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonLocationsListRequest): CommonLocationsListResponse {
-        var data: MutableList<CommonLocation> = mutableListOf()
+        var data: MutableList<location> = mutableListOf()
         if (req.token == null) return CommonLocationsListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
@@ -58,7 +58,9 @@ class List(
                 columns = arrayOf(
                     "id",
                     "name",
+                    "sensitivity",
                     "type",
+                    "iso_alpha3",
                     "sensitivity",
                     "created_at",
                     "created_by",
@@ -80,12 +82,14 @@ class List(
                 var name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) name = null
 
-                var type: String? = jdbcResult.getString("type")
-                if (jdbcResult.wasNull()) type = null
-
                 var sensitivity: String? = jdbcResult.getString("sensitivity")
                 if (jdbcResult.wasNull()) sensitivity = null
 
+                var type: String? = jdbcResult.getString("type")
+                if (jdbcResult.wasNull()) type = null
+
+                var iso_alpha3: String? = jdbcResult.getString("iso_alpha3")
+                if (jdbcResult.wasNull()) iso_alpha3 = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -106,11 +110,12 @@ class List(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
-                    CommonLocation(
+                    location(
                         id = id,
                         name = name,
-                        type = if (type == null) null else LocationType.valueOf(type),
-                        sensitivity = if (sensitivity == null) null else CommonSensitivity.valueOf(sensitivity),
+                        sensitivity = sensitivity,
+                        type = type,
+                        iso_alpha3 = iso_alpha3,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

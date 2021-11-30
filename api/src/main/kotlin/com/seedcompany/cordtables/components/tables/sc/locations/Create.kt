@@ -6,7 +6,7 @@ import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationInput
+import com.seedcompany.cordtables.components.tables.common.locations.locationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -66,7 +66,7 @@ class Create(
         var createResponse = commonCreate.createHandler(
             CommonLocationsCreateRequest(
                 token = req.token,
-                location = CommonLocationInput(
+                location = locationInput(
                     name = req.location.name,
                     type = req.location.type,
                     owning_person = req.location.owning_person,
