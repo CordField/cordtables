@@ -29,7 +29,7 @@ data class ScProjectMembershipsUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScProjectMembershipsUpdate")
 class Update(
     @Autowired

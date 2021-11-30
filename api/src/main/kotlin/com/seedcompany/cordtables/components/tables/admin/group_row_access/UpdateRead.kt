@@ -27,7 +27,7 @@ data class AdminGroupRowAccessUpdateReadResponse(
     val groupRowAccess: groupRowAccess? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("AdminGroupRowAccessUpdateRead")
 class UpdateRead(
     @Autowired

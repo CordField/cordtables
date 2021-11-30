@@ -23,7 +23,7 @@ data class AdminRoleMembershipsCreateReadResponse(
     val roleMembership: roleMembership? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("AdminRoleMembershipsCreateRead")
 class CreateRead(
     @Autowired

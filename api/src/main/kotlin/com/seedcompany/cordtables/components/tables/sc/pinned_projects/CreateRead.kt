@@ -23,7 +23,7 @@ data class ScPinnedProjectsCreateReadResponse(
     val pinnedProject: pinnedProject? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScPinnedProjectsCreateRead")
 class CreateRead(
     @Autowired

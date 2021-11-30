@@ -22,7 +22,7 @@ data class CommonPostsCreateResponse(
         val id: Int? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonPostsCreate")
 class Create(
         @Autowired

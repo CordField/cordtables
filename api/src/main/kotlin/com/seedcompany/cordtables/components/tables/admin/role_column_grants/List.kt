@@ -27,7 +27,7 @@ data class AdminRoleColumnGrantsListResponse(
     val roleColumnGrants: MutableList<roleColumnGrant>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("AdminRoleColumnGrantsList")
 class List(
     @Autowired

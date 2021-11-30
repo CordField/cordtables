@@ -2,6 +2,11 @@ package com.seedcompany.cordtables.components.tables.common.locations
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsReadRequest
+import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsUpdateRequest
+import com.seedcompany.cordtables.components.tables.common.locations.location
+import com.seedcompany.cordtables.components.tables.common.locations.locationInput
+import com.seedcompany.cordtables.components.tables.sc.locations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -12,15 +17,17 @@ import javax.sql.DataSource
 
 data class CommonLocationsUpdateReadRequest(
     val token: String?,
-    val location: CommonLocationInput? = null,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
 data class CommonLocationsUpdateReadResponse(
     val error: ErrorType,
-    val location: CommonLocation? = null,
+    val location: location? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonLocationsUpdateRead")
 class UpdateRead(
     @Autowired
@@ -42,7 +49,9 @@ class UpdateRead(
         val updateResponse = update.updateHandler(
             CommonLocationsUpdateRequest(
                 token = req.token,
-                location = req.location,
+                column = req.column,
+                id = req.id,
+                value = req.value,
             )
         )
 
@@ -53,7 +62,7 @@ class UpdateRead(
         val readResponse = read.readHandler(
             CommonLocationsReadRequest(
                 token = req.token,
-                id = req.location!!.id
+                id = req.id!!
             )
         )
 

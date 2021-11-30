@@ -20,7 +20,7 @@ data class ScLocationsCreateReadResponse(
     val location: ScLocation? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScLocationsCreateRead")
 class CreateRead(
     @Autowired

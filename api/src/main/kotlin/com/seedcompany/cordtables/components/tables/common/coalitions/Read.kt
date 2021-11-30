@@ -26,7 +26,7 @@ data class CommonCoalitionsReadResponse(
     val coalition: coalition? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonCoalitionsRead")
 class Read(
     @Autowired

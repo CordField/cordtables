@@ -27,7 +27,7 @@ data class ScProjectsListResponse(
     val projects: MutableList<project>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScProjectsList")
 class List(
     @Autowired

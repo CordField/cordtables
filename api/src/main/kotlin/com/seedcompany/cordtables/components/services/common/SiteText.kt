@@ -25,7 +25,7 @@ data class SiteTextUtilGetStringResponse(
         val name: String? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonSiteTextService")
 class SiteText (
         @Autowired

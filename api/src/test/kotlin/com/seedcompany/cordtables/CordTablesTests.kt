@@ -103,49 +103,6 @@ class CordTablesTests(
         assert(true)
     }
 
-    // WIP, not ready:)
-//    @Test
-//    fun `doesThisWork2`() {
-//        container.webDriver["http://host.testcontainers.internal:$port/login"]
-////        container.webDriver.get("http://172.17.0.1:3333/")
-//        var test = container.webDriver.executeScript("return document.querySelector('%s')")
-//
-////        println(test)
-////        container.waitingFor()
-////        val firstResult = WebDriverWait(container.webDriver, 20)
-////            .until(ExpectedConditions.elementToBeSelected(By.name("q")))
-//
-//        // val wait: Wait<WebDriver> = WebDriverWait(container.webDriver, 10)
-//
-//        val allElements = container.webDriver.findElementsByXPath(".//*")
-//
-//        for(elm in allElements){
-//            println(elm.tagName)
-//            if (elm.tagName == "input"){
-//                println(elm.getAttribute("name"))
-//            }
-//        }
-//
-//        //wait.until(checkAppRoot(container.webDriver))
-//
-//        // println("Wat Start")
-//        // container.webDriver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS)
-//        // container.webDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS)
-//
-//
-////
-////
-////        println(firstResult)
-//
-//        // val select = container.webDriver.findElementById("tables")
-////        println(select.tagName.toString())
-//
-//        //val className = messageElement.getAttribute("class")
-//       // println(className)
-//        //println("app-root: ${messageElement.toString()}")
-//        assert(true)
-//    }
-
     fun checkAppRoot(webDriver: WebDriver):Boolean {
         val  rootElements = webDriver.findElement(By.tagName("app-root")).findElements(By.tagName("div"))
         return rootElements.size > 0

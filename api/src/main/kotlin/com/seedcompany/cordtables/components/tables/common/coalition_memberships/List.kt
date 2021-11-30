@@ -27,7 +27,7 @@ data class CommonCoalitionMembershipsListResponse(
     val coalitionMemberships: MutableList<coalitionMembership>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonCoalitionMembershipsList")
 class List(
     @Autowired

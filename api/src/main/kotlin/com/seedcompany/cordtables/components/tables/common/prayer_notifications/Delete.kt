@@ -23,7 +23,7 @@ data class CommonPrayerNotificationsDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonPrayerNotificationsDelete")
 class Delete(
     @Autowired

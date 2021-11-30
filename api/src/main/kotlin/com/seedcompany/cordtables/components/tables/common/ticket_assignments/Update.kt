@@ -24,7 +24,7 @@ data class CommonTicketAssignmentUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonTicketAssignmentsUpdate")
 class Update(
         @Autowired

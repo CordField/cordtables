@@ -1,9 +1,13 @@
 package com.seedcompany.cordtables.components.tables.common.locations
 
+import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsUpdateRequest
+import com.seedcompany.cordtables.components.tables.common.locations.Update as CommonUpdate
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
+import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsUpdateResponse
+import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -14,7 +18,9 @@ import javax.sql.DataSource
 
 data class CommonLocationsUpdateRequest(
     val token: String?,
-    val location: CommonLocationInput? = null,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
 data class CommonLocationsUpdateResponse(
@@ -22,7 +28,7 @@ data class CommonLocationsUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonLocationsUpdate")
 class Update(
     @Autowired
@@ -36,57 +42,70 @@ class Update(
     fun updateHandler(@RequestBody req: CommonLocationsUpdateRequest): CommonLocationsUpdateResponse {
 
         if (req.token == null) return CommonLocationsUpdateResponse(ErrorType.TokenNotFound)
-        if (req.location == null) return CommonLocationsUpdateResponse(ErrorType.MissingId)
-        if (req.location.id == null) return CommonLocationsUpdateResponse(ErrorType.MissingId)
+        if (req.column == null) return CommonLocationsUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return CommonLocationsUpdateResponse(ErrorType.MissingId)
 
-        if (req.location.type != null && !enumContains<LocationType>(req.location.type)) {
-            return CommonLocationsUpdateResponse(
-                error = ErrorType.ValueDoesNotMap
-            )
+        when (req.column) {
+            "name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.locations",
+                    column = "name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "sensitivity" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.locations",
+                    column = "sensitivity",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::common.sensitivity"
+                )
+            }
+            "type" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.locations",
+                    column = "type",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::common.location_type"
+                )
+            }
+            "iso_alpha3" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.locations",
+                    column = "iso_alpha3",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.locations",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
+            }
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.locations",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
+            }
         }
-
-        if (req.location.name != null) util.updateField(
-            token = req.token,
-            table = "common.locations",
-            column = "name",
-            id = req.location.id!!,
-            value = req.location.name,
-        )
-
-        if (req.location.sensitivity != null) util.updateField(
-            token = req.token,
-            table = "common.locations",
-            column = "sensitivity",
-            id = req.location.id!!,
-            value = req.location.sensitivity,
-            cast = "::common.sensitivity"
-        )
-
-        if (req.location.type != null) util.updateField(
-            token = req.token,
-            table = "common.locations",
-            column = "type",
-            id = req.location.id!!,
-            value = req.location.type,
-            cast = "::common.location_type"
-        )
-
-
-        if (req.location.owning_person != null) util.updateField(
-            token = req.token,
-            table = "common.locations",
-            column = "owning_person",
-            id = req.location.id!!,
-            value = req.location.owning_person,
-        )
-
-        if (req.location.owning_group != null) util.updateField(
-            token = req.token,
-            table = "common.locations",
-            column = "owning_group",
-            id = req.location.id!!,
-            value = req.location.owning_group,
-        )
 
         return CommonLocationsUpdateResponse(ErrorType.NoError)
     }

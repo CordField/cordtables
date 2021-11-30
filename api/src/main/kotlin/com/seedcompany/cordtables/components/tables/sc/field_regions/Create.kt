@@ -24,7 +24,7 @@ data class ScFieldRegionsCreateResponse(
     val id: Int? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScFieldRegionsCreate")
 class Create(
     @Autowired

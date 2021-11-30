@@ -12,15 +12,15 @@ import javax.sql.DataSource
 
 data class CommonLocationsCreateReadRequest(
     val token: String? = null,
-    val location: CommonLocationInput,
+    val location: locationInput,
 )
 
 data class CommonLocationsCreateReadResponse(
     val error: ErrorType,
-    val location: CommonLocation? = null,
+    val location: location? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonLocationsCreateRead")
 class CreateRead(
     @Autowired

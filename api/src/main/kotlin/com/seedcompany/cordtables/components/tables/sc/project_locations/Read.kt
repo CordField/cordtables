@@ -28,7 +28,7 @@ data class ScProjectLocationsReadResponse(
     val projectLocation: projectLocation? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScProjectLocationsRead")
 class Read(
     @Autowired

@@ -28,7 +28,7 @@ data class AdminPeopleListResponse(
     val peoples: MutableList<people>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("AdminPeopleList")
 class List(
     @Autowired

@@ -25,7 +25,7 @@ data class CommonDiscussionChannelsListResponse(
     val discussion_channels: MutableList<DiscussionChannel>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonDiscussionChannelsList")
 class List(
     @Autowired

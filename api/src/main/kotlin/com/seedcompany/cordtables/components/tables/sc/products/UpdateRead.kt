@@ -27,7 +27,7 @@ data class ScProductsUpdateReadResponse(
     val product: product? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScProductsUpdateRead")
 class UpdateRead(
     @Autowired

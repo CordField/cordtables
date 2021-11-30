@@ -27,7 +27,7 @@ data class ScInternshipEngagementsUpdateReadResponse(
     val internshipEngagement: internshipEngagement? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScInternshipEngagementsUpdateRead")
 class UpdateRead(
     @Autowired

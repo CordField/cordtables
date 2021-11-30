@@ -25,7 +25,7 @@ data class CommonThreadsReadResponse(
         val thread: Thread? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonThreadsRead")
 class Read(
         @Autowired

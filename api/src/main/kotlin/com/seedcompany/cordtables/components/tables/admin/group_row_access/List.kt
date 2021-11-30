@@ -26,7 +26,7 @@ data class AdminGroupRowAccessListResponse(
     val groupRowAccesses: MutableList<groupRowAccess>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("AdminGroupRowAccessList")
 class List(
     @Autowired

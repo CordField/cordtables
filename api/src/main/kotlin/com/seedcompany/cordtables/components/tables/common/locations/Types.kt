@@ -3,12 +3,14 @@ package com.seedcompany.cordtables.components.tables.common.locations
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.CommonSensitivity
 
-data class CommonLocation(
+data class location(
     var id: Int? = null,
 
-    val sensitivity: CommonSensitivity? = null,
+
     val name: String? = null,
-    val type: LocationType? = null,
+    val sensitivity: String? = null,
+    val type: String? = null,
+    val iso_alpha3: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -18,12 +20,13 @@ data class CommonLocation(
     val owning_group: Int? = null,
 )
 
-data class CommonLocationInput(
+data class locationInput(
     var id: Int? = null,
 
-    val sensitivity: CommonSensitivity? = null,
+    val sensitivity: String? = null,
     val name: String? = null,
     val type: String? = null,
+    val iso_alpha3: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
