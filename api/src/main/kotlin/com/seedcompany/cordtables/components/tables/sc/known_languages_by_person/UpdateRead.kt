@@ -27,7 +27,7 @@ data class ScKnownLanguagesByPersonUpdateReadResponse(
     val knownLanguagesByPerson: knownLanguagesByPerson? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScKnownLanguagesByPersonUpdateRead")
 class UpdateRead(
     @Autowired

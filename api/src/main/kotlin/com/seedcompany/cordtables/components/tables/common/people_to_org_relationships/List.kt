@@ -27,7 +27,7 @@ data class CommonPeopleToOrgRelationshipsListResponse(
     val peopleToOrgRelationships: MutableList<peopleToOrgRelationship>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonPeopleToOrgRelationshipsList")
 class List(
     @Autowired

@@ -27,7 +27,7 @@ data class CommonDirectoriesListResponse(
     val directories: MutableList<CommonDirectory>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonDirectoriesList")
 class List(
     @Autowired

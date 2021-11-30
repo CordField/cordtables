@@ -23,7 +23,7 @@ data class CommonStageNotificationsCreateReadResponse(
     val stageNotification: stageNotification? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonStageNotificationsCreateRead")
 class CreateRead(
     @Autowired

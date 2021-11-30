@@ -27,7 +27,7 @@ data class ScPartnershipsUpdateReadResponse(
     val partnership: partnership? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScPartnershipsUpdateRead")
 class UpdateRead(
     @Autowired

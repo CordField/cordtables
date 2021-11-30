@@ -22,7 +22,7 @@ data class CommonWorkEstimateUpdateReadResponse(
     val work_estimate: CommonWorkEstimates? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonWorkEstimatesUpdateRead")
 class UpdateRead(
     @Autowired

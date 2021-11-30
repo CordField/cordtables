@@ -28,7 +28,7 @@ data class CommonNotesReadResponse(
     val note: note? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonNotesRead")
 class Read(
     @Autowired

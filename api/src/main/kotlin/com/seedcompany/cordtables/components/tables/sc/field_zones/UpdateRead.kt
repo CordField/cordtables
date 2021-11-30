@@ -27,7 +27,7 @@ data class ScFieldZonesUpdateReadResponse(
     val fieldZone: fieldZone? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScFieldZonesUpdateRead")
 class UpdateRead(
     @Autowired

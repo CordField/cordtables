@@ -28,7 +28,7 @@ data class CommonPeopleToOrgRelationshipsReadResponse(
     val peopleToOrgRelationship: peopleToOrgRelationship? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonPeopleToOrgRelationshipsRead")
 class Read(
     @Autowired

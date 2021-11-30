@@ -14,7 +14,7 @@ data class CommonSiteTextTranslationListResponse (
         val data: MutableList<SiteTextTranslation>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonSiteTextTranslationList")
 class TranslationList(
         @Autowired

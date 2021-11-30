@@ -28,7 +28,7 @@ data class CommonOrgChartPositionsReadResponse(
     val orgChartPosition: orgChartPosition? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonOrgChartPositionsRead")
 class Read(
     @Autowired

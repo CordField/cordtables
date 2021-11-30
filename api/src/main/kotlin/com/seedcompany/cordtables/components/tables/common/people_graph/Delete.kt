@@ -23,7 +23,7 @@ data class CommonPeopleGraphDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonPeopleGraphDelete")
 class Delete(
     @Autowired

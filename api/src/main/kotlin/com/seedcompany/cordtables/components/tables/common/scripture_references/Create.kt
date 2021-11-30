@@ -26,7 +26,7 @@ data class ScriptureReferenceCreateResponse(
     val response: ScriptureReference?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScriptureReferenceCreate")
 class Create(
     @Autowired

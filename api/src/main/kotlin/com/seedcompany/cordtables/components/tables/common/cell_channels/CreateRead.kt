@@ -22,7 +22,7 @@ data class CommonCellChannelsCreateReadResponse(
         val cell_channel: CellChannel? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScCellChannelsCreateRead")
 class CreateRead(
         @Autowired

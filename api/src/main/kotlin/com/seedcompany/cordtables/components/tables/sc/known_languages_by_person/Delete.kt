@@ -23,7 +23,7 @@ data class ScKnownLanguagesByPersonDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("ScKnownLanguagesByPersonDelete")
 class Delete(
     @Autowired

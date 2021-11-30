@@ -25,7 +25,7 @@ data class CommonTicketGraphListResponse(
         val ticket_graph: MutableList<CommonTicketGraph>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonTicketGraphList")
 class List(
         @Autowired

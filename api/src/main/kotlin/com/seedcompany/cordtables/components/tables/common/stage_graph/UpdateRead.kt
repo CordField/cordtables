@@ -27,7 +27,7 @@ data class CommonStageGraphUpdateReadResponse(
     val stageGraph: stageGraph? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+
 @Controller("CommonStageGraphUpdateRead")
 class UpdateRead(
     @Autowired
