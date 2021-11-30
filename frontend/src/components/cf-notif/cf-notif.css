@@ -12,6 +12,10 @@ div.success {
   color: #047857;
 }
 
+div.info {
+  color: #d97706;
+}
+
 .close-button {
   color: #374151;
 }
