@@ -31,6 +31,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
+
     @PostMapping("sc-budget-records/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScBudgetRecordsUpdateRequest): ScBudgetRecordsUpdateResponse {

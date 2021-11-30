@@ -125,9 +125,6 @@ class Update(
                     var owningGroup: Int? = updateStatementResult.getInt("owning_group")
                     if (updateStatementResult.wasNull()) owningGroup = null
 
-                    var peer: Int? = updateStatementResult.getInt("peer")
-                    if (updateStatementResult.wasNull()) peer = null
-
                     updatedAdminUser =  AdminUser(
                         id= id,
                         person = person,
@@ -140,7 +137,6 @@ class Update(
                         modified_by = modifiedBy,
                         owning_person= owningPerson,
                         owning_group =  owningGroup,
-                        peer = peer,
                     )
                     println("updated row's id: $id")
                 }

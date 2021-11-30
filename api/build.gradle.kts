@@ -6,6 +6,7 @@ plugins {
 	id("org.asciidoctor.convert") version "1.5.8"
 	kotlin("jvm") version "1.5.30"
 	kotlin("plugin.spring") version "1.5.30"
+	kotlin("plugin.serialization") version "1.5.30"
 }
 
 group = "com.seedcompany"
@@ -38,10 +39,18 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
+
 	implementation("org.bouncycastle:bcprov-jdk15on:1.69")
 	implementation("org.springframework.security:spring-security-crypto:5.5.2")
 
 	implementation("com.amazonaws:aws-java-sdk-ses:1.12.62")
+
+	implementation("org.springdoc:springdoc-openapi-ui:1.5.12")
+	implementation("org.springdoc:springdoc-openapi-kotlin:1.5.12")
+	implementation("org.springdoc:springdoc-openapi-javadoc:1.5.12")
+
+
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 //	runtimeOnly("org.postgresql:postgresql")

@@ -20,6 +20,7 @@ data class ScBudgetRecordsUpdateReadRequest(
 data class ScBudgetRecordsUpdateReadResponse(
     val error: ErrorType,
     val budget_record: BudgetRecord? = null,
+
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -37,6 +38,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
+  
     @PostMapping("sc-budget-records/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScBudgetRecordsUpdateReadRequest): ScBudgetRecordsUpdateReadResponse {
@@ -62,5 +64,6 @@ class UpdateRead(
         )
 
         return ScBudgetRecordsUpdateReadResponse(error = readResponse.error, readResponse.budget_record)
+
     }
 }

@@ -20,18 +20,18 @@ data class ScLanguagesUpdateRequest(
 )
 
 data class ScLanguagesUpdateResponse(
-        val error: ErrorType,
+    val error: ErrorType,
 )
 
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
 @Controller("ScLanguagesUpdate")
 class Update(
-        @Autowired
-        val util: Utility,
+    @Autowired
+    val util: Utility,
 
-        @Autowired
-        val ds: DataSource,
+    @Autowired
+    val ds: DataSource,
 ) {
     @PostMapping("sc-languages/update")
     @ResponseBody
@@ -43,13 +43,13 @@ class Update(
 
         if (req.column.equals("sensitivity") && req.value != null && !enumContains<CommonSensitivity>(req.value as String)) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
         if (req.column.equals("egids_level") && req.value != null && !enumContains<EgidsScale>(req.value as String)) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
@@ -61,7 +61,7 @@ class Update(
 
         if (req.column.equals("partner_interest_level") && req.value != null && !enumContains<PartnerInterestScale>(req.value as String)) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
@@ -70,7 +70,7 @@ class Update(
                 )
         ) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
@@ -79,7 +79,7 @@ class Update(
                 )
         ) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
@@ -88,7 +88,7 @@ class Update(
                 )
         ) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
@@ -97,19 +97,19 @@ class Update(
                 )
         ) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
         if (req.column.equals("access_to_scripture_in_lwc_level") && req.value != null && !enumContains<AccessToScriptureInLwcScale>(req.value as String)) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
         if (req.column.equals("begin_work_geo_challenges_level") && req.value != null && !enumContains<BeginWorkGeoChallengesScale>(req.value as String)) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
@@ -118,7 +118,7 @@ class Update(
                 )
         ) {
             return ScLanguagesUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+                error = ErrorType.ValueDoesNotMap
             )
         }
 
@@ -567,180 +567,166 @@ class Update(
                 )
             }
 
-            "lang_comm_int_in_scripture_translation_source" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "lang_comm_int_in_scripture_translation_source",
-                        id = req.id,
-                        value = req.value,
+            "lang_comm_int_in_scripture_translation_source" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "lang_comm_int_in_scripture_translation_source",
+            id = req.id,
+            value = req.value,
                 )
             }
 
-            "access_to_scripture_in_lwc_level" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "access_to_scripture_in_lwc_level",
-                        id = req.id,
-                        value = req.value,
-                        cast = "::sc.access_to_scripture_in_lwc_scale",
-                )
+            "access_to_scripture_in_lwc_level" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "access_to_scripture_in_lwc_level",
+            id = req.id,
+            value = req.value,
+            cast = "::sc.access_to_scripture_in_lwc_scale",
+        )
 
 
                 util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "access_to_scripture_in_lwc_value",
-                        id = req.id,
-                        value = if (req.value !== null) AccessToScriptureInLwcScale.valueOf(req.value as String).value else 0.0,
+            token = req.token,
+            table = "sc.languages",
+            column = "access_to_scripture_in_lwc_value",
+            id = req.id,
+                    value = if (req.value !== null) AccessToScriptureInLwcScale.valueOf(req.value as String).value else 0.0,
                 )
             }
 
 
             "access_to_scripture_in_lwc_description"
-            -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "access_to_scripture_in_lwc_description",
-                        id = req.id,
-                        value = req.value,
+            -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "access_to_scripture_in_lwc_description",
+            id = req.id,
+            value = req.value,
                 )
             }
 
-            "access_to_scripture_in_lwc_source" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "access_to_scripture_in_lwc_source",
-                        id = req.id,
-                        value = req.value,
+            "access_to_scripture_in_lwc_source" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "access_to_scripture_in_lwc_source",
+            id = req.id,
+            value = req.value,
                 )
             }
 
 
-            "begin_work_geo_challenges_level" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "begin_work_geo_challenges_level",
-                        id = req.id,
-                        value = req.value,
-                        cast = "::sc.begin_work_geo_challenges_scale",
-                )
+            "begin_work_geo_challenges_level" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "begin_work_geo_challenges_level",
+            id = req.id,
+            value = req.value,
+            cast = "::sc.begin_work_geo_challenges_scale",
+        )
 
 
                 util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "begin_work_geo_challenges_value",
-                        id = req.id,
-                        value = if (req.value !== null) BeginWorkGeoChallengesScale.valueOf(req.value as String).value else 0.0,
+            token = req.token,
+            table = "sc.languages",
+            column = "begin_work_geo_challenges_value",
+            id = req.id,
+                    value = if (req.value !== null) BeginWorkGeoChallengesScale.valueOf(req.value as String).value else 0.0,
                 )
             }
 
             "begin_work_geo_challenges_description"
-            -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "begin_work_geo_challenges_description",
-                        id = req.id,
-                        value = req.value,
+            -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "begin_work_geo_challenges_description",
+            id = req.id,
+            value = req.value,
                 )
             }
 
-            "begin_work_geo_challenges_source" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "begin_work_geo_challenges_source",
-                        id = req.id,
-                        value = req.value,
+            "begin_work_geo_challenges_source" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "begin_work_geo_challenges_source",
+            id = req.id,
+            value = req.value,
                 )
             }
 
 
-            "begin_work_rel_pol_obstacles_level" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "begin_work_rel_pol_obstacles_level",
-                        id = req.id,
-                        value = req.value,
-                        cast = "::sc.begin_work_rel_pol_obstacles_scale",
-                )
+            "begin_work_rel_pol_obstacles_level" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "begin_work_rel_pol_obstacles_level",
+            id = req.id,
+            value = req.value,
+            cast = "::sc.begin_work_rel_pol_obstacles_scale",
+        )
 
 
                 util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "begin_work_rel_pol_obstacles_value",
-                        id = req.id,
-                        value = if (req.value !== null) BeginWorkRelPolObstaclesScale.valueOf(req.value as String).value else 0.0,
+            token = req.token,
+            table = "sc.languages",
+            column = "begin_work_rel_pol_obstacles_value",
+            id = req.id,
+                    value = if (req.value !== null) BeginWorkRelPolObstaclesScale.valueOf(req.value as String).value else 0.0,
                 )
             }
 
 
             "begin_work_rel_pol_obstacles_description"
-            -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "begin_work_rel_pol_obstacles_description",
-                        id = req.id,
-                        value = req.value,
+            -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "begin_work_rel_pol_obstacles_description",
+            id = req.id,
+            value = req.value,
                 )
             }
 
-            "begin_work_rel_pol_obstacles_source" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "begin_work_rel_pol_obstacles_source",
-                        id = req.id,
-                        value = req.value,
+            "begin_work_rel_pol_obstacles_source" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "begin_work_rel_pol_obstacles_source",
+            id = req.id,
+            value = req.value,
                 )
             }
 
-            "suggested_strategies" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "suggested_strategies",
-                        id = req.id,
-                        value = req.value,
+            "suggested_strategies" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "suggested_strategies",
+            id = req.id,
+            value = req.value,
                 )
             }
 
-            "comments" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "comments",
-                        id = req.id,
-                        value = req.value,
+            "comments" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "comments",
+            id = req.id,
+            value = req.value,
                 )
             }
 
-            "owning_person" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "owning_person",
-                        id = req.id,
-                        value = req.value,
+            "owning_person" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "owning_person",
+            id = req.id,
+            value = req.value,
                 )
             }
 
-            "owning_group" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "owning_group",
-                        id = req.id,
-                        value = req.value,
+            "owning_group" -> { util.updateField(
+            token = req.token,
+            table = "sc.languages",
+            column = "owning_group",
+            id = req.id,
+            value = req.value,
                 )
             }
 
@@ -752,7 +738,7 @@ class Update(
                         column = "egids_level",
                         id = req.id,
                         value = req.value,
-                        cast = "::sc.egids_scale",
+                        cast = "::common.egids_scale",
                 )
 
                 util.updateField(
@@ -790,15 +776,16 @@ class Update(
                                 "SRID=4326;POINT(${longLatValue})"
                     }
 
-                    util.updateField(
-                            token = req.token,
-                            table = "sc.languages",
-                            column = "coordinates",
-                            id = req.id,
-                            value = coordinatesValue,
-                            cast = "::common.geography",
+                util.updateField(
+                    token = req.token,
+                    table = "sc.languages",
+                    column = "coordinates",
+                    id = req.id,
+                    value = coordinatesValue,
+                    cast = "::common.geography",
                     )
             }
+
 
 //            else -> null
         }

@@ -74,6 +74,7 @@ data class Language(
     val owning_person: Int? = null,
     val owning_group: Int? = null,
     val coordinates: String? = null,
+    val coordinates_json: String? = null
 )
 
 data class LanguageInput(

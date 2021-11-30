@@ -19,3 +19,5 @@ services:
       PGADMIN_DEFAULT_PASSWORD: asdfasdf
     ports:
       - "5050:80"
+    depends_on:
+      - db

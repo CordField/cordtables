@@ -289,39 +289,51 @@ class Utility(
 
     }
 
-    fun getReadableTables(token: String): MutableList<String> {
+    fun getReadableTables(token: String): List<String> {
         val tableNames = mutableListOf<String>()
+
         if (isAdmin(token)) {
             this.ds.connection.use { conn ->
                 val statement = conn.prepareCall(
-                    "select table_schema || '.' || table_name as table_name " +
-                            "from information_schema.tables where table_schema in ('admin', 'common', 'sc', 'sil') order by table_name asc"
+                    """
+                        select table_schema || '.' || table_name as table_name 
+                        from information_schema.tables 
+                        where table_schema in ('admin', 'common', 'sc', 'sil')
+                        order by table_name asc;
+                    """.trimIndent()
                 )
+
                 val result = statement.executeQuery()
                 while (result.next()) {
-                    tableNames.add(result.getString("table_name").replace('_', '-'))
+                    tableNames.add(result.getString("table_name"))
                 }
             }
-            return tableNames;
+        } else {
+            this.ds.connection.use { conn ->
+                val statement = conn.prepareCall(
+                    """
+                        select distinct table_name
+                        from admin.role_column_grants as a
+                        inner join admin.role_memberships as b
+                        on a.role = b.role
+                        inner join admin.tokens as c
+                        on b.person = c.person
+                        where c.token = ? order by table_name asc;
+                    """.trimIndent()
+                )
+                statement.setString(1, token)
+                val result = statement.executeQuery()
+                while (result.next()) {
+                    tableNames.add(result.getString("table_name"))
+                }
+            }
+
         }
 
-        this.ds.connection.use { conn ->
-            val statement = conn.prepareCall(
-                "select distinct table_name \n" +
-                        "from admin.role_column_grants as a \n" +
-                        "inner join admin.role_memberships as b \n" +
-                        "on a.role = b.role \n" +
-                        "inner join admin.tokens as c \n" +
-                        "on b.person = c.person \n" +
-                        "where c.token = ? order by table_name asc"
-            )
-            statement.setString(1, token)
-            val result = statement.executeQuery()
-            while (result.next()) {
-                tableNames.add(result.getString("table_name").replace('_', '-'))
-            }
-        }
-        return tableNames;
+        return tableNames
+            .filter { !it.contains("_history") }
+            .filter { !it.contains("_peer") }
+            .map { it.replace('_', '-') };
     }
 
     fun updateField(token: String, table: String, column: String, id: Int, value: Any?, cast: String? = "") {
@@ -354,6 +366,40 @@ class Utility(
         }
     }
 
+    // Char -> Decimal -> Hex
+    fun convertStringToHex(str: String): String? {
+        val hex = StringBuffer()
+
+        // loop chars one by one
+        for (temp in str.toCharArray()) {
+
+            // convert char to int, for char `a` decimal 97
+            val decimal = temp.code
+
+            // convert int to hex, for decimal 97 hex 61
+            hex.append(Integer.toHexString(decimal))
+        }
+        return hex.toString()
+    }
+
+    // Hex -> Decimal -> Char
+    fun convertHexToString(hex: String): String? {
+        val result = StringBuilder()
+
+        // split into two chars per loop, hex, 0A, 0B, 0C...
+        var i = 0
+        while (i < hex.length - 1) {
+            val tempInHex = hex.substring(i, i + 2)
+
+            //convert hex to decimal
+            val decimal = tempInHex.toInt(16)
+
+            // convert the decimal to char
+            result.append(decimal.toChar())
+            i += 2
+        }
+        return result.toString()
+    }
 }
 
 inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
