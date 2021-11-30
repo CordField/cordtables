@@ -29,22 +29,22 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-budgetrecords/delete")
+  
+    @PostMapping("sc-budget-records/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScBudgetRecordsDeleteRequest): ScBudgetRecordsDeleteResponse {
 
         if (req.token == null) return ScBudgetRecordsDeleteResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "sc.budgetrecords"))
+        if(!util.userHasDeletePermission(req.token, "sc.budget-records"))
             return ScBudgetRecordsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-        println("req: $req")
         var deletedBudgetRecordExId: Int? = null
 
         this.ds.connection.use { conn ->
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from sc.budgetrecords where id = ? returning id"
+                    "delete from sc.budget_records where id = ? returning id"
                 )
                 deleteStatement.setInt(1, req.id)
 

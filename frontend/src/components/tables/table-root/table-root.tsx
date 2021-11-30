@@ -71,6 +71,7 @@ export class TableRoot {
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
         {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}
         {this.match.params.table === 'common-ticket-graph' && <ticket-graph></ticket-graph>}
+        {this.match.params.table === 'sc-budget-records' && <sc-budget-records></sc-budget-records>}
         {this.match.params.table === 'common-ticket-assignments' && <ticket-assignments></ticket-assignments>}
         {this.match.params.table === 'common-work-records' && <work-records></work-records>}
         {this.match.params.table === 'common-work-estimates' && <work-estimates></work-estimates>}
