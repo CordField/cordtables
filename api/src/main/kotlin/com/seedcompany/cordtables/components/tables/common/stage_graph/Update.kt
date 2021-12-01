@@ -29,7 +29,7 @@ data class CommonStageGraphUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonStageGraphUpdate")
 class Update(
     @Autowired

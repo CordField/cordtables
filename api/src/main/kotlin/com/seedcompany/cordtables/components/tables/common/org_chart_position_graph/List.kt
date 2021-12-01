@@ -27,7 +27,7 @@ data class CommonOrgChartPositionGraphListResponse(
     val orgChartPositionGraphs: MutableList<orgChartPositionGraph>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonOrgChartPositionGraphList")
 class List(
     @Autowired

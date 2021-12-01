@@ -27,7 +27,7 @@ data class CommonPrayerNotificationsListResponse(
     val prayerNotifications: MutableList<prayerNotification>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonPrayerNotificationsList")
 class List(
     @Autowired

@@ -27,7 +27,7 @@ data class ScKnownLanguagesByPersonListResponse(
     val knownLanguagesByPersons: MutableList<knownLanguagesByPerson>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScKnownLanguagesByPersonList")
 class List(
     @Autowired

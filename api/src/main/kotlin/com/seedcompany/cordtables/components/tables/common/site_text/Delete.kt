@@ -21,7 +21,7 @@ data class CommonSiteTextDeleteResponse(
         val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonSiteTextDelete")
 class Delete(
         @Autowired

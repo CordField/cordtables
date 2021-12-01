@@ -27,7 +27,7 @@ data class CommonLocationsUpdateReadResponse(
     val location: location? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonLocationsUpdateRead")
 class UpdateRead(
     @Autowired

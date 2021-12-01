@@ -27,7 +27,7 @@ data class ScLanguageEngagementsUpdateReadResponse(
     val languageEngagement: languageEngagement? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScLanguageEngagementsUpdateRead")
 class UpdateRead(
     @Autowired

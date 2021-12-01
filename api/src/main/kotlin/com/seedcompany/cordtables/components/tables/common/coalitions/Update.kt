@@ -28,7 +28,7 @@ data class CommonCoalitionsUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonCoalitionsUpdate")
 class Update(
     @Autowired

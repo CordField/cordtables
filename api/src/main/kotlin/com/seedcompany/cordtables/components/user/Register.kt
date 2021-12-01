@@ -23,7 +23,7 @@ data class RegisterReturn(
     val isAdmin: Boolean = false
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller()
 class Register (
     @Autowired

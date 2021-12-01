@@ -27,7 +27,7 @@ data class CommonStageGraphListResponse(
     val stageGraphs: MutableList<stageGraph>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonStageGraphList")
 class List(
     @Autowired

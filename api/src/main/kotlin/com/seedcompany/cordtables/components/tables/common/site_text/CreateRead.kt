@@ -20,7 +20,7 @@ data class CommonSiteTextCreateReadResponse(
         val site_text: CommonSiteText? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonSiteTextCreateRead")
 class CreateRead(
         @Autowired

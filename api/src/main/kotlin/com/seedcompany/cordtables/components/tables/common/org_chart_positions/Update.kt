@@ -29,7 +29,7 @@ data class CommonOrgChartPositionsUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonOrgChartPositionsUpdate")
 class Update(
     @Autowired

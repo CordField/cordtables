@@ -26,7 +26,7 @@ data class CommonPostsListResponse(
         val posts: MutableList<Post>
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonPostsList")
 class List(
         @Autowired

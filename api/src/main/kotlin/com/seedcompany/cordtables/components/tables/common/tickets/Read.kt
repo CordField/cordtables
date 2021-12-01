@@ -26,7 +26,7 @@ data class CommonTicketsReadResponse(
         val ticket: CommonTickets? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonTicketsRead")
 class Read(
         @Autowired

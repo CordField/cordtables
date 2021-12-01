@@ -20,7 +20,7 @@ data class CommonWorkEstimateCreateReadResponse(
     val work_estimate: CommonWorkEstimates? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonWorkEstimatesCreateRead")
 class CreateRead(
     @Autowired

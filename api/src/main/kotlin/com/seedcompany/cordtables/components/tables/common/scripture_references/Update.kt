@@ -32,7 +32,7 @@ data class ScriptureReferenceUpdateResponse(
     val response: ScriptureReference?,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScriptureReferenceUpdate")
 class Update(
     @Autowired

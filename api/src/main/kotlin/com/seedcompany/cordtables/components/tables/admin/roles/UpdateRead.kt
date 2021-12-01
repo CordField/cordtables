@@ -27,7 +27,7 @@ data class AdminRolesUpdateReadResponse(
     val role: role? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("AdminRolesUpdateRead")
 class UpdateRead(
     @Autowired

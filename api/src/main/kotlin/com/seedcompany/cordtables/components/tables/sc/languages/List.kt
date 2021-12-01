@@ -28,7 +28,7 @@ data class ScLanguagesListResponse(
         val languages: MutableList<Language>?,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScLanguagesList")
 class List(
         @Autowired

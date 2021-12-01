@@ -28,7 +28,7 @@ data class ScEthnologueReadResponse(
     val ethnologue: ethnologue? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScEthnologueRead")
 class Read(
     @Autowired
