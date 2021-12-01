@@ -22,7 +22,7 @@ data class CommonDiscussionChannelsReadRequest(
 
 data class CommonDiscussionChannelsReadResponse(
     val error: ErrorType,
-    val discussionchannel: DiscussionChannel? = null,
+    val discussion_channel: DiscussionChannel? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -96,7 +96,7 @@ class Read(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                val discussionchannel =
+                val discussion_channel =
                     DiscussionChannel(
                         id = id,
 
@@ -110,7 +110,7 @@ class Read(
                         owning_group = owning_group
                     )
 
-                return CommonDiscussionChannelsReadResponse(ErrorType.NoError, discussionchannel = discussionchannel)
+                return CommonDiscussionChannelsReadResponse(ErrorType.NoError, discussion_channel = discussion_channel)
 
             }
         } catch (e: SQLException) {

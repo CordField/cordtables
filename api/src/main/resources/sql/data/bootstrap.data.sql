@@ -15,6 +15,9 @@ DECLARE
   vPublicPersonId int;
   vPublicGroupId int;
   vPublicRoleId int;
+  vTableOfLanguagesId int;
+  vCommonLanguagesId int;
+  vCommonSiteTextStringsId int;
 BEGIN
   select count(id)
   from admin.people
@@ -296,8 +299,6 @@ BEGIN
       -- giving row membership to only one row
       insert into admin.group_row_access(group_id,table_name,row,created_by,modified_by,owning_person,owning_group)
       values(vPublicGroupId,'sc.languages',1,vPersonId,vPersonId,vPersonId,vAdminGroupId);
-
-    error_type := 'NoError';
   end if;
 
 END; $$;

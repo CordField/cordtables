@@ -51,8 +51,9 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.people(neo4j_id, skills, status, created_by, modified_by, owning_person, owning_group)
+            insert into sc.people(id, neo4j_id, skills, status, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?,
                     ?,
                     ARRAY[?],
                     ?,
@@ -76,6 +77,7 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
+            req.people.id,
             req.people.neo4j_id,
             req.people.skills,
             req.people.status,

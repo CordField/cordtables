@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePeopleExRequest {
   token: string;
   people: {
+    id: number;
     neo4j_id: string;
     skills: string;
     status: string;
@@ -56,7 +57,7 @@ class DeletePeopleExResponse extends GenericResponse {
 export class ScPeoples {
 
   @State() peoplesResponse: ScPeopleListResponse;
-
+  newId: number;
   newNeo4j_id: string;
   newSkills: string;
   newStatus: string;
@@ -108,6 +109,9 @@ export class ScPeoples {
   //   });
   // }
 
+  idChange(event) {
+    this.newId = event.target.value;
+  }
 
   neo4j_idChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -128,6 +132,7 @@ export class ScPeoples {
     const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('sc-people/create-read', {
       token: globals.globalStore.state.token,
       people: {
+        id: this.newId,
         neo4j_id: this.newNeo4j_id,
         skills: this.newSkills,
         status: this.newStatus,
@@ -230,6 +235,15 @@ export class ScPeoples {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
+            <div id="id-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="id">Admin People ID</label>
+              </span>
+              <span class="form-thing">
+                <input type="number" id="id" name="id" onInput={event => this.idChange(event)} />
+              </span>
+            </div>
 
             <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">

@@ -1,5 +1,7 @@
-package com.seedcompany.cordtables.components.tables.common.discussion_channels
+package com.seedcompany.cordtables.components.tables.common.site_text
 
+import com.seedcompany.cordtables.common.CommonSensitivity
+import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
@@ -15,56 +17,56 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-
-data class CommonDiscussionChannelsListRequest(
-    val token: String?
+data class CommonSiteTextReadRequest(
+        val token: String?,
+        val id: Int? = null,
 )
 
-data class CommonDiscussionChannelsListResponse(
-    val error: ErrorType,
-    val discussion_channels: MutableList<DiscussionChannel>?
+data class CommonSiteTextReadResponse(
+        val error: ErrorType,
+        val site_text: CommonSiteText? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CommonDiscussionChannelsList")
-class List(
-    @Autowired
-    val util: Utility,
+@Controller("CommonSiteTextRead")
+class Read(
+        @Autowired
+        val util: Utility,
 
-    @Autowired
-    val ds: DataSource,
+        @Autowired
+        val ds: DataSource,
 
-    @Autowired
-    val secureList: GetSecureListQuery,
+        @Autowired
+        val secureList: GetSecureListQuery,
 ) {
-
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-discussion-channels/list")
+    @PostMapping("common-site-texts/read")
     @ResponseBody
-    fun listHandler(@RequestBody req: CommonDiscussionChannelsListRequest): CommonDiscussionChannelsListResponse {
-        var data: MutableList<DiscussionChannel> = mutableListOf()
-        if (req.token == null) return CommonDiscussionChannelsListResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun readHandler(@RequestBody req: CommonSiteTextReadRequest): CommonSiteTextReadResponse {
+
+        if (req.token == null) return CommonSiteTextReadResponse(ErrorType.TokenNotFound)
+        if (req.id == null) return CommonSiteTextReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+        paramSource.addValue("id", req.id)
 
         val query = secureList.getSecureListQueryHandler(
-            GetSecureListQueryRequest(
-                tableName = "common.discussion_channels",
-                filter = "order by id",
-                columns = arrayOf(
-                    "id",
-                    "name",
-
-                    "created_at",
-                    "created_by",
-                    "modified_at",
-                    "modified_by",
-                    "owning_person",
-                    "owning_group"
+                GetSecureListQueryRequest(
+                        tableName = "common.site_text",
+                        getList = false,
+                        columns = arrayOf(
+                                "id",
+                                "ethnologue",
+                                "created_at",
+                                "created_by",
+                                "modified_at",
+                                "modified_by",
+                                "owning_person",
+                                "owning_group",
+                        ),
                 )
-            )
         ).query
 
         try {
@@ -74,8 +76,8 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var name: String? = jdbcResult.getString("name")
-                if (jdbcResult.wasNull()) name = null
+                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
+                if (jdbcResult.wasNull()) ethnologue = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -95,26 +97,24 @@ class List(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                data.add(
-                    DiscussionChannel(
-                        id = id,
-
-                        name = name,
-
-                        created_at = created_at,
-                        created_by = created_by,
-                        modified_at = modified_at,
-                        modified_by = modified_by,
-                        owning_person = owning_person,
-                        owning_group = owning_group
-                    )
+                val site_text = CommonSiteText(
+                    id = id,
+                    ethnologue = ethnologue,
+                    created_at = created_at,
+                    created_by = created_by,
+                    modified_at = modified_at,
+                    modified_by = modified_by,
+                    owning_person = owning_person,
+                    owning_group = owning_group
                 )
+
+                return CommonSiteTextReadResponse(ErrorType.NoError, site_text = site_text)
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return CommonDiscussionChannelsListResponse(ErrorType.SQLReadError, mutableListOf())
+            return CommonSiteTextReadResponse(ErrorType.SQLReadError)
         }
 
-        return CommonDiscussionChannelsListResponse(ErrorType.NoError, data)
+        return CommonSiteTextReadResponse(error = ErrorType.UnknownError)
     }
 }

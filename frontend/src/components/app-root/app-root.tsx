@@ -14,7 +14,7 @@ export class AppRoot {
 
   @State() showSelect = false;
 
-  pages = ['Groups', 'Roles', 'Organizations', 'Tickets'];
+  pages = ['Groups', 'Roles', 'Organizations', 'Slack', 'Tickets'];
 
   selectChange(event) {
     const table = event.target.value;
