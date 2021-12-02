@@ -16,8 +16,8 @@ class SilLanguageCodeListResponse {
 
 
 @Component({
-  tag: 'sil-languages-codes',
-  styleUrl: 'sil-languages-codes.css',
+  tag: 'sil-language-codes',
+  styleUrl: 'sil-language-codes.css',
   shadow: true,
 })
 export class SilLanguageCodes {
@@ -27,7 +27,7 @@ export class SilLanguageCodes {
   
 
   async getList() {
-    this.languageCodesResponse = await fetchAs<SilLanguageCodeListRequest, SilLanguageCodeListResponse>('sil-languages-codes/list', {
+    this.languageCodesResponse = await fetchAs<SilLanguageCodeListRequest, SilLanguageCodeListResponse>('sil-language-codes/list', {
       token: globals.globalStore.state.token,
     });
   }

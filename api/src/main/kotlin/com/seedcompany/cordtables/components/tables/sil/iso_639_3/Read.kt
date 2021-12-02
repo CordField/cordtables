@@ -84,7 +84,7 @@ class Read(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var _id: Int? = jdbcResult.getInt("_id")
+                var _id: String? = jdbcResult.getString("_id")
                 if (jdbcResult.wasNull()) _id = null
 
                 var part_2b: String? = jdbcResult.getString("part_2b")

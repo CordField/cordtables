@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.sil.iso_639_3
 data class iso6393(
     var id: Int? = null,
 
-    val _id: Int? = null,
+    val _id: String? = null,
     val part_2b: String? = null,
     val part_2t: String? = null,
     val part_1: String? = null,
@@ -22,7 +22,7 @@ data class iso6393(
 
 data class iso6393Input(
     var id: Int? = null,
-    val _id: Int? = null,
+    val _id: String? = null,
     val part_2b: String? = null,
     val part_2t: String? = null,
     val part_1: String? = null,

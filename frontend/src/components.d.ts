@@ -261,9 +261,9 @@ export namespace Components {
     }
     interface SilIso6393Retirements {
     }
-    interface SilLanguageIndex {
+    interface SilLanguageCodes {
     }
-    interface SilLanguagesCodes {
+    interface SilLanguageIndex {
     }
     interface SilTableOfCountries {
     }
@@ -969,17 +969,17 @@ declare global {
         prototype: HTMLSilIso6393RetirementsElement;
         new (): HTMLSilIso6393RetirementsElement;
     };
+    interface HTMLSilLanguageCodesElement extends Components.SilLanguageCodes, HTMLStencilElement {
+    }
+    var HTMLSilLanguageCodesElement: {
+        prototype: HTMLSilLanguageCodesElement;
+        new (): HTMLSilLanguageCodesElement;
+    };
     interface HTMLSilLanguageIndexElement extends Components.SilLanguageIndex, HTMLStencilElement {
     }
     var HTMLSilLanguageIndexElement: {
         prototype: HTMLSilLanguageIndexElement;
         new (): HTMLSilLanguageIndexElement;
-    };
-    interface HTMLSilLanguagesCodesElement extends Components.SilLanguagesCodes, HTMLStencilElement {
-    }
-    var HTMLSilLanguagesCodesElement: {
-        prototype: HTMLSilLanguagesCodesElement;
-        new (): HTMLSilLanguagesCodesElement;
     };
     interface HTMLSilTableOfCountriesElement extends Components.SilTableOfCountries, HTMLStencilElement {
     }
@@ -1227,8 +1227,8 @@ declare global {
         "sil-iso-639-3-macrolanguages": HTMLSilIso6393MacrolanguagesElement;
         "sil-iso-639-3-names": HTMLSilIso6393NamesElement;
         "sil-iso-639-3-retirements": HTMLSilIso6393RetirementsElement;
+        "sil-language-codes": HTMLSilLanguageCodesElement;
         "sil-language-index": HTMLSilLanguageIndexElement;
-        "sil-languages-codes": HTMLSilLanguagesCodesElement;
         "sil-table-of-countries": HTMLSilTableOfCountriesElement;
         "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
         "sil-table-of-languages-in-country": HTMLSilTableOfLanguagesInCountryElement;
@@ -1510,9 +1510,9 @@ declare namespace LocalJSX {
     }
     interface SilIso6393Retirements {
     }
-    interface SilLanguageIndex {
+    interface SilLanguageCodes {
     }
-    interface SilLanguagesCodes {
+    interface SilLanguageIndex {
     }
     interface SilTableOfCountries {
     }
@@ -1685,8 +1685,8 @@ declare namespace LocalJSX {
         "sil-iso-639-3-macrolanguages": SilIso6393Macrolanguages;
         "sil-iso-639-3-names": SilIso6393Names;
         "sil-iso-639-3-retirements": SilIso6393Retirements;
+        "sil-language-codes": SilLanguageCodes;
         "sil-language-index": SilLanguageIndex;
-        "sil-languages-codes": SilLanguagesCodes;
         "sil-table-of-countries": SilTableOfCountries;
         "sil-table-of-languages": SilTableOfLanguages;
         "sil-table-of-languages-in-country": SilTableOfLanguagesInCountry;
@@ -1823,8 +1823,8 @@ declare module "@stencil/core" {
             "sil-iso-639-3-macrolanguages": LocalJSX.SilIso6393Macrolanguages & JSXBase.HTMLAttributes<HTMLSilIso6393MacrolanguagesElement>;
             "sil-iso-639-3-names": LocalJSX.SilIso6393Names & JSXBase.HTMLAttributes<HTMLSilIso6393NamesElement>;
             "sil-iso-639-3-retirements": LocalJSX.SilIso6393Retirements & JSXBase.HTMLAttributes<HTMLSilIso6393RetirementsElement>;
+            "sil-language-codes": LocalJSX.SilLanguageCodes & JSXBase.HTMLAttributes<HTMLSilLanguageCodesElement>;
             "sil-language-index": LocalJSX.SilLanguageIndex & JSXBase.HTMLAttributes<HTMLSilLanguageIndexElement>;
-            "sil-languages-codes": LocalJSX.SilLanguagesCodes & JSXBase.HTMLAttributes<HTMLSilLanguagesCodesElement>;
             "sil-table-of-countries": LocalJSX.SilTableOfCountries & JSXBase.HTMLAttributes<HTMLSilTableOfCountriesElement>;
             "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
             "sil-table-of-languages-in-country": LocalJSX.SilTableOfLanguagesInCountry & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesInCountryElement>;
