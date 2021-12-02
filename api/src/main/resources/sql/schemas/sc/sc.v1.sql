@@ -1144,30 +1144,12 @@ create table sc.internship_engagements (
   status_modified_at timestamp,
   last_suspended_at timestamp,
 
-
-create type common.ceremony_type as enum (
-  'Dedication',
-  'Certification'
-);
-
-create table sc.ceremonies (
-  id serial primary key,
-
-  neo4j_id varchar(32) unique,
-  project int references sc.projects(id), -- not null
-	ethnologue int references sc.ethnologue(id), -- not null
-	actual_date timestamp,
-	estimated_date timestamp,
-	is_planned bool,
-	type common.ceremony_type,
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id)
-
 );
 
 -- PARTNER CRM STUFF ---------------------------------------------------------------------------------------------------

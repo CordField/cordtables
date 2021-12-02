@@ -74,7 +74,7 @@ create table common.site_text_translations(
 -- todo
 create type common.book_name as enum (
   'Genesis',
-  'Exodus'
+  'Exodus',
   'Leviticus',
   'Numbers',
   'Deuteronomy',
@@ -137,7 +137,7 @@ create type common.book_name as enum (
   '1 John',
   '2 John',
   '3 John',
-  'Jude'
+  'Jude',
   'Revelation'
 );
 
