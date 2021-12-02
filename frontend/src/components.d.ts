@@ -276,7 +276,6 @@ export namespace Components {
     }
     interface SlackThread {
         "thread": CommonThread;
-        "threadPosts": CommonPost[];
     }
     interface StageGraph {
     }
@@ -1475,7 +1474,6 @@ declare namespace LocalJSX {
     }
     interface SlackThread {
         "thread"?: CommonThread;
-        "threadPosts"?: CommonPost[];
     }
     interface StageGraph {
     }
