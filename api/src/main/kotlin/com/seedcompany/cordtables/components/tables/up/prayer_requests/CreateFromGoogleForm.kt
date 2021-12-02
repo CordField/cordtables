@@ -76,7 +76,7 @@ class CreateFromGoogleForm(
    *
    */
 
-  @PostMapping("common-prayer-requests/create-from-form")
+  @PostMapping("up-prayer-requests/create-from-form")
   @ResponseBody
   fun createHandler(@RequestBody req: UpPrayerRequestsCreateFromFormRequest): UpPrayerRequestsCreateFromFormResponse {
 
