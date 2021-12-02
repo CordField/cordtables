@@ -74,7 +74,7 @@ class Register (
             statement.setString(4, errorType.name)
             statement.setInt(5,userId)
             statement.registerOutParameter(4, java.sql.Types.VARCHAR)
-            statement.registerOutParameter(5,userId)
+            statement.registerOutParameter(5,java.sql.Types.INTEGER)
 
             statement.execute()
 
