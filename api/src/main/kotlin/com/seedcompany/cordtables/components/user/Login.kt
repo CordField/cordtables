@@ -24,7 +24,8 @@ data class LoginReturn(
     val error: ErrorType,
     val token: String? = null,
     val readableTables: List<String> = listOf(),
-    val isAdmin: Boolean = false
+    val isAdmin: Boolean = false,
+    val userId: Int? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -49,8 +50,9 @@ class Login (
         if (req.password.length > 32) return LoginReturn(ErrorType.PasswordTooLong)
 
         var response = LoginReturn(ErrorType.UnknownError)
-        var token: String? = null
-        var errorType = ErrorType.UnknownError
+        var token: String?
+        var errorType: ErrorType
+        var userId: Int?
 //        val path = context.filesDir.absolutePath
 //
 //        println(home.resolve("src/Dockerfile").toAbsolutePath())
@@ -68,9 +70,13 @@ class Login (
                     if (matches) {
                         token = util.createToken()
 
-                        errorType = loginDB(req.email, token!!)
+                        val returnList = loginDB(req.email, token!!)
+                        errorType = returnList[0] as ErrorType
+                        userId = returnList[1] as Int?
+                        if(userId == -1) userId = null
+
                         if (errorType === ErrorType.NoError) {
-                            response = LoginReturn(errorType, token, util.getReadableTables(token!!), util.isAdmin(token!!))
+                            response = LoginReturn(errorType, token, util.getReadableTables(token!!), util.isAdmin(token!!), userId)
                         }
                     } else {
                         response = LoginReturn(ErrorType.BadCredentials, null)
@@ -88,21 +94,26 @@ class Login (
         return response
     }
 
-    fun loginDB(email: String, token: String): ErrorType{
+    fun loginDB(email: String, token: String): List<Any>{
 
         var errorType = ErrorType.UnknownError
+        var userId:Int = -1
 
         this.ds.connection.use{conn ->
-            val statement = conn.prepareCall("call admin.login(?, ?, ?);")
+            val statement = conn.prepareCall("call admin.login(?, ?, ?,?);")
             statement.setString(1, email)
             statement.setString(2, token)
             statement.setString(3, errorType.name)
+            statement.setInt(4,userId)
+
             statement.registerOutParameter(3, java.sql.Types.VARCHAR)
+            statement.registerOutParameter(4, java.sql.Types.INTEGER)
 
             statement.execute()
 
             try {
                 errorType = ErrorType.valueOf(statement.getString(3))
+                userId = statement.getInt(4)
             } catch (ex: IllegalArgumentException) {
                 throw ex
             }
@@ -114,6 +125,6 @@ class Login (
             statement.close()
         }
 
-        return errorType
+        return listOf<Any>(errorType,userId as Any)
     }
 }
