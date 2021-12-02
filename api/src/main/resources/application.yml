@@ -37,4 +37,5 @@ spring:
     auto-commit: true #default auto-commit behavior.
 springdoc:
   swagger-ui:
+    schemes: [ "http", "https" ]
     disable-swagger-default-url: true
