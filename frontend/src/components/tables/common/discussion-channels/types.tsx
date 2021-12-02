@@ -1,14 +1,14 @@
 import { ErrorType, GenericResponse } from '../../../../common/types';
 
 export class CommonDiscussionChannel {
-  id: number;
-  name: string;
-  created_at: string;
-  created_by: number;
-  modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  id?: number;
+  name?: string;
+  created_at?: string;
+  created_by?: number;
+  modified_at?: string;
+  modified_by?: number;
+  owning_person?: number;
+  owning_group?: number;
 }
 
 export class CreateCommonDiscussionChannelRequest {

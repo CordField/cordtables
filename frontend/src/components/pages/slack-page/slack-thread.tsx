@@ -15,9 +15,9 @@ import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse } fro
 export class SlackThread {
   @Prop({ mutable: true }) threadPosts: CommonPost[];
   @Prop() thread: CommonThread;
-  @State() showPosts: Boolean = false;
-  @State() showButtons: Boolean = false;
-  // @State() showForm: Boolean = false;
+  @State() showPosts: boolean = false;
+  @State() showButtons: boolean = false;
+  // @State() showForm: Bdoolean = false;
   componentDidLoad() {
     console.log('slackthread', this.thread);
   }
@@ -26,9 +26,14 @@ export class SlackThread {
     console.log('event received', event);
     this.threadPosts = this.threadPosts.concat(event.detail);
   }
+  mouseEnterAndLeaveHandler() {
+    console.log(this);
+    if (this.thread.owning_person === globals.globalStore.state.userId) this.showButtons = !this.showButtons;
+  }
 
   render() {
     // figure out a way to make this cleaner code
+    console.log('render', this);
     const jsx = (
       <div>
         <div
@@ -36,10 +41,10 @@ export class SlackThread {
             this.showPosts = !this.showPosts;
           }}
           onMouseEnter={() => {
-            setTimeout(() => (this.showButtons = !this.showButtons), 100);
+            setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
           }}
           onMouseLeave={() => {
-            setTimeout(() => (this.showButtons = !this.showButtons), 100);
+            setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
           }}
           class="slack-thread-content"
         >

@@ -70,7 +70,7 @@ export class SlackSidebar {
       this.discussionChannels.discussion_channels?.map(discussionChannel => {
         const discussionChannelClassName = `discussion-channel ${discussionChannel.id === this.selectedDiscussionChannel?.id ? 'selected-discussion-channel' : ''}`;
         return (
-          <div class={discussionChannelClassName} onClick={e => this.clickHandler(e)}>
+          <div class={discussionChannelClassName} onClick={e => this.clickHandler(e)} key={discussionChannel.id}>
             {discussionChannel.name}
           </div>
         );

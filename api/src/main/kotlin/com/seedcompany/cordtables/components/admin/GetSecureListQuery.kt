@@ -12,6 +12,7 @@ data class GetSecureListQueryRequest(
     val custom_columns: String? = null,
     val filter: String = "",
     val getList: Boolean = true, // get read if false
+    val whereClause: String = ""
 )
 
 data class GetSecureListQueryResponse(
@@ -98,11 +99,10 @@ class GetSecureListQuery() {
 
             response.query += """
             from ${req.tableName} 
-            where id in (select row from row_level_access) or
+            where (id in (select row from row_level_access) or
                 (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
                 owning_person = (select person from admin.tokens where token = :token) or
-                id in (select row from public_row_level_access)
-            ${req.filter};
+                id in (select row from public_row_level_access))  
         """.replace('\n', ' ')
 
         } else {
@@ -111,14 +111,26 @@ class GetSecureListQuery() {
             from ${req.tableName} 
             where
                 id = :id and
-                (id in (select row from row_level_access) or
+                ((id in (select row from row_level_access) or
                 (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
                 owning_person = (select person from admin.tokens where token = :token) or
-                id in (select row from public_row_level_access));
+                id in (select row from public_row_level_access)))
         """.replace('\n', ' ')
 
         }
-
+      if(req.whereClause!=="") {
+        response.query += """
+            and ${req.whereClause}
+            ${req.filter}            ;
+            ;
+            """.trimIndent().replace('\n', ' ')
+      }
+      else {
+        response.query+="""
+          ${req.filter};
+          """.trimIndent().replace('\n',' ')
+      }
+      println(response.query)
         return response
     }
 
