@@ -27,7 +27,7 @@ data class ScPinnedProjectsListResponse(
     val pinnedProjects: MutableList<pinnedProject>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScPinnedProjectsList")
 class List(
     @Autowired

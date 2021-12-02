@@ -22,7 +22,7 @@ data class CommonDiscussionChannelsUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonDiscussionChannelsUpdate")
 class Update(
         @Autowired
@@ -43,7 +43,7 @@ class Update(
             "name" -> {
                 util.updateField(
                     token = req.token,
-                    table = "common.discussionchannels",
+                    table = "common.discussion_channels",
                     column = "name",
                     id = req.id,
                     value = req.value,
@@ -53,7 +53,7 @@ class Update(
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
-                    table = "common.discussionchannels",
+                    table = "common.discussion_channels",
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
@@ -63,7 +63,7 @@ class Update(
             "owning_group" -> {
                 util.updateField(
                     token = req.token,
-                    table = "common.discussionchannels",
+                    table = "common.discussion_channels",
                     column = "owning_group",
                     id = req.id,
                     value = req.value,

@@ -27,7 +27,7 @@ data class ScFundingAccountsListResponse(
     val fundingAccounts: MutableList<fundingAccount>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScFundingAccountsList")
 class List(
     @Autowired

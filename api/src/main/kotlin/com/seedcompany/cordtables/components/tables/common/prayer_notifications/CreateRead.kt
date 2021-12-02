@@ -23,7 +23,7 @@ data class CommonPrayerNotificationsCreateReadResponse(
     val prayerNotification: prayerNotification? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonPrayerNotificationsCreateRead")
 class CreateRead(
     @Autowired

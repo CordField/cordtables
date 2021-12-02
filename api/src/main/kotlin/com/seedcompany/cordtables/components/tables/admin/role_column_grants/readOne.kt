@@ -37,7 +37,7 @@ data class GlobalRoleColumnGrantsReturnUnique(
         val response: MutableList<GlobalRoleColumnGrantsUnique>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @RestController("globalRoleColumnGrantsReadOneController")
 class readOne(
         @Autowired

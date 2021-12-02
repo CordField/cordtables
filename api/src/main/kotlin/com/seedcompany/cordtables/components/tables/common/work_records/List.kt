@@ -27,7 +27,7 @@ data class CommonWorkRecordListResponse(
     val work_record: MutableList<CommonWorkRecords>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonWorkRecordsList")
 class List(
     @Autowired

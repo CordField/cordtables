@@ -23,7 +23,7 @@ data class ScProjectsCreateReadResponse(
     val project: project? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScProjectsCreateRead")
 class CreateRead(
     @Autowired

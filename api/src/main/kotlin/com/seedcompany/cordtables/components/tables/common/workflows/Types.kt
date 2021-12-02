@@ -1,16 +1,22 @@
 package com.seedcompany.cordtables.components.tables.common.workflows
+data class workflow(
+    var id: Int? = null,
+    val title: String? = null,
+    val created_at: String? = null,
+    val created_by: Int? = null,
+    val modified_at: String? = null,
+    val modified_by: Int? = null,
+    val owning_person: Int? = null,
+    val owning_group: Int? = null,
+)
 
-import com.seedcompany.cordtables.common.CommonTicketStatus
-
-data class CommonWorkflowsRecords(
-        val id: Int? = null,
-        val ticket_status: CommonTicketStatus? = null,
-        val parent: Int? = null,
-        val content: String? = null,
-        val estimated_total_time: Number? = null,
-        val blocked_by: Number? = null,
-        val assigned_person: Number ?= null,
-        val total_time_worked: Number? = null,
-        val comment: String? = null,
-        val feedback: String? = null
+data class workflowInput(
+    var id: Int? = null,
+    val title: String? = null,
+    val created_at: String? = null,
+    val created_by: Int? = null,
+    val modified_at: String? = null,
+    val modified_by: Int? = null,
+    val owning_person: Int? = null,
+    val owning_group: Int? = null,
 )

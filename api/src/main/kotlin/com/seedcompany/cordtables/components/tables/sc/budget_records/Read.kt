@@ -22,10 +22,10 @@ data class ScBudgetRecordsReadRequest(
 
 data class ScBudgetRecordsReadResponse(
     val error: ErrorType,
-    val budgetrecord: BudgetRecord? = null,
+    val budget_record: BudgetRecord? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScBudgetRecordsRead")
 class Read(
     @Autowired
@@ -39,7 +39,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-budgetrecords/read")
+    @PostMapping("sc-budget-records/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScBudgetRecordsReadRequest): ScBudgetRecordsReadResponse {
 
@@ -52,19 +52,16 @@ class Read(
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "sc.budgetrecords",
+                tableName = "sc.budget_records",
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
-
                     "budget",
                     "change_to_plan",
                     "active",
                     "amount",
                     "fiscal_year",
                     "partnership",
-
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -81,9 +78,6 @@ class Read(
 
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var budget: Int? = jdbcResult.getInt("budget")
                 if (jdbcResult.wasNull()) budget = null
@@ -121,18 +115,15 @@ class Read(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                val budgetrecord =
+                val budget_record =
                     BudgetRecord(
                         id = id,
-                        neo4j_id = neo4j_id,
-
                         budget = budget,
                         change_to_plan = change_to_plan,
                         active = active,
                         amount = amount,
                         fiscal_year = fiscal_year,
                         partnership = partnership,
-
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,
@@ -141,7 +132,7 @@ class Read(
                         owning_group = owning_group
                     )
 
-                return ScBudgetRecordsReadResponse(ErrorType.NoError, budgetrecord = budgetrecord)
+                return ScBudgetRecordsReadResponse(ErrorType.NoError, budget_record = budget_record)
 
             }
         } catch (e: SQLException) {

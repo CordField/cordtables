@@ -22,7 +22,7 @@ data class PeerConfirmReturn(
     val error: ErrorType,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("AdminPeersConfirm")
 class Confirm(
     @Autowired

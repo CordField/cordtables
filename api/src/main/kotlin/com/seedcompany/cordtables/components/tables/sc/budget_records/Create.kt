@@ -13,7 +13,7 @@ import javax.sql.DataSource
 
 data class ScBudgetRecordsCreateRequest(
     val token: String? = null,
-    val budgetrecord: BudgetRecordInput,
+    val budget_record: BudgetRecordInput,
 )
 
 data class ScBudgetRecordsCreateResponse(
@@ -21,7 +21,7 @@ data class ScBudgetRecordsCreateResponse(
     val id: Int? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScBudgetRecordsCreate")
 class Create(
     @Autowired
@@ -48,7 +48,7 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.budgetrecords(budget, change_to_plan, created_by, modified_by, owning_person, owning_group)
+            insert into sc.budget_records(budget, change_to_plan, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
                     ?,
@@ -72,14 +72,14 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
-            req.budgetrecord.budget,
-            req.budgetrecord.change_to_plan,
+            req.budget_record.budget,
+            req.budget_record.change_to_plan,
             req.token,
             req.token,
             req.token,
         )
 
-//        req.budgetrecord.id = id
+//        req.budget_record.id = id
 
         return ScBudgetRecordsCreateResponse(error = ErrorType.NoError, id = id)
     }
