@@ -11,15 +11,15 @@ export class CommonDiscussionChannel {
   owning_group: number;
 }
 
-export class CreateDiscussionChannelRequest {
+export class CreateCommonDiscussionChannelRequest {
   token: string;
-  discussion_channels: {
+  discussion_channel: {
     name: string;
   };
 }
 
-export class CreateDiscussionChannelResponse extends GenericResponse {
-  discussion_channels: CommonDiscussionChannel;
+export class CreateCommonDiscussionChannelResponse extends GenericResponse {
+  discussion_channel: CommonDiscussionChannel;
 }
 
 export class CommonDiscussionChannelListRequest {
@@ -43,11 +43,11 @@ export class CommonDiscussionChannelUpdateResponse {
   discussion_channels: CommonDiscussionChannel | null = null;
 }
 
-export class DeleteDiscussionChannelRequest {
+export class DeleteCommonDiscussionChannelRequest {
   id: number;
   token: string;
 }
 
-export class DeleteDiscussionChannelResponse extends GenericResponse {
+export class DeleteCommonDiscussionChannelResponse extends GenericResponse {
   id: number;
 }

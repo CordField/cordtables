@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Watch, Event, EventEmitter, State } from '@stencil/core';
+import { Component, Host, h, Prop, Watch, Event, EventEmitter, State, Listen } from '@stencil/core';
 import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
@@ -6,8 +6,8 @@ import { DiscussionChannels } from '../../tables/common/discussion-channels/disc
 import {
   CommonDiscussionChannel,
   CommonDiscussionChannelListResponse,
-  CreateDiscussionChannelRequest,
-  CreateDiscussionChannelResponse,
+  CreateCommonDiscussionChannelRequest,
+  CreateCommonDiscussionChannelResponse,
 } from '../../tables/common/discussion-channels/types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -18,12 +18,21 @@ import { v4 as uuidv4 } from 'uuid';
   shadow: true,
 })
 export class SlackSidebar {
-  @Prop() discussionChannels: CommonDiscussionChannelListResponse;
+  @Prop({ mutable: true }) discussionChannels: CommonDiscussionChannelListResponse;
   @Event({ eventName: 'channelSelected' }) channelSelected: EventEmitter<CommonDiscussionChannel>;
   @State() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() name: string = '';
+  @State() showForm: boolean = false;
   // @Prop({ mutable: true }) selectedDiscussionChannel: CommonDiscussionChannel;
-
+  @Listen('channelAdded')
+  handleChannelAddedChange(event: CustomEvent<CommonDiscussionChannel>) {
+    // if (this.discussionChannels.error === ErrorType.NoError) {
+    //   this.channelThreads = this.channelThreads.concat(event.detail);
+    // }
+    if (this.discussionChannels.error === ErrorType.NoError) {
+      this.discussionChannels = { error: ErrorType.NoError, discussion_channels: this.discussionChannels.discussion_channels.concat(event.detail) };
+    }
+  }
   componentWillLoad() {
     console.log('component did load', this.discussionChannels);
     this.selectedDiscussionChannel = this.discussionChannels?.discussion_channels.length > 0 ? this.discussionChannels.discussion_channels[0] : null;
@@ -43,14 +52,14 @@ export class SlackSidebar {
   }
   async handleCreate(e) {
     e.preventDefault();
-    const createResponse = await fetchAs<CreateDiscussionChannelRequest, CreateDiscussionChannelResponse>('common-discussion_channels/create-read', {
+    const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common-discussion-channels/create-read', {
       token: globals.globalStore.state.token,
-      discussion_channels: {
+      discussion_channel: {
         name: this.name,
       },
     });
     if (createResponse.error === ErrorType.NoError) {
-      this.discussionChannels = { ...this.discussionChannels, discussion_channels: this.discussionChannels?.discussion_channels.concat(createResponse.discussion_channels) };
+      this.discussionChannels = { ...this.discussionChannels, discussion_channels: this.discussionChannels?.discussion_channels.concat(createResponse.discussion_channel) };
     } else {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
@@ -88,6 +97,16 @@ export class SlackSidebar {
         <slot></slot>
         {jsx}
         {/* {formJsx} */}
+        <div
+          class="add-button"
+          onClick={() => {
+            this.showForm = !this.showForm;
+          }}
+        >
+          {this.showForm ? '\u2212' : '\u002B'}
+        </div>
+        {/* {this.showForm && <slack-form type="channel" />} */}
+        {this.showForm && formJsx}
       </Host>
     );
   }

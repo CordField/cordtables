@@ -221,7 +221,7 @@ export namespace Components {
     interface SlackForm {
         "selectedChannelId": number;
         "selectedThreadId": number;
-        "type": 'thread' | 'post';
+        "type": 'thread' | 'post' | 'channel';
     }
     interface SlackPage {
     }
@@ -1241,11 +1241,12 @@ declare namespace LocalJSX {
         "selectedDiscussionChannel"?: CommonDiscussionChannel;
     }
     interface SlackForm {
+        "onChannelAdded"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
         "onPostAdded"?: (event: CustomEvent<CommonPost>) => void;
         "onThreadAdded"?: (event: CustomEvent<CommonThread>) => void;
         "selectedChannelId"?: number;
         "selectedThreadId"?: number;
-        "type"?: 'thread' | 'post';
+        "type"?: 'thread' | 'post' | 'channel';
     }
     interface SlackPage {
     }

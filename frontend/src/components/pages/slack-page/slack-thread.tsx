@@ -16,6 +16,7 @@ export class SlackThread {
   @Prop({ mutable: true }) threadPosts: CommonPost[];
   @Prop() thread: CommonThread;
   @State() showPosts: Boolean = false;
+  @State() showButtons: Boolean = false;
   // @State() showForm: Boolean = false;
   componentDidLoad() {
     console.log('slackthread', this.thread);
@@ -34,10 +35,24 @@ export class SlackThread {
           onClick={() => {
             this.showPosts = !this.showPosts;
           }}
+          onMouseEnter={() => {
+            setTimeout(() => (this.showButtons = !this.showButtons), 100);
+          }}
+          onMouseLeave={() => {
+            setTimeout(() => (this.showButtons = !this.showButtons), 100);
+          }}
           class="slack-thread-content"
         >
           <span class="post-indicator">{this.showPosts ? <span>&#128071;</span> : <span>&#x261e;</span>}</span>
           {this.thread.content} <span class="post-count">{this.threadPosts.length}</span>
+          {this.showButtons && (
+            <span class="slack-thread-buttons">
+              <span class="slack-thread-update" onClick={e => {}}>
+                &#9998;
+              </span>
+              <span class="slack-thread-delete">&#9940;</span>
+            </span>
+          )}
         </div>
         {/* <span class="form-indicator" onClick={() => (this.showForm = !this.showForm)}>
           {this.showForm === false ? <span>&#43;</span> : <span>&#8722;</span>}

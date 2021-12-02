@@ -35,16 +35,16 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-discussion_channels/create-read")
+    @PostMapping("common-discussion-channels/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonDiscussionChannelsCreateReadRequest): CommonDiscussionChannelsCreateReadResponse {
-
         val createResponse = create.createHandler(
             CommonDiscussionChannelsCreateRequest(
                 token = req.token,
                 discussion_channel = req.discussion_channel
             )
         )
+
 
         if (createResponse.error != ErrorType.NoError) {
             return CommonDiscussionChannelsCreateReadResponse(error = createResponse.error)

@@ -76,6 +76,19 @@ slack-thread {
   margin-top: 2.5rem;
 }
 
+.slack-thread-buttons {
+  margin-left: 10px;
+}
+.add-button {
+  color: #3c6a29;
+  background-color: #f0f7ec;
+  width: fit-content;
+  border-radius: 5px;
+  font-size: 2rem;
+  user-select: none;
+  text-align: center;
+  margin-top: 5px;
+}
 /* 
 .discussion-channel {
   color: red;

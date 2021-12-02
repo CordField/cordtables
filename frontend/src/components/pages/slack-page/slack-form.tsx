@@ -1,12 +1,10 @@
 import { Component, Host, h, Prop, State, Event, EventEmitter } from '@stencil/core';
-import { create } from 'domain';
-import { runInThisContext } from 'vm';
 import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CommonDiscussionChannel } from '../../tables/common/discussion-channels/types';
+import { CommonDiscussionChannel, CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse } from '../../tables/common/discussion-channels/types';
 import { CommonPost, CommonPostsListRequest, CommonPostsListResponse, CreateCommonPostsRequest, CreateCommonPostsResponse } from '../../tables/common/posts/types';
 import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, CreateCommonThreadsRequest, CreateCommonThreadsResponse } from '../../tables/common/threads/types';
 
@@ -17,12 +15,13 @@ import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, Crea
 })
 export class SlackForm {
   // this will be 0 in case of root component
-  @Prop() type: 'thread' | 'post' = 'thread';
+  @Prop() type: 'thread' | 'post' | 'channel' = 'thread';
   @Prop() selectedChannelId: number = null;
   @Prop() selectedThreadId: number = null;
   @State() content: string = null;
   @Event({ eventName: 'threadAdded' }) threadAdded: EventEmitter<CommonThread>;
   @Event({ eventName: 'postAdded' }) postAdded: EventEmitter<CommonPost>;
+  @Event({ eventName: 'channelAdded' }) channelAdded: EventEmitter<CommonDiscussionChannel>;
   handleContentChange(e) {
     this.content = e.target.value;
   }
@@ -47,6 +46,18 @@ export class SlackForm {
       });
       if (createResponse.error === ErrorType.NoError) {
         this.threadAdded.emit(createResponse.thread);
+      } else {
+        globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
+      }
+    } else if (this.type === 'channel') {
+      const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common-discussion-channels/create-read', {
+        token: globals.globalStore.state.token,
+        discussion_channel: {
+          name: this.content,
+        },
+      });
+      if (createResponse.error === ErrorType.NoError) {
+        this.channelAdded.emit(createResponse.discussion_channel);
       } else {
         globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
       }
