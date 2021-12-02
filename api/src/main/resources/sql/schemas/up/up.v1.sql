@@ -13,7 +13,7 @@ create table up.prayer_requests(
   language_id int references common.languages(id),
   sensitivity common.sensitivity default 'High',
   parent int references up.prayer_requests(id),
-  translator varchar(128),
+  translator int references admin.people(id),
   location varchar(64),
   title varchar(64) not null,
   content text not null,
