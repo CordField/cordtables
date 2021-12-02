@@ -17,6 +17,7 @@ create table up.prayer_requests(
   location varchar(64),
   title varchar(64) not null,
   content text not null,
+  reviewed bool default false,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
