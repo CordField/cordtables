@@ -2,6 +2,8 @@ package com.seedcompany.cordtables.components.tables.sc.partners
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.sc.languages.Read
+import com.seedcompany.cordtables.components.tables.sc.budget_records.Update
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -21,20 +23,17 @@ data class ScPartnersCreateResponse(
     val id: Int? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScPartnersCreate")
 class Create(
     @Autowired
-    val util: Utility,
-
+        val util: Utility,
     @Autowired
-    val ds: DataSource,
-
+        val ds: DataSource,
     @Autowired
-    val update: Update,
-
+        val update: Update,
     @Autowired
-    val read: Read,
+        val read: Read,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 

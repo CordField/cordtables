@@ -25,7 +25,7 @@ data class CommonPostsReadResponse(
         val post: Post? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonPostsRead")
 class Read(
         @Autowired

@@ -22,10 +22,10 @@ data class ScBudgetRecordsListRequest(
 
 data class ScBudgetRecordsListResponse(
     val error: ErrorType,
-    val budgetrecords: MutableList<BudgetRecord>?
+    val budget_records: MutableList<BudgetRecord>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScBudgetRecordsList")
 class List(
     @Autowired
@@ -51,11 +51,10 @@ class List(
 
         val query =  secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "sc.locations",
+                tableName = "sc.budget_records",
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
                     "budget",
                     "change_to_plan",
                     "active",
@@ -68,22 +67,17 @@ class List(
                     "modified_by",
                     "owning_person",
                     "owning_group",
-                    "peer"
                 )
             )
         ).query
 
 
         try {
-            println(query)
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var budget: Int? = jdbcResult.getInt("budget")
                 if (jdbcResult.wasNull()) budget = null
@@ -124,15 +118,12 @@ class List(
                 data.add(
                     BudgetRecord(
                         id = id,
-                        neo4j_id = neo4j_id,
-
                         budget = budget,
                         change_to_plan = change_to_plan,
                         active = active,
                         amount = amount,
                         fiscal_year = fiscal_year,
                         partnership = partnership,
-
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

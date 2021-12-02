@@ -27,7 +27,7 @@ data class CommonFilesUpdateReadResponse(
     val file: CommonFile? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonFilesUpdateRead")
 class UpdateRead(
     @Autowired

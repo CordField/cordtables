@@ -27,7 +27,7 @@ data class ScProductScriptureReferencesListResponse(
     val productScriptureReferences: MutableList<productScriptureReference>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScProductScriptureReferencesList")
 class List(
     @Autowired

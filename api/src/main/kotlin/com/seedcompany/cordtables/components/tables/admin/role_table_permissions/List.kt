@@ -28,7 +28,7 @@ data class AdminRoleTablePermissionsListResponse(
     val roleTablePermissions: MutableList<roleTablePermission>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("AdminRoleTablePermissionsList")
 class List(
     @Autowired

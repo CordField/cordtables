@@ -23,7 +23,7 @@ data class ScFundingAccountsCreateReadResponse(
     val fundingAccount: fundingAccount? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScFundingAccountsCreateRead")
 class CreateRead(
     @Autowired

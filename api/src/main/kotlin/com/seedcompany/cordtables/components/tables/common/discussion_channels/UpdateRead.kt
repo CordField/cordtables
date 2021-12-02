@@ -22,7 +22,7 @@ data class CommonDiscussionChannelsUpdateReadResponse(
     val discussion_channel: DiscussionChannel? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonDiscussionChannelsUpdateRead")
 class UpdateRead(
     @Autowired

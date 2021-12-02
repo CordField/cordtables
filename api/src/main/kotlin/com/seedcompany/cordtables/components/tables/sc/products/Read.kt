@@ -28,7 +28,7 @@ data class ScProductsReadResponse(
     val product: product? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScProductsRead")
 class Read(
     @Autowired

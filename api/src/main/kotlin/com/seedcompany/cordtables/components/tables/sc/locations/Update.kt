@@ -6,7 +6,7 @@ import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationInput
+import com.seedcompany.cordtables.components.tables.common.locations.locationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -25,7 +25,7 @@ data class ScLocationsUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScLocationsUpdate")
 class Update(
     @Autowired
@@ -51,22 +51,22 @@ class Update(
             )
         }
 
-        val updateResponse = commonUpdate.updateHandler(
-            CommonLocationsUpdateRequest(
-                token = req.token,
-                location = CommonLocationInput(
-                    id = req.location.id,
-                    name = req.location.name,
-                    type = req.location.type,
-                    owning_person = req.location.owning_person,
-                    owning_group = req.location.owning_group,
-                ),
-            )
-        )
-
-        if (updateResponse.error != ErrorType.NoError) {
-            return ScLocationsUpdateResponse(updateResponse.error)
-        }
+//        val updateResponse = commonUpdate.updateHandler(
+//            CommonLocationsUpdateRequest(
+//                token = req.token,
+//                location = CommonLocationInput(
+//                    id = req.location.id,
+//                    name = req.location.name,
+//                    type = req.location.type,
+//                    owning_person = req.location.owning_person,
+//                    owning_group = req.location.owning_group,
+//                ),
+//            )
+//        )
+//
+//        if (updateResponse.error != ErrorType.NoError) {
+//            return ScLocationsUpdateResponse(updateResponse.error)
+//        }
 
         if (req.location.neo4j_id != null) util.updateField(
             token = req.token,

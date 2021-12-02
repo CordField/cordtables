@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
 import javax.sql.DataSource
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScEthnologueMigrate")
 @DependsOn("BootstrapDB")
 class Migrate(

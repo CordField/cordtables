@@ -27,7 +27,7 @@ data class ScFieldZonesListResponse(
     val fieldZones: MutableList<fieldZone>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScFieldZonesList")
 class List(
     @Autowired

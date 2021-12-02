@@ -21,7 +21,7 @@ data class CommonDiscussionChannelsDeleteResponse(
     val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonDiscussionChannelsDelete")
 class Delete(
     @Autowired

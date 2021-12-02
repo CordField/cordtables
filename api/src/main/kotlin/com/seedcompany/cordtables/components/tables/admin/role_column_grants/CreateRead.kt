@@ -23,7 +23,7 @@ data class AdminRoleColumnGrantsCreateReadResponse(
     val roleColumnGrant: roleColumnGrant? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("AdminRoleColumnGrantsCreateRead")
 class CreateRead(
     @Autowired

@@ -23,7 +23,7 @@ data class ScGlobalPartnerEngagementsCreateReadResponse(
     val globalPartnerEngagement: globalPartnerEngagement? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScGlobalPartnerEngagementsCreateRead")
 class CreateRead(
     @Autowired

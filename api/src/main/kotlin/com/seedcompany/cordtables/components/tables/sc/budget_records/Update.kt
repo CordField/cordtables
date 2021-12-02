@@ -22,7 +22,7 @@ data class ScBudgetRecordsUpdateResponse(
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("ScBudgetRecordsUpdate")
 class Update(
     @Autowired
@@ -31,7 +31,8 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-budgetrecords/update")
+
+    @PostMapping("sc-budget-records/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScBudgetRecordsUpdateRequest): ScBudgetRecordsUpdateResponse {
 
@@ -40,20 +41,11 @@ class Update(
         if (req.id == null) return ScBudgetRecordsUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-            "neo4j_id" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.budgetrecords",
-                    column = "neo4j_id",
-                    id = req.id,
-                    value = req.value,
-                )
-            }
 
             "budget" -> {
                 util.updateField(
                     token = req.token,
-                    table = "sc.budgetrecords",
+                    table = "sc.budget_records",
                     column = "budget",
                     id = req.id,
                     value = req.value,
@@ -63,7 +55,7 @@ class Update(
             "change_to_plan" -> {
                 util.updateField(
                     token = req.token,
-                    table = "sc.budgetrecords",
+                    table = "sc.budget_records",
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
@@ -73,17 +65,18 @@ class Update(
             "active" -> {
                 util.updateField(
                     token = req.token,
-                    table = "sc.budgetrecords",
+                    table = "sc.budget_records",
                     column = "active",
                     id = req.id,
                     value = req.value,
+                    cast =  "::boolean"
                 )
             }
 
             "amount" -> {
                 util.updateField(
                     token = req.token,
-                    table = "sc.budgetrecords",
+                    table = "sc.budget_records",
                     column = "amount",
                     id = req.id,
                     value = req.value,
@@ -93,7 +86,7 @@ class Update(
             "fiscal_year" -> {
                 util.updateField(
                     token = req.token,
-                    table = "sc.budgetrecords",
+                    table = "sc.budget-records",
                     column = "fiscal_year",
                     id = req.id,
                     value = req.value,
@@ -103,7 +96,7 @@ class Update(
             "partnership" -> {
                 util.updateField(
                     token = req.token,
-                    table = "sc.budgetrecords",
+                    table = "sc.budget_records",
                     column = "partnership",
                     id = req.id,
                     value = req.value,
@@ -113,7 +106,7 @@ class Update(
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
-                    table = "sc.budgetrecords",
+                    table = "sc.budget_records",
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
@@ -123,7 +116,7 @@ class Update(
             "owning_group" -> {
                 util.updateField(
                     token = req.token,
-                    table = "sc.budgetrecords",
+                    table = "sc.budget_records",
                     column = "owning_group",
                     id = req.id,
                     value = req.value,

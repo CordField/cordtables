@@ -56,6 +56,13 @@ export namespace Components {
     }
     interface CfNotif {
     }
+    interface CfPagination {
+        "currentPage": number;
+        "history": RouterHistory;
+        "pageUrl": string;
+        "resultsPerPage": number;
+        "totalRows": number;
+    }
     interface CfRegister {
         "history": RouterHistory;
     }
@@ -82,7 +89,19 @@ export namespace Components {
     }
     interface CommonCoalitions {
     }
+    interface CommonLocations {
+    }
+    interface CommonNotes {
+    }
+    interface CommonOrgChartPositionGraph {
+    }
+    interface CommonOrgChartPositions {
+    }
     interface CommonOrganizations {
+    }
+    interface CommonPeopleGraph {
+    }
+    interface CommonPeopleToOrgRelationships {
     }
     interface CommonPosts {
     }
@@ -90,7 +109,17 @@ export namespace Components {
     }
     interface CommonPrayerRequests {
     }
+    interface CommonStageGraph {
+    }
+    interface CommonStageNotifications {
+    }
+    interface CommonStageRoleColumnGrants {
+    }
+    interface CommonStages {
+    }
     interface CommonThreads {
+    }
+    interface CommonWorkflows {
     }
     interface CreateUpdateModal {
         "isOpen": boolean;
@@ -127,6 +156,12 @@ export namespace Components {
     }
     interface OrganizationsTable {
     }
+    interface PageNotFound {
+        "history": RouterHistory;
+    }
+    interface PagePrayerRequests {
+        "history": RouterHistory;
+    }
     interface PageRoot {
         "match": MatchResults;
     }
@@ -135,6 +170,13 @@ export namespace Components {
     interface PeopleTable {
     }
     interface PeopleToOrgRelationships {
+    }
+    interface PrayerRequestEditPage {
+        "history": RouterHistory;
+        "requestId": any;
+    }
+    interface RequestPrayerPage {
+        "history": RouterHistory;
     }
     interface RoleColumnGrants {
         "history": RouterHistory;
@@ -155,6 +197,8 @@ export namespace Components {
     }
     interface ScChangeToPlan {
     }
+    interface ScEthnologue {
+    }
     interface ScFieldRegionsTable {
     }
     interface ScFieldZones {
@@ -168,6 +212,8 @@ export namespace Components {
     interface ScGlobalPartnerEngagements {
     }
     interface ScGlobalPartnerPerformance {
+    }
+    interface ScGlobalPartnerTransitions {
     }
     interface ScInternshipEngagements {
     }
@@ -371,6 +417,12 @@ declare global {
         prototype: HTMLCfNotifElement;
         new (): HTMLCfNotifElement;
     };
+    interface HTMLCfPaginationElement extends Components.CfPagination, HTMLStencilElement {
+    }
+    var HTMLCfPaginationElement: {
+        prototype: HTMLCfPaginationElement;
+        new (): HTMLCfPaginationElement;
+    };
     interface HTMLCfRegisterElement extends Components.CfRegister, HTMLStencilElement {
     }
     var HTMLCfRegisterElement: {
@@ -425,11 +477,47 @@ declare global {
         prototype: HTMLCommonCoalitionsElement;
         new (): HTMLCommonCoalitionsElement;
     };
+    interface HTMLCommonLocationsElement extends Components.CommonLocations, HTMLStencilElement {
+    }
+    var HTMLCommonLocationsElement: {
+        prototype: HTMLCommonLocationsElement;
+        new (): HTMLCommonLocationsElement;
+    };
+    interface HTMLCommonNotesElement extends Components.CommonNotes, HTMLStencilElement {
+    }
+    var HTMLCommonNotesElement: {
+        prototype: HTMLCommonNotesElement;
+        new (): HTMLCommonNotesElement;
+    };
+    interface HTMLCommonOrgChartPositionGraphElement extends Components.CommonOrgChartPositionGraph, HTMLStencilElement {
+    }
+    var HTMLCommonOrgChartPositionGraphElement: {
+        prototype: HTMLCommonOrgChartPositionGraphElement;
+        new (): HTMLCommonOrgChartPositionGraphElement;
+    };
+    interface HTMLCommonOrgChartPositionsElement extends Components.CommonOrgChartPositions, HTMLStencilElement {
+    }
+    var HTMLCommonOrgChartPositionsElement: {
+        prototype: HTMLCommonOrgChartPositionsElement;
+        new (): HTMLCommonOrgChartPositionsElement;
+    };
     interface HTMLCommonOrganizationsElement extends Components.CommonOrganizations, HTMLStencilElement {
     }
     var HTMLCommonOrganizationsElement: {
         prototype: HTMLCommonOrganizationsElement;
         new (): HTMLCommonOrganizationsElement;
+    };
+    interface HTMLCommonPeopleGraphElement extends Components.CommonPeopleGraph, HTMLStencilElement {
+    }
+    var HTMLCommonPeopleGraphElement: {
+        prototype: HTMLCommonPeopleGraphElement;
+        new (): HTMLCommonPeopleGraphElement;
+    };
+    interface HTMLCommonPeopleToOrgRelationshipsElement extends Components.CommonPeopleToOrgRelationships, HTMLStencilElement {
+    }
+    var HTMLCommonPeopleToOrgRelationshipsElement: {
+        prototype: HTMLCommonPeopleToOrgRelationshipsElement;
+        new (): HTMLCommonPeopleToOrgRelationshipsElement;
     };
     interface HTMLCommonPostsElement extends Components.CommonPosts, HTMLStencilElement {
     }
@@ -449,11 +537,41 @@ declare global {
         prototype: HTMLCommonPrayerRequestsElement;
         new (): HTMLCommonPrayerRequestsElement;
     };
+    interface HTMLCommonStageGraphElement extends Components.CommonStageGraph, HTMLStencilElement {
+    }
+    var HTMLCommonStageGraphElement: {
+        prototype: HTMLCommonStageGraphElement;
+        new (): HTMLCommonStageGraphElement;
+    };
+    interface HTMLCommonStageNotificationsElement extends Components.CommonStageNotifications, HTMLStencilElement {
+    }
+    var HTMLCommonStageNotificationsElement: {
+        prototype: HTMLCommonStageNotificationsElement;
+        new (): HTMLCommonStageNotificationsElement;
+    };
+    interface HTMLCommonStageRoleColumnGrantsElement extends Components.CommonStageRoleColumnGrants, HTMLStencilElement {
+    }
+    var HTMLCommonStageRoleColumnGrantsElement: {
+        prototype: HTMLCommonStageRoleColumnGrantsElement;
+        new (): HTMLCommonStageRoleColumnGrantsElement;
+    };
+    interface HTMLCommonStagesElement extends Components.CommonStages, HTMLStencilElement {
+    }
+    var HTMLCommonStagesElement: {
+        prototype: HTMLCommonStagesElement;
+        new (): HTMLCommonStagesElement;
+    };
     interface HTMLCommonThreadsElement extends Components.CommonThreads, HTMLStencilElement {
     }
     var HTMLCommonThreadsElement: {
         prototype: HTMLCommonThreadsElement;
         new (): HTMLCommonThreadsElement;
+    };
+    interface HTMLCommonWorkflowsElement extends Components.CommonWorkflows, HTMLStencilElement {
+    }
+    var HTMLCommonWorkflowsElement: {
+        prototype: HTMLCommonWorkflowsElement;
+        new (): HTMLCommonWorkflowsElement;
     };
     interface HTMLCreateUpdateModalElement extends Components.CreateUpdateModal, HTMLStencilElement {
     }
@@ -545,6 +663,18 @@ declare global {
         prototype: HTMLOrganizationsTableElement;
         new (): HTMLOrganizationsTableElement;
     };
+    interface HTMLPageNotFoundElement extends Components.PageNotFound, HTMLStencilElement {
+    }
+    var HTMLPageNotFoundElement: {
+        prototype: HTMLPageNotFoundElement;
+        new (): HTMLPageNotFoundElement;
+    };
+    interface HTMLPagePrayerRequestsElement extends Components.PagePrayerRequests, HTMLStencilElement {
+    }
+    var HTMLPagePrayerRequestsElement: {
+        prototype: HTMLPagePrayerRequestsElement;
+        new (): HTMLPagePrayerRequestsElement;
+    };
     interface HTMLPageRootElement extends Components.PageRoot, HTMLStencilElement {
     }
     var HTMLPageRootElement: {
@@ -568,6 +698,18 @@ declare global {
     var HTMLPeopleToOrgRelationshipsElement: {
         prototype: HTMLPeopleToOrgRelationshipsElement;
         new (): HTMLPeopleToOrgRelationshipsElement;
+    };
+    interface HTMLPrayerRequestEditPageElement extends Components.PrayerRequestEditPage, HTMLStencilElement {
+    }
+    var HTMLPrayerRequestEditPageElement: {
+        prototype: HTMLPrayerRequestEditPageElement;
+        new (): HTMLPrayerRequestEditPageElement;
+    };
+    interface HTMLRequestPrayerPageElement extends Components.RequestPrayerPage, HTMLStencilElement {
+    }
+    var HTMLRequestPrayerPageElement: {
+        prototype: HTMLRequestPrayerPageElement;
+        new (): HTMLRequestPrayerPageElement;
     };
     interface HTMLRoleColumnGrantsElement extends Components.RoleColumnGrants, HTMLStencilElement {
     }
@@ -623,6 +765,12 @@ declare global {
         prototype: HTMLScChangeToPlanElement;
         new (): HTMLScChangeToPlanElement;
     };
+    interface HTMLScEthnologueElement extends Components.ScEthnologue, HTMLStencilElement {
+    }
+    var HTMLScEthnologueElement: {
+        prototype: HTMLScEthnologueElement;
+        new (): HTMLScEthnologueElement;
+    };
     interface HTMLScFieldRegionsTableElement extends Components.ScFieldRegionsTable, HTMLStencilElement {
     }
     var HTMLScFieldRegionsTableElement: {
@@ -664,6 +812,12 @@ declare global {
     var HTMLScGlobalPartnerPerformanceElement: {
         prototype: HTMLScGlobalPartnerPerformanceElement;
         new (): HTMLScGlobalPartnerPerformanceElement;
+    };
+    interface HTMLScGlobalPartnerTransitionsElement extends Components.ScGlobalPartnerTransitions, HTMLStencilElement {
+    }
+    var HTMLScGlobalPartnerTransitionsElement: {
+        prototype: HTMLScGlobalPartnerTransitionsElement;
+        new (): HTMLScGlobalPartnerTransitionsElement;
     };
     interface HTMLScInternshipEngagementsElement extends Components.ScInternshipEngagements, HTMLStencilElement {
     }
@@ -935,6 +1089,7 @@ declare global {
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-notif": HTMLCfNotifElement;
+        "cf-pagination": HTMLCfPaginationElement;
         "cf-register": HTMLCfRegisterElement;
         "cf-row": HTMLCfRowElement;
         "cf-table": HTMLCfTableElement;
@@ -944,11 +1099,22 @@ declare global {
         "common-cell-channels": HTMLCommonCellChannelsElement;
         "common-coalition-memberships": HTMLCommonCoalitionMembershipsElement;
         "common-coalitions": HTMLCommonCoalitionsElement;
+        "common-locations": HTMLCommonLocationsElement;
+        "common-notes": HTMLCommonNotesElement;
+        "common-org-chart-position-graph": HTMLCommonOrgChartPositionGraphElement;
+        "common-org-chart-positions": HTMLCommonOrgChartPositionsElement;
         "common-organizations": HTMLCommonOrganizationsElement;
+        "common-people-graph": HTMLCommonPeopleGraphElement;
+        "common-people-to-org-relationships": HTMLCommonPeopleToOrgRelationshipsElement;
         "common-posts": HTMLCommonPostsElement;
         "common-prayer-notifications": HTMLCommonPrayerNotificationsElement;
         "common-prayer-requests": HTMLCommonPrayerRequestsElement;
+        "common-stage-graph": HTMLCommonStageGraphElement;
+        "common-stage-notifications": HTMLCommonStageNotificationsElement;
+        "common-stage-role-column-grants": HTMLCommonStageRoleColumnGrantsElement;
+        "common-stages": HTMLCommonStagesElement;
         "common-threads": HTMLCommonThreadsElement;
+        "common-workflows": HTMLCommonWorkflowsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
         "directories-table": HTMLDirectoriesTableElement;
         "discussion-channels": HTMLDiscussionChannelsElement;
@@ -964,10 +1130,14 @@ declare global {
         "locations-table": HTMLLocationsTableElement;
         "organizations-page": HTMLOrganizationsPageElement;
         "organizations-table": HTMLOrganizationsTableElement;
+        "page-not-found": HTMLPageNotFoundElement;
+        "page-prayer-requests": HTMLPagePrayerRequestsElement;
         "page-root": HTMLPageRootElement;
         "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
         "people-to-org-relationships": HTMLPeopleToOrgRelationshipsElement;
+        "prayer-request-edit-page": HTMLPrayerRequestEditPageElement;
+        "request-prayer-page": HTMLRequestPrayerPageElement;
         "role-column-grants": HTMLRoleColumnGrantsElement;
         "role-memberships": HTMLRoleMembershipsElement;
         "role-table-permissions": HTMLRoleTablePermissionsElement;
@@ -977,6 +1147,7 @@ declare global {
         "sc-budgets": HTMLScBudgetsElement;
         "sc-ceremonies": HTMLScCeremoniesElement;
         "sc-change-to-plan": HTMLScChangeToPlanElement;
+        "sc-ethnologue": HTMLScEthnologueElement;
         "sc-field-regions-table": HTMLScFieldRegionsTableElement;
         "sc-field-zones": HTMLScFieldZonesElement;
         "sc-funding-accounts": HTMLScFundingAccountsElement;
@@ -984,6 +1155,7 @@ declare global {
         "sc-global-partner-engagement-people": HTMLScGlobalPartnerEngagementPeopleElement;
         "sc-global-partner-engagements": HTMLScGlobalPartnerEngagementsElement;
         "sc-global-partner-performance": HTMLScGlobalPartnerPerformanceElement;
+        "sc-global-partner-transitions": HTMLScGlobalPartnerTransitionsElement;
         "sc-internship-engagements": HTMLScInternshipEngagementsElement;
         "sc-known-languages-by-person": HTMLScKnownLanguagesByPersonElement;
         "sc-language-engagements": HTMLScLanguageEngagementsElement;
@@ -1073,6 +1245,14 @@ declare namespace LocalJSX {
     }
     interface CfNotif {
     }
+    interface CfPagination {
+        "currentPage"?: number;
+        "history"?: RouterHistory;
+        "onPageChanged"?: (event: CustomEvent<number>) => void;
+        "pageUrl"?: string;
+        "resultsPerPage"?: number;
+        "totalRows"?: number;
+    }
     interface CfRegister {
         "history"?: RouterHistory;
     }
@@ -1100,7 +1280,19 @@ declare namespace LocalJSX {
     }
     interface CommonCoalitions {
     }
+    interface CommonLocations {
+    }
+    interface CommonNotes {
+    }
+    interface CommonOrgChartPositionGraph {
+    }
+    interface CommonOrgChartPositions {
+    }
     interface CommonOrganizations {
+    }
+    interface CommonPeopleGraph {
+    }
+    interface CommonPeopleToOrgRelationships {
     }
     interface CommonPosts {
     }
@@ -1108,7 +1300,17 @@ declare namespace LocalJSX {
     }
     interface CommonPrayerRequests {
     }
+    interface CommonStageGraph {
+    }
+    interface CommonStageNotifications {
+    }
+    interface CommonStageRoleColumnGrants {
+    }
+    interface CommonStages {
+    }
     interface CommonThreads {
+    }
+    interface CommonWorkflows {
     }
     interface CreateUpdateModal {
         "isOpen"?: boolean;
@@ -1149,6 +1351,12 @@ declare namespace LocalJSX {
     }
     interface OrganizationsTable {
     }
+    interface PageNotFound {
+        "history"?: RouterHistory;
+    }
+    interface PagePrayerRequests {
+        "history"?: RouterHistory;
+    }
     interface PageRoot {
         "match"?: MatchResults;
     }
@@ -1157,6 +1365,13 @@ declare namespace LocalJSX {
     interface PeopleTable {
     }
     interface PeopleToOrgRelationships {
+    }
+    interface PrayerRequestEditPage {
+        "history"?: RouterHistory;
+        "requestId"?: any;
+    }
+    interface RequestPrayerPage {
+        "history"?: RouterHistory;
     }
     interface RoleColumnGrants {
         "history"?: RouterHistory;
@@ -1177,6 +1392,8 @@ declare namespace LocalJSX {
     }
     interface ScChangeToPlan {
     }
+    interface ScEthnologue {
+    }
     interface ScFieldRegionsTable {
     }
     interface ScFieldZones {
@@ -1190,6 +1407,8 @@ declare namespace LocalJSX {
     interface ScGlobalPartnerEngagements {
     }
     interface ScGlobalPartnerPerformance {
+    }
+    interface ScGlobalPartnerTransitions {
     }
     interface ScInternshipEngagements {
     }
@@ -1311,6 +1530,7 @@ declare namespace LocalJSX {
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-notif": CfNotif;
+        "cf-pagination": CfPagination;
         "cf-register": CfRegister;
         "cf-row": CfRow;
         "cf-table": CfTable;
@@ -1320,11 +1540,22 @@ declare namespace LocalJSX {
         "common-cell-channels": CommonCellChannels;
         "common-coalition-memberships": CommonCoalitionMemberships;
         "common-coalitions": CommonCoalitions;
+        "common-locations": CommonLocations;
+        "common-notes": CommonNotes;
+        "common-org-chart-position-graph": CommonOrgChartPositionGraph;
+        "common-org-chart-positions": CommonOrgChartPositions;
         "common-organizations": CommonOrganizations;
+        "common-people-graph": CommonPeopleGraph;
+        "common-people-to-org-relationships": CommonPeopleToOrgRelationships;
         "common-posts": CommonPosts;
         "common-prayer-notifications": CommonPrayerNotifications;
         "common-prayer-requests": CommonPrayerRequests;
+        "common-stage-graph": CommonStageGraph;
+        "common-stage-notifications": CommonStageNotifications;
+        "common-stage-role-column-grants": CommonStageRoleColumnGrants;
+        "common-stages": CommonStages;
         "common-threads": CommonThreads;
+        "common-workflows": CommonWorkflows;
         "create-update-modal": CreateUpdateModal;
         "directories-table": DirectoriesTable;
         "discussion-channels": DiscussionChannels;
@@ -1340,10 +1571,14 @@ declare namespace LocalJSX {
         "locations-table": LocationsTable;
         "organizations-page": OrganizationsPage;
         "organizations-table": OrganizationsTable;
+        "page-not-found": PageNotFound;
+        "page-prayer-requests": PagePrayerRequests;
         "page-root": PageRoot;
         "peers-table": PeersTable;
         "people-table": PeopleTable;
         "people-to-org-relationships": PeopleToOrgRelationships;
+        "prayer-request-edit-page": PrayerRequestEditPage;
+        "request-prayer-page": RequestPrayerPage;
         "role-column-grants": RoleColumnGrants;
         "role-memberships": RoleMemberships;
         "role-table-permissions": RoleTablePermissions;
@@ -1353,6 +1588,7 @@ declare namespace LocalJSX {
         "sc-budgets": ScBudgets;
         "sc-ceremonies": ScCeremonies;
         "sc-change-to-plan": ScChangeToPlan;
+        "sc-ethnologue": ScEthnologue;
         "sc-field-regions-table": ScFieldRegionsTable;
         "sc-field-zones": ScFieldZones;
         "sc-funding-accounts": ScFundingAccounts;
@@ -1360,6 +1596,7 @@ declare namespace LocalJSX {
         "sc-global-partner-engagement-people": ScGlobalPartnerEngagementPeople;
         "sc-global-partner-engagements": ScGlobalPartnerEngagements;
         "sc-global-partner-performance": ScGlobalPartnerPerformance;
+        "sc-global-partner-transitions": ScGlobalPartnerTransitions;
         "sc-internship-engagements": ScInternshipEngagements;
         "sc-known-languages-by-person": ScKnownLanguagesByPerson;
         "sc-language-engagements": ScLanguageEngagements;
@@ -1425,6 +1662,7 @@ declare module "@stencil/core" {
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-notif": LocalJSX.CfNotif & JSXBase.HTMLAttributes<HTMLCfNotifElement>;
+            "cf-pagination": LocalJSX.CfPagination & JSXBase.HTMLAttributes<HTMLCfPaginationElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
             "cf-row": LocalJSX.CfRow & JSXBase.HTMLAttributes<HTMLCfRowElement>;
             "cf-table": LocalJSX.CfTable & JSXBase.HTMLAttributes<HTMLCfTableElement>;
@@ -1434,11 +1672,22 @@ declare module "@stencil/core" {
             "common-cell-channels": LocalJSX.CommonCellChannels & JSXBase.HTMLAttributes<HTMLCommonCellChannelsElement>;
             "common-coalition-memberships": LocalJSX.CommonCoalitionMemberships & JSXBase.HTMLAttributes<HTMLCommonCoalitionMembershipsElement>;
             "common-coalitions": LocalJSX.CommonCoalitions & JSXBase.HTMLAttributes<HTMLCommonCoalitionsElement>;
+            "common-locations": LocalJSX.CommonLocations & JSXBase.HTMLAttributes<HTMLCommonLocationsElement>;
+            "common-notes": LocalJSX.CommonNotes & JSXBase.HTMLAttributes<HTMLCommonNotesElement>;
+            "common-org-chart-position-graph": LocalJSX.CommonOrgChartPositionGraph & JSXBase.HTMLAttributes<HTMLCommonOrgChartPositionGraphElement>;
+            "common-org-chart-positions": LocalJSX.CommonOrgChartPositions & JSXBase.HTMLAttributes<HTMLCommonOrgChartPositionsElement>;
             "common-organizations": LocalJSX.CommonOrganizations & JSXBase.HTMLAttributes<HTMLCommonOrganizationsElement>;
+            "common-people-graph": LocalJSX.CommonPeopleGraph & JSXBase.HTMLAttributes<HTMLCommonPeopleGraphElement>;
+            "common-people-to-org-relationships": LocalJSX.CommonPeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLCommonPeopleToOrgRelationshipsElement>;
             "common-posts": LocalJSX.CommonPosts & JSXBase.HTMLAttributes<HTMLCommonPostsElement>;
             "common-prayer-notifications": LocalJSX.CommonPrayerNotifications & JSXBase.HTMLAttributes<HTMLCommonPrayerNotificationsElement>;
             "common-prayer-requests": LocalJSX.CommonPrayerRequests & JSXBase.HTMLAttributes<HTMLCommonPrayerRequestsElement>;
+            "common-stage-graph": LocalJSX.CommonStageGraph & JSXBase.HTMLAttributes<HTMLCommonStageGraphElement>;
+            "common-stage-notifications": LocalJSX.CommonStageNotifications & JSXBase.HTMLAttributes<HTMLCommonStageNotificationsElement>;
+            "common-stage-role-column-grants": LocalJSX.CommonStageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLCommonStageRoleColumnGrantsElement>;
+            "common-stages": LocalJSX.CommonStages & JSXBase.HTMLAttributes<HTMLCommonStagesElement>;
             "common-threads": LocalJSX.CommonThreads & JSXBase.HTMLAttributes<HTMLCommonThreadsElement>;
+            "common-workflows": LocalJSX.CommonWorkflows & JSXBase.HTMLAttributes<HTMLCommonWorkflowsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "directories-table": LocalJSX.DirectoriesTable & JSXBase.HTMLAttributes<HTMLDirectoriesTableElement>;
             "discussion-channels": LocalJSX.DiscussionChannels & JSXBase.HTMLAttributes<HTMLDiscussionChannelsElement>;
@@ -1454,10 +1703,14 @@ declare module "@stencil/core" {
             "locations-table": LocalJSX.LocationsTable & JSXBase.HTMLAttributes<HTMLLocationsTableElement>;
             "organizations-page": LocalJSX.OrganizationsPage & JSXBase.HTMLAttributes<HTMLOrganizationsPageElement>;
             "organizations-table": LocalJSX.OrganizationsTable & JSXBase.HTMLAttributes<HTMLOrganizationsTableElement>;
+            "page-not-found": LocalJSX.PageNotFound & JSXBase.HTMLAttributes<HTMLPageNotFoundElement>;
+            "page-prayer-requests": LocalJSX.PagePrayerRequests & JSXBase.HTMLAttributes<HTMLPagePrayerRequestsElement>;
             "page-root": LocalJSX.PageRoot & JSXBase.HTMLAttributes<HTMLPageRootElement>;
             "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "people-to-org-relationships": LocalJSX.PeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLPeopleToOrgRelationshipsElement>;
+            "prayer-request-edit-page": LocalJSX.PrayerRequestEditPage & JSXBase.HTMLAttributes<HTMLPrayerRequestEditPageElement>;
+            "request-prayer-page": LocalJSX.RequestPrayerPage & JSXBase.HTMLAttributes<HTMLRequestPrayerPageElement>;
             "role-column-grants": LocalJSX.RoleColumnGrants & JSXBase.HTMLAttributes<HTMLRoleColumnGrantsElement>;
             "role-memberships": LocalJSX.RoleMemberships & JSXBase.HTMLAttributes<HTMLRoleMembershipsElement>;
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
@@ -1467,6 +1720,7 @@ declare module "@stencil/core" {
             "sc-budgets": LocalJSX.ScBudgets & JSXBase.HTMLAttributes<HTMLScBudgetsElement>;
             "sc-ceremonies": LocalJSX.ScCeremonies & JSXBase.HTMLAttributes<HTMLScCeremoniesElement>;
             "sc-change-to-plan": LocalJSX.ScChangeToPlan & JSXBase.HTMLAttributes<HTMLScChangeToPlanElement>;
+            "sc-ethnologue": LocalJSX.ScEthnologue & JSXBase.HTMLAttributes<HTMLScEthnologueElement>;
             "sc-field-regions-table": LocalJSX.ScFieldRegionsTable & JSXBase.HTMLAttributes<HTMLScFieldRegionsTableElement>;
             "sc-field-zones": LocalJSX.ScFieldZones & JSXBase.HTMLAttributes<HTMLScFieldZonesElement>;
             "sc-funding-accounts": LocalJSX.ScFundingAccounts & JSXBase.HTMLAttributes<HTMLScFundingAccountsElement>;
@@ -1474,6 +1728,7 @@ declare module "@stencil/core" {
             "sc-global-partner-engagement-people": LocalJSX.ScGlobalPartnerEngagementPeople & JSXBase.HTMLAttributes<HTMLScGlobalPartnerEngagementPeopleElement>;
             "sc-global-partner-engagements": LocalJSX.ScGlobalPartnerEngagements & JSXBase.HTMLAttributes<HTMLScGlobalPartnerEngagementsElement>;
             "sc-global-partner-performance": LocalJSX.ScGlobalPartnerPerformance & JSXBase.HTMLAttributes<HTMLScGlobalPartnerPerformanceElement>;
+            "sc-global-partner-transitions": LocalJSX.ScGlobalPartnerTransitions & JSXBase.HTMLAttributes<HTMLScGlobalPartnerTransitionsElement>;
             "sc-internship-engagements": LocalJSX.ScInternshipEngagements & JSXBase.HTMLAttributes<HTMLScInternshipEngagementsElement>;
             "sc-known-languages-by-person": LocalJSX.ScKnownLanguagesByPerson & JSXBase.HTMLAttributes<HTMLScKnownLanguagesByPersonElement>;
             "sc-language-engagements": LocalJSX.ScLanguageEngagements & JSXBase.HTMLAttributes<HTMLScLanguageEngagementsElement>;

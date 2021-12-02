@@ -144,7 +144,7 @@ CREATE TABLE sil.iso_639_3_retirements (
 
   _id char(3) not null, -- three letter 639-3 identifier
   ref_name varchar(150) not null, -- reference name of the language
-  ret_reason sil.iso_639_3_retirement_reason_options not null, -- code for retirement
+  ret_reason sil.iso_639_3_retirement_reason_options, -- code for retirement
   change_to char(3), -- in the cases of C, D, and M, the identifier to which all instances of this id should be changed
   ret_remedy varchar(300), -- the instructions for updating an instance of the retired (split) identifier
   effective timestamp not null, -- the date the retirement became effective
