@@ -37,4 +37,5 @@ spring:
     auto-commit: true #default auto-commit behavior.
 springdoc:
   swagger-ui:
+    path: /swagger-ui/index.html
     disable-swagger-default-url: true
