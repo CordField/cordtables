@@ -13,13 +13,28 @@ import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse } fro
   shadow: true,
 })
 export class SlackThread {
-  @Prop({ mutable: true }) threadPosts: CommonPost[];
   @Prop() thread: CommonThread;
+  @State() threadPostsResponse: CommonPostsListResponse = null;
+  @State() threadPosts: CommonPost[];
   @State() showPosts: boolean = false;
   @State() showButtons: boolean = false;
-  // @State() showForm: Bdoolean = false;
-  componentDidLoad() {
-    console.log('slackthread', this.thread);
+  @Watch('showPosts')
+  async handleShowPostsChange(newValue: boolean, oldValue: boolean) {
+    if (newValue === true && this.threadPostsResponse === null) {
+      await this.getPosts();
+    }
+  }
+  // componentDidLoad() {
+  //   console.log('slackthread', this.thread);
+  // }
+  async getPosts() {
+    this.threadPostsResponse = await fetchAs<CommonPostsListRequest, CommonPostsListResponse>('common-posts/list', {
+      token: globals.globalStore.state.token,
+      threadId: this.thread.id,
+    });
+    if (this.threadPostsResponse.error === ErrorType.NoError) {
+      this.threadPosts = this.threadPostsResponse.posts;
+    }
   }
   @Listen('postAdded')
   postAddedHandler(event: CustomEvent<CommonPost>) {
@@ -49,7 +64,8 @@ export class SlackThread {
           class="slack-thread-content"
         >
           <span class="post-indicator">{this.showPosts ? <span>&#128071;</span> : <span>&#x261e;</span>}</span>
-          {this.thread.content} <span class="post-count">{this.threadPosts.length}</span>
+          {this.thread.content}
+          {/* <span class="post-count">{this.threadPosts.length}</span> */}
           {this.showButtons && (
             <span class="slack-thread-buttons">
               <span class="slack-thread-update" onClick={e => {}}>
@@ -63,7 +79,7 @@ export class SlackThread {
           {this.showForm === false ? <span>&#43;</span> : <span>&#8722;</span>}
         </span> */}
         {/* add button here to toggle visibility */}
-        <div class="thread-posts">{this.showPosts && this.threadPosts.map(post => <div>{post.content}</div>)}</div>
+        <div class="thread-posts">{this.showPosts && this.threadPosts?.map(post => <div>{post.content}</div>)}</div>
       </div>
     );
 

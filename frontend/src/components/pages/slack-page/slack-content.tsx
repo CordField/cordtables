@@ -15,9 +15,7 @@ import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse } fro
 export class SlackContent {
   @Prop() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() threadListResponse: CommonThreadsListResponse = null;
-  @State() postListResponse: CommonPostsListResponse = null;
   @State() channelThreads: CommonThread[] = [];
-  @State() channelPosts: CommonPost[] = [];
   @Watch('selectedDiscussionChannel')
   async handleSelectedDiscussionChannelChange(newValue: CommonDiscussionChannel, oldValue: CommonDiscussionChannel) {
     // if (this.threadListResponse.error === ErrorType.NoError && newValue) {
@@ -25,9 +23,9 @@ export class SlackContent {
     // this.channelThreads = this.threadListResponse.threads.filter(thread => thread.channel === newValue?.id);
     // console.log(this.channelThreads);
     // }
-    if (newValue && this.postListResponse.error === ErrorType.NoError) {
-      this.channelPosts = this.postListResponse.posts.filter(post => this.channelThreads.findIndex(thread => thread.id === post.thread) !== -1);
-    }
+    // if (newValue && this.postListResponse.error === ErrorType.NoError) {
+    //   this.channelPosts = this.postListResponse.posts.filter(post => this.channelThreads.findIndex(thread => thread.id === post.thread) !== -1);
+    // }
   }
   @Listen('threadAdded')
   handleThreadAddedChange(event: CustomEvent<CommonThread>) {
@@ -38,10 +36,10 @@ export class SlackContent {
   async componentWillLoad() {
     await this.getThreads(this.selectedDiscussionChannel.id);
 
-    this.postListResponse = await this.getPosts();
-    if (this.selectedDiscussionChannel && this.postListResponse.error === ErrorType.NoError) {
-      this.channelPosts = this.postListResponse.posts.filter(post => this.channelThreads.findIndex(thread => thread.id === post.thread) !== -1);
-    }
+    // this.postListResponse = await this.getPosts();
+    // if (this.selectedDiscussionChannel && this.postListResponse.error === ErrorType.NoError) {
+    //   this.channelPosts = this.postListResponse.posts.filter(post => this.channelThreads.findIndex(thread => thread.id === post.thread) !== -1);
+    // }
   }
   async getThreads(discussionChannelId: number) {
     this.threadListResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common-threads/list', {
@@ -52,11 +50,6 @@ export class SlackContent {
       this.channelThreads = this.threadListResponse.threads;
     }
   }
-  async getPosts() {
-    return await fetchAs<CommonPostsListRequest, CommonPostsListResponse>('common-posts/list', {
-      token: globals.globalStore.state.token,
-    });
-  }
 
   render() {
     const threadsJsx =
@@ -65,7 +58,7 @@ export class SlackContent {
       ) : this.channelThreads.length > 0 ? (
         <div>
           {this.channelThreads.map(thread => (
-            <slack-thread threadPosts={this.channelPosts.filter(post => post.thread === thread.id)} thread={thread} key={thread.id} />
+            <slack-thread thread={thread} key={thread.id} />
           ))}
         </div>
       ) : this.selectedDiscussionChannel !== null ? (
