@@ -8,6 +8,8 @@ import com.seedcompany.cordtables.components.tables.sc.languages.Update
 import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.neo4j.driver.Driver
+import org.neo4j.driver.Record
+import org.neo4j.driver.types.Node
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -210,10 +212,7 @@ class Neo4j(
                 .list()
                 .forEach {
                     neo4jIdQueue.add(
-                        BaseNode(
-                            id = it.get("n").asNode().get("id").asString(),
-                            labels = it.get("n").asNode().labels() as List<String>
-                        )
+                        createBaseNode(it, "n")
                     )
                 }
         }
@@ -339,8 +338,9 @@ class Neo4j(
                 id = node.id
             )
             node!!.labels.contains("Location") -> writeBaseNode(
-                targetTable = "common.locations",
+                targetTable = "sc.locations",
                 id = node!!.id,
+                commonTable = "common.locations"
             )
             node!!.labels.contains("FundingAccount") -> writeBaseNode(
                 targetTable = "sc.funding_accounts",
@@ -350,21 +350,36 @@ class Neo4j(
                 targetTable = "sc.products",
                 id = node!!.id,
             )
-            node!!.labels.contains("Film") -> writeBaseNode(
-                targetTable = "sc.films",
-                id = node!!.id,
-            )
-            node!!.labels.contains("Story") -> writeBaseNode(
-                targetTable = "sc.stories",
-                id = node!!.id,
-            )
-            node!!.labels.contains("EthnoArt") -> writeBaseNode(
-                targetTable = "sc.ethno_arts",
-                id = node!!.id,
-            )
             node!!.labels.contains("ScriptureRange") -> writeBaseNode(
                 targetTable = "common.scripture_references",
                 id = node!!.id,
+            )
+            node.labels.contains("Changeset") -> writeBaseNode(
+                targetTable = "sc.change_to_plans",
+                id = node.id
+            )
+            node.labels.contains("Film") -> writeProducibleBaseNode(
+                targetTable = "sc.producible",
+                id = node.id,
+                type = "Film"
+            )
+            node.labels.contains("Story") -> writeProducibleBaseNode(
+                targetTable = "sc.producible",
+                id = node.id,
+                type = "Story"
+            )
+            node.labels.contains("EthnoArt") -> writeProducibleBaseNode(
+                targetTable = "sc.producible",
+                id = node!!.id,
+                type = "EthnoArt"
+            )
+            node.labels.contains("ProductProgress") -> writeBaseNode(
+                targetTable = "sc.product_progress",
+                id = node.id
+            )
+            node.labels.contains("StepProgress") -> writeBaseNode(
+                targetTable = "sc.step_progress",
+                id = node.id
             )
             else -> {
                 println("didn't process: ${node.labels}")
@@ -434,6 +449,23 @@ class Neo4j(
 
             }
         }
+    }
+
+    suspend fun writeProducibleBaseNode(targetTable: String, id: String, type: String) {
+        val exists = jdbcTemplate.queryForObject(
+            "select exists(select id from $targetTable where neo4j_id = ?);",
+            Boolean::class.java,
+            id
+        )
+
+        if (!exists) {
+            jdbcTemplate.update(
+                "insert into $targetTable(neo4j_id, type, created_by, modified_by, owning_person, owning_group) values(?, cast(? AS sc.producible_type), 1, 1, 1, 1);",
+                id,
+                type
+            )
+        }
+
     }
 
     suspend fun migrateBaseNodeToBaseNodeRelationships() {
@@ -514,13 +546,29 @@ class Neo4j(
                     val remainingNodes = totalBaseNodeRels.toFloat() - processedBaseNodeRels.get().toFloat()
                     val eta = remainingNodes / rate / 60F
 
-                    print("\r${processedBaseNodeRels}/$totalBaseNodeRels rate: ${rate.toInt()} records/sec eta: ${eta.toInt()}r queue: ${nodePairs.size}")
+                    print("\r${processedBaseNodeRels}/$totalBaseNodeRels rate: ${rate.toInt()} records/sec eta: ${eta.toInt()}m queue: ${nodePairs.size}")
                     delay(1000L)
                 }
             }
         }
 
         println("base node to base node relationships migration done")
+    }
+
+    suspend fun createBaseNode(node: Record, nodeVariable: String): BaseNode {
+        /* Since ScriptureRange BaseNodes doesn't have an id property
+        it's needed to use its neo4j identity */
+        if (node.get(nodeVariable).asNode().labels().contains("ScriptureRange")) {
+            return BaseNode(
+                id = node.get(nodeVariable).asNode().id().toString(),
+                labels = node.get(nodeVariable).asNode().labels() as List<String>
+            )
+        } else {
+            return BaseNode(
+                id = node.get(nodeVariable).asNode().get("id").asString(),
+                labels = node.get(nodeVariable).asNode().labels() as List<String>
+            )
+        }
     }
 
     suspend fun getNodePairs(skip: Int, size: Int) {
@@ -530,17 +578,9 @@ class Neo4j(
                 .forEach {
                     nodePairs.add(
                         arrayOf(
-                            BaseNode(
-                                id = it.get("n").asNode().get("id").asString(),
-                                labels = it.get("n").asNode().labels() as List<String>
-                            ),
-                            Relation(
-                                type = it.get("r").asRelationship().type()
-                            ),
-                            BaseNode(
-                                id = it.get("m").asNode().get("id").asString(),
-                                labels = it.get("m").asNode().labels() as List<String>
-                            )
+                            createBaseNode(it, "n"),
+                            Relation(type = it.get("r").asRelationship().type()),
+                            createBaseNode(it, "m")
                         )
                     )
                 }
@@ -814,6 +854,16 @@ class Neo4j(
                 "created_by",
                 "id"
             )
+            checkRelationship(n, r, m, "ScriptureRange", "scriptureReferences", "Producible") -> writeRelationshipsPairs(
+                n,
+                m,
+                "sc.producible_scripture_references",
+                "sc.producible",
+                "common.scripture_references",
+                "producible",
+                "scripture_reference",
+                "id"
+            )
         }
     }
 
@@ -843,6 +893,49 @@ class Neo4j(
                 "update $targetTable set $field = ? where neo4j_id = ?;",
                 id,
                 m.id,
+            )
+        }
+    }
+
+    suspend fun writeRelationshipsPairs(
+        n: BaseNode,
+        m: BaseNode,
+        targetTable: String,
+        refTable1: String,
+        refTable2: String,
+        field1: String,
+        field2: String,
+        foreignKey: String
+    ) {
+        val exists1 = jdbcTemplate.queryForObject(
+            "select exists(select $foreignKey from $refTable1 where neo4j_id = ?);",
+            Boolean::class.java,
+            m.id
+        )
+
+        val exists2 = jdbcTemplate.queryForObject(
+            "select exists(select $foreignKey from $refTable2 where neo4j_id = ?);",
+            Boolean::class.java,
+            n.id
+        )
+
+        if (exists1 && exists2) {
+            val id1 = jdbcTemplate.queryForObject(
+                "select $foreignKey from $refTable1 where neo4j_id = ?;",
+                Int::class.java,
+                m.id
+            )
+
+            val id2 = jdbcTemplate.queryForObject(
+                "select $foreignKey from $refTable2 where neo4j_id = ?;",
+                Int::class.java,
+                n.id
+            )
+
+            jdbcTemplate.update(
+                "insert into $targetTable($field1, $field2, created_by, modified_by, owning_person, owning_group) values(?, ?, 1, 1, 1, 1)",
+                id1,
+                id2,
             )
         }
     }
