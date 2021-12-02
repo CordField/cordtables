@@ -1,58 +1,72 @@
 package com.seedcompany.cordtables.components.tables.admin.role_memberships
 
+import com.seedcompany.cordtables.components.tables.admin.role_memberships.Delete as CommonDelete
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.role_memberships.AdminRoleMembershipsDeleteRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import java.sql.SQLException
 import javax.sql.DataSource
 
-data class GlobalRoleMembershipsDeleteRequest(
-        val token: String? = null,
-        val id: Int? = null,
+data class AdminRoleMembershipsDeleteRequest(
+    val id: Int,
+    val token: String?,
 )
 
-data class GlobalRoleMembershipsDeleteResponse(
-        val error: ErrorType,
+data class AdminRoleMembershipsDeleteResponse(
+    val error: ErrorType,
+    val id: Int?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("GlobalRoleMembershipsDelete")
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("AdminRoleMembershipsDelete")
 class Delete(
-        @Autowired
-        val util: Utility,
+    @Autowired
+    val util: Utility,
 
-        @Autowired
-        val ds: DataSource,
+    @Autowired
+    val ds: DataSource,
 ) {
-
-    @PostMapping("role-memberships/delete")
+    @PostMapping("admin-role-memberships/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: GlobalRoleMembershipsDeleteRequest): GlobalRoleMembershipsDeleteResponse {
+    fun deleteHandler(@RequestBody req: AdminRoleMembershipsDeleteRequest): AdminRoleMembershipsDeleteResponse {
 
-        if (req.token == null) return GlobalRoleMembershipsDeleteResponse(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return GlobalRoleMembershipsDeleteResponse(ErrorType.AdminOnly)
+        if (req.token == null) return AdminRoleMembershipsDeleteResponse(ErrorType.TokenNotFound, null)
+        if(!util.userHasDeletePermission(req.token, "admin.role_memberships"))
+            return AdminRoleMembershipsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-        if (req.id == null) return GlobalRoleMembershipsDeleteResponse(ErrorType.MissingId)
+        println("req: $req")
+        var deletedLocationExId: Int? = null
 
         this.ds.connection.use { conn ->
+            try {
 
-            //language=SQL
-            val deleteStatement = conn.prepareStatement(
-                    """
-                delete from admin.role_memberships where id = ?;
-            """.trimIndent()
-            )
+                val deleteStatement = conn.prepareCall(
+                    "delete from admin.role_memberships where id = ? returning id"
+                )
+                deleteStatement.setInt(1, req.id)
 
-            deleteStatement.setInt(1, req.id)
+                deleteStatement.setInt(1,req.id)
 
-            deleteStatement.execute()
+
+                val deleteStatementResult = deleteStatement.executeQuery()
+
+                if (deleteStatementResult.next()) {
+                    deletedLocationExId  = deleteStatementResult.getInt("id")
+                }
+            }
+            catch (e:SQLException ){
+                println(e.message)
+
+                return AdminRoleMembershipsDeleteResponse(ErrorType.SQLDeleteError, null)
+            }
         }
 
-        return GlobalRoleMembershipsDeleteResponse(ErrorType.NoError)
+        return AdminRoleMembershipsDeleteResponse(ErrorType.NoError,deletedLocationExId)
     }
-
 }

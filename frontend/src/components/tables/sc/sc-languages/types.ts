@@ -29,7 +29,7 @@ class ScLanguage {
   least_reached_value?: number | undefined;
   partner_interest_level?: string | undefined;
   partner_interest_value?: number | undefined;
-  partner_interest_description?: string | undefined;
+  partner_interest_deription?: string | undefined;
   partner_interest_source?: string | undefined;
   multiple_languages_leverage_linguistic_level?: string | undefined;
   multiple_languages_leverage_linguistic_value?: number | undefined;
@@ -68,4 +68,5 @@ class ScLanguage {
   owning_person?: number | undefined;
   owning_group?: number | undefined;
   coordinates?: string | undefined;
+  coordinates_json?: string | undefined;
 }

@@ -47,7 +47,7 @@ data class Relation(
     val type: String,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("Neo4jMigration")
 class Neo4j(
     @Autowired

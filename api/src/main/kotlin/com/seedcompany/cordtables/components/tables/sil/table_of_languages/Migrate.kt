@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.sil.table_of_languages
+package com.seedcompany.cordtables.components.tables.sc.ethnologue
 
 import com.seedcompany.cordtables.common.CordApiRestUtils
 import com.seedcompany.cordtables.common.ErrorType
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.client.RestTemplate
 import javax.sql.DataSource
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("SilTableOfLanguagesMigrate")
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("ScEthnologueMigrate")
 @DependsOn("BootstrapDB")
 class Migrate(
     @Autowired

@@ -18,6 +18,11 @@ export class CfHeaderMenu {
     this.history.push(`/`);
   };
 
+  clickedPrayerRequests = () => {
+    this.menuClicked.emit({ type: 'MenuClicked' });
+    this.history.push(`/page/prayer-requests`);
+  }
+
   clickedProfile = () => {
     this.menuClicked.emit({ type: 'MenuClicked' });
     this.history.push(`/profile`);
@@ -32,6 +37,7 @@ export class CfHeaderMenu {
     this.menuClicked.emit({ type: 'MenuClicked' });
     this.history.push(`/login`);
   };
+  
 
   clickedLogout = () => {
     globals.globalStore.state.isLoggedIn = false;
@@ -50,6 +56,12 @@ export class CfHeaderMenu {
           <button class="menu-item" onClick={this.clickedHome}>
             Home
           </button>
+
+          {globals.globalStore.state.isLoggedIn && (
+            <button class="menu-item" onClick={this.clickedPrayerRequests}>
+              Prayer Requests
+            </button>
+          )}
 
           {globals.globalStore.state.isLoggedIn && (
             <button class="menu-item" onClick={this.clickedProfile}>

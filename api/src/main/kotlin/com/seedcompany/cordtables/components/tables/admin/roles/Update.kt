@@ -1,136 +1,85 @@
 package com.seedcompany.cordtables.components.tables.admin.roles
 
+import com.seedcompany.cordtables.components.tables.admin.roles.AdminRolesUpdateRequest
+import com.seedcompany.cordtables.components.tables.admin.roles.Update as CommonUpdate
+import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.common.enumContains
+import com.seedcompany.cordtables.components.tables.admin.roles.AdminRolesUpdateResponse
+import com.seedcompany.cordtables.components.tables.admin.roles.roleInput
+import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
-import java.sql.Timestamp
 import javax.sql.DataSource
-import kotlin.collections.mutableListOf as mutableListOf
-import java.time.Instant
 
-data class UpdateGlobalRoleResponse(
-        val error: ErrorType,
-        val data: Role?
+data class AdminRolesUpdateRequest(
+    val token: String?,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
-data class UpdateGlobalRoleRequest(
-        val columnToUpdate: String,
-        val updatedColumnValue: Any,
-        val token: String?,
-        val id: Int
+data class AdminRolesUpdateResponse(
+    val error: ErrorType,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller()
+
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("AdminRolesUpdate")
 class Update(
-        @Autowired
-        val util: Utility,
+    @Autowired
+    val util: Utility,
 
-        @Autowired
-        val ds: DataSource,
-
-        @Autowired
-        val roleUtil: RoleUtil
+    @Autowired
+    val ds: DataSource,
 ) {
-    @PostMapping("role/update")
+    @PostMapping("admin-roles/update")
     @ResponseBody
-    fun UpdateHandler(@RequestBody req: UpdateGlobalRoleRequest): UpdateGlobalRoleResponse {
-        if (req.token == null) return UpdateGlobalRoleResponse(ErrorType.TokenNotFound, null)
-        if (!util.userHasUpdatePermission(req.token, "admin.roles", req.columnToUpdate, req.id)) {
-            return UpdateGlobalRoleResponse(ErrorType.DoesNotHaveUpdatePermission, null)
-        }
-        println("req: $req")
-        var updatedRole: Role? = null
-        var userId = 0
+    fun updateHandler(@RequestBody req: AdminRolesUpdateRequest): AdminRolesUpdateResponse {
+
+        if (req.token == null) return AdminRolesUpdateResponse(ErrorType.TokenNotFound)
+        if (req.column == null) return AdminRolesUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return AdminRolesUpdateResponse(ErrorType.MissingId)
 
 
-        this.ds.connection.use { conn ->
-            try {
-                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token= ?")
-                getUserIdStatement.setString(1, req.token)
-                val getUserIdResult = getUserIdStatement.executeQuery()
-                if (getUserIdResult.next()) {
-                    userId = getUserIdResult.getInt("person")
-                    println("userId: $userId")
-                } else {
-                    throw SQLException("User not found")
-                }
-            } catch (e: SQLException) {
-                println(e.message)
-                return UpdateGlobalRoleResponse(ErrorType.UserNotFound, null)
-            }
-            try {
-                var reqValues: MutableList<Any> = mutableListOf()
-                var updateSql = "update admin.roles set"
-                if (req.updatedColumnValue != null && req.columnToUpdate !in roleUtil.nonMutableColumns) {
-                    updateSql = "$updateSql ${req.columnToUpdate} = ?,"
-                    reqValues.add(req.updatedColumnValue)
-                }
-
-
-                updateSql = "$updateSql modified_by = ?, modified_at = ? where id = ? returning *"
-                println(updateSql)
-                val updateStatement = conn.prepareCall(
-                        updateSql
+        when (req.column) {
+            "name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.roles",
+                    column = "name",
+                    id = req.id,
+                    value = req.value,
                 )
-                var counter = 1
-                reqValues.forEach { value ->
-                    when (value) {
-                        is Int -> updateStatement.setInt(counter, value)
-                        is String -> updateStatement.setString(counter, value)
-                        is Double -> updateStatement.setDouble(counter, value)
-                        else -> updateStatement.setObject(counter, value, java.sql.Types.OTHER)
-                    }
-                    counter += 1
-                }
-//                modified_by, modified_at, id
-                updateStatement.setInt(counter, userId)
-                updateStatement.setTimestamp(counter + 1, Timestamp(Instant.now().toEpochMilli()))
-                updateStatement.setInt(counter + 2, req.id)
-                val updateStatementResult = updateStatement.executeQuery()
-//
-                if (updateStatementResult.next()) {
-                    var id: Int? = updateStatementResult.getInt("id")
-                    if(updateStatementResult.wasNull()) id = null
-                    var name: String? = updateStatementResult.getString("name")
-                    if(updateStatementResult.wasNull()) name = null
-                    var created_by: Int? = updateStatementResult.getInt("created_by")
-                    if(updateStatementResult.wasNull()) created_by = null
-                    var modified_by: Int? = updateStatementResult.getInt("modified_by")
-                    if(updateStatementResult.wasNull()) modified_by = null
-                    var owning_group: Int? = updateStatementResult.getInt("owning_group")
-                    if(updateStatementResult.wasNull()) owning_group = null
-                    var owning_person: Int? = updateStatementResult.getInt("owning_person")
-                    if(updateStatementResult.wasNull()) owning_person = null
-                    var chat: Int? = updateStatementResult.getInt("chat")
-                    if(updateStatementResult.wasNull()) chat = null
-                    var created_at: String? = updateStatementResult.getString("created_at")
-                    if(updateStatementResult.wasNull()) created_at = null
-                    var modified_at: String? = updateStatementResult.getString("modified_at")
-                    if(updateStatementResult.wasNull()) modified_at = null
-                    updatedRole = Role(
-                            id = id,
-                            chat = chat,
-                            owning_group = owning_group,
-                            owning_person = owning_person,
-                            created_at = created_at,
-                            created_by = created_by,
-                            modified_at = modified_at,
-                            modified_by = modified_by,
-                            name = name)
-                    println("updated row's id: $id")
-                }
-            } catch (e: SQLException) {
-                println(e.message)
-                return UpdateGlobalRoleResponse(ErrorType.SQLUpdateError, null)
+            }
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.roles",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
+            }
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.roles",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
             }
         }
-        return UpdateGlobalRoleResponse(ErrorType.NoError, updatedRole)
+
+        return AdminRolesUpdateResponse(ErrorType.NoError)
     }
+
 }

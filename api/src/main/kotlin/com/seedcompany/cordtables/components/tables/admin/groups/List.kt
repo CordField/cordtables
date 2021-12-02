@@ -1,9 +1,11 @@
 package com.seedcompany.cordtables.components.tables.admin.groups
 
+import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
+import com.seedcompany.cordtables.components.tables.admin.groups.group
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -14,31 +16,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
-import kotlin.collections.List
 
 
-data class GroupsRow(
-    val id: Int?,
-    val name: String?,
-    val createdAt: String?,
-    val createdBy: Int?,
-    val modifiedAt: String?,
-    val modifiedBy: Int?,
-    val owningPerson: Int?,
-    val owningGroup: Int?,
+data class AdminGroupsListRequest(
+    val token: String?
 )
 
-data class GroupsListRequest(
-    val token: String? = null,
-)
-
-data class GroupsListReturn(
+data class AdminGroupsListResponse(
     val error: ErrorType,
-    val groups: List<out GroupsRow>?,
+    val groups: MutableList<group>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("GroupsList")
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("AdminGroupsList")
 class List(
     @Autowired
     val util: Utility,
@@ -49,16 +39,14 @@ class List(
     @Autowired
     val secureList: GetSecureListQuery,
 ) {
+
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("groups/list")
+    @PostMapping("admin-groups/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: GroupsListRequest): GroupsListReturn {
-
-        if (req.token == null) return GroupsListReturn(ErrorType.TokenNotFound, null)
-        if (!util.isAdmin(req.token)) return GroupsListReturn(ErrorType.AdminOnly, null)
-
-        val items = mutableListOf<GroupsRow>()
+    fun listHandler(@RequestBody req:AdminGroupsListRequest): AdminGroupsListResponse {
+        var data: MutableList<group> = mutableListOf()
+        if (req.token == null) return AdminGroupsListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -66,15 +54,17 @@ class List(
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "admin.groups",
+                filter = "order by id",
                 columns = arrayOf(
                     "id",
                     "name",
-                    "createdAt",
-                    "createdBy",
-                    "modifiedAt",
-                    "modifiedBy",
-                    "owningPerson",
-                    "owningGroup"
+                    "parent_group",
+                    "created_at",
+                    "created_by",
+                    "modified_at",
+                    "modified_by",
+                    "owning_person",
+                    "owning_group",
                 )
             )
         ).query
@@ -89,43 +79,46 @@ class List(
                 var name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) name = null
 
-                var createdAt: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) createdAt = null
+                var parent_group: Int? = jdbcResult.getInt("parent_group")
+                if (jdbcResult.wasNull()) parent_group = null
 
-                var createdBy: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) createdBy = null
+                var created_by: Int? = jdbcResult.getInt("created_by")
+                if (jdbcResult.wasNull()) created_by = null
 
-                var modifiedAt: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modifiedAt = null
+                var created_at: String? = jdbcResult.getString("created_at")
+                if (jdbcResult.wasNull()) created_at = null
 
-                var modifiedBy: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modifiedBy = null
+                var modified_at: String? = jdbcResult.getString("modified_at")
+                if (jdbcResult.wasNull()) modified_at = null
 
-                var owningPerson: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owningPerson = null
+                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                if (jdbcResult.wasNull()) modified_by = null
 
-                var owningGroup: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owningGroup = null
+                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                if (jdbcResult.wasNull()) owning_person = null
 
-                items.add(
-                    GroupsRow(
+                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                if (jdbcResult.wasNull()) owning_group = null
+
+                data.add(
+                    group(
                         id = id,
                         name = name,
-                        createdAt = createdAt,
-                        createdBy = createdBy,
-                        modifiedAt = modifiedAt,
-                        modifiedBy = modifiedBy,
-                        owningPerson = owningPerson,
-                        owningGroup = owningGroup,
+                        parent_group = parent_group,
+                        created_at = created_at,
+                        created_by = created_by,
+                        modified_at = modified_at,
+                        modified_by = modified_by,
+                        owning_person = owning_person,
+                        owning_group = owning_group,
+                    )
                 )
-            )
-        }
+            }
         } catch (e: SQLException) {
-            println("error while listting ${e.message}")
-            return GroupsListReturn(ErrorType.SQLReadError, mutableListOf())
+            println("error while listing ${e.message}")
+            return AdminGroupsListResponse(ErrorType.SQLReadError, mutableListOf())
         }
 
-        return GroupsListReturn(ErrorType.NoError, items)
+        return AdminGroupsListResponse(ErrorType.NoError, data)
     }
-
 }

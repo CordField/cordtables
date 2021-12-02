@@ -19,11 +19,11 @@ data class RegisterRequest(
 data class RegisterReturn(
     val error: ErrorType,
     val token: String? = null,
-    val readableTables: MutableList<String> = mutableListOf(),
+    val readableTables: List<String> = listOf(),
     val isAdmin: Boolean = false
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller()
 class Register (
     @Autowired

@@ -1,7 +1,14 @@
 package com.seedcompany.cordtables.components.tables.admin.people
 
+import com.seedcompany.cordtables.components.tables.admin.people.AdminPeopleUpdateRequest
+import com.seedcompany.cordtables.components.tables.admin.people.Update as CommonUpdate
+import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.common.enumContains
+import com.seedcompany.cordtables.components.tables.admin.people.AdminPeopleUpdateResponse
+import com.seedcompany.cordtables.components.tables.admin.people.peopleInput
+import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -10,18 +17,20 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class PeopleUpdateRequest(
-    val token: String? = null,
+data class AdminPeopleUpdateRequest(
+    val token: String?,
     val id: Int? = null,
-    val publicFullName: String? = null
+    val column: String? = null,
+    val value: Any? = null,
 )
 
-data class PeopleUpdateResponse(
+data class AdminPeopleUpdateResponse(
     val error: ErrorType,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("PeopleUpdate")
+
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("AdminPeopleUpdate")
 class Update(
     @Autowired
     val util: Utility,
@@ -29,69 +38,166 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-
-    @PostMapping("people/update")
+    @PostMapping("admin-people/update")
     @ResponseBody
-    fun updateHandler(@RequestBody req: PeopleUpdateRequest): PeopleUpdateResponse {
+    fun updateHandler(@RequestBody req: AdminPeopleUpdateRequest): AdminPeopleUpdateResponse {
 
-        if (req.token == null) return PeopleUpdateResponse(ErrorType.TokenNotFound)
-        if (!util.isAdmin(req.token)) return PeopleUpdateResponse(ErrorType.AdminOnly)
-        if (req.id === 1) return PeopleUpdateResponse(ErrorType.CannotUpdateAdminGroup)
+        if (req.token == null) return AdminPeopleUpdateResponse(ErrorType.TokenNotFound)
+        if (req.column == null) return AdminPeopleUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return AdminPeopleUpdateResponse(ErrorType.MissingId)
 
-        if (req.publicFullName == null) return PeopleUpdateResponse(ErrorType.InputMissingName)
-        if (req.publicFullName.isEmpty()) return PeopleUpdateResponse(ErrorType.NameTooShort)
-        if (req.publicFullName.length > 64) return PeopleUpdateResponse(ErrorType.NameTooLong)
-
-        if (req.id == null) return PeopleUpdateResponse(ErrorType.MissingId)
-
-        this.ds.connection.use { conn ->
-
-            //language=SQL
-            val checkNameStatement = conn.prepareStatement(
-                """
-                select exists(select id from admin.people where public_full_name = ?)
-            """.trimIndent()
-            )
-
-            checkNameStatement.setString(1, req.publicFullName)
-
-            val result = checkNameStatement.executeQuery();
-
-            if (result.next()) {
-                val nameFound = result.getBoolean(1)
-
-                if (nameFound) {
-                    return PeopleUpdateResponse(ErrorType.NameAlreadyExists)
-                } else {
-
-                    //language=SQL
-                    val statement = conn.prepareStatement(
-                        """
-                        update admin.people
-                        set 
-                          public_full_name = ?, 
-                          modified_by = (
-                                  select person 
-                                  from admin.tokens 
-                                  where token = ?
-                                ), 
-                          modified_at = CURRENT_TIMESTAMP
-                        where id = ?;
-                        """.trimIndent()
-                    )
-
-                    statement.setString(1, req.publicFullName)
-                    statement.setString(2, req.token)
-                    statement.setInt(3, req.id)
-
-                    statement.execute()
-
-                }
+        when (req.column) {
+            "about" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "about",
+                    id = req.id,
+                    value = req.value,
+                )
             }
-
+            "phone" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "phone",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "picture" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "picture",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "private_first_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "private_first_name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "private_last_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "private_last_name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "public_first_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "public_first_name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "public_last_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "public_last_name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "primary_location" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "primary_location",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
+            }
+            "private_full_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "private_full_name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "public_full_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "public_full_name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "sensitivity_clearance" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "sensitivity_clearance",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::common.sensitivity"
+                )
+            }
+            "time_zone" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "time_zone",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "title" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "title",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "status" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "status",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
+            }
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.people",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
+            }
         }
 
-        return PeopleUpdateResponse(ErrorType.NoError)
+        return AdminPeopleUpdateResponse(ErrorType.NoError)
     }
 
 }

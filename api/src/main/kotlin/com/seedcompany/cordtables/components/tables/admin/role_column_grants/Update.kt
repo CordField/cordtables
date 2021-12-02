@@ -1,92 +1,111 @@
 package com.seedcompany.cordtables.components.tables.admin.role_column_grants
 
-import com.seedcompany.cordtables.common.ErrorType
-import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.common.*
+import com.seedcompany.cordtables.components.tables.admin.role_column_grants.AdminRoleColumnGrantsUpdateRequest
+import com.seedcompany.cordtables.components.tables.admin.role_column_grants.Update as CommonUpdate
+import com.seedcompany.cordtables.components.tables.admin.role_column_grants.AdminRoleColumnGrantsUpdateResponse
+import com.seedcompany.cordtables.components.tables.admin.role_column_grants.roleColumnGrantInput
+import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
 
-
-data class GlobalRoleColumnGrantsUpdate(
-        val id: Int,
-        val access_level: String,
-        val column_name: String? = null,
-        val created_by: Int,
-        val role: Int,
-        val table_name: String? = null,
-        val token: String,
+data class AdminRoleColumnGrantsUpdateRequest(
+    val token: String?,
+    val id: Int? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
-data class UpdateGlobalRoleColumnGrantsResponse(
-        val error: ErrorType,
-        val response: GlobalRoleColumnGrantsUpdate?
+data class AdminRoleColumnGrantsUpdateResponse(
+    val error: ErrorType,
 )
 
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@RestController("globalRoleColumnGrantsUpdateController")
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("AdminRoleColumnGrantsUpdate")
 class Update(
-        @Autowired
-        val util: Utility,
+    @Autowired
+    val util: Utility,
 
-        @Autowired
-        val ds: DataSource,
+    @Autowired
+    val ds: DataSource,
 ) {
-    @PostMapping("table/role-column-grants-update")
+    @PostMapping("admin-role-column-grants/update")
     @ResponseBody
-    fun UpdateHandler(@RequestBody req: GlobalRoleColumnGrantsUpdate): UpdateGlobalRoleColumnGrantsResponse {
+    fun updateHandler(@RequestBody req: AdminRoleColumnGrantsUpdateRequest): AdminRoleColumnGrantsUpdateResponse {
 
-        println("req: $req")
-        var errorType = ErrorType.UnknownError
-        var insertedGlobalRole: GlobalRoleColumnGrantsUpdate? = null
-        var userId = 0
+        if (req.token == null) return AdminRoleColumnGrantsUpdateResponse(ErrorType.TokenNotFound)
+        if (req.column == null) return AdminRoleColumnGrantsUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return AdminRoleColumnGrantsUpdateResponse(ErrorType.MissingId)
 
-        this.ds.connection.use { conn ->
-            try {
-                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
-                getUserIdStatement.setString(1, req.token)
-                val getUserIdResult = getUserIdStatement.executeQuery()
-                if (getUserIdResult.next()) {
-                    userId = getUserIdResult.getInt("person")
-                    println("userId: $userId")
-                }
-                else {
-                    throw SQLException("User not found")
-                }
-            }
-            catch(e:SQLException){
-                println(e.message)
-                errorType = ErrorType.UserTokenNotFound
-                return UpdateGlobalRoleColumnGrantsResponse(errorType, null)
-            }
-            try {
-                println(req.access_level)
-                val insertStatement = conn.prepareCall(
-                        "update admin.role_column_grants set access_level = ?::admin.access_level, column_name = ?, modified_by = ?, role = ?, table_name = ?::admin.table_name where id = ? returning *"
+        when (req.column) {
+            "role" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_column_grants",
+                    column = "role",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
                 )
-                insertStatement.setString(1, req.access_level)
-                insertStatement.setString(2, req.column_name)
-                insertStatement.setInt(3, userId)
-                insertStatement.setInt(4, req.role)
-                insertStatement.setString(5, req.table_name)
-                insertStatement.setInt(6, req.id)
-
-
-                val insertStatementResult = insertStatement.executeQuery()
-
             }
-            catch (e:SQLException ){
-                println(e.message)
-                errorType = ErrorType.SQLUpdateError
-                return UpdateGlobalRoleColumnGrantsResponse(errorType, null)
+            "table_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_column_grants",
+                    column = "table_name",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::admin.table_name"
+                )
+            }
+            "column_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_column_grants",
+                    column = "column_name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+            "access_level" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_column_grants",
+                    column = "access_level",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::admin.access_level"
+                )
+            }
+            "owning_person" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_column_grants",
+                    column = "owning_person",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
+            }
+            "owning_group" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "admin.role_column_grants",
+                    column = "owning_group",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
             }
         }
-        return UpdateGlobalRoleColumnGrantsResponse(ErrorType.NoError,insertedGlobalRole)
+
+        return AdminRoleColumnGrantsUpdateResponse(ErrorType.NoError)
     }
+
 }

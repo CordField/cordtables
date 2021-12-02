@@ -1,95 +1,96 @@
 package com.seedcompany.cordtables.components.tables.admin.role_column_grants
 
+import com.seedcompany.cordtables.common.AccessLevels
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.TableNames
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.admin.people.PeopleCreateResponse
+import com.seedcompany.cordtables.components.tables.admin.role_column_grants.roleColumnGrantInput
+import com.seedcompany.cordtables.components.tables.admin.role_column_grants.Read
+import com.seedcompany.cordtables.components.tables.admin.role_column_grants.Update
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
 
-
-data class GlobalRoleColumnGrantsCreate(
-        val id: Int? = null,
-        val access_level: String,
-        val column_name: String? = null,
-        val created_by: Int,
-        val role: Int,
-        val table_name: String? = null,
-        val token: String
+data class AdminRoleColumnGrantsCreateRequest(
+    val token: String? = null,
+    val roleColumnGrant: roleColumnGrantInput,
 )
 
-data class CreateGlobalRoleColumnGrantsResponse(
-        val error: ErrorType,
-        val response: GlobalRoleColumnGrantsCreate?
+data class AdminRoleColumnGrantsCreateResponse(
+    val error: ErrorType,
+    val id: Int? = null,
 )
 
-
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@RestController("globalRoleColumnGrantsCreateController")
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("AdminRoleColumnGrantsCreate")
 class Create(
-        @Autowired
-        val util: Utility,
+    @Autowired
+    val util: Utility,
 
-        @Autowired
-        val ds: DataSource,
+    @Autowired
+    val ds: DataSource,
+
+    @Autowired
+    val update: Update,
+
+    @Autowired
+    val read: Read,
 ) {
-    @PostMapping("table/role-column-grants-create", consumes = ["application/json"], produces = ["application/json"])
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+
+    @PostMapping("admin-role-column-grants/create")
     @ResponseBody
-    fun CreateHandler(@RequestBody req: GlobalRoleColumnGrantsCreate): CreateGlobalRoleColumnGrantsResponse {
+    fun createHandler(@RequestBody req: AdminRoleColumnGrantsCreateRequest): AdminRoleColumnGrantsCreateResponse {
 
-        if (!util.isAdmin(req.token)) return CreateGlobalRoleColumnGrantsResponse(ErrorType.AdminOnly, null)
-        println("req: $req")
-        var errorType = ErrorType.UnknownError
-        var insertedGlobalRole: GlobalRoleColumnGrantsCreate? = null
-        var userId = 0
+        // if (req.roleColumnGrant.name == null) return AdminRoleColumnGrantsCreateResponse(error = ErrorType.InputMissingToken, null)
 
-        this.ds.connection.use { conn ->
-            try {
-                val getUserIdStatement = conn.prepareCall("select person from admin.tokens where token = ?")
-                getUserIdStatement.setString(1, req.token)
-                val getUserIdResult = getUserIdStatement.executeQuery()
-                if (getUserIdResult.next()) {
-                    userId = getUserIdResult.getInt("person")
-                    println("userId: $userId")
-                }
-                else {
-                    throw SQLException("User not found")
-                }
-            }
-            catch(e:SQLException){
-                println(e.message)
-                errorType = ErrorType.UserTokenNotFound
-                return CreateGlobalRoleColumnGrantsResponse(errorType, null)
-            }
-            try {
-                println(req.access_level)
-                val insertStatement = conn.prepareCall(
-                        "insert into admin.role_column_grants(access_level, column_name, created_by, modified_by, owning_person, owning_group, role, table_name) values(?::admin.access_level,?,?,?,?,?,?,?::admin.table_name) returning *"
+
+        // create row with required fields, use id to update cells afterwards one by one
+        val id = jdbcTemplate.queryForObject(
+            """
+            insert into admin.role_column_grants(role, table_name, column_name, access_level,  created_by, modified_by, owning_person, owning_group)
+                values(
+                    ?,
+                    ?::admin.table_name,
+                    ?,
+                    ?::admin.access_level,
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    1
                 )
-                insertStatement.setString(1, req.access_level)
-                insertStatement.setString(2, req.column_name)
-                insertStatement.setInt(3, userId)
-                insertStatement.setInt(4, userId)
-                insertStatement.setInt(5, userId)
-                insertStatement.setInt(6, 1)
-                insertStatement.setInt(7, req.role)
-                insertStatement.setString(8, req.table_name)
+            returning id;
+        """.trimIndent(),
+            Int::class.java,
+            req.roleColumnGrant.role,
+            req.roleColumnGrant.table_name,
+            req.roleColumnGrant.column_name,
+            req.roleColumnGrant.access_level,
+            req.token,
+            req.token,
+            req.token,
+        )
 
+//        req.language.id = id
 
-                val insertStatementResult = insertStatement.executeQuery()
-
-            }
-            catch (e:SQLException ){
-                println(e.message)
-                errorType = ErrorType.SQLInsertError
-                return CreateGlobalRoleColumnGrantsResponse(errorType, null)
-            }
-        }
-        return CreateGlobalRoleColumnGrantsResponse(ErrorType.NoError,insertedGlobalRole)
+        return AdminRoleColumnGrantsCreateResponse(error = ErrorType.NoError, id = id)
     }
+
 }

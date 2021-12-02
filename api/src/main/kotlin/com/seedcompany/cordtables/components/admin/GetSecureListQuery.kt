@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 data class GetSecureListQueryRequest(
     val tableName: String,
     val columns: Array<String>,
+    val custom_columns: String? = null,
     val filter: String = "",
     val getList: Boolean = true, // get read if false
 )
@@ -17,7 +18,7 @@ data class GetSecureListQueryResponse(
     var query: String,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("GetSecureListQuery")
 class GetSecureListQuery() {
 
@@ -88,6 +89,10 @@ class GetSecureListQuery() {
         }
 
         response.query += columns.joinToString()
+        if(req.custom_columns!=null) {
+            response.query += ','
+            response.query += req.custom_columns.replace('\n', ' ')
+        }
 
         if (req.getList) {
 

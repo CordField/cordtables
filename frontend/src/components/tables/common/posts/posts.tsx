@@ -3,60 +3,17 @@ import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
-
-class CommonPost {
-  id?: number | undefined;
-  content?: string | undefined;
-  thread?: number | undefined;
-  created_at?: string | undefined;
-  created_by?: number | undefined;
-  modified_at?: string | undefined;
-  modified_by?: number | undefined;
-  owning_person?: number | undefined;
-  owning_group?: number | undefined;
-}
-
-class CreateCommonPostsRequest {
-  token: string;
-  post: {
-    content: string;
-    thread: number;
-  };
-}
-
-class CreateCommonPostsResponse extends GenericResponse {
-  post: CommonPost;
-}
-
-class CommonPostsListRequest {
-  token: string;
-}
-
-class CommonPostsListResponse {
-  error: ErrorType;
-  posts: CommonPost[];
-}
-
-class CommonPostsUpdateRequest {
-  token: string;
-  column: string;
-  value: any;
-  id: number;
-}
-
-class CommonPostsUpdateResponse {
-  error: ErrorType;
-  post: CommonPost | null = null;
-}
-
-class DeleteCommonPostsRequest {
-  id: number;
-  token: string;
-}
-
-class DeleteCommonPostsResponse extends GenericResponse {
-  id: number;
-}
+import {
+  CommonPost,
+  CommonPostsListRequest,
+  CommonPostsListResponse,
+  CommonPostsUpdateRequest,
+  CommonPostsUpdateResponse,
+  CreateCommonPostsRequest,
+  CreateCommonPostsResponse,
+  DeleteCommonPostsRequest,
+  DeleteCommonPostsResponse,
+} from './types';
 
 @Component({
   tag: 'common-posts',
@@ -123,7 +80,7 @@ export class Posts {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateCommonPostsRequest, CreateCommonPostsResponse>('common-cell-channels/create-read', {
+    const result = await fetchAs<CreateCommonPostsRequest, CreateCommonPostsResponse>('common-posts/create-read', {
       token: globals.globalStore.state.token,
       post: {
         content: this.newContent,

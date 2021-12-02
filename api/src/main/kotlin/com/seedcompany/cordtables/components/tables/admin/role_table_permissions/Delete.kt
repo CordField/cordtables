@@ -1,7 +1,9 @@
 package com.seedcompany.cordtables.components.tables.admin.role_table_permissions
 
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.Delete as CommonDelete
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.AdminRoleTablePermissionsDeleteRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -11,21 +13,18 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class dataId(
+data class AdminRoleTablePermissionsDeleteRequest(
+    val id: Int,
+    val token: String?,
+)
+
+data class AdminRoleTablePermissionsDeleteResponse(
+    val error: ErrorType,
     val id: Int?
 )
 
-data class DeletePermissionResponse(
-    val error: ErrorType,
-    val data: dataId?
-)
-
-data class DeletePermissionRequest(
-    val id: Int
-)
-
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("DeleteTablePermissions")
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("AdminRoleTablePermissionsDelete")
 class Delete(
     @Autowired
     val util: Utility,
@@ -33,35 +32,41 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("globalrolestablepermissions/delete")
+    @PostMapping("admin-role-table-permissions/delete")
     @ResponseBody
-    fun DeleteHandler(@RequestBody req: DeletePermissionRequest): DeletePermissionResponse {
+    fun deleteHandler(@RequestBody req: AdminRoleTablePermissionsDeleteRequest): AdminRoleTablePermissionsDeleteResponse {
+
+        if (req.token == null) return AdminRoleTablePermissionsDeleteResponse(ErrorType.TokenNotFound, null)
+        if(!util.userHasDeletePermission(req.token, "admin.role_table_permissions"))
+            return AdminRoleTablePermissionsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
-        var deletedPermissionRowId: Int?= null
+        var deletedLocationExId: Int? = null
 
         this.ds.connection.use { conn ->
-
             try {
-
 
                 val deleteStatement = conn.prepareCall(
                     "delete from admin.role_table_permissions where id = ? returning id"
                 )
-
-//                modified_by, modified_at, id
                 deleteStatement.setInt(1, req.id)
+
+                deleteStatement.setInt(1,req.id)
+
+
                 val deleteStatementResult = deleteStatement.executeQuery()
-//
+
                 if (deleteStatementResult.next()) {
-                    deletedPermissionRowId= deleteStatementResult.getInt("id")
-                    println("deleted row's id: $deletedPermissionRowId")
+                    deletedLocationExId  = deleteStatementResult.getInt("id")
                 }
-            } catch (e: SQLException) {
+            }
+            catch (e:SQLException ){
                 println(e.message)
-                return DeletePermissionResponse(ErrorType.SQLDeleteError, null)
+
+                return AdminRoleTablePermissionsDeleteResponse(ErrorType.SQLDeleteError, null)
             }
         }
-        return DeletePermissionResponse(ErrorType.NoError, dataId(deletedPermissionRowId))
+
+        return AdminRoleTablePermissionsDeleteResponse(ErrorType.NoError,deletedLocationExId)
     }
 }

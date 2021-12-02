@@ -26,7 +26,7 @@ data class CommonPostsListResponse(
         val posts: MutableList<Post>
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonPostsList")
 class List(
         @Autowired
@@ -50,7 +50,7 @@ class List(
         paramSource.addValue("token", req.token)
         val query = secureList.getSecureListQueryHandler(
                 GetSecureListQueryRequest(
-                        tableName = "common.postss",
+                        tableName = "common.posts",
                         filter = "order by id",
                         columns = arrayOf(
                                 "id",

@@ -3,60 +3,16 @@ import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
-
-class CommonThread {
-  id?: number | undefined;
-  content?: string | undefined;
-  channel?: number | undefined;
-  created_at?: string | undefined;
-  created_by?: number | undefined;
-  modified_at?: string | undefined;
-  modified_by?: number | undefined;
-  owning_person?: number | undefined;
-  owning_group?: number | undefined;
-}
-
-class CreateCommonThreadsRequest {
-  token: string;
-  thread: {
-    content: string;
-    channel: number;
-  };
-}
-
-class CreateCommonThreadsResponse extends GenericResponse {
-  thread: CommonThread;
-}
-
-class CommonThreadsListRequest {
-  token: string;
-}
-
-class CommonThreadsListResponse {
-  error: ErrorType;
-  threads: CommonThread[];
-}
-
-class CommonThreadsUpdateRequest {
-  token: string;
-  column: string;
-  value: any;
-  id: number;
-}
-
-class CommonThreadsUpdateResponse {
-  error: ErrorType;
-  thread: CommonThread | null = null;
-}
-
-class DeleteCommonThreadsRequest {
-  id: number;
-  token: string;
-}
-
-class DeleteCommonThreadsResponse extends GenericResponse {
-  id: number;
-}
+import {
+  CommonThreadsListRequest,
+  CommonThreadsListResponse,
+  CommonThreadsUpdateRequest,
+  CommonThreadsUpdateResponse,
+  CreateCommonThreadsRequest,
+  CreateCommonThreadsResponse,
+  DeleteCommonThreadsRequest,
+  DeleteCommonThreadsResponse,
+} from './types';
 
 @Component({
   tag: 'common-threads',
@@ -123,7 +79,7 @@ export class Threads {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common-cell-channels/create-read', {
+    const result = await fetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common-threads/create-read', {
       token: globals.globalStore.state.token,
       thread: {
         content: this.newContent,

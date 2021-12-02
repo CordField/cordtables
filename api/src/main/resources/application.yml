@@ -1,14 +1,16 @@
 
-org:
-  neo4j:
-    driver:
-      uri: ${NEO4J_URL}
-      authentication:
-        username: ${NEO4J_USERNAME}
-        password: ${NEO4J_PASSWORD}
+#org:
+#  neo4j:
+#    driver:
+#      uri: ${NEO4J_URL}
+#      authentication:
+#        username: ${NEO4J_USERNAME}
+#        password: ${NEO4J_PASSWORD}
 cord:
   admin:
     password: ${CORD_ADMIN_PASSWORD}
+  init:
+    load-language-data: false
 cord-api:
   url: ${CORD_API_GRAPHQL_URL}
   email: ${CORD_API_EMAIL}
@@ -33,4 +35,8 @@ spring:
     idle-timeout: 10000 #maximum idle time for connection
     max-lifetime: 1000 # maximum lifetime in milliseconds of a connection in the pool after it is closed.
     auto-commit: true #default auto-commit behavior.
-
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+    schemes: [http, https]
+    disable-swagger-default-url: true

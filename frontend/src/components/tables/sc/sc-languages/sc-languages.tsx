@@ -1,4 +1,4 @@
-import { Component, Host, h, State } from '@stencil/core';
+import { Component, Host, h, State, Listen } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
@@ -18,10 +18,13 @@ class CreateLanguageExResponse extends GenericResponse {
 
 class ScLanguagesListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class ScLanguagesListResponse {
   error: ErrorType;
+  size: number;
   languages: ScLanguage[];
 }
 
@@ -34,6 +37,7 @@ class ScLanguagesUpdateRequest {
 
 class ScLanguageUpdateResponse {
   error: ErrorType;
+  size: number;
   language: ScLanguage | null = null;
 }
 
@@ -52,8 +56,10 @@ class DeleteLanguageExResponse extends GenericResponse {
 })
 export class ScLanguages {
   @State() languagesResponse: ScLanguagesListResponse;
+  @State() currentPage: number = 1;
   newLanguageName: string;
   newDisplayName: string;
+  
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
@@ -66,7 +72,7 @@ export class ScLanguages {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.languagesResponse = { error: ErrorType.NoError, languages: this.languagesResponse.languages.map(language => (language.id === id ? updateResponse.language : language)) };
+      this.languagesResponse = { error: ErrorType.NoError, size: this.languagesResponse.size, languages: this.languagesResponse.languages.map(language => (language.id === id ? updateResponse.language : language)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -81,7 +87,7 @@ export class ScLanguages {
       token: globals.globalStore.state.token,
     });
     if (deleteResponse.error === ErrorType.NoError) {
-      this.getList();
+      this.getList(this.currentPage);
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item deleted successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -90,9 +96,11 @@ export class ScLanguages {
     }
   };
 
-  async getList() {
+  async getList(page) {
     this.languagesResponse = await fetchAs<ScLanguagesListRequest, ScLanguagesListResponse>('sc-languages/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 5,
     });
   }
 
@@ -118,7 +126,7 @@ export class ScLanguages {
 
     if (createResponse.error === ErrorType.NoError) {
       globals.globalStore.state.editMode = false;
-      this.getList();
+      this.getList(this.currentPage);
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item inserted successfully', id: uuidv4(), type: 'success' });
     } else {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
@@ -693,7 +701,16 @@ export class ScLanguages {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    console.log("Current Page: "+this.currentPage)
+    await this.getList(this.currentPage);
+  }
+
+  @Listen('pageChanged',{target: "body"})
+  async getChangedValue(event: CustomEvent) {
+      console.log(event.detail);
+      console.log("page changed");
+      this.currentPage = event.detail;
+      await this.getList(this.currentPage);
   }
 
   render() {
@@ -705,6 +722,8 @@ export class ScLanguages {
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
+        <cf-pagination current-page={this.currentPage} total-rows={this.languagesResponse.size} results-per-page="5" page-url="sc-languages" ></cf-pagination>
+
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">

@@ -1,104 +1,93 @@
 package com.seedcompany.cordtables.components.tables.admin.role_table_permissions
 
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.TableNames
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.admin.role_memberships.GlobalRoleMembershipsCreateReturn
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.roleTablePermissionInput
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.Read
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.Update
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
 
-
-data class InsertableGRTPFields(
-    val tableName: String,
-    val globalRole: Int,
-    val tablePermission: String,
+data class AdminRoleTablePermissionsCreateRequest(
+    val token: String? = null,
+    val roleTablePermission: roleTablePermissionInput,
 )
 
-data class CreateGRTPermissionsResponse(
+data class AdminRoleTablePermissionsCreateResponse(
     val error: ErrorType,
-    val data: GlobalRolesTablePermissions?
-)
-data class CreateGRTPermissionsRequest(
-    val token: String,
-        val insertedFields: InsertableGRTPFields,
-        val email: String
+    val id: Int? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("CreateTablePermissions")
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("AdminRoleTablePermissionsCreate")
 class Create(
     @Autowired
     val util: Utility,
 
     @Autowired
     val ds: DataSource,
+
+    @Autowired
+    val update: Update,
+
+    @Autowired
+    val read: Read,
 ) {
-    @PostMapping("globalrolestablepermissions/create")
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+
+    @PostMapping("admin-role-table-permissions/create")
     @ResponseBody
-    fun CreateHandler(@RequestBody req: CreateGRTPermissionsRequest): CreateGRTPermissionsResponse {
+    fun createHandler(@RequestBody req: AdminRoleTablePermissionsCreateRequest): AdminRoleTablePermissionsCreateResponse {
 
-        if (!util.isAdmin(req.token)) return CreateGRTPermissionsResponse(ErrorType.AdminOnly, null)
-        println("req: $req")
-        var errorType = ErrorType.UnknownError
-        var newGRTPermission: GlobalRolesTablePermissions? = null
-        var userId = 0
+        // if (req.roleTablePermission.name == null) return AdminRoleTablePermissionsCreateResponse(error = ErrorType.InputMissingToken, null)
 
-        this.ds.connection.use { conn ->
-            try {
-                val getUserIdStatement = conn.prepareCall("select person from admin.users where email = ?")
-                getUserIdStatement.setString(1, req.email)
-                val getUserIdResult = getUserIdStatement.executeQuery()
-                if (getUserIdResult.next()) {
-                    userId = getUserIdResult.getInt("person")
-                    println("userId: $userId")
-                }
-                else {
-                    throw SQLException("User not found")
-                }
-            }
-            catch(e:SQLException){
-                println(e.message)
-                errorType = ErrorType.UserNotFound
-                return CreateGRTPermissionsResponse(errorType, null)
-            }
-            try {
-                val insertStatement = conn.prepareCall(
-                    "insert into admin.role_table_permissions(table_name, table_permission, role, created_by, modified_by, owning_person, owning_group) values(?::admin.table_name,?::admin.table_permission,?, ?, ?, ?, ?) returning *"
+
+        // create row with required fields, use id to update cells afterwards one by one
+        val id = jdbcTemplate.queryForObject(
+            """
+            insert into admin.role_table_permissions(role, table_name, table_permission,  created_by, modified_by, owning_person, owning_group)
+                values(
+                    ?,
+                    ?::admin.table_name,
+                    ?::admin.table_permission_grant_type,
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
+                    1
                 )
-                insertStatement.setString(1, req.insertedFields.tableName)
-                insertStatement.setString(2, req.insertedFields.tablePermission)
-                insertStatement.setInt(3, req.insertedFields.globalRole)
-                insertStatement.setInt(4, userId)
-                insertStatement.setInt(5, userId)
-                insertStatement.setInt(6, userId)
-                insertStatement.setInt(7, 1)
+            returning id;
+        """.trimIndent(),
+            Int::class.java,
+            req.roleTablePermission.role,
+            req.roleTablePermission.table_name,
+            req.roleTablePermission.table_permission,
+            req.token,
+            req.token,
+            req.token,
+        )
 
-                val insertStatementResult = insertStatement.executeQuery()
+//        req.language.id = id
 
-                if (insertStatementResult.next()) {
-                    val id = insertStatementResult.getInt("id")
-                    val createdAt = insertStatementResult.getString("created_at")
-                    val createdBy = insertStatementResult.getInt("created_by")
-                    val modifiedAt = insertStatementResult.getString("modified_at")
-                    val modifiedBy = insertStatementResult.getInt("modified_by")
-                    val tableName = insertStatementResult.getString("table_name")
-                    val tablePermission = insertStatementResult.getString("table_permission")
-                    val globalRole = insertStatementResult.getInt("role")
-                    newGRTPermission = GlobalRolesTablePermissions(id, createdAt, createdBy, modifiedAt, modifiedBy, tableName, tablePermission, globalRole)
-                    println("newly inserted id: $id")
-                }
-            }
-            catch (e:SQLException ){
-                println(e.message)
-                errorType = ErrorType.SQLInsertError
-                return CreateGRTPermissionsResponse(errorType, null)
-            }
-        }
-        return CreateGRTPermissionsResponse(ErrorType.NoError,newGRTPermission)
+        return AdminRoleTablePermissionsCreateResponse(error = ErrorType.NoError, id = id)
     }
+
 }

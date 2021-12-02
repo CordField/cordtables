@@ -21,7 +21,7 @@ data class CommonDirectoriesCreateResponse(
     val id: Int? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonDirectoriesCreate")
 class Create(
     @Autowired

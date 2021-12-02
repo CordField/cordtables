@@ -1,4 +1,5 @@
 package com.seedcompany.cordtables.components.tables.admin.role_column_grants
+/**
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import org.apache.tomcat.jni.Global
@@ -31,7 +32,7 @@ data class GlobalRoleColumnGrantsReturn(
         val response: MutableList<GlobalRoleColumnGrants>?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @RestController("globalRoleColumnGrantsReadAllController")
 class readAll(
         @Autowired
@@ -86,3 +87,4 @@ class readAll(
         }
     }
 }
+        */

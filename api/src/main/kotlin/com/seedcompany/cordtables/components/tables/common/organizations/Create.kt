@@ -1,12 +1,10 @@
 package com.seedcompany.cordtables.components.tables.common.organizations
 
 import com.seedcompany.cordtables.common.*
-import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsCreateResponse
-import com.seedcompany.cordtables.components.tables.sc.languages.LanguageInput
 import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.enumContains
 import com.seedcompany.cordtables.components.tables.sc.languages.Read
-import com.seedcompany.cordtables.components.tables.sc.languages.Update
+import com.seedcompany.cordtables.components.tables.sc.budget_records.Update
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
@@ -27,19 +25,19 @@ data class CommonOrganizationsCreateResponse(
         val id: Int? = null,
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonOrganizationsCreate")
 class Create(
-        @Autowired
+    @Autowired
         val util: Utility,
 
-        @Autowired
+    @Autowired
         val ds: DataSource,
 
-        @Autowired
+    @Autowired
         val update: Update,
 
-        @Autowired
+    @Autowired
         val read: Read,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)

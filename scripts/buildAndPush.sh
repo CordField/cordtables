@@ -16,7 +16,7 @@ cp -r api/build/resources/main/static/* infra/dev/cf-server/static && \
 
 echo 'CONTAINERIZING' && \
 cd infra/dev/cf-server && \
-docker build -f Dockerfile -t cf-server:latest . --progress plain && \
+docker build --no-cache -f Dockerfile -t cf-server:latest . --progress plain && \
 
 echo 'PUSHING' && \
 docker tag cf-server:latest 140251415856.dkr.ecr.us-east-2.amazonaws.com/cf-server:latest;# && \

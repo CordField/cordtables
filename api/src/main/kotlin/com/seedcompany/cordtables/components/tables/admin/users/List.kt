@@ -1,9 +1,11 @@
 package com.seedcompany.cordtables.components.tables.admin.users
 
+import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
+import com.seedcompany.cordtables.components.tables.admin.users.user
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -15,17 +17,18 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class AdminUserListResponse(
-    val error: ErrorType,
-    val data: MutableList<AdminUser>?
-)
 
-data class AdminUserListRequest(
+data class AdminUsersListRequest(
     val token: String?
 )
 
-@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
-@Controller("AdminUserList")
+data class AdminUsersListResponse(
+    val error: ErrorType,
+    val users: MutableList<user>?
+)
+
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("AdminUsersList")
 class List(
     @Autowired
     val util: Utility,
@@ -35,16 +38,15 @@ class List(
 
     @Autowired
     val secureList: GetSecureListQuery,
-
-    ) {
+) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("table/admin-users/list")
+    @PostMapping("admin-users/list")
     @ResponseBody
-    fun listHandler(@RequestBody req: AdminUserListRequest): AdminUserListResponse {
-        var data: MutableList<AdminUser> = mutableListOf()
-        if (req.token == null) return AdminUserListResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun listHandler(@RequestBody req:AdminUsersListRequest): AdminUsersListResponse {
+        var data: MutableList<user> = mutableListOf()
+        if (req.token == null) return AdminUsersListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -52,11 +54,12 @@ class List(
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "admin.users",
+                filter = "order by id",
                 columns = arrayOf(
                     "id",
                     "person",
                     "email",
-                    "chat",
+                    "password",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -80,48 +83,48 @@ class List(
                 var email: String? = jdbcResult.getString("email")
                 if (jdbcResult.wasNull()) email = null
 
-                var chat: Int? = jdbcResult.getInt("chat")
-                if (jdbcResult.wasNull()) chat = null
+                var password: String? = jdbcResult.getString("password")
+                if(jdbcResult.wasNull()) password = null
 
-                var createdAt: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) createdAt = null
+                var created_by: Int? = jdbcResult.getInt("created_by")
+                if (jdbcResult.wasNull()) created_by = null
 
-                var createdBy: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) createdBy = null
+                var created_at: String? = jdbcResult.getString("created_at")
+                if (jdbcResult.wasNull()) created_at = null
 
-                var modifiedAt: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modifiedAt = null
+                var modified_at: String? = jdbcResult.getString("modified_at")
+                if (jdbcResult.wasNull()) modified_at = null
 
-                var modifiedBy: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modifiedBy = null
+                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                if (jdbcResult.wasNull()) modified_by = null
 
-                var owningPerson: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owningPerson = null
+                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                if (jdbcResult.wasNull()) owning_person = null
 
-                var owningGroup: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owningGroup = null
+                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
-                    AdminUser(
-                        id= id,
+                    user(
+                        id = id,
                         person = person,
                         email = email,
-                        password = null,
-                        chat = chat,
-                        created_at = createdAt,
-                        created_by = createdBy,
-                        modified_at = modifiedAt,
-                        modified_by = modifiedBy,
-                        owning_person= owningPerson,
-                        owning_group =  owningGroup,
+                        password = password,
+                        created_at = created_at,
+                        created_by = created_by,
+                        modified_at = modified_at,
+                        modified_by = modified_by,
+                        owning_person = owning_person,
+                        owning_group = owning_group,
                     )
                 )
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return AdminUserListResponse(ErrorType.SQLReadError, mutableListOf())
+            return AdminUsersListResponse(ErrorType.SQLReadError, mutableListOf())
         }
 
-        return AdminUserListResponse(ErrorType.NoError, data)
+        return AdminUsersListResponse(ErrorType.NoError, data)
     }
 }
+
