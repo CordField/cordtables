@@ -74,7 +74,7 @@ create table common.site_text_translations(
 -- todo
 create type common.book_name as enum (
   'Genesis',
-  'Exodus'
+  'Exodus',
   'Leviticus',
   'Numbers',
   'Deuteronomy',
@@ -137,7 +137,7 @@ create type common.book_name as enum (
   '1 John',
   '2 John',
   '3 John',
-  'Jude'
+  'Jude',
   'Revelation'
 );
 
@@ -285,7 +285,7 @@ create type common.location_type as enum (
 
 create table common.locations (
 	id serial primary key,
-
+  neo4j_id varchar(32),
 	name varchar(255) unique, -- not null,
 	sensitivity common.sensitivity not null default 'High',
 	type common.location_type, -- not null,
@@ -344,7 +344,7 @@ create table common.education_by_person (
 
 create table common.organizations (
 	id serial primary key,
-
+  neo4j_id varchar(32),
 	name varchar(255) unique, -- not null
 	sensitivity common.sensitivity default 'High',
 	primary_location int references common.locations(id),

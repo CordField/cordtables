@@ -10,7 +10,7 @@ create table sc.posts_directory ( -- does not need to be secure
 );
 
 create type sc.post_shareability as enum (
-  'Project Team',
+  'Membership',
   'Internal',
   'Ask to Share Externally',
   'External'
@@ -411,10 +411,8 @@ create table sc.language_goal_definitions (
 
 create table sc.language_locations (
   id serial primary key,
-
 	language int not null references sc.languages(id),
 	location int not null references sc.locations(id),
-	-- todo
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -599,9 +597,9 @@ create table sc.periodic_reports (
 -- extension table to common
 create table sc.projects (
   id serial primary key,
-
+  neo4j_id varchar(32),
 	name varchar(32), -- not null
-	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+	change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
 	active bool,
 	department varchar(255),
 	estimated_submission timestamp,
@@ -679,7 +677,7 @@ create table sc.partnerships (
   neo4j_id varchar(32) unique,
   project int references sc.projects(id), -- not null
   partner int references sc.organizations(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
   active bool,
   agreement_status sc.partnership_agreement_status,
   mou int references common.files(id),
@@ -694,7 +692,7 @@ create table sc.partnerships (
   sensitivity common.sensitivity,
 
   types sc.partner_types[],  -- added because exists in neo4j
-  
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -724,7 +722,7 @@ create table sc.budgets (
   universal_template_file_url varchar(255),
   sensitivity common.sensitivity,
   total decimal,
-  
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -740,13 +738,13 @@ create table sc.budget_records (
 
   neo4j_id varchar(32) unique,
   budget int references sc.budgets(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
   active bool,
   amount decimal,
   fiscal_year int,
   organization int references sc.organizations(id),
   sensitivity common.sensitivity,
-  
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -757,30 +755,16 @@ create table sc.budget_records (
 
 );
 
-create table sc.budget_records_partnerships (
-  id serial primary key,
-  budget_record int not null references sc.budget_records(id),
-  partnership int not null references sc.partnerships(id),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-
-);
-
 -- PROJECT LOCATION
 
 create table sc.project_locations (
   id serial primary key,
 
   active bool,
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
   location int references sc.locations(id), -- not null
   project int references sc.projects(id), -- not null
-  
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -801,12 +785,11 @@ create type common.ceremony_type as enum (
 create table sc.ceremonies (
   id serial primary key,
   neo4j_id varchar(32),
-  project int  references sc.projects(id),
-  ethnologue int references sil.table_of_languages(id),
   actual_date timestamp,
   estimated_date timestamp,
   is_planned bool,
   type common.ceremony_type,
+  sensitivity common.sensitivity,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -851,7 +834,7 @@ create table sc.language_engagements (
   neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
 	ethnologue int references sc.ethnologue(id), -- not null
-	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+	change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
   active bool,
   ceremony int references sc.ceremonies(id),
   is_open_to_investor_visit bool,
@@ -876,6 +859,7 @@ create table sc.language_engagements (
   status common.engagement_status,
   status_modified_at timestamp,
   historic_goal varchar(255),
+  sensitivity common.sensitivity,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -995,7 +979,7 @@ create table sc.producible_scripture_references (
   id serial primary key,
   producible int references sc.producible(id), -- not null
   scripture_reference int references common.scripture_references(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int default 1,-- references sc.change_to_plans(id), -- not null
   active bool,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1003,9 +987,9 @@ create table sc.producible_scripture_references (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-  unique (id)
+--  unique (producible, scripture_reference)
 );
 
 create table sc.products (
@@ -1013,7 +997,7 @@ create table sc.products (
 
   neo4j_id varchar(32) unique,
   name varchar(64), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int default 1,-- references sc.change_to_plans(id), -- not null
   active bool,
   mediums common.product_mediums[],
   methodology common.product_methodologies,
@@ -1043,9 +1027,9 @@ create table sc.product_scripture_references (
   id serial primary key,
   product int references sc.products(id), -- not null
   scripture_reference int references common.scripture_references(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
   active bool,
-  
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1053,7 +1037,7 @@ create table sc.product_scripture_references (
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
 
-  unique (id)
+  unique (product, scripture_reference)
 );
 
 create table sc.product_progress (
@@ -1119,7 +1103,7 @@ create table sc.internship_engagements (
 
   neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
-	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+	change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
   active bool,
   ceremony int references sc.ceremonies(id),
   communications_complete_date timestamp,
@@ -1144,30 +1128,12 @@ create table sc.internship_engagements (
   status_modified_at timestamp,
   last_suspended_at timestamp,
 
-
-create type common.ceremony_type as enum (
-  'Dedication',
-  'Certification'
-);
-
-create table sc.ceremonies (
-  id serial primary key,
-
-  neo4j_id varchar(32) unique,
-  project int references sc.projects(id), -- not null
-	ethnologue int references sc.ethnologue(id), -- not null
-	actual_date timestamp,
-	estimated_date timestamp,
-	is_planned bool,
-	type common.ceremony_type,
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id)
-
 );
 
 -- PARTNER CRM STUFF ---------------------------------------------------------------------------------------------------

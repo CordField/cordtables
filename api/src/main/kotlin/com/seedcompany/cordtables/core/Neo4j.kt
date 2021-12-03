@@ -9,7 +9,6 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.neo4j.driver.Driver
 import org.neo4j.driver.Record
-import org.neo4j.driver.types.Node
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -44,7 +43,8 @@ data class BaseAndPropertyNode(
 )
 
 data class Relation(
-    val type: String,
+  val type: String,
+  val active: String
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -284,10 +284,10 @@ class Neo4j(
                 targetTable = "sc.budgets",
                 id = node.id,
             )
-            node.labels.contains("EthnologueLanguage") -> writeBaseNode(
-                targetTable = "sil.table_of_languages",
-                id = node.id,
-            )
+//            node.labels.contains("EthnologueLanguage") -> writeBaseNode(
+//                targetTable = "sil.table_of_languages",
+//                id = node.id,
+//            )
             node.labels.contains("Language") -> writeBaseNode(
                 targetTable = "sc.languages",
                 id = node.id,
@@ -510,6 +510,7 @@ class Neo4j(
             }
 
             val processedBaseNodeRels = AtomicInteger(0)
+            val err = mutableMapOf<List<String>, Exception>();
 
             launch {
                 println("starting writer 1")
@@ -532,6 +533,17 @@ class Neo4j(
                 }
                 println("writer 2 closing")
             }
+
+          launch {
+            println("starting writer 3")
+            while (nodePairs.size > 0) {
+              val (n, r, m) = nodePairs.remove()
+              createRelationship(n as BaseNode, r as Relation, m as BaseNode)
+              processedBaseNodeRels.incrementAndGet()
+              delay(1L)
+            }
+            println("writer 3 closing")
+          }
 
             launch {
                 val then = DateTime.now().millis
@@ -579,7 +591,7 @@ class Neo4j(
                     nodePairs.add(
                         arrayOf(
                             createBaseNode(it, "n"),
-                            Relation(type = it.get("r").asRelationship().type()),
+                            Relation(type = it.get("r").asRelationship().type(), active = it.get("r").asRelationship().get("active").toString()),
                             createBaseNode(it, "m")
                         )
                     )
@@ -595,7 +607,7 @@ class Neo4j(
         r_label: String,
         m_label: String
     ): Boolean {
-        return (n.labels.contains(n_label) && r.type == r_label && m.labels.contains(m_label))
+        return (n.labels.contains(n_label) && r.type.contains(r_label) && r.active == "TRUE"  && m.labels.contains(m_label))
     }
 
     suspend fun createRelationship(n: BaseNode, r: Relation, m: BaseNode) {
@@ -696,14 +708,14 @@ class Neo4j(
                 "root_directory",
                 "id"
             )
-            checkRelationship(n, r, m, "EthnologueLanguage", "ethnologue", "Language") -> writeRelationship(
-                n,
-                m,
-                "sc.languages",
-                "sil.table_of_languages",
-                "ethnologue",
-                "id"
-            )
+//            checkRelationship(n, r, m, "EthnologueLanguage", "ethnologue", "Language") -> writeRelationship(
+//                n,
+//                m,
+//                "sc.languages",
+//                "sil.table_of_languages",
+//                "ethnologue",
+//                "id"
+//            )
             checkRelationship(n, r, m, "Project", "engagement", "LanguageEngagement") -> writeRelationship(
                 n,
                 m,
@@ -712,14 +724,14 @@ class Neo4j(
                 "project",
                 "id"
             )
-            checkRelationship(n, r, m, "Language", "language", "LanguageEngagement") -> writeRelationship(
-                n,
-                m,
-                "sc.language_engagements",
-                "sc.languages",
-                "ethnologue",
-                "ethnologue"
-            )
+//            checkRelationship(n, r, m, "Language", "language", "LanguageEngagement") -> writeRelationship(
+//                n,
+//                m,
+//                "sc.language_engagements",
+//                "sc.languages",
+//                "ethnologue",
+//                "ethnologue"
+//            )
             checkRelationship(n, r, m, "Project", "engagement", "InternshipEngagement") -> writeRelationship(
                 n,
                 m,
@@ -762,7 +774,7 @@ class Neo4j(
             )
             checkRelationship(n, r, m, "LanguageEngagement", "ceremony", "Ceremony") -> {
                 writeRelationship(n, m, "sc.ceremonies", "sc.language_engagements", "project", "project")
-                writeRelationship(n, m, "sc.ceremonies", "sc.language_engagements", "ethnologue", "ethnologue")
+//                writeRelationship(n, m, "sc.ceremonies", "sc.language_engagements", "ethnologue", "ethnologue")
             }
             checkRelationship(n, r, m, "FundingAccount", "fundingAccount", "Location") -> writeRelationship(
                 n,
@@ -854,7 +866,31 @@ class Neo4j(
                 "created_by",
                 "id"
             )
-            checkRelationship(n, r, m, "ScriptureRange", "scriptureReferences", "Producible") -> writeRelationshipsPairs(
+            checkRelationship(n, r, m, "FieldZone", "zone", "FieldRegion") -> writeRelationship(
+              n,
+              m,
+              "sc.field_regions",
+              "sc.field_zones",
+              "field_zone",
+              "id"
+            )
+            checkRelationship(n, r, m, "LanguageEngagement", "product", "Product") -> writeRelationship(
+              n,
+              m,
+              "sc.products",
+              "sc.language_engagements",
+              "engagement",
+              "id"
+            )
+            checkRelationship(n, r, m, "Producible", "produces", "Product") -> writeRelationship(
+              n,
+              m,
+              "sc.products",
+              "sc.producible",
+              "produces",
+              "id"
+            )
+            checkRelationship(n, r, m, "ScriptureRange", "scriptureReferences", "Producible")  && !m.labels.contains("Product")-> writeRelationshipsPairs(
                 n,
                 m,
                 "sc.producible_scripture_references",
@@ -864,6 +900,27 @@ class Neo4j(
                 "scripture_reference",
                 "id"
             )
+            checkRelationship(n, r, m, "Location", "locations", "Language") ->  writeRelationshipsPairs(
+                n,
+                m,
+                "sc.language_locations",
+                "sc.languages",
+                "sc.locations",
+                "language",
+                "location",
+                "id"
+            )
+            checkRelationship(n, r, m, "ScriptureRange", "scriptureReferences", "Product")  -> writeRelationshipsPairs(
+                n,
+                m,
+                "sc.product_scripture_references",
+                "sc.products",
+                "common.scripture_references",
+                "product",
+                "scripture_reference",
+                "id"
+            )
+
         }
     }
 
@@ -876,9 +933,8 @@ class Neo4j(
         foreignKey: String
     ) {
         val exists = jdbcTemplate.queryForObject(
-            "select exists(select ? from $refTable where neo4j_id = ?);",
+            "select exists(select $foreignKey from $refTable where neo4j_id = ?);",
             Boolean::class.java,
-            foreignKey,
             n.id
         )
 
@@ -907,19 +963,15 @@ class Neo4j(
         field2: String,
         foreignKey: String
     ) {
-        val exists1 = jdbcTemplate.queryForObject(
-            "select exists(select $foreignKey from $refTable1 where neo4j_id = ?);",
-            Boolean::class.java,
-            m.id
-        )
 
-        val exists2 = jdbcTemplate.queryForObject(
-            "select exists(select $foreignKey from $refTable2 where neo4j_id = ?);",
+        val exists = jdbcTemplate.queryForObject(
+            "select exists((select $foreignKey from $refTable1 where neo4j_id = ?) union (select $foreignKey from $refTable2 where neo4j_id = ?));",
             Boolean::class.java,
+            m.id,
             n.id
         )
 
-        if (exists1 && exists2) {
+        if (exists) {
             val id1 = jdbcTemplate.queryForObject(
                 "select $foreignKey from $refTable1 where neo4j_id = ?;",
                 Int::class.java,
@@ -932,11 +984,19 @@ class Neo4j(
                 n.id
             )
 
-            jdbcTemplate.update(
-                "insert into $targetTable($field1, $field2, created_by, modified_by, owning_person, owning_group) values(?, ?, 1, 1, 1, 1)",
-                id1,
-                id2,
+            val existsRelation = jdbcTemplate.queryForObject(
+                "select exists(select $foreignKey from $targetTable where $field1 = $id1 and $field2 = $id2)",
+                Boolean::class.java
             )
+
+            if (!existsRelation!!) {
+                jdbcTemplate.update(
+                  "insert into $targetTable($field1, $field2, created_by, modified_by, owning_person, owning_group) values(?, ?, 1, 1, 1, 1)",
+                  id1,
+                  id2,
+                )
+            }
+
         }
     }
 
