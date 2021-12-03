@@ -11,6 +11,8 @@ data class GetSecureListQueryRequest(
     val columns: Array<String>,
     val custom_columns: String? = null,
     val filter: String = "",
+    val searchField: String = "",
+    val searchKeyword: String = "",
     val getList: Boolean = true, // get read if false
 )
 
@@ -116,6 +118,10 @@ class GetSecureListQuery() {
                 owning_person = (select person from admin.tokens where token = :token) or
                 id in (select row from public_row_level_access));
         """.replace('\n', ' ')
+
+        }
+
+        if(req.searchField != "" && req.searchKeyword!=""){
 
         }
 

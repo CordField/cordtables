@@ -5,11 +5,11 @@ import com.seedcompany.cordtables.components.tables.common.prayer_requests.praye
 
 data class PrayerRequestData(
     val id: Int,
-    val subject: String,
-    val parentRequest: Int,
-    val content: String,
-    val requestedBy: String,
-    val notify: Int,
+    val subject: String?,
+    val parentRequest: Int?,
+    val content: String?,
+    val requestedBy: String?,
+    val notify: Int?,
     val myRequest: Boolean
 )
 

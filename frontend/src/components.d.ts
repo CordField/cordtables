@@ -265,8 +265,6 @@ export namespace Components {
     }
     interface SilLanguageIndex {
     }
-    interface SilLanguagesCodes {
-    }
     interface SilTableOfCountries {
     }
     interface SilTableOfLanguages {
@@ -983,12 +981,6 @@ declare global {
         prototype: HTMLSilLanguageIndexElement;
         new (): HTMLSilLanguageIndexElement;
     };
-    interface HTMLSilLanguagesCodesElement extends Components.SilLanguagesCodes, HTMLStencilElement {
-    }
-    var HTMLSilLanguagesCodesElement: {
-        prototype: HTMLSilLanguagesCodesElement;
-        new (): HTMLSilLanguagesCodesElement;
-    };
     interface HTMLSilTableOfCountriesElement extends Components.SilTableOfCountries, HTMLStencilElement {
     }
     var HTMLSilTableOfCountriesElement: {
@@ -1237,7 +1229,6 @@ declare global {
         "sil-iso-639-3-retirements": HTMLSilIso6393RetirementsElement;
         "sil-language-codes": HTMLSilLanguageCodesElement;
         "sil-language-index": HTMLSilLanguageIndexElement;
-        "sil-languages-codes": HTMLSilLanguagesCodesElement;
         "sil-table-of-countries": HTMLSilTableOfCountriesElement;
         "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
         "sil-table-of-languages-in-country": HTMLSilTableOfLanguagesInCountryElement;
@@ -1523,8 +1514,6 @@ declare namespace LocalJSX {
     }
     interface SilLanguageIndex {
     }
-    interface SilLanguagesCodes {
-    }
     interface SilTableOfCountries {
     }
     interface SilTableOfLanguages {
@@ -1698,7 +1687,6 @@ declare namespace LocalJSX {
         "sil-iso-639-3-retirements": SilIso6393Retirements;
         "sil-language-codes": SilLanguageCodes;
         "sil-language-index": SilLanguageIndex;
-        "sil-languages-codes": SilLanguagesCodes;
         "sil-table-of-countries": SilTableOfCountries;
         "sil-table-of-languages": SilTableOfLanguages;
         "sil-table-of-languages-in-country": SilTableOfLanguagesInCountry;
@@ -1837,7 +1825,6 @@ declare module "@stencil/core" {
             "sil-iso-639-3-retirements": LocalJSX.SilIso6393Retirements & JSXBase.HTMLAttributes<HTMLSilIso6393RetirementsElement>;
             "sil-language-codes": LocalJSX.SilLanguageCodes & JSXBase.HTMLAttributes<HTMLSilLanguageCodesElement>;
             "sil-language-index": LocalJSX.SilLanguageIndex & JSXBase.HTMLAttributes<HTMLSilLanguageIndexElement>;
-            "sil-languages-codes": LocalJSX.SilLanguagesCodes & JSXBase.HTMLAttributes<HTMLSilLanguagesCodesElement>;
             "sil-table-of-countries": LocalJSX.SilTableOfCountries & JSXBase.HTMLAttributes<HTMLSilTableOfCountriesElement>;
             "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
             "sil-table-of-languages-in-country": LocalJSX.SilTableOfLanguagesInCountry & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesInCountryElement>;

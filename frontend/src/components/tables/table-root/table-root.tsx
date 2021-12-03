@@ -102,6 +102,17 @@ export class TableRoot {
         {this.match.params.table === 'sc-people' && <sc-people></sc-people>}
         
 
+        {this.match.params.table === 'sil-country-codes' && <sil-country-codes></sil-country-codes>}
+        {this.match.params.table === 'sil-language-codes' && <sil-language-codes></sil-language-codes>}
+        {this.match.params.table === 'sil-language-index' && <sil-language-index></sil-language-index>}
+        {this.match.params.table === 'sil-table-of-languages' && <sil-table-of-languages></sil-table-of-languages>}
+        {this.match.params.table === 'sil-iso-639-3' && <sil-iso-639-3></sil-iso-639-3>}
+        {this.match.params.table === 'sil-iso-639-3-names' && <sil-iso-639-3-names></sil-iso-639-3-names>}
+        {this.match.params.table === 'sil-iso-639-3-macrolanguages' && <sil-iso-639-3-macrolanguages></sil-iso-639-3-macrolanguages>}
+        {this.match.params.table === 'sil-iso-639-3-retirements' && <sil-iso-639-3-retirements></sil-iso-639-3-retirements>}
+        {this.match.params.table === 'sil-table-of-countries' && <sil-table-of-countries></sil-table-of-countries>}
+        {this.match.params.table === 'sil-table-of-languages-in-country' && <sil-table-of-languages-in-country></sil-table-of-languages-in-country>}
+
 
 
       </Host>
