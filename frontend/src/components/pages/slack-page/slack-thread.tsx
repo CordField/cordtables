@@ -1,10 +1,11 @@
 import { Component, Host, h, Prop, Watch, Event, EventEmitter, Listen, State } from '@stencil/core';
+import { v4 } from 'uuid';
 import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 import { CommonDiscussionChannel } from '../../tables/common/discussion-channels/types';
 import { CommonPost, CommonPostsListRequest, CommonPostsListResponse } from '../../tables/common/posts/types';
-import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse } from '../../tables/common/threads/types';
+import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, CommonThreadsUpdateRequest, CommonThreadsUpdateResponse } from '../../tables/common/threads/types';
 
 // will take discussion channels as a prop
 @Component({
@@ -18,15 +19,27 @@ export class SlackThread {
   @State() threadPosts: CommonPost[];
   @State() showPosts: boolean = false;
   @State() showButtons: boolean = false;
+  @State() updateMode: boolean = false;
+  @State() threadContent: string = null;
+  @Event({ eventName: 'threadDeleted' }) threadDeleted: EventEmitter<number>;
+
+  componentWillLoad() {
+    this.threadContent = this.thread.content;
+  }
+
   @Watch('showPosts')
   async handleShowPostsChange(newValue: boolean, oldValue: boolean) {
     if (newValue === true && this.threadPostsResponse === null) {
       await this.getPosts();
     }
   }
-  // componentDidLoad() {
-  //   console.log('slackthread', this.thread);
-  // }
+
+  @Listen('postAdded')
+  postAddedHandler(event: CustomEvent<CommonPost>) {
+    console.log('event received', event);
+    this.threadPosts = this.threadPosts.concat(event.detail);
+  }
+
   async getPosts() {
     this.threadPostsResponse = await fetchAs<CommonPostsListRequest, CommonPostsListResponse>('common-posts/list', {
       token: globals.globalStore.state.token,
@@ -36,13 +49,9 @@ export class SlackThread {
       this.threadPosts = this.threadPostsResponse.posts;
     }
   }
-  @Listen('postAdded')
-  postAddedHandler(event: CustomEvent<CommonPost>) {
-    console.log('event received', event);
-    this.threadPosts = this.threadPosts.concat(event.detail);
-  }
+
   mouseEnterAndLeaveHandler() {
-    console.log(this);
+    console.log(this.thread.owning_person, globals.globalStore.state.userId);
     if (this.thread.owning_person === globals.globalStore.state.userId) this.showButtons = !this.showButtons;
   }
 
@@ -52,9 +61,6 @@ export class SlackThread {
     const jsx = (
       <div>
         <div
-          onClick={() => {
-            this.showPosts = !this.showPosts;
-          }}
           onMouseEnter={() => {
             setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
           }}
@@ -63,23 +69,93 @@ export class SlackThread {
           }}
           class="slack-thread-content"
         >
-          <span class="post-indicator">{this.showPosts ? <span>&#128071;</span> : <span>&#x261e;</span>}</span>
-          {this.thread.content}
-          {/* <span class="post-count">{this.threadPosts.length}</span> */}
+          <span
+            class="post-indicator"
+            onClick={() => {
+              this.showPosts = !this.showPosts;
+            }}
+          >
+            {this.showPosts ? '👇' : '👉'}
+          </span>
+          <span
+            class="thread-content"
+            contenteditable={this.updateMode}
+            innerHTML={this.threadContent}
+            onInput={e => {
+              e.stopPropagation();
+              this.threadContent = (e.target as HTMLElement).innerHTML;
+            }}
+          ></span>
           {this.showButtons && (
             <span class="slack-thread-buttons">
-              <span class="slack-thread-update" onClick={e => {}}>
-                &#9998;
-              </span>
-              <span class="slack-thread-delete">&#9940;</span>
+              {this.updateMode ? (
+                <span>
+                  <span
+                    class="thread-update-confirm"
+                    onClick={async e => {
+                      e.stopPropagation();
+                      this.updateMode = false;
+                      const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common-threads/update-read', {
+                        token: globals.globalStore.state.token,
+                        column: 'content',
+                        id: this.thread.id,
+                        value: this.threadContent !== '' ? this.threadContent : null,
+                      });
+                      if (updateResponse.error === ErrorType.NoError) {
+                        this.threadContent = updateResponse.thread.content;
+                      }
+                    }}
+                  >
+                    ✔️
+                  </span>
+                  <span
+                    class="thread-update-cancel"
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.updateMode = false;
+                      this.threadContent = this.thread.content;
+                    }}
+                  >
+                    ❌
+                  </span>
+                </span>
+              ) : (
+                <span>
+                  <span
+                    class="thread-update"
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.updateMode = true;
+                    }}
+                  >
+                    ✎
+                  </span>
+                  <span
+                    class="thread-delete"
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.threadDeleted.emit(this.thread.id);
+                    }}
+                  >
+                    ⛔
+                  </span>
+                </span>
+              )}
             </span>
           )}
         </div>
-        {/* <span class="form-indicator" onClick={() => (this.showForm = !this.showForm)}>
-          {this.showForm === false ? <span>&#43;</span> : <span>&#8722;</span>}
-        </span> */}
-        {/* add button here to toggle visibility */}
         <div class="thread-posts">{this.showPosts && this.threadPosts?.map(post => <div>{post.content}</div>)}</div>
+
+        {/* <tinymce-editor
+          key={0}
+          id="tiny-ed"
+          api-key={process.env.TINY_KEY}
+          plugins="image link emoticons image table media"
+          menubar="false"
+          toolbar_mode="floating"
+          toolbar="quicklink emoticons image table media | bold italic | undo redo | styleselect | alignleft aligncenter alignright alignjustify | outdent indent"
+          quickbars_insert_toolbar="false"
+        ></tinymce-editor> */}
       </div>
     );
 

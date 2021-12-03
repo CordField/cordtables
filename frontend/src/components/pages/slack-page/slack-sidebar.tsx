@@ -23,12 +23,9 @@ export class SlackSidebar {
   @State() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() name: string = '';
   @State() showForm: boolean = false;
-  // @Prop({ mutable: true }) selectedDiscussionChannel: CommonDiscussionChannel;
+
   @Listen('channelAdded')
   handleChannelAddedChange(event: CustomEvent<CommonDiscussionChannel>) {
-    // if (this.discussionChannels.error === ErrorType.NoError) {
-    //   this.channelThreads = this.channelThreads.concat(event.detail);
-    // }
     if (this.discussionChannels.error === ErrorType.NoError) {
       this.discussionChannels = { error: ErrorType.NoError, discussion_channels: this.discussionChannels.discussion_channels.concat(event.detail) };
     }
@@ -96,7 +93,6 @@ export class SlackSidebar {
       <Host>
         <slot></slot>
         {jsx}
-        {/* {formJsx} */}
         <div
           class="add-button"
           onClick={() => {
@@ -105,7 +101,6 @@ export class SlackSidebar {
         >
           {this.showForm ? '\u2212' : '\u002B'}
         </div>
-        {/* {this.showForm && <slack-form type="channel" />} */}
         {this.showForm && formJsx}
       </Host>
     );

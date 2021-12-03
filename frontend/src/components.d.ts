@@ -1473,6 +1473,7 @@ declare namespace LocalJSX {
         "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
     }
     interface SlackThread {
+        "onThreadDeleted"?: (event: CustomEvent<number>) => void;
         "thread"?: CommonThread;
     }
     interface StageGraph {

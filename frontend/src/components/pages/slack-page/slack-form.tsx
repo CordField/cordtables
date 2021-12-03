@@ -77,22 +77,20 @@ export class SlackForm {
     }
   }
   setContentToNull() {
-    this.content = '';
+    this.content = null;
   }
   render() {
     const formClassName = this.type === 'thread' ? `slack-form slack-form-last` : `slack-form`;
     const jsx = (
-      <form class={formClassName}>
+      <form
+        class={formClassName}
+        onSubmit={e => {
+          this.handleCreate(e);
+          this.setContentToNull();
+        }}
+      >
         <input type="text" name="content" id="content" value={this.content} onChange={e => this.handleContentChange(e)} />
-        <button
-          onClick={e => {
-            this.handleCreate(e);
-            this.setContentToNull();
-          }}
-          class="slack-form-button"
-        >
-          submit
-        </button>
+        <button class="slack-form-button">submit</button>
       </form>
     );
     return (
