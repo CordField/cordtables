@@ -717,11 +717,11 @@ create table sc.budgets (
   id serial primary key,
 
   neo4j_id varchar(32) unique,
-  change_to_plan int default 1, -- not null
-  project int references sc.projects(id), -- not null
+  change_to_plan int default 1, -- not null   //TODO: this column doesn't exist in neo4j
+  project int references sc.projects(id), -- not null   // TODO: column doesn't exist in neo4j
   status common.budget_status,
   universal_template int references common.files(id),
-  universal_template_file_url varchar(255),
+  universal_template_file_url varchar(255),       -- // TODO: Shouldn't this come from file_versions -> common.files?
   sensitivity common.sensitivity,
   total decimal,
   
@@ -740,8 +740,8 @@ create table sc.budget_records (
 
   neo4j_id varchar(32) unique,
   budget int references sc.budgets(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
-  active bool,
+  change_to_plan int default 1 references sc.change_to_plans(id), -- not null //TODO: column doesn't exist in neo4j
+  active bool, -- // TODO: shouldn't ACTIVE be in every table? it's a BaseNode prop...
   amount decimal,
   fiscal_year int,
   organization int references sc.organizations(id),
@@ -757,6 +757,7 @@ create table sc.budget_records (
 
 );
 
+-- TODO: this relationship doesn't technically live in neo4j. the relationship between a budget and a partnership lives in a project.
 create table sc.budget_records_partnerships (
   id serial primary key,
   budget_record int not null references sc.budget_records(id),
@@ -772,7 +773,7 @@ create table sc.budget_records_partnerships (
 );
 
 -- PROJECT LOCATION
-
+-- TODO: does this map to project's 'otherLocations' in neo4j?
 create table sc.project_locations (
   id serial primary key,
 
@@ -801,12 +802,13 @@ create type common.ceremony_type as enum (
 create table sc.ceremonies (
   id serial primary key,
   neo4j_id varchar(32),
-  project int  references sc.projects(id),
-  ethnologue int references sil.table_of_languages(id),
+  project int  references sc.projects(id),     --TODO: this should probably be taken out. ceremony is on Language engagement, which
+  ethnologue int references sil.table_of_languages(id),  -- TODO: (cont) does this for us.
   actual_date timestamp,
   estimated_date timestamp,
   is_planned bool,
   type common.ceremony_type,
+  sensitivity common.sensitivity,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -848,14 +850,27 @@ create type common.project_engagement_tag as enum (
 create table sc.language_engagements (
   id serial primary key,
 
+  --TODO: neo4j also has the following columns not covered in this table:
+  --TODO                   changeset
+  --TODO                   currentProgressReportDue
+  --TODO                   dateRange (derived, so probably don't need it here)
+  --TODO                   dateRangeOverride (derived)
+  --TODO                   latestProgressReportSubmitted
+  --TODO                   nextProgressReportDue
+  --TODO                   partnershipsProducingMediums
+  --TODO                   products? (see note on product_engagement_tag)
+  --TODO                   progressReports? (see note on periodic_reports_directory)
+  --TODO                   sentPrintingDate
+
+
   neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
-	ethnologue int references sc.ethnologue(id), -- not null
-	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+	ethnologue int references sc.ethnologue(id), -- not null  //TODO: referencing ethnologue or sc.languages or language_index or common.language? neo4j just references language
+	change_to_plan int default 1 references sc.change_to_plans(id), -- not null   //TODO: column doesn't exist in neo4j
   active bool,
   ceremony int references sc.ceremonies(id),
   is_open_to_investor_visit bool,
-  communications_complete_date timestamp,
+  communications_complete_date timestamp,   -- //TODO: column doesn't exist in neo4j
   complete_date timestamp,
   disbursement_complete_date timestamp,
   end_date timestamp,
@@ -863,19 +878,20 @@ create table sc.language_engagements (
   initial_end_date timestamp,
   is_first_scripture bool,
   is_luke_partnership bool,
-  is_sent_printing bool,
+  is_sent_printing bool,     -- //TODO: should probably be sent_printing_date. in neo4j has sentPrintingDate
   last_suspended_at timestamp,
   last_reactivated_at timestamp,
   paratext_registry varchar(32),
-  periodic_reports_directory int references sc.periodic_reports_directory(id),
-  pnp varchar(255),
-  pnp_file int references common.files(id),
-  product_engagement_tag common.project_engagement_tag,
+  periodic_reports_directory int references sc.periodic_reports_directory(id),   -- TODO: neo4j has this as 'progressReports' and its a list of PeriodicReports
+  pnp varchar(255),   -- TODO: does this map to pnpData in neo4j? if so, it's marked as deprecated.
+  pnp_file int references common.files(id),   --TODO: this should probably be file_version instead.
+  product_engagement_tag common.project_engagement_tag,   --TODO: is this synonymous to the products field in LanguageEngagement? If so, this is already covered in the products table. If not, this column doesn't exist in neo4j
   start_date timestamp,
   start_date_override timestamp,
   status common.engagement_status,
   status_modified_at timestamp,
   historic_goal varchar(255),
+  sensitivity common.sensitivity,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
