@@ -1,9 +1,9 @@
-package com.seedcompany.cordtables.components.tables.common.prayer_notifications
+package com.seedcompany.cordtables.components.tables.up.prayer_requests
 
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.Delete as CommonDelete
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.Delete as CommonDelete
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.CommonPrayerNotificationsDeleteRequest
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsDeleteRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class CommonPrayerNotificationsDeleteRequest(
+data class UpPrayerRequestsDeleteRequest(
     val id: Int,
     val token: String?,
 )
 
-data class CommonPrayerNotificationsDeleteResponse(
+data class UpPrayerRequestsDeleteResponse(
     val error: ErrorType,
     val id: Int?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonPrayerNotificationsDelete")
+@Controller("UpPrayerRequestsDelete")
 class Delete(
     @Autowired
     val util: Utility,
@@ -32,13 +32,13 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-prayer-notifications/delete")
+    @PostMapping("up-prayer-requests/delete")
     @ResponseBody
-    fun deleteHandler(@RequestBody req: CommonPrayerNotificationsDeleteRequest): CommonPrayerNotificationsDeleteResponse {
+    fun deleteHandler(@RequestBody req: UpPrayerRequestsDeleteRequest): UpPrayerRequestsDeleteResponse {
 
-        if (req.token == null) return CommonPrayerNotificationsDeleteResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "common.prayer_notifications"))
-            return CommonPrayerNotificationsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
+        if (req.token == null) return UpPrayerRequestsDeleteResponse(ErrorType.TokenNotFound, null)
+        if(!util.userHasDeletePermission(req.token, "up.prayer_requests"))
+            return UpPrayerRequestsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
         var deletedLocationExId: Int? = null
@@ -47,7 +47,7 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from common.prayer_notifications where id = ? returning id"
+                    "delete from up.prayer_requests where id = ? returning id"
                 )
                 deleteStatement.setInt(1, req.id)
 
@@ -63,10 +63,10 @@ class Delete(
             catch (e:SQLException ){
                 println(e.message)
 
-                return CommonPrayerNotificationsDeleteResponse(ErrorType.SQLDeleteError, null)
+                return UpPrayerRequestsDeleteResponse(ErrorType.SQLDeleteError, null)
             }
         }
 
-        return CommonPrayerNotificationsDeleteResponse(ErrorType.NoError,deletedLocationExId)
+        return UpPrayerRequestsDeleteResponse(ErrorType.NoError,deletedLocationExId)
     }
 }

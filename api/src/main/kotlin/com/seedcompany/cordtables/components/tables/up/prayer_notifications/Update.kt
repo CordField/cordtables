@@ -1,13 +1,13 @@
-package com.seedcompany.cordtables.components.tables.common.prayer_notifications
+package com.seedcompany.cordtables.components.tables.up.prayer_notifications
 
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.CommonPrayerNotificationsUpdateRequest
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.Update as CommonUpdate
+import com.seedcompany.cordtables.components.tables.up.prayer_notifications.UpPrayerNotificationsUpdateRequest
+import com.seedcompany.cordtables.components.tables.up.prayer_notifications.Update as CommonUpdate
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.CommonPrayerNotificationsUpdateResponse
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.prayerNotificationInput
+import com.seedcompany.cordtables.components.tables.up.prayer_notifications.UpPrayerNotificationsUpdateResponse
+import com.seedcompany.cordtables.components.tables.up.prayer_notifications.prayerNotificationInput
 import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -17,20 +17,20 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class CommonPrayerNotificationsUpdateRequest(
+data class UpPrayerNotificationsUpdateRequest(
     val token: String?,
     val id: Int? = null,
     val column: String? = null,
     val value: Any? = null,
 )
 
-data class CommonPrayerNotificationsUpdateResponse(
+data class UpPrayerNotificationsUpdateResponse(
     val error: ErrorType,
 )
 
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonPrayerNotificationsUpdate")
+@Controller("UpPrayerNotificationsUpdate")
 class Update(
     @Autowired
     val util: Utility,
@@ -38,19 +38,19 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-prayer-notifications/update")
+    @PostMapping("up-prayer-notifications/update")
     @ResponseBody
-    fun updateHandler(@RequestBody req: CommonPrayerNotificationsUpdateRequest): CommonPrayerNotificationsUpdateResponse {
+    fun updateHandler(@RequestBody req: UpPrayerNotificationsUpdateRequest): UpPrayerNotificationsUpdateResponse {
 
-        if (req.token == null) return CommonPrayerNotificationsUpdateResponse(ErrorType.TokenNotFound)
-        if (req.column == null) return CommonPrayerNotificationsUpdateResponse(ErrorType.InputMissingColumn)
-        if (req.id == null) return CommonPrayerNotificationsUpdateResponse(ErrorType.MissingId)
+        if (req.token == null) return UpPrayerNotificationsUpdateResponse(ErrorType.TokenNotFound)
+        if (req.column == null) return UpPrayerNotificationsUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return UpPrayerNotificationsUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
             "request" -> {
                 util.updateField(
                     token = req.token,
-                    table = "common.prayer_notifications",
+                    table = "up.prayer_notifications",
                     column = "request",
                     id = req.id,
                     value = req.value,
@@ -60,7 +60,7 @@ class Update(
             "person" -> {
                 util.updateField(
                     token = req.token,
-                    table = "common.prayer_notifications",
+                    table = "up.prayer_notifications",
                     column = "person",
                     id = req.id,
                     value = req.value,
@@ -70,7 +70,7 @@ class Update(
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
-                    table = "common.prayer_notifications",
+                    table = "up.prayer_notifications",
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
@@ -80,7 +80,7 @@ class Update(
             "owning_group" -> {
                 util.updateField(
                     token = req.token,
-                    table = "common.prayer_notifications",
+                    table = "up.prayer_notifications",
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
@@ -89,7 +89,7 @@ class Update(
             }
         }
 
-        return CommonPrayerNotificationsUpdateResponse(ErrorType.NoError)
+        return UpPrayerNotificationsUpdateResponse(ErrorType.NoError)
     }
 
 }

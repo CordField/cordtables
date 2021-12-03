@@ -1,11 +1,12 @@
-package com.seedcompany.cordtables.components.tables.common.prayer_notifications
+package com.seedcompany.cordtables.components.tables.up.prayer_requests
 
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.prayerNotification
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequest
+import com.seedcompany.cordtables.components.tables.sc.locations.ScLocation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -17,19 +18,19 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-
-data class CommonPrayerNotificationsListRequest(
-    val token: String?
+data class UpPrayerRequestsReadRequest(
+    val token: String?,
+    val id: Int? = null,
 )
 
-data class CommonPrayerNotificationsListResponse(
+data class UpPrayerRequestsReadResponse(
     val error: ErrorType,
-    val prayerNotifications: MutableList<prayerNotification>?
+    val prayerRequest: prayerRequest? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonPrayerNotificationsList")
-class List(
+@Controller("UpPrayerRequestsRead")
+class Read(
     @Autowired
     val util: Utility,
 
@@ -39,33 +40,40 @@ class List(
     @Autowired
     val secureList: GetSecureListQuery,
 ) {
-
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-prayer-notifications/list")
+    @PostMapping("up-prayer-requests/read")
     @ResponseBody
-    fun listHandler(@RequestBody req:CommonPrayerNotificationsListRequest): CommonPrayerNotificationsListResponse {
-        var data: MutableList<prayerNotification> = mutableListOf()
-        if (req.token == null) return CommonPrayerNotificationsListResponse(ErrorType.TokenNotFound, mutableListOf())
+    fun readHandler(@RequestBody req: UpPrayerRequestsReadRequest): UpPrayerRequestsReadResponse {
+
+        if (req.token == null) return UpPrayerRequestsReadResponse(ErrorType.TokenNotFound)
+        if (req.id == null) return UpPrayerRequestsReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+        paramSource.addValue("id", req.id)
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "common.prayer_notifications",
-                filter = "order by id",
+                tableName = "up.prayer_requests",
+                getList = false,
                 columns = arrayOf(
                     "id",
-                    "request",
-                    "person",
+                    "language_id",
+                    "sensitivity",
+                    "parent",
+                    "translator",
+                    "location",
+                    "title",
+                    "content",
+                    "reviewed",
                     "created_at",
                     "created_by",
                     "modified_at",
                     "modified_by",
                     "owning_person",
                     "owning_group",
-                )
+                ),
             )
         ).query
 
@@ -76,17 +84,35 @@ class List(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var request: Int? = jdbcResult.getInt("request")
-                if (jdbcResult.wasNull()) request = null
+                var language_id: Int? = jdbcResult.getInt("language_id")
+                if (jdbcResult.wasNull()) language_id = null
 
-                var person: Int? = jdbcResult.getInt("person")
-                if (jdbcResult.wasNull()) person = null
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) created_by = null
+                var parent: Int? = jdbcResult.getInt("parent")
+                if (jdbcResult.wasNull()) parent = null
+
+                var translator: Int? = jdbcResult.getInt("translator")
+                if (jdbcResult.wasNull()) translator = null
+
+                var location: String? = jdbcResult.getString("location")
+                if (jdbcResult.wasNull()) location = null
+
+                var title: String? = jdbcResult.getString("title")
+                if (jdbcResult.wasNull()) title = null
+
+                var content: String? = jdbcResult.getString("content")
+                if (jdbcResult.wasNull()) content = null
+
+                var reviewed: Boolean? = jdbcResult.getBoolean("reviewed")
+                if (jdbcResult.wasNull()) reviewed = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
+
+                var created_by: Int? = jdbcResult.getInt("created_by")
+                if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
@@ -100,11 +126,17 @@ class List(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                data.add(
-                    prayerNotification(
+                val prayerRequest =
+                    prayerRequest(
                         id = id,
-                        request = request,
-                        person = person,
+                        language_id = language_id,
+                        sensitivity = sensitivity,
+                        parent = parent,
+                        translator = translator,
+                        location = location,
+                        title = title,
+                        content = content,
+                        reviewed = reviewed,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,
@@ -112,14 +144,15 @@ class List(
                         owning_person = owning_person,
                         owning_group = owning_group,
                     )
-                )
+
+                return UpPrayerRequestsReadResponse(ErrorType.NoError, prayerRequest = prayerRequest)
+
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return CommonPrayerNotificationsListResponse(ErrorType.SQLReadError, mutableListOf())
+            return UpPrayerRequestsReadResponse(ErrorType.SQLReadError)
         }
 
-        return CommonPrayerNotificationsListResponse(ErrorType.NoError, data)
+        return UpPrayerRequestsReadResponse(error = ErrorType.UnknownError)
     }
 }
-

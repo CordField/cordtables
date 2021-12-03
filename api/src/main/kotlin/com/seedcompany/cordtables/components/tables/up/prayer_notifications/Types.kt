@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.common.prayer_notifications
+package com.seedcompany.cordtables.components.tables.up.prayer_notifications
 
 data class prayerNotification(
     var id: Int? = null,

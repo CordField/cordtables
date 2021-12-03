@@ -1,10 +1,10 @@
-package com.seedcompany.cordtables.components.tables.common.prayer_requests
+package com.seedcompany.cordtables.components.tables.up.prayer_requests
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.common.prayer_requests.*
-import com.seedcompany.cordtables.components.tables.common.prayer_requests.CommonPrayerRequestsCreateRequest
-import com.seedcompany.cordtables.components.tables.common.prayer_requests.Create
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.*
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsCreateRequest
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.Create
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class CommonPrayerRequestsCreateReadRequest(
+data class UpPrayerRequestsCreateReadRequest(
     val token: String? = null,
     val prayerRequest: prayerRequestInput,
 )
 
-data class CommonPrayerRequestsCreateReadResponse(
+data class UpPrayerRequestsCreateReadResponse(
     val error: ErrorType,
     val prayerRequest: prayerRequest? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonPrayerRequestsCreateRead")
+@Controller("UpPrayerRequestsCreateRead")
 class CreateRead(
     @Autowired
     val util: Utility,
@@ -38,28 +38,28 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-prayer-requests/create-read")
+    @PostMapping("up-prayer-requests/create-read")
     @ResponseBody
-    fun createReadHandler(@RequestBody req: CommonPrayerRequestsCreateReadRequest): CommonPrayerRequestsCreateReadResponse {
+    fun createReadHandler(@RequestBody req: UpPrayerRequestsCreateReadRequest): UpPrayerRequestsCreateReadResponse {
 
         val createResponse = create.createHandler(
-            CommonPrayerRequestsCreateRequest(
+            UpPrayerRequestsCreateRequest(
                 token = req.token,
                 prayerRequest = req.prayerRequest
             )
         )
 
         if (createResponse.error != ErrorType.NoError) {
-            return CommonPrayerRequestsCreateReadResponse(error = createResponse.error)
+            return UpPrayerRequestsCreateReadResponse(error = createResponse.error)
         }
 
         val readResponse = read.readHandler(
-            CommonPrayerRequestsReadRequest(
+            UpPrayerRequestsReadRequest(
                 token = req.token,
                 id = createResponse!!.id
             )
         )
 
-        return CommonPrayerRequestsCreateReadResponse(error = readResponse.error, prayerRequest = readResponse.prayerRequest)
+        return UpPrayerRequestsCreateReadResponse(error = readResponse.error, prayerRequest = readResponse.prayerRequest)
     }
 }

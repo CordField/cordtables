@@ -1,11 +1,11 @@
-package com.seedcompany.cordtables.components.tables.common.prayer_notifications
+package com.seedcompany.cordtables.components.tables.up.prayer_requests
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.CommonPrayerNotificationsReadRequest
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.CommonPrayerNotificationsUpdateRequest
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.prayerNotification
-import com.seedcompany.cordtables.components.tables.common.prayer_notifications.prayerNotificationInput
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsReadRequest
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsUpdateRequest
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequest
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequestInput
 import com.seedcompany.cordtables.components.tables.sc.locations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class CommonPrayerNotificationsUpdateReadRequest(
+data class UpPrayerRequestsUpdateReadRequest(
     val token: String?,
     val id: Int? = null,
     val column: String? = null,
     val value: Any? = null,
 )
 
-data class CommonPrayerNotificationsUpdateReadResponse(
+data class UpPrayerRequestsUpdateReadResponse(
     val error: ErrorType,
-    val prayerNotification: prayerNotification? = null,
+    val prayerRequest: prayerRequest? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonPrayerNotificationsUpdateRead")
+@Controller("UpPrayerRequestsUpdateRead")
 class UpdateRead(
     @Autowired
     val util: Utility,
@@ -42,12 +42,12 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-prayer-notifications/update-read")
+    @PostMapping("up-prayer-requests/update-read")
     @ResponseBody
-    fun updateReadHandler(@RequestBody req: CommonPrayerNotificationsUpdateReadRequest): CommonPrayerNotificationsUpdateReadResponse {
+    fun updateReadHandler(@RequestBody req: UpPrayerRequestsUpdateReadRequest): UpPrayerRequestsUpdateReadResponse {
 
         val updateResponse = update.updateHandler(
-            CommonPrayerNotificationsUpdateRequest(
+            UpPrayerRequestsUpdateRequest(
                 token = req.token,
                 column = req.column,
                 id = req.id,
@@ -56,16 +56,16 @@ class UpdateRead(
         )
 
         if (updateResponse.error != ErrorType.NoError) {
-            return CommonPrayerNotificationsUpdateReadResponse(updateResponse.error)
+            return UpPrayerRequestsUpdateReadResponse(updateResponse.error)
         }
 
         val readResponse = read.readHandler(
-            CommonPrayerNotificationsReadRequest(
+            UpPrayerRequestsReadRequest(
                 token = req.token,
                 id = req.id!!
             )
         )
 
-        return CommonPrayerNotificationsUpdateReadResponse(error = readResponse.error, readResponse.prayerNotification)
+        return UpPrayerRequestsUpdateReadResponse(error = readResponse.error, readResponse.prayerRequest)
     }
 }

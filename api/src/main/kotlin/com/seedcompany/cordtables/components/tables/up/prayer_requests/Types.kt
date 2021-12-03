@@ -1,13 +1,18 @@
-package com.seedcompany.cordtables.components.tables.common.prayer_requests
+package com.seedcompany.cordtables.components.tables.up.prayer_requests
 
 import javax.security.auth.Subject
 
 data class prayerRequest(
     var id: Int? = null,
 
-    val subject: String? = null,
+    val language_id: Int? = null,
+    val sensitivity: String? = null,
     val parent: Int? = null,
+    val translator: Int? = null,
+    val location: String? = null,
+    val title: String? = null,
     val content: String? = null,
+    val reviewed: Boolean? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -20,9 +25,14 @@ data class prayerRequest(
 data class prayerRequestInput(
     var id: Int? = null,
 
-    val subject: String? = null,
+    val language_id: Int? = null,
+    val sensitivity: String? = null,
     val parent: Int? = null,
+    val translator: Int? = null,
+    val location: String? = null,
+    val title: String? = null,
     val content: String? = null,
+    val reviewed: Boolean? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -31,3 +41,4 @@ data class prayerRequestInput(
     val owning_person: Int? = null,
     val owning_group: Int? = null,
 )
+

@@ -13,29 +13,29 @@ class CreatePrayerNotificationExRequest {
   };
 }
 class CreatePrayerNotificationExResponse extends GenericResponse {
-  prayerNotification: CommonPrayerNotification;
+  prayerNotification: UpPrayerNotification;
 }
 
-class CommonPrayerNotificationListRequest {
+class UpPrayerNotificationListRequest {
   token: string;
 }
 
-class CommonPrayerNotificationListResponse {
+class UpPrayerNotificationListResponse {
   error: ErrorType;
-  prayerNotifications: CommonPrayerNotification[];
+  prayerNotifications: UpPrayerNotification[];
 }
 
 
-class CommonPrayerNotificationUpdateRequest {
+class UpPrayerNotificationUpdateRequest {
   token: string;
   column: string;
   value: any;
   id: number;
 }
 
-class CommonPrayerNotificationUpdateResponse {
+class UpPrayerNotificationUpdateResponse {
   error: ErrorType;
-  prayerNotification: CommonPrayerNotification | null = null;
+  prayerNotification: UpPrayerNotification | null = null;
 }
 
 class DeletePrayerNotificationExRequest {
@@ -48,19 +48,19 @@ class DeletePrayerNotificationExResponse extends GenericResponse {
 }
 
 @Component({
-  tag: 'common-prayer-notifications',
-  styleUrl: 'common-prayer-notifications.css',
+  tag: 'up-prayer-notifications',
+  styleUrl: 'up-prayer-notifications.css',
   shadow: true,
 })
-export class CommonPrayerNotifications {
+export class UpPrayerNotifications {
 
-  @State() prayerNotificationsResponse: CommonPrayerNotificationListResponse;
+  @State() prayerNotificationsResponse: UpPrayerNotificationListResponse;
 
   newRequest: number;
   newPerson: number;
   
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonPrayerNotificationUpdateRequest, CommonPrayerNotificationUpdateResponse>('common-prayer-notifications/update-read', {
+    const updateResponse = await fetchAs<UpPrayerNotificationUpdateRequest, UpPrayerNotificationUpdateResponse>('up-prayer-notifications/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -80,7 +80,7 @@ export class CommonPrayerNotifications {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePrayerNotificationExRequest, DeletePrayerNotificationExResponse>('common-prayer-notifications/delete', {
+    const deleteResponse = await fetchAs<DeletePrayerNotificationExRequest, DeletePrayerNotificationExResponse>('up-prayer-notifications/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -95,7 +95,7 @@ export class CommonPrayerNotifications {
   };
 
   async getList() {
-    this.prayerNotificationsResponse = await fetchAs<CommonPrayerNotificationListRequest, CommonPrayerNotificationListResponse>('common-prayer-notifications/list', {
+    this.prayerNotificationsResponse = await fetchAs<UpPrayerNotificationListRequest, UpPrayerNotificationListResponse>('up-prayer-notifications/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -119,7 +119,7 @@ export class CommonPrayerNotifications {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePrayerNotificationExRequest, CreatePrayerNotificationExResponse>('common-prayer-notifications/create-read', {
+    const createResponse = await fetchAs<CreatePrayerNotificationExRequest, CreatePrayerNotificationExResponse>('up-prayer-notifications/create-read', {
       token: globals.globalStore.state.token,
       prayerNotification: {
         request: this.newRequest,

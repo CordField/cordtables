@@ -1,11 +1,11 @@
-package com.seedcompany.cordtables.components.tables.common.prayer_requests
+package com.seedcompany.cordtables.components.tables.up.prayer_notifications
 
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.common.prayer_requests.prayerRequest
+import com.seedcompany.cordtables.components.tables.up.prayer_notifications.prayerNotification
 import com.seedcompany.cordtables.components.tables.sc.locations.ScLocation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -18,18 +18,18 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class CommonPrayerRequestsReadRequest(
+data class UpPrayerNotificationsReadRequest(
     val token: String?,
     val id: Int? = null,
 )
 
-data class CommonPrayerRequestsReadResponse(
+data class UpPrayerNotificationsReadResponse(
     val error: ErrorType,
-    val prayerRequest: prayerRequest? = null,
+    val prayerNotification: prayerNotification? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonPrayerRequestsRead")
+@Controller("UpPrayerNotificationsRead")
 class Read(
     @Autowired
     val util: Utility,
@@ -42,12 +42,12 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-prayer-requests/read")
+    @PostMapping("up-prayer-notifications/read")
     @ResponseBody
-    fun readHandler(@RequestBody req: CommonPrayerRequestsReadRequest): CommonPrayerRequestsReadResponse {
+    fun readHandler(@RequestBody req: UpPrayerNotificationsReadRequest): UpPrayerNotificationsReadResponse {
 
-        if (req.token == null) return CommonPrayerRequestsReadResponse(ErrorType.TokenNotFound)
-        if (req.id == null) return CommonPrayerRequestsReadResponse(ErrorType.MissingId)
+        if (req.token == null) return UpPrayerNotificationsReadResponse(ErrorType.TokenNotFound)
+        if (req.id == null) return UpPrayerNotificationsReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -55,13 +55,12 @@ class Read(
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
-                tableName = "common.prayer_requests",
+                tableName = "up.prayer_notifications",
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "parent",
-                    "subject",
-                    "content",
+                    "request",
+                    "person",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -79,14 +78,11 @@ class Read(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var parent: Int? = jdbcResult.getInt("parent")
-                if (jdbcResult.wasNull()) parent = null
+                var request: Int? = jdbcResult.getInt("request")
+                if (jdbcResult.wasNull()) request = null
 
-                var subject: String? = jdbcResult.getString("subject")
-                if (jdbcResult.wasNull()) subject = null
-
-                var content: String? = jdbcResult.getString("content")
-                if (jdbcResult.wasNull()) content = null
+                var person: Int? = jdbcResult.getInt("person")
+                if (jdbcResult.wasNull()) person = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -106,12 +102,11 @@ class Read(
                 var owning_group: Int? = jdbcResult.getInt("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
-                val prayerRequest =
-                    prayerRequest(
+                val prayerNotification =
+                    prayerNotification(
                         id = id,
-                        parent = parent,
-                        subject = subject,
-                        content = content,
+                        request = request,
+                        person = person,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,
@@ -120,14 +115,14 @@ class Read(
                         owning_group = owning_group,
                     )
 
-                return CommonPrayerRequestsReadResponse(ErrorType.NoError, prayerRequest = prayerRequest)
+                return UpPrayerNotificationsReadResponse(ErrorType.NoError, prayerNotification = prayerNotification)
 
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return CommonPrayerRequestsReadResponse(ErrorType.SQLReadError)
+            return UpPrayerNotificationsReadResponse(ErrorType.SQLReadError)
         }
 
-        return CommonPrayerRequestsReadResponse(error = ErrorType.UnknownError)
+        return UpPrayerNotificationsReadResponse(error = ErrorType.UnknownError)
     }
 }

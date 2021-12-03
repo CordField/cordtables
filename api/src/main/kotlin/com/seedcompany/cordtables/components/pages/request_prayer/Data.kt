@@ -1,13 +1,20 @@
 package com.seedcompany.cordtables.components.pages.request_prayer
 
 import com.seedcompany.cordtables.common.ErrorType
-import com.seedcompany.cordtables.components.tables.common.prayer_requests.prayerRequestInput
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequestInput
 
 data class PrayerRequestData(
     val id: Int,
-    val subject: String?,
-    val parentRequest: Int?,
-    val content: String?,
+
+    val language_id: Int? = null,
+    val sensitivity: String? = null,
+    val parent: Int? = null,
+    val translator: Int? = null,
+    val location: String? = null,
+    val title: String? = null,
+    val content: String? = null,
+    val reviewed: Boolean? = null,
+
     val requestedBy: String?,
     val notify: Int?,
     val myRequest: Boolean
@@ -15,17 +22,27 @@ data class PrayerRequestData(
 
 data class PrayerRequestGetData(
     val id: Int,
-    val subject: String,
-    val parent: Int,
-    val content: String,
+    val language_id: Int? = null,
+    val sensitivity: String? = null,
+    val parent: Int? = null,
+    val translator: Int? = null,
+    val location: String? = null,
+    val title: String? = null,
+    val content: String? = null,
+    val reviewed: Boolean? = null,
     val created_by: Int,
 )
 
 data class PrayerRequestUpdateData(
     val id: Int,
-    val subject: String,
-    val parent: Int,
-    val content: String,
+    val language_id: Int? = null,
+    val sensitivity: String? = null,
+    val parent: Int? = null,
+    val translator: Int? = null,
+    val location: String? = null,
+    val title: String? = null,
+    val content: String? = null,
+    val reviewed: Boolean? = null,
     val created_by: Int,
 )
 

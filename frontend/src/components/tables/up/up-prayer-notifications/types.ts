@@ -1,5 +1,5 @@
 
-class CommonPrayerNotification {
+class UpPrayerNotification {
     id?: number | undefined;
 
     request?: number | undefined;

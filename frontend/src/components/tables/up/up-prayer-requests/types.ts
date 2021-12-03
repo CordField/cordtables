@@ -1,10 +1,15 @@
 
-class CommonPrayerRequest {
+class UpPrayerRequest {
     id?: number | undefined;
 
+    language_id?: number | undefined;
+    sensitivity?: string | undefined;
     parent?: number | undefined;
-    subject?: string | undefined;
+    translator?: number | undefined;
+    location?: string | undefined;
+    title?: string | undefined;
     content?: string | undefined;
+    reviewed?: boolean | undefined;
 
     created_at?: string | undefined;
     created_by?: number | undefined;

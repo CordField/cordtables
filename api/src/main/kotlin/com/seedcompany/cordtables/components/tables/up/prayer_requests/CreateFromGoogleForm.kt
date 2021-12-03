@@ -3,8 +3,8 @@ package com.seedcompany.cordtables.components.tables.up.prayer_requests
 import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.common.prayer_requests.Read
-import com.seedcompany.cordtables.components.tables.common.prayer_requests.Update
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.Read
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.Update
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -19,11 +19,11 @@ enum class UpPrayerTypes{
   Update,
   Celebration,
 }
-
+// prayer_requests data recieve from google form with these fields, needs to save this to up.prayer_requests
 data class PrayerForm (
-  val creatorEmail: String,
-  val translatorEmail: String?,
-  val ethCode: String?,
+  val creatorEmail: String, // admin.people // admin.users // created_by, updated_by, owning_person
+  val translatorEmail: String?, // admin.people // admin.users // translator
+  val ethCode: String?, // sil.language_index lang field value
   val sensitivity: CommonSensitivity = CommonSensitivity.High,
   val location: String?,
   val prayerType: UpPrayerTypes,

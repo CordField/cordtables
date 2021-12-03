@@ -8,35 +8,40 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePrayerRequestExRequest {
   token: string;
   prayerRequest: {
+    language_id: number;
+    sensitivity: string;
     parent: number;
-    subject: string;
+    translator: number;
+    location: string;
+    title: string;
     content: string;
+    reviewed: boolean;
   };
 }
 class CreatePrayerRequestExResponse extends GenericResponse {
-  prayerRequest: CommonPrayerRequest;
+  prayerRequest: UpPrayerRequest;
 }
 
-class CommonPrayerRequestListRequest {
+class UpPrayerRequestListRequest {
   token: string;
 }
 
-class CommonPrayerRequestListResponse {
+class UpPrayerRequestListResponse {
   error: ErrorType;
-  prayerRequests: CommonPrayerRequest[];
+  prayerRequests: UpPrayerRequest[];
 }
 
 
-class CommonPrayerRequestUpdateRequest {
+class UpPrayerRequestUpdateRequest {
   token: string;
   column: string;
   value: any;
   id: number;
 }
 
-class CommonPrayerRequestUpdateResponse {
+class UpPrayerRequestUpdateResponse {
   error: ErrorType;
-  prayerRequest: CommonPrayerRequest | null = null;
+  prayerRequest: UpPrayerRequest | null = null;
 }
 
 class DeletePrayerRequestExRequest {
@@ -49,20 +54,25 @@ class DeletePrayerRequestExResponse extends GenericResponse {
 }
 
 @Component({
-  tag: 'common-prayer-requests',
-  styleUrl: 'common-prayer-requests.css',
+  tag: 'up-prayer-requests',
+  styleUrl: 'up-prayer-requests.css',
   shadow: true,
 })
-export class CommonPrayerRequests {
+export class UpPrayerRequests {
 
-  @State() prayerRequestsResponse: CommonPrayerRequestListResponse;
+  @State() prayerRequestsResponse: UpPrayerRequestListResponse;
 
+  newLanguage_id: number;
+  newSensitivity: string;
   newParent: number;
-  newSubject: string;
+  newTranslator: number;
+  newLocation: string;
+  newTitle: string;
   newContent: string;
+  newReviewed: boolean;
   
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonPrayerRequestUpdateRequest, CommonPrayerRequestUpdateResponse>('common-prayer-requests/update-read', {
+    const updateResponse = await fetchAs<UpPrayerRequestUpdateRequest, UpPrayerRequestUpdateResponse>('up-prayer-requests/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -82,7 +92,7 @@ export class CommonPrayerRequests {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePrayerRequestExRequest, DeletePrayerRequestExResponse>('common-prayer-requests/delete', {
+    const deleteResponse = await fetchAs<DeletePrayerRequestExRequest, DeletePrayerRequestExResponse>('up-prayer-requests/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,7 +107,7 @@ export class CommonPrayerRequests {
   };
 
   async getList() {
-    this.prayerRequestsResponse = await fetchAs<CommonPrayerRequestListRequest, CommonPrayerRequestListResponse>('common-prayer-requests/list', {
+    this.prayerRequestsResponse = await fetchAs<UpPrayerRequestListRequest, UpPrayerRequestListResponse>('up-prayer-requests/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -109,28 +119,53 @@ export class CommonPrayerRequests {
   // }
 
 
+  language_idChange(event) {
+    this.newLanguage_id = event.target.value;
+  }
+
+  sensitivityChange(event){
+    this.newSensitivity = event.target.value;
+  }
+
   parentChange(event) {
     this.newParent = event.target.value;
   }
 
-  subjectChange(event){
-    this.newSubject = event.target.value;
+  translatorChange(event) {
+    this.newTranslator = event.target.value;
   }
 
-  contentChange(event) {
+  locationChange(event){
+    this.newLocation = event.target.value;
+  }
+
+  titleChange(event) {
+    this.newTitle = event.target.value;
+  }
+
+  contentChange(event){
     this.newContent = event.target.value;
+  }
+
+  reviewedChange(event) {
+    this.newReviewed = event.target.value;
   }
 
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePrayerRequestExRequest, CreatePrayerRequestExResponse>('common-prayer-requests/create-read', {
+    const createResponse = await fetchAs<CreatePrayerRequestExRequest, CreatePrayerRequestExResponse>('up-prayer-requests/create-read', {
       token: globals.globalStore.state.token,
       prayerRequest: {
+        language_id: this.newLanguage_id,
+        sensitivity: this.newSensitivity,
         parent: this.newParent,
-        subject: this.newSubject,
+        translator: this.newTranslator,
+        location: this.newLocation,
+        title: this.newTitle,
         content: this.newContent,
+        reviewed: this.newReviewed,
       },
     });
 
@@ -152,6 +187,26 @@ export class CommonPrayerRequests {
       editable: false,
       deleteFn: this.handleDelete,
     },
+    
+    {
+      field: 'language_id',
+      displayName: 'Language ID',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'sensitivity',
+      displayName: 'Sensitivity',
+      width: 200,
+      editable: true,
+      selectOptions: [
+        {display:  "Low", value: "Low"},
+        {display:  "Medium", value: "Medium"},
+        {display:  "High", value: "High"},
+      ],
+      updateFn: this.handleUpdate,
+    },
     {
       field: 'parent',
       displayName: 'Parent',
@@ -160,12 +215,27 @@ export class CommonPrayerRequests {
       updateFn: this.handleUpdate,
     },
     {
-      field: 'subject',
-      displayName: 'Subject',
+      field: 'translator',
+      displayName: 'Translator',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
     },
+    {
+      field: 'location',
+      displayName: 'Location',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'title',
+      displayName: 'Title',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+
     {
       field: 'content',
       displayName: 'Content',
@@ -173,6 +243,19 @@ export class CommonPrayerRequests {
       editable: true,
       updateFn: this.handleUpdate,
     },
+    {
+      field: 'reviewed',
+      displayName: 'Reviewed',
+      width: 200,
+      editable: true,
+      selectOptions: [
+        {display: 'True', value: 'true'},
+        {display: 'False', value: 'false'},
+      ],
+      updateFn: this.handleUpdate,
+    },
+
+
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -232,6 +315,29 @@ export class CommonPrayerRequests {
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
 
+            <div id="language_id-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="language_id">Language ID</label>
+              </span>
+              <span class="form-thing">
+                <input type="number" id="language_id" name="language_id" onInput={event => this.language_idChange(event)} />
+              </span>
+            </div>
+
+            <div id="sensitivity-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="sensitivity">Sensitivity</label>
+              </span>
+              <span class="form-thing">
+                <select id="sensitivity" name="sensitivity" onInput={event => this.sensitivityChange(event)}>
+                    <option value="">Select Sensitivity</option>
+                    <option value="Low" selected={this.newSensitivity === "Low"}>Low</option>
+                    <option value="Medium" selected={this.newSensitivity === "Medium"}>Medium</option>
+                    <option value="High" selected={this.newSensitivity === "High"}>High</option>
+                </select>
+              </span>
+            </div>
+
             <div id="parent-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="parent">Parent</label>
@@ -241,12 +347,30 @@ export class CommonPrayerRequests {
               </span>
             </div>
 
-            <div id="subject-holder" class="form-input-item form-thing">
+            <div id="translator-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="subject">Subject</label>
+                <label htmlFor="translator">Translator</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="subject" name="subject" onInput={event => this.subjectChange(event)} />
+                <input type="number" id="translator" name="translator" onInput={event => this.translatorChange(event)} />
+              </span>
+            </div>
+
+            <div id="location-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="location">Location</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="location" name="location" onInput={event => this.locationChange(event)} />
+              </span>
+            </div>
+
+            <div id="title-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="title">Title</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="title" name="title" onInput={event => this.titleChange(event)} />
               </span>
             </div>
 
@@ -258,6 +382,20 @@ export class CommonPrayerRequests {
                 <textarea id="content" name="content" onInput={event => this.contentChange(event)}></textarea>
               </span>
             </div>        
+
+            <div id="reviewed-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="reviewed">Reviewed</label>
+              </span>
+              <span class="form-thing">
+                <select id="reviewed" name="reviewed" onInput={event => this.reviewedChange(event)}>
+                    <option value="">Select Reviewed</option>
+                    <option value="true" selected={this.newReviewed === true}>True</option>
+                    <option value="false" selected={this.newReviewed === false}>False</option>
+                </select>
+              </span>
+            </div>  
+
             
 
             <span class="form-thing">
