@@ -17,6 +17,7 @@ public enum class ConfigEnv {
     prod,
 }
 
+
 @OpenAPIDefinition(
 info = Info(
   title = "Cord Tables ",
@@ -24,12 +25,8 @@ info = Info(
 ),
 servers = [
     Server(
-      description = "Localhost",
-      url = "http://localhost:8080",
-    ),
-    Server(
-      description = "Dev",
-      url= "https://dev.cordtables.com"
+      description = "API URL",
+      url = ("\${server.url}").toString(),
     )
   ]
 )
