@@ -41,6 +41,7 @@ slack-thread {
 }
 .slack-thread-content {
   user-select: none;
+  position: relative;
 }
 .slack-thread-content:hover {
   cursor: pointer;
@@ -51,6 +52,10 @@ slack-thread {
 }
 .post-indicator {
   margin-right: 3px;
+  /* position: absolute; */
+  top: 100%;
+  right: 100%;
+  z-index: 100;
 }
 .post-count {
   color: #9ca3af;
@@ -78,6 +83,8 @@ slack-thread {
 
 .slack-thread-buttons {
   margin-left: 10px;
+  position: absolute;
+  top: 100%;
 }
 .add-button {
   color: #3c6a29;

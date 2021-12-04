@@ -3,6 +3,8 @@ import { v4 } from 'uuid';
 import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
+import { idService, IdService } from '../../../core/id.service';
+import { TinyUpdateEvent } from '../../cf-tiny/types';
 import { CommonDiscussionChannel } from '../../tables/common/discussion-channels/types';
 import { CommonPost, CommonPostsListRequest, CommonPostsListResponse } from '../../tables/common/posts/types';
 import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, CommonThreadsUpdateRequest, CommonThreadsUpdateResponse } from '../../tables/common/threads/types';
@@ -14,17 +16,23 @@ import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, Comm
   shadow: true,
 })
 export class SlackThread {
+  tinyMceId: string = idService.getNextId();
   @Prop() thread: CommonThread;
   @State() threadPostsResponse: CommonPostsListResponse = null;
   @State() threadPosts: CommonPost[];
   @State() showPosts: boolean = false;
-  @State() showButtons: boolean = false;
+  @State() showEditAndDeleteButtons: boolean = false;
   @State() updateMode: boolean = false;
   @State() threadContent: string = null;
   @Event({ eventName: 'threadDeleted' }) threadDeleted: EventEmitter<number>;
 
   componentWillLoad() {
     this.threadContent = this.thread.content;
+  }
+
+  @Listen('contentUpdate')
+  handleContentUpdateChange(e: CustomEvent<TinyUpdateEvent>) {
+    if (e.detail.id === this.tinyMceId) this.threadContent = e.detail.content;
   }
 
   @Watch('showPosts')
@@ -51,13 +59,68 @@ export class SlackThread {
   }
 
   mouseEnterAndLeaveHandler() {
-    console.log(this.thread.owning_person, globals.globalStore.state.userId);
-    if (this.thread.owning_person === globals.globalStore.state.userId) this.showButtons = !this.showButtons;
+    if (this.thread.owning_person === globals.globalStore.state.userId) this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
   }
 
   render() {
-    // figure out a way to make this cleaner code
-    console.log('render', this);
+    const editAndDeleteButtons = (
+      <span class="slack-thread-buttons">
+        {this.updateMode ? (
+          <span>
+            <span
+              class="thread-update-confirm"
+              onClick={async e => {
+                e.stopPropagation();
+                this.updateMode = false;
+                const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common-threads/update-read', {
+                  token: globals.globalStore.state.token,
+                  column: 'content',
+                  id: this.thread.id,
+                  value: this.threadContent !== '' ? this.threadContent : this.thread.content,
+                });
+                if (updateResponse.error === ErrorType.NoError) {
+                  this.threadContent = updateResponse.thread.content;
+                }
+              }}
+            >
+              ✔️
+            </span>
+            <span
+              class="thread-update-cancel"
+              onClick={e => {
+                e.stopPropagation();
+                this.updateMode = false;
+                this.threadContent = this.thread.content;
+              }}
+            >
+              ❌
+            </span>
+          </span>
+        ) : this.showEditAndDeleteButtons ? (
+          <span>
+            <span
+              class="thread-update"
+              onClick={e => {
+                e.stopPropagation();
+                this.updateMode = true;
+              }}
+            >
+              ✎
+            </span>
+            <span
+              class="thread-delete"
+              onClick={e => {
+                e.stopPropagation();
+                this.threadDeleted.emit(this.thread.id);
+              }}
+            >
+              ⛔
+            </span>
+          </span>
+        ) : null}
+      </span>
+    );
+
     const jsx = (
       <div>
         <div
@@ -77,85 +140,11 @@ export class SlackThread {
           >
             {this.showPosts ? '👇' : '👉'}
           </span>
-          <span
-            class="thread-content"
-            contenteditable={this.updateMode}
-            innerHTML={this.threadContent}
-            onInput={e => {
-              e.stopPropagation();
-              this.threadContent = (e.target as HTMLElement).innerHTML;
-            }}
-          ></span>
-          {this.showButtons && (
-            <span class="slack-thread-buttons">
-              {this.updateMode ? (
-                <span>
-                  <span
-                    class="thread-update-confirm"
-                    onClick={async e => {
-                      e.stopPropagation();
-                      this.updateMode = false;
-                      const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common-threads/update-read', {
-                        token: globals.globalStore.state.token,
-                        column: 'content',
-                        id: this.thread.id,
-                        value: this.threadContent !== '' ? this.threadContent : null,
-                      });
-                      if (updateResponse.error === ErrorType.NoError) {
-                        this.threadContent = updateResponse.thread.content;
-                      }
-                    }}
-                  >
-                    ✔️
-                  </span>
-                  <span
-                    class="thread-update-cancel"
-                    onClick={e => {
-                      e.stopPropagation();
-                      this.updateMode = false;
-                      this.threadContent = this.thread.content;
-                    }}
-                  >
-                    ❌
-                  </span>
-                </span>
-              ) : (
-                <span>
-                  <span
-                    class="thread-update"
-                    onClick={e => {
-                      e.stopPropagation();
-                      this.updateMode = true;
-                    }}
-                  >
-                    ✎
-                  </span>
-                  <span
-                    class="thread-delete"
-                    onClick={e => {
-                      e.stopPropagation();
-                      this.threadDeleted.emit(this.thread.id);
-                    }}
-                  >
-                    ⛔
-                  </span>
-                </span>
-              )}
-            </span>
-          )}
-        </div>
-        <div class="thread-posts">{this.showPosts && this.threadPosts?.map(post => <div>{post.content}</div>)}</div>
+          {this.updateMode ? <cf-tiny initialHTMLContent={this.threadContent} uid={this.tinyMceId} /> : <span class="thread-content" innerHTML={this.threadContent}></span>}
 
-        {/* <tinymce-editor
-          key={0}
-          id="tiny-ed"
-          api-key={process.env.TINY_KEY}
-          plugins="image link emoticons image table media"
-          menubar="false"
-          toolbar_mode="floating"
-          toolbar="quicklink emoticons image table media | bold italic | undo redo | styleselect | alignleft aligncenter alignright alignjustify | outdent indent"
-          quickbars_insert_toolbar="false"
-        ></tinymce-editor> */}
+          {editAndDeleteButtons}
+        </div>
+        <div class="thread-posts">{this.showPosts && this.threadPosts?.map(post => <div innerHTML={post.content} />)}</div>
       </div>
     );
 
