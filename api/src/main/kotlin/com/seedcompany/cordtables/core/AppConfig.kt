@@ -26,7 +26,7 @@ info = Info(
 servers = [
     Server(
       description = "API URL",
-      url = "\"\${server.url}\"",
+      url = ("\${server.url}").toString(),
     )
   ]
 )
