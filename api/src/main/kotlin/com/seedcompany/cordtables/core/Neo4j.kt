@@ -550,7 +550,7 @@ class Neo4j(
         println("starting writer 1")
         while (nodePairs.size > 0) {
           val (n, r, m) = nodePairs.remove()
-          createRelationship(n as BaseNode, r as Relation, m as BaseNode)
+          errorOutput += createRelationship(n as BaseNode, r as Relation, m as BaseNode)
           processedBaseNodeRels.incrementAndGet()
           delay(1L)
         }
@@ -561,7 +561,7 @@ class Neo4j(
         println("starting writer 2")
         while (nodePairs.size > 0) {
           val (n, r, m) = nodePairs.remove()
-          createRelationship(n as BaseNode, r as Relation, m as BaseNode)
+          errorOutput += createRelationship(n as BaseNode, r as Relation, m as BaseNode)
           processedBaseNodeRels.incrementAndGet()
           delay(1L)
         }
@@ -572,7 +572,7 @@ class Neo4j(
         println("starting writer 3")
         while (nodePairs.size > 0) {
           val (n, r, m) = nodePairs.remove()
-          createRelationship(n as BaseNode, r as Relation, m as BaseNode)
+          errorOutput += createRelationship(n as BaseNode, r as Relation, m as BaseNode)
           processedBaseNodeRels.incrementAndGet()
           delay(1L)
         }
@@ -597,6 +597,9 @@ class Neo4j(
         }
       }
     }
+//    if (errorOutput.isNotEmpty()) {
+//      throw Exception("There were errors in property migration: \n$errorOutput")
+//    }
 
     println("base node to base node relationships migration done")
   }
@@ -647,9 +650,11 @@ class Neo4j(
     return (n.labels.contains(n_label) && r.type.contains(r_label) && r.active=="TRUE" && m.labels.contains(m_label))
   }
 
-  suspend fun createRelationship(n: BaseNode, r: Relation, m: BaseNode) {
+  suspend fun createRelationship(n: BaseNode, r: Relation, m: BaseNode): MutableMap<String, Exception> {
+    var err = mutableMapOf<String, Exception>();
+
     when {
-      checkRelationship(n, r, m, "User", "user", "ProjectMember") -> writeRelationship(
+      checkRelationship(n, r, m, "User", "user", "ProjectMember") -> err = writeRelationship(
         n,
         m,
         "sc.project_members",
@@ -657,7 +662,7 @@ class Neo4j(
         "person",
         "id"
       )
-      checkRelationship(n, r, m, "User", "director", "FieldRegion") -> writeRelationship(
+      checkRelationship(n, r, m, "User", "director", "FieldRegion") -> err = writeRelationship(
         n,
         m,
         "sc.field_regions",
@@ -665,7 +670,7 @@ class Neo4j(
         "director",
         "id"
       )
-      checkRelationship(n, r, m, "User", "director", "FieldZone") -> writeRelationship(
+      checkRelationship(n, r, m, "User", "director", "FieldZone") -> err = writeRelationship(
         n,
         m,
         "sc.field_zones",
@@ -673,7 +678,7 @@ class Neo4j(
         "director",
         "id"
       )
-      checkRelationship(n, r, m, "Budget", "universalTemplateFileNode", "File") -> writeRelationship(
+      checkRelationship(n, r, m, "Budget", "universalTemplateFileNode", "File") -> err = writeRelationship(
         m,
         n,
         "sc.budgets",
@@ -681,7 +686,7 @@ class Neo4j(
         "universal_template",
         "id"
       )
-      checkRelationship(n, r, m, "Budget", "record", "BudgetRecord") -> writeRelationship(
+      checkRelationship(n, r, m, "Budget", "record", "BudgetRecord") -> err = writeRelationship(
         n,
         m,
         "sc.budget_records",
@@ -689,7 +694,7 @@ class Neo4j(
         "budget",
         "id"
       )
-      checkRelationship(n, r, m, "Organization", "organization", "BudgetRecord") -> writeRelationship(
+      checkRelationship(n, r, m, "Organization", "organization", "BudgetRecord") -> err = writeRelationship(
         n,
         m,
         "sc.budget_records",
@@ -697,7 +702,7 @@ class Neo4j(
         "organization",
         "id"
       )
-      checkRelationship(n, r, m, "Project", "budget", "Budget") -> writeRelationship(
+      checkRelationship(n, r, m, "Project", "budget", "Budget") -> err = writeRelationship(
         n,
         m,
         "sc.budgets",
@@ -705,7 +710,7 @@ class Neo4j(
         "project",
         "id"
       )
-      checkRelationship(n, r, m, "Project", "member", "ProjectMember") -> writeRelationship(
+      checkRelationship(n, r, m, "Project", "member", "ProjectMember") -> err = writeRelationship(
         n,
         m,
         "sc.project_members",
@@ -713,7 +718,7 @@ class Neo4j(
         "project",
         "id"
       )
-      checkRelationship(n, r, m, "Project", "partnership", "Partnership") -> writeRelationship(
+      checkRelationship(n, r, m, "Project", "partnership", "Partnership") -> err = writeRelationship(
         n,
         m,
         "sc.partnerships",
@@ -721,7 +726,7 @@ class Neo4j(
         "project",
         "id"
       )
-      checkRelationship(n, r, m, "BaseFile", "reportFileNode", "PeriodicReport") -> writeRelationship(
+      checkRelationship(n, r, m, "BaseFile", "reportFileNode", "PeriodicReport") -> err = writeRelationship(
         n,
         m,
         "sc.periodic_reports",
@@ -729,7 +734,7 @@ class Neo4j(
         "report_file",
         "id"
       )
-      checkRelationship(n, r, m, "FieldRegion", "fieldRegion", "Project") -> writeRelationship(
+      checkRelationship(n, r, m, "FieldRegion", "fieldRegion", "Project") -> err = writeRelationship(
         n,
         m,
         "sc.projects",
@@ -737,7 +742,7 @@ class Neo4j(
         "field_region",
         "id"
       )
-      checkRelationship(n, r, m, "Directory", "rootDirectory", "Project") -> writeRelationship(
+      checkRelationship(n, r, m, "Directory", "rootDirectory", "Project") -> err = writeRelationship(
         n,
         m,
         "sc.projects",
@@ -745,7 +750,7 @@ class Neo4j(
         "root_directory",
         "id"
       )
-      checkRelationship(n, r, m, "EthnologueLanguage", "ethnologue", "Language") -> writeRelationship(
+      checkRelationship(n, r, m, "EthnologueLanguage", "ethnologue", "Language") -> err =writeRelationship(
         n,
         m,
         "sc.languages",
@@ -753,7 +758,7 @@ class Neo4j(
         "ethnologue",
         "id"
       )
-      checkRelationship(n, r, m, "Project", "engagement", "LanguageEngagement") -> writeRelationship(
+      checkRelationship(n, r, m, "Project", "engagement", "LanguageEngagement") -> err = writeRelationship(
         n,
         m,
         "sc.language_engagements",
@@ -761,7 +766,7 @@ class Neo4j(
         "project",
         "id"
       )
-      checkRelationship(n, r, m, "Language", "language", "LanguageEngagement") -> writeRelationship(
+      checkRelationship(n, r, m, "Language", "language", "LanguageEngagement") -> err = writeRelationship(
         n,
         m,
         "sc.language_engagements",
@@ -769,7 +774,7 @@ class Neo4j(
         "language",
         "id"
       )
-      checkRelationship(n, r, m, "Project", "engagement", "InternshipEngagement") -> writeRelationship(
+      checkRelationship(n, r, m, "Project", "engagement", "InternshipEngagement") -> err = writeRelationship(
         n,
         m,
         "sc.internship_engagements",
@@ -777,7 +782,7 @@ class Neo4j(
         "project",
         "id"
       )
-      checkRelationship(n, r, m, "Organization", "organization", "Partner") -> writeRelationship(
+      checkRelationship(n, r, m, "Organization", "organization", "Partner") -> err = writeRelationship(
         n,
         m,
         "sc.partners",
@@ -785,7 +790,7 @@ class Neo4j(
         "organization",
         "id"
       )
-      checkRelationship(n, r, m, "Partner", "partner", "Partnership") -> writeRelationship(
+      checkRelationship(n, r, m, "Partner", "partner", "Partnership") -> err = writeRelationship(
         n,
         m,
         "sc.partnerships",
@@ -793,7 +798,7 @@ class Neo4j(
         "partner",
         "organization"
       )
-      checkRelationship(n, r, m, "User", "pointOfContact", "Partner") -> writeRelationship(
+      checkRelationship(n, r, m, "User", "pointOfContact", "Partner") -> err = writeRelationship(
         n,
         m,
         "sc.partners",
@@ -801,7 +806,7 @@ class Neo4j(
         "point_of_contact",
         "id"
       )
-      checkRelationship(n, r, m, "Ceremony", "ceremony", "InternshipEngagement") -> writeRelationship(
+      checkRelationship(n, r, m, "Ceremony", "ceremony", "InternshipEngagement") -> err = writeRelationship(
         n,
         m,
         "sc.internship_engagements",
@@ -809,7 +814,7 @@ class Neo4j(
         "ceremony",
         "id"
       )
-      checkRelationship(n, r, m, "Ceremony", "ceremony", "LanguageEngagement") -> writeRelationship(
+      checkRelationship(n, r, m, "Ceremony", "ceremony", "LanguageEngagement") -> err = writeRelationship(
         n,
         m,
         "sc.language_engagements",
@@ -818,7 +823,7 @@ class Neo4j(
         "id"
       )
 
-      checkRelationship(n, r, m, "FundingAccount", "fundingAccount", "Location") -> writeRelationship(
+      checkRelationship(n, r, m, "FundingAccount", "fundingAccount", "Location") -> err = writeRelationship(
         n,
         m,
         "sc.locations",
@@ -826,7 +831,7 @@ class Neo4j(
         "funding_account",
         "id"
       )
-      checkRelationship(n, r, m, "FieldRegion", "defaultFieldRegion", "Location") -> writeRelationship(
+      checkRelationship(n, r, m, "FieldRegion", "defaultFieldRegion", "Location") -> err = writeRelationship(
         n,
         m,
         "sc.locations",
@@ -834,7 +839,7 @@ class Neo4j(
         "default_region",
         "id"
       )
-      checkRelationship(n, r, m, "Location", "countryOfOrigin", "InternshipEngagement") -> writeRelationship(
+      checkRelationship(n, r, m, "Location", "countryOfOrigin", "InternshipEngagement") -> err = writeRelationship(
         n,
         m,
         "sc.internship_engagements",
@@ -842,7 +847,7 @@ class Neo4j(
         "country_of_origin",
         "id"
       )
-      checkRelationship(n, r, m, "User", "mentor", "InternshipEngagement") -> writeRelationship(
+      checkRelationship(n, r, m, "User", "mentor", "InternshipEngagement") -> err = writeRelationship(
         n,
         m,
         "sc.internship_engagements",
@@ -850,7 +855,7 @@ class Neo4j(
         "mentor",
         "id"
       )
-      checkRelationship(n, r, m, "User", "intern", "InternshipEngagement") -> writeRelationship(
+      checkRelationship(n, r, m, "User", "intern", "InternshipEngagement") -> err = writeRelationship(
         n,
         m,
         "sc.internship_engagements",
@@ -858,7 +863,7 @@ class Neo4j(
         "intern",
         "id"
       )
-      checkRelationship(n, r, m, "BaseFile", "pnpNode", "LanguageEngagement") -> writeRelationship(
+      checkRelationship(n, r, m, "BaseFile", "pnpNode", "LanguageEngagement") -> err = writeRelationship(
         n,
         m,
         "sc.language_engagements",
@@ -866,7 +871,7 @@ class Neo4j(
         "pnp_file",
         "id"
       )
-      checkRelationship(n, r, m, "Location", "primaryLocation", "Project") -> writeRelationship(
+      checkRelationship(n, r, m, "Location", "primaryLocation", "Project") -> err = writeRelationship(
         n,
         m,
         "sc.projects",
@@ -874,7 +879,7 @@ class Neo4j(
         "primary_location",
         "id"
       )
-      checkRelationship(n, r, m, "Location", "marketingLocation", "Project") -> writeRelationship(
+      checkRelationship(n, r, m, "Location", "marketingLocation", "Project") -> err = writeRelationship(
         n,
         m,
         "sc.projects",
@@ -882,7 +887,7 @@ class Neo4j(
         "marketing_location",
         "id"
       )
-      checkRelationship(n, r, m, "User", "unavailability", "Unavailability") -> writeRelationship(
+      checkRelationship(n, r, m, "User", "unavailability", "Unavailability") -> err = writeRelationship(
         n,
         m,
         "sc.person_unavailabilities",
@@ -890,17 +895,15 @@ class Neo4j(
         "person",
         "id"
       )
-      checkRelationship(n, r, m, "User", "createdBy", "BaseFile") -> {
-        writeRelationship(
-          n,
-          m,
-          "common.files",
-          "admin.people",
-          "created_by",
-          "id"
-        )
-      }
-      checkRelationship(n, r, m, "User", "createdBy", "Directory") -> writeRelationship(
+      checkRelationship(n, r, m, "User", "createdBy", "BaseFile") -> err = writeRelationship(
+        n,
+        m,
+        "common.files",
+        "admin.people",
+        "created_by",
+        "id"
+      )
+      checkRelationship(n, r, m, "User", "createdBy", "Directory") -> err = writeRelationship(
         n,
         m,
         "common.directories",
@@ -908,7 +911,7 @@ class Neo4j(
         "created_by",
         "id"
       )
-      checkRelationship(n, r, m, "FieldZone", "zone", "FieldRegion") -> writeRelationship(
+      checkRelationship(n, r, m, "FieldZone", "zone", "FieldRegion") -> err = writeRelationship(
         n,
         m,
         "sc.field_regions",
@@ -916,7 +919,7 @@ class Neo4j(
         "field_zone",
         "id"
       )
-      checkRelationship(n, r, m, "LanguageEngagement", "product", "Product") -> writeRelationship(
+      checkRelationship(n, r, m, "LanguageEngagement", "product", "Product") -> err = writeRelationship(
         n,
         m,
         "sc.products",
@@ -924,7 +927,7 @@ class Neo4j(
         "engagement",
         "id"
       )
-      checkRelationship(n, r, m, "Producible", "produces", "Product") -> writeRelationship(
+      checkRelationship(n, r, m, "Producible", "produces", "Product") -> err = writeRelationship(
         n,
         m,
         "sc.products",
@@ -939,7 +942,7 @@ class Neo4j(
         "ScriptureRange",
         "scriptureReferences",
         "Producible"
-      ) && !m.labels.contains("Product") -> writeRelationshipsPairs(
+      ) && !m.labels.contains("Product") ->  writeRelationshipsPairs(
         n,
         m,
         "sc.producible_scripture_references",
@@ -949,7 +952,7 @@ class Neo4j(
         "scripture_reference",
         "id"
       )
-      checkRelationship(n, r, m, "Location", "locations", "Language") -> writeRelationshipsPairs(
+      checkRelationship(n, r, m, "Location", "locations", "Language") -> err = writeRelationshipsPairs(
         n,
         m,
         "sc.language_locations",
@@ -959,7 +962,7 @@ class Neo4j(
         "location",
         "id"
       )
-      checkRelationship(n, r, m, "ScriptureRange", "scriptureReferences", "Product") -> writeRelationshipsPairs(
+      checkRelationship(n, r, m, "ScriptureRange", "scriptureReferences", "Product") -> err = writeRelationshipsPairs(
         n,
         m,
         "sc.product_scripture_references",
@@ -969,8 +972,9 @@ class Neo4j(
         "scripture_reference",
         "id"
       )
-
     }
+
+    return err;
   }
 
   suspend fun writeRelationship(
@@ -979,27 +983,37 @@ class Neo4j(
     targetTable: String,
     refTable: String,
     field: String,
-    foreignKey: String
-  ) {
-    val exists = jdbcTemplate.queryForObject(
-      "select exists(select $foreignKey from $refTable where neo4j_id = ?);",
-      Boolean::class.java,
-      n.id
-    )
+    foreignKey: String,
+  ): MutableMap<String, Exception> {
+    val err = mutableMapOf<String, Exception>();
 
-    if (exists) {
-      val id = jdbcTemplate.queryForObject(
-        "select $foreignKey from $refTable where neo4j_id = ?;",
-        Int::class.java,
+    try {
+      val exists = jdbcTemplate.queryForObject(
+        "select exists(select $foreignKey from $refTable where neo4j_id = ?);",
+        Boolean::class.java,
         n.id
       )
 
-      jdbcTemplate.update(
-        "update $targetTable set $field = ? where neo4j_id = ?;",
-        id,
-        m.id,
-      )
+      if (exists) {
+        val id = jdbcTemplate.queryForObject(
+          "select $foreignKey from $refTable where neo4j_id = ?;",
+          Int::class.java,
+          n.id
+        )
+
+        jdbcTemplate.update(
+          "update $targetTable set $field = ? where neo4j_id = ?;",
+          id,
+          m.id,
+        )
+      }
+    } catch (e: Exception) {
+      err["\n\nERROR:\n\tTargetTable: $targetTable\n" +
+        "\tfield:$field\n" +
+        "\tforeignKey:$foreignKey\n"] = Exception(e);
     }
+
+    return err;
   }
 
   suspend fun writeRelationshipsPairs(
@@ -1011,41 +1025,54 @@ class Neo4j(
     field1: String,
     field2: String,
     foreignKey: String
-  ) {
+  ): MutableMap<String, Exception> {
 
-    val exists = jdbcTemplate.queryForObject(
-      "select exists((select $foreignKey from $refTable1 where neo4j_id = ?) union (select $foreignKey from $refTable2 where neo4j_id = ?));",
-      Boolean::class.java,
-      m.id,
-      n.id
-    )
+    val err = mutableMapOf<String, Exception>();
 
-    if (exists) {
-      val id1 = jdbcTemplate.queryForObject(
-        "select $foreignKey from $refTable1 where neo4j_id = ?;",
-        Int::class.java,
-        m.id
-      )
-
-      val id2 = jdbcTemplate.queryForObject(
-        "select $foreignKey from $refTable2 where neo4j_id = ?;",
-        Int::class.java,
+    try {
+      val exists = jdbcTemplate.queryForObject(
+        "select exists((select $foreignKey from $refTable1 where neo4j_id = ?) union (select $foreignKey from $refTable2 where neo4j_id = ?));",
+        Boolean::class.java,
+        m.id,
         n.id
       )
 
-      val existsRelation = jdbcTemplate.queryForObject(
-        "select exists(select $foreignKey from $targetTable where $field1 = $id1 and $field2 = $id2)",
-        Boolean::class.java
-      )
-
-      if (!existsRelation!!) {
-        jdbcTemplate.update(
-          "insert into $targetTable($field1, $field2, created_by, modified_by, owning_person, owning_group) values(?, ?, 1, 1, 1, 1)",
-          id1,
-          id2,
+      if (exists) {
+        val id1 = jdbcTemplate.queryForObject(
+          "select $foreignKey from $refTable1 where neo4j_id = ?;",
+          Int::class.java,
+          m.id
         )
+
+        val id2 = jdbcTemplate.queryForObject(
+          "select $foreignKey from $refTable2 where neo4j_id = ?;",
+          Int::class.java,
+          n.id
+        )
+
+        val existsRelation = jdbcTemplate.queryForObject(
+          "select exists(select $foreignKey from $targetTable where $field1 = $id1 and $field2 = $id2)",
+          Boolean::class.java
+        )
+
+        if (!existsRelation!!) {
+          jdbcTemplate.update(
+            "insert into $targetTable($field1, $field2, created_by, modified_by, owning_person, owning_group) values(?, ?, 1, 1, 1, 1)",
+            id1,
+            id2,
+          )
+        }
       }
+    } catch (e: Exception) {
+      err["\n\nERROR:\n\tTargetTable: $targetTable\n" +
+        "\trefTable1: $refTable1 \n" +
+        "\trefTable2: $refTable2 \n" +
+        "\trefTable1: $field1 \n" +
+        "\trefTable1: $field2 \n" +
+        "\tforeignKey:$foreignKey\n"] = Exception(e);
     }
+
+    return err;
   }
 
   suspend fun migrateBaseNodeProperties() {
