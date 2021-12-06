@@ -69,6 +69,19 @@ create table common.site_text_translations(
   unique (language, site_text)
 );
 
+create table common.site_text_languages(
+  id serial primary key,
+
+  language int not null reference common.languages(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id),
+)
+
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
 
 -- todo
