@@ -2,7 +2,7 @@ CREATE OR REPLACE PROCEDURE admin.login(
     in p_email VARCHAR(255),
     in p_token varchar(64),
     inout error_type varchar(32),
-    inout user_id integer default null 
+    inout user_id integer  
 )
 LANGUAGE PLPGSQL
 AS $$
@@ -25,3 +25,5 @@ BEGIN
     end if;
 
 END; $$;
+
+
