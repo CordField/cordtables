@@ -31,7 +31,7 @@ alter table sc.project_locations alter column change_to_plan set not null;
 alter table sc.project_locations alter column location set not null;
 alter table sc.project_locations alter column project set not null;
 alter table sc.language_engagements alter column project set not null;
-alter table sc.language_engagements alter column ethnologue set not null;
+alter table sc.language_engagements alter column languages set not null;
 alter table sc.language_engagements alter column change_to_plan set not null;
 alter table sc.products alter column name set not null;
 alter table sc.products alter column change_to_plan set not null;
@@ -40,6 +40,4 @@ alter table sc.product_scripture_references alter column scripture_reference set
 alter table sc.product_scripture_references alter column change_to_plan set not null;
 alter table sc.internship_engagements alter column project set not null;
 alter table sc.internship_engagements alter column change_to_plan set not null;
-alter table sc.ceremonies alter column project set not null;
-alter table sc.ceremonies alter column ethnologue set not null;
 alter table admin.users alter column email set not null;

@@ -832,8 +832,8 @@ create table sc.language_engagements (
   id serial primary key,
 
   neo4j_id varchar(32) unique,
-	project int references sc.projects(id), -- not null
-	ethnologue int references sc.ethnologue(id), -- not null
+  project int references sc.projects(id), -- not null
+	language int references sc.languages(id),
 	change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
   active bool,
   ceremony int references sc.ceremonies(id),
@@ -868,7 +868,7 @@ create table sc.language_engagements (
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
 
-	unique (project, ethnologue, change_to_plan)
+	unique (project, language, change_to_plan)
 );
 
 -- PRODUCTS
