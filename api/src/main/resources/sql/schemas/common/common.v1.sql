@@ -2,7 +2,7 @@
 
 -- ENUMS ----
 
--- todo
+-- todo this isn't an enum in neo4j, just a string.
 create type common.mime_type as enum (
   'A',
   'B',
@@ -141,6 +141,30 @@ create type common.book_name as enum (
   'Revelation'
 );
 
+-- TODO: Would it be possible to have a  scripture_range and scripture_reference type?
+--       It may serve better for the times we just have a range attached more directly to something.
+--       See two types below for an example
+create type common.scripture_range as (
+  book_end common.scripture_reference,
+  label varchar(255),
+  book_start common.scripture_reference,
+  total_verses int
+);
+
+create type common.unspecified_scripture as (
+  book common.book_name,
+  total_verses int
+);
+
+create type common.scripture_reference as (
+  book common.book_name,
+  chapter int,
+  label varchar(255),
+  verse int
+)
+
+
+
 create table common.scripture_references (
   id serial primary key,
   neo4j_id varchar(32) unique,
@@ -210,6 +234,8 @@ create table common.threads (
   owning_group int not null references admin.groups(id)
 );
 
+
+-- todo: not sure if this is supposed to follow neo4j, bet if it were, it's really different.
 create table common.posts (
 	id serial primary key,
 
@@ -277,19 +303,22 @@ create table common.notes (
 
 create type common.location_type as enum (
   'City',
-  'County',
-  'State',
   'Country',
-  'CrossBorderArea'
+  'County',
+  'CrossBorderArea',
+  'State'
 );
 
 create table common.locations (
 	id serial primary key,
 
+  default_field_region sc.field_regions,
+  funding_account sc.funding_accounts(id),
+  iso_alpha3 char(3) unique,
+  iso_country varchar(32),
 	name varchar(255) unique, -- not null,
-	sensitivity common.sensitivity not null default 'High',
 	type common.location_type, -- not null,
-	iso_alpha3 char(3) unique,
+
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -345,9 +374,11 @@ create table common.education_by_person (
 create table common.organizations (
 	id serial primary key,
 
+  address varchar(255),
+  avatarLetters varchar(32),
+	locations int references common.locations(id),
 	name varchar(255) unique, -- not null
-	sensitivity common.sensitivity default 'High',
-	primary_location int references common.locations(id),
+  sensitivity common.sensitivity default 'High',
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
