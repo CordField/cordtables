@@ -10,6 +10,7 @@ class CreateLanguageExRequest {
   language: {
     name: string;
     display_name: string;
+    ethnologue: number;
   };
 }
 class CreateLanguageExResponse extends GenericResponse {
@@ -59,7 +60,7 @@ export class ScLanguages {
   @State() currentPage: number = 1;
   newLanguageName: string;
   newDisplayName: string;
-  
+  newEthnologue: number;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
@@ -72,7 +73,11 @@ export class ScLanguages {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.languagesResponse = { error: ErrorType.NoError, size: this.languagesResponse.size, languages: this.languagesResponse.languages.map(language => (language.id === id ? updateResponse.language : language)) };
+      this.languagesResponse = {
+        error: ErrorType.NoError,
+        size: this.languagesResponse.size,
+        languages: this.languagesResponse.languages.map(language => (language.id === id ? updateResponse.language : language)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -121,6 +126,7 @@ export class ScLanguages {
       language: {
         name: this.newLanguageName,
         display_name: this.newDisplayName,
+        ethnologue: this.newEthnologue,
       },
     });
 
@@ -701,16 +707,16 @@ export class ScLanguages {
   ];
 
   async componentWillLoad() {
-    console.log("Current Page: "+this.currentPage)
+    console.log('Current Page: ' + this.currentPage);
     await this.getList(this.currentPage);
   }
 
-  @Listen('pageChanged',{target: "body"})
+  @Listen('pageChanged', { target: 'body' })
   async getChangedValue(event: CustomEvent) {
-      console.log(event.detail);
-      console.log("page changed");
-      this.currentPage = event.detail;
-      await this.getList(this.currentPage);
+    console.log(event.detail);
+    console.log('page changed');
+    this.currentPage = event.detail;
+    await this.getList(this.currentPage);
   }
 
   render() {
@@ -722,8 +728,7 @@ export class ScLanguages {
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
-        <cf-pagination current-page={this.currentPage} total-rows={this.languagesResponse.size} results-per-page="5" page-url="sc-languages" ></cf-pagination>
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.languagesResponse.size} results-per-page="5" page-url="sc-languages"></cf-pagination>
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
@@ -738,6 +743,14 @@ export class ScLanguages {
             <div id="display-name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="display-name">Display Name</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />
+              </span>
+            </div>
+            <div id="ethnologue-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="ethnologue">Ethnologue</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />

@@ -81,6 +81,7 @@ data class LanguageInput(
 //    var id: Int? = null,
     val name: String,
     val display_name: String,
+    val ethnologue: Int,
 )
 
 enum class EgidsScale(val value: Float)  {
