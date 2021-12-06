@@ -16,7 +16,8 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class CommonThreadsListRequest(
-        val token: String?
+        val token: String?,
+        val channelId: Integer?=null
 )
 
 data class CommonThreadsListResponse(
@@ -43,9 +44,15 @@ class List(
     fun listHandler(@RequestBody req: CommonThreadsListRequest): CommonThreadsListResponse
     {
         var data: MutableList<Thread> = mutableListOf()
+        var whereClause:String = ""
         if (req.token == null) return CommonThreadsListResponse(ErrorType.TokenNotFound, mutableListOf())
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+        if(req.channelId!==null){
+          whereClause = "channel = :channelId"
+          paramSource.addValue("channelId", req.channelId)
+        }
+
         val query = secureList.getSecureListQueryHandler(
                 GetSecureListQueryRequest(
                         tableName = "common.threads",
@@ -60,7 +67,8 @@ class List(
                                 "modified_by",
                                 "owning_person",
                                 "owning_group",
-                        )
+                        ),
+                        whereClause = whereClause
                 )
         ).query
 

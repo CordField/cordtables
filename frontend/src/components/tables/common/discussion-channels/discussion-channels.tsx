@@ -9,10 +9,10 @@ import {
   CommonDiscussionChannelListResponse,
   CommonDiscussionChannelUpdateRequest,
   CommonDiscussionChannelUpdateResponse,
-  CreateDiscussionChannelRequest,
-  CreateDiscussionChannelResponse,
-  DeleteDiscussionChannelRequest,
-  DeleteDiscussionChannelResponse,
+  CreateCommonDiscussionChannelRequest,
+  CreateCommonDiscussionChannelResponse,
+  DeleteCommonDiscussionChannelRequest,
+  DeleteCommonDiscussionChannelResponse,
 } from './types';
 
 @Component({
@@ -50,7 +50,7 @@ export class DiscussionChannels {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteDiscussionChannelRequest, DeleteDiscussionChannelResponse>('common-dicsussion-channels/delete', {
+    const deleteResponse = await fetchAs<DeleteCommonDiscussionChannelRequest, DeleteCommonDiscussionChannelResponse>('common-dicsussion-channels/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -78,9 +78,9 @@ export class DiscussionChannels {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateDiscussionChannelRequest, CreateDiscussionChannelResponse>('common-discussion-channels/create-read', {
+    const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common-discussion-channels/create-read', {
       token: globals.globalStore.state.token,
-      discussion_channels: {
+      discussion_channel: {
         name: this.newDiscussionChannelName,
       },
     });

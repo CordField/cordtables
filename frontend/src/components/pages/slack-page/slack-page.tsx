@@ -16,6 +16,7 @@ import { CommonDiscussionChannel, CommonDiscussionChannelListRequest, CommonDisc
 export class SlackPage {
   @State() discussionChannelsResponse: CommonDiscussionChannelListResponse = { error: null, discussion_channels: null };
   @State() selectedDiscussionChannel?: CommonDiscussionChannel = null;
+  @State() showForm?: boolean = false;
 
   async componentWillLoad() {
     await this.getDiscussionChannels();
@@ -40,6 +41,7 @@ export class SlackPage {
         <div class="slack-page">
           <slack-sidebar discussionChannels={this.discussionChannelsResponse} />
           <slack-content selectedDiscussionChannel={this.selectedDiscussionChannel} />
+
         </div>
       </Host>
     );

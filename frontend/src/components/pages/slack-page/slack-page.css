@@ -41,6 +41,7 @@ slack-thread {
 }
 .slack-thread-content {
   user-select: none;
+  position: relative;
 }
 .slack-thread-content:hover {
   cursor: pointer;
@@ -51,6 +52,10 @@ slack-thread {
 }
 .post-indicator {
   margin-right: 3px;
+  /* position: absolute; */
+  top: 100%;
+  right: 100%;
+  z-index: 100;
 }
 .post-count {
   color: #9ca3af;
@@ -76,6 +81,21 @@ slack-thread {
   margin-top: 2.5rem;
 }
 
+.slack-thread-buttons {
+  margin-left: 10px;
+  position: absolute;
+  top: 100%;
+}
+.add-button {
+  color: #3c6a29;
+  background-color: #f0f7ec;
+  width: fit-content;
+  border-radius: 5px;
+  font-size: 2rem;
+  user-select: none;
+  text-align: center;
+  margin-top: 5px;
+}
 /* 
 .discussion-channel {
   color: red;

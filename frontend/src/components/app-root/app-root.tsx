@@ -1,6 +1,7 @@
 import { Component, h, Host, Prop, State } from '@stencil/core';
 import { injectHistory, RouterHistory } from '@stencil/router';
 import { globals } from '../../core/global.store';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   tag: 'app-root',
@@ -34,6 +35,13 @@ export class AppRoot {
       this.path = window.location.pathname;
       this.updateSelect();
     });
+    const infoText = 'INSECURE CONNECTION';
+    if (!process.env.SERVER_URL.startsWith('https')) {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: infoText, id: uuidv4(), type: 'info' });
+    }
+    // else {
+    //   globals.globalStore.state.notifications = globals.globalStore.state.notifications.filter(notif => notif.text !== infoText);
+    // }
   }
 
   componentWillRender() {
@@ -86,7 +94,7 @@ export class AppRoot {
                   </div>
                 </div>
 
-                {this.path != '/page/tickets' && (<button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>)}
+                {this.path != '/page/tickets' && <button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>}
               </div>
             )}
           </div>
@@ -99,7 +107,7 @@ export class AppRoot {
                 <stencil-route url="/login" component="cf-login" />
 
                 <stencil-route url="/table/:table" component="table-root" />
-                
+
                 <stencil-route url="/page/:page/:requestId?" component="page-root" />
               </stencil-route-switch>
             </stencil-router>

@@ -9,7 +9,8 @@ import { TinyUpdateEvent } from './types';
 export class CfTiny {
   @Element() el: HTMLElement;
 
-  @Prop() uid: number;
+  @Prop() uid: string;
+  @Prop() initialHTMLContent: string = null;
 
   @Event() contentUpdate: EventEmitter<TinyUpdateEvent>;
   content: string;
@@ -50,7 +51,9 @@ export class CfTiny {
           toolbar_mode="floating"
           toolbar="quicklink emoticons image table media | bold italic | undo redo | styleselect | alignleft aligncenter alignright alignjustify | outdent indent"
           quickbars_insert_toolbar="false"
-        ></tinymce-editor>
+        >
+          {this.initialHTMLContent}
+        </tinymce-editor>
       </Host>
     );
   }

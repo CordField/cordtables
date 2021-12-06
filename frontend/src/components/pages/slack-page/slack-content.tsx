@@ -4,7 +4,8 @@ import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 import { CommonDiscussionChannel } from '../../tables/common/discussion-channels/types';
 import { CommonPost, CommonPostsListRequest, CommonPostsListResponse } from '../../tables/common/posts/types';
-import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse } from '../../tables/common/threads/types';
+import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, DeleteCommonThreadsRequest, DeleteCommonThreadsResponse } from '../../tables/common/threads/types';
+import { v4 as uuidv4 } from 'uuid';
 
 // will take discussion channels as a prop
 @Component({
@@ -15,45 +16,39 @@ import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse } fro
 export class SlackContent {
   @Prop() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() threadListResponse: CommonThreadsListResponse = null;
-  @State() postListResponse: CommonPostsListResponse = null;
   @State() channelThreads: CommonThread[] = [];
-  @State() channelPosts: CommonPost[] = [];
   @Watch('selectedDiscussionChannel')
-  handleSelectedDiscussionChannelChange(newValue: CommonDiscussionChannel, oldValue: CommonDiscussionChannel) {
-    if (this.threadListResponse.error === ErrorType.NoError && newValue) {
-      this.channelThreads = this.threadListResponse.threads.filter(thread => thread.channel === newValue?.id);
-      console.log(this.channelThreads);
-    }
-    if (newValue && this.postListResponse.error === ErrorType.NoError) {
-      this.channelPosts = this.postListResponse.posts.filter(post => this.channelThreads.findIndex(thread => thread.id === post.thread) !== -1);
+  async handleSelectedDiscussionChannelChange(newValue: CommonDiscussionChannel, oldValue: CommonDiscussionChannel) {
+    if (newValue) await this.getThreads(newValue.id);
+  }
+  @Listen('threadDeleted')
+  async handleThreadDeletedChange(event: CustomEvent<number>) {
+    const deleteResponse = await fetchAs<DeleteCommonThreadsRequest, DeleteCommonThreadsResponse>('common-threads/delete', {
+      token: globals.globalStore.state.token,
+      id: event.detail,
+    });
+    if (deleteResponse.error === ErrorType.NoError) {
+      this.channelThreads = this.channelThreads?.filter(thread => thread.id !== event.detail);
+    } else {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'unable to delete thread', id: uuidv4(), type: 'error' });
     }
   }
   @Listen('threadAdded')
   handleThreadAddedChange(event: CustomEvent<CommonThread>) {
-    if (this.threadListResponse.error === ErrorType.NoError) {
-      this.channelThreads = this.channelThreads.concat(event.detail);
-    }
+    this.channelThreads = this.channelThreads?.concat(event.detail);
   }
   async componentWillLoad() {
-    this.threadListResponse = await this.getThreads();
-    if (this.selectedDiscussionChannel && this.threadListResponse.error === ErrorType.NoError) {
-      this.channelThreads = this.threadListResponse.threads.filter(thread => thread.channel === this.selectedDiscussionChannel?.id);
-    }
+    await this.getThreads(this.selectedDiscussionChannel?.id);
+  }
 
-    this.postListResponse = await this.getPosts();
-    if (this.selectedDiscussionChannel && this.postListResponse.error === ErrorType.NoError) {
-      this.channelPosts = this.postListResponse.posts.filter(post => this.channelThreads.findIndex(thread => thread.id === post.thread) !== -1);
+  async getThreads(discussionChannelId: number) {
+    this.threadListResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common-threads/list', {
+      token: globals.globalStore.state.token,
+      channelId: discussionChannelId,
+    });
+    if (this.threadListResponse.error === ErrorType.NoError) {
+      this.channelThreads = this.threadListResponse.threads;
     }
-  }
-  async getThreads() {
-    return await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common-threads/list', {
-      token: globals.globalStore.state.token,
-    });
-  }
-  async getPosts() {
-    return await fetchAs<CommonPostsListRequest, CommonPostsListResponse>('common-posts/list', {
-      token: globals.globalStore.state.token,
-    });
   }
 
   render() {
@@ -63,7 +58,7 @@ export class SlackContent {
       ) : this.channelThreads.length > 0 ? (
         <div>
           {this.channelThreads.map(thread => (
-            <slack-thread threadPosts={this.channelPosts.filter(post => post.thread === thread.id)} thread={thread} />
+            <slack-thread thread={thread} key={thread.id} />
           ))}
         </div>
       ) : this.selectedDiscussionChannel !== null ? (

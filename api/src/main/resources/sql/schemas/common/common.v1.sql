@@ -166,16 +166,13 @@ create table common.scripture_references (
 
 create table common.discussion_channels (
 	id serial primary key,
-
 	name varchar(32) not null,
-
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-
   unique (name, owning_group)
 );
 
@@ -199,7 +196,7 @@ create table common.cell_channels (
 create table common.threads (
 	id serial primary key,
 
-	channel int not null references common.discussion_channels(id),
+	channel int not null references common.discussion_channels(id) on delete cascade,
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -212,10 +209,8 @@ create table common.threads (
 
 create table common.posts (
 	id serial primary key,
-
-	thread int not null references common.threads(id),
+	thread int not null references common.threads(id) on delete cascade,
 	content text not null,
-
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
