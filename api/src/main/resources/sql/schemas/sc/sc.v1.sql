@@ -820,7 +820,7 @@ create type common.ceremony_type as enum (
 create table sc.ceremonies (
   id serial primary key,
   neo4j_id varchar(32),
- -- project int  references sc.projects(id),     --TODO: this should probably be taken out. ceremony is on Language engagement, which
+  project int  references sc.projects(id),     --TODO: this should probably be taken out. ceremony is on Language engagement, which
   ethnologue int references sil.table_of_languages(id),  -- TODO: (cont) does this for us.
   actual_date timestamp,
   estimated_date timestamp,
