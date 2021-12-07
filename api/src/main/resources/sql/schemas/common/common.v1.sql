@@ -311,6 +311,7 @@ create type common.location_type as enum (
 
 create table common.locations (
 	id serial primary key,
+  neo4j_id varchar(32),
 
   default_field_region sc.field_regions,
   funding_account sc.funding_accounts(id),
@@ -373,6 +374,7 @@ create table common.education_by_person (
 
 create table common.organizations (
 	id serial primary key,
+  neo4j_id varchar(32),
 
   address varchar(255),
   avatarLetters varchar(32),
