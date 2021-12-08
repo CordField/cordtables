@@ -133,6 +133,11 @@ create type admin.db_vc_status as enum (
   'Abandoned'
 );
 
+create type admin.row_status as enum (
+  'Active',
+  'Inactive'
+);
+
 create table admin.database_version_control (
   id serial primary key,
   version int not null,
@@ -159,6 +164,7 @@ create table admin.people (
   sensitivity_clearance common.sensitivity default 'Low',
   timezone varchar(32),
   title varchar(255),
+  status admin.row_status,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int, -- not null doesn't work here, on startup

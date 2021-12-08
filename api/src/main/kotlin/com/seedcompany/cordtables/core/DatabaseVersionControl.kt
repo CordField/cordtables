@@ -44,10 +44,10 @@ class DatabaseVersionControl(
     private fun updateSchemaIdempotent() {
         while (true) {
             when (getSchemaVersion()) {
-                1 -> {
-                    println("upgrading schema to version 2")
-                    toVersion2()
-                }
+//                1 -> {
+//                    println("upgrading schema to version 2")
+//                    toVersion2()
+//                }
                 else -> {
                     break
                 }

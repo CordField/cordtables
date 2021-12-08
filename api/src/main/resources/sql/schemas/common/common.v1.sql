@@ -2,11 +2,19 @@
 
 -- ENUMS ----
 
--- todo this isn't an enum in neo4j, just a string.
 create type common.mime_type as enum (
-  'A',
-  'B',
-  'C'
+  'application/vnd.oasis.opendocument.database',
+  'application/vnd.visio',
+  'application/x-iso9660-image',
+  'application/x-texinfo',
+  'audio/s3m',
+  'font/woff',
+  'image/tiff',
+  'image/x-rgb',
+  'image/x-3ds',
+  'video/mp4',
+  'video/x-ms-wmv',
+  'video/webm'
 );
 
 -- SITE TEXT --------------------------------------------------------------------------------
@@ -144,12 +152,7 @@ create type common.book_name as enum (
 -- TODO: Would it be possible to have a  scripture_range and scripture_reference type?
 --       It may serve better for the times we just have a range attached more directly to something.
 --       See two types below for an example
-create type common.scripture_range as (
-  book_end common.scripture_reference,
-  label varchar(255),
-  book_start common.scripture_reference,
-  total_verses int
-);
+
 
 create type common.unspecified_scripture as (
   book common.book_name,
@@ -161,7 +164,14 @@ create type common.scripture_reference as (
   chapter int,
   label varchar(255),
   verse int
-)
+);
+
+create type common.scripture_range as (
+  book_end common.scripture_reference,
+  label varchar(255),
+  book_start common.scripture_reference,
+  total_verses int
+);
 
 
 
@@ -313,11 +323,8 @@ create table common.locations (
 	id serial primary key,
   neo4j_id varchar(32),
 
-  default_field_region sc.field_regions,
-  funding_account sc.funding_accounts(id),
-  iso_alpha3 char(3) unique,
   iso_country varchar(32),
-	name varchar(255) unique, -- not null,
+	name varchar(255), --  unique not null,
 	type common.location_type, -- not null,
 
 
@@ -376,9 +383,7 @@ create table common.organizations (
 	id serial primary key,
   neo4j_id varchar(32),
 
-  address varchar(255),
-  avatarLetters varchar(32),
-	locations int references common.locations(id),
+
 	name varchar(255) unique, -- not null
   sensitivity common.sensitivity default 'High',
 
@@ -510,7 +515,7 @@ create table common.file_versions (
   neo4j_id varchar(32),
 
   category varchar(255),
-  mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
+  mime_type common.mime_type, -- not null,
   name varchar(255), -- not null,
   file int references common.files(id), -- not null
   file_url varchar(255), -- not null,

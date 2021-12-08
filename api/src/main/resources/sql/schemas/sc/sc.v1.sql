@@ -46,7 +46,7 @@ create table sc.funding_accounts (
   id serial primary key,
   neo4j_id varchar(32) unique,
 
-	account_number int unique, -- not null,
+	account_number int, -- unique, -- not null,
 	name varchar(255),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -65,7 +65,7 @@ create table sc.field_zones (
 
 	director int references admin.people(id),
 	name varchar(32) unique, -- not null
-	
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -98,7 +98,7 @@ create table sc.locations (
 	default_region int references sc.field_regions(id),
 	funding_account int references sc.funding_accounts(id),
 	iso_alpha_3 char(3),
-	name varchar(32) unique, -- not null
+	name varchar(255) unique, -- not null
 	type common.location_type, -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -117,7 +117,6 @@ create table sc.organizations (
 	neo4j_id varchar(32) unique,
   
 	address varchar(255),
-	sensitivity common.sensitivity,
 	root_directory int references common.directories(id),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -411,8 +410,8 @@ create table sc.language_goal_definitions (
 
 create table sc.language_locations (
   id serial primary key,
-	language int not null references sc.languages(id),
-	location int not null references sc.locations(id),
+	language int  references sc.languages(id), --not null
+	location int references sc.locations(id), --not null
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -581,7 +580,7 @@ create table sc.periodic_reports (
   neo4j_id varchar(32),
   directory int references sc.periodic_reports_directory(id),
   -- TODO: not sure how to put 'parent' from neo4j...
-  due: timestamp,
+  due timestamp,
   end_at timestamp,
   received_date timestamp,
   report_file int references common.files(id),
@@ -603,7 +602,7 @@ create table sc.periodic_reports (
 create table sc.projects (
   id serial primary key,
   neo4j_id varchar(32),
-	name varchar(32), -- not null
+	name varchar(255), -- not null
 	change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
 	active bool,
 	department varchar(255),
@@ -707,18 +706,6 @@ create table sc.partnerships (
 
 );
 
-create table sc.partnerships_producing_mediums (
-
-  medium references common.product_mediums,
-  partnership references common.partnerships(id),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-)
 
 -- PROJECT BUDGETS
 
@@ -756,7 +743,7 @@ create table sc.budget_records (
 
   neo4j_id varchar(32) unique,
   budget int references sc.budgets(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null //TODO: column doesn't exist in neo4j
+  change_to_plan int references sc.change_to_plans(id), -- not null default 1 //TODO: column doesn't exist in neo4j
   active bool, -- // TODO: shouldn't ACTIVE be in every table? it's a BaseNode prop...
   amount decimal,
   fiscal_year int,
@@ -856,7 +843,7 @@ create table sc.language_engagements (
   --TODO                   dateRange (derived, so probably don't need it here)    // can do `select as date ranges SELECT tsrange(start_date, end_date)`
   --TODO                   dateRangeOverride (derived)                            // can do `select as date ranges SELECT tsrange(start_date_override, end_date_override)`
   neo4j_id varchar(32) unique,
-	current_progress_report_due references common.files(id),
+	current_progress_report_due int references common.files(id),
   project int references sc.projects(id), -- not null
 	language int references sc.languages(id),
 	change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
@@ -872,12 +859,11 @@ create table sc.language_engagements (
   is_first_scripture bool,
   is_luke_partnership bool,
   is_sent_printing bool,     -- //TODO: should probably be sent_printing_date. in neo4j has sentPrintingDate
-  latest_progress_report_submitted references sc.periodic_reports(id),
+  latest_progress_report_submitted int references sc.periodic_reports(id),
   last_suspended_at timestamp,
   last_reactivated_at timestamp,
-  nextProgressReportDue references sc.periodic_reports(id),
+  nextProgressReportDue int references sc.periodic_reports(id),
   paratext_registry varchar(32),
-  partnerships_producing_mediums sc.partnerships_producing_mediums(id) []
   periodic_reports_directory int references sc.periodic_reports_directory(id),   -- TODO: neo4j has this as 'progressReports' and its a list of PeriodicReports
   pnp varchar(255),   -- TODO: does this map to pnpData in neo4j? if so, it's marked as deprecated.
   pnp_file int references common.files(id),   --TODO: this should probably be file_version instead.
@@ -901,20 +887,6 @@ create table sc.language_engagements (
 );
 
 
-create table sc.language_engagements_partnerships_producing_mediums (
-  id serial primary key,
-  language_engagement references sc.language_engagements(id),
-  partnerships_producing_mediums references sc.partnerships_producing_mediums(id),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-)
-
-
 -- PRODUCTS
 
 create type common.product_mediums as enum (
@@ -926,6 +898,32 @@ create type common.product_mediums as enum (
   'Audio',
   'Video',
   'Other'
+);
+
+create table sc.partnerships_producing_mediums (
+  id serial primary key,
+  medium common.product_mediums,
+  partnership int references sc.partnerships(id),  -- not null
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
+create table sc.language_engagements_partnerships_producing_mediums (
+  id serial primary key,
+  language_engagement int references sc.language_engagements(id),
+  partnerships_producing_mediums int references sc.partnerships_producing_mediums(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 
@@ -1004,9 +1002,12 @@ create type common.product_methodology_step as enum (
 
 
 create type sc.producible_type as enum (
-  'DirectScriptureProduct',
-  'DerivativeScriptureProduct',
-  'OtherProduct'
+  'Film',
+  'LiteracyMaterial',
+  'Song',
+  'Product',
+  'EthnoArt',
+  'Story'
 );
 
 create table sc.producible (
@@ -1027,7 +1028,7 @@ create table sc.producible_scripture_references (
   id serial primary key,
   producible int references sc.producible(id), -- not null
   scripture_reference int references common.scripture_references(id), -- not null
-  change_to_plan int default 1 --references sc.change_to_plans(id), -- not null   //TODO: column doesn't exist in neo4j
+  change_to_plan int default 1, --references sc.change_to_plans(id), -- not null   //TODO: column doesn't exist in neo4j
   active bool,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1044,17 +1045,16 @@ create table sc.products (
   id serial primary key,
 
   neo4j_id varchar(32) unique,
-  name varchar(64), -- not null
-  change_to_plan int default 1,-- references sc.change_to_plans(id), -- not null
   active bool,
 
   approach common.product_approach,
   available_steps common.product_methodology_step[],
   category varchar(32),
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null  //TODO: column not exist in neo4j
+  change_to_plan int references sc.change_to_plans(id), -- not null default 1  //TODO: column not exist in neo4j
   describe_completion text,
   description text,            -- TODO: column not exist in neo4j
   engagement int references sc.language_engagements(id),
+  is_overriding bool,
   label varchar(32),
   mediums common.product_mediums[],
   methodology common.product_methodologies,
@@ -1083,19 +1083,19 @@ create table sc.products (
 
 -- extension tables of products representing whether it's a derivative, direct, and other
 -- TODO: need a blessing on these
-create table product_derivative_scripture {
-  product references sc.products(id),    -- not null
+create table sc.product_derivative_scripture (
+  product int references sc.products(id),    -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-}
+  owning_group int not null references admin.groups(id)
+);
 
-create table product_direct_scripture {
-  product int references sc.products(id),    -- not null
+create table sc.product_direct_scripture (
+  product int references sc.products(id),   -- not null
   unspecified_scripture common.unspecified_scripture,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1103,10 +1103,10 @@ create table product_direct_scripture {
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-}
+  owning_group int not null references admin.groups(id)
+);
 
-create table product_other{
+create table sc.product_other (
   product int  references sc.products(id),    -- not null
   title varchar(255),
 
@@ -1115,11 +1115,10 @@ create table product_other{
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
-}
+  owning_group int not null references admin.groups(id)
+);
 
 
--- TODO: would it be best to describe a scripture reference type? see types common.scripture_reference and common.scripture_range
 create table sc.product_scripture_references (
   id serial primary key,
   product int references sc.products(id), -- not null
@@ -1145,7 +1144,7 @@ create table sc.product_progress_of_current_report_due (
   product int references sc.products(id),
   report int references sc.periodic_reports,
   steps common.product_methodology_step[]
-)
+);
 
 create table sc.product_progress (
   id serial primary key,
@@ -1220,7 +1219,6 @@ create table sc.internship_engagements (
 	change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
   active bool,
 	ceremony int references sc.ceremonies(id),
-	change_to_plan int default 1 references sc.change_to_plans(id), -- not null  //TODO: column doesn't exist in neo4j
   communications_complete_date timestamp,     -- TODO: doesn't exist in neo4j
   complete_date timestamp,
   country_of_origin int references common.locations(id),

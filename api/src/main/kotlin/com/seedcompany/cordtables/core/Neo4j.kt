@@ -85,7 +85,7 @@ class Neo4j(
 
     migrateBaseNodes()
     migrateBaseNodeToBaseNodeRelationships()
-    //migrateBaseNodeProperties()
+    migrateBaseNodeProperties()
 
     return Neo4jMigrationResponse(ErrorType.NoError)
   }
@@ -1188,7 +1188,10 @@ class Neo4j(
         }
       )
       node!!.labels.contains("Organization") -> err = writeNodeProperty(
-        targetTable = "sc.organizations",
+        targetTable = if (prop!!.type.equals("name"))
+        { "common.organizations" }
+        else
+        {"sc.organizations"},
         id = node!!.id,
         propKey = prop!!.type,
         propValue = prop!!.value!!
@@ -1299,7 +1302,7 @@ class Neo4j(
           null,
       )
       node!!.labels.contains("EthnologueLanguage") -> err = writeNodeProperty(
-        targetTable = "sil.table_of_languages",
+        targetTable = "sc.ethnologue",
         id = node!!.id,
         propKey = if (prop!!.type.equals("name")) {
           "language_name"
@@ -1442,9 +1445,15 @@ class Neo4j(
         }
       )
       node!!.labels.contains("Location") -> err = writeNodeProperty(
-        targetTable = "common.locations",
+        targetTable = "sc.locations",
         id = node!!.id,
-        propKey = prop!!.type,
+        propKey = if (prop.type.equals("isoAlpha3"))
+        {
+          "iso_alpha_3"
+        } else
+        {
+          prop!!.type
+        },
         propValue = prop!!.value!!
       )
       node!!.labels.contains("FundingAccount") -> err = writeNodeProperty(
@@ -1460,6 +1469,12 @@ class Neo4j(
       )
       node!!.labels.contains("Product") -> err = writeNodeProperty(
         targetTable = "sc.products",
+        id = node!!.id,
+        propKey = prop!!.type,
+        propValue = prop!!.value!!
+      )
+      node!!.labels.contains("Producible") -> err = writeNodeProperty(
+        targetTable = "sc.producible",
         id = node!!.id,
         propKey = prop!!.type,
         propValue = prop!!.value!!
