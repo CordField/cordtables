@@ -278,12 +278,11 @@ class SiteTextService(
       paramSource.addValue("language", language)
       paramSource.addValue("token", token)
 
-      val status = jdbcTemplate.update(query, paramSource)
-
-      println("status ${status}")
-
+      jdbcTemplate.update(query, paramSource)
+      println("site_text_languages row create success!")
     } catch(e: Exception) {
       println(e)
+      println("site_text_languages row create fail!")
     }
   }
 
@@ -355,9 +354,10 @@ class SiteTextService(
           1)""".trimIndent()
 
       jdbcTemplate.batchUpdate(query, batch)
-
+      println("site_text_translations load success!")
     } catch(e: Exception) {
       println(e)
+      println("site_text_translations load fail!")
     }
 
   }
