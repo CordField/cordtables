@@ -310,7 +310,7 @@ class SiteTextService(
 
         stringParamSource.addValue("english", english)
         val findSiteTextStringQuery = """
-          select sts.id
+          select stt.id
           from common.site_text_strings stt
           where stt.english = :english
         """.trimIndent()
@@ -331,10 +331,10 @@ class SiteTextService(
 
       val query = """
         insert into common.site_text_translations(
-          common_id, site_text, translation, created_by, modified_by, owning_person, owning_group
+          language, site_text, translation, created_by, modified_by, owning_person, owning_group
         )
         values (
-          :common_id,
+          :language,
           :site_text,
           :translation,
           (
@@ -354,10 +354,7 @@ class SiteTextService(
           ),
           1)""".trimIndent()
 
-
-      val updateCounts = jdbcTemplate.batchUpdate(query, batch)
-
-      println("updateCounts ${updateCounts}")
+      jdbcTemplate.batchUpdate(query, batch)
 
     } catch(e: Exception) {
       println(e)
@@ -369,7 +366,6 @@ class SiteTextService(
     val file = ClassPathResource("/data/translations").file
     file.list().forEach {
       var indexInfo: LanguageIndexKey
-
       try {
         indexInfo = getKeyFromTranslationFileName(it)
       } catch(e: Exception) {
@@ -396,10 +392,10 @@ class SiteTextService(
         paramSource.addValue("name", indexInfo.name)
 
         val result = jdbcTemplate.queryForRowSet(query, paramSource)
-
-        if(result.next()) commonLanguageId = result.getInt(1)
+        if(result.next()) {
+          commonLanguageId = result.getInt(1)
+        }
         else return@forEach
-
       } catch(e: Exception) {
         println(e)
         return@forEach
@@ -411,8 +407,7 @@ class SiteTextService(
   }
 
   fun init(token: String) {
-    println("============here here ===========")
     loadSiteTextStrings(token)
-//    loadTranslations(token)
+    loadTranslations(token)
   }
 }
