@@ -192,10 +192,9 @@ class SiteTextService(
     this.ds.connection.use { conn ->
       try {
 
-        val insertSQL = """insert into common.site_text_strings(english, comment, created_by, modified_by, owning_person, owning_group) 
+        val insertSQL = """insert into common.site_text_strings(english, created_by, modified_by, owning_person, owning_group) 
           values (
             ?, 
-            ?,
             (
               select person 
               from admin.tokens 
@@ -220,13 +219,10 @@ class SiteTextService(
           if (count == 1) continue
 
           val english = splitArray[0]
-          val comment = splitArray[1]
-
           insertStmt.setString(1, english)
-          insertStmt.setString(2, comment)
+          insertStmt.setString(2, token)
           insertStmt.setString(3, token)
           insertStmt.setString(4, token)
-          insertStmt.setString(5, token)
 
           insertStmt.addBatch()
         }
@@ -415,7 +411,8 @@ class SiteTextService(
   }
 
   fun init(token: String) {
+    println("============here here ===========")
     loadSiteTextStrings(token)
-    loadTranslations(token)
+//    loadTranslations(token)
   }
 }

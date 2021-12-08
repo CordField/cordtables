@@ -76,7 +76,7 @@ class SiteText (
       try {
         siteTextService.init(req.token)
       } catch(ex: Exception) {
-
+        return SiteTextInitResponse(ErrorType.UnknownError)
       }
       return SiteTextInitResponse(ErrorType.NoError)
     }
