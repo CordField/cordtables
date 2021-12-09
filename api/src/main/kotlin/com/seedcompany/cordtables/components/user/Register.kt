@@ -20,7 +20,8 @@ data class RegisterReturn(
     val error: ErrorType,
     val token: String? = null,
     val readableTables: List<String> = listOf(),
-    val isAdmin: Boolean = false
+    val isAdmin: Boolean = false,
+    val userId: Int? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -42,35 +43,44 @@ class Register (
         if (req.password == null || req.password.length < 8) return RegisterReturn(ErrorType.PasswordTooShort)
         if (req.password.length > 32) return RegisterReturn(ErrorType.PasswordTooLong)
 
+
+        var errorType: ErrorType
+        var userId: Int?
         val pash = util.encoder.encode(req.password)
         val token = util.createToken()
 
-        val result = registerDB(req.email, pash, token)
+        val resultList = registerDB(req.email, pash, token)
+        errorType = resultList[0] as ErrorType
+        userId = resultList[1] as Int?
+        if(userId == -1) userId = null
 
-        return if (result === ErrorType.NoError){
-            RegisterReturn(result, token, util.getReadableTables(token), util.isAdmin(token))
+        return if (errorType === ErrorType.NoError){
+            RegisterReturn(errorType, token, util.getReadableTables(token), util.isAdmin(token), userId)
         } else {
-            RegisterReturn(result)
+            RegisterReturn(errorType)
         }
 
     }
 
-    fun registerDB(email: String, pash: String, token: String): ErrorType{
+    fun registerDB(email: String, pash: String, token: String): List<Any>{
 
         var errorType = ErrorType.UnknownError
-
+        var userId:Int = -1
         this.ds.connection.use{conn ->
-            val statement = conn.prepareCall("call admin.register(?, ?, ?, ?);")
+            val statement = conn.prepareCall("call admin.register(?, ?, ?, ?,?);")
             statement.setString(1, email)
             statement.setString(2, pash)
             statement.setString(3, token)
             statement.setString(4, errorType.name)
+            statement.setInt(5,userId)
             statement.registerOutParameter(4, java.sql.Types.VARCHAR)
+            statement.registerOutParameter(5,java.sql.Types.INTEGER)
 
             statement.execute()
 
             try {
                 errorType = ErrorType.valueOf(statement.getString(4))
+                userId = statement.getInt(5)
             } catch (ex: IllegalArgumentException) {
                 errorType = ErrorType.UnknownError
             }
@@ -82,6 +92,6 @@ class Register (
             statement.close()
         }
 
-        return errorType
+        return  listOf<Any>(errorType,userId as Any)
     }
 }

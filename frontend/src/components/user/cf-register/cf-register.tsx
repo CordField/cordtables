@@ -13,6 +13,7 @@ class RegisterResponse extends GenericResponse {
   token: string;
   readableTables: string[];
   isAdmin: string;
+  userId: number;
 }
 
 @Component({
@@ -48,6 +49,7 @@ export class CfRegister {
       globals.globalStore.state.isLoggedIn = true;
       globals.globalStore.state.readableTables = result.readableTables;
       globals.globalStore.state.isAdmin = result.isAdmin;
+      globals.globalStore.state.userId = result.userId;
 
       this.history.push('/');
     } else {

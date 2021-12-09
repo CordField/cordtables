@@ -81,7 +81,8 @@ export namespace Components {
     interface CfTableFooter {
     }
     interface CfTiny {
-        "uid": number;
+        "initialHTMLContent": string;
+        "uid": string;
     }
     interface CommonCellChannels {
     }
@@ -284,7 +285,6 @@ export namespace Components {
     }
     interface SlackThread {
         "thread": CommonThread;
-        "threadPosts": CommonPost[];
     }
     interface StageGraph {
     }
@@ -1325,8 +1325,9 @@ declare namespace LocalJSX {
     interface CfTableFooter {
     }
     interface CfTiny {
+        "initialHTMLContent"?: string;
         "onContentUpdate"?: (event: CustomEvent<TinyUpdateEvent>) => void;
-        "uid"?: number;
+        "uid"?: string;
     }
     interface CommonCellChannels {
     }
@@ -1535,8 +1536,8 @@ declare namespace LocalJSX {
         "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
     }
     interface SlackThread {
+        "onThreadDeleted"?: (event: CustomEvent<number>) => void;
         "thread"?: CommonThread;
-        "threadPosts"?: CommonPost[];
     }
     interface StageGraph {
     }

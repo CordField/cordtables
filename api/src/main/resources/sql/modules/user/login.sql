@@ -1,22 +1,22 @@
 CREATE OR REPLACE PROCEDURE admin.login(
     in p_email VARCHAR(255),
     in p_token varchar(64),
-    inout error_type varchar(32)
+    inout error_type varchar(32),
+    inout user_id integer  
 )
 LANGUAGE PLPGSQL
 AS $$
 DECLARE
-    vPersonId INT;
     vToken varchar(512);
 BEGIN
     SELECT person
     FROM admin.users
-    INTO vPersonId
+    INTO user_id
     WHERE email = p_email;
 
-    if vPersonId is not null then
+    if user_id is not null then
       insert into admin.tokens ("token", "person")
-      values (p_token, vPersonId);
+      values (p_token, user_id);
 
       error_type = 'NoError';
 
@@ -25,3 +25,5 @@ BEGIN
     end if;
 
 END; $$;
+
+

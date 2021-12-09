@@ -1,14 +1,14 @@
-import { Component, Host, h, Prop, State, Event, EventEmitter } from '@stencil/core';
-import { create } from 'domain';
-import { runInThisContext } from 'vm';
+import { Component, Host, h, Prop, State, Event, EventEmitter, Listen } from '@stencil/core';
 import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CommonDiscussionChannel } from '../../tables/common/discussion-channels/types';
+import { CommonDiscussionChannel, CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse } from '../../tables/common/discussion-channels/types';
 import { CommonPost, CommonPostsListRequest, CommonPostsListResponse, CreateCommonPostsRequest, CreateCommonPostsResponse } from '../../tables/common/posts/types';
 import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, CreateCommonThreadsRequest, CreateCommonThreadsResponse } from '../../tables/common/threads/types';
+import { TinyUpdateEvent } from '../../cf-tiny/types';
+import { idService } from '../../../core/id.service';
 
 @Component({
   tag: 'slack-form',
@@ -16,15 +16,17 @@ import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, Crea
   shadow: true,
 })
 export class SlackForm {
-  // this will be 0 in case of root component
+  tinyMceId: string = idService.getNextId();
   @Prop() type: 'thread' | 'post' = 'thread';
   @Prop() selectedChannelId: number = null;
   @Prop() selectedThreadId: number = null;
   @State() content: string = null;
   @Event({ eventName: 'threadAdded' }) threadAdded: EventEmitter<CommonThread>;
   @Event({ eventName: 'postAdded' }) postAdded: EventEmitter<CommonPost>;
-  handleContentChange(e) {
-    this.content = e.target.value;
+
+  @Listen('contentUpdate')
+  handleContentUpdateChange(e: CustomEvent<TinyUpdateEvent>) {
+    if (e.detail.id === this.tinyMceId) this.content = e.detail.content;
   }
 
   componentWillLoad() {
@@ -66,28 +68,24 @@ export class SlackForm {
     }
   }
   setContentToNull() {
-    this.content = '';
+    this.content = null;
   }
   render() {
     const formClassName = this.type === 'thread' ? `slack-form slack-form-last` : `slack-form`;
-    const jsx = (
-      <form class={formClassName}>
-        <input type="text" name="content" id="content" value={this.content} onChange={e => this.handleContentChange(e)} />
-        <button
-          onClick={e => {
-            this.handleCreate(e);
-            this.setContentToNull();
-          }}
-          class="slack-form-button"
-        >
-          submit
-        </button>
-      </form>
-    );
+
     return (
       <Host class="slack-thread">
         <slot></slot>
-        {jsx}
+        <form
+          class={formClassName}
+          onSubmit={e => {
+            this.handleCreate(e);
+            this.setContentToNull();
+          }}
+        >
+          <cf-tiny uid={this.tinyMceId} />
+          <button class="slack-form-button">submit</button>
+        </form>
       </Host>
     );
   }

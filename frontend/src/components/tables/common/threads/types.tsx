@@ -1,4 +1,4 @@
-import { ErrorType, GenericResponse } from "../../../../common/types";
+import { ErrorType, GenericResponse } from '../../../../common/types';
 
 export class CommonThread {
   id?: number | undefined;
@@ -26,6 +26,7 @@ export class CreateCommonThreadsResponse extends GenericResponse {
 
 export class CommonThreadsListRequest {
   token: string;
+  channelId?: number;
 }
 
 export class CommonThreadsListResponse {
