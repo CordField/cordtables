@@ -147,6 +147,8 @@ export namespace Components {
     }
     interface GroupsTable {
     }
+    interface LanguageSelect {
+    }
     interface LocationsTable {
     }
     interface OrganizationsPage {
@@ -644,6 +646,12 @@ declare global {
     var HTMLGroupsTableElement: {
         prototype: HTMLGroupsTableElement;
         new (): HTMLGroupsTableElement;
+    };
+    interface HTMLLanguageSelectElement extends Components.LanguageSelect, HTMLStencilElement {
+    }
+    var HTMLLanguageSelectElement: {
+        prototype: HTMLLanguageSelectElement;
+        new (): HTMLLanguageSelectElement;
     };
     interface HTMLLocationsTableElement extends Components.LocationsTable, HTMLStencilElement {
     }
@@ -1173,6 +1181,7 @@ declare global {
         "groups-page": HTMLGroupsPageElement;
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
+        "language-select": HTMLLanguageSelectElement;
         "locations-table": HTMLLocationsTableElement;
         "organizations-page": HTMLOrganizationsPageElement;
         "organizations-table": HTMLOrganizationsTableElement;
@@ -1395,6 +1404,8 @@ declare namespace LocalJSX {
     interface GroupsRowAccess {
     }
     interface GroupsTable {
+    }
+    interface LanguageSelect {
     }
     interface LocationsTable {
     }
@@ -1632,6 +1643,7 @@ declare namespace LocalJSX {
         "groups-page": GroupsPage;
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
+        "language-select": LanguageSelect;
         "locations-table": LocationsTable;
         "organizations-page": OrganizationsPage;
         "organizations-table": OrganizationsTable;
@@ -1770,6 +1782,7 @@ declare module "@stencil/core" {
             "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
+            "language-select": LocalJSX.LanguageSelect & JSXBase.HTMLAttributes<HTMLLanguageSelectElement>;
             "locations-table": LocalJSX.LocationsTable & JSXBase.HTMLAttributes<HTMLLocationsTableElement>;
             "organizations-page": LocalJSX.OrganizationsPage & JSXBase.HTMLAttributes<HTMLOrganizationsPageElement>;
             "organizations-table": LocalJSX.OrganizationsTable & JSXBase.HTMLAttributes<HTMLOrganizationsTableElement>;

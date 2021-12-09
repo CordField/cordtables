@@ -9,6 +9,7 @@ interface Notification {
 export class Globals {
   storeObject = {
     appState: 0,
+    language: undefined,
     editMode: false,
     editModeWidth: 0,
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',

@@ -100,7 +100,8 @@ export class TableRoot {
         {this.match.params.table === 'sc-ethnologue' && <sc-ethnologue></sc-ethnologue>} 
         {this.match.params.table === 'sc-global-partner-transitions' && <sc-global-partner-transitions></sc-global-partner-transitions>}
         {this.match.params.table === 'sc-people' && <sc-people></sc-people>}
-        
+
+        {['common-site-text', 'common-site-text-languages', 'common-site-text-strings', 'common-site-text-translations'].includes(this.match.params.table) && <site-text></site-text>}
 
         {this.match.params.table === 'sil-country-codes' && <sil-country-codes></sil-country-codes>}
         {this.match.params.table === 'sil-language-codes' && <sil-language-codes></sil-language-codes>}
