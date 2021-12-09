@@ -105,10 +105,6 @@ export namespace Components {
     }
     interface CommonPosts {
     }
-    interface CommonPrayerNotifications {
-    }
-    interface CommonPrayerRequests {
-    }
     interface CommonStageGraph {
     }
     interface CommonStageNotifications {
@@ -314,6 +310,10 @@ export namespace Components {
     }
     interface TicketsTable {
         "onlyShowCreate": boolean;
+    }
+    interface UpPrayerNotifications {
+    }
+    interface UpPrayerRequests {
     }
     interface UsersTable {
     }
@@ -536,18 +536,6 @@ declare global {
     var HTMLCommonPostsElement: {
         prototype: HTMLCommonPostsElement;
         new (): HTMLCommonPostsElement;
-    };
-    interface HTMLCommonPrayerNotificationsElement extends Components.CommonPrayerNotifications, HTMLStencilElement {
-    }
-    var HTMLCommonPrayerNotificationsElement: {
-        prototype: HTMLCommonPrayerNotificationsElement;
-        new (): HTMLCommonPrayerNotificationsElement;
-    };
-    interface HTMLCommonPrayerRequestsElement extends Components.CommonPrayerRequests, HTMLStencilElement {
-    }
-    var HTMLCommonPrayerRequestsElement: {
-        prototype: HTMLCommonPrayerRequestsElement;
-        new (): HTMLCommonPrayerRequestsElement;
     };
     interface HTMLCommonStageGraphElement extends Components.CommonStageGraph, HTMLStencilElement {
     }
@@ -1095,6 +1083,18 @@ declare global {
         prototype: HTMLTicketsTableElement;
         new (): HTMLTicketsTableElement;
     };
+    interface HTMLUpPrayerNotificationsElement extends Components.UpPrayerNotifications, HTMLStencilElement {
+    }
+    var HTMLUpPrayerNotificationsElement: {
+        prototype: HTMLUpPrayerNotificationsElement;
+        new (): HTMLUpPrayerNotificationsElement;
+    };
+    interface HTMLUpPrayerRequestsElement extends Components.UpPrayerRequests, HTMLStencilElement {
+    }
+    var HTMLUpPrayerRequestsElement: {
+        prototype: HTMLUpPrayerRequestsElement;
+        new (): HTMLUpPrayerRequestsElement;
+    };
     interface HTMLUsersTableElement extends Components.UsersTable, HTMLStencilElement {
     }
     var HTMLUsersTableElement: {
@@ -1155,8 +1155,6 @@ declare global {
         "common-people-graph": HTMLCommonPeopleGraphElement;
         "common-people-to-org-relationships": HTMLCommonPeopleToOrgRelationshipsElement;
         "common-posts": HTMLCommonPostsElement;
-        "common-prayer-notifications": HTMLCommonPrayerNotificationsElement;
-        "common-prayer-requests": HTMLCommonPrayerRequestsElement;
         "common-stage-graph": HTMLCommonStageGraphElement;
         "common-stage-notifications": HTMLCommonStageNotificationsElement;
         "common-stage-role-column-grants": HTMLCommonStageRoleColumnGrantsElement;
@@ -1248,6 +1246,8 @@ declare global {
         "ticket-graph": HTMLTicketGraphElement;
         "tickets-page": HTMLTicketsPageElement;
         "tickets-table": HTMLTicketsTableElement;
+        "up-prayer-notifications": HTMLUpPrayerNotificationsElement;
+        "up-prayer-requests": HTMLUpPrayerRequestsElement;
         "users-table": HTMLUsersTableElement;
         "work-estimates": HTMLWorkEstimatesElement;
         "work-records": HTMLWorkRecordsElement;
@@ -1349,10 +1349,6 @@ declare namespace LocalJSX {
     interface CommonPeopleToOrgRelationships {
     }
     interface CommonPosts {
-    }
-    interface CommonPrayerNotifications {
-    }
-    interface CommonPrayerRequests {
     }
     interface CommonStageGraph {
     }
@@ -1567,6 +1563,10 @@ declare namespace LocalJSX {
     interface TicketsTable {
         "onlyShowCreate"?: boolean;
     }
+    interface UpPrayerNotifications {
+    }
+    interface UpPrayerRequests {
+    }
     interface UsersTable {
     }
     interface WorkEstimates {
@@ -1613,8 +1613,6 @@ declare namespace LocalJSX {
         "common-people-graph": CommonPeopleGraph;
         "common-people-to-org-relationships": CommonPeopleToOrgRelationships;
         "common-posts": CommonPosts;
-        "common-prayer-notifications": CommonPrayerNotifications;
-        "common-prayer-requests": CommonPrayerRequests;
         "common-stage-graph": CommonStageGraph;
         "common-stage-notifications": CommonStageNotifications;
         "common-stage-role-column-grants": CommonStageRoleColumnGrants;
@@ -1706,6 +1704,8 @@ declare namespace LocalJSX {
         "ticket-graph": TicketGraph;
         "tickets-page": TicketsPage;
         "tickets-table": TicketsTable;
+        "up-prayer-notifications": UpPrayerNotifications;
+        "up-prayer-requests": UpPrayerRequests;
         "users-table": UsersTable;
         "work-estimates": WorkEstimates;
         "work-records": WorkRecords;
@@ -1751,8 +1751,6 @@ declare module "@stencil/core" {
             "common-people-graph": LocalJSX.CommonPeopleGraph & JSXBase.HTMLAttributes<HTMLCommonPeopleGraphElement>;
             "common-people-to-org-relationships": LocalJSX.CommonPeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLCommonPeopleToOrgRelationshipsElement>;
             "common-posts": LocalJSX.CommonPosts & JSXBase.HTMLAttributes<HTMLCommonPostsElement>;
-            "common-prayer-notifications": LocalJSX.CommonPrayerNotifications & JSXBase.HTMLAttributes<HTMLCommonPrayerNotificationsElement>;
-            "common-prayer-requests": LocalJSX.CommonPrayerRequests & JSXBase.HTMLAttributes<HTMLCommonPrayerRequestsElement>;
             "common-stage-graph": LocalJSX.CommonStageGraph & JSXBase.HTMLAttributes<HTMLCommonStageGraphElement>;
             "common-stage-notifications": LocalJSX.CommonStageNotifications & JSXBase.HTMLAttributes<HTMLCommonStageNotificationsElement>;
             "common-stage-role-column-grants": LocalJSX.CommonStageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLCommonStageRoleColumnGrantsElement>;
@@ -1844,6 +1842,8 @@ declare module "@stencil/core" {
             "ticket-graph": LocalJSX.TicketGraph & JSXBase.HTMLAttributes<HTMLTicketGraphElement>;
             "tickets-page": LocalJSX.TicketsPage & JSXBase.HTMLAttributes<HTMLTicketsPageElement>;
             "tickets-table": LocalJSX.TicketsTable & JSXBase.HTMLAttributes<HTMLTicketsTableElement>;
+            "up-prayer-notifications": LocalJSX.UpPrayerNotifications & JSXBase.HTMLAttributes<HTMLUpPrayerNotificationsElement>;
+            "up-prayer-requests": LocalJSX.UpPrayerRequests & JSXBase.HTMLAttributes<HTMLUpPrayerRequestsElement>;
             "users-table": LocalJSX.UsersTable & JSXBase.HTMLAttributes<HTMLUsersTableElement>;
             "work-estimates": LocalJSX.WorkEstimates & JSXBase.HTMLAttributes<HTMLWorkEstimatesElement>;
             "work-records": LocalJSX.WorkRecords & JSXBase.HTMLAttributes<HTMLWorkRecordsElement>;
