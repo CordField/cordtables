@@ -5,8 +5,10 @@ interface Notification {
   type: 'error' | 'success' | 'info';
 }
 
+
 export class Globals {
   storeObject = {
+    appState: 0,
     editMode: false,
     editModeWidth: 0,
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
@@ -16,6 +18,9 @@ export class Globals {
     isAdmin: localStorage.getItem('isAdmin'),
     notifications: (JSON.parse(localStorage.getItem('notifications')) ?? []) as Notification[],
     userId: JSON.parse(localStorage.getItem('userId')) as number | undefined,
+    siteTextLanguages: [],
+    siteTextStrings: [],
+    siteTextTranslations: {}
   };
   public globalStore = createStore(this.storeObject);
 
