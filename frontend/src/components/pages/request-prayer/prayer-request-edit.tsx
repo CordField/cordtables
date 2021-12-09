@@ -10,13 +10,19 @@ class UpdatePrayerRequestRequest {
     token: string;
     prayerRequest: {
         id: number;
+        language_id: number;
+        sensitivity: string;
         parent: number;
-        subject: string;
+        translator: number;
+        location: string;
+        title: string;
         content: string;
+        reviewed: boolean;
+        prayer_type: string;
     };
 }
 class SubmitPrayerRequestResponse extends GenericResponse {
-    prayerRequest: CommonPrayerRequest;
+    prayerRequest: UpPrayerRequest;
 }
 
 
@@ -29,13 +35,13 @@ class GetPrayerRequestResponse extends GenericResponse {
     prayerRequest: GetPrayerRequest;
 }
 
-class CommonPrayerRequestListRequest {
+class UpPrayerRequestListRequest {
     token: string;
 }
 
-class CommonPrayerRequestListResponse {
+class UpPrayerRequestListResponse {
     error: ErrorType;
-    prayerRequests: CommonPrayerRequest[];
+    prayerRequests: UpPrayerRequest[];
 }
 
 class AdminPeopleListRequest {
@@ -55,26 +61,56 @@ class AdminPeopleListResponse {
 export class PrayerRequestEditPage {
     @Prop() requestId: any;
     @Prop() history: RouterHistory;
-    @State() prayerRequestsResponse: CommonPrayerRequestListResponse;
+    @State() prayerRequestsResponse: UpPrayerRequestListResponse;
     @State() peoplesResponse: AdminPeopleListResponse;
     @State() getResponse: any;
 
+    newLanguage_id: number;
+    newSensitivity: string;
     newParent: number;
+    newTranslator: number;
+    newLocation: string;
+    newTitle: string;
     newContent: string;
-    newSubject: string;
+    newReviewed: boolean;
+    newPrayer_type: string;
 
     
     
+    language_idChange(event){
+        this.newLanguage_id = event.target.value;
+    }
+
+    sensitivityChange(event){
+        this.newSensitivity = event.target.value;
+    }
+
     parentChange(event){
         this.newParent = event.target.value;
     }
 
-    subjectChange(event){
-        this.newSubject = event.target.value;
+    translatorChange(event){
+        this.newTranslator = event.target.value;
+    }
+
+    locationChange(event){
+        this.newLocation = event.target.value;
+    }
+
+    titleChange(event){
+        this.newTitle = event.target.value;
     }
 
     contentChange(event){
         this.newContent = event.target.value;
+    }
+
+    reviewedChange(event){
+        this.newReviewed = event.target.value;
+    }
+
+    prayer_typeChange(event){
+        this.newPrayer_type = event.target.value;
     }
 
     updatePrayerRequest = async (event: MouseEvent) => {
@@ -85,9 +121,15 @@ export class PrayerRequestEditPage {
             token: globals.globalStore.state.token,
             prayerRequest: {
                 id: this.getResponse.id,
+                language_id: this.newLanguage_id,
+                sensitivity: this.newSensitivity,
                 parent: this.newParent,
-                subject: this.newSubject,
+                translator: this.newTranslator,
+                location: this.newLocation,
+                title: this.newTitle,
                 content: this.newContent,
+                reviewed: this.newReviewed,
+                prayer_type: this.newPrayer_type,
             },
         });
       
@@ -110,9 +152,15 @@ export class PrayerRequestEditPage {
         });
         if(getRequestResponse.error === ErrorType.NoError) {
             this.getResponse = getRequestResponse.prayerRequest
-            this.newParent = this.getResponse.parent;
-            this.newSubject = this.getResponse.subject;
-            this.newContent = this.getResponse.content;
+            this.newLanguage_id = this.getResponse.language_id
+            this.newSensitivity = this.getResponse.sensitivity
+            this.newParent = this.getResponse.parent
+            this.newTranslator = this.getResponse.translator
+            this.newLocation = this.getResponse.location
+            this.newTitle = this.getResponse.title
+            this.newContent = this.getResponse.content
+            this.newReviewed = this.getResponse.reviewed
+            this.newPrayer_type = this.getResponse.prayer_type
         }
         else {
             this.history.replace('/page/not-found')
@@ -120,7 +168,7 @@ export class PrayerRequestEditPage {
     }
 
     async getParentsList() {
-        this.prayerRequestsResponse = await fetchAs<CommonPrayerRequestListRequest, CommonPrayerRequestListResponse>('common-prayer-requests/list', {
+        this.prayerRequestsResponse = await fetchAs<UpPrayerRequestListRequest, UpPrayerRequestListResponse>('up-prayer-requests/list', {
           token: globals.globalStore.state.token,
         });
     }
@@ -150,23 +198,65 @@ export class PrayerRequestEditPage {
                 </ion-buttons>
             </ion-toolbar>
             <ion-grid>
-            <ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Language ID</ion-label>
+                            <ion-input name="language_id" value={this.getResponse.language_id} onInput={event => this.language_idChange(event)}></ion-input>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Sensitivity</ion-label>
+                            <ion-select okText="Ok" value={this.getResponse.sensitivity} onIonChange={event => this.sensitivityChange(event)} cancelText="Cancel">
+                                <ion-select-option value="Low">Low</ion-select-option>
+                                <ion-select-option value="Medium">Medium</ion-select-option>
+                                <ion-select-option value="High">High</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
                     <ion-col>
                         <ion-item>
                             <ion-label>Parent</ion-label>
                             <ion-select okText="Ok" value={this.getResponse.parent} onIonChange={event => this.parentChange(event)} cancelText="Cancel">
                                 {this.prayerRequestsResponse.prayerRequests.map(option => (
-                                    <ion-select-option onLoad={this.loadParent} value={option.id}>{option.subject}</ion-select-option>
+                                    <ion-select-option onLoad={this.loadParent} value={option.id}>{option.title}</ion-select-option>
                                 ))}
                             </ion-select>
                         </ion-item>
                     </ion-col>
                 </ion-row>
+
                 <ion-row>
                     <ion-col>
                         <ion-item>
-                            <ion-label>Subject</ion-label>
-                            <ion-input name="subject" value={this.getResponse.subject} onInput={event => this.subjectChange(event)}></ion-input>
+                            <ion-label>Translator</ion-label>
+                            <ion-input name="translator" value={this.getResponse.translator} onInput={event => this.translatorChange(event)}></ion-input>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Location</ion-label>
+                            <ion-input name="location" value={this.getResponse.location} onInput={event => this.locationChange(event)}></ion-input>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Title</ion-label>
+                            <ion-input name="title" value={this.getResponse.title} onInput={event => this.titleChange(event)}></ion-input>
                         </ion-item>
                     </ion-col>
                 </ion-row>
@@ -179,6 +269,31 @@ export class PrayerRequestEditPage {
                     </ion-col>
                 </ion-row>
 
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Reviewed</ion-label>
+                            <ion-select okText="Ok" value={this.getResponse.reviewed} onIonChange={event => this.reviewedChange(event)} cancelText="Cancel">
+                                <ion-select-option value="">Null</ion-select-option>
+                                <ion-select-option value={true}>True</ion-select-option>
+                                <ion-select-option value={false}>False</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Prayer Type</ion-label>
+                            <ion-select okText="Ok" value={this.getResponse.prayer_type} onIonChange={event => this.prayer_typeChange(event)} cancelText="Cancel">
+                                {/* <ion-select-option value="">Select Prayer Type</ion-select-option> */}
+                                <ion-select-option value="Request">Request</ion-select-option>
+                                <ion-select-option value="Update">Update</ion-select-option>
+                                <ion-select-option value="Celebration">Celebration</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
                 
                 <ion-row>
                     <ion-col><ion-button  onClick={this.updatePrayerRequest} >Update</ion-button></ion-col>

@@ -69,6 +69,19 @@ create table common.site_text_translations(
   unique (language, site_text)
 );
 
+create table common.site_text_languages(
+  id serial primary key,
+
+  language int not null references common.languages(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
+);
+
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
 
 -- todo
@@ -669,37 +682,6 @@ create table common.stage_notifications(
 	on_exit bool default false,
 	person int references admin.people(id),
   
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
--- PRAYER --------------------------------------------------------------
-
-create table common.prayer_requests(
-	id serial primary key,
-
-  parent int references common.prayer_requests(id),
-  subject varchar(255) default null,
-  content text not null,
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
-create table common.prayer_notifications(
-	id serial primary key,
-
-  request int references common.prayer_requests(id),
-  person int references admin.people(id),
-
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

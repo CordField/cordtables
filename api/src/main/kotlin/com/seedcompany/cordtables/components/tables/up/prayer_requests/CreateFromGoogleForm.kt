@@ -1,11 +1,11 @@
 package com.seedcompany.cordtables.components.tables.up.prayer_requests
 
-import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.common.prayer_requests.Read
-import com.seedcompany.cordtables.components.tables.common.prayer_requests.Update
+import com.seedcompany.cordtables.components.tables.sil.language_index.languageIndex
+import com.seedcompany.cordtables.components.user.Register
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
+
 enum class UpPrayerTypes{
   Request,
   Update,
   Celebration,
 }
-
 data class PrayerForm (
-  val creatorEmail: String,
-  val translatorEmail: String?,
-  val ethCode: String?,
-  val sensitivity: CommonSensitivity = CommonSensitivity.High,
+  val creatorEmail: String, // admin.people // admin.users // created_by, updated_by, owning_person
+  val translatorEmail: String?, // admin.people // admin.users // translator
+  val ethCode: String?, // sil.language_index lang field value
+  val sensitivity: String?, // CommonSensitivity = CommonSensitivity.High,
   val location: String?,
-  val prayerType: UpPrayerTypes,
+  val prayerType: String,
   val title: String,
   val content: String,
 )
@@ -55,6 +55,9 @@ class CreateFromGoogleForm(
 
   @Autowired
   val read: Read,
+
+  @Autowired
+  val reg: Register
 ) {
   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
@@ -79,10 +82,106 @@ class CreateFromGoogleForm(
   @PostMapping("up-prayer-requests/create-from-form")
   @ResponseBody
   fun createHandler(@RequestBody req: UpPrayerRequestsCreateFromFormRequest): UpPrayerRequestsCreateFromFormResponse {
+    var creatorUserId: Int?
+    var translatorUserId: Int?
+
+    creatorUserId = checkUserExists(req.prayerForm.creatorEmail)
+    translatorUserId = req.prayerForm.translatorEmail?.let { checkUserExists(it) }
+
+    var langExists = req.prayerForm.ethCode?.let { getSilLanguageData(it) }
+
+    if(creatorUserId == 0){
+      val pass = util.encoder.encode("somepassword")
+      val tkn = util.createToken()
+      reg.registerDB(req.prayerForm.creatorEmail, pass, tkn)
+      creatorUserId = checkUserExists(req.prayerForm.creatorEmail)
+    }
+
+    if(translatorUserId == 0){
+      val pass = util.encoder.encode("somepassword")
+      val tkn = util.createToken()
+      req.prayerForm.translatorEmail?.let { reg.registerDB(it, pass, tkn) }
+      translatorUserId = req.prayerForm.translatorEmail?.let { checkUserExists(it) }
+    }
+
+    val id = jdbcTemplate.queryForObject(
+      """
+            insert into up.prayer_requests(language_id, sensitivity, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
+                values(
+                    ?,
+                    ?::common.sensitivity,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    false,
+                    ?::up.prayer_type,
+                    ?,
+                    ?,
+                    ?,
+                    1
+                )
+            returning id;
+        """.trimIndent(),
+      Int::class.java,
+      langExists!!.common_id,
+      req.prayerForm.sensitivity,
+      translatorUserId,
+      req.prayerForm.location,
+      req.prayerForm.title,
+      req.prayerForm.content,
+      req.prayerForm.prayerType,
+      creatorUserId,
+      creatorUserId,
+      creatorUserId,
+    )
+    return UpPrayerRequestsCreateFromFormResponse(error = ErrorType.NoError, id = id)
+  }
+
+  fun getSilLanguageData(ethCode: String): languageIndex {
+    var data = jdbcTemplate.query(
+      """
+        SELECT * FROM sil.language_index WHERE lang='${ethCode}'
+      """.trimIndent()
+    ){ rs, rowNum ->
+      languageIndex(
+        rs.getInt("id"),
+        rs.getInt("common_id"),
+        rs.getString("lang"),
+        rs.getString("country"),
+        rs.getString("name_type"),
+        rs.getString("name"),
+      )
+    }
+    return data.first()
+  }
+
+  fun checkDataExists(table: String, field: String, fieldValue: String): Int {
+    var id: Int?
+    id = jdbcTemplate.queryForObject(
+      """
+          SELECT id FROM $table WHERE $field = ?;
+      """.trimIndent(),
+      Int::class.java,
+      fieldValue,
+    )
+    return  id;
+  }
 
 
-
-    return UpPrayerRequestsCreateFromFormResponse(error = ErrorType.NoError, id = 42)
+  fun checkUserExists(email: String):Int{
+    return try {
+      jdbcTemplate.queryForObject(
+        """
+            SELECT id FROM admin.users WHERE email = ?;
+          """.trimIndent(),
+        Int::class.java,
+        email
+        )
+    }
+    catch (e: EmptyResultDataAccessException){
+      0
+    }
   }
 
 }

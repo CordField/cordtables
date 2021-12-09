@@ -53,8 +53,8 @@ create type admin.table_name as enum (
   'common.people_graph',
   'common.people_to_org_relationships',
   'common.posts',
-  'common.prayer_requests',
-  'common.prayer_notifications',
+  'up.prayer_requests',
+  'up.prayer_notifications',
   'common.scripture_references',
   'common.site_text_strings',
   'common.site_text_translations',
@@ -355,37 +355,4 @@ create table admin.email_tokens (
 	token varchar(512) unique not null,
 	user_id int not null references admin.users(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP
-);
-
-DO $$ BEGIN
-    create type admin.email_sent_type as enum (
-          'Register',
-          'PasswordReset'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-DO $$ BEGIN
-    create type admin.email_response_type as enum (
-          'Bounce',
-          'Complaint',
-          'Delivery'
-	);
-	EXCEPTION
-	WHEN duplicate_object THEN null;
-END; $$;
-
-create table if not exists admin.emails_sent (
-    id serial primary key,
-    email varchar(255) not null,
-    message_id varchar(64) not null,
-    type admin.email_sent_type not null,
-    response admin.email_response_type,
-    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-create table if not exists admin.emails_blocked (
-    email varchar(255) primary key,
-    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

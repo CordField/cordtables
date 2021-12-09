@@ -6,26 +6,35 @@ import { fetchAs } from '../../../common/utility';
 import { v4 as uuidv4 } from 'uuid';
 import '@ionic/core'
 
+
+    
 class SubmitPrayerRequestRequest {
     token: string;
     prayerRequest: {
+        language_id: number;
+        sensitivity: string;
         parent: number;
-        subject: string;
+        translator: number;
+        location: string;
+        title: string;
         content: string;
+        reviewed: boolean;
+        prayer_type: string;
+
     };
 }
 class SubmitPrayerRequestResponse extends GenericResponse {
-    prayerRequest: CommonPrayerRequest;
+    prayerRequest: UpPrayerRequest;
 }
 
 
-class CommonPrayerRequestListRequest {
+class UpPrayerRequestListRequest {
     token: string;
 }
 
-class CommonPrayerRequestListResponse {
+class UpPrayerRequestListResponse {
     error: ErrorType;
-    prayerRequests: CommonPrayerRequest[];
+    prayerRequests: UpPrayerRequest[];
 }
 
 class AdminPeopleListRequest {
@@ -44,23 +53,53 @@ class AdminPeopleListResponse {
 })
 export class RequestPrayerPage {
     @Prop() history: RouterHistory;
-    @State() prayerRequestsResponse: CommonPrayerRequestListResponse;
+    @State() prayerRequestsResponse: UpPrayerRequestListResponse;
     @State() peoplesResponse: AdminPeopleListResponse;
 
+    newLanguage_id: number;
+    newSensitivity: string;
     newParent: number;
+    newTranslator: number;
+    newLocation: string;
+    newTitle: string;
     newContent: string;
-    newSubject: string;
+    newReviewed: boolean;
+    newPrayer_type: string;
+
+    language_idChange(event){
+        this.newLanguage_id = event.target.value;
+    }
+
+    sensitivityChange(event){
+        this.newSensitivity = event.target.value;
+    }
 
     parentChange(event){
         this.newParent = event.target.value;
     }
 
-    subjectChange(event){
-        this.newSubject = event.target.value;
+    translatorChange(event){
+        this.newTranslator = event.target.value;
+    }
+
+    locationChange(event){
+        this.newLocation = event.target.value;
+    }
+
+    titleChange(event){
+        this.newTitle = event.target.value;
     }
 
     contentChange(event){
         this.newContent = event.target.value;
+    }
+
+    reviewedChange(event){
+        this.newReviewed = event.target.value;
+    }
+
+    prayer_typeChange(event){
+        this.newPrayer_type = event.target.value;
     }
 
     submitPrayerRequest = async (event: MouseEvent) => {
@@ -70,9 +109,15 @@ export class RequestPrayerPage {
         const createResponse = await fetchAs<SubmitPrayerRequestRequest, SubmitPrayerRequestResponse>('prayer-requests/create', {
             token: globals.globalStore.state.token,
             prayerRequest: {
+                language_id: this.newLanguage_id,
+                sensitivity: this.newSensitivity,
                 parent: this.newParent,
-                subject: this.newSubject,
+                translator: this.newTranslator,
+                location: this.newLocation,
+                title: this.newTitle,
                 content: this.newContent,
+                reviewed: this.newReviewed,
+                prayer_type: this.newPrayer_type,
             },
         });
       
@@ -88,7 +133,7 @@ export class RequestPrayerPage {
     }
 
     async getParentsList() {
-        this.prayerRequestsResponse = await fetchAs<CommonPrayerRequestListRequest, CommonPrayerRequestListResponse>('common-prayer-requests/list', {
+        this.prayerRequestsResponse = await fetchAs<UpPrayerRequestListRequest, UpPrayerRequestListResponse>('up-prayer-requests/list', {
           token: globals.globalStore.state.token,
         });
     }
@@ -112,13 +157,34 @@ export class RequestPrayerPage {
                 </ion-buttons>
             </ion-toolbar>
             <ion-grid>
-            <ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Language ID</ion-label>
+                            <ion-input name="language_id" onInput={event => this.language_idChange(event)}></ion-input>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Sensitivity</ion-label>
+                            <ion-select okText="Ok" onIonChange={event => this.sensitivityChange(event)} cancelText="Cancel">
+                                {/* <ion-select-option value="">Select Sensitivity</ion-select-option> */}
+                                <ion-select-option value="Low">Low</ion-select-option>
+                                <ion-select-option value="Medium">Medium</ion-select-option>
+                                <ion-select-option value="High">High</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
                     <ion-col>
                         <ion-item>
                             <ion-label>Parent</ion-label>
                             <ion-select okText="Ok" onIonChange={event => this.parentChange(event)} cancelText="Cancel">
                                 {this.prayerRequestsResponse.prayerRequests.map(option => (
-                                    <ion-select-option value={option.id}>{option.subject}</ion-select-option>
+                                    <ion-select-option value={option.id}>{option.title}</ion-select-option>
                                 ))}
                             </ion-select>
                         </ion-item>
@@ -127,8 +193,24 @@ export class RequestPrayerPage {
                 <ion-row>
                     <ion-col>
                         <ion-item>
-                            <ion-label>Subject</ion-label>
-                            <ion-input name="subject" onInput={event => this.subjectChange(event)}></ion-input>
+                            <ion-label>Translator</ion-label>
+                            <ion-input name="translator" onInput={event => this.translatorChange(event)}></ion-input>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Location</ion-label>
+                            <ion-input name="location" onInput={event => this.locationChange(event)}></ion-input>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Title</ion-label>
+                            <ion-input name="title" onInput={event => this.titleChange(event)}></ion-input>
                         </ion-item>
                     </ion-col>
                 </ion-row>
@@ -140,7 +222,31 @@ export class RequestPrayerPage {
                         </ion-item>
                     </ion-col>
                 </ion-row>
-
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Reviewed</ion-label>
+                            <ion-select okText="Ok" onIonChange={event => this.reviewedChange(event)} cancelText="Cancel">
+                                <ion-select-option value="">Null</ion-select-option>
+                                <ion-select-option value="true">True</ion-select-option>
+                                <ion-select-option value="false">False</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Prayer Type</ion-label>
+                            <ion-select okText="Ok" onIonChange={event => this.prayer_typeChange(event)} cancelText="Cancel">
+                                {/* <ion-select-option value="">Select Prayer Type</ion-select-option> */}
+                                <ion-select-option value="Request">Request</ion-select-option>
+                                <ion-select-option value="Update">Update</ion-select-option>
+                                <ion-select-option value="Celebration">Celebration</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
                 
                 <ion-row>
                     <ion-col><ion-button  onClick={this.submitPrayerRequest} >Submit</ion-button></ion-col>
