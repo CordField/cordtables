@@ -65,6 +65,7 @@ class List(
                     "title",
                     "content",
                     "reviewed",
+                    "prayer_type",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -106,6 +107,9 @@ class List(
                 var reviewed: Boolean? = jdbcResult.getBoolean("reviewed")
                 if (jdbcResult.wasNull()) reviewed = null
 
+                var  prayer_type: String? = jdbcResult.getString("prayer_type")
+                if (jdbcResult.wasNull()) prayer_type = null
+
                 var created_by: Int? = jdbcResult.getInt("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
@@ -135,6 +139,7 @@ class List(
                         title = title,
                         content = content,
                         reviewed = reviewed,
+                        prayer_type = prayer_type,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

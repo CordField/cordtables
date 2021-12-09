@@ -13,6 +13,7 @@ data class prayerRequest(
     val title: String? = null,
     val content: String? = null,
     val reviewed: Boolean? = null,
+    val prayer_type: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -33,6 +34,7 @@ data class prayerRequestInput(
     val title: String? = null,
     val content: String? = null,
     val reviewed: Boolean? = null,
+    val prayer_type: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,

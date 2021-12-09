@@ -30,6 +30,7 @@ data class PrayerRequestGetData(
     val title: String? = null,
     val content: String? = null,
     val reviewed: Boolean? = null,
+    val prayer_type: String? = null,
     val created_by: Int,
 )
 
@@ -43,6 +44,7 @@ data class PrayerRequestUpdateData(
     val title: String? = null,
     val content: String? = null,
     val reviewed: Boolean? = null,
+    val prayer_type: String? = null,
     val created_by: Int,
 )
 

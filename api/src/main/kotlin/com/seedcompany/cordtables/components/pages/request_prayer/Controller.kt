@@ -54,14 +54,15 @@ class Controller (
         }
 
         var sql = """
-            SELECT a.id, a.parentRequest, a.subject, a.content, a.requestedBy,
+            SELECT a.id, a.language_id, a.sensitivity, a.parent, a.translator, a.location, a.title, a.content,  a.title, a.content, a.reviewed, a.requestedBy,
             CASE
                 WHEN created_by = (SELECT person FROM admin.tokens where token = '${req.token}') THEN TRUE
                 ELSE FALSE
             END 
               AS myRequest,
             b.id as notify FROM
-            (SELECT pr.id as id, pr.language_id, pr.sensitivity, pr. pr.parent as parent, pr.translator, pr.location,  pr.title as title, pr.content as content, pr.reviewed, pr.created_by as created_by, ap.public_full_name as requestedBy FROM up.prayer_requests as pr, admin.people as ap where pr.created_by=ap.id) as a
+            (SELECT pr.id as id, pr.language_id, pr.sensitivity, pr.parent as parent, pr.translator, pr.location,  pr.title as title, pr.content as content, pr.reviewed, pr.created_by as created_by, ap.public_full_name as requestedBy FROM 
+            up.prayer_requests as pr, admin.people as ap where pr.created_by=ap.id) as a
             LEFT JOIN (SELECT id, request FROM up.prayer_notifications WHERE person=(SELECT person FROM admin.tokens where token = '${req.token}')) as b ON a.id=b.request order by a.id desc
         """.trimIndent()
         var results = jdbcTemplate.query(sql, rowMapper)
@@ -102,6 +103,7 @@ class Controller (
                     ?,
                     ?,
                     ?::boolean,
+                    ?::up.prayer_type,
                     (
                       select person 
                       from admin.tokens 
@@ -143,7 +145,7 @@ class Controller (
     fun update(@RequestBody req: CommonPrayerRequestsUpdateRequest): CommonPrayerRequestsCreateResponse{
         val id = jdbcTemplate.queryForObject(
             """
-                UPDATE up.prayer_requests SET language_id=?, sensitivity=?::common.sensitivity, parent=?, translator=?, location=?,  title=?, content=?, reviewed=?::boolean WHERE id=? AND created_by=(
+                UPDATE up.prayer_requests SET language_id=?, sensitivity=?::common.sensitivity, parent=?, translator=?, location=?,  title=?, content=?, reviewed=?::boolean, prayer_type=?::up.prayer_type WHERE id=? AND created_by=(
                     select person 
                     from admin.tokens 
                     where token = ?
@@ -158,6 +160,7 @@ class Controller (
             req.prayerRequest.title,
             req.prayerRequest.content,
             req.prayerRequest.reviewed,
+            req.prayerRequest.prayer_type,
             req.prayerRequest.id,
             req.token,
         )
@@ -180,6 +183,7 @@ class Controller (
                 resultSet.getString("title"),
                 resultSet.getString("content"),
                 resultSet.getBoolean("reviewed"),
+                resultSet.getString("prayer_type"),
                 resultSet.getInt("created_by"),
             )
         }
@@ -204,6 +208,7 @@ class Controller (
                 title = reData.title,
                 content = reData.content,
                 reviewed = reData.reviewed,
+                prayer_type = reData.prayer_type,
                 created_by = reData.created_by
             )
             return PrayerRequestsGetResponse(ErrorType.NoError, prayerRequest = data)

@@ -10,6 +10,7 @@ class UpPrayerRequest {
     title?: string | undefined;
     content?: string | undefined;
     reviewed?: boolean | undefined;
+    prayer_type?: string | undefined;
 
     created_at?: string | undefined;
     created_by?: number | undefined;
