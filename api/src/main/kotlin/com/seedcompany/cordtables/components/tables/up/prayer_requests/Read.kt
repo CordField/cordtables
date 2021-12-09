@@ -67,6 +67,7 @@ class Read(
                     "title",
                     "content",
                     "reviewed",
+                    "prayer_type",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -108,6 +109,9 @@ class Read(
                 var reviewed: Boolean? = jdbcResult.getBoolean("reviewed")
                 if (jdbcResult.wasNull()) reviewed = null
 
+                var  prayer_type: String? = jdbcResult.getString("prayer_type")
+                if (jdbcResult.wasNull()) prayer_type = null
+
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
@@ -137,6 +141,7 @@ class Read(
                         title = title,
                         content = content,
                         reviewed = reviewed,
+                        prayer_type = prayer_type,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

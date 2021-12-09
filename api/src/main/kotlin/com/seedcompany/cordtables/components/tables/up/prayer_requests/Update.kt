@@ -124,6 +124,16 @@ class Update(
                 cast = "::BOOLEAN"
               )
             }
+            "prayer_type" -> {
+              util.updateField(
+                token = req.token,
+                table = "up.prayer_requests",
+                column = "prayer_type",
+                id = req.id,
+                value = req.value,
+                cast = "::up.prayer_type"
+              )
+            }
             "owning_person" -> {
                 util.updateField(
                     token = req.token,

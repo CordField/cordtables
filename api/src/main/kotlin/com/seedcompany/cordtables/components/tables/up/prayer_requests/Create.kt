@@ -49,7 +49,7 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into up.prayer_requests(language_id, sensitivity, parent, translator, location, title, content, reviewed, created_by, modified_by, owning_person, owning_group)
+            insert into up.prayer_requests(language_id, sensitivity, parent, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
                     ?::common.sensitivity,
@@ -59,6 +59,7 @@ class Create(
                     ?,
                     ?,
                     ?::boolean,
+                    ?::up.prayer_type,
                     (
                       select person 
                       from admin.tokens 

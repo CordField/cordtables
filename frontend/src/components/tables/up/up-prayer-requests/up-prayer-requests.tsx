@@ -16,6 +16,7 @@ class CreatePrayerRequestExRequest {
     title: string;
     content: string;
     reviewed: boolean;
+    prayer_type: string;
   };
 }
 class CreatePrayerRequestExResponse extends GenericResponse {
@@ -70,6 +71,7 @@ export class UpPrayerRequests {
   newTitle: string;
   newContent: string;
   newReviewed: boolean;
+  newPrayer_type
   
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<UpPrayerRequestUpdateRequest, UpPrayerRequestUpdateResponse>('up-prayer-requests/update-read', {
@@ -151,6 +153,10 @@ export class UpPrayerRequests {
     this.newReviewed = event.target.value;
   }
 
+  prayer_typeChange(event) {
+    this.newPrayer_type = event.target.value;
+  }
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -166,6 +172,7 @@ export class UpPrayerRequests {
         title: this.newTitle,
         content: this.newContent,
         reviewed: this.newReviewed,
+        prayer_type: this.newPrayer_type,
       },
     });
 
@@ -235,7 +242,6 @@ export class UpPrayerRequests {
       editable: true,
       updateFn: this.handleUpdate,
     },
-
     {
       field: 'content',
       displayName: 'Content',
@@ -254,8 +260,18 @@ export class UpPrayerRequests {
       ],
       updateFn: this.handleUpdate,
     },
-
-
+    {
+      field: 'prayer_type',
+      displayName: 'Prayer Type',
+      width: 200,
+      editable: true,
+      selectOptions: [
+        {display: 'Request', value: 'Request'},
+        {display: 'Update', value: 'Update'},
+        {display: 'Celebration', value: 'Celebration'},
+      ],
+      updateFn: this.handleUpdate,
+    },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -396,7 +412,19 @@ export class UpPrayerRequests {
               </span>
             </div>  
 
-            
+            <div id="prayer_type-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="prayer_type">Prayer Type</label>
+              </span>
+              <span class="form-thing">
+                <select id="prayer_type" name="prayer_type" onInput={event => this.prayer_typeChange(event)}>
+                    <option value="">Select Reviewed</option>
+                    <option value="Request" selected={this.newPrayer_type === 'Request'}>Request</option>
+                    <option value="Update" selected={this.newPrayer_type === 'Update'}>Update</option>
+                    <option value="Celebration" selected={this.newPrayer_type === 'Celebration'}>Celebration</option>
+                </select>
+              </span>
+            </div>  
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
