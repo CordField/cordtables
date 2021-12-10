@@ -1,3 +1,4 @@
+import { siteTextService } from "../core/site-text.service";
 export default async () => {
   /**
    * The code to be executed should be placed within a default function that is
@@ -12,13 +13,9 @@ const initApp = () => {
   console.info("initializing app");
 
   window.addEventListener('appload', (event: any) => {
-    console.info("Adding appload event", event.detail.namespace);
-    if(event.detail.namespace === 'Cordtable') {
-      loadLanguages();
+    console.debug("Adding appload event", event.detail.namespace);
+    if(event.detail.namespace === 'app') {
+      siteTextService.load();
     }
   });
-}
-
-const loadLanguages = () => {
-
 }
