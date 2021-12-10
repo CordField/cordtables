@@ -10,8 +10,10 @@ create type up.prayer_type as enum (
 create table up.prayer_requests(
 	id serial primary key,
 
-  language_id int references common.languages(id),
+  request_language_id int references common.languages(id),
+  target_language_id int references common.languages(id),
   sensitivity common.sensitivity default 'High',
+  organization_name varchar(64),
   parent int references up.prayer_requests(id),
   translator int references admin.people(id),
   location varchar(64),
