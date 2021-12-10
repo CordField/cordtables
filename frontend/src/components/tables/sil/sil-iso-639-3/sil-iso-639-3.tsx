@@ -7,13 +7,15 @@ import { globals } from '../../../../core/global.store';
 
 class SilIso6393ListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilIso6393ListResponse {
   error: ErrorType;
+  size: number;
   iso6393s: SilIso6393[];
 }
-
 
 @Component({
   tag: 'sil-iso-639-3',
@@ -23,12 +25,15 @@ class SilIso6393ListResponse {
 export class SilIso6393s {
 
   @State() iso6393sResponse: SilIso6393ListResponse;
+  @State() currentPage: number = 1;
 
   
 
-  async getList() {
+  async getList(page) {
     this.iso6393sResponse = await fetchAs<SilIso6393ListRequest, SilIso6393ListResponse>('sil-iso-639-3/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
 
@@ -126,7 +131,7 @@ export class SilIso6393s {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -137,7 +142,7 @@ export class SilIso6393s {
         <slot></slot>
         {/* table abstraction */}
         {this.iso6393sResponse && <cf-table rowData={this.iso6393sResponse.iso6393s} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393sResponse.size} results-per-page="50" page-url="sil-iso-639-3"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 

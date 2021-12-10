@@ -7,10 +7,13 @@ import { globals } from '../../../../core/global.store';
 
 class SilLanguageIndexListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilLanguageIndexListResponse {
   error: ErrorType;
+  size: number;
   languageIndexes: SilLanguageIndex[];
 }
 
@@ -23,12 +26,14 @@ class SilLanguageIndexListResponse {
 export class SilLanguageIndexs {
 
   @State() languageIndexesResponse: SilLanguageIndexListResponse;
-
+  @State() currentPage: number = 1;
   
 
-  async getList() {
+  async getList(page) {
     this.languageIndexesResponse = await fetchAs<SilLanguageIndexListRequest, SilLanguageIndexListResponse>('sil-language-index/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
 
@@ -108,7 +113,7 @@ export class SilLanguageIndexs {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -119,7 +124,7 @@ export class SilLanguageIndexs {
         <slot></slot>
         {/* table abstraction */}
         {this.languageIndexesResponse && <cf-table rowData={this.languageIndexesResponse.languageIndexes} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.languageIndexesResponse.size} results-per-page="50" page-url="sil-language-index"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 

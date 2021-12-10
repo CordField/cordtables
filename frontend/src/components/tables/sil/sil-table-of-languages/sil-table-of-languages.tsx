@@ -7,10 +7,13 @@ import { globals } from '../../../../core/global.store';
 
 class SilTableOfLanguageListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilTableOfLanguageListResponse {
   error: ErrorType;
+  size: number;
   tableOfLanguages: SilTableOfLanguage[];
 }
 
@@ -21,14 +24,14 @@ class SilTableOfLanguageListResponse {
   shadow: true,
 })
 export class SilTableOfLanguages {
-
   @State() tableOfLanguagesResponse: SilTableOfLanguageListResponse;
+  @State() currentPage: number = 1;
 
-  
-
-  async getList() {
+  async getList(page) {
     this.tableOfLanguagesResponse = await fetchAs<SilTableOfLanguageListRequest, SilTableOfLanguageListResponse>('sil-table-of-languages/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
 
@@ -226,7 +229,7 @@ export class SilTableOfLanguages {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -237,7 +240,7 @@ export class SilTableOfLanguages {
         <slot></slot>
         {/* table abstraction */}
         {this.tableOfLanguagesResponse && <cf-table rowData={this.tableOfLanguagesResponse.tableOfLanguages} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.tableOfLanguagesResponse.size} results-per-page="50" page-url="sil-table-of-languages"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 

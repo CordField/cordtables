@@ -7,10 +7,13 @@ import { globals } from '../../../../core/global.store';
 
 class SilTableOfCountryListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilTableOfCountryListResponse {
   error: ErrorType;
+  size: number;
   tableOfCountries: SilTableOfCountry[];
 }
 
@@ -21,14 +24,14 @@ class SilTableOfCountryListResponse {
   shadow: true,
 })
 export class SilTableOfCountrys {
-
   @State() tableOfCountriesResponse: SilTableOfCountryListResponse;
+  @State() currentPage: number = 1;
 
-  
-
-  async getList() {
+  async getList(page) {
     this.tableOfCountriesResponse = await fetchAs<SilTableOfCountryListRequest, SilTableOfCountryListResponse>('sil-table-of-countries/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
 
@@ -162,7 +165,7 @@ export class SilTableOfCountrys {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -173,7 +176,7 @@ export class SilTableOfCountrys {
         <slot></slot>
         {/* table abstraction */}
         {this.tableOfCountriesResponse && <cf-table rowData={this.tableOfCountriesResponse.tableOfCountries} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.tableOfCountriesResponse.size} results-per-page="50" page-url="sil-table-of-countries"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 

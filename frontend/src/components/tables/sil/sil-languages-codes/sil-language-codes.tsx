@@ -7,10 +7,13 @@ import { globals } from '../../../../core/global.store';
 
 class SilLanguageCodeListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilLanguageCodeListResponse {
   error: ErrorType;
+  size: number;
   languageCodes: SilLanguageCode[];
 }
 
@@ -23,12 +26,14 @@ class SilLanguageCodeListResponse {
 export class SilLanguageCodes {
 
   @State() languageCodesResponse: SilLanguageCodeListResponse;
-
+  @State() currentPage: number = 1;
   
 
-  async getList() {
+  async getList(page) {
     this.languageCodesResponse = await fetchAs<SilLanguageCodeListRequest, SilLanguageCodeListResponse>('sil-language-codes/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
 
@@ -102,7 +107,7 @@ export class SilLanguageCodes {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -113,7 +118,7 @@ export class SilLanguageCodes {
         <slot></slot>
         {/* table abstraction */}
         {this.languageCodesResponse && <cf-table rowData={this.languageCodesResponse.languageCodes} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.languageCodesResponse.size} results-per-page="50" page-url="sil-language-codes"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 

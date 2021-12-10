@@ -7,10 +7,13 @@ import { globals } from '../../../../core/global.store';
 
 class SilIso6393RetirementListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilIso6393RetirementListResponse {
   error: ErrorType;
+  size: number;
   iso6393Retirements: SilIso6393Retirement[];
 }
 
@@ -23,12 +26,14 @@ class SilIso6393RetirementListResponse {
 export class SilIso6393Retirements {
 
   @State() iso6393RetirementsResponse: SilIso6393RetirementListResponse;
-
+  @State() currentPage: number = 1;
   
 
-  async getList() {
+  async getList(page) {
     this.iso6393RetirementsResponse = await fetchAs<SilIso6393RetirementListRequest, SilIso6393RetirementListResponse>('sil-iso-639-3-retirements/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
 
@@ -52,29 +57,29 @@ export class SilIso6393Retirements {
       editable: false,
     },
     {
-        field: 'ret_reason',
-        displayName: 'Ret Reason',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'change_to',
-        displayName: 'Change To',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'ret_remedy',
-        displayName: 'Ret Remedy',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'effective',
-        displayName: 'Effective',
-        width: 200,
-        editable: false,
-      },
+      field: 'ret_reason',
+      displayName: 'Ret Reason',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'change_to',
+      displayName: 'Change To',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'ret_remedy',
+      displayName: 'Ret Remedy',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'effective',
+      displayName: 'Effective',
+      width: 200,
+      editable: false,
+    },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -114,7 +119,7 @@ export class SilIso6393Retirements {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -125,7 +130,7 @@ export class SilIso6393Retirements {
         <slot></slot>
         {/* table abstraction */}
         {this.iso6393RetirementsResponse && <cf-table rowData={this.iso6393RetirementsResponse.iso6393Retirements} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393RetirementsResponse.size} results-per-page="50" page-url="sil-iso-639-3-retirements"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 

@@ -7,10 +7,13 @@ import { globals } from '../../../../core/global.store';
 
 class SilTableOfLanguagesInCountryListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilTableOfLanguagesInCountryListResponse {
   error: ErrorType;
+  size: number;
   tableOfLanguagesInCountries: SilTableOfLanguagesInCountry[];
 }
 
@@ -21,18 +24,16 @@ class SilTableOfLanguagesInCountryListResponse {
   shadow: true,
 })
 export class SilTableOfLanguagesInCountrys {
-
   @State() tableOfLanguagesInCountriesResponse: SilTableOfLanguagesInCountryListResponse;
+  @State() currentPage: number = 1;
 
-  
-
-  async getList() {
+  async getList(page) {
     this.tableOfLanguagesInCountriesResponse = await fetchAs<SilTableOfLanguagesInCountryListRequest, SilTableOfLanguagesInCountryListResponse>('sil-table-of-languages-in-country/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
-
-
 
   columnData: ColumnDescription[] = [
     {
@@ -41,10 +42,6 @@ export class SilTableOfLanguagesInCountrys {
       width: 50,
       editable: false,
     },
-
-
-
-
     {
       field: 'iso_639',
       displayName: 'ISO 639',
@@ -142,53 +139,53 @@ export class SilTableOfLanguagesInCountrys {
         editable: false,
     },
     {
-    field: 'function_code',
-    displayName: 'Function Code',
-    width: 200,
-    editable: false,
+      field: 'function_code',
+      displayName: 'Function Code',
+      width: 200,
+      editable: false,
     },
     {
-    field: 'function_label',
-        displayName: 'Function Label',
+      field: 'function_label',
+      displayName: 'Function Label',
+      width: 200,
+      editable: false,
+    },
+    {
+        field: 'institutional',
+        displayName: 'Institutional',
         width: 200,
         editable: false,
-        },
-        {
-            field: 'institutional',
-            displayName: 'Institutional',
-            width: 200,
-            editable: false,
-        },
-        {
-            field: 'developing',
-            displayName: 'Developing',
-            width: 200,
-            editable: false,
-        },
-        {
-            field: 'vigorous',
-            displayName: 'Vigorous',
-            width: 200,
-            editable: false,
-        },
-        {
-            field: 'in_trouble',
-            displayName: 'In Trouble',
-            width: 200,
-            editable: false,
-        },
-        {
-            field: 'dying',
-            displayName: 'Dying',
-            width: 200,
-            editable: false,
-        },
-        {
-            field: 'extinct',
-            displayName: 'Extinct',
-            width: 200,
-            editable: false,
-        },
+    },
+    {
+        field: 'developing',
+        displayName: 'Developing',
+        width: 200,
+        editable: false,
+    },
+    {
+        field: 'vigorous',
+        displayName: 'Vigorous',
+        width: 200,
+        editable: false,
+    },
+    {
+        field: 'in_trouble',
+        displayName: 'In Trouble',
+        width: 200,
+        editable: false,
+    },
+    {
+        field: 'dying',
+        displayName: 'Dying',
+        width: 200,
+        editable: false,
+    },
+    {
+        field: 'extinct',
+        displayName: 'Extinct',
+        width: 200,
+        editable: false,
+    },
 
 
 
@@ -231,7 +228,7 @@ export class SilTableOfLanguagesInCountrys {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -242,7 +239,7 @@ export class SilTableOfLanguagesInCountrys {
         <slot></slot>
         {/* table abstraction */}
         {this.tableOfLanguagesInCountriesResponse && <cf-table rowData={this.tableOfLanguagesInCountriesResponse.tableOfLanguagesInCountries} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.tableOfLanguagesInCountriesResponse.size} results-per-page="50" page-url="sil-table-of-languages-in-country"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 

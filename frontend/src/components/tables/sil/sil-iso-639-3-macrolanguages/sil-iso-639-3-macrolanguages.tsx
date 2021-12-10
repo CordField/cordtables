@@ -7,10 +7,13 @@ import { globals } from '../../../../core/global.store';
 
 class SilIso6393MacrolanguageListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilIso6393MacrolanguageListResponse {
   error: ErrorType;
+  size: number;
   iso6393Macrolanguages: SilIso6393Macrolanguage[];
 }
 
@@ -23,15 +26,15 @@ class SilIso6393MacrolanguageListResponse {
 export class SilIso6393Macrolanguages {
 
   @State() iso6393MacrolanguagesResponse: SilIso6393MacrolanguageListResponse;
-
+  @State() currentPage: number = 1;
   
-
-  async getList() {
+  async getList(page) {
     this.iso6393MacrolanguagesResponse = await fetchAs<SilIso6393MacrolanguageListRequest, SilIso6393MacrolanguageListResponse>('sil-iso-639-3-macrolanguages/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
-
 
   columnData: ColumnDescription[] = [
     {
@@ -53,11 +56,11 @@ export class SilIso6393Macrolanguages {
       editable: false,
     },
     {
-        field: 'i_status',
-        displayName: 'I Status',
-        width: 200,
-        editable: false,
-      },
+      field: 'i_status',
+      displayName: 'I Status',
+      width: 200,
+      editable: false,
+    },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -97,7 +100,7 @@ export class SilIso6393Macrolanguages {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -108,7 +111,7 @@ export class SilIso6393Macrolanguages {
         <slot></slot>
         {/* table abstraction */}
         {this.iso6393MacrolanguagesResponse && <cf-table rowData={this.iso6393MacrolanguagesResponse.iso6393Macrolanguages} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393MacrolanguagesResponse.size} results-per-page="50" page-url="sil-iso-639-3-macrolanguages"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 

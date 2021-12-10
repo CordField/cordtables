@@ -19,7 +19,9 @@ import javax.sql.DataSource
 
 
 data class SilIso6393ListRequest(
-    val token: String?
+    val token: String?,
+    val page: Int,
+    val resultsPerPage: Int
 )
 
 data class SilIso6393ListResponse(
@@ -48,13 +50,17 @@ class List(
         var data: MutableList<iso6393> = mutableListOf()
         if (req.token == null) return SilIso6393ListResponse(ErrorType.TokenNotFound, mutableListOf())
 
+        var offset = (req.page-1)*req.resultsPerPage
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+        paramSource.addValue("limit", req.resultsPerPage)
+        paramSource.addValue("offset", offset)
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "sil.iso_639_3",
                 filter = "order by id",
+                page = req.page,
                 columns = arrayOf(
                     "id",
                     "_id",

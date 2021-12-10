@@ -7,10 +7,13 @@ import { globals } from '../../../../core/global.store';
 
 class SilIso6393NameListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilIso6393NameListResponse {
   error: ErrorType;
+  size: number;
   iso6393Names: SilIso6393Name[];
 }
 
@@ -23,12 +26,14 @@ class SilIso6393NameListResponse {
 export class SilIso6393Names {
 
   @State() iso6393NamesResponse: SilIso6393NameListResponse;
-
+  @State() currentPage: number = 1;
   
 
-  async getList() {
+  async getList(page) {
     this.iso6393NamesResponse = await fetchAs<SilIso6393NameListRequest, SilIso6393NameListResponse>('sil-iso-639-3-names/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
 
@@ -52,11 +57,11 @@ export class SilIso6393Names {
       editable: false,
     },
     {
-        field: 'inverted_name',
-        displayName: 'Inverted Name',
-        width: 200,
-        editable: false,
-      },
+      field: 'inverted_name',
+      displayName: 'Inverted Name',
+      width: 200,
+      editable: false,
+    },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -96,7 +101,7 @@ export class SilIso6393Names {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -107,7 +112,7 @@ export class SilIso6393Names {
         <slot></slot>
         {/* table abstraction */}
         {this.iso6393NamesResponse && <cf-table rowData={this.iso6393NamesResponse.iso6393Names} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393NamesResponse.size} results-per-page="50" page-url="sil-iso-639-3-names"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
