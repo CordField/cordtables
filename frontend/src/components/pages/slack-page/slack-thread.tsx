@@ -6,8 +6,15 @@ import { globals } from '../../../core/global.store';
 import { idService, IdService } from '../../../core/id.service';
 import { TinyUpdateEvent } from '../../cf-tiny/types';
 import { CommonDiscussionChannel } from '../../tables/common/discussion-channels/types';
-import { CommonPost, CommonPostsListRequest, CommonPostsListResponse } from '../../tables/common/posts/types';
-import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, CommonThreadsUpdateRequest, CommonThreadsUpdateResponse } from '../../tables/common/threads/types';
+import { CommonPost, CommonPostsListRequest, CommonPostsListResponse, DeleteCommonPostsRequest, DeleteCommonPostsResponse } from '../../tables/common/posts/types';
+import {
+  CommonThread,
+  CommonThreadsListRequest,
+  CommonThreadsListResponse,
+  CommonThreadsUpdateRequest,
+  CommonThreadsUpdateResponse,
+  DeleteCommonThreadsRequest,
+} from '../../tables/common/threads/types';
 
 // will take discussion channels as a prop
 @Component({
@@ -33,6 +40,18 @@ export class SlackThread {
   @Listen('contentUpdate')
   handleContentUpdateChange(e: CustomEvent<TinyUpdateEvent>) {
     if (e.detail.id === this.tinyMceId) this.threadContent = e.detail.content;
+  }
+  @Listen('postDeleted')
+  async handleThreadDeletedChange(event: CustomEvent<number>) {
+    const deleteResponse = await fetchAs<DeleteCommonPostsRequest, DeleteCommonPostsResponse>('common-posts/delete', {
+      token: globals.globalStore.state.token,
+      id: event.detail,
+    });
+    if (deleteResponse.error === ErrorType.NoError) {
+      this.threadPosts = this.threadPosts?.filter(thread => thread.id !== event.detail);
+    } else {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'unable to delete thread', id: v4(), type: 'error' });
+    }
   }
 
   @Watch('showPosts')
@@ -63,8 +82,9 @@ export class SlackThread {
   }
 
   render() {
+    const slackThreadButtonsClass = this.updateMode === false ? 'thread-buttons' : 'thread-buttons thread-buttons-update';
     const editAndDeleteButtons = (
-      <span class="slack-thread-buttons">
+      <span class={slackThreadButtonsClass}>
         {this.updateMode ? (
           <span>
             <span
@@ -122,36 +142,33 @@ export class SlackThread {
     );
 
     const jsx = (
-      <div>
-        <div
-          onMouseEnter={() => {
-            setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
+      <div
+        onMouseEnter={() => {
+          setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
+        }}
+        onMouseLeave={() => {
+          setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
+        }}
+        class="thread-header"
+      >
+        <span
+          class="post-indicator"
+          onClick={() => {
+            if (this.updateMode === false) this.showPosts = !this.showPosts;
           }}
-          onMouseLeave={() => {
-            setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
-          }}
-          class="slack-thread-content"
         >
-          <span
-            class="post-indicator"
-            onClick={() => {
-              this.showPosts = !this.showPosts;
-            }}
-          >
-            {this.showPosts ? '👇' : '👉'}
-          </span>
-          {this.updateMode ? <cf-tiny initialHTMLContent={this.threadContent} uid={this.tinyMceId} /> : <span class="thread-content" innerHTML={this.threadContent}></span>}
-
-          {editAndDeleteButtons}
-        </div>
-        <div class="thread-posts">{this.showPosts && this.threadPosts?.map(post => <div innerHTML={post.content} />)}</div>
+          {this.showPosts ? '👇' : '👉'}
+        </span>
+        {this.updateMode ? <cf-tiny initialHTMLContent={this.threadContent} uid={this.tinyMceId} /> : <span class="slack-thread-content" innerHTML={this.threadContent}></span>}
+        {editAndDeleteButtons}
       </div>
     );
 
     return (
-      <Host class="slack-thread">
+      <Host>
         <slot></slot>
         {jsx}
+        <div class="thread-posts">{this.showPosts && this.threadPosts?.map(post => <slack-post post={post} />)}</div>
         {this.showPosts && <slack-form type="post" selectedThreadId={this.thread.id} />}
       </Host>
     );

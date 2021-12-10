@@ -272,6 +272,9 @@ export namespace Components {
     }
     interface SlackPage {
     }
+    interface SlackPost {
+        "post": CommonPost;
+    }
     interface SlackSidebar {
         "discussionChannels": CommonDiscussionChannelListResponse;
     }
@@ -975,6 +978,12 @@ declare global {
         prototype: HTMLSlackPageElement;
         new (): HTMLSlackPageElement;
     };
+    interface HTMLSlackPostElement extends Components.SlackPost, HTMLStencilElement {
+    }
+    var HTMLSlackPostElement: {
+        prototype: HTMLSlackPostElement;
+        new (): HTMLSlackPostElement;
+    };
     interface HTMLSlackSidebarElement extends Components.SlackSidebar, HTMLStencilElement {
     }
     var HTMLSlackSidebarElement: {
@@ -1182,6 +1191,7 @@ declare global {
         "slack-content": HTMLSlackContentElement;
         "slack-form": HTMLSlackFormElement;
         "slack-page": HTMLSlackPageElement;
+        "slack-post": HTMLSlackPostElement;
         "slack-sidebar": HTMLSlackSidebarElement;
         "slack-thread": HTMLSlackThreadElement;
         "stage-graph": HTMLStageGraphElement;
@@ -1469,6 +1479,10 @@ declare namespace LocalJSX {
     }
     interface SlackPage {
     }
+    interface SlackPost {
+        "onPostDeleted"?: (event: CustomEvent<number>) => void;
+        "post"?: CommonPost;
+    }
     interface SlackSidebar {
         "discussionChannels"?: CommonDiscussionChannelListResponse;
         "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
@@ -1623,6 +1637,7 @@ declare namespace LocalJSX {
         "slack-content": SlackContent;
         "slack-form": SlackForm;
         "slack-page": SlackPage;
+        "slack-post": SlackPost;
         "slack-sidebar": SlackSidebar;
         "slack-thread": SlackThread;
         "stage-graph": StageGraph;
@@ -1755,6 +1770,7 @@ declare module "@stencil/core" {
             "slack-content": LocalJSX.SlackContent & JSXBase.HTMLAttributes<HTMLSlackContentElement>;
             "slack-form": LocalJSX.SlackForm & JSXBase.HTMLAttributes<HTMLSlackFormElement>;
             "slack-page": LocalJSX.SlackPage & JSXBase.HTMLAttributes<HTMLSlackPageElement>;
+            "slack-post": LocalJSX.SlackPost & JSXBase.HTMLAttributes<HTMLSlackPostElement>;
             "slack-sidebar": LocalJSX.SlackSidebar & JSXBase.HTMLAttributes<HTMLSlackSidebarElement>;
             "slack-thread": LocalJSX.SlackThread & JSXBase.HTMLAttributes<HTMLSlackThreadElement>;
             "stage-graph": LocalJSX.StageGraph & JSXBase.HTMLAttributes<HTMLStageGraphElement>;

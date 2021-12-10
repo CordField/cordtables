@@ -8,13 +8,16 @@
   Any global CSS variables should also be applied here.
 */
 
-@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css");
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css');
 body {
   margin: 0px;
   padding: 0px;
   height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --color-primary: #3c6a29;
+  --color-primary-lightest: #f0f7ec;
+  box-sizing: border-box;
 }
-#container{
+#container {
   width: 1000px;
 }

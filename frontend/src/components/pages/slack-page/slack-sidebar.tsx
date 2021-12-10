@@ -2,7 +2,6 @@ import { Component, Host, h, Prop, Watch, Event, EventEmitter, State, Listen } f
 import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
-import { DiscussionChannels } from '../../tables/common/discussion-channels/discussion-channels';
 import {
   CommonDiscussionChannel,
   CommonDiscussionChannelListResponse,

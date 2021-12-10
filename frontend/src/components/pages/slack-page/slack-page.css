@@ -2,7 +2,7 @@
   display: block;
   box-sizing: border-box;
 }
-
+/* LAYOUT */
 .slack-page {
   margin: 5px 0px;
   display: flex;
@@ -10,10 +10,19 @@
 }
 slack-sidebar {
   display: flex;
-  width: 25%;
   flex-direction: column;
+  flex: 0 1 250px;
   padding: 0 1.25rem;
 }
+slack-content {
+  /* display: flex; */
+  margin-left: auto;
+  /* width: calc(75% - 5rem); */
+  flex: 1 0 70%;
+  padding: 0 2.5rem;
+}
+
+/* SIDEBAR */
 .discussion-channel {
   user-select: none;
   padding: 5px 5px;
@@ -21,74 +30,16 @@ slack-sidebar {
 .discussion-channel:hover {
   cursor: pointer;
 }
-
 .selected-discussion-channel {
   /* font-size: 400px; */
-  color: #3c6a29;
-  background-color: #f0f7ec;
+  color: var(--color-primary);
+  background-color: var(--color-primary-lightest);
   width: fit-content;
 }
 
-slack-content {
-  /* display: flex; */
-  margin-left: auto;
-  width: calc(75% - 5rem);
-  padding: 0 2.5rem;
-}
-
-slack-thread {
-  padding: 0px 1rem 1.5rem 1rem;
-}
-.slack-thread-content {
-  user-select: none;
-  position: relative;
-}
-.slack-thread-content:hover {
-  cursor: pointer;
-}
-
-.thread-posts {
-  margin-left: 2.5rem;
-}
-.post-indicator {
-  margin-right: 3px;
-  /* position: absolute; */
-  top: 100%;
-  right: 100%;
-  z-index: 100;
-}
-.post-count {
-  color: #9ca3af;
-}
-
-.slack-form-button {
-  color: #3c6a29;
-  background-color: #f0f7ec;
-  border: none;
-  margin-left: 3px;
-  outline: none;
-}
-.slack-form-button:hover,
-.slack-form-button:focus {
-  background-color: #3c6a29;
-  color: #f0f7ec;
-}
-
-.slack-form {
-  margin-top: 2px;
-}
-.slack-form-last {
-  margin-top: 2.5rem;
-}
-
-.slack-thread-buttons {
-  margin-left: 10px;
-  position: absolute;
-  top: 100%;
-}
 .add-button {
-  color: #3c6a29;
-  background-color: #f0f7ec;
+  color: var(--color-primary);
+  background-color: var(--color-primary-lightest);
   width: fit-content;
   border-radius: 5px;
   font-size: 2rem;
@@ -96,6 +47,69 @@ slack-thread {
   text-align: center;
   margin-top: 5px;
 }
+
+/* THREAD */
+slack-thread {
+  padding: 0px 1rem 1.5rem 1rem;
+}
+.thread-header {
+  position: relative;
+  width: 100%;
+}
+.thread-header:hover {
+  position: relative;
+  background-color: var(--color-gray-light);
+}
+.thread-posts {
+  margin-left: 2.5rem;
+}
+.post-indicator {
+  margin-right: 3px;
+  position: absolute;
+  user-select: none;
+  top: 0%;
+  right: 100%;
+  z-index: 100;
+}
+.post-indicator:hover {
+  cursor: pointer;
+}
+
+.thread-buttons {
+  z-index: 100;
+  user-select: none;
+  position: absolute;
+  top: 0%;
+  right: 50%;
+}
+.thread-buttons:hover {
+  cursor: pointer;
+}
+.thread-buttons-update {
+  top: 100%;
+  right: 90%;
+}
+
+/* FORM */
+.slack-form {
+  margin-top: 2px;
+}
+.slack-form-last {
+  margin-top: 2.5rem;
+}
+.slack-form-button {
+  color: var(--color-primary);
+  background-color: var(--color-primary-lightest);
+  border: none;
+  margin-left: 3px;
+  outline: none;
+}
+.slack-form-button:hover,
+.slack-form-button:focus {
+  background-color: var(--color-primary);
+  color: var(--color-primary-lightest);
+}
+
 /* 
 .discussion-channel {
   color: red;
