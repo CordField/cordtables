@@ -1,3 +1,11 @@
 :host {
   display: block;
 }
+
+.site-text {
+  padding: 5px 40px;
+}
+
+.language-select-wrapper h4 {
+  margin: 0.5rem 0rem;
+}
