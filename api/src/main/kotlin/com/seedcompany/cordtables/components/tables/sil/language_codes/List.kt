@@ -19,11 +19,14 @@ import javax.sql.DataSource
 
 
 data class SilLanguageCodesListRequest(
-    val token: String?
+    val token: String?,
+    val page: Int? = 1,
+    val resultsPerPage: Int? = 50
 )
 
 data class SilLanguageCodesListResponse(
     val error: ErrorType,
+    val size: Int,
     val languageCodes: MutableList<languageCode>?
 )
 
@@ -46,7 +49,7 @@ class List(
     @ResponseBody
     fun listHandler(@RequestBody req:SilLanguageCodesListRequest): SilLanguageCodesListResponse {
         var data: MutableList<languageCode> = mutableListOf()
-        if (req.token == null) return SilLanguageCodesListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return SilLanguageCodesListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -127,10 +130,10 @@ class List(
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return SilLanguageCodesListResponse(ErrorType.SQLReadError, mutableListOf())
+            return SilLanguageCodesListResponse(ErrorType.SQLReadError, size=0, mutableListOf())
         }
 
-        return SilLanguageCodesListResponse(ErrorType.NoError, data)
+        return SilLanguageCodesListResponse(ErrorType.NoError, size=0, data)
     }
 }
 

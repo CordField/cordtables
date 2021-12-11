@@ -20,12 +20,13 @@ import javax.sql.DataSource
 
 data class SilIso6393ListRequest(
     val token: String?,
-    val page: Int,
-    val resultsPerPage: Int
+    val page: Int? = 1,
+    val resultsPerPage: Int? = 50
 )
 
 data class SilIso6393ListResponse(
     val error: ErrorType,
+    val size: Int,
     val iso6393s: MutableList<iso6393>?
 )
 
@@ -48,13 +49,13 @@ class List(
     @ResponseBody
     fun listHandler(@RequestBody req:SilIso6393ListRequest): SilIso6393ListResponse {
         var data: MutableList<iso6393> = mutableListOf()
-        if (req.token == null) return SilIso6393ListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return SilIso6393ListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
 
-        var offset = (req.page-1)*req.resultsPerPage
+        // var offset = (req.page-1)* req.resultsPerPage!!
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
-        paramSource.addValue("limit", req.resultsPerPage)
-        paramSource.addValue("offset", offset)
+        // paramSource.addValue("limit", req.resultsPerPage)
+        // paramSource.addValue("offset", offset)
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
@@ -155,10 +156,10 @@ class List(
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return SilIso6393ListResponse(ErrorType.SQLReadError, mutableListOf())
+            return SilIso6393ListResponse(ErrorType.SQLReadError, size=0, mutableListOf())
         }
 
-        return SilIso6393ListResponse(ErrorType.NoError, data)
+        return SilIso6393ListResponse(ErrorType.NoError, size=0, data)
     }
 }
 

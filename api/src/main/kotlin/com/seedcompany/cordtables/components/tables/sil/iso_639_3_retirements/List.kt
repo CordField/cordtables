@@ -19,11 +19,14 @@ import javax.sql.DataSource
 
 
 data class SilIso6393RetirementsListRequest(
-    val token: String?
+    val token: String?,
+    val page: Int? = 1,
+    val resultsPerPage: Int? = 50
 )
 
 data class SilIso6393RetirementsListResponse(
     val error: ErrorType,
+    val size: Int,
     val iso6393Retirements: MutableList<iso6393Retirement>?
 )
 
@@ -46,7 +49,7 @@ class List(
     @ResponseBody
     fun listHandler(@RequestBody req:SilIso6393RetirementsListRequest): SilIso6393RetirementsListResponse {
         var data: MutableList<iso6393Retirement> = mutableListOf()
-        if (req.token == null) return SilIso6393RetirementsListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return SilIso6393RetirementsListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -139,10 +142,10 @@ class List(
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return SilIso6393RetirementsListResponse(ErrorType.SQLReadError, mutableListOf())
+            return SilIso6393RetirementsListResponse(ErrorType.SQLReadError, size=0, mutableListOf())
         }
 
-        return SilIso6393RetirementsListResponse(ErrorType.NoError, data)
+        return SilIso6393RetirementsListResponse(ErrorType.NoError, size=0, data)
     }
 }
 

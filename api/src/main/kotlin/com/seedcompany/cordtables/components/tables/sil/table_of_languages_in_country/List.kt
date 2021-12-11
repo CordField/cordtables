@@ -19,11 +19,14 @@ import javax.sql.DataSource
 
 
 data class SilTableOfLanguagesInCountryListRequest(
-    val token: String?
+    val token: String?,
+    val page: Int? = 1,
+    val resultsPerPage: Int? = 50
 )
 
 data class SilTableOfLanguagesInCountryListResponse(
     val error: ErrorType,
+    val size: Int,
     val tableOfLanguagesInCountries: MutableList<tableOfLanguagesInCountry>?
 )
 
@@ -46,7 +49,7 @@ class List(
     @ResponseBody
     fun listHandler(@RequestBody req:SilTableOfLanguagesInCountryListRequest): SilTableOfLanguagesInCountryListResponse {
         var data: MutableList<tableOfLanguagesInCountry> = mutableListOf()
-        if (req.token == null) return SilTableOfLanguagesInCountryListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return SilTableOfLanguagesInCountryListResponse(ErrorType.TokenNotFound, size = 0, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -235,10 +238,10 @@ class List(
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return SilTableOfLanguagesInCountryListResponse(ErrorType.SQLReadError, mutableListOf())
+            return SilTableOfLanguagesInCountryListResponse(ErrorType.SQLReadError, size = 0, mutableListOf())
         }
 
-        return SilTableOfLanguagesInCountryListResponse(ErrorType.NoError, data)
+        return SilTableOfLanguagesInCountryListResponse(ErrorType.NoError, size = 0, data)
     }
 }
 

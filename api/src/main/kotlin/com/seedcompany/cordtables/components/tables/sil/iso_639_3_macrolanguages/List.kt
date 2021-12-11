@@ -19,11 +19,14 @@ import javax.sql.DataSource
 
 
 data class SilIso6393MacrolanguagesListRequest(
-    val token: String?
+    val token: String?,
+    val page: Int? = 1,
+    val resultsPerPage: Int? = 50
 )
 
 data class SilIso6393MacrolanguagesListResponse(
     val error: ErrorType,
+    val size: Int,
     val iso6393Macrolanguages: MutableList<iso6393Macrolanguage>?
 )
 
@@ -46,7 +49,7 @@ class List(
     @ResponseBody
     fun listHandler(@RequestBody req:SilIso6393MacrolanguagesListRequest): SilIso6393MacrolanguagesListResponse {
         var data: MutableList<iso6393Macrolanguage> = mutableListOf()
-        if (req.token == null) return SilIso6393MacrolanguagesListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return SilIso6393MacrolanguagesListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -121,10 +124,10 @@ class List(
             }
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-            return SilIso6393MacrolanguagesListResponse(ErrorType.SQLReadError, mutableListOf())
+            return SilIso6393MacrolanguagesListResponse(ErrorType.SQLReadError, size=0, mutableListOf())
         }
 
-        return SilIso6393MacrolanguagesListResponse(ErrorType.NoError, data)
+        return SilIso6393MacrolanguagesListResponse(ErrorType.NoError, size=0, data)
     }
 }
 
