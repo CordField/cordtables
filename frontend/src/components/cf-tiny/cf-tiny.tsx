@@ -46,7 +46,7 @@ export class CfTiny {
           key={0}
           id="tiny-ed"
           api-key={process.env.TINY_KEY}
-          plugins="image link emoticons image table media"
+          plugins="image link emoticons image table media autoresize"
           menubar="false"
           toolbar_mode="floating"
           toolbar="quicklink emoticons image table media | bold italic | undo redo | styleselect | alignleft aligncenter alignright alignjustify | outdent indent"

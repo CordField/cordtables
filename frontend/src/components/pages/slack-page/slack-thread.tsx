@@ -88,7 +88,7 @@ export class SlackThread {
         {this.updateMode ? (
           <span>
             <span
-              class="thread-update-confirm"
+              class="update-confirm-icon"
               onClick={async e => {
                 e.stopPropagation();
                 this.updateMode = false;
@@ -103,45 +103,45 @@ export class SlackThread {
                 }
               }}
             >
-              ✔️
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
             </span>
             <span
-              class="thread-update-cancel"
+              class="update-cancel-icon thread-icon"
               onClick={e => {
                 e.stopPropagation();
                 this.updateMode = false;
                 this.threadContent = this.thread.content;
               }}
             >
-              ❌
+              <ion-icon name="close-circle-outline"></ion-icon>
             </span>
           </span>
         ) : this.showEditAndDeleteButtons ? (
           <span>
             <span
-              class="thread-update"
+              class="update-icon thread-icon"
               onClick={e => {
                 e.stopPropagation();
                 this.updateMode = true;
               }}
             >
-              ✎
+              <ion-icon name="create-outline"></ion-icon>
             </span>
             <span
-              class="thread-delete"
+              class="delete-icon thread-icon"
               onClick={e => {
                 e.stopPropagation();
                 this.threadDeleted.emit(this.thread.id);
               }}
             >
-              ⛔
+              <ion-icon name="trash-outline" class="delete-icon"></ion-icon>
             </span>
           </span>
         ) : null}
       </span>
     );
 
-    const jsx = (
+    const threadHeaderJSX = (
       <div
         onMouseEnter={() => {
           setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
@@ -152,14 +152,14 @@ export class SlackThread {
         class="thread-header"
       >
         <span
-          class="post-indicator"
+          class="post-indicator thread-icon"
           onClick={() => {
             if (this.updateMode === false) this.showPosts = !this.showPosts;
           }}
         >
-          {this.showPosts ? '👇' : '👉'}
+          {this.showPosts ? <ion-icon name="arrow-down-circle-outline"></ion-icon> : <ion-icon name="arrow-forward-circle-outline"></ion-icon>}
         </span>
-        {this.updateMode ? <cf-tiny initialHTMLContent={this.threadContent} uid={this.tinyMceId} /> : <span class="slack-thread-content" innerHTML={this.threadContent}></span>}
+        {this.updateMode ? <cf-tiny initialHTMLContent={this.threadContent} uid={this.tinyMceId} /> : <span class="thread-content" innerHTML={this.threadContent}></span>}
         {editAndDeleteButtons}
       </div>
     );
@@ -167,7 +167,7 @@ export class SlackThread {
     return (
       <Host>
         <slot></slot>
-        {jsx}
+        {threadHeaderJSX}
         <div class="thread-posts">{this.showPosts && this.threadPosts?.map(post => <slack-post post={post} />)}</div>
         {this.showPosts && <slack-form type="post" selectedThreadId={this.thread.id} />}
       </Host>

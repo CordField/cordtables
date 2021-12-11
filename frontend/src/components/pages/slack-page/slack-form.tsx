@@ -71,10 +71,10 @@ export class SlackForm {
     this.content = null;
   }
   render() {
-    const formClassName = this.type === 'thread' ? `slack-form slack-form-last` : `slack-form`;
+    const formClassName = this.type === 'thread' ? `form form-last` : `form`;
 
     return (
-      <Host class="slack-thread">
+      <Host>
         <slot></slot>
         <form
           class={formClassName}
@@ -84,7 +84,7 @@ export class SlackForm {
           }}
         >
           <cf-tiny uid={this.tinyMceId} />
-          <button class="slack-form-button">submit</button>
+          <button class="form-button">submit</button>
         </form>
       </Host>
     );
