@@ -3,6 +3,8 @@ package com.seedcompany.cordtables.components.tables.up.prayer_requests
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.common.GetSecureQuery
+import com.seedcompany.cordtables.common.GetSecureQueryRequest
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
 import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequest
@@ -37,7 +39,7 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureListQuery,
+    val secureList: GetSecureQuery,
 ) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
@@ -48,12 +50,10 @@ class List(
         var data: MutableList<prayerRequest> = mutableListOf()
         if (req.token == null) return UpPrayerRequestsListResponse(ErrorType.TokenNotFound, mutableListOf())
 
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", req.token)
-
-        val query = secureList.getSecureListQueryHandler(
-            GetSecureListQueryRequest(
+        val jdbcResult = secureList.getSecureQueryHandler(
+          GetSecureQueryRequest(
                 tableName = "up.prayer_requests",
+                token = req.token,
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
@@ -76,65 +76,64 @@ class List(
                     "owning_group",
                 )
             )
-        ).query
+        )
+        val resultSet = jdbcResult.result
 
-        try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()) {
+        if (jdbcResult.errorType == ErrorType.NoError){
+            while (resultSet?.next() == true){
+                var id: Int? = resultSet!!.getInt("id")
+                if (resultSet!!.wasNull()) id = null
 
-                var id: Int? = jdbcResult.getInt("id")
-                if (jdbcResult.wasNull()) id = null
+                var request_language_id: Int? = resultSet!!.getInt("request_language_id")
+                if (resultSet!!.wasNull()) request_language_id = null
 
-                var request_language_id: Int? = jdbcResult.getInt("request_language_id")
-                if (jdbcResult.wasNull()) request_language_id = null
+                var target_language_id: Int? = resultSet!!.getInt("target_language_id")
+                if (resultSet!!.wasNull()) target_language_id = null
 
-                var target_language_id: Int? = jdbcResult.getInt("target_language_id")
-                if (jdbcResult.wasNull()) target_language_id = null
+                var sensitivity: String? = resultSet!!.getString("sensitivity")
+                if (resultSet!!.wasNull()) sensitivity = null
 
-                var sensitivity: String? = jdbcResult.getString("sensitivity")
-                if (jdbcResult.wasNull()) sensitivity = null
+                var organization_name: String? = resultSet!!.getString("organization_name")
+                if (resultSet!!.wasNull()) organization_name = null
 
-                var organization_name: String? = jdbcResult.getString("organization_name")
-                if (jdbcResult.wasNull()) organization_name = null
+                var parent: Int? = resultSet!!.getInt("parent")
+                if (resultSet!!.wasNull()) parent = null
 
-                var parent: Int? = jdbcResult.getInt("parent")
-                if (jdbcResult.wasNull()) parent = null
+                var translator: Int? = resultSet!!.getInt("translator")
+                if (resultSet!!.wasNull()) translator = null
 
-                var translator: Int? = jdbcResult.getInt("translator")
-                if (jdbcResult.wasNull()) translator = null
+                var location: String? = resultSet!!.getString("location")
+                if (resultSet!!.wasNull()) location = null
 
-                var location: String? = jdbcResult.getString("location")
-                if (jdbcResult.wasNull()) location = null
+                var title: String? = resultSet!!.getString("title")
+                if (resultSet!!.wasNull()) title = null
 
-                var title: String? = jdbcResult.getString("title")
-                if (jdbcResult.wasNull()) title = null
+                var content: String? = resultSet!!.getString("content")
+                if (resultSet!!.wasNull()) content = null
 
-                var content: String? = jdbcResult.getString("content")
-                if (jdbcResult.wasNull()) content = null
+                var reviewed: Boolean? = resultSet!!.getBoolean("reviewed")
+                if (resultSet!!.wasNull()) reviewed = null
 
-                var reviewed: Boolean? = jdbcResult.getBoolean("reviewed")
-                if (jdbcResult.wasNull()) reviewed = null
+                var  prayer_type: String? = resultSet!!.getString("prayer_type")
+                if (resultSet!!.wasNull()) prayer_type = null
 
-                var  prayer_type: String? = jdbcResult.getString("prayer_type")
-                if (jdbcResult.wasNull()) prayer_type = null
+                var created_by: Int? = resultSet!!.getInt("created_by")
+                if (resultSet!!.wasNull()) created_by = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) created_by = null
+                var created_at: String? = resultSet!!.getString("created_at")
+                if (resultSet!!.wasNull()) created_at = null
 
-                var created_at: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) created_at = null
+                var modified_at: String? = resultSet!!.getString("modified_at")
+                if (resultSet!!.wasNull()) modified_at = null
 
-                var modified_at: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modified_at = null
+                var modified_by: Int? = resultSet!!.getInt("modified_by")
+                if (resultSet!!.wasNull()) modified_by = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modified_by = null
+                var owning_person: Int? = resultSet!!.getInt("owning_person")
+                if (resultSet!!.wasNull()) owning_person = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owning_person = null
-
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owning_group = null
+                var owning_group: Int? = resultSet!!.getInt("owning_group")
+                if (resultSet!!.wasNull()) owning_group = null
 
                 data.add(
                     prayerRequest(
@@ -159,8 +158,9 @@ class List(
                     )
                 )
             }
-        } catch (e: SQLException) {
-            println("error while listing ${e.message}")
+        }
+        else{
+            //println("error while listing ${e.message}")
             return UpPrayerRequestsListResponse(ErrorType.SQLReadError, mutableListOf())
         }
 

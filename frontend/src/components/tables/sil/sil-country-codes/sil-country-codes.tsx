@@ -1,4 +1,4 @@
-import { Component, Host, h, State } from '@stencil/core';
+import { Component, Host, h, State, Listen } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
@@ -7,10 +7,13 @@ import { globals } from '../../../../core/global.store';
 
 class SilCountryCodeListRequest {
   token: string;
+  page: number;
+  resultsPerPage: number;
 }
 
 class SilCountryCodeListResponse {
   error: ErrorType;
+  size: number;
   countryCodes: SilCountryCode[];
 }
 
@@ -23,12 +26,21 @@ class SilCountryCodeListResponse {
 export class SilCountryCodes {
 
   @State() countryCodesResponse: SilCountryCodeListResponse;
-
+  @State() currentPage: number = 1;
   
+  @Listen('pageChanged', { target: 'body' })
+  async getChangedValue(event: CustomEvent) {
+    console.log(event.detail);
+    console.log('page changed');
+    this.currentPage = event.detail;
+    await this.getList(this.currentPage);
+  }
 
-  async getList() {
+  async getList(page) {
     this.countryCodesResponse = await fetchAs<SilCountryCodeListRequest, SilCountryCodeListResponse>('sil-country-codes/list', {
       token: globals.globalStore.state.token,
+      page: page,
+      resultsPerPage: 50,
     });
   }
 
@@ -96,7 +108,11 @@ export class SilCountryCodes {
   ];
 
   async componentWillLoad() {
-    await this.getList();
+    var url = new URL(window.location.href)
+    if(url.searchParams.has("page")){
+      this.currentPage = parseInt(url.searchParams.get("page"))>0?parseInt(url.searchParams.get("page")):1;
+    }
+    await this.getList(this.currentPage);
     // await this.getFilesList();
   }
 
@@ -107,7 +123,7 @@ export class SilCountryCodes {
         <slot></slot>
         {/* table abstraction */}
         {this.countryCodesResponse && <cf-table rowData={this.countryCodesResponse.countryCodes} columnData={this.columnData}></cf-table>}
-
+        <cf-pagination current-page={this.currentPage} total-rows={this.countryCodesResponse.size} results-per-page="50" page-url="sil-country-codes"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
