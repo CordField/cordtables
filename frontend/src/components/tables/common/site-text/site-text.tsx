@@ -2,6 +2,7 @@ import { Component, State, Host, h } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { SiteTextLanguage, SiteTextString } from '../../../../common/types';
 import { globals } from '../../../../core/global.store';
+import { t } from '../../../../core/site-text.service'
 @Component({
   tag: 'site-text',
   styleUrl: 'site-text.css',
@@ -34,7 +35,7 @@ export class SiteText {
       },
       {
         field: 'english',
-        displayName: 'English',
+        displayName: t('english').toUppercase(),
         width: 50,
         editable: true,
         deleteFn: this.handleDelete,
@@ -42,7 +43,7 @@ export class SiteText {
       },
       {
         field: 'comment',
-        displayName: 'Comment',
+        displayName: t('comment').toUppercase(),
         width: 200,
         editable: true,
         updateFn: this.handleSiteTextStringUpdate,
@@ -51,7 +52,7 @@ export class SiteText {
     const languageColumns: ColumnDescription[] = globals.globalStore.state.siteTextLanguages.map((siteTextLanguage: SiteTextLanguage) => {
       return {
         field: siteTextLanguage.language,
-        displayName: siteTextLanguage.language_name,
+        displayName: t(siteTextLanguage.language_name),
         width: 50,
         editable: true,
         updateFn: this.handleSiteTextTranslationUpdate,
@@ -88,7 +89,9 @@ export class SiteText {
           <h4>Select Site Language</h4>
           <language-select />
         </div>
-        <div class="translations">{this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}</div>
+        <div class="translations">
+          <h4>Site Text Translations</h4>
+          {this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}</div>
       </div>
     );
   }
