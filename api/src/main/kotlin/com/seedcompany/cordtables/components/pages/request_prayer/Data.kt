@@ -6,14 +6,17 @@ import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerReq
 data class PrayerRequestData(
     val id: Int,
 
-    val language_id: Int? = null,
+    val request_language_id:Int? = null,
+    val target_language_id:Int? = null,
     val sensitivity: String? = null,
+    val organization_name: String? = null,
     val parent: Int? = null,
     val translator: Int? = null,
     val location: String? = null,
     val title: String? = null,
     val content: String? = null,
     val reviewed: Boolean? = null,
+    val prayer_type: String? = null,
 
     val requestedBy: String?,
     val notify: Int?,
@@ -22,8 +25,10 @@ data class PrayerRequestData(
 
 data class PrayerRequestGetData(
     val id: Int,
-    val language_id: Int? = null,
+    val request_language_id:Int? = null,
+    val target_language_id:Int? = null,
     val sensitivity: String? = null,
+    val organization_name: String? = null,
     val parent: Int? = null,
     val translator: Int? = null,
     val location: String? = null,
@@ -36,8 +41,10 @@ data class PrayerRequestGetData(
 
 data class PrayerRequestUpdateData(
     val id: Int,
-    val language_id: Int? = null,
+    val request_language_id:Int? = null,
+    val target_language_id:Int? = null,
     val sensitivity: String? = null,
+    val organization_name: String? = null,
     val parent: Int? = null,
     val translator: Int? = null,
     val location: String? = null,

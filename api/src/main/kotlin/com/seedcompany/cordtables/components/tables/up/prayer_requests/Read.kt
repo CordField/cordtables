@@ -59,8 +59,10 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "language_id",
+                    "request_language_id",
+                    "target_language_id",
                     "sensitivity",
+                    "organization_name",
                     "parent",
                     "translator",
                     "location",
@@ -85,11 +87,17 @@ class Read(
                 var id: Int? = jdbcResult.getInt("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var language_id: Int? = jdbcResult.getInt("language_id")
-                if (jdbcResult.wasNull()) language_id = null
+                var request_language_id: Int? = jdbcResult.getInt("request_language_id")
+                if (jdbcResult.wasNull()) request_language_id = null
+
+                var target_language_id: Int? = jdbcResult.getInt("target_language_id")
+                if (jdbcResult.wasNull()) target_language_id = null
 
                 var sensitivity: String? = jdbcResult.getString("sensitivity")
                 if (jdbcResult.wasNull()) sensitivity = null
+
+                var organization_name: String? = jdbcResult.getString("organization_name")
+                if (jdbcResult.wasNull()) organization_name = null
 
                 var parent: Int? = jdbcResult.getInt("parent")
                 if (jdbcResult.wasNull()) parent = null
@@ -133,8 +141,10 @@ class Read(
                 val prayerRequest =
                     prayerRequest(
                         id = id,
-                        language_id = language_id,
+                        request_language_id = request_language_id,
+                        target_language_id = target_language_id,
                         sensitivity = sensitivity,
+                        organization_name = organization_name,
                         parent = parent,
                         translator = translator,
                         location = location,

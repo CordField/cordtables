@@ -8,8 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePrayerRequestExRequest {
   token: string;
   prayerRequest: {
-    language_id: number;
+    request_language_id: number;
+    target_language_id: number;
     sensitivity: string;
+    organization_name: string;
     parent: number;
     translator: number;
     location: string;
@@ -63,8 +65,10 @@ export class UpPrayerRequests {
 
   @State() prayerRequestsResponse: UpPrayerRequestListResponse;
 
-  newLanguage_id: number;
+  newRequest_language_id: number;
+  newTarget_language_id: number;
   newSensitivity: string;
+  newOrganization_name: string;
   newParent: number;
   newTranslator: number;
   newLocation: string;
@@ -121,12 +125,20 @@ export class UpPrayerRequests {
   // }
 
 
-  language_idChange(event) {
-    this.newLanguage_id = event.target.value;
+  request_language_idChange(event) {
+    this.newRequest_language_id = event.target.value;
+  }
+
+  target_language_idChange(event) {
+    this.newTarget_language_id = event.target.value;
   }
 
   sensitivityChange(event){
     this.newSensitivity = event.target.value;
+  }
+
+  organization_nameChange(event){
+    this.newOrganization_name = event.target.value;
   }
 
   parentChange(event) {
@@ -164,8 +176,10 @@ export class UpPrayerRequests {
     const createResponse = await fetchAs<CreatePrayerRequestExRequest, CreatePrayerRequestExResponse>('up-prayer-requests/create-read', {
       token: globals.globalStore.state.token,
       prayerRequest: {
-        language_id: this.newLanguage_id,
+        request_language_id: this.newRequest_language_id,
+        target_language_id: this.newTarget_language_id,
         sensitivity: this.newSensitivity,
+        organization_name: this.newOrganization_name,
         parent: this.newParent,
         translator: this.newTranslator,
         location: this.newLocation,
@@ -185,7 +199,6 @@ export class UpPrayerRequests {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
@@ -194,10 +207,16 @@ export class UpPrayerRequests {
       editable: false,
       deleteFn: this.handleDelete,
     },
-    
     {
-      field: 'language_id',
-      displayName: 'Language ID',
+      field: 'request_language_id',
+      displayName: 'Request Language ID',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'target_language_id',
+      displayName: 'Target Language ID',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
@@ -212,6 +231,13 @@ export class UpPrayerRequests {
         {display:  "Medium", value: "Medium"},
         {display:  "High", value: "High"},
       ],
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'organization_name',
+      displayName: 'Organization Name',
+      width: 200,
+      editable: true,
       updateFn: this.handleUpdate,
     },
     {
@@ -317,6 +343,10 @@ export class UpPrayerRequests {
     // await this.getFilesList();
   }
 
+  request_language_id: number;
+  target_language_id: number;
+  sensitivity: string;
+  organization_name: string;
 
   render() {
     return (
@@ -331,12 +361,21 @@ export class UpPrayerRequests {
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
 
-            <div id="language_id-holder" class="form-input-item form-thing">
+            <div id="request_language_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="language_id">Language ID</label>
+                <label htmlFor="request_language_id">Request Language ID</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="language_id" name="language_id" onInput={event => this.language_idChange(event)} />
+                <input type="number" id="request_language_id" name="request_language_id" onInput={event => this.request_language_idChange(event)} />
+              </span>
+            </div>
+
+            <div id="target_language_id-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="target_language_id">Target Language ID</label>
+              </span>
+              <span class="form-thing">
+                <input type="number" id="target_language_id" name="target_language_id" onInput={event => this.target_language_idChange(event)} />
               </span>
             </div>
 
@@ -351,6 +390,15 @@ export class UpPrayerRequests {
                     <option value="Medium" selected={this.newSensitivity === "Medium"}>Medium</option>
                     <option value="High" selected={this.newSensitivity === "High"}>High</option>
                 </select>
+              </span>
+            </div>
+
+            <div id="organization_name-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="organization_name">Organization Name</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="organization_name" name="organization_name" onInput={event => this.organization_nameChange(event)} />
               </span>
             </div>
 
@@ -418,7 +466,7 @@ export class UpPrayerRequests {
               </span>
               <span class="form-thing">
                 <select id="prayer_type" name="prayer_type" onInput={event => this.prayer_typeChange(event)}>
-                    <option value="">Select Reviewed</option>
+                    <option value="">Select Prayer Type</option>
                     <option value="Request" selected={this.newPrayer_type === 'Request'}>Request</option>
                     <option value="Update" selected={this.newPrayer_type === 'Update'}>Update</option>
                     <option value="Celebration" selected={this.newPrayer_type === 'Celebration'}>Celebration</option>

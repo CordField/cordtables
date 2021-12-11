@@ -60,7 +60,7 @@ class List(
             GetSecureListQueryRequest(
                 tableName = "sil.iso_639_3",
                 filter = "order by id",
-                page = req.page,
+                //page = req.page,
                 columns = arrayOf(
                     "id",
                     "_id",

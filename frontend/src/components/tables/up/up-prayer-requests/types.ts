@@ -2,8 +2,10 @@
 class UpPrayerRequest {
     id?: number | undefined;
 
-    language_id?: number | undefined;
+    request_language_id?: number | undefined;
+    target_language_id?: number | undefined;
     sensitivity?: string | undefined;
+    organization_name?: string | undefined;
     parent?: number | undefined;
     translator?: number | undefined;
     location?: string | undefined;

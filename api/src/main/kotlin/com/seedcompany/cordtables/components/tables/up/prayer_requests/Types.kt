@@ -5,8 +5,10 @@ import javax.security.auth.Subject
 data class prayerRequest(
     var id: Int? = null,
 
-    val language_id: Int? = null,
+    val request_language_id:Int? = null,
+    val target_language_id:Int? = null,
     val sensitivity: String? = null,
+    val organization_name: String? = null,
     val parent: Int? = null,
     val translator: Int? = null,
     val location: String? = null,
@@ -26,8 +28,10 @@ data class prayerRequest(
 data class prayerRequestInput(
     var id: Int? = null,
 
-    val language_id: Int? = null,
+    val request_language_id:Int? = null,
+    val target_language_id:Int? = null,
     val sensitivity: String? = null,
+    val organization_name: String? = null,
     val parent: Int? = null,
     val translator: Int? = null,
     val location: String? = null,
