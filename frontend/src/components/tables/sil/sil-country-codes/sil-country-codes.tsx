@@ -1,9 +1,8 @@
 import { Component, Host, h, State, Listen } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { ErrorType } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
-
 
 class SilCountryCodeListRequest {
   token: string;
@@ -16,7 +15,6 @@ class SilCountryCodeListResponse {
   size: number;
   countryCodes: SilCountryCode[];
 }
-
 
 @Component({
   tag: 'sil-country-codes',
@@ -113,9 +111,7 @@ export class SilCountryCodes {
       this.currentPage = parseInt(url.searchParams.get("page"))>0?parseInt(url.searchParams.get("page")):1;
     }
     await this.getList(this.currentPage);
-    // await this.getFilesList();
   }
-
 
   render() {
     return (
