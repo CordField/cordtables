@@ -1,20 +1,15 @@
 package com.seedcompany.cordtables.components.tables.sil.iso_639_3_names
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sil.iso_639_3_names.iso6393Name
+import com.seedcompany.cordtables.common.GetSecureQuery
+import com.seedcompany.cordtables.common.GetSecureQueryRequest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
 
 
@@ -40,10 +35,10 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureListQuery,
+    val secureList: GetSecureQuery,
 ) {
 
-    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
+//    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
     @PostMapping("sil-iso-639-3-names/list")
     @ResponseBody
@@ -51,13 +46,16 @@ class List(
         var data: MutableList<iso6393Name> = mutableListOf()
         if (req.token == null) return SilIso6393NamesListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
 
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", req.token)
+//        val paramSource = MapSqlParameterSource()
+//        paramSource.addValue("token", req.token)
 
-        val query = secureList.getSecureListQueryHandler(
-            GetSecureListQueryRequest(
+        val jdbcResult = secureList.getSecureQueryHandler(
+            GetSecureQueryRequest(
                 tableName = "sil.iso_639_3_names",
                 filter = "order by id",
+                token = req.token,
+                page = req.page!!,
+                resultsPerPage = req.resultsPerPage!!,
                 columns = arrayOf(
                     "id",
                     "_id",
@@ -71,41 +69,42 @@ class List(
                     "owning_group",
                 )
             )
-        ).query
+        )
 
-        try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()) {
+        val resultSet = jdbcResult.result
+        val size = jdbcResult.size
+        if (jdbcResult.errorType == ErrorType.NoError){
+            while (resultSet!!.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
-                if (jdbcResult.wasNull()) id = null
+                var id: Int? = resultSet!!.getInt("id")
+                if (resultSet!!.wasNull()) id = null
 
-                var _id: String? = jdbcResult.getString("_id")
-                if (jdbcResult.wasNull()) _id = null
+                var _id: String? = resultSet!!.getString("_id")
+                if (resultSet!!.wasNull()) _id = null
 
-                var print_name: String? = jdbcResult.getString("print_name")
-                if (jdbcResult.wasNull()) print_name = null
+                var print_name: String? = resultSet!!.getString("print_name")
+                if (resultSet!!.wasNull()) print_name = null
 
-                var inverted_name: String? = jdbcResult.getString("inverted_name")
-                if (jdbcResult.wasNull()) inverted_name = null
+                var inverted_name: String? = resultSet!!.getString("inverted_name")
+                if (resultSet!!.wasNull()) inverted_name = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) created_by = null
+                var created_by: Int? = resultSet!!.getInt("created_by")
+                if (resultSet!!.wasNull()) created_by = null
 
-                var created_at: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) created_at = null
+                var created_at: String? = resultSet!!.getString("created_at")
+                if (resultSet!!.wasNull()) created_at = null
 
-                var modified_at: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modified_at = null
+                var modified_at: String? = resultSet!!.getString("modified_at")
+                if (resultSet!!.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modified_by = null
+                var modified_by: Int? = resultSet!!.getInt("modified_by")
+                if (resultSet!!.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owning_person = null
+                var owning_person: Int? = resultSet!!.getInt("owning_person")
+                if (resultSet!!.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owning_group = null
+                var owning_group: Int? = resultSet!!.getInt("owning_group")
+                if (resultSet!!.wasNull()) owning_group = null
 
                 data.add(
                     iso6393Name(
@@ -122,12 +121,12 @@ class List(
                     )
                 )
             }
-        } catch (e: SQLException) {
-            println("error while listing ${e.message}")
+        }
+        else{
             return SilIso6393NamesListResponse(ErrorType.SQLReadError, size=0, mutableListOf())
         }
 
-        return SilIso6393NamesListResponse(ErrorType.NoError, size=0, data)
+        return SilIso6393NamesListResponse(ErrorType.NoError, size = size, data)
     }
 }
 
