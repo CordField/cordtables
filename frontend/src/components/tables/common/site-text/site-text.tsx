@@ -1,9 +1,26 @@
 import { Component, State, Host, h } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { SiteTextLanguage, SiteTextString } from '../../../../common/types';
+import { ErrorType, SiteTextLanguage, SiteTextString } from '../../../../common/types';
 import { globals } from '../../../../core/global.store';
-import { t } from '../../../../core/site-text.service'
+import { t } from '../../../../core/site-text.service';
 import { capitalize } from '../../../../common/utility';
+import { fetchAs } from '../../../../common/utility';
+
+type SiteTextStringUpdateInput = {
+  id: number;
+  column: string;
+  newValue: string;
+};
+
+type SiteTextStringUpdateRequest = {
+  token: string;
+  site_text_string: SiteTextStringUpdateInput;
+};
+
+type SiteTextStringUpdateResponse = {
+  error: ErrorType;
+  site_text_string: SiteTextString;
+};
 @Component({
   tag: 'site-text',
   styleUrl: 'site-text.css',
@@ -13,8 +30,41 @@ export class SiteText {
   @State() columnData: ColumnDescription[];
   @State() rowData: Array<any>;
 
-  handleSiteTextStringUpdate = async (): Promise<boolean> => {
-    return true;
+  handleSiteTextStringUpdate = async (id: number, column: string, newValue: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<SiteTextStringUpdateRequest, SiteTextStringUpdateResponse>('common-site-text-strings/update-read', {
+      token: globals.globalStore.state.token,
+      site_text_string: {
+        column,
+        id: id,
+        newValue,
+      },
+    });
+
+    if (updateResponse.error == ErrorType.NoError) {
+      const oldValue = globals.globalStore.state.siteTextStrings.find((siteTextString: SiteTextString) => siteTextString.id === id).english;
+
+      globals.globalStore.set(
+        'siteTextStrings',
+        globals.globalStore.state.siteTextStrings.map((siteTextString: SiteTextString) => {
+          if (siteTextString.id === updateResponse.site_text_string.id) return updateResponse.site_text_string;
+          else return siteTextString;
+        }),
+      );
+
+      if(column === 'english') {
+        const newTranslations = { ... globals.globalStore.state.siteTextTranslations };
+        Object.keys(newTranslations).map(language => {
+          newTranslations[language][newValue] = newTranslations[language][oldValue];
+          delete newTranslations[language][oldValue];
+        })
+        globals.globalStore.set('siteTextTranslations', newTranslations);        
+      }
+
+      this.rowData = this.makeRows();
+      return true;
+    } else {
+      return false;
+    }
   };
 
   handleDelete = async (): Promise<boolean> => {
@@ -61,7 +111,7 @@ export class SiteText {
     });
     return columnData.concat(languageColumns);
   };
-  
+
   makeRows = () => {
     return globals.globalStore.state.siteTextStrings.map((siteTextString: SiteTextString) => {
       const row = {
@@ -92,7 +142,8 @@ export class SiteText {
         </div>
         <div class="translations">
           <h4>Site Text Translations</h4>
-          {this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}</div>
+          {this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}
+        </div>
       </div>
     );
   }

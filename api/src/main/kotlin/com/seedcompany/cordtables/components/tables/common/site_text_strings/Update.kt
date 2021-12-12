@@ -43,6 +43,8 @@ class Update(
     if (req.token == null) return SiteTextStringUpdateResponse(ErrorType.TokenNotFound)
     if (req.site_text_string.id == null) return SiteTextStringUpdateResponse(ErrorType.MissingId)
 
+    println(req.site_text_string)
+
     if (req.site_text_string.column != null) util.updateField(
       token = req.token,
       table = "common.site_text_strings",

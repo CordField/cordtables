@@ -68,9 +68,14 @@ class Read(
       )
     ).query
 
+    println("hahahhaha")
+    println(req)
     try {
+      println("query ------>")
+      println(query)
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
       while (jdbcResult.next()) {
+        println("hahahhaha2")
 
         var id: Int? = jdbcResult.getInt("id")
         if (jdbcResult.wasNull()) id = null
@@ -111,6 +116,8 @@ class Read(
           owning_group = owning_group
         )
 
+        println("site_text_string")
+        println(site_text_string)
         return SiteTextStringReadResponse(ErrorType.NoError, site_text_string = site_text_string)
       }
     } catch (e: SQLException) {
