@@ -1,4 +1,5 @@
 import { createStore } from '@stencil/store';
+import { AppState } from '../common/types';
 interface Notification {
   id: string;
   text: string;
@@ -8,7 +9,7 @@ interface Notification {
 
 export class Globals {
   storeObject = {
-    appState: 0,
+    appState: AppState.Init,
     language: undefined,
     editMode: false,
     editModeWidth: 0,

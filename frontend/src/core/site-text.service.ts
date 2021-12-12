@@ -1,5 +1,5 @@
 import { fetchAs } from '../common/utility';
-import { ErrorType, GenericResponse, SiteTextLanguage, SiteTextString, SiteTextTranslation, SiteTextTranslationList } from '../common/types';
+import { ErrorType, GenericResponse, SiteTextLanguage, SiteTextString, SiteTextTranslation, SiteTextTranslationList, AppState } from '../common/types';
 
 import { globals } from './global.store';
 
@@ -83,6 +83,7 @@ export class SiteTextService {
     globals.globalStore.set('siteTextStrings', data[1]);
     const translationObject = this.makeReadableTranslations(data[1], data[2]);
     globals.globalStore.set('siteTextTranslations', translationObject);
+    globals.globalStore.set('appState', AppState.TranslationLoaded)
   }
 }
 
@@ -90,6 +91,7 @@ export const siteTextService = new SiteTextService();
 
 export const t = (key: string) => {
   const language = globals.globalStore.state.language;
+  if(!language) return key;
   const translation = globals.globalStore.state.siteTextTranslations[language][key];
   if(!translation) {
     console.debug(`${key} doesn't exist in translations`);

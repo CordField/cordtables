@@ -1,3 +1,5 @@
+import { AppState } from "../common/types";
+import { globals } from "../core/global.store";
 import { siteTextService } from "../core/site-text.service";
 export default async () => {
   /**
@@ -15,6 +17,7 @@ const initApp = () => {
   window.addEventListener('appload', (event: any) => {
     console.debug("Adding appload event", event.detail.namespace);
     if(event.detail.namespace === 'app') {
+      globals.globalStore.set('appState', AppState.Loaded)
       siteTextService.load();
     }
   });

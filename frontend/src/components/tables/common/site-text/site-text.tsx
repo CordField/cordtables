@@ -3,6 +3,7 @@ import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { SiteTextLanguage, SiteTextString } from '../../../../common/types';
 import { globals } from '../../../../core/global.store';
 import { t } from '../../../../core/site-text.service'
+import { capitalize } from '../../../../common/utility';
 @Component({
   tag: 'site-text',
   styleUrl: 'site-text.css',
@@ -35,7 +36,7 @@ export class SiteText {
       },
       {
         field: 'english',
-        displayName: t('english').toUppercase(),
+        displayName: capitalize(t('english')),
         width: 50,
         editable: true,
         deleteFn: this.handleDelete,
@@ -43,7 +44,7 @@ export class SiteText {
       },
       {
         field: 'comment',
-        displayName: t('comment').toUppercase(),
+        displayName: capitalize(t('comment')),
         width: 200,
         editable: true,
         updateFn: this.handleSiteTextStringUpdate,
