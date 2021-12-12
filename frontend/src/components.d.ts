@@ -106,10 +106,6 @@ export namespace Components {
     }
     interface CommonPosts {
     }
-    interface CommonPrayerNotifications {
-    }
-    interface CommonPrayerRequests {
-    }
     interface CommonStageGraph {
     }
     interface CommonStageNotifications {
@@ -150,6 +146,8 @@ export namespace Components {
     interface GroupsRowAccess {
     }
     interface GroupsTable {
+    }
+    interface LanguageSelect {
     }
     interface LocationsTable {
     }
@@ -254,11 +252,23 @@ export namespace Components {
     }
     interface SilCountryCodes {
     }
+    interface SilIso6393 {
+    }
+    interface SilIso6393Macrolanguages {
+    }
+    interface SilIso6393Names {
+    }
+    interface SilIso6393Retirements {
+    }
+    interface SilLanguageCodes {
+    }
     interface SilLanguageIndex {
     }
-    interface SilLanguagesCodes {
+    interface SilTableOfCountries {
     }
     interface SilTableOfLanguages {
+    }
+    interface SilTableOfLanguagesInCountry {
     }
     interface SiteText {
     }
@@ -305,6 +315,10 @@ export namespace Components {
     }
     interface TicketsTable {
         "onlyShowCreate": boolean;
+    }
+    interface UpPrayerNotifications {
+    }
+    interface UpPrayerRequests {
     }
     interface UsersTable {
     }
@@ -528,18 +542,6 @@ declare global {
         prototype: HTMLCommonPostsElement;
         new (): HTMLCommonPostsElement;
     };
-    interface HTMLCommonPrayerNotificationsElement extends Components.CommonPrayerNotifications, HTMLStencilElement {
-    }
-    var HTMLCommonPrayerNotificationsElement: {
-        prototype: HTMLCommonPrayerNotificationsElement;
-        new (): HTMLCommonPrayerNotificationsElement;
-    };
-    interface HTMLCommonPrayerRequestsElement extends Components.CommonPrayerRequests, HTMLStencilElement {
-    }
-    var HTMLCommonPrayerRequestsElement: {
-        prototype: HTMLCommonPrayerRequestsElement;
-        new (): HTMLCommonPrayerRequestsElement;
-    };
     interface HTMLCommonStageGraphElement extends Components.CommonStageGraph, HTMLStencilElement {
     }
     var HTMLCommonStageGraphElement: {
@@ -647,6 +649,12 @@ declare global {
     var HTMLGroupsTableElement: {
         prototype: HTMLGroupsTableElement;
         new (): HTMLGroupsTableElement;
+    };
+    interface HTMLLanguageSelectElement extends Components.LanguageSelect, HTMLStencilElement {
+    }
+    var HTMLLanguageSelectElement: {
+        prototype: HTMLLanguageSelectElement;
+        new (): HTMLLanguageSelectElement;
     };
     interface HTMLLocationsTableElement extends Components.LocationsTable, HTMLStencilElement {
     }
@@ -936,23 +944,59 @@ declare global {
         prototype: HTMLSilCountryCodesElement;
         new (): HTMLSilCountryCodesElement;
     };
+    interface HTMLSilIso6393Element extends Components.SilIso6393, HTMLStencilElement {
+    }
+    var HTMLSilIso6393Element: {
+        prototype: HTMLSilIso6393Element;
+        new (): HTMLSilIso6393Element;
+    };
+    interface HTMLSilIso6393MacrolanguagesElement extends Components.SilIso6393Macrolanguages, HTMLStencilElement {
+    }
+    var HTMLSilIso6393MacrolanguagesElement: {
+        prototype: HTMLSilIso6393MacrolanguagesElement;
+        new (): HTMLSilIso6393MacrolanguagesElement;
+    };
+    interface HTMLSilIso6393NamesElement extends Components.SilIso6393Names, HTMLStencilElement {
+    }
+    var HTMLSilIso6393NamesElement: {
+        prototype: HTMLSilIso6393NamesElement;
+        new (): HTMLSilIso6393NamesElement;
+    };
+    interface HTMLSilIso6393RetirementsElement extends Components.SilIso6393Retirements, HTMLStencilElement {
+    }
+    var HTMLSilIso6393RetirementsElement: {
+        prototype: HTMLSilIso6393RetirementsElement;
+        new (): HTMLSilIso6393RetirementsElement;
+    };
+    interface HTMLSilLanguageCodesElement extends Components.SilLanguageCodes, HTMLStencilElement {
+    }
+    var HTMLSilLanguageCodesElement: {
+        prototype: HTMLSilLanguageCodesElement;
+        new (): HTMLSilLanguageCodesElement;
+    };
     interface HTMLSilLanguageIndexElement extends Components.SilLanguageIndex, HTMLStencilElement {
     }
     var HTMLSilLanguageIndexElement: {
         prototype: HTMLSilLanguageIndexElement;
         new (): HTMLSilLanguageIndexElement;
     };
-    interface HTMLSilLanguagesCodesElement extends Components.SilLanguagesCodes, HTMLStencilElement {
+    interface HTMLSilTableOfCountriesElement extends Components.SilTableOfCountries, HTMLStencilElement {
     }
-    var HTMLSilLanguagesCodesElement: {
-        prototype: HTMLSilLanguagesCodesElement;
-        new (): HTMLSilLanguagesCodesElement;
+    var HTMLSilTableOfCountriesElement: {
+        prototype: HTMLSilTableOfCountriesElement;
+        new (): HTMLSilTableOfCountriesElement;
     };
     interface HTMLSilTableOfLanguagesElement extends Components.SilTableOfLanguages, HTMLStencilElement {
     }
     var HTMLSilTableOfLanguagesElement: {
         prototype: HTMLSilTableOfLanguagesElement;
         new (): HTMLSilTableOfLanguagesElement;
+    };
+    interface HTMLSilTableOfLanguagesInCountryElement extends Components.SilTableOfLanguagesInCountry, HTMLStencilElement {
+    }
+    var HTMLSilTableOfLanguagesInCountryElement: {
+        prototype: HTMLSilTableOfLanguagesInCountryElement;
+        new (): HTMLSilTableOfLanguagesInCountryElement;
     };
     interface HTMLSiteTextElement extends Components.SiteText, HTMLStencilElement {
     }
@@ -1056,6 +1100,18 @@ declare global {
         prototype: HTMLTicketsTableElement;
         new (): HTMLTicketsTableElement;
     };
+    interface HTMLUpPrayerNotificationsElement extends Components.UpPrayerNotifications, HTMLStencilElement {
+    }
+    var HTMLUpPrayerNotificationsElement: {
+        prototype: HTMLUpPrayerNotificationsElement;
+        new (): HTMLUpPrayerNotificationsElement;
+    };
+    interface HTMLUpPrayerRequestsElement extends Components.UpPrayerRequests, HTMLStencilElement {
+    }
+    var HTMLUpPrayerRequestsElement: {
+        prototype: HTMLUpPrayerRequestsElement;
+        new (): HTMLUpPrayerRequestsElement;
+    };
     interface HTMLUsersTableElement extends Components.UsersTable, HTMLStencilElement {
     }
     var HTMLUsersTableElement: {
@@ -1116,8 +1172,6 @@ declare global {
         "common-people-graph": HTMLCommonPeopleGraphElement;
         "common-people-to-org-relationships": HTMLCommonPeopleToOrgRelationshipsElement;
         "common-posts": HTMLCommonPostsElement;
-        "common-prayer-notifications": HTMLCommonPrayerNotificationsElement;
-        "common-prayer-requests": HTMLCommonPrayerRequestsElement;
         "common-stage-graph": HTMLCommonStageGraphElement;
         "common-stage-notifications": HTMLCommonStageNotificationsElement;
         "common-stage-role-column-grants": HTMLCommonStageRoleColumnGrantsElement;
@@ -1136,6 +1190,7 @@ declare global {
         "groups-page": HTMLGroupsPageElement;
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
+        "language-select": HTMLLanguageSelectElement;
         "locations-table": HTMLLocationsTableElement;
         "organizations-page": HTMLOrganizationsPageElement;
         "organizations-table": HTMLOrganizationsTableElement;
@@ -1184,9 +1239,15 @@ declare global {
         "sc-projects": HTMLScProjectsElement;
         "scripture-references": HTMLScriptureReferencesElement;
         "sil-country-codes": HTMLSilCountryCodesElement;
+        "sil-iso-639-3": HTMLSilIso6393Element;
+        "sil-iso-639-3-macrolanguages": HTMLSilIso6393MacrolanguagesElement;
+        "sil-iso-639-3-names": HTMLSilIso6393NamesElement;
+        "sil-iso-639-3-retirements": HTMLSilIso6393RetirementsElement;
+        "sil-language-codes": HTMLSilLanguageCodesElement;
         "sil-language-index": HTMLSilLanguageIndexElement;
-        "sil-languages-codes": HTMLSilLanguagesCodesElement;
+        "sil-table-of-countries": HTMLSilTableOfCountriesElement;
         "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
+        "sil-table-of-languages-in-country": HTMLSilTableOfLanguagesInCountryElement;
         "site-text": HTMLSiteTextElement;
         "slack-content": HTMLSlackContentElement;
         "slack-form": HTMLSlackFormElement;
@@ -1204,6 +1265,8 @@ declare global {
         "ticket-graph": HTMLTicketGraphElement;
         "tickets-page": HTMLTicketsPageElement;
         "tickets-table": HTMLTicketsTableElement;
+        "up-prayer-notifications": HTMLUpPrayerNotificationsElement;
+        "up-prayer-requests": HTMLUpPrayerRequestsElement;
         "users-table": HTMLUsersTableElement;
         "work-estimates": HTMLWorkEstimatesElement;
         "work-records": HTMLWorkRecordsElement;
@@ -1307,10 +1370,6 @@ declare namespace LocalJSX {
     }
     interface CommonPosts {
     }
-    interface CommonPrayerNotifications {
-    }
-    interface CommonPrayerRequests {
-    }
     interface CommonStageGraph {
     }
     interface CommonStageNotifications {
@@ -1355,6 +1414,8 @@ declare namespace LocalJSX {
     interface GroupsRowAccess {
     }
     interface GroupsTable {
+    }
+    interface LanguageSelect {
     }
     interface LocationsTable {
     }
@@ -1459,11 +1520,23 @@ declare namespace LocalJSX {
     }
     interface SilCountryCodes {
     }
+    interface SilIso6393 {
+    }
+    interface SilIso6393Macrolanguages {
+    }
+    interface SilIso6393Names {
+    }
+    interface SilIso6393Retirements {
+    }
+    interface SilLanguageCodes {
+    }
     interface SilLanguageIndex {
     }
-    interface SilLanguagesCodes {
+    interface SilTableOfCountries {
     }
     interface SilTableOfLanguages {
+    }
+    interface SilTableOfLanguagesInCountry {
     }
     interface SiteText {
     }
@@ -1516,6 +1589,10 @@ declare namespace LocalJSX {
     interface TicketsTable {
         "onlyShowCreate"?: boolean;
     }
+    interface UpPrayerNotifications {
+    }
+    interface UpPrayerRequests {
+    }
     interface UsersTable {
     }
     interface WorkEstimates {
@@ -1562,8 +1639,6 @@ declare namespace LocalJSX {
         "common-people-graph": CommonPeopleGraph;
         "common-people-to-org-relationships": CommonPeopleToOrgRelationships;
         "common-posts": CommonPosts;
-        "common-prayer-notifications": CommonPrayerNotifications;
-        "common-prayer-requests": CommonPrayerRequests;
         "common-stage-graph": CommonStageGraph;
         "common-stage-notifications": CommonStageNotifications;
         "common-stage-role-column-grants": CommonStageRoleColumnGrants;
@@ -1582,6 +1657,7 @@ declare namespace LocalJSX {
         "groups-page": GroupsPage;
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
+        "language-select": LanguageSelect;
         "locations-table": LocationsTable;
         "organizations-page": OrganizationsPage;
         "organizations-table": OrganizationsTable;
@@ -1630,9 +1706,15 @@ declare namespace LocalJSX {
         "sc-projects": ScProjects;
         "scripture-references": ScriptureReferences;
         "sil-country-codes": SilCountryCodes;
+        "sil-iso-639-3": SilIso6393;
+        "sil-iso-639-3-macrolanguages": SilIso6393Macrolanguages;
+        "sil-iso-639-3-names": SilIso6393Names;
+        "sil-iso-639-3-retirements": SilIso6393Retirements;
+        "sil-language-codes": SilLanguageCodes;
         "sil-language-index": SilLanguageIndex;
-        "sil-languages-codes": SilLanguagesCodes;
+        "sil-table-of-countries": SilTableOfCountries;
         "sil-table-of-languages": SilTableOfLanguages;
+        "sil-table-of-languages-in-country": SilTableOfLanguagesInCountry;
         "site-text": SiteText;
         "slack-content": SlackContent;
         "slack-form": SlackForm;
@@ -1650,6 +1732,8 @@ declare namespace LocalJSX {
         "ticket-graph": TicketGraph;
         "tickets-page": TicketsPage;
         "tickets-table": TicketsTable;
+        "up-prayer-notifications": UpPrayerNotifications;
+        "up-prayer-requests": UpPrayerRequests;
         "users-table": UsersTable;
         "work-estimates": WorkEstimates;
         "work-records": WorkRecords;
@@ -1695,8 +1779,6 @@ declare module "@stencil/core" {
             "common-people-graph": LocalJSX.CommonPeopleGraph & JSXBase.HTMLAttributes<HTMLCommonPeopleGraphElement>;
             "common-people-to-org-relationships": LocalJSX.CommonPeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLCommonPeopleToOrgRelationshipsElement>;
             "common-posts": LocalJSX.CommonPosts & JSXBase.HTMLAttributes<HTMLCommonPostsElement>;
-            "common-prayer-notifications": LocalJSX.CommonPrayerNotifications & JSXBase.HTMLAttributes<HTMLCommonPrayerNotificationsElement>;
-            "common-prayer-requests": LocalJSX.CommonPrayerRequests & JSXBase.HTMLAttributes<HTMLCommonPrayerRequestsElement>;
             "common-stage-graph": LocalJSX.CommonStageGraph & JSXBase.HTMLAttributes<HTMLCommonStageGraphElement>;
             "common-stage-notifications": LocalJSX.CommonStageNotifications & JSXBase.HTMLAttributes<HTMLCommonStageNotificationsElement>;
             "common-stage-role-column-grants": LocalJSX.CommonStageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLCommonStageRoleColumnGrantsElement>;
@@ -1715,6 +1797,7 @@ declare module "@stencil/core" {
             "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
+            "language-select": LocalJSX.LanguageSelect & JSXBase.HTMLAttributes<HTMLLanguageSelectElement>;
             "locations-table": LocalJSX.LocationsTable & JSXBase.HTMLAttributes<HTMLLocationsTableElement>;
             "organizations-page": LocalJSX.OrganizationsPage & JSXBase.HTMLAttributes<HTMLOrganizationsPageElement>;
             "organizations-table": LocalJSX.OrganizationsTable & JSXBase.HTMLAttributes<HTMLOrganizationsTableElement>;
@@ -1763,9 +1846,15 @@ declare module "@stencil/core" {
             "sc-projects": LocalJSX.ScProjects & JSXBase.HTMLAttributes<HTMLScProjectsElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
             "sil-country-codes": LocalJSX.SilCountryCodes & JSXBase.HTMLAttributes<HTMLSilCountryCodesElement>;
+            "sil-iso-639-3": LocalJSX.SilIso6393 & JSXBase.HTMLAttributes<HTMLSilIso6393Element>;
+            "sil-iso-639-3-macrolanguages": LocalJSX.SilIso6393Macrolanguages & JSXBase.HTMLAttributes<HTMLSilIso6393MacrolanguagesElement>;
+            "sil-iso-639-3-names": LocalJSX.SilIso6393Names & JSXBase.HTMLAttributes<HTMLSilIso6393NamesElement>;
+            "sil-iso-639-3-retirements": LocalJSX.SilIso6393Retirements & JSXBase.HTMLAttributes<HTMLSilIso6393RetirementsElement>;
+            "sil-language-codes": LocalJSX.SilLanguageCodes & JSXBase.HTMLAttributes<HTMLSilLanguageCodesElement>;
             "sil-language-index": LocalJSX.SilLanguageIndex & JSXBase.HTMLAttributes<HTMLSilLanguageIndexElement>;
-            "sil-languages-codes": LocalJSX.SilLanguagesCodes & JSXBase.HTMLAttributes<HTMLSilLanguagesCodesElement>;
+            "sil-table-of-countries": LocalJSX.SilTableOfCountries & JSXBase.HTMLAttributes<HTMLSilTableOfCountriesElement>;
             "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
+            "sil-table-of-languages-in-country": LocalJSX.SilTableOfLanguagesInCountry & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesInCountryElement>;
             "site-text": LocalJSX.SiteText & JSXBase.HTMLAttributes<HTMLSiteTextElement>;
             "slack-content": LocalJSX.SlackContent & JSXBase.HTMLAttributes<HTMLSlackContentElement>;
             "slack-form": LocalJSX.SlackForm & JSXBase.HTMLAttributes<HTMLSlackFormElement>;
@@ -1783,6 +1872,8 @@ declare module "@stencil/core" {
             "ticket-graph": LocalJSX.TicketGraph & JSXBase.HTMLAttributes<HTMLTicketGraphElement>;
             "tickets-page": LocalJSX.TicketsPage & JSXBase.HTMLAttributes<HTMLTicketsPageElement>;
             "tickets-table": LocalJSX.TicketsTable & JSXBase.HTMLAttributes<HTMLTicketsTableElement>;
+            "up-prayer-notifications": LocalJSX.UpPrayerNotifications & JSXBase.HTMLAttributes<HTMLUpPrayerNotificationsElement>;
+            "up-prayer-requests": LocalJSX.UpPrayerRequests & JSXBase.HTMLAttributes<HTMLUpPrayerRequestsElement>;
             "users-table": LocalJSX.UsersTable & JSXBase.HTMLAttributes<HTMLUsersTableElement>;
             "work-estimates": LocalJSX.WorkEstimates & JSXBase.HTMLAttributes<HTMLWorkEstimatesElement>;
             "work-records": LocalJSX.WorkRecords & JSXBase.HTMLAttributes<HTMLWorkRecordsElement>;

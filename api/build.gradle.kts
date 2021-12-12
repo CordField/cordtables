@@ -5,9 +5,9 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("org.asciidoctor.convert") version "1.5.8"
   id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
-	kotlin("jvm") version "1.5.30"
-	kotlin("plugin.spring") version "1.5.30"
-	kotlin("plugin.serialization") version "1.5.30"
+  kotlin("jvm") version "1.6.0"
+	kotlin("plugin.spring") version "1.6.0"
+	kotlin("plugin.serialization") version "1.6.0"
 }
 
 group = "com.seedcompany"

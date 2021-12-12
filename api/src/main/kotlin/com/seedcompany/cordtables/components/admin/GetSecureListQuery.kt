@@ -11,6 +11,8 @@ data class GetSecureListQueryRequest(
     val columns: Array<String>,
     val custom_columns: String? = null,
     val filter: String = "",
+    val searchField: String = "",
+    val searchKeyword: String = "",
     val getList: Boolean = true, // get read if false
     val whereClause: String = ""
 )
@@ -118,6 +120,11 @@ class GetSecureListQuery() {
         """.replace('\n', ' ')
 
         }
+
+//        if(req.searchField != "" && req.searchKeyword!=""){
+//
+//        }
+
       if(req.whereClause!=="") {
         response.query += """
             and ${req.whereClause}
@@ -130,7 +137,6 @@ class GetSecureListQuery() {
           ${req.filter};
           """.trimIndent().replace('\n',' ')
       }
-//      println(response.query)
         return response
     }
 

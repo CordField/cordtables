@@ -1,12 +1,16 @@
 import { createStore } from '@stencil/store';
+import { AppState } from '../common/types';
 interface Notification {
   id: string;
   text: string;
   type: 'error' | 'success' | 'info';
 }
 
+
 export class Globals {
   storeObject = {
+    appState: AppState.Init,
+    language: undefined,
     editMode: false,
     editModeWidth: 0,
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
@@ -16,6 +20,9 @@ export class Globals {
     isAdmin: localStorage.getItem('isAdmin'),
     notifications: (JSON.parse(localStorage.getItem('notifications')) ?? []) as Notification[],
     userId: JSON.parse(localStorage.getItem('userId')) as number | undefined,
+    siteTextLanguages: [],
+    siteTextStrings: [],
+    siteTextTranslations: {}
   };
   public globalStore = createStore(this.storeObject);
 

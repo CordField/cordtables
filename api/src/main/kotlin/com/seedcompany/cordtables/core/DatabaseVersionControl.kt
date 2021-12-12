@@ -116,6 +116,9 @@ class DatabaseVersionControl(
         runSqlFile("sql/schemas/sc/sc.v1.sql")
         runSqlFile("sql/migration/ethnologue.migration.sql")
 
+        // up (unceasing prayer)
+        runSqlFile("sql/schemas/up/up.v1.sql")
+
         // load data functions
         runSqlFile("sql/data/bootstrap.data.sql")
         runSqlFile("sql/data/roles.data.sql")

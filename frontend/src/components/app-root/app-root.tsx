@@ -2,6 +2,7 @@ import { Component, h, Host, Prop, State } from '@stencil/core';
 import { injectHistory, RouterHistory } from '@stencil/router';
 import { globals } from '../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
+import { AppState } from '../../common/types';
 
 @Component({
   tag: 'app-root',
@@ -65,57 +66,60 @@ export class AppRoot {
   };
 
   render() {
+    console.debug("globals.globalStore.state.appState", globals.globalStore.state.appState);
     return (
       <div id="root-wrap-outer">
         <cf-notif />
         <cf-header />
-        <div id="root-wrap-inner">
-          <div>
-            {!globals.globalStore.state.isLoggedIn && <div>Please login or register</div>}
+        {globals.globalStore.state.appState === AppState.TranslationLoaded && (
+          <div id="root-wrap-inner">
+            <div>
+              {!globals.globalStore.state.isLoggedIn && <div>Please login or register</div>}
 
-            {globals.globalStore.state.isLoggedIn && this.showSelect && (
-              <div id="top-thing">
-                <div id="nav-menu">
-                  <div>
-                    <select name="tables" id="tables" onChange={event => this.selectChange(event)}>
-                      <option selected={this.path === '/'} value="-">
-                        -
-                      </option>
-
-                      {this.pages.map(page => (
-                        <option selected={this.path === `/page/${page.toLowerCase()}`} value={page}>
-                          {page} Page
+              {globals.globalStore.state.isLoggedIn && this.showSelect && (
+                <div id="top-thing">
+                  <div id="nav-menu">
+                    <div>
+                      <select name="tables" id="tables" onChange={event => this.selectChange(event)}>
+                        <option selected={this.path === '/'} value="-">
+                          -
                         </option>
-                      ))}
 
-                      {globals.globalStore.state.readableTables.map(table => (
-                        <option selected={this.path === `/table/${table.split('.').join('-')}`} value={table.split('.').join('-')}>
-                          {table}
-                        </option>
-                      ))}
-                    </select>
+                        {this.pages.map(page => (
+                          <option selected={this.path === `/page/${page.toLowerCase()}`} value={page}>
+                            {page} Page
+                          </option>
+                        ))}
+
+                        {globals.globalStore.state.readableTables.map(table => (
+                          <option selected={this.path === `/table/${table.split('.').join('-')}`} value={table.split('.').join('-')}>
+                            {table}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
+
+                  {this.path != '/page/tickets' && <button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>}
                 </div>
+              )}
+            </div>
+            <main>
+              <stencil-router>
+                <stencil-route-switch scrollTopOffset={0}>
+                  <stencil-route url="/" component="app-home" exact={true} />
+                  <stencil-route url="/profile" component="app-profile" />
+                  <stencil-route url="/register" component="cf-register" />
+                  <stencil-route url="/login" component="cf-login" />
 
-                {this.path != '/page/tickets' && <button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>}
-              </div>
-            )}
+                  <stencil-route url="/table/:table" component="table-root" />
+
+                  <stencil-route url="/page/:page/:requestId?" component="page-root" />
+                </stencil-route-switch>
+              </stencil-router>
+            </main>
           </div>
-          <main>
-            <stencil-router>
-              <stencil-route-switch scrollTopOffset={0}>
-                <stencil-route url="/" component="app-home" exact={true} />
-                <stencil-route url="/profile" component="app-profile" />
-                <stencil-route url="/register" component="cf-register" />
-                <stencil-route url="/login" component="cf-login" />
-
-                <stencil-route url="/table/:table" component="table-root" />
-
-                <stencil-route url="/page/:page/:requestId?" component="page-root" />
-              </stencil-route-switch>
-            </stencil-router>
-          </main>
-        </div>
+        )}
         <footer>
           <div id="version-info">
             <div>pre-alpha</div>

@@ -10,7 +10,9 @@ export async function fetchAs<REQ, RES>(path: string, data: REQ) {
 
   const json = await result.json();
 
-  console.log(json);
-
   return json as unknown as RES;
+}
+
+export const capitalize = (str: string) => {
+  return str.replace(/^\w/, (c) => c.toUpperCase());
 }
