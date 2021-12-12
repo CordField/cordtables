@@ -3,7 +3,6 @@ import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 import { CommonDiscussionChannel } from '../../tables/common/discussion-channels/types';
-import { CommonPost, CommonPostsListRequest, CommonPostsListResponse } from '../../tables/common/posts/types';
 import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, DeleteCommonThreadsRequest, DeleteCommonThreadsResponse } from '../../tables/common/threads/types';
 import { v4 as uuidv4 } from 'uuid';
 

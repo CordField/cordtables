@@ -47,7 +47,7 @@ export class Notif {
                   this.clickHandler(notif.id);
                 }}
               >
-                &#10006;
+                <ion-icon name="close-circle-outline"></ion-icon>
               </span>
             </div>
           );
