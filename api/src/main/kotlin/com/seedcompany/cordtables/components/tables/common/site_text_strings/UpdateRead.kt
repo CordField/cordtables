@@ -21,7 +21,7 @@ data class SiteTextStringUpdateReadResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonSiteTextUpdateRead")
+@Controller("CommonSiteTextStringUpdateRead")
 class UpdateRead(
   @Autowired
   val util: Utility,
@@ -35,7 +35,7 @@ class UpdateRead(
   @Autowired
   val read: Read,
 ) {
-  @PostMapping("common-site-texts/update-read")
+  @PostMapping("common-site-text-strings/update-read")
   @ResponseBody
   fun updateReadHandler(@RequestBody req: SiteTextStringUpdateReadRequest): SiteTextStringUpdateReadResponse {
 

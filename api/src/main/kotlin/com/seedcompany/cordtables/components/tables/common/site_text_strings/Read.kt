@@ -26,7 +26,7 @@ data class SiteTextStringReadResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("SiteTextStringRead")
+@Controller("CommonSiteTextStringRead")
 class Read(
   @Autowired
   val util: Utility,
