@@ -56,7 +56,7 @@ export class SlackThread {
                 }
               }}
             >
-              ✔️
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
             </span>
             <span
               class="thread-update-cancel"
@@ -66,10 +66,10 @@ export class SlackThread {
                 this.postContent = this.post.content;
               }}
             >
-              ❌
+              <ion-icon name="close-circle-outline"></ion-icon>
             </span>
           </span>
-        ) : this.showEditAndDeleteButtons ? (
+        ) : globals.globalStore.state.editMode ? (
           <span>
             <span
               class="thread-update"
@@ -78,7 +78,7 @@ export class SlackThread {
                 this.updateMode = true;
               }}
             >
-              ✎
+              <ion-icon name="create-outline"></ion-icon>
             </span>
             <span
               class="thread-delete"
@@ -87,7 +87,7 @@ export class SlackThread {
                 this.postDeleted.emit(this.post.id);
               }}
             >
-              ⛔
+              <ion-icon name="trash-outline" class="delete-icon"></ion-icon>
             </span>
           </span>
         ) : null}
@@ -96,12 +96,12 @@ export class SlackThread {
 
     const jsx = (
       <div
-        onMouseEnter={() => {
-          setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
-        }}
-        onMouseLeave={() => {
-          setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
-        }}
+        // onMouseEnter={() => {
+        //   setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
+        // }}
+        // onMouseLeave={() => {
+        //   setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
+        // }}
         class="thread-header"
       >
         {this.updateMode ? <cf-tiny initialHTMLContent={this.postContent} uid={this.tinyMceId} /> : <span class="slack-thread-content" innerHTML={this.postContent}></span>}

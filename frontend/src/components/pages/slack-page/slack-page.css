@@ -47,12 +47,10 @@ slack-content {
 
 .add-button {
   color: var(--color-primary);
-  background-color: var(--color-primary-lightest);
+  display: block;
   width: fit-content;
-  border-radius: 5px;
-  font-size: 2rem;
+  font-size: 1.5rem;
   user-select: none;
-  text-align: center;
   margin-top: 5px;
 }
 
@@ -98,6 +96,9 @@ slack-thread {
 .delete-icon {
   margin-left: 3px;
 }
+.update-cancel-icon {
+  margin-left: 3px;
+}
 .update-confirm-icon {
   color: var(--color-primary);
 }
@@ -112,6 +113,9 @@ slack-thread {
   margin-top: 1rem;
   margin-left: 0;
   max-height: 10vh;
+}
+.sidebar-form {
+  margin-top: 2px;
 }
 .form-button {
   color: var(--color-primary);
@@ -141,22 +145,16 @@ slack-thread {
     padding: 0;
     margin: 5px 2px;
   }
-  .add-button {
-    color: var(--color-primary);
-    background-color: var(--color-primary-lightest);
-    width: fit-content;
-    border-radius: 5px;
-    font-size: 1rem;
-    user-select: none;
-    text-align: center;
-    margin-top: 2px;
-  }
+
   .form {
     max-height: 100px;
     margin-top: 1rem;
   }
   .form-last {
     margin-top: 1rem;
+  }
+  .update-cancel-icon {
+    margin-left: 0px;
   }
 }
 

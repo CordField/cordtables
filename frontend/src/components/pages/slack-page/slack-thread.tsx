@@ -77,8 +77,12 @@ export class SlackThread {
     }
   }
 
-  mouseEnterAndLeaveHandler() {
-    if (this.thread.owning_person === globals.globalStore.state.userId) this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+  mouseEnterAndLeaveHandler(e) {
+    e.stopPropagation();
+    console.log('mouse enter/leave', this.thread.owning_person, globals.globalStore.state.userId, this.showEditAndDeleteButtons, this.thread.id);
+    if (this.thread.owning_person === globals.globalStore.state.userId) {
+      this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+    }
   }
 
   render() {
@@ -116,7 +120,7 @@ export class SlackThread {
               <ion-icon name="close-circle-outline"></ion-icon>
             </span>
           </span>
-        ) : this.showEditAndDeleteButtons ? (
+        ) : globals.globalStore.state.editMode ? (
           <span>
             <span
               class="update-icon thread-icon"
@@ -140,21 +144,27 @@ export class SlackThread {
         ) : null}
       </span>
     );
-
     const threadHeaderJSX = (
       <div
-        onMouseEnter={() => {
-          setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
-        }}
-        onMouseLeave={() => {
-          setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
-        }}
+        // onMouseEnter={e => {
+        //   e.stopPropagation();
+        //   this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+        //   // if (timer) clearTimeout(timer);
+        //   // timer = setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 50);
+        // }}
+        // onMouseLeave={e => {
+        //   this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+        //   e.stopPropagation();
+        //   // if (timer) clearTimeout(timer);
+        //   // timer = setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 50);
+        // }}
         class="thread-header"
       >
         <span
           class="post-indicator thread-icon"
-          onClick={() => {
-            if (this.updateMode === false) this.showPosts = !this.showPosts;
+          onClick={e => {
+            e.stopPropagation();
+            this.showPosts = !this.showPosts;
           }}
         >
           {this.showPosts ? <ion-icon name="arrow-down-circle-outline"></ion-icon> : <ion-icon name="arrow-forward-circle-outline"></ion-icon>}
