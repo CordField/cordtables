@@ -56,7 +56,7 @@ create table common.site_text_translations(
   id serial primary key,
 
   language int not null references common.languages(id),
-  site_text int not null references common.site_text_strings(id),
+  site_text int not null references common.site_text_strings(id) on delete cascade,
   translation varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,

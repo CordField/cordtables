@@ -11,7 +11,8 @@ export enum ErrorType {
 }
 
 export enum AppState {
-  AppLoaded = 'AppLoaded',
+  Init = 'Init', 
+  Loaded = 'Loaded',
   TranslationLoaded = 'TranslationLoaded',
 }
 
