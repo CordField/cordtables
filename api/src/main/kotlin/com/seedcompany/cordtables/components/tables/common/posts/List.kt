@@ -6,6 +6,7 @@ import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
 import com.seedcompany.cordtables.components.tables.common.threads.Thread
+import com.seedcompany.cordtables.components.tables.sc.people.people
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -45,6 +46,7 @@ class List(
   @ResponseBody
   fun listHandler(@RequestBody req: CommonPostsListRequest): CommonPostsListResponse {
     var data: MutableList<Post> = mutableListOf()
+    var personIds: String = "("
     var whereClause = ""
     if (req.token == null) return CommonPostsListResponse(ErrorType.TokenNotFound, mutableListOf())
     val paramSource = MapSqlParameterSource()
@@ -117,11 +119,22 @@ class List(
             owning_group = owning_group
           )
         )
+        if(personIds=="(") {
+          personIds+= "$owning_person,"
+        }
+        else{
+          personIds+="$personIds, $owning_person"
+        }
       }
     } catch (e: SQLException) {
       println("error while listing ${e.message}")
       return CommonPostsListResponse(ErrorType.SQLReadError, mutableListOf())
     }
+
+    personIds+=")"
+    val peopleQuery = """select public_first_name, public_last_name from admin.people where id in $personIds""".trimIndent()
+    val jdbcPeopleResult = jdbcTemplate.queryForRowSet(peopleQuery, paramSource)
+
     return CommonPostsListResponse(ErrorType.NoError, data)
   }
 }

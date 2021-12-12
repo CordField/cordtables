@@ -40,6 +40,9 @@ export class AppRoot {
     if (!process.env.SERVER_URL.startsWith('https')) {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: infoText, id: uuidv4(), type: 'info' });
     }
+    if (globals.globalStore.state.token === null || globals.globalStore.state.token === undefined) {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'TOKEN NOT FOUND', id: uuidv4(), type: 'info' });
+    }
     // else {
     //   globals.globalStore.state.notifications = globals.globalStore.state.notifications.filter(notif => notif.text !== infoText);
     // }

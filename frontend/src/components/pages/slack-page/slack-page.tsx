@@ -34,14 +34,12 @@ export class SlackPage {
   }
 
   render() {
-    // console.log('in parent', this.selectedDiscussionChannel);
     return (
       <Host>
         <slot></slot>
         <div class="slack-page">
           <slack-sidebar discussionChannels={this.discussionChannelsResponse} />
           <slack-content selectedDiscussionChannel={this.selectedDiscussionChannel} />
-
         </div>
       </Host>
     );

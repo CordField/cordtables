@@ -2,7 +2,6 @@ import { Component, Host, h, Prop, Watch, Event, EventEmitter, State, Listen } f
 import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
-import { DiscussionChannels } from '../../tables/common/discussion-channels/discussion-channels';
 import {
   CommonDiscussionChannel,
   CommonDiscussionChannelListResponse,
@@ -76,14 +75,14 @@ export class SlackSidebar {
       <div>Loading...</div>
     );
     const formJsx = (
-      <form class="slack-form-last">
+      <form class="sidebar-form">
         <input type="text" name="name" id="name" value={this.name} onChange={e => this.handleNameChange(e)} />
         <button
           onClick={e => {
             this.handleCreate(e);
             this.setNameToNull();
           }}
-          class="slack-form-button"
+          class="form-button"
         >
           submit
         </button>
@@ -93,14 +92,14 @@ export class SlackSidebar {
       <Host>
         <slot></slot>
         {jsx}
-        <div
+        <span
           class="add-button"
           onClick={() => {
             this.showForm = !this.showForm;
           }}
         >
-          {this.showForm ? '\u2212' : '\u002B'}
-        </div>
+          {this.showForm ? <ion-icon name="remove-circle-outline"></ion-icon> : <ion-icon name="add-circle-outline"></ion-icon>}
+        </span>
         {this.showForm && formJsx}
       </Host>
     );

@@ -6,8 +6,15 @@ import { globals } from '../../../core/global.store';
 import { idService, IdService } from '../../../core/id.service';
 import { TinyUpdateEvent } from '../../cf-tiny/types';
 import { CommonDiscussionChannel } from '../../tables/common/discussion-channels/types';
-import { CommonPost, CommonPostsListRequest, CommonPostsListResponse } from '../../tables/common/posts/types';
-import { CommonThread, CommonThreadsListRequest, CommonThreadsListResponse, CommonThreadsUpdateRequest, CommonThreadsUpdateResponse } from '../../tables/common/threads/types';
+import { CommonPost, CommonPostsListRequest, CommonPostsListResponse, DeleteCommonPostsRequest, DeleteCommonPostsResponse } from '../../tables/common/posts/types';
+import {
+  CommonThread,
+  CommonThreadsListRequest,
+  CommonThreadsListResponse,
+  CommonThreadsUpdateRequest,
+  CommonThreadsUpdateResponse,
+  DeleteCommonThreadsRequest,
+} from '../../tables/common/threads/types';
 
 // will take discussion channels as a prop
 @Component({
@@ -34,6 +41,18 @@ export class SlackThread {
   handleContentUpdateChange(e: CustomEvent<TinyUpdateEvent>) {
     if (e.detail.id === this.tinyMceId) this.threadContent = e.detail.content;
   }
+  @Listen('postDeleted')
+  async handleThreadDeletedChange(event: CustomEvent<number>) {
+    const deleteResponse = await fetchAs<DeleteCommonPostsRequest, DeleteCommonPostsResponse>('common-posts/delete', {
+      token: globals.globalStore.state.token,
+      id: event.detail,
+    });
+    if (deleteResponse.error === ErrorType.NoError) {
+      this.threadPosts = this.threadPosts?.filter(thread => thread.id !== event.detail);
+    } else {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'unable to delete thread', id: v4(), type: 'error' });
+    }
+  }
 
   @Watch('showPosts')
   async handleShowPostsChange(newValue: boolean, oldValue: boolean) {
@@ -58,17 +77,22 @@ export class SlackThread {
     }
   }
 
-  mouseEnterAndLeaveHandler() {
-    if (this.thread.owning_person === globals.globalStore.state.userId) this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+  mouseEnterAndLeaveHandler(e) {
+    e.stopPropagation();
+    console.log('mouse enter/leave', this.thread.owning_person, globals.globalStore.state.userId, this.showEditAndDeleteButtons, this.thread.id);
+    if (this.thread.owning_person === globals.globalStore.state.userId) {
+      this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+    }
   }
 
   render() {
+    const slackThreadButtonsClass = this.updateMode === false ? 'thread-buttons' : 'thread-buttons thread-buttons-update';
     const editAndDeleteButtons = (
-      <span class="slack-thread-buttons">
+      <span class={slackThreadButtonsClass}>
         {this.updateMode ? (
           <span>
             <span
-              class="thread-update-confirm"
+              class="update-confirm-icon"
               onClick={async e => {
                 e.stopPropagation();
                 this.updateMode = false;
@@ -83,75 +107,78 @@ export class SlackThread {
                 }
               }}
             >
-              ✔️
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
             </span>
             <span
-              class="thread-update-cancel"
+              class="update-cancel-icon thread-icon"
               onClick={e => {
                 e.stopPropagation();
                 this.updateMode = false;
                 this.threadContent = this.thread.content;
               }}
             >
-              ❌
+              <ion-icon name="close-circle-outline"></ion-icon>
             </span>
           </span>
-        ) : this.showEditAndDeleteButtons ? (
+        ) : globals.globalStore.state.editMode ? (
           <span>
             <span
-              class="thread-update"
+              class="update-icon thread-icon"
               onClick={e => {
                 e.stopPropagation();
                 this.updateMode = true;
               }}
             >
-              ✎
+              <ion-icon name="create-outline"></ion-icon>
             </span>
             <span
-              class="thread-delete"
+              class="delete-icon thread-icon"
               onClick={e => {
                 e.stopPropagation();
                 this.threadDeleted.emit(this.thread.id);
               }}
             >
-              ⛔
+              <ion-icon name="trash-outline" class="delete-icon"></ion-icon>
             </span>
           </span>
         ) : null}
       </span>
     );
-
-    const jsx = (
-      <div>
-        <div
-          onMouseEnter={() => {
-            setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
+    const threadHeaderJSX = (
+      <div
+        // onMouseEnter={e => {
+        //   e.stopPropagation();
+        //   this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+        //   // if (timer) clearTimeout(timer);
+        //   // timer = setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 50);
+        // }}
+        // onMouseLeave={e => {
+        //   this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+        //   e.stopPropagation();
+        //   // if (timer) clearTimeout(timer);
+        //   // timer = setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 50);
+        // }}
+        class="thread-header"
+      >
+        <span
+          class="post-indicator thread-icon"
+          onClick={e => {
+            e.stopPropagation();
+            this.showPosts = !this.showPosts;
           }}
-          onMouseLeave={() => {
-            setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
-          }}
-          class="slack-thread-content"
         >
-          <span
-            class="post-indicator"
-            onClick={() => {
-              this.showPosts = !this.showPosts;
-            }}
-          >
-            {this.showPosts ? '👇' : '👉'}
-          </span>
-          {this.updateMode ? <cf-tiny initialHTMLContent={this.threadContent} uid={this.tinyMceId} /> : <span class="thread-content" innerHTML={this.threadContent}></span>}
-
-          {editAndDeleteButtons}
-        </div>
-        <div class="thread-posts">{this.showPosts && this.threadPosts?.map(post => <div innerHTML={post.content} />)}</div>
+          {this.showPosts ? <ion-icon name="arrow-down-circle-outline"></ion-icon> : <ion-icon name="arrow-forward-circle-outline"></ion-icon>}
+        </span>
+        {this.updateMode ? <cf-tiny initialHTMLContent={this.threadContent} uid={this.tinyMceId} /> : <span class="thread-content" innerHTML={this.threadContent}></span>}
+        {editAndDeleteButtons}
       </div>
     );
 
     return (
-      <Host class="slack-thread">
+      <Host>
         <slot></slot>
-        {jsx}
+        {threadHeaderJSX}
+        <div class="thread-posts">{this.showPosts && this.threadPosts?.map(post => <slack-post post={post} />)}</div>
         {this.showPosts && <slack-form type="post" selectedThreadId={this.thread.id} />}
       </Host>
     );
