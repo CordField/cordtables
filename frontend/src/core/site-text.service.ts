@@ -87,3 +87,12 @@ export class SiteTextService {
 }
 
 export const siteTextService = new SiteTextService();
+
+export const t = (key: string) => {
+  const language = globals.globalStore.state.language;
+  const translation = globals.globalStore.state.siteTextTranslations[language][key];
+  if(!translation) {
+    console.debug(`${key} doesn't exist in translations`);
+  }
+  return translation? translation: key;
+}

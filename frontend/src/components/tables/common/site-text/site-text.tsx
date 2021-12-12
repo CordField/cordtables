@@ -2,36 +2,40 @@ import { Component, State, Host, h } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { SiteTextLanguage, SiteTextString } from '../../../../common/types';
 import { globals } from '../../../../core/global.store';
+import { t } from '../../../../core/site-text.service'
 @Component({
   tag: 'site-text',
   styleUrl: 'site-text.css',
   shadow: true,
 })
-
 export class SiteText {
   @State() columnData: ColumnDescription[];
-
-  constructor() {
-    this.columnData = []
-  }
+  @State() rowData: Array<any>;
 
   handleSiteTextStringUpdate = async (): Promise<boolean> => {
     return true;
-  }
+  };
 
-  handleDelete = async (): Promise<boolean>  => {
+  handleDelete = async (): Promise<boolean> => {
     return true;
-  }
+  };
 
   handleSiteTextTranslationUpdate = async (): Promise<boolean> => {
     return true;
-  }
+  };
 
   makeColumns = (): ColumnDescription[] => {
     const columnData: ColumnDescription[] = [
       {
+        field: 'id',
+        displayName: 'ID',
+        width: 50,
+        editable: false,
+        deleteFn: this.handleDelete,
+      },
+      {
         field: 'english',
-        displayName: 'English',
+        displayName: t('english').toUppercase(),
         width: 50,
         editable: true,
         deleteFn: this.handleDelete,
@@ -39,7 +43,7 @@ export class SiteText {
       },
       {
         field: 'comment',
-        displayName: 'Comment',
+        displayName: t('comment').toUppercase(),
         width: 200,
         editable: true,
         updateFn: this.handleSiteTextStringUpdate,
@@ -48,22 +52,34 @@ export class SiteText {
     const languageColumns: ColumnDescription[] = globals.globalStore.state.siteTextLanguages.map((siteTextLanguage: SiteTextLanguage) => {
       return {
         field: siteTextLanguage.language,
-        displayName: siteTextLanguage.language_name,
+        displayName: t(siteTextLanguage.language_name),
         width: 50,
         editable: true,
-        updateFn: this.handleSiteTextTranslationUpdate
-      }
+        updateFn: this.handleSiteTextTranslationUpdate,
+      };
     });
     return columnData.concat(languageColumns);
-  }
-
-  makeRows = () => {
+  };
   
-  }
+  makeRows = () => {
+    return globals.globalStore.state.siteTextStrings.map((siteTextString: SiteTextString) => {
+      const row = {
+        id: siteTextString.id,
+        english: siteTextString.english,
+        comment: siteTextString.comment,
+      };
+
+      globals.globalStore.state.siteTextLanguages.forEach((siteTextLanguage: SiteTextLanguage) => {
+        row[siteTextLanguage.language] = globals.globalStore.state.siteTextTranslations[siteTextLanguage.language][siteTextString.english];
+      });
+
+      return row;
+    });
+  };
 
   componentDidLoad() {
     this.columnData = this.makeColumns();
-    // this.makeRows();
+    this.rowData = this.makeRows();
   }
 
   render() {
@@ -74,10 +90,9 @@ export class SiteText {
           <language-select />
         </div>
         <div class="translations">
-
-        </div>
+          <h4>Site Text Translations</h4>
+          {this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}</div>
       </div>
     );
   }
-
 }
