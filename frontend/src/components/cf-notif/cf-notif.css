@@ -3,6 +3,7 @@
   padding-left: 10px;
   max-height: 100px;
   overflow-y: auto;
+  font-size: 0.75rem;
 }
 div.error {
   color: #b91c1c;
@@ -12,6 +13,10 @@ div.success {
   color: #047857;
 }
 
+div.info {
+  color: #d97706;
+}
+
 .close-button {
-  color: #374151;
+  color: var(--color-gray-darkest);
 }

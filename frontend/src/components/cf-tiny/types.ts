@@ -1,4 +1,4 @@
 export class TinyUpdateEvent {
-  id: number;
+  id: string;
   content: string;
 }

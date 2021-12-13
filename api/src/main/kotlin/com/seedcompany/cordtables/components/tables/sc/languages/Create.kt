@@ -48,8 +48,9 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.languages(name, display_name, created_by, modified_by, owning_person, owning_group)
+            insert into sc.languages(name, display_name, ethnologue, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?,
                     ?,
                     ?,
                     (
@@ -74,6 +75,7 @@ class Create(
             Int::class.java,
             req.language.name,
             req.language.display_name,
+          req.language.ethnologue,
             req.token,
             req.token,
             req.token,

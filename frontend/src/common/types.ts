@@ -10,6 +10,12 @@ export enum ErrorType {
   DuplicateEmail = 'DuplicateEmail',
 }
 
+export enum AppState {
+  Init = 'Init', 
+  Loaded = 'Loaded',
+  TranslationLoaded = 'TranslationLoaded',
+}
+
 //export type EgidsScale = `0` | `1` | `2` | `3` | `4` | `5` | `6a` | `6b` | `7` | `8a` | `8b` | `9` | `10`;
 
 export interface GlobalRole {
@@ -122,7 +128,23 @@ export interface AdminUser {
 }
 
 export type SiteTextLanguage = {
-  id: number;
-  ethnologue: number;
+  language: number;
   language_name: string;
+}
+
+export type SiteTextString = {
+  id: number,
+  english: string,
+  comment: string
+}
+
+export type SiteTextTranslation = {
+  id: number,
+  site_text: number,
+  translation: string
+}
+
+export type SiteTextTranslationList = {
+  language: number,
+  translations: Array<SiteTextTranslation>
 }

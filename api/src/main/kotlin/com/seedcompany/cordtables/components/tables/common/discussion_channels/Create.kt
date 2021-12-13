@@ -38,7 +38,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-discussion_channels/create")
+    @PostMapping("common-discussion-channels/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonDiscussionChannelsCreateRequest): CommonDiscussionChannelsCreateResponse {
 

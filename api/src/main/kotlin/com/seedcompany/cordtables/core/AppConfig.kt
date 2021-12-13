@@ -1,5 +1,8 @@
 package com.seedcompany.cordtables.core
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.info.Info
+import io.swagger.v3.oas.annotations.servers.Server
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
@@ -13,6 +16,20 @@ public enum class ConfigEnv {
     test,
     prod,
 }
+
+
+@OpenAPIDefinition(
+info = Info(
+  title = "Cord Tables ",
+  version = "1.0",
+),
+servers = [
+    Server(
+      description = "API URL",
+      url = ("\${server.url}").toString(),
+    )
+  ]
+)
 
 @Component
 @EnableConfigurationProperties

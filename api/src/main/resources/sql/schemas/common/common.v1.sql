@@ -64,7 +64,7 @@ create table common.site_text_translations(
   id serial primary key,
 
   language int not null references common.languages(id),
-  site_text int not null references common.site_text_strings(id),
+  site_text int not null references common.site_text_strings(id) on delete cascade,
   translation varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -75,6 +75,19 @@ create table common.site_text_translations(
   owning_group int not null references admin.groups(id),
 
   unique (language, site_text)
+);
+
+create table common.site_text_languages(
+  id serial primary key,
+
+  language int not null references common.languages(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by int not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by int not null references admin.people(id),
+  owning_person int not null references admin.people(id),
+  owning_group int not null references admin.groups(id)
 );
 
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
@@ -200,16 +213,13 @@ create table common.scripture_references (
 
 create table common.discussion_channels (
 	id serial primary key,
-
 	name varchar(32) not null,
-
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
   owning_group int not null references admin.groups(id),
-
   unique (name, owning_group)
 );
 
@@ -233,7 +243,7 @@ create table common.cell_channels (
 create table common.threads (
 	id serial primary key,
 
-	channel int not null references common.discussion_channels(id),
+	channel int not null references common.discussion_channels(id) on delete cascade,
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -248,10 +258,8 @@ create table common.threads (
 -- todo: not sure if this is supposed to follow neo4j, bet if it were, it's really different.
 create table common.posts (
 	id serial primary key,
-
-	thread int not null references common.threads(id),
+	thread int not null references common.threads(id) on delete cascade,
 	content text not null,
-
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -712,37 +720,6 @@ create table common.stage_notifications(
 	on_exit bool default false,
 	person int references admin.people(id),
   
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
--- PRAYER --------------------------------------------------------------
-
-create table common.prayer_requests(
-	id serial primary key,
-
-  parent int references common.prayer_requests(id),
-  subject varchar(255) default null,
-  content text not null,
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
-create table common.prayer_notifications(
-	id serial primary key,
-
-  request int references common.prayer_requests(id),
-  person int references admin.people(id),
-
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

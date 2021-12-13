@@ -2,19 +2,18 @@ CREATE OR REPLACE PROCEDURE admin.register(
   IN p_email VARCHAR(255),
   IN p_password VARCHAR(50),
   in p_token varchar(64),
-  INOUT error_type VARCHAR(32)
+  INOUT error_type VARCHAR(32), 
+  INOUT user_id integer
 )
 LANGUAGE PLPGSQL
 AS $$
 DECLARE
   vPersonId int;
   vEmail VARCHAR(255);
-
-  vUserId INT;
   vToken varchar(512);
 BEGIN
   -- check to see if the email exists, if not continue
-  SELECT email
+  SELECT email, id
   FROM admin.users
   INTO vEmail
   WHERE users.email = p_email;
@@ -30,7 +29,9 @@ BEGIN
     values (p_token, vPersonId);
 
     insert into admin.users(person, email, password, created_by, modified_by, owning_person, owning_group)
-    values (vPersonId, p_email, p_password, 1, 1, 1, 1);
+    values (vPersonId, p_email, p_password, 1, 1, 1, 1)
+    returning id 
+    into user_id;
 
     error_type := 'NoError';
 

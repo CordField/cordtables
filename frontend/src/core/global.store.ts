@@ -1,12 +1,16 @@
 import { createStore } from '@stencil/store';
+import { AppState } from '../common/types';
 interface Notification {
   id: string;
   text: string;
   type: 'error' | 'success' | 'info';
 }
 
+
 export class Globals {
-  public globalStore = createStore({
+  storeObject = {
+    appState: AppState.Init,
+    language: undefined,
     editMode: false,
     editModeWidth: 0,
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
@@ -15,7 +19,12 @@ export class Globals {
     readableTables: (JSON.parse(localStorage.getItem('readableTables')) ?? []) as string[],
     isAdmin: localStorage.getItem('isAdmin'),
     notifications: (JSON.parse(localStorage.getItem('notifications')) ?? []) as Notification[],
-  });
+    userId: JSON.parse(localStorage.getItem('userId')) as number | undefined,
+    siteTextLanguages: [],
+    siteTextStrings: [],
+    siteTextTranslations: {}
+  };
+  public globalStore = createStore(this.storeObject);
 
   constructor() {
     this.globalStore.onChange('editMode', newValue => {
@@ -25,7 +34,6 @@ export class Globals {
         this.globalStore.state.editModeWidth = 0;
       }
     });
-
     this.globalStore.onChange('isLoggedIn', newValue => {
       if (newValue) {
         localStorage.setItem('isLoggedIn', 'true');
@@ -44,6 +52,13 @@ export class Globals {
         localStorage.setItem('email', newValue);
       } else {
         localStorage.removeItem('email');
+      }
+    });
+    this.globalStore.onChange('userId', newValue => {
+      if (newValue != null) {
+        localStorage.setItem('userId', JSON.stringify(newValue));
+      } else {
+        localStorage.removeItem('userId');
       }
     });
 
