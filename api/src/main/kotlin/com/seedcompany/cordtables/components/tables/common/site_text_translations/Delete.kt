@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.common.site_text_strings
+package com.seedcompany.cordtables.components.tables.common.site_text_translations
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -11,31 +11,31 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class SiteTextStringDeleteRequest(
+data class SiteTextTranslationDeleteRequest(
   val id: Int,
   val token: String?,
 )
 
-data class SiteTextStringDeleteResponse(
+data class SiteTextTranslationDeleteResponse(
   val error: ErrorType,
   val id: Int?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonSiteTextStringDelete")
+@Controller("CommonSiteTextTranslationDelete")
 class Delete(
   @Autowired
   val util: Utility,
   @Autowired
   val ds: DataSource,
 ) {
-  @PostMapping("common-site-text-strings/delete")
+  @PostMapping("common-site-text-translations/delete")
   @ResponseBody
-  fun deleteHandler(@RequestBody req: SiteTextStringDeleteRequest): SiteTextStringDeleteResponse {
+  fun deleteHandler(@RequestBody req: SiteTextTranslationDeleteRequest): SiteTextTranslationDeleteResponse {
 
-    if (req.token == null) return SiteTextStringDeleteResponse(ErrorType.TokenNotFound, null)
-    if (!util.userHasDeletePermission(req.token, "common.site_text_strings"))
-      return SiteTextStringDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
+    if (req.token == null) return SiteTextTranslationDeleteResponse(ErrorType.TokenNotFound, null)
+    if (!util.userHasDeletePermission(req.token, "common.site_text_translations"))
+      return SiteTextTranslationDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
     var deletedLocationExId: Int? = null
 
@@ -43,7 +43,7 @@ class Delete(
       try {
 
         val deleteStatement = conn.prepareCall(
-          "delete from common.site_text_strings where id = ? returning id"
+          "delete from common.site_text_translations where id = ? returning id"
         )
         deleteStatement.setInt(1, req.id)
 
@@ -55,9 +55,9 @@ class Delete(
       } catch (e: SQLException) {
         println(e.message)
 
-        return SiteTextStringDeleteResponse(ErrorType.SQLDeleteError, null)
+        return SiteTextTranslationDeleteResponse(ErrorType.SQLDeleteError, null)
       }
     }
-    return SiteTextStringDeleteResponse(ErrorType.NoError, deletedLocationExId)
+    return SiteTextTranslationDeleteResponse(ErrorType.NoError, deletedLocationExId)
   }
 }

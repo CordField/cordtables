@@ -338,7 +338,6 @@ class Utility(
 
     fun updateField(token: String, table: String, column: String, id: Int, value: Any?, cast: String? = "") {
 
-        println("here =================>")
         if (userHasUpdatePermission(
                 token = token,
                 tableName = table,

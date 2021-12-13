@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.common.site_text_strings
+package com.seedcompany.cordtables.components.tables.common.site_text_translations
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class SiteTextStringUpdateReadRequest(
+data class SiteTextTranslationUpdateReadRequest(
   val token: String,
-  val site_text_string: SiteTextStringUpdateInput,
+  val site_text_translation: SiteTextTranslationUpdateInput,
 )
 
-data class SiteTextStringUpdateReadResponse(
+data class SiteTextTranslationUpdateReadResponse(
   val error: ErrorType,
-  val site_text_string: SiteTextString? = null,
+  val site_text_translation: SiteTextTranslation? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonSiteTextStringUpdateRead")
+@Controller("CommonSiteTextTranslationUpdateRead")
 class UpdateRead(
   @Autowired
   val util: Utility,
@@ -35,27 +35,27 @@ class UpdateRead(
   @Autowired
   val read: Read,
 ) {
-  @PostMapping("common-site-text-strings/update-read")
+  @PostMapping("common-site-text-translations/update-read")
   @ResponseBody
-  fun updateReadHandler(@RequestBody req: SiteTextStringUpdateReadRequest): SiteTextStringUpdateReadResponse {
+  fun updateReadHandler(@RequestBody req: SiteTextTranslationUpdateReadRequest): SiteTextTranslationUpdateReadResponse {
 
     val updateResponse = update.updateHandler(
-      SiteTextStringUpdateRequest(
+      SiteTextTranslationUpdateRequest(
         token = req.token,
-        site_text_string = req.site_text_string,
+        site_text_translation = req.site_text_translation,
       )
     )
     if (updateResponse.error != ErrorType.NoError) {
-      return SiteTextStringUpdateReadResponse(updateResponse.error)
+      return SiteTextTranslationUpdateReadResponse(updateResponse.error)
     }
 
     val readResponse = read.readHandler(
-      SiteTextStringReadRequest(
+      SiteTextTranslationReadRequest(
         token = req.token,
-        id = req.site_text_string!!.id
+        id = updateResponse.id
       )
     )
 
-    return SiteTextStringUpdateReadResponse(error = readResponse.error, readResponse.site_text_string)
+    return SiteTextTranslationUpdateReadResponse(error = readResponse.error, readResponse.site_text_translation)
   }
 }

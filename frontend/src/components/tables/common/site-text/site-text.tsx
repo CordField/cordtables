@@ -1,6 +1,6 @@
 import { Component, State, Host, h } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, SiteTextLanguage, SiteTextString } from '../../../../common/types';
+import { ErrorType, SiteTextLanguage, SiteTextString, SiteTextTranslation } from '../../../../common/types';
 import { globals } from '../../../../core/global.store';
 import { t } from '../../../../core/site-text.service';
 import { capitalize } from '../../../../common/utility';
@@ -21,6 +21,24 @@ type SiteTextStringUpdateResponse = {
   error: ErrorType;
   site_text_string: SiteTextString;
 };
+
+type SiteTextTranslationUpdateInput = {
+  language: number;
+  site_text: number;
+  newValue: string;
+};
+
+type SiteTextTranslationUpdateRequest = {
+  token: string;
+  site_text_translation: SiteTextTranslationUpdateInput;
+};
+
+type SiteTextTranslationUpdateResponse = {
+  error: ErrorType;
+  site_text_translation: SiteTextTranslation;
+};
+
+
 @Component({
   tag: 'site-text',
   styleUrl: 'site-text.css',
@@ -35,7 +53,7 @@ export class SiteText {
       token: globals.globalStore.state.token,
       site_text_string: {
         column,
-        id: id,
+        id,
         newValue,
       },
     });
@@ -71,8 +89,30 @@ export class SiteText {
     return true;
   };
 
-  handleSiteTextTranslationUpdate = async (): Promise<boolean> => {
-    return true;
+  handleSiteTextTranslationUpdate = async (id: number, column: number, newValue: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<SiteTextTranslationUpdateRequest, SiteTextTranslationUpdateResponse>('common-site-text-translations/update-read', {
+      token: globals.globalStore.state.token,
+      site_text_translation: {
+        language: column,
+        site_text: id,
+        newValue,
+      },
+    });
+
+    if (updateResponse.error == ErrorType.NoError) {
+      const key = globals.globalStore.state.siteTextStrings.find((siteTextString: SiteTextString) => siteTextString.id === id).english;
+      const newTranslations = { ... globals.globalStore.state.siteTextTranslations };
+      Object.keys(newTranslations).map(language => {
+        if(language === column.toString()) {
+          newTranslations[language][key] = newValue
+        }
+      })
+      globals.globalStore.set('siteTextTranslations', newTranslations);    
+      this.rowData = this.makeRows();
+      return true;
+    } else {
+      return false;
+    }
   };
 
   makeColumns = (): ColumnDescription[] => {
@@ -103,7 +143,7 @@ export class SiteText {
     const languageColumns: ColumnDescription[] = globals.globalStore.state.siteTextLanguages.map((siteTextLanguage: SiteTextLanguage) => {
       return {
         field: siteTextLanguage.language,
-        displayName: t(siteTextLanguage.language_name),
+        displayName: capitalize(t(siteTextLanguage.language_name)),
         width: 50,
         editable: true,
         updateFn: this.handleSiteTextTranslationUpdate,
