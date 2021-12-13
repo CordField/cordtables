@@ -1,14 +1,16 @@
-package com.seedcompany.cordtables.components.tables.common.site_text_strings
+package com.seedcompany.cordtables.components.tables.common.site_text_translations
 
-data class SiteTextStringInput(
-  var english: String,
-  var comment: String?
+data class SiteTextTranslationInput(
+  var language: Int,
+  var site_text: Int,
+  var translation: String?
 )
 
-data class SiteTextString(
+data class SiteTextTranslation(
   var id: Int,
-  var english: String,
-  var comment: String?,
+  var language: Int,
+  var site_text: Int,
+  var translation: String,
 
   val created_at: String? = null,
   val created_by: Int? = null,

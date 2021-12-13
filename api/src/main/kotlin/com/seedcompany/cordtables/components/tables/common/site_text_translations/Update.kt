@@ -1,8 +1,10 @@
-package com.seedcompany.cordtables.components.tables.common.site_text_strings
+package com.seedcompany.cordtables.components.tables.common.site_text_translations
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -10,48 +12,81 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class SiteTextStringUpdateInput(
-  val id: Int,
-  val column: String,
+data class SiteTextTranslationUpdateInput(
+  val site_text: Int,
+  val language: Int,
   val newValue: String?
 )
 
-data class SiteTextStringUpdateRequest(
+data class SiteTextTranslationUpdateRequest(
   val token: String,
-  val site_text_string: SiteTextStringUpdateInput,
+  val site_text_translation: SiteTextTranslationUpdateInput,
 )
 
-data class SiteTextStringUpdateResponse(
+data class SiteTextTranslationUpdateResponse(
   val error: ErrorType,
-  val site_text_string: SiteTextString? = null,
+  val id: Int? = null,
 )
 
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonSiteTextStringUpdate")
+@Controller("CommonSiteTextTranslationUpdate")
 class Update(
   @Autowired
   val util: Utility,
-
   @Autowired
   val ds: DataSource,
+  @Autowired
+  val create: Create
 ) {
-  @PostMapping("common-site-text-strings/update")
+  val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+
+  @PostMapping("common-site-text-translations/update")
   @ResponseBody
-  fun updateHandler(@RequestBody req: SiteTextStringUpdateRequest): SiteTextStringUpdateResponse {
+  fun updateHandler(@RequestBody req: SiteTextTranslationUpdateRequest): SiteTextTranslationUpdateResponse {
 
-    if (req.token == null) return SiteTextStringUpdateResponse(ErrorType.TokenNotFound)
-    if (req.site_text_string.id == null) return SiteTextStringUpdateResponse(ErrorType.MissingId)
+    if (req.token == null) return SiteTextTranslationUpdateResponse(ErrorType.TokenNotFound)
+    if (req.site_text_translation.language == null || req.site_text_translation.site_text == null) return SiteTextTranslationUpdateResponse(ErrorType.MissingId)
 
-    println(req.site_text_string)
+    var id: Int? = null;
 
-    if (req.site_text_string.column != null) util.updateField(
-      token = req.token,
-      table = "common.site_text_strings",
-      column = req.site_text_string.column,
-      id = req.site_text_string.id,
-      value = req.site_text_string.newValue,
-    )
-    return SiteTextStringUpdateResponse(ErrorType.NoError)
+    val paramSource = MapSqlParameterSource()
+    paramSource.addValue("language", req.site_text_translation.language)
+    paramSource.addValue("site_text", req.site_text_translation.site_text)
+
+    try {
+      val findTranslationIdQuery = """
+        select id
+        from common.site_text_translations
+        where language = ? and site_text = ?
+      """.trimIndent()
+      val jdbcResult = jdbcTemplate.queryForRowSet(findTranslationIdQuery, paramSource)
+      if (jdbcResult.next()) {
+        id = jdbcResult.getInt(1)
+      }
+    } catch (e: Exception) {
+      SiteTextTranslationUpdateResponse(ErrorType.UnknownError)
+    }
+
+    if (id == null) {
+      val createResponse = create.createHandler(SiteTextTranslationCreateRequest(
+        token = req.token,
+        site_text_translation = SiteTextTranslationInput(
+          language = req.site_text_translation.language,
+          site_text = req.site_text_translation.site_text,
+          translation = req.site_text_translation.newValue
+        )
+      ))
+      return SiteTextTranslationUpdateResponse(createResponse.error, createResponse.id)
+    } else {
+      if (req.site_text_translation.newValue != null) util.updateField(
+        token = req.token,
+        table = "common.site_text_translations",
+        column = "translation",
+        id = id,
+        value = req.site_text_translation.newValue,
+      )
+    }
+    return SiteTextTranslationUpdateResponse(ErrorType.NoError)
   }
 }
