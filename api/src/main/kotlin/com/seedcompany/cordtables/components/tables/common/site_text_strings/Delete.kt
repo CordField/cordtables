@@ -34,7 +34,7 @@ class Delete(
   fun deleteHandler(@RequestBody req: SiteTextStringDeleteRequest): SiteTextStringDeleteResponse {
 
     if (req.token == null) return SiteTextStringDeleteResponse(ErrorType.TokenNotFound, null)
-    if (!util.userHasDeletePermission(req.token, "common.site_text"))
+    if (!util.userHasDeletePermission(req.token, "common.site_text_strings"))
       return SiteTextStringDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
     var deletedLocationExId: Int? = null
