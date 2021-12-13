@@ -35,7 +35,7 @@ class UpdateRead(
   @Autowired
   val read: Read,
 ) {
-  @PostMapping("common-site-text-strings/update-read")
+  @PostMapping("common-site-text-translations/update-read")
   @ResponseBody
   fun updateReadHandler(@RequestBody req: SiteTextTranslationUpdateReadRequest): SiteTextTranslationUpdateReadResponse {
 

@@ -47,27 +47,20 @@ class Update(
 
     if (req.token == null) return SiteTextTranslationUpdateResponse(ErrorType.TokenNotFound)
     if (req.site_text_translation.language == null || req.site_text_translation.site_text == null) return SiteTextTranslationUpdateResponse(ErrorType.MissingId)
-
     var id: Int? = null;
 
-    val paramSource = MapSqlParameterSource()
-    paramSource.addValue("language", req.site_text_translation.language)
-    paramSource.addValue("site_text", req.site_text_translation.site_text)
-
     try {
-      val findTranslationIdQuery = """
-        select id
-        from common.site_text_translations
-        where language = ? and site_text = ?
-      """.trimIndent()
-      val jdbcResult = jdbcTemplate.queryForRowSet(findTranslationIdQuery, paramSource)
-      if (jdbcResult.next()) {
-        id = jdbcResult.getInt(1)
-      }
+      id = jdbcTemplate.queryForObject(
+        """
+          select id from common.site_text_translations where language = ? and site_text = ?;
+      """.trimIndent(),
+        Int::class.java,
+        req.site_text_translation.language,
+        req.site_text_translation.site_text
+      )
     } catch (e: Exception) {
-      SiteTextTranslationUpdateResponse(ErrorType.UnknownError)
+      return SiteTextTranslationUpdateResponse(ErrorType.UnknownError)
     }
-
     if (id == null) {
       val createResponse = create.createHandler(SiteTextTranslationCreateRequest(
         token = req.token,
@@ -87,6 +80,6 @@ class Update(
         value = req.site_text_translation.newValue,
       )
     }
-    return SiteTextTranslationUpdateResponse(ErrorType.NoError)
+    return SiteTextTranslationUpdateResponse(ErrorType.NoError, id)
   }
 }
