@@ -45,6 +45,8 @@ class UpdateRead(
         site_text_string = req.site_text_string,
       )
     )
+    println("update response")
+    println(updateResponse)
     if (updateResponse.error != ErrorType.NoError) {
       return SiteTextStringUpdateReadResponse(updateResponse.error)
     }
@@ -55,6 +57,8 @@ class UpdateRead(
         id = req.site_text_string!!.id
       )
     )
+    println("readResponse")
+    println(updateResponse)
 
     return SiteTextStringUpdateReadResponse(error = readResponse.error, readResponse.site_text_string)
   }

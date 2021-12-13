@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class SiteTextStringUpdateReadRequest(
-  val token: String,
-  val site_text_string: SiteTextStringUpdateInput,
+data class SiteTextStringCreateReadRequest(
+  val token: String? = null,
+  val site_text_string: SiteTextStringInput,
 )
 
-data class SiteTextStringUpdateReadResponse(
+data class SiteTextStringCreateReadResponse(
   val error: ErrorType,
   val site_text_string: SiteTextString? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonSiteTextStringUpdateRead")
-class UpdateRead(
+@Controller("CommonSiteTextStringCreateRead")
+class CreateRead(
   @Autowired
   val util: Utility,
 
@@ -30,32 +30,33 @@ class UpdateRead(
   val ds: DataSource,
 
   @Autowired
-  val update: Update,
+  val create: Create,
 
   @Autowired
   val read: Read,
 ) {
-  @PostMapping("common-site-text-strings/update-read")
+  @PostMapping("common-site-text-strings/create-read")
   @ResponseBody
-  fun updateReadHandler(@RequestBody req: SiteTextStringUpdateReadRequest): SiteTextStringUpdateReadResponse {
+  fun createReadHandler(@RequestBody req: SiteTextStringCreateReadRequest): SiteTextStringCreateReadResponse {
 
-    val updateResponse = update.updateHandler(
-      SiteTextStringUpdateRequest(
+    val createResponse = create.createHandler(
+      SiteTextStringCreateRequest(
         token = req.token,
-        site_text_string = req.site_text_string,
+        site_text_string = req.site_text_string
       )
     )
-    if (updateResponse.error != ErrorType.NoError) {
-      return SiteTextStringUpdateReadResponse(updateResponse.error)
+
+    if (createResponse.error != ErrorType.NoError) {
+      return SiteTextStringCreateReadResponse(error = createResponse.error)
     }
 
     val readResponse = read.readHandler(
       SiteTextStringReadRequest(
         token = req.token,
-        id = req.site_text_string!!.id
+        id = createResponse!!.id
       )
     )
 
-    return SiteTextStringUpdateReadResponse(error = readResponse.error, readResponse.site_text_string)
+    return SiteTextStringCreateReadResponse(error = readResponse.error, site_text_string = readResponse.site_text_string)
   }
 }

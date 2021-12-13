@@ -37,6 +37,7 @@ class Delete(
     if (!util.userHasDeletePermission(req.token, "common.site_text"))
       return SiteTextStringDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
+    println("req: $req")
     var deletedLocationExId: Int? = null
 
     this.ds.connection.use { conn ->
