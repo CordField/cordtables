@@ -15,10 +15,23 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.DependsOn
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.ResponseBody
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import javax.sql.DataSource
 
+data class PasswordResetRequest(
+  val email: String
+)
+
+data class PasswordResetReturn(
+  val errorType: ErrorType,
+  val email: String?,
+  val avatar: String?,
+)
 
 @Component
 @DependsOn("BootstrapDB")
@@ -51,12 +64,9 @@ class PasswordReset(
 //
 //  }
 
-  data class PasswordResetReturn(
-    val errorType: ErrorType,
-    val email: String?,
-    val avatar: String?,
-  )
 
+//  @PostMapping(path=["user/login"], consumes = ["application/json"], produces = ["application/json"])
+//  @ResponseBody
   fun passwordResetFn(token: String, password: String): PasswordResetReturn {
 
     if (token.length < 64) return PasswordResetReturn(ErrorType.InvalidToken, null, null)

@@ -63,6 +63,9 @@ export namespace Components {
         "resultsPerPage": number;
         "totalRows": number;
     }
+    interface CfPasswordReset {
+        "history": RouterHistory;
+    }
     interface CfRegister {
         "history": RouterHistory;
     }
@@ -105,10 +108,6 @@ export namespace Components {
     interface CommonPeopleToOrgRelationships {
     }
     interface CommonPosts {
-    }
-    interface CommonPrayerNotifications {
-    }
-    interface CommonPrayerRequests {
     }
     interface CommonStageGraph {
     }
@@ -265,8 +264,6 @@ export namespace Components {
     interface SilLanguageCodes {
     }
     interface SilLanguageIndex {
-    }
-    interface SilLanguagesCodes {
     }
     interface SilTableOfCountries {
     }
@@ -441,6 +438,12 @@ declare global {
         prototype: HTMLCfPaginationElement;
         new (): HTMLCfPaginationElement;
     };
+    interface HTMLCfPasswordResetElement extends Components.CfPasswordReset, HTMLStencilElement {
+    }
+    var HTMLCfPasswordResetElement: {
+        prototype: HTMLCfPasswordResetElement;
+        new (): HTMLCfPasswordResetElement;
+    };
     interface HTMLCfRegisterElement extends Components.CfRegister, HTMLStencilElement {
     }
     var HTMLCfRegisterElement: {
@@ -542,18 +545,6 @@ declare global {
     var HTMLCommonPostsElement: {
         prototype: HTMLCommonPostsElement;
         new (): HTMLCommonPostsElement;
-    };
-    interface HTMLCommonPrayerNotificationsElement extends Components.CommonPrayerNotifications, HTMLStencilElement {
-    }
-    var HTMLCommonPrayerNotificationsElement: {
-        prototype: HTMLCommonPrayerNotificationsElement;
-        new (): HTMLCommonPrayerNotificationsElement;
-    };
-    interface HTMLCommonPrayerRequestsElement extends Components.CommonPrayerRequests, HTMLStencilElement {
-    }
-    var HTMLCommonPrayerRequestsElement: {
-        prototype: HTMLCommonPrayerRequestsElement;
-        new (): HTMLCommonPrayerRequestsElement;
     };
     interface HTMLCommonStageGraphElement extends Components.CommonStageGraph, HTMLStencilElement {
     }
@@ -987,12 +978,6 @@ declare global {
         prototype: HTMLSilLanguageIndexElement;
         new (): HTMLSilLanguageIndexElement;
     };
-    interface HTMLSilLanguagesCodesElement extends Components.SilLanguagesCodes, HTMLStencilElement {
-    }
-    var HTMLSilLanguagesCodesElement: {
-        prototype: HTMLSilLanguagesCodesElement;
-        new (): HTMLSilLanguagesCodesElement;
-    };
     interface HTMLSilTableOfCountriesElement extends Components.SilTableOfCountries, HTMLStencilElement {
     }
     var HTMLSilTableOfCountriesElement: {
@@ -1162,6 +1147,7 @@ declare global {
         "cf-login": HTMLCfLoginElement;
         "cf-notif": HTMLCfNotifElement;
         "cf-pagination": HTMLCfPaginationElement;
+        "cf-password-reset": HTMLCfPasswordResetElement;
         "cf-register": HTMLCfRegisterElement;
         "cf-row": HTMLCfRowElement;
         "cf-table": HTMLCfTableElement;
@@ -1179,8 +1165,6 @@ declare global {
         "common-people-graph": HTMLCommonPeopleGraphElement;
         "common-people-to-org-relationships": HTMLCommonPeopleToOrgRelationshipsElement;
         "common-posts": HTMLCommonPostsElement;
-        "common-prayer-notifications": HTMLCommonPrayerNotificationsElement;
-        "common-prayer-requests": HTMLCommonPrayerRequestsElement;
         "common-stage-graph": HTMLCommonStageGraphElement;
         "common-stage-notifications": HTMLCommonStageNotificationsElement;
         "common-stage-role-column-grants": HTMLCommonStageRoleColumnGrantsElement;
@@ -1253,7 +1237,6 @@ declare global {
         "sil-iso-639-3-retirements": HTMLSilIso6393RetirementsElement;
         "sil-language-codes": HTMLSilLanguageCodesElement;
         "sil-language-index": HTMLSilLanguageIndexElement;
-        "sil-languages-codes": HTMLSilLanguagesCodesElement;
         "sil-table-of-countries": HTMLSilTableOfCountriesElement;
         "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
         "sil-table-of-languages-in-country": HTMLSilTableOfLanguagesInCountryElement;
@@ -1334,6 +1317,9 @@ declare namespace LocalJSX {
         "resultsPerPage"?: number;
         "totalRows"?: number;
     }
+    interface CfPasswordReset {
+        "history"?: RouterHistory;
+    }
     interface CfRegister {
         "history"?: RouterHistory;
     }
@@ -1377,10 +1363,6 @@ declare namespace LocalJSX {
     interface CommonPeopleToOrgRelationships {
     }
     interface CommonPosts {
-    }
-    interface CommonPrayerNotifications {
-    }
-    interface CommonPrayerRequests {
     }
     interface CommonStageGraph {
     }
@@ -1542,8 +1524,6 @@ declare namespace LocalJSX {
     }
     interface SilLanguageIndex {
     }
-    interface SilLanguagesCodes {
-    }
     interface SilTableOfCountries {
     }
     interface SilTableOfLanguages {
@@ -1630,6 +1610,7 @@ declare namespace LocalJSX {
         "cf-login": CfLogin;
         "cf-notif": CfNotif;
         "cf-pagination": CfPagination;
+        "cf-password-reset": CfPasswordReset;
         "cf-register": CfRegister;
         "cf-row": CfRow;
         "cf-table": CfTable;
@@ -1647,8 +1628,6 @@ declare namespace LocalJSX {
         "common-people-graph": CommonPeopleGraph;
         "common-people-to-org-relationships": CommonPeopleToOrgRelationships;
         "common-posts": CommonPosts;
-        "common-prayer-notifications": CommonPrayerNotifications;
-        "common-prayer-requests": CommonPrayerRequests;
         "common-stage-graph": CommonStageGraph;
         "common-stage-notifications": CommonStageNotifications;
         "common-stage-role-column-grants": CommonStageRoleColumnGrants;
@@ -1721,7 +1700,6 @@ declare namespace LocalJSX {
         "sil-iso-639-3-retirements": SilIso6393Retirements;
         "sil-language-codes": SilLanguageCodes;
         "sil-language-index": SilLanguageIndex;
-        "sil-languages-codes": SilLanguagesCodes;
         "sil-table-of-countries": SilTableOfCountries;
         "sil-table-of-languages": SilTableOfLanguages;
         "sil-table-of-languages-in-country": SilTableOfLanguagesInCountry;
@@ -1771,6 +1749,7 @@ declare module "@stencil/core" {
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-notif": LocalJSX.CfNotif & JSXBase.HTMLAttributes<HTMLCfNotifElement>;
             "cf-pagination": LocalJSX.CfPagination & JSXBase.HTMLAttributes<HTMLCfPaginationElement>;
+            "cf-password-reset": LocalJSX.CfPasswordReset & JSXBase.HTMLAttributes<HTMLCfPasswordResetElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
             "cf-row": LocalJSX.CfRow & JSXBase.HTMLAttributes<HTMLCfRowElement>;
             "cf-table": LocalJSX.CfTable & JSXBase.HTMLAttributes<HTMLCfTableElement>;
@@ -1788,8 +1767,6 @@ declare module "@stencil/core" {
             "common-people-graph": LocalJSX.CommonPeopleGraph & JSXBase.HTMLAttributes<HTMLCommonPeopleGraphElement>;
             "common-people-to-org-relationships": LocalJSX.CommonPeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLCommonPeopleToOrgRelationshipsElement>;
             "common-posts": LocalJSX.CommonPosts & JSXBase.HTMLAttributes<HTMLCommonPostsElement>;
-            "common-prayer-notifications": LocalJSX.CommonPrayerNotifications & JSXBase.HTMLAttributes<HTMLCommonPrayerNotificationsElement>;
-            "common-prayer-requests": LocalJSX.CommonPrayerRequests & JSXBase.HTMLAttributes<HTMLCommonPrayerRequestsElement>;
             "common-stage-graph": LocalJSX.CommonStageGraph & JSXBase.HTMLAttributes<HTMLCommonStageGraphElement>;
             "common-stage-notifications": LocalJSX.CommonStageNotifications & JSXBase.HTMLAttributes<HTMLCommonStageNotificationsElement>;
             "common-stage-role-column-grants": LocalJSX.CommonStageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLCommonStageRoleColumnGrantsElement>;
@@ -1862,7 +1839,6 @@ declare module "@stencil/core" {
             "sil-iso-639-3-retirements": LocalJSX.SilIso6393Retirements & JSXBase.HTMLAttributes<HTMLSilIso6393RetirementsElement>;
             "sil-language-codes": LocalJSX.SilLanguageCodes & JSXBase.HTMLAttributes<HTMLSilLanguageCodesElement>;
             "sil-language-index": LocalJSX.SilLanguageIndex & JSXBase.HTMLAttributes<HTMLSilLanguageIndexElement>;
-            "sil-languages-codes": LocalJSX.SilLanguagesCodes & JSXBase.HTMLAttributes<HTMLSilLanguagesCodesElement>;
             "sil-table-of-countries": LocalJSX.SilTableOfCountries & JSXBase.HTMLAttributes<HTMLSilTableOfCountriesElement>;
             "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
             "sil-table-of-languages-in-country": LocalJSX.SilTableOfLanguagesInCountry & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesInCountryElement>;

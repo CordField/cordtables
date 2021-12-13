@@ -1,5 +1,5 @@
 import { Component, Host, h, Prop, State } from '@stencil/core';
-import { RouterHistory } from '@stencil/router';
+import { injectHistory, RouterHistory } from '@stencil/router';
 import { ErrorType, GenericResponse } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
@@ -57,6 +57,10 @@ export class CfLogin {
     }
   };
 
+  clickedResetPassword = () => {
+    this.history.push(`/reset-password`);
+  }
+
   render() {
     return (
       <Host>
@@ -79,7 +83,11 @@ export class CfLogin {
           </div>
           <input id="Login-button" type="submit" value="Login" onClick={this.clickSubmit} />
         </form>
+        
+        <a href="javascript:void(0)" onClick={this.clickedResetPassword}>Reset Password</a>
+        
       </Host>
     );
   }
 }
+injectHistory(CfLogin);
