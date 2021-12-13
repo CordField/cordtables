@@ -149,6 +149,7 @@ export class SilIso6393s {
       <Host>
         <slot></slot>
         {/* table abstraction */}
+        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393sResponse.size} results-per-page="50" page-url="sil-iso-639-3"></cf-pagination>
         {this.iso6393sResponse && <cf-table rowData={this.iso6393sResponse.iso6393s} columnData={this.columnData}></cf-table>}
         <cf-pagination current-page={this.currentPage} total-rows={this.iso6393sResponse.size} results-per-page="50" page-url="sil-iso-639-3"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
