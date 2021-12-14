@@ -25,7 +25,7 @@ data class PrayerForm (
   val translatorEmail: String?, // admin.people // admin.users // translator
   val ethCode: String?, // sil.language_index lang field value
   val sensitivity: String?, // CommonSensitivity = CommonSensitivity.High,
-  val organization_name: String,
+//  val organization_name: String,
   val location: String?,
   val prayerType: String,
   val title: String,
@@ -107,12 +107,10 @@ class CreateFromGoogleForm(
 
     val id = jdbcTemplate.queryForObject(
       """
-            insert into up.prayer_requests(request_language_id, target_language_id, sensitivity, organization_name, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
+            insert into up.prayer_requests(request_language_id, sensitivity, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
                     ?::common.sensitivity,
-                    ?,
                     ?,
                     ?,
                     ?,
@@ -128,9 +126,7 @@ class CreateFromGoogleForm(
         """.trimIndent(),
       Int::class.java,
       langExists!!.common_id,
-      langExists!!.common_id,
       req.prayerForm.sensitivity,
-      req.prayerForm.organization_name,
       translatorUserId,
       req.prayerForm.location,
       req.prayerForm.title,
