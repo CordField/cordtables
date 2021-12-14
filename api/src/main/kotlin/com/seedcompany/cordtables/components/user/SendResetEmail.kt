@@ -124,26 +124,26 @@ class SendResetEmail(
 
   fun sendResetEmail(email: String, avatar: String, emailToken: String) {
 
-    val emailFrom = "no-reply@crowdaltar.com"
-    val emailSubject = "Password Reset - Crowd Altar"
-    val encodedToken = URLEncoder.encode(emailToken, StandardCharsets.UTF_8.toString())
-
-    val emailHtmlBody = """
-      <h1>Hello ${avatar}!</h1>
-      <p>To reset your password, please click <a href="${appConfig.emailServer}/reset/${encodedToken}">here</a>.</p>
-      <p>If you didn't request your password to be reset, you do not need to do anything.</p>
-    """.trimIndent()
-
-    val emailTextBody = """
-      Hello ${avatar}!
-      
-      To reset your password, please click this link:
-      
-      ${appConfig.emailServer}/reset/${encodedToken}
-      
-      If you didn't request your password to be reset, you do not need to do anything.
-      
-    """.trimIndent()
+//    val emailFrom = "no-reply@crowdaltar.com"
+//    val emailSubject = "Password Reset - Crowd Altar"
+//    val encodedToken = URLEncoder.encode(emailToken, StandardCharsets.UTF_8.toString())
+//
+//    val emailHtmlBody = """
+//      <h1>Hello ${avatar}!</h1>
+//      <p>To reset your password, please click <a href="${appConfig.emailServer}/reset/${encodedToken}">here</a>.</p>
+//      <p>If you didn't request your password to be reset, you do not need to do anything.</p>
+//    """.trimIndent()
+//
+//    val emailTextBody = """
+//      Hello ${avatar}!
+//
+//      To reset your password, please click this link:
+//
+//      ${appConfig.emailServer}/reset/${encodedToken}
+//
+//      If you didn't request your password to be reset, you do not need to do anything.
+//
+//    """.trimIndent()
 
 //    val emailRequest = SendEmailRequest()
 //      .withDestination(Destination().withToAddresses(email))
