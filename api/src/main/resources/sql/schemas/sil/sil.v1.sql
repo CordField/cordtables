@@ -185,7 +185,7 @@ CREATE TABLE sil.table_of_countries (
 
 CREATE TABLE sil.table_of_languages (
   id serial primary key,
-
+  neo4j_id varchar(32),
   iso_639 char(3),
   language_name varchar(50),
   uninverted_name varchar(50),

@@ -599,9 +599,10 @@ create table sc.periodic_reports (
 -- extension table to common
 create table sc.projects (
   id serial primary key,
+  neo4j_id varchar(32),
 
 	name varchar(32), -- not null
-	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+	change_to_plan int references sc.change_to_plans(id), -- not null
 	active bool,
 	department varchar(255),
 	estimated_submission timestamp,
@@ -679,7 +680,7 @@ create table sc.partnerships (
   neo4j_id varchar(32) unique,
   project int references sc.projects(id), -- not null
   partner int references sc.organizations(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int references sc.change_to_plans(id), -- not null
   active bool,
   agreement_status sc.partnership_agreement_status,
   mou int references common.files(id),
@@ -717,7 +718,7 @@ create table sc.budgets (
   id serial primary key,
 
   neo4j_id varchar(32) unique,
-  change_to_plan int default 1, -- not null
+  change_to_plan int references sc.change_to_plans(id), -- not null
   project int references sc.projects(id), -- not null
   status common.budget_status,
   universal_template int references common.files(id),
@@ -740,7 +741,7 @@ create table sc.budget_records (
 
   neo4j_id varchar(32) unique,
   budget int references sc.budgets(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int references sc.change_to_plans(id), -- not null
   active bool,
   amount decimal,
   fiscal_year int,
@@ -777,7 +778,7 @@ create table sc.project_locations (
   id serial primary key,
 
   active bool,
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int references sc.change_to_plans(id), -- not null
   location int references sc.locations(id), -- not null
   project int references sc.projects(id), -- not null
   
@@ -851,7 +852,7 @@ create table sc.language_engagements (
   neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
 	ethnologue int references sc.ethnologue(id), -- not null
-	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+	change_to_plan int references sc.change_to_plans(id), -- not null
   active bool,
   ceremony int references sc.ceremonies(id),
   is_open_to_investor_visit bool,
@@ -995,7 +996,7 @@ create table sc.producible_scripture_references (
   id serial primary key,
   producible int references sc.producible(id), -- not null
   scripture_reference int references common.scripture_references(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int references sc.change_to_plans(id), -- not null
   active bool,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1013,7 +1014,7 @@ create table sc.products (
 
   neo4j_id varchar(32) unique,
   name varchar(64), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int references sc.change_to_plans(id), -- not null
   active bool,
   mediums common.product_mediums[],
   methodology common.product_methodologies,
@@ -1043,7 +1044,7 @@ create table sc.product_scripture_references (
   id serial primary key,
   product int references sc.products(id), -- not null
   scripture_reference int references common.scripture_references(id), -- not null
-  change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+  change_to_plan int references sc.change_to_plans(id), -- not null
   active bool,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -1119,7 +1120,7 @@ create table sc.internship_engagements (
 
   neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
-	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
+	change_to_plan int references sc.change_to_plans(id), -- not null
   active bool,
   ceremony int references sc.ceremonies(id),
   communications_complete_date timestamp,
