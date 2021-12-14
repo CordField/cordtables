@@ -10,7 +10,7 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 
-data class GetSecureQueryRequest(
+data class GetPaginatedResultSetRequest(
   val tableName: String,
   val columns: Array<String>,
   val token: String,
@@ -21,20 +21,20 @@ data class GetSecureQueryRequest(
   val getList: Boolean = true, // get read if false
 )
 
-data class  GetSecureQueryResponse(
+data class  GetPaginatedResultSetResponse(
   val errorType: ErrorType,
   val result: SqlRowSet? = null,
   val size: Int
 )
 
 @Component
-class GetSecureQuery (
+class GetPaginatedResultSet (
   @Autowired
   val ds: DataSource,
   ) {
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-  fun getSecureQueryHandler(req: GetSecureQueryRequest) :GetSecureQueryResponse {
+  fun getPaginatedResultSetHandler(req: GetPaginatedResultSetRequest) :GetPaginatedResultSetResponse {
       var query = """
           with row_level_access as 
           (
@@ -132,10 +132,10 @@ class GetSecureQuery (
           val totalRows = resultRows.getRow();
 
           val jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)
-          GetSecureQueryResponse(ErrorType.NoError, result = jdbcResult, size = totalRows)
+          GetPaginatedResultSetResponse(ErrorType.NoError, result = jdbcResult, size = totalRows)
         } catch (e: SQLException) {
             println("error while listing ${e.message}")
-          GetSecureQueryResponse(ErrorType.SQLReadError, size = 0)
+          GetPaginatedResultSetResponse(ErrorType.SQLReadError, size = 0)
         }
       }
 }

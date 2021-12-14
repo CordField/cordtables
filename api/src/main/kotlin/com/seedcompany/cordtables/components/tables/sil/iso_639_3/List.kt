@@ -3,8 +3,8 @@ package com.seedcompany.cordtables.components.tables.sil.iso_639_3
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.GetSecureQuery
-import com.seedcompany.cordtables.common.GetSecureQueryRequest
+import com.seedcompany.cordtables.common.GetPaginatedResultSet
+import com.seedcompany.cordtables.common.GetPaginatedResultSetRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -38,7 +38,7 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureQuery,
+    val secureList: GetPaginatedResultSet,
 ) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
@@ -55,8 +55,8 @@ class List(
         // paramSource.addValue("limit", req.resultsPerPage)
         // paramSource.addValue("offset", offset)
 
-        val jdbcResult = secureList.getSecureQueryHandler(
-          GetSecureQueryRequest(
+        val jdbcResult = secureList.getPaginatedResultSetHandler(
+          GetPaginatedResultSetRequest(
                 tableName = "sil.iso_639_3",
                 filter = "order by id",
                 token = req.token,

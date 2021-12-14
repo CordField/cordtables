@@ -2,8 +2,8 @@ package com.seedcompany.cordtables.components.tables.sil.iso_639_3_names
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.GetSecureQuery
-import com.seedcompany.cordtables.common.GetSecureQueryRequest
+import com.seedcompany.cordtables.common.GetPaginatedResultSet
+import com.seedcompany.cordtables.common.GetPaginatedResultSetRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -35,7 +35,7 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureQuery,
+    val secureList: GetPaginatedResultSet,
 ) {
 
 //    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
@@ -49,8 +49,8 @@ class List(
 //        val paramSource = MapSqlParameterSource()
 //        paramSource.addValue("token", req.token)
 
-        val jdbcResult = secureList.getSecureQueryHandler(
-            GetSecureQueryRequest(
+        val jdbcResult = secureList.getPaginatedResultSetHandler(
+            GetPaginatedResultSetRequest(
                 tableName = "sil.iso_639_3_names",
                 filter = "order by id",
                 token = req.token,

@@ -3,8 +3,8 @@ package com.seedcompany.cordtables.components.tables.sil.country_codes
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.GetSecureQuery
-import com.seedcompany.cordtables.common.GetSecureQueryRequest
+import com.seedcompany.cordtables.common.GetPaginatedResultSet
+import com.seedcompany.cordtables.common.GetPaginatedResultSetRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -38,7 +38,7 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureQuery,
+    val secureList: GetPaginatedResultSet,
 ) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
@@ -49,8 +49,8 @@ class List(
         var data: MutableList<countryCode> = mutableListOf()
         if (req.token == null) return SilCountryCodesListResponse(ErrorType.TokenNotFound, size = 0, mutableListOf())
 
-        val jdbcResult = secureList.getSecureQueryHandler(
-            GetSecureQueryRequest(
+        val jdbcResult = secureList.getPaginatedResultSetHandler(
+            GetPaginatedResultSetRequest(
                 tableName = "sil.country_codes",
                 token = req.token,
                 page = req.page!!,
