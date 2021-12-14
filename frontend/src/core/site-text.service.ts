@@ -91,7 +91,7 @@ export const siteTextService = new SiteTextService();
 
 export const t = (key: string) => {
   const language = globals.globalStore.state.language;
-  if(!language) return key;
+  if(language === "default") return key;
   const translation = globals.globalStore.state.siteTextTranslations[language][key];
   if(!translation) {
     console.debug(`${key} doesn't exist in translations`);
