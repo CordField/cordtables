@@ -45,6 +45,21 @@ type SiteTextStringDeleteRequest = {
 
 type SiteTextStringDeleteResponse = GenericResponse;
 
+type SiteTextStringCreateInput = {
+  english: string;
+  comment: string;
+}
+
+type SiteTextStringCreateRequest = {
+  token: string;
+  site_text_string: SiteTextStringCreateInput
+}
+
+type SiteTextStringCreateResponse = {
+  error: ErrorType,
+  site_text_string: SiteTextString
+}
+
 @Component({
   tag: 'site-text',
   styleUrl: 'site-text.css',
@@ -53,6 +68,34 @@ type SiteTextStringDeleteResponse = GenericResponse;
 export class SiteText {
   @State() columnData: ColumnDescription[];
   @State() rowData: Array<any>;
+  @State() newSiteText: SiteTextStringCreateInput = {
+    english: '',
+    comment: '',
+  };
+
+  handleInsert = async (event) => {
+    event.preventDefault();
+    if(this.newSiteText.english === '') return;
+    const createResponse = await fetchAs<SiteTextStringCreateRequest, SiteTextStringCreateResponse>('common-site-text-strings/create-read', {
+      token: globals.globalStore.state.token,
+      site_text_string: {
+        english: this.newSiteText.english,
+        comment: this.newSiteText.comment
+      }
+    });
+
+    if(createResponse.error === ErrorType.NoError) {
+      globals.globalStore.set('siteTextStrings', [ createResponse.site_text_string, ...globals.globalStore.state.siteTextStrings ]);
+      this.rowData = this.makeRows();
+    } else {
+      return;
+    }
+    this.newSiteText = { english: '', comment: ''};
+  };
+
+  handleInputChange = event => {
+    this.newSiteText = { ...this.newSiteText, [event.target.name]: event.target.value };
+  };
 
   handleSiteTextStringUpdate = async (id: number, column: string, newValue: string): Promise<boolean> => {
     const updateResponse = await fetchAs<SiteTextStringUpdateRequest, SiteTextStringUpdateResponse>('common-site-text-strings/update-read', {
@@ -213,6 +256,29 @@ export class SiteText {
           <h4>Site Text Translations</h4>
           {this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}
         </div>
+        <form class="form-thing">
+          <div id="new-site-text-string-holder" class="form-input-item form-thing">
+            <span class="form-thing">
+              <label htmlFor="new-site-text-string">{capitalize(t('english'))}</label>
+            </span>
+            <span class="form-thing">
+              <input type="text" id="new-site-text-string" value={this.newSiteText.english} name="english" onInput={this.handleInputChange} />
+            </span>
+          </div>
+          <div id="new-site-text-string-comment-holder" class="form-input-item form-thing">
+            <span class="form-thing">
+              <label htmlFor="site-text-string-comment">{capitalize(t('comment'))}</label>
+            </span>
+            <span class="form-thing">
+              <input type="text" id="site-text-string-comment" name="comment" value={this.newSiteText.comment} onInput={this.handleInputChange} />
+            </span>
+          </div>
+          <div class="form-thing">
+            <span class="form-thing">
+              <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
+            </span>
+          </div>
+        </form>
       </div>
     );
   }
