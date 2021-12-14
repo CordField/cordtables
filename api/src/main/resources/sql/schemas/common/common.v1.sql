@@ -190,7 +190,7 @@ create type common.scripture_range as (
 
 create table common.scripture_references (
   id serial primary key,
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
 
   book_start common.book_name,
   book_end common.book_name,
@@ -204,9 +204,9 @@ create table common.scripture_references (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-  unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
+--  unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
 );
 
 -- CHAT ------------------------------------------------------------
@@ -390,7 +390,7 @@ create table common.education_by_person (
 create table common.organizations (
 	id serial primary key,
   neo4j_id varchar(32),
-	name varchar(255) unique, -- not null
+	name varchar(255), -- not null unique
   sensitivity common.sensitivity default 'High',
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -481,7 +481,7 @@ create table common.coalition_memberships(
 
 create table common.directories (
   id serial primary key,
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
 
   parent int references common.directories(id),
   name varchar(255), -- not null
@@ -511,9 +511,9 @@ create table common.files (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-  unique (directory, name)
+--  unique (directory, name)
 );
 
 create table common.file_versions (

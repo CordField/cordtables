@@ -331,8 +331,8 @@ create table admin.role_memberships (
 create table admin.users(
   id serial primary key,
 
-  person int references admin.people(id) unique, -- not null added in v2
-  email varchar(255) unique, -- not null added in v2
+  person int references admin.people(id), -- not null added in v2
+  email varchar(255), -- not null added in v2
   password varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,

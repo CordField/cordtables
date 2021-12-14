@@ -25,7 +25,7 @@ create type sc.post_type as enum (
 
 create table sc.posts (
   id serial primary key,
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
 
   directory int references sc.posts_directory(id), -- not null
   type sc.post_type, --not null,
@@ -44,9 +44,9 @@ create table sc.posts (
 
 create table sc.funding_accounts (
   id serial primary key,
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
 
-	account_number int, -- unique, -- not null,
+	account_number int, -- not null unique,
 	name varchar(255),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -93,12 +93,12 @@ create table sc.field_regions (
 -- extension table from commmon
 create table sc.locations (
 	id int primary key not null references common.locations(id),
-	neo4j_id varchar(32) unique,
+	neo4j_id varchar(32),
 
 	default_region int references sc.field_regions(id),
 	funding_account int references sc.funding_accounts(id),
 	iso_alpha_3 char(3),
-	name varchar(255) unique, -- not null
+	name varchar(255), -- not null unique
 	type common.location_type, -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -114,7 +114,7 @@ create table sc.locations (
 -- extension table from commmon
 create table sc.organizations (
 	id int primary key not null references common.organizations(id),
-	neo4j_id varchar(32) unique,
+	neo4j_id varchar(32),
   
 	address varchar(255),
 	root_directory int references common.directories(id),
@@ -175,7 +175,7 @@ END; $$;
 create table sc.partners (
 	id serial primary key,
 
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
 	organization int references sc.organizations(id), -- not null
 	active bool,
 	financial_reporting_types sc.financial_reporting_types[],
@@ -199,7 +199,7 @@ create table sc.partners (
 create table sc.ethnologue (
   id serial primary key,
 
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
   language_index int not null references sil.language_index(id),
   code varchar(32),
   language_name varchar(64), -- override for language_index
@@ -292,11 +292,11 @@ create type sc.begin_work_rel_pol_obstacles_scale as enum (
 
 create table sc.languages(
 	id serial primary key,
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
 
   ethnologue int references sc.ethnologue(id), -- not null
-  name varchar(255) unique, -- not null
-  display_name varchar(255) unique, -- not null
+  name varchar(255), -- not null unique
+  display_name varchar(255), -- not null
   display_name_pronunciation varchar(255),
   tags text[],
   preset_inventory bool,
@@ -462,7 +462,7 @@ create table sc.known_languages_by_person (
 -- extension table from commmon
 create table sc.people (
   id int primary key references admin.people(id),
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
 
 	skills varchar(32)[],
 	status varchar(32),
@@ -633,9 +633,9 @@ create table sc.projects (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-	unique (id, change_to_plan)
+--	unique (id, change_to_plan)
 );
 
 create table sc.project_members (
@@ -652,9 +652,9 @@ create table sc.project_members (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-  unique (project, person, group_id, role)
+--  unique (project, person, group_id, role)
 );
 
 create table sc.pinned_projects (
@@ -679,7 +679,7 @@ create type sc.partnership_agreement_status as enum (
 create table sc.partnerships (
   id serial primary key,
 
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
   project int references sc.projects(id), -- not null
   partner int references sc.organizations(id), -- not null
   change_to_plan int references sc.change_to_plans(id), -- not null
@@ -720,7 +720,7 @@ create type common.budget_status as enum (
 create table sc.budgets (
   id serial primary key,
 
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
   change_to_plan int references sc.change_to_plans(id), -- not null
   project int references sc.projects(id), -- not null // TODO: column doesn't exist in neo4j
   status common.budget_status,
@@ -734,15 +734,15 @@ create table sc.budgets (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-  unique (id, change_to_plan)
+--  unique (id, change_to_plan)
 );
 
 create table sc.budget_records (
   id serial primary key,
 
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
   budget int references sc.budgets(id), -- not null
   change_to_plan int references sc.change_to_plans(id), -- not null default 1 //TODO: column doesn't exist in neo4j
   active bool, -- // TODO: shouldn't ACTIVE be in every table? it's a BaseNode prop...
@@ -843,7 +843,7 @@ create table sc.language_engagements (
   --TODO                   changeset   -- not sure about this one
   --TODO                   dateRange (derived, so probably don't need it here)    // can do `select as date ranges SELECT tsrange(start_date, end_date)`
   --TODO                   dateRangeOverride (derived)                            // can do `select as date ranges SELECT tsrange(start_date_override, end_date_override)`
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
 	project int references sc.projects(id), -- not null
 	ethnologue int references sc.ethnologue(id), -- not null
 	change_to_plan int references sc.change_to_plans(id), -- not null
@@ -884,9 +884,9 @@ create table sc.language_engagements (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-	unique (project, language, change_to_plan)
+--	unique (project, language, change_to_plan)
 );
 
 
@@ -1015,7 +1015,7 @@ create type sc.producible_type as enum (
 
 create table sc.producible (
   id serial primary key,
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
   name varchar(64),
   type sc.producible_type,
 
@@ -1047,7 +1047,7 @@ create table sc.producible_scripture_references (
 create table sc.products (
   id serial primary key,
 
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
   active bool,
 
   approach common.product_approach,
@@ -1079,9 +1079,9 @@ create table sc.products (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-  unique (id, change_to_plan)
+--  unique (id, change_to_plan)
 );
 
 -- extension tables of products representing whether it's a derivative, direct, and other
@@ -1134,9 +1134,9 @@ create table sc.product_scripture_references (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by int not null references admin.people(id),
   owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  owning_group int not null references admin.groups(id)
 
-  unique (product, scripture_reference)
+--  unique (product, scripture_reference)
 );
 
 -- todo: not sure if this is what the sc.step_progress covers or not...
@@ -1212,7 +1212,7 @@ create type common.internship_position as enum (
 create table sc.internship_engagements (
   id serial primary key,
 
-  neo4j_id varchar(32) unique,
+  neo4j_id varchar(32),
 	project int references sc.projects(id), -- not null
 	change_to_plan int references sc.change_to_plans(id), -- not null
 
