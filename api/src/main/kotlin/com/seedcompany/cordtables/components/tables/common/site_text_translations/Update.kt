@@ -58,9 +58,12 @@ class Update(
         req.site_text_translation.language,
         req.site_text_translation.site_text
       )
+    } catch(e: org.springframework.dao.EmptyResultDataAccessException) {
+      // do nothing
     } catch (e: Exception) {
       return SiteTextTranslationUpdateResponse(ErrorType.UnknownError)
     }
+
     if (id == null) {
       val createResponse = create.createHandler(SiteTextTranslationCreateRequest(
         token = req.token,
