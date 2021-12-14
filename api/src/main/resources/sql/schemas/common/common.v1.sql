@@ -2,11 +2,19 @@
 
 -- ENUMS ----
 
--- todo
 create type common.mime_type as enum (
-  'A',
-  'B',
-  'C'
+  'application/vnd.oasis.opendocument.database',
+  'application/vnd.visio',
+  'application/x-iso9660-image',
+  'application/x-texinfo',
+  'audio/s3m',
+  'font/woff',
+  'image/tiff',
+  'image/x-rgb',
+  'image/x-3ds',
+  'video/mp4',
+  'video/x-ms-wmv',
+  'video/webm'
 );
 
 -- SITE TEXT --------------------------------------------------------------------------------
@@ -154,6 +162,32 @@ create type common.book_name as enum (
   'Revelation'
 );
 
+-- TODO: Would it be possible to have a  scripture_range and scripture_reference type?
+--       It may serve better for the times we just have a range attached more directly to something.
+--       See two types below for an example
+
+
+create type common.unspecified_scripture as (
+  book common.book_name,
+  total_verses int
+);
+
+create type common.scripture_reference as (
+  book common.book_name,
+  chapter int,
+  label varchar(255),
+  verse int
+);
+
+create type common.scripture_range as (
+  book_end common.scripture_reference,
+  label varchar(255),
+  book_start common.scripture_reference,
+  total_verses int
+);
+
+
+
 create table common.scripture_references (
   id serial primary key,
   neo4j_id varchar(32) unique,
@@ -220,6 +254,8 @@ create table common.threads (
   owning_group int not null references admin.groups(id)
 );
 
+
+-- todo: not sure if this is supposed to follow neo4j, bet if it were, it's really different.
 create table common.posts (
 	id serial primary key,
 	thread int not null references common.threads(id) on delete cascade,
@@ -285,19 +321,20 @@ create table common.notes (
 
 create type common.location_type as enum (
   'City',
-  'County',
-  'State',
   'Country',
-  'CrossBorderArea'
+  'County',
+  'CrossBorderArea',
+  'State'
 );
 
 create table common.locations (
 	id serial primary key,
   neo4j_id varchar(32),
-	name varchar(255) unique, -- not null,
+
 	sensitivity common.sensitivity not null default 'High',
+  iso_country varchar(32),
+	name varchar(255), --  unique not null,
 	type common.location_type, -- not null,
-	iso_alpha3 char(3) unique,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -354,8 +391,7 @@ create table common.organizations (
 	id serial primary key,
   neo4j_id varchar(32),
 	name varchar(255) unique, -- not null
-	sensitivity common.sensitivity default 'High',
-	primary_location int references common.locations(id),
+  sensitivity common.sensitivity default 'High',
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -485,7 +521,7 @@ create table common.file_versions (
   neo4j_id varchar(32),
 
   category varchar(255),
-  mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
+  mime_type common.mime_type, -- not null,
   name varchar(255), -- not null,
   file int references common.files(id), -- not null
   file_url varchar(255), -- not null,

@@ -48,10 +48,10 @@ CREATE TABLE sil.language_index (
   id serial primary key,
 
   common_id int not null references common.languages(id),
-  lang char(3) not null,      -- Three-letter code for language
-  country char(2) not null,   -- Country where this name is used
-  name_type sil.language_name_type not null,
-  name  varchar(75) not null,
+  lang char(3), -- not null,      -- Three-letter code for language
+  country char(2), --not null,   -- Country where this name is used
+  name_type sil.language_name_type, --not null,
+  name  varchar(75), -- not null,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),

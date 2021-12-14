@@ -87,12 +87,10 @@ create type admin.table_name as enum (
   'sc.budgets',
   'sc.ceremonies',
   'sc.change_to_plans',
-  'sc.ethno_arts',
   'sc.ethnologue',
   'sc.field_regions',
   'sc.field_zones',
   'sc.file_versions',
-  'sc.films',
   'sc.funding_accounts',
   'sc.global_partner_assessments',
   'sc.global_partner_engagements',
@@ -118,13 +116,13 @@ create type admin.table_name as enum (
   'sc.pinned_projects',
   'sc.posts',
   'sc.posts_directory',
+  'sc.producible',
+  'sc.producible_scripture_references',
   'sc.product_scripture_references',
   'sc.products',
   'sc.project_locations',
   'sc.project_members',
-  'sc.projects',
-  'sc.stories'
-
+  'sc.projects'
 );
 
 -- VERSION CONTROL ---------------------------------------------------
@@ -133,6 +131,11 @@ create type admin.db_vc_status as enum (
   'In Progress',
   'Completed',
   'Abandoned'
+);
+
+create type admin.row_status as enum (
+  'Active',
+  'Inactive'
 );
 
 create table admin.database_version_control (
@@ -161,6 +164,7 @@ create table admin.people (
   sensitivity_clearance common.sensitivity default 'Low',
   timezone varchar(32),
   title varchar(255),
+  status admin.row_status,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int, -- not null doesn't work here, on startup
