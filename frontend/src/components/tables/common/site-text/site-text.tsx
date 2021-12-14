@@ -198,7 +198,7 @@ export class SiteText {
       },
       {
         field: 'english',
-        displayName: capitalize(t('english')),
+        displayName: capitalize(t("english")),
         width: 50,
         editable: true,
         deleteFn: this.handleDelete,
@@ -206,7 +206,7 @@ export class SiteText {
       },
       {
         field: 'comment',
-        displayName: capitalize(t('comment')),
+        displayName: capitalize(t("comment")),
         width: 200,
         editable: true,
         updateFn: this.handleSiteTextStringUpdate,
