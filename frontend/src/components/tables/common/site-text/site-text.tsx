@@ -1,9 +1,9 @@
 import { Component, State, Host, h } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, SiteTextLanguage, SiteTextString, SiteTextTranslation } from '../../../../common/types';
+import { ErrorType, GenericResponse, SiteTextLanguage, SiteTextString, SiteTextTranslation } from '../../../../common/types';
 import { globals } from '../../../../core/global.store';
 import { t } from '../../../../core/site-text.service';
-import { capitalize } from '../../../../common/utility';
+import { capitalize, capitalizePhrase } from '../../../../common/utility';
 import { fetchAs } from '../../../../common/utility';
 
 type SiteTextStringUpdateInput = {
@@ -38,6 +38,27 @@ type SiteTextTranslationUpdateResponse = {
   site_text_translation: SiteTextTranslation;
 };
 
+type SiteTextStringDeleteRequest = {
+  token: string;
+  id: number;
+};
+
+type SiteTextStringDeleteResponse = GenericResponse;
+
+type SiteTextStringCreateInput = {
+  english: string;
+  comment: string;
+};
+
+type SiteTextStringCreateRequest = {
+  token: string;
+  site_text_string: SiteTextStringCreateInput;
+};
+
+type SiteTextStringCreateResponse = {
+  error: ErrorType;
+  site_text_string: SiteTextString;
+};
 
 @Component({
   tag: 'site-text',
@@ -47,6 +68,34 @@ type SiteTextTranslationUpdateResponse = {
 export class SiteText {
   @State() columnData: ColumnDescription[];
   @State() rowData: Array<any>;
+  @State() newSiteText: SiteTextStringCreateInput = {
+    english: '',
+    comment: '',
+  };
+
+  handleInsert = async event => {
+    event.preventDefault();
+    if (this.newSiteText.english === '') return;
+    const createResponse = await fetchAs<SiteTextStringCreateRequest, SiteTextStringCreateResponse>('common-site-text-strings/create-read', {
+      token: globals.globalStore.state.token,
+      site_text_string: {
+        english: this.newSiteText.english,
+        comment: this.newSiteText.comment,
+      },
+    });
+
+    if (createResponse.error === ErrorType.NoError) {
+      globals.globalStore.set('siteTextStrings', [createResponse.site_text_string, ...globals.globalStore.state.siteTextStrings]);
+      this.rowData = this.makeRows();
+    } else {
+      return;
+    }
+    this.newSiteText = { english: '', comment: '' };
+  };
+
+  handleInputChange = event => {
+    this.newSiteText = { ...this.newSiteText, [event.target.name]: event.target.value };
+  };
 
   handleSiteTextStringUpdate = async (id: number, column: string, newValue: string): Promise<boolean> => {
     const updateResponse = await fetchAs<SiteTextStringUpdateRequest, SiteTextStringUpdateResponse>('common-site-text-strings/update-read', {
@@ -69,13 +118,14 @@ export class SiteText {
         }),
       );
 
-      if(column === 'english') {
-        const newTranslations = { ... globals.globalStore.state.siteTextTranslations };
+      if (column === 'english') {
+        const newTranslations = { ...globals.globalStore.state.siteTextTranslations };
         Object.keys(newTranslations).map(language => {
           newTranslations[language][newValue] = newTranslations[language][oldValue];
           delete newTranslations[language][oldValue];
-        })
-        globals.globalStore.set('siteTextTranslations', newTranslations);        
+          return null;
+        });
+        globals.globalStore.set('siteTextTranslations', newTranslations);
       }
 
       this.rowData = this.makeRows();
@@ -85,8 +135,29 @@ export class SiteText {
     }
   };
 
-  handleDelete = async (): Promise<boolean> => {
-    return true;
+  handleDelete = async (id: number): Promise<boolean> => {
+    const updateResponse = await fetchAs<SiteTextStringDeleteRequest, SiteTextStringDeleteResponse>('common-site-text-strings/delete', {
+      token: globals.globalStore.state.token,
+      id,
+    });
+
+    if (updateResponse.error == ErrorType.NoError) {
+      const key = globals.globalStore.state.siteTextStrings.find((siteTextString: SiteTextString) => siteTextString.id === id).english;
+      const newTranslations = { ...globals.globalStore.state.siteTextTranslations };
+      Object.keys(newTranslations).map(language => {
+        delete newTranslations[language][key];
+        return null;
+      });
+      globals.globalStore.set('siteTextTranslations', newTranslations);
+      globals.globalStore.set(
+        'siteTextStrings',
+        globals.globalStore.state.siteTextStrings.filter((siteTextString: SiteTextString) => siteTextString.id !== id),
+      );
+      this.rowData = this.makeRows();
+      return true;
+    } else {
+      return false;
+    }
   };
 
   handleSiteTextTranslationUpdate = async (id: number, column: number, newValue: string): Promise<boolean> => {
@@ -101,13 +172,14 @@ export class SiteText {
 
     if (updateResponse.error == ErrorType.NoError) {
       const key = globals.globalStore.state.siteTextStrings.find((siteTextString: SiteTextString) => siteTextString.id === id).english;
-      const newTranslations = { ... globals.globalStore.state.siteTextTranslations };
+      const newTranslations = { ...globals.globalStore.state.siteTextTranslations };
       Object.keys(newTranslations).map(language => {
-        if(language === column.toString()) {
-          newTranslations[language][key] = newValue
+        if (language === column.toString()) {
+          newTranslations[language][key] = newValue;
         }
-      })
-      globals.globalStore.set('siteTextTranslations', newTranslations);    
+        return null;
+      });
+      globals.globalStore.set('siteTextTranslations', newTranslations);
       this.rowData = this.makeRows();
       return true;
     } else {
@@ -126,7 +198,7 @@ export class SiteText {
       },
       {
         field: 'english',
-        displayName: capitalize(t('english')),
+        displayName: capitalize(t("english")),
         width: 50,
         editable: true,
         deleteFn: this.handleDelete,
@@ -134,7 +206,7 @@ export class SiteText {
       },
       {
         field: 'comment',
-        displayName: capitalize(t('comment')),
+        displayName: capitalize(t("comment")),
         width: 200,
         editable: true,
         updateFn: this.handleSiteTextStringUpdate,
@@ -177,13 +249,38 @@ export class SiteText {
     return (
       <div class="site-text">
         <div class="language-select-wrapper">
-          <h4>Select Site Language</h4>
+          <h4>{capitalizePhrase(`${t("select")} ${t("site")} ${t("language")}`)}</h4>
           <language-select />
         </div>
         <div class="translations">
-          <h4>Site Text Translations</h4>
+          <h4>{capitalizePhrase(`${t("site")} ${t("text")} ${t("translations")}`)}</h4>
           {this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}
         </div>
+        {globals.globalStore.state.editMode === true && (
+          <form class="form-thing">
+            <div id="new-site-text-string-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="new-site-text-string">{capitalize(t('english'))}</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="new-site-text-string" value={this.newSiteText.english} name="english" onInput={this.handleInputChange} />
+              </span>
+            </div>
+            <div id="new-site-text-string-comment-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="site-text-string-comment">{capitalize(t('comment'))}</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="site-text-string-comment" name="comment" value={this.newSiteText.comment} onInput={this.handleInputChange} />
+              </span>
+            </div>
+            <div class="form-thing">
+              <span class="form-thing">
+                <input id="create-button" type="submit" value={capitalize(t("create"))} onClick={this.handleInsert} />
+              </span>
+            </div>
+          </form>
+        )}
       </div>
     );
   }
