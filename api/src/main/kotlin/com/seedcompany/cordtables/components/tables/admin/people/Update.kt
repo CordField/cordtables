@@ -152,7 +152,7 @@ class Update(
                 util.updateField(
                     token = req.token,
                     table = "admin.people",
-                    column = "time_zone",
+                    column = "timezone",
                     id = req.id,
                     value = req.value,
                 )

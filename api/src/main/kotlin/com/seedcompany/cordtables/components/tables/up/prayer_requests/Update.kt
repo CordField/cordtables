@@ -47,11 +47,21 @@ class Update(
         if (req.id == null) return UpPrayerRequestsUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-            "language_id" -> {
+            "request_language_id" -> {
                 util.updateField(
                     token = req.token,
                     table = "up.prayer_requests",
-                    column = "language_id",
+                    column = "request_language_id",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::INTEGER"
+                )
+            }
+            "target_language_id" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "up.prayer_requests",
+                    column = "target_language_id",
                     id = req.id,
                     value = req.value,
                     cast = "::INTEGER"
@@ -65,6 +75,15 @@ class Update(
                     id = req.id,
                     value = req.value,
                     cast = "::common.sensitivity"
+                )
+            }
+            "organization_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "up.prayer_requests",
+                    column = "organization_name",
+                    id = req.id,
+                    value = req.value,
                 )
             }
             "parent" -> {
