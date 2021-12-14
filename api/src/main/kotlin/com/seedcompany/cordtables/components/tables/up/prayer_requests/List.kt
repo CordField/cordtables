@@ -3,8 +3,8 @@ package com.seedcompany.cordtables.components.tables.up.prayer_requests
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.GetSecureQuery
-import com.seedcompany.cordtables.common.GetSecureQueryRequest
+import com.seedcompany.cordtables.common.GetPaginatedResultSet
+import com.seedcompany.cordtables.common.GetPaginatedResultSetRequest
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
 import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequest
@@ -39,7 +39,7 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureQuery,
+    val secureList: GetPaginatedResultSet,
 ) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
@@ -50,8 +50,8 @@ class List(
         var data: MutableList<prayerRequest> = mutableListOf()
         if (req.token == null) return UpPrayerRequestsListResponse(ErrorType.TokenNotFound, mutableListOf())
 
-        val jdbcResult = secureList.getSecureQueryHandler(
-          GetSecureQueryRequest(
+        val jdbcResult = secureList.getPaginatedResultSetHandler(
+          GetPaginatedResultSetRequest(
                 tableName = "up.prayer_requests",
                 token = req.token,
                 filter = "order by id",
