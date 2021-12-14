@@ -1048,8 +1048,6 @@ create table sc.products (
   id serial primary key,
 
   neo4j_id varchar(32) unique,
-  name varchar(64), -- not null
-  change_to_plan int references sc.change_to_plans(id), -- not null
   active bool,
 
   approach common.product_approach,
@@ -1223,7 +1221,6 @@ create table sc.internship_engagements (
     -- TODO                 date_range
     -- TODO                 date_range_override
     -- TODO
-	change_to_plan int default 1, -- references sc.change_to_plans(id), -- not null
   active bool,
 	ceremony int references sc.ceremonies(id),
   communications_complete_date timestamp,     -- TODO: doesn't exist in neo4j
@@ -1242,7 +1239,6 @@ create table sc.internship_engagements (
   paratext_registry varchar(32),         -- TODO: col doesn't exist in neo4j
   periodic_reports_directory int references sc.periodic_reports_directory(id),   --TODO: column doesn't exist in neo4j
   position common.internship_position,
-  project int references sc.projects(id), -- not null
   sensitivity common.sensitivity,
   start_date timestamp,
   start_date_override timestamp,
