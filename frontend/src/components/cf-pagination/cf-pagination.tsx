@@ -84,6 +84,15 @@ export class CfPagination {
           continue;
         }
 
+        if(index >= totalPages - 3){
+          pagesBreaking.push({
+            type: 'page',
+            index,
+            display: createPageView(index),
+          });
+          continue;
+        }
+
         if (pagesBreaking.length > 0 && pagesBreaking[pagesBreaking.length - 1].display !== breakView) {
           breakView = (
             <a>...</a>
