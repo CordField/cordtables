@@ -3,7 +3,7 @@ import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse, SiteTextLanguage, SiteTextString, SiteTextTranslation } from '../../../../common/types';
 import { globals } from '../../../../core/global.store';
 import { t } from '../../../../core/site-text.service';
-import { capitalize } from '../../../../common/utility';
+import { capitalize, capitalizePhrase } from '../../../../common/utility';
 import { fetchAs } from '../../../../common/utility';
 
 type SiteTextStringUpdateInput = {
@@ -249,11 +249,11 @@ export class SiteText {
     return (
       <div class="site-text">
         <div class="language-select-wrapper">
-          <h4>Select Site Language</h4>
+          <h4>{capitalizePhrase(`${t("select")} ${t("site")} ${t("language")}`)}</h4>
           <language-select />
         </div>
         <div class="translations">
-          <h4>Site Text Translations</h4>
+          <h4>{capitalizePhrase(`${t("site")} ${t("text")} ${t("translations")}`)}</h4>
           {this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}
         </div>
         {globals.globalStore.state.editMode === true && (
@@ -276,7 +276,7 @@ export class SiteText {
             </div>
             <div class="form-thing">
               <span class="form-thing">
-                <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
+                <input id="create-button" type="submit" value={capitalize(t("create"))} onClick={this.handleInsert} />
               </span>
             </div>
           </form>
