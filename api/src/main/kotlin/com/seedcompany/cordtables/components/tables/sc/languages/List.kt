@@ -7,6 +7,7 @@ import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.support.rowset.SqlRowSet
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -51,10 +52,11 @@ class List(
                 if (req.token == null) return ScLanguagesListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
 
                 var offset = (req.page-1)*req.resultsPerPage
-
+                println(req.resultsPerPage)
 
                 val paramSource = MapSqlParameterSource()
                 paramSource.addValue("token", req.token)
+
                 paramSource.addValue("limit", req.resultsPerPage)
                 paramSource.addValue("offset", offset)
                 //language=SQL
@@ -2069,7 +2071,11 @@ order by id
 
                         //println(totalRows)
 
-                        val jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)
+                        var jdbcResult: SqlRowSet;
+                        // if resultsPerPage isn't specified in the req, it's by default 0, so adding this here
+                        // for cases where no pagination is specified.
+                        if (req.resultsPerPage != 0) { jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)} else { resultRows.first(); jdbcResult = resultRows}
+
                         while (jdbcResult.next()) {
 
                                 var id: Int? = jdbcResult.getInt("id")
