@@ -254,8 +254,6 @@ create table common.threads (
   owning_group int not null references admin.groups(id)
 );
 
-
--- todo: not sure if this is supposed to follow neo4j, bet if it were, it's really different.
 create table common.posts (
 	id serial primary key,
 	thread int not null references common.threads(id) on delete cascade,
