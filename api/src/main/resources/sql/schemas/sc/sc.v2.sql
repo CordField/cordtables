@@ -1,5 +1,4 @@
-alter table sc.funding_accounts alter column account_number set not null;
-alter table sc.funding_accounts add unique (account_number);
+alter table sc.funding_accounts alter column account_number set unique not null;
 alter table sc.field_zones alter column name set not null;
 alter table sc.field_regions alter column name set not null;
 alter table sc.locations alter column name set not null;
@@ -34,10 +33,10 @@ alter table sc.project_locations alter column change_to_plan set not null;
 alter table sc.project_locations alter column location set not null;
 alter table sc.project_locations alter column project set not null;
 alter table sc.language_engagements alter column project set not null;
-alter table sc.language_engagements alter column language set not null;
+alter table sc.language_engagements alter column languages set not null;
 alter table sc.language_engagements alter column change_to_plan set not null;
-alter table sc.language_locations alter column language set not null;
-alter table sc.language_locations alter column location set not null;
+alter table sc.language_locations alter column language set not null
+alter table sc.language_locations alter column location set not null
 alter table sc.products alter column name set not null;
 alter table sc.products alter column change_to_plan set not null;
 alter table sc.product_scripture_references alter column product set not null;
