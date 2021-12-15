@@ -162,31 +162,10 @@ create type common.book_name as enum (
   'Revelation'
 );
 
--- TODO: Would it be possible to have a  scripture_range and scripture_reference type?
---       It may serve better for the times we just have a range attached more directly to something.
---       See two types below for an example
-
-
 create type common.unspecified_scripture as (
   book common.book_name,
   total_verses int
 );
-
-create type common.scripture_reference as (
-  book common.book_name,
-  chapter int,
-  label varchar(255),
-  verse int
-);
-
-create type common.scripture_range as (
-  book_end common.scripture_reference,
-  label varchar(255),
-  book_start common.scripture_reference,
-  total_verses int
-);
-
-
 
 create table common.scripture_references (
   id serial primary key,

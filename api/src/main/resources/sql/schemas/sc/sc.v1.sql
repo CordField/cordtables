@@ -1067,9 +1067,6 @@ create table sc.products (
   steps common.product_methodology_step[],
   type common.product_type,                 -- TODO: named 'legacyType' in neo4j
 
-  -- TODO: need to discuss if this is a better route for representing scripture ranges....
-  --   see types common.scripture_range and common.scripture_reference
-  scripture_references common.scripture_range[],
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
