@@ -117,6 +117,7 @@ create table sc.organizations (
 	neo4j_id varchar(32) unique,
   
 	address varchar(255),
+	sensitivity common.sensitivity,
 	root_directory int references common.directories(id),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
