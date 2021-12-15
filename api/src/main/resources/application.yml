@@ -1,11 +1,10 @@
-
-#org:
-#  neo4j:
-#    driver:
-#      uri: ${NEO4J_URL}
-#      authentication:
-#        username: ${NEO4J_USERNAME}
-#        password: ${NEO4J_PASSWORD}
+org:
+  neo4j:
+    driver:
+      uri: ${NEO4J_URL}
+      authentication:
+        username: ${NEO4J_USERNAME}
+        password: ${NEO4J_PASSWORD}
 cord:
   admin:
     password: ${CORD_ADMIN_PASSWORD}
