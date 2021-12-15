@@ -2,19 +2,11 @@
 
 -- ENUMS ----
 
+-- todo
 create type common.mime_type as enum (
-  'application/vnd.oasis.opendocument.database',
-  'application/vnd.visio',
-  'application/x-iso9660-image',
-  'application/x-texinfo',
-  'audio/s3m',
-  'font/woff',
-  'image/tiff',
-  'image/x-rgb',
-  'image/x-3ds',
-  'video/mp4',
-  'video/x-ms-wmv',
-  'video/webm'
+  'A',
+  'B',
+  'C'
 );
 
 -- SITE TEXT --------------------------------------------------------------------------------
@@ -162,11 +154,6 @@ create type common.book_name as enum (
   'Revelation'
 );
 
-create type common.unspecified_scripture as (
-  book common.book_name,
-  total_verses int
-);
-
 create table common.scripture_references (
   id serial primary key,
   neo4j_id varchar(32) unique,
@@ -298,20 +285,19 @@ create table common.notes (
 
 create type common.location_type as enum (
   'City',
-  'Country',
   'County',
-  'CrossBorderArea',
-  'State'
+  'State',
+  'Country',
+  'CrossBorderArea'
 );
 
 create table common.locations (
 	id serial primary key,
-  neo4j_id varchar(32),
 
-  iso_country varchar(32),
-	name varchar(255), --  unique not null,
+	name varchar(255) unique, -- not null,
+	sensitivity common.sensitivity not null default 'High',
 	type common.location_type, -- not null,
-
+	iso_alpha3 char(3) unique,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by int not null references admin.people(id),
@@ -366,11 +352,10 @@ create table common.education_by_person (
 
 create table common.organizations (
 	id serial primary key,
-  neo4j_id varchar(32),
-
 
 	name varchar(255) unique, -- not null
-  sensitivity common.sensitivity default 'High',
+	sensitivity common.sensitivity default 'High',
+	primary_location int references common.locations(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -500,7 +485,7 @@ create table common.file_versions (
   neo4j_id varchar(32),
 
   category varchar(255),
-  mime_type common.mime_type, -- not null,
+  mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
   name varchar(255), -- not null,
   file int references common.files(id), -- not null
   file_url varchar(255), -- not null,
