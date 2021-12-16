@@ -298,7 +298,7 @@ class Utility(
                     """
                         select table_schema || '.' || table_name as table_name 
                         from information_schema.tables 
-                        where table_schema in ('admin', 'common', 'sc', 'sil')
+                        where table_schema in ('admin', 'common', 'sc', 'sil', 'up')
                         order by table_name asc;
                     """.trimIndent()
                 )
