@@ -9,6 +9,15 @@
 */
 
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css');
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+@media only screen and (max-width: 30em) {
+  html {
+    font-size: 50%;
+  }
+}
 body {
   margin: 0px;
   padding: 0px;
@@ -21,8 +30,9 @@ body {
   --color-gray-lightest: #f1f5f9;
   --color-gray-dark: #334155;
   --color-gray-darkest: #0f172a;
-  box-sizing: border-box;
+  color: var(--color-gray-darkest);
 }
+
 #container {
   width: 1000px;
 }

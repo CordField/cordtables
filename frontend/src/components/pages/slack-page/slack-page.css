@@ -1,6 +1,7 @@
 :host {
   display: block;
   box-sizing: border-box;
+  font-size: 2rem;
 }
 /* LAYOUT */
 .slack-page {
@@ -13,6 +14,7 @@ slack-sidebar {
   flex-direction: column;
   flex: 0 1 250px;
   padding: 0 1.25rem;
+  font-size: 1.5rem;
 }
 slack-content {
   margin-left: auto;
@@ -26,9 +28,6 @@ slack-content {
   overflow: auto;
   flex: 1 0 90%;
 }
-/* .thread-form {
-  flex: 0 1 10%;
-} */
 
 /* SIDEBAR */
 .discussion-channel {
@@ -39,7 +38,6 @@ slack-content {
   cursor: pointer;
 }
 .selected-discussion-channel {
-  /* font-size: 400px; */
   color: var(--color-primary);
   background-color: var(--color-primary-lightest);
   width: fit-content;
@@ -49,7 +47,6 @@ slack-content {
   color: var(--color-primary);
   display: block;
   width: fit-content;
-  font-size: 1.5rem;
   user-select: none;
   margin-top: 5px;
 }
@@ -131,9 +128,6 @@ slack-thread {
 }
 
 @media only screen and (max-width: 30em) {
-  * {
-    font-size: 10px;
-  }
   .slack-page {
     flex-direction: column;
   }

@@ -123,7 +123,7 @@ class List(
           personIds+= "$owning_person,"
         }
         else{
-          personIds+="$personIds, $owning_person"
+          personIds+="$personIds, ${owning_person?:0}"
         }
       }
     } catch (e: SQLException) {
@@ -131,9 +131,9 @@ class List(
       return CommonPostsListResponse(ErrorType.SQLReadError, mutableListOf())
     }
 
-    personIds+=")"
-    val peopleQuery = """select public_first_name, public_last_name from admin.people where id in $personIds""".trimIndent()
-    val jdbcPeopleResult = jdbcTemplate.queryForRowSet(peopleQuery, paramSource)
+//    personIds+=")"
+//    val peopleQuery = """select public_first_name, public_last_name from admin.people where id in $personIds""".trimIndent()
+//    val jdbcPeopleResult = jdbcTemplate.queryForRowSet(peopleQuery)
 
     return CommonPostsListResponse(ErrorType.NoError, data)
   }
