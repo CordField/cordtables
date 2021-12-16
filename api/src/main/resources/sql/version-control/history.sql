@@ -24,7 +24,7 @@ begin
             raise info 'history_table_name: % ', history_table_name;
 
             -- HISTORY TABLE CREATION
-            execute format('create table if not exists %I.%I ( _history_id serial primary key,
+            execute format('create table if not exists %I.%I ( _history_id uuid default uuid_generate_v4(),
             _history_created_at timestamp not null default CURRENT_TIMESTAMP)', rec0.table_schema,history_table_name);
 
             -- UPDATE BOTH SECURITY AND HISTORY TABLE (IDEMPOTENT MANNER)
