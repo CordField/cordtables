@@ -1,7 +1,7 @@
 :host {
   display: block;
   box-sizing: border-box;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 /* LAYOUT */
 .slack-page {
@@ -14,7 +14,6 @@ slack-sidebar {
   flex-direction: column;
   flex: 0 1 250px;
   padding: 0 1.25rem;
-  font-size: 1.5rem;
 }
 slack-content {
   margin-left: auto;

@@ -1544,6 +1544,7 @@ declare namespace LocalJSX {
         "selectedDiscussionChannel"?: CommonDiscussionChannel;
     }
     interface SlackForm {
+        "onContentSubmitted"?: (event: CustomEvent<string>) => void;
         "onPostAdded"?: (event: CustomEvent<CommonPost>) => void;
         "onThreadAdded"?: (event: CustomEvent<CommonThread>) => void;
         "selectedChannelId"?: number;
