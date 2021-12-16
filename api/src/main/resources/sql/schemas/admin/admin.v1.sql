@@ -5,7 +5,7 @@ set schema 'common';
 
 CREATE EXTENSION if not exists hstore;
 create extension if not exists postgis;
-
+CREATE EXTENSION if not exists "uuid-ossp";
 
 create type admin.history_event_type as enum (
   'INSERT',
@@ -143,7 +143,7 @@ create type admin.db_vc_status as enum (
 );
 
 create table admin.database_version_control (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
   version int not null,
   status admin.db_vc_status default 'In Progress',
   started timestamp not null default CURRENT_TIMESTAMP,
@@ -153,7 +153,7 @@ create table admin.database_version_control (
 -- PEOPLE ------------------------------------------------------------
 
 create table admin.people (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   about text,
   phone varchar(32),
@@ -186,7 +186,7 @@ alter table admin.people add constraint admin_people_owning_person_fk foreign ke
 -- GROUPS --------------------------------------------------------------------
 
 create table admin.groups(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   name varchar(64) not null,
   parent_group int references admin.groups(id),
@@ -204,7 +204,7 @@ create table admin.groups(
 alter table admin.people add constraint admin_people_owning_group_fk foreign key (owning_group) references admin.groups(id);
 
 create table admin.group_row_access(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   group_id int not null references admin.groups(id),
   table_name admin.table_name not null,
@@ -221,7 +221,7 @@ create table admin.group_row_access(
 );
 
 create table admin.group_memberships(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   group_id int not null references admin.groups(id),
   person int not null references admin.people(id),
@@ -239,7 +239,7 @@ create table admin.group_memberships(
 -- PEER to PEER -------------------------------------------------------------
 
 create table admin.peers (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   person int unique not null references admin.people(id),
   url varchar(128) unique not null,
@@ -260,7 +260,7 @@ create table admin.peers (
 -- ROLES --------------------------------------------------------------------
 
 create table admin.roles (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	name varchar(255) not null,
   
@@ -275,7 +275,7 @@ create table admin.roles (
 );
 
 create table admin.role_column_grants(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	role int not null references admin.roles(id),
 	table_name admin.table_name not null,
@@ -298,7 +298,7 @@ create type admin.table_permission_grant_type as enum (
 );
 
 create table admin.role_table_permissions(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   role int not null references admin.roles(id),
   table_name admin.table_name not null,
@@ -315,7 +315,7 @@ create table admin.role_table_permissions(
 );
 
 create table admin.role_memberships (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
 	role int not null references admin.roles(id),
 	person int not null references admin.people(id),
@@ -333,7 +333,7 @@ create table admin.role_memberships (
 -- USERS ---------------------------------------------------------------------
 
 create table admin.users(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   person int references admin.people(id) unique, -- not null added in v2
   email varchar(255) unique not null,
@@ -350,7 +350,7 @@ create table admin.users(
 -- AUTHENTICATION ------------------------------------------------------------
 
 create table if not exists admin.tokens (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 	token varchar(64) unique not null,
 	person int references admin.people(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP
@@ -359,7 +359,7 @@ create table if not exists admin.tokens (
 -- email tokens
 
 create table admin.email_tokens (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 	token varchar(512) unique not null,
 	user_id int not null references admin.users(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP

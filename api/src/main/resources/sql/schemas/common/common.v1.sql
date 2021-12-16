@@ -29,7 +29,7 @@ create type common.egids_scale as enum (
 
 -- meant to be extended by all orgs, so everyone has a globally unique id to reference within their language lists
 create table common.languages(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -39,7 +39,7 @@ create table common.languages(
 );
 
 create table common.site_text_strings(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   english varchar(64) not null, -- US English, all translations including other English locales will be in the translation table
   comment text,
@@ -53,7 +53,7 @@ create table common.site_text_strings(
 );
 
 create table common.site_text_translations(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   language int not null references common.languages(id),
   site_text int not null references common.site_text_strings(id) on delete cascade,
@@ -70,7 +70,7 @@ create table common.site_text_translations(
 );
 
 create table common.site_text_languages(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   language int not null references common.languages(id),
 
@@ -155,7 +155,7 @@ create type common.book_name as enum (
 );
 
 create table common.scripture_references (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
   neo4j_id varchar(32) unique,
 
   book_start common.book_name,
@@ -178,7 +178,7 @@ create table common.scripture_references (
 -- CHAT ------------------------------------------------------------
 
 create table common.discussion_channels (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 	name varchar(32) not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
@@ -190,7 +190,7 @@ create table common.discussion_channels (
 );
 
 create table common.cell_channels (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
   table_name admin.table_name not null,
   column_name varchar(64) not null,
@@ -207,7 +207,7 @@ create table common.cell_channels (
 );
 
 create table common.threads (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	channel int not null references common.discussion_channels(id) on delete cascade,
 	content text not null,
@@ -221,7 +221,7 @@ create table common.threads (
 );
 
 create table common.posts (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 	thread int not null references common.threads(id) on delete cascade,
 	content text not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -235,7 +235,7 @@ create table common.posts (
 -- BLOGS ---------------
 
 create table common.blogs (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	title varchar(64) not null,
 
@@ -250,7 +250,7 @@ create table common.blogs (
 );
 
 create table common.blog_posts (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
   blog int not null references common.blogs(id),
 	content text not null,
@@ -266,7 +266,7 @@ create table common.blog_posts (
 -- NOTES ----------------------------------------------------
 
 create table common.notes (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
   table_name admin.table_name not null,
   column_name varchar(64) not null,
@@ -292,7 +292,7 @@ create type common.location_type as enum (
 );
 
 create table common.locations (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	name varchar(255) unique, -- not null,
 	sensitivity common.sensitivity not null default 'High',
@@ -314,7 +314,7 @@ ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk fore
 -- Education
 
 create table common.education_entries (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   neo4j_id varchar(32) unique,
   degree varchar(64),
@@ -332,7 +332,7 @@ create table common.education_entries (
 );
 
 create table common.education_by_person (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   person int not null references admin.people(id),
   education int not null references common.education_entries(id),
@@ -351,7 +351,7 @@ create table common.education_by_person (
 -- ORGANIZATIONS ------------------------------------------------------------
 
 create table common.organizations (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	name varchar(255) unique, -- not null
 	sensitivity common.sensitivity default 'High',
@@ -366,7 +366,7 @@ create table common.organizations (
 );
 
 create table common.org_chart_positions(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   organization int not null references common.organizations(id),
   name varchar(64) not null,
@@ -387,7 +387,7 @@ create type common.position_relationship_types as enum (
 );
 
 create table common.org_chart_position_graph(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   from_position int not null references common.org_chart_positions(id),
   to_position int not null references common.org_chart_positions(id),
@@ -411,7 +411,7 @@ create type common.involvement_options as enum (
 );
 
 create table common.coalitions(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   name varchar(64) unique not null,
 
@@ -426,7 +426,7 @@ create table common.coalitions(
 -- coalition memberships
 
 create table common.coalition_memberships(
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   coalition int not null references common.coalitions(id),
   organization int not null references common.organizations(id),
@@ -444,7 +444,7 @@ create table common.coalition_memberships(
 -- FILES & DIRECTORIES ----------------------------------------------------------
 
 create table common.directories (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
   neo4j_id varchar(32) unique,
 
   parent int references common.directories(id),
@@ -462,7 +462,7 @@ create table common.directories (
 );
 
 create table common.files (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
   neo4j_id varchar(32),
 
   directory int references common.directories(id), --not null
@@ -481,7 +481,7 @@ create table common.files (
 );
 
 create table common.file_versions (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
   neo4j_id varchar(32),
 
   category varchar(255),
@@ -508,7 +508,7 @@ create type common.ticket_status as enum (
 );
 
 create table common.tickets (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	ticket_status common.ticket_status not null default 'Open',
 	parent int,
@@ -525,7 +525,7 @@ create table common.tickets (
 ALTER TABLE common.tickets ADD CONSTRAINT common_tickets_parent_fk foreign key (parent) references common.tickets(id);
 
 create table common.ticket_graph (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	from_ticket int not null references common.tickets(id),
 	to_ticket int not null references common.tickets(id),
@@ -539,7 +539,7 @@ create table common.ticket_graph (
 );
 
 create table common.ticket_assignments (
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	ticket int not null references common.tickets(id),
 	person int not null references admin.people(id),
@@ -553,7 +553,7 @@ create table common.ticket_assignments (
 );
 
 create table common.work_records(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	person int not null references admin.people(id),
 	ticket int not null references common.tickets(id),
@@ -573,7 +573,7 @@ create table common.work_records(
 );
 
 create table common.work_estimates(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
     ticket int references common.tickets(id),
 	person int not null references admin.people(id),
 	hours int not null,
@@ -597,7 +597,7 @@ create type common.ticket_feedback_options as enum (
 );
 
 create table common.ticket_feedback(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	ticket int references common.tickets(id),
 	stakeholder int not null references admin.people(id),
@@ -614,7 +614,7 @@ create table common.ticket_feedback(
 -- WORKFLOW -----------------------------------------------------------------
 
 create table common.workflows(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	title varchar(128) not null unique,
   
@@ -627,7 +627,7 @@ create table common.workflows(
 );
 
 create table common.stages(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	title varchar(128) not null unique,
   
@@ -640,7 +640,7 @@ create table common.stages(
 );
 
 create table common.stage_graph(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	from_stage int not null references common.stages(id),
 	to_stage int not null references common.stages(id),
@@ -656,7 +656,7 @@ create table common.stage_graph(
 );
 
 create table common.stage_role_column_grants(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
   stage int not null references common.stages(id),
 	role int not null references admin.roles(id),
@@ -675,7 +675,7 @@ create table common.stage_role_column_grants(
 );
 
 create table common.stage_notifications(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
 	stage int not null references common.stages(id),
 	on_enter bool default false,
@@ -707,7 +707,7 @@ create type common.people_to_org_relationship_type as enum (
 );
 
 create table common.people_to_org_relationships (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
 	org int not null references common.organizations(id),
 	person int not null references admin.people(id),
@@ -730,7 +730,7 @@ create type common.people_to_people_relationship_types as enum (
 );
 
 create table common.people_graph (
-  id serial primary key,
+  id uuid default uuid_generate_v4(),
 
   from_person int not null references admin.people(id),
   to_person int not null references admin.people(id),

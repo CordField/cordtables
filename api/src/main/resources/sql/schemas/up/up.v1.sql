@@ -8,7 +8,7 @@ create type up.prayer_type as enum (
 );
 
 create table up.prayer_requests(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
   request_language_id int references common.languages(id),
   target_language_id int references common.languages(id),
@@ -31,7 +31,7 @@ create table up.prayer_requests(
 );
 
 create table up.prayer_notifications(
-	id serial primary key,
+	id uuid default uuid_generate_v4(),
 
   request int references up.prayer_requests(id),
   person int references admin.people(id),
