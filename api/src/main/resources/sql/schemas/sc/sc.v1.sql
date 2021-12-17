@@ -5,7 +5,7 @@ create schema sc;
 -- POSTS ----------------------------------------------------------
 
 create table sc.posts_directory ( -- does not need to be secure
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   created_at timestamp not null default CURRENT_TIMESTAMP
 );
 
@@ -24,7 +24,7 @@ create type sc.post_type as enum (
 );
 
 create table sc.posts (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32) unique,
 
   directory int references sc.posts_directory(id), -- not null
@@ -43,7 +43,7 @@ create table sc.posts (
 -- ACCOUNTING TABLES --------------------------------------------------------
 
 create table sc.funding_accounts (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32) unique,
 
 	account_number int unique, -- not null,
@@ -60,7 +60,7 @@ create table sc.funding_accounts (
 -- LOCATION TABLES ----------------------------------------------------------
 
 create table sc.field_zones (
-	id serial primary key,
+	id uuid default public.uuid_generate_v4(),
 	neo4j_id varchar(32) unique,
 
 	director int references admin.people(id),
@@ -75,7 +75,7 @@ create table sc.field_zones (
 );
 
 create table sc.field_regions (
-	id serial primary key,
+	id uuid default public.uuid_generate_v4(),
 	neo4j_id varchar(32),
 	field_zone int references sc.field_zones(id),
 
@@ -129,7 +129,7 @@ create table sc.organizations (
 );
 
 create table sc.organization_locations(
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
 	organization int not null references sc.organizations(id),
 	location int not null references sc.locations(id),
@@ -174,7 +174,7 @@ DO $$ BEGIN
 END; $$;
 
 create table sc.partners (
-	id serial primary key,
+	id uuid default public.uuid_generate_v4(),
 
   neo4j_id varchar(32) unique,
 	organization int references sc.organizations(id), -- not null
@@ -198,7 +198,7 @@ create table sc.partners (
 -- LANGUAGE TABLES ----------------------------------------------------------
 
 create table sc.ethnologue (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   neo4j_id varchar(32) unique,
   language_index int not null references sil.language_index(id),
@@ -292,7 +292,7 @@ create type sc.begin_work_rel_pol_obstacles_scale as enum (
 );
 
 create table sc.languages(
-	id serial primary key,
+	id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32) unique,
 
   ethnologue int references sc.ethnologue(id), -- not null
@@ -397,7 +397,7 @@ create table sc.languages(
 );
 
 create table sc.language_goal_definitions (
-	id serial primary key,
+	id uuid default public.uuid_generate_v4(),
 
 	-- todo
 
@@ -410,7 +410,7 @@ create table sc.language_goal_definitions (
 );
 
 create table sc.language_locations (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
 	language int not null references sc.languages(id),
 	location int not null references sc.locations(id),
@@ -427,7 +427,7 @@ create table sc.language_locations (
 );
 
 create table sc.language_goals (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   language int not null references sc.languages(id),
 	goal int not null references sc.language_goal_definitions(id),
@@ -447,7 +447,7 @@ create table sc.language_goals (
 -- USER TABLES --------------------------------------------------------------
 
 create table sc.known_languages_by_person (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   person int not null references admin.people(id),
   known_language int not null references sc.languages(id),
@@ -479,7 +479,7 @@ create table sc.people (
 );
 
 create table sc.person_unavailabilities (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32) unique,
 
   person int references admin.people(id),
@@ -557,7 +557,7 @@ create type sc.change_to_plan_status as enum (
 );
 
 create table sc.change_to_plans (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32),
 
   status sc.change_to_plan_status,
@@ -573,12 +573,12 @@ create table sc.change_to_plans (
 );
 
 create table sc.periodic_reports_directory ( -- security not needed
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   created_at timestamp not null default CURRENT_TIMESTAMP
 );
 
 create table sc.periodic_reports (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   neo4j_id varchar(32),
   directory int references sc.periodic_reports_directory(id),
@@ -598,7 +598,7 @@ create table sc.periodic_reports (
 
 -- extension table to common
 create table sc.projects (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
 	name varchar(32), -- not null
 	change_to_plan int default 1 references sc.change_to_plans(id), -- not null
@@ -636,7 +636,7 @@ create table sc.projects (
 );
 
 create table sc.project_members (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32),
 	project int references sc.projects(id), --not null
 	person int references sc.people(id), --not null
@@ -655,7 +655,7 @@ create table sc.project_members (
 );
 
 create table sc.pinned_projects (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 	person int references sc.people(id), -- not null
 	project int references sc.projects(id), -- not null
 
@@ -674,7 +674,7 @@ create type sc.partnership_agreement_status as enum (
 );
 
 create table sc.partnerships (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   neo4j_id varchar(32) unique,
   project int references sc.projects(id), -- not null
@@ -714,7 +714,7 @@ create type common.budget_status as enum (
 );
 
 create table sc.budgets (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   neo4j_id varchar(32) unique,
   change_to_plan int default 1, -- not null
@@ -736,7 +736,7 @@ create table sc.budgets (
 );
 
 create table sc.budget_records (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   neo4j_id varchar(32) unique,
   budget int references sc.budgets(id), -- not null
@@ -758,7 +758,7 @@ create table sc.budget_records (
 );
 
 create table sc.budget_records_partnerships (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   budget_record int not null references sc.budget_records(id),
   partnership int not null references sc.partnerships(id),
 
@@ -774,7 +774,7 @@ create table sc.budget_records_partnerships (
 -- PROJECT LOCATION
 
 create table sc.project_locations (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   active bool,
   change_to_plan int default 1 references sc.change_to_plans(id), -- not null
@@ -799,7 +799,7 @@ create type common.ceremony_type as enum (
 );
 
 create table sc.ceremonies (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32),
   project int  references sc.projects(id),
   ethnologue int references sil.table_of_languages(id),
@@ -846,7 +846,7 @@ create type common.project_engagement_tag as enum (
 );
 
 create table sc.language_engagements (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
@@ -978,7 +978,7 @@ create type sc.producible_type as enum (
 );
 
 create table sc.producible (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32) unique,
   name varchar(64),
   type sc.producible_type,
@@ -992,7 +992,7 @@ create table sc.producible (
 );
 
 create table sc.producible_scripture_references (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   producible int references sc.producible(id), -- not null
   scripture_reference int references common.scripture_references(id), -- not null
   change_to_plan int default 1 references sc.change_to_plans(id), -- not null
@@ -1009,7 +1009,7 @@ create table sc.producible_scripture_references (
 );
 
 create table sc.products (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   neo4j_id varchar(32) unique,
   name varchar(64), -- not null
@@ -1040,7 +1040,7 @@ create table sc.products (
 );
 
 create table sc.product_scripture_references (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   product int references sc.products(id), -- not null
   scripture_reference int references common.scripture_references(id), -- not null
   change_to_plan int default 1 references sc.change_to_plans(id), -- not null
@@ -1057,7 +1057,7 @@ create table sc.product_scripture_references (
 );
 
 create table sc.product_progress (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32),
   product int references sc.products(id),
   report int references sc.periodic_reports,
@@ -1071,7 +1071,7 @@ create table sc.product_progress (
 );
 
 create table sc.step_progress (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
   neo4j_id varchar(32),
   step common.product_methodology_step,
   completed decimal,
@@ -1115,7 +1115,7 @@ create type common.internship_position as enum (
 );
 
 create table sc.internship_engagements (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   neo4j_id varchar(32) unique,
 	project int references sc.projects(id), -- not null
@@ -1162,7 +1162,7 @@ create type sc.partner_maturity_scale as enum (
 );
 
 create table sc.global_partner_assessments (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   partner int not null references sc.organizations(id),
 
@@ -1195,7 +1195,7 @@ create type sc.partner_performance_options as enum(
 );
 
 create table sc.global_partner_performance (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   organization int unique not null references sc.organizations(id),
 
@@ -1217,7 +1217,7 @@ create type sc.global_partner_transition_options as enum(
 );
 
  create table sc.global_partner_transitions (
-   id serial primary key,
+   id uuid default public.uuid_generate_v4(),
 
    organization int unique not null references sc.organizations(id),
    transition_type sc.global_partner_transition_options not null,
@@ -1237,7 +1237,7 @@ create type sc.global_partner_roles as enum (
 );
 
 create table sc.global_partner_engagements (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   organization int not null references common.organizations(id),
   type common.involvement_options not null,
@@ -1257,7 +1257,7 @@ create table sc.global_partner_engagements (
 );
 
 create table sc.global_partner_engagement_people (
-  id serial primary key,
+  id uuid default public.uuid_generate_v4(),
 
   engagement int not null references sc.global_partner_engagements(id),
   person int not null references admin.people(id),
