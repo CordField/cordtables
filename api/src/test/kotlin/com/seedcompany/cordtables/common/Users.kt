@@ -1,9 +1,11 @@
 package com.seedcompany.cordtables.common
 
 import com.seedcompany.cordtables.CordTablesTests
+import com.seedcompany.cordtables.common.test.Utilities
 import com.seedcompany.cordtables.components.user.RegisterRequest
 import com.seedcompany.cordtables.components.user.RegisterReturn
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.openqa.selenium.chrome.ChromeOptions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

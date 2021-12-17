@@ -52,9 +52,6 @@ class CordTablesTests(
                 withEnv("POSTGRES_PORT", "5432")
             }.withExposedPorts(5432)
 
-
-
-
         @DynamicPropertySource
         @JvmStatic
         fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
@@ -64,16 +61,13 @@ class CordTablesTests(
             System.setProperty("DB_PORT", "5432")
             System.setProperty("DB_USERNAME", "postgres")
             System.setProperty("DB_PASSWORD", "asdfasdf")
-
             System.setProperty("CORD_ADMIN_PASSWORD", "asdfasdf")
             System.setProperty("CORD_API_GRAPHQL_URL", "asdfasdf")
             System.setProperty("CORD_API_EMAIL", "asdfasdf")
             System.setProperty("CORD_API_PASSWORD", "asdfasdf")
-
             System.setProperty("NEO4J_URL", "asdfasdf")
             System.setProperty("NEO4J_USERNAME", "asdfasdf")
             System.setProperty("NEO4J_PASSWORD", "asdfasdf")
-
             System.setProperty("SERVER_URL", "http://localhost:8080")
             System.setProperty("SERVER_PORT", "8080")
 
@@ -93,6 +87,7 @@ class CordTablesTests(
 
     init {
         exposeHostPorts(port);
+      println("test")
     }
 
     @Test
