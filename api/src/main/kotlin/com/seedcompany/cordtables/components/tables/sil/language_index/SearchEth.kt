@@ -19,7 +19,7 @@ data class SilLanguageIndexSearchEthRequest(
 
 data class SilLanguageIndexSearchEthResponse(
   val error: ErrorType,
-  val data: MutableList<Int>? = null
+  val id: Int? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -37,7 +37,7 @@ class SearchEth(
   @PostMapping("sil-language-index/search-eth")
   @ResponseBody
   fun listHandler(@RequestBody req:SilLanguageIndexSearchEthRequest): SilLanguageIndexSearchEthResponse {
-    var data: MutableList<Int> = mutableListOf()
+//    var data: MutableList<Int> = mutableListOf()
     if(req.lang == null) return SilLanguageIndexSearchEthResponse(ErrorType.InputMissingColumn)
 
     val paramSource = MapSqlParameterSource()
@@ -47,20 +47,24 @@ class SearchEth(
       select id
       from sil.language_index
       where lang = :lang
+      and name_type = 'L'
+      limit 1
     """.trimIndent()
+
+    var id: Int? = null
 
     try {
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-      while (jdbcResult.next()) {
+//      while (jdbcResult.next()) {
 
-        var id: Int = jdbcResult.getInt("id")
-        data.add(id)
-      }
+        id = jdbcResult.getInt("id")
+//        data.add(id)
+//      }
     } catch (e: SQLException) {
       println("error while searching ${e.message}")
-      return SilLanguageIndexSearchEthResponse(ErrorType.SQLReadError, mutableListOf())
+      return SilLanguageIndexSearchEthResponse(ErrorType.SQLReadError, id)
     }
 
-    return SilLanguageIndexSearchEthResponse(ErrorType.NoError, data)
+    return SilLanguageIndexSearchEthResponse(ErrorType.NoError, id)
   }
 }
