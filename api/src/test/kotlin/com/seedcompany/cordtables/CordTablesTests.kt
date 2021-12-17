@@ -34,6 +34,9 @@ class CordTablesTests(
 
     @Autowired
     val rest: TestRestTemplate,
+
+    @Autowired
+    val util: Util2,
 ) {
     val userPassword = "asdfasdf"
     val url = "http://localhost:$port"
@@ -110,6 +113,9 @@ class CordTablesTests(
 
     @Test
     fun user() {
+
+        util.asdf()
+
         val user1 = register("user1@cordtables.com", userPassword)
         assert(true) // temp until we have some legit assert in this test case
     }
