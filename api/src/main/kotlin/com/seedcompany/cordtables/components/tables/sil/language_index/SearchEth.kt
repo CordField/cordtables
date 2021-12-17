@@ -30,15 +30,14 @@ class SearchEth(
 
   @Autowired
   val ds: DataSource,
-  ) {
+) {
 
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
   @PostMapping("sil-language-index/search-eth")
   @ResponseBody
-  fun listHandler(@RequestBody req:SilLanguageIndexSearchEthRequest): SilLanguageIndexSearchEthResponse {
-//    var data: MutableList<Int> = mutableListOf()
-    if(req.lang == null) return SilLanguageIndexSearchEthResponse(ErrorType.InputMissingColumn)
+  fun listHandler(@RequestBody req: SilLanguageIndexSearchEthRequest): SilLanguageIndexSearchEthResponse {
+    if (req.lang == null) return SilLanguageIndexSearchEthResponse(ErrorType.InputMissingColumn)
 
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("lang", req.lang)
@@ -55,11 +54,9 @@ class SearchEth(
 
     try {
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-//      while (jdbcResult.next()) {
-
+      if (jdbcResult.next()) {
         id = jdbcResult.getInt("id")
-//        data.add(id)
-//      }
+      }
     } catch (e: SQLException) {
       println("error while searching ${e.message}")
       return SilLanguageIndexSearchEthResponse(ErrorType.SQLReadError, id)
