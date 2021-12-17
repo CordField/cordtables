@@ -5,6 +5,8 @@ import { globals } from '../../../core/global.store';
 import {
   CommonDiscussionChannel,
   CommonDiscussionChannelListResponse,
+  CommonDiscussionChannelUpdateRequest,
+  CommonDiscussionChannelUpdateResponse,
   CreateCommonDiscussionChannelRequest,
   CreateCommonDiscussionChannelResponse,
 } from '../../tables/common/discussion-channels/types';
@@ -23,12 +25,6 @@ export class SlackSidebar {
   @State() name: string = '';
   @State() showForm: boolean = false;
 
-  @Listen('channelAdded')
-  handleChannelAddedChange(event: CustomEvent<CommonDiscussionChannel>) {
-    if (this.discussionChannels.error === ErrorType.NoError) {
-      this.discussionChannels = { error: ErrorType.NoError, discussion_channels: this.discussionChannels.discussion_channels.concat(event.detail) };
-    }
-  }
   componentWillLoad() {
     console.log('component did load', this.discussionChannels);
     this.selectedDiscussionChannel = this.discussionChannels?.discussion_channels.length > 0 ? this.discussionChannels.discussion_channels[0] : null;
@@ -66,23 +62,25 @@ export class SlackSidebar {
       this.discussionChannels.discussion_channels?.map(discussionChannel => {
         const discussionChannelClassName = `discussion-channel ${discussionChannel.id === this.selectedDiscussionChannel?.id ? 'selected-discussion-channel' : ''}`;
         return (
-          <div class={discussionChannelClassName} onClick={e => this.clickHandler(e)} key={discussionChannel.id}>
-            {discussionChannel.name}
-          </div>
+          <span>
+            <div class={discussionChannelClassName} onClick={e => this.clickHandler(e)} key={discussionChannel.id}>
+              {discussionChannel.name}
+            </div>
+          </span>
         );
       })
     ) : (
       <div>Loading...</div>
     );
     const formJsx = (
-      <form class="sidebar-form">
+      <form class="sidebar-form form">
         <input type="text" name="name" id="name" value={this.name} onChange={e => this.handleNameChange(e)} />
         <button
           onClick={e => {
             this.handleCreate(e);
             this.setNameToNull();
           }}
-          class="form-button"
+          class="form-button channel-button"
         >
           submit
         </button>

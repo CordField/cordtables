@@ -24,6 +24,8 @@ body {
   height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   --color-primary: #3c6a29;
+  --color-primary-dark: #2d501f;
+  --color-primary-light: #b1c3a9;
   --color-primary-lightest: #f0f7ec;
   --color-gray: #64748b;
   --color-gray-light: #cbd5e1;

@@ -14,7 +14,7 @@ export class CfTiny {
 
   @Event() contentUpdate: EventEmitter<TinyUpdateEvent>;
   @State() content: string;
-  // we listen to a global event as the event is emitted on the parent element. 
+  // we listen to a global event as the event is emitted on the parent element.
   @Listen('contentSubmitted', {
     target: 'window',
   })
@@ -64,6 +64,8 @@ export class CfTiny {
           toolbar_mode="floating"
           toolbar="quicklink emoticons image table media | bold italic | undo redo | styleselect | alignleft aligncenter alignright alignjustify | outdent indent"
           quickbars_insert_toolbar="false"
+          icons="thin"
+          branding={false}
         >
           {this.initialHTMLContent}
         </tinymce-editor>

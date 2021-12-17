@@ -69,7 +69,7 @@ export class SlackThread {
               <ion-icon name="close-circle-outline"></ion-icon>
             </span>
           </span>
-        ) : globals.globalStore.state.editMode ? (
+        ) : globals.globalStore.state.editMode && this.post.owning_person === globals.globalStore.state.userId ? (
           <span>
             <span
               class="thread-update"

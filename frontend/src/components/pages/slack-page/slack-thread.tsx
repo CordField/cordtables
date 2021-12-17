@@ -3,20 +3,11 @@ import { v4 } from 'uuid';
 import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
-import { idService, IdService } from '../../../core/id.service';
+import { idService } from '../../../core/id.service';
 import { TinyUpdateEvent } from '../../cf-tiny/types';
-import { CommonDiscussionChannel } from '../../tables/common/discussion-channels/types';
 import { CommonPost, CommonPostsListRequest, CommonPostsListResponse, DeleteCommonPostsRequest, DeleteCommonPostsResponse } from '../../tables/common/posts/types';
-import {
-  CommonThread,
-  CommonThreadsListRequest,
-  CommonThreadsListResponse,
-  CommonThreadsUpdateRequest,
-  CommonThreadsUpdateResponse,
-  DeleteCommonThreadsRequest,
-} from '../../tables/common/threads/types';
+import { CommonThread, CommonThreadsUpdateRequest, CommonThreadsUpdateResponse } from '../../tables/common/threads/types';
 
-// will take discussion channels as a prop
 @Component({
   tag: 'slack-thread',
   styleUrl: 'slack-page.css',
@@ -77,13 +68,13 @@ export class SlackThread {
     }
   }
 
-  mouseEnterAndLeaveHandler(e) {
-    e.stopPropagation();
-    console.log('mouse enter/leave', this.thread.owning_person, globals.globalStore.state.userId, this.showEditAndDeleteButtons, this.thread.id);
-    if (this.thread.owning_person === globals.globalStore.state.userId) {
-      this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
-    }
-  }
+  // mouseEnterAndLeaveHandler(e) {
+  //   e.stopPropagation();
+  //   console.log('mouse enter/leave', this.thread.owning_person, globals.globalStore.state.userId, this.showEditAndDeleteButtons, this.thread.id);
+  //   if (this.thread.owning_person === globals.globalStore.state.userId) {
+  //     this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+  //   }
+  // }
 
   render() {
     const slackThreadButtonsClass = this.updateMode === false ? 'thread-buttons' : 'thread-buttons thread-buttons-update';
@@ -120,7 +111,7 @@ export class SlackThread {
               <ion-icon name="close-circle-outline"></ion-icon>
             </span>
           </span>
-        ) : globals.globalStore.state.editMode ? (
+        ) : globals.globalStore.state.editMode && this.thread.owning_person === globals.globalStore.state.userId ? (
           <span>
             <span
               class="update-icon thread-icon"
