@@ -401,8 +401,41 @@ class Utility(
         }
         return result.toString()
     }
+  data class PeopleDetails(
+    val id: Int,
+    val public_first_name: String?,
+    val public_last_name: String?
+  )
+  fun getPeopleDetailsFromIds(idArray: MutableList<Int>): MutableList<PeopleDetails>{
+    var peopleDetails: MutableList<PeopleDetails> = mutableListOf()
+    var stringPeopleIds = "("
+    if(idArray.isNotEmpty()) {idArray.forEach { it -> stringPeopleIds+="$it," }}
+    else {stringPeopleIds += "0,"}
+    stringPeopleIds = stringPeopleIds.dropLast(1)
+    stringPeopleIds+=")"
+//    if(idArray.isEmpty()) idArray.add(0)
+
+    this.ds.connection.use { conn ->
+      //language=SQL
+      val statement = conn.prepareCall(
+        """
+               select id, public_first_name, public_last_name from admin.people where id in $stringPeopleIds
+            """.trimIndent()
+      )
+
+//      statement.setObject(1, idArray, java.sql.Types.ARRAY);
+      println(statement)
+      val result = statement.executeQuery()
+      while (result.next()) {
+        peopleDetails.add(PeopleDetails(id = result.getInt(1),public_first_name = result.getString(2), public_last_name= result.getString(3)))
+      }
+    }
+    return peopleDetails;
+  }
 }
 
 inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
     return enumValues<T>().any { it.name == name }
 }
+
+
