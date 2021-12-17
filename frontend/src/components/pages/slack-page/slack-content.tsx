@@ -16,6 +16,7 @@ export class SlackContent {
   @Prop() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() threadListResponse: CommonThreadsListResponse = null;
   @State() channelThreads: CommonThread[] = [];
+  contentThreads: HTMLDivElement;
   @Watch('selectedDiscussionChannel')
   async handleSelectedDiscussionChannelChange(newValue: CommonDiscussionChannel, oldValue: CommonDiscussionChannel) {
     if (newValue) await this.getThreads(newValue.id);
@@ -36,10 +37,13 @@ export class SlackContent {
   handleThreadAddedChange(event: CustomEvent<CommonThread>) {
     this.channelThreads = this.channelThreads?.concat(event.detail);
   }
-  async componentWillLoad() {
+  async componentWillRender() {
     await this.getThreads(this.selectedDiscussionChannel?.id);
   }
 
+  componentDidRender() {
+    (this.contentThreads.lastChild as HTMLDivElement).scrollIntoView({ behavior: 'smooth' });
+  }
   async getThreads(discussionChannelId: number) {
     this.threadListResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common-threads/list', {
       token: globals.globalStore.state.token,
@@ -52,7 +56,7 @@ export class SlackContent {
 
   render() {
     const threadsJsx = (
-      <div class="content-threads">
+      <div class="content-threads" ref={contentThreads => (this.contentThreads = contentThreads)}>
         {this.channelThreads === null
           ? 'Loading..'
           : this.channelThreads.length > 0
