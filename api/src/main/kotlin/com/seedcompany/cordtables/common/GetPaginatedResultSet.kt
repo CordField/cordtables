@@ -125,13 +125,12 @@ class GetPaginatedResultSet (
         query += """
               and ${req.whereClause}
               
-              ${req.filter}            ;
-              ;
+              ${req.filter}
               """.trimIndent().replace('\n', ' ')
       }
       else {
         query+="""
-            ${req.filter};
+            ${req.filter}
             """.trimIndent().replace('\n',' ')
       }
 

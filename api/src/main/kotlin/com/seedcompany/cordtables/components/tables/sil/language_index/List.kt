@@ -14,6 +14,7 @@ import javax.sql.DataSource
 
 data class SilLanguageIndexListRequest(
     val token: String?,
+    val search: String?,
     val page: Int? = 1,
     val resultsPerPage: Int? = 50
 )
@@ -45,12 +46,16 @@ class List(
         var data: MutableList<languageIndex> = mutableListOf()
         if (req.token == null) return SilLanguageIndexListResponse(ErrorType.TokenNotFound, size = 0, mutableListOf())
 
-//        val paramSource = MapSqlParameterSource()
-//        paramSource.addValue("token", req.token)
+        var whereClause = ""
+        if(req.search != null && req.search != "") {
+          val search = req.search.lowercase()
+          whereClause = "lower(name) like '%${search}%'"
+        }
 
         val jdbcResult = secureList.getPaginatedResultSetHandler(
             GetPaginatedResultSetRequest(
                 tableName = "sil.language_index",
+                whereClause = whereClause,
                 filter = "order by id",
                 token = req.token,
                 page = req.page!!,
