@@ -70,6 +70,18 @@ type LanguageIndex = {
   site_text_language?: number | undefined;
 };
 
+type LanguageIndexListRequest = {
+  token: string,
+  search: string,
+  page_number?: number,
+  page_limit?: number
+}
+
+type LanguageIndexListResponse = {
+  error: ErrorType,
+  languageIndexes: Array<LanguageIndex> | null
+}
+
 @Component({
   tag: 'site-text',
   styleUrl: 'site-text.css',
@@ -250,89 +262,29 @@ export class SiteText {
     });
   };
 
+  loadLanguages = () => {
+    fetchAs<LanguageIndexListRequest, LanguageIndexListResponse>('sil-language-index/list', {
+      token: globals.globalStore.state.token,
+      search: this.search,
+      page_number: 1,
+      page_limit: 10
+    }).then((res) => {
+      if(res.error === ErrorType.NoError) {
+        this.languages = res.languageIndexes
+      }
+    });
+
+  }
+
   componentDidLoad() {
     this.columnData = this.makeColumns();
     this.rowData = this.makeRows();
+    this.loadLanguages();
   }
 
   @State() search: string = '';
   @State() page = 1;
-  @State() languages: Array<LanguageIndex> = [
-    {
-      common_id: 234,
-      lang: 'SPA',
-      country: 'ES',
-      name_type: 'BA',
-      name: 'Spanish',
-      site_text_language: 1,
-    },
-    {
-      common_id: 214,
-      lang: 'EN',
-      country: 'US',
-      name_type: 'BA',
-      name: 'English',
-    },
-    {
-      common_id: 234,
-      lang: 'SPA',
-      country: 'ES',
-      name_type: 'BA',
-      name: 'Spanish',
-      site_text_language: 1,
-    },
-    {
-      common_id: 214,
-      lang: 'EN',
-      country: 'US',
-      name_type: 'BA',
-      name: 'English',
-    },
-    {
-      common_id: 214,
-      lang: 'EN',
-      country: 'US',
-      name_type: 'BA',
-      name: 'English',
-    },
-    {
-      common_id: 234,
-      lang: 'SPA',
-      country: 'ES',
-      name_type: 'BA',
-      name: 'Spanish',
-      site_text_language: 1,
-    },
-    {
-      common_id: 214,
-      lang: 'EN',
-      country: 'US',
-      name_type: 'BA',
-      name: 'English',
-    },
-    {
-      common_id: 214,
-      lang: 'EN',
-      country: 'US',
-      name_type: 'BA',
-      name: 'English',
-    },
-    {
-      common_id: 234,
-      lang: 'SPA',
-      country: 'ES',
-      name_type: 'BA',
-      name: 'Spanish',
-      site_text_language: 1,
-    },
-    {
-      common_id: 214,
-      lang: 'EN',
-      country: 'US',
-      name_type: 'BA',
-      name: 'English',
-    },
-  ];
+  @State() languages: Array<LanguageIndex> = [];
 
   handleSearch = (event: CustomEvent) => {
     this.search = event.detail.search;
@@ -384,7 +336,7 @@ export class SiteText {
                             <ion-col size="3">{language.name}</ion-col>
                             <ion-col size="2">
                               {language.site_text_language && language.site_text_language !== undefined ? (
-                                <ion-button expand="block" color="danger">
+                                <ion-button expand="block">
                                   ADD
                                 </ion-button>
                               ) : (
