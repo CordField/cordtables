@@ -408,22 +408,22 @@ class Utility(
   )
   fun getPeopleDetailsFromIds(idArray: MutableList<Int>): MutableList<PeopleDetails>{
     var peopleDetails: MutableList<PeopleDetails> = mutableListOf()
-    var stringPeopleIds = "("
-    if(idArray.isNotEmpty()) {idArray.forEach { it -> stringPeopleIds+="$it," }}
-    else {stringPeopleIds += "0,"}
-    stringPeopleIds = stringPeopleIds.dropLast(1)
-    stringPeopleIds+=")"
-//    if(idArray.isEmpty()) idArray.add(0)
+//    var stringPeopleIds = "("
+//    if(idArray.isNotEmpty()) {idArray.forEach { it -> stringPeopleIds+="$it," }}
+//    else {stringPeopleIds += "0,"}
+//    stringPeopleIds = stringPeopleIds.dropLast(1)
+//    stringPeopleIds+=")"
+    if(idArray.isEmpty()) idArray.add(0)
 
     this.ds.connection.use { conn ->
       //language=SQL
       val statement = conn.prepareCall(
         """
-               select id, public_first_name, public_last_name from admin.people where id in $stringPeopleIds
+               select id, public_first_name, public_last_name from admin.people where id  = ANY(?)
             """.trimIndent()
       )
 
-//      statement.setObject(1, idArray, java.sql.Types.ARRAY);
+      statement.setObject(1, idArray.toTypedArray(), java.sql.Types.ARRAY);
       println(statement)
       val result = statement.executeQuery()
       while (result.next()) {
