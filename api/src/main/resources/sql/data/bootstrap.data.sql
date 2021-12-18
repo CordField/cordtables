@@ -7,17 +7,17 @@ LANGUAGE PLPGSQL
 AS $$
 DECLARE
   vPeopleCount int; -- if this is a fresh db or not
-  vPersonId int; -- the new root person id, some tables set defaults to 1
-  vOrgId int; -- the default org for tables that set defaults to 1
-  vAdminRoleId int;
-  vAdminGroupId int;
-  vNonAdminPersonId int;
-  vPublicPersonId int;
-  vPublicGroupId int;
-  vPublicRoleId int;
-  vTableOfLanguagesId int;
-  vCommonLanguagesId int;
-  vCommonSiteTextStringsId int;
+  vPersonId uuid; -- the new root person id, some tables set defaults to 1
+  vOrgId uuid; -- the default org for tables that set defaults to 1
+  vAdminRoleId uuid;
+  vAdminGroupId uuid;
+  vNonAdminPersonId uuid;
+  vPublicPersonId uuid;
+  vPublicGroupId uuid;
+  vPublicRoleId uuid;
+  vTableOfLanguagesId uuid;
+  vCommonLanguagesId uuid;
+  vCommonSiteTextStringsId uuid;
 BEGIN
   select count(id)
   from admin.people
@@ -238,8 +238,8 @@ BEGIN
      ('Write', 'owning_group', vAdminRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- group memberships
-    insert into admin.group_memberships(group_id, person, created_by, modified_by, owning_person, owning_group)
-    values (1, vPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
+--    insert into admin.group_memberships(group_id, person, created_by, modified_by, owning_person, owning_group)
+--    values (public.uuid_generate_v4(), vPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- grants on scripture_references
     insert into admin.role_column_grants(access_level, column_name, role, table_name, created_by, modified_by, owning_person, owning_group)
@@ -281,12 +281,12 @@ BEGIN
     ('non-admin@tsco.org','$argon2id$v=19$m=4096,t=3,p=1$wrgddJLJEp4iGr1xtX9f9A$7iicFbpW55+8wo0yoLd8kK1yToMIy6FNLXRIAtTAuLU',
      vPublicPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId)
     returning id into vNonAdminPersonId;
+--
+--     insert into admin.role_memberships(role, person, created_by, modified_by, owning_person, owning_group) values
+--     (vPublicRoleId, vNonAdminPersonId, vPersonId, vPersonId, vPersonId,vAdminGroupId ) ;
 
-     insert into admin.role_memberships(role, person, created_by, modified_by, owning_person, owning_group) values
-     (vPublicRoleId, vNonAdminPersonId, vPersonId, vPersonId, vPersonId,vAdminGroupId ) ;
-
-     insert into admin.group_memberships(group_id,person,created_by,modified_by,owning_person,owning_group) values
-     (vPublicGroupId, vNonAdminPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
+--     insert into admin.group_memberships(group_id,person,created_by,modified_by,owning_person,owning_group) values
+--     (vPublicGroupId, vNonAdminPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
  --    only giving the user create permission so we can test if they have create and don't have delete
      insert into admin.role_table_permissions(role, table_permission, table_name, created_by, modified_by, owning_person, owning_group)
      values (vPublicRoleId, 'Create', 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
