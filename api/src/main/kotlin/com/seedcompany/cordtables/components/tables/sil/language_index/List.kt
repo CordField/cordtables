@@ -19,7 +19,10 @@ import javax.sql.DataSource
 
 
 data class SilLanguageIndexListRequest(
-    val token: String?
+    val token: String?,
+    val search: String?,
+    val page_limit: Int?,
+    val page_number: Int?,
 )
 
 data class SilLanguageIndexListResponse(
@@ -51,10 +54,24 @@ class List(
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
 
+        var filter = "order by id "
+        var whereClass = ""
+        var limit = 20
+        if(req.page_limit != null) limit = req.page_limit
+        if(req.search != null && req.search != "") {
+          val search = req.search.lowercase()
+          paramSource.addValue("search", "%${search}%")
+          whereClass = "lower(name) like :search"
+        }
+        if(req.page_number != null) filter = """order by id 
+          offset ${(req.page_number-1) * limit} limit ${limit} 
+        """.trimIndent()
+
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "sil.language_index",
-                filter = "order by id",
+                whereClause = whereClass,
+                filter = filter,
                 columns = arrayOf(
                     "id",
                     "common_id",
