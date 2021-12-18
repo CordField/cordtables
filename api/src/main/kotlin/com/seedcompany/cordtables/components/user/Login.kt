@@ -41,13 +41,14 @@ class Login (
     val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
 
     @PostMapping(path=["user/login"], consumes = ["application/json"], produces = ["application/json"])
-
     @ResponseBody
     fun LoginHandler(@RequestBody req: LoginRequest):LoginReturn{
 
         if (req.email == null || !util.isEmailValid(req.email)) return LoginReturn(ErrorType.InvalidEmail)
         if (req.password == null || req.password.length < 8) return LoginReturn(ErrorType.PasswordTooShort)
         if (req.password.length > 32) return LoginReturn(ErrorType.PasswordTooLong)
+
+
 
         var response = LoginReturn(ErrorType.UnknownError)
         var token: String?
@@ -63,6 +64,7 @@ class Login (
 
                 val getPashResult = pashStatement.executeQuery()
 
+              println(pashStatement)
                 var pash: String? = null
                 if (getPashResult.next()) {
                     pash = getPashResult.getString("password")
@@ -86,6 +88,7 @@ class Login (
                 }
             }
             catch (e: SQLException){
+              println("within exception catch")
                 println(e.message)
                 return LoginReturn(ErrorType.SQLInsertError, null)
             }

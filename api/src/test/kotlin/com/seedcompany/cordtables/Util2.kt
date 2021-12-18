@@ -8,15 +8,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.stereotype.Component
 
 @Component
-class Utilities2 (
+class Util2 (
   @Autowired
   val rest: TestRestTemplate,
 
   ){
 
-
-
-  fun asdf(){
+  fun test(){
     println("hey")
   }
 

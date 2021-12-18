@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.common
 
 import com.seedcompany.cordtables.CordTablesTests
-import com.seedcompany.cordtables.common.test.Utilities
+import com.seedcompany.cordtables.Util2
 import com.seedcompany.cordtables.components.user.RegisterRequest
 import com.seedcompany.cordtables.components.user.RegisterReturn
 import org.junit.jupiter.api.Test
@@ -31,6 +31,9 @@ class Users(
 
     @Autowired
     val rest: TestRestTemplate,
+
+    @Autowired
+    val util2: Util2
 ) {
     val userPassword = "asdfasdf"
     val url = "http://localhost:$port"
@@ -73,6 +76,12 @@ class Users(
 
     init {
         exposeHostPorts(port);
+    }
+
+    @Test
+    fun test(){
+      util2.test()
+      println("somthing");
     }
 
     @Test

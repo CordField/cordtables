@@ -1,5 +1,6 @@
 package com.seedcompany.cordtables
 
+import com.seedcompany.cordtables.common.UtilityTest
 import com.seedcompany.cordtables.components.user.RegisterRequest
 import com.seedcompany.cordtables.components.user.RegisterReturn
 import org.junit.jupiter.api.Test
@@ -27,16 +28,13 @@ import java.util.concurrent.TimeUnit
 
 
 @Testcontainers
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = ["spring.main.lazy-initialization=true"])
 class CordTablesTests(
-    @LocalServerPort
-    val port: Int,
-
     @Autowired
-    val rest: TestRestTemplate,
+    val util: UtilityTest,
 ) {
     val userPassword = "asdfasdf"
-    val url = "http://localhost:$port"
+    val url = "http://localhost:${util.port}"
 
     @Container
     private val container: BrowserWebDriverContainer<*> = BrowserWebDriverContainer<Nothing>()
@@ -85,14 +83,11 @@ class CordTablesTests(
         }
     }
 
-    init {
-        exposeHostPorts(port);
-      println("test")
-    }
+
 
     @Test
     fun `doesThisWork`() {
-        container.webDriver["http://host.testcontainers.internal:$port/"]
+        container.webDriver["http://host.testcontainers.internal:${util.port}/"]
         val messageElement = container.webDriver.findElementByTagName("app-root")
         println("app-root: ${messageElement.toString()}")
         assert(true)
@@ -110,7 +105,7 @@ class CordTablesTests(
     }
 
     fun register(email: String, password: String): RegisterReturn {
-        val newUserResponse = rest.postForEntity("$url/user/register", RegisterRequest("asdf@asdf.asdf", userPassword), RegisterReturn::class.java)
+        val newUserResponse = util.rest.postForEntity("$url/user/register", RegisterRequest("asdf@asdf.asdf", userPassword), RegisterReturn::class.java)
         assert(newUserResponse !== null) { "response was null" }
         assert(newUserResponse.body !== null) { "response body was null" }
         assert(!newUserResponse.body!!.isAdmin) { "new user should not be admin" }

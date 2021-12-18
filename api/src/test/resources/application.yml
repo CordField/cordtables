@@ -1,0 +1,10 @@
+spring:
+  mvc:
+    async:
+      request-timeout: -1
+  datasource:
+    jdbcUrl: jdbc:postgresql://localhost:5432/cordfield
+    driverClassName: software.aws.rds.jdbc.postgresql.Driver
+    username: postgres
+    password: asdfasdf
+    ssl: false
