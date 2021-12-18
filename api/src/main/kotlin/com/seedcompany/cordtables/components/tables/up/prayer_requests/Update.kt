@@ -77,6 +77,15 @@ class Update(
                     cast = "::common.sensitivity"
                 )
             }
+            "organization_name" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "up.prayer_requests",
+                    column = "organization_name",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
             "parent" -> {
               util.updateField(
                 token = req.token,
