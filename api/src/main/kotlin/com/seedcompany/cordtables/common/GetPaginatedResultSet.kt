@@ -14,6 +14,7 @@ data class GetPaginatedResultSetRequest(
   val tableName: String,
   val columns: Array<String>,
   val token: String,
+  val whereClause: String = "",
   val filter: String = "",
   val resultsPerPage: Int = 50,
   val page: Int = 1,
@@ -118,6 +119,20 @@ class GetPaginatedResultSet (
                   owning_person = (select person from admin.tokens where token = :token) or
                   id in (select row from public_row_level_access)))
               """.replace('\n', ' ')
+      }
+
+      if(req.whereClause!=="") {
+        query += """
+              and ${req.whereClause}
+              
+              ${req.filter}            ;
+              ;
+              """.trimIndent().replace('\n', ' ')
+      }
+      else {
+        query+="""
+            ${req.filter};
+            """.trimIndent().replace('\n',' ')
       }
 
       var offset = (req.page-1)*req.resultsPerPage
