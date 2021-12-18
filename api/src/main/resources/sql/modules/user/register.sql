@@ -3,7 +3,7 @@ CREATE OR REPLACE PROCEDURE admin.register(
   IN p_password VARCHAR(50),
   in p_token varchar(64),
   INOUT error_type VARCHAR(32), 
-  INOUT user_id integer
+  INOUT user_id uuid
 )
 LANGUAGE PLPGSQL
 AS $$

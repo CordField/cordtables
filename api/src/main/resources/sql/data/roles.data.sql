@@ -3,16 +3,16 @@ CREATE OR REPLACE PROCEDURE roles_migration(
 LANGUAGE PLPGSQL
 AS $$
 DECLARE
-  vProjectManagerRoleId int;
-  vProjectManagersGroupId int;
-  vRegionalDirectorRoleId int;
-  vRegionalDirectorsGroupId int;
-  vFieldOperationsDirectorRoleId int;
-  vFieldOperationsDirectorsGroupId int;
-  vControllerRoleId int;
-  vControllersGroupId int;
-  vLeadFinancialAnalystRoleId int;
-  vLeadFinancialAnalystsGroupId int;
+  vProjectManagerRoleId uuid;
+  vProjectManagersGroupId uuid;
+  vRegionalDirectorRoleId uuid;
+  vRegionalDirectorsGroupId uuid;
+  vFieldOperationsDirectorRoleId uuid;
+  vFieldOperationsDirectorsGroupId uuid;
+  vControllerRoleId uuid;
+  vControllersGroupId uuid;
+  vLeadFinancialAnalystRoleId uuid;
+  vLeadFinancialAnalystsGroupId uuid;
   vRoleCount int;
 BEGIN
  select count(id)
