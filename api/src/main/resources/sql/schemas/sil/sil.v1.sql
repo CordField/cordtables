@@ -5,7 +5,7 @@
 create schema sil;
 
 CREATE TABLE sil.language_codes (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
   lang char(3) not null,  -- Three-letter code
   country char(2) not null,  -- Main country where used
@@ -13,26 +13,26 @@ CREATE TABLE sil.language_codes (
   name varchar(75) not null,   -- Primary name in that country
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 CREATE TABLE sil.country_codes (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
   country char(2) not null,  -- Two-letter code from ISO3166
   name varchar(75) not null,  -- Country name
   area varchar(10) not null, -- World area
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 create type sil.language_name_type as enum (
@@ -45,20 +45,20 @@ create type sil.language_name_type as enum (
 );
 
 CREATE TABLE sil.language_index (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
-  common_id int not null references common.languages(id),
+  common_id uuid not null references common.languages(id),
   lang char(3) not null,      -- Three-letter code for language
   country char(2) not null,   -- Country where this name is used
   name_type sil.language_name_type not null,
   name  varchar(75) not null,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 create type sil.iso_639_3_scope_options as enum (
@@ -77,7 +77,7 @@ create type sil.iso_639_3_type_options as enum (
 );
 
 CREATE TABLE sil.iso_639_3 (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
   _id char(3) not null, -- three letter 639-3 identifier
   part_2b char(3), -- equivalent 639-2 identifier of the bibliographic applications code set, if there is one
@@ -89,26 +89,26 @@ CREATE TABLE sil.iso_639_3 (
   comment varchar(150), -- comment relating to one or more of the columns
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 CREATE TABLE sil.iso_639_3_names (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
   _id char(3) not null, -- three letter 639-3 identifier
   print_name varchar(75) not null, -- one of the names associated with this identifier
   inverted_name varchar(75) not null, -- the inverted form of this print_name form
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 create type sil.iso_639_3_status_options as enum (
@@ -117,18 +117,18 @@ create type sil.iso_639_3_status_options as enum (
 );
 
 CREATE TABLE sil.iso_639_3_macrolanguages (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
   m_id char(3) not null, -- the identifier for a macrolanguage
   i_id char(3) not null, -- the identifier for an individual language that is a member of the macrolanguage
   i_status sil.iso_639_3_status_options not null, -- indicating the status of the individual code element
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 create type sil.iso_639_3_retirement_reason_options as enum (
@@ -140,7 +140,7 @@ create type sil.iso_639_3_retirement_reason_options as enum (
 );
 
 CREATE TABLE sil.iso_639_3_retirements (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
   _id char(3) not null, -- three letter 639-3 identifier
   ref_name varchar(150) not null, -- reference name of the language
@@ -150,15 +150,15 @@ CREATE TABLE sil.iso_639_3_retirements (
   effective timestamp not null, -- the date the retirement became effective
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 CREATE TABLE sil.table_of_countries (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
   country_code char(2),
   country_name varchar(40),
@@ -176,15 +176,15 @@ CREATE TABLE sil.table_of_countries (
   conventions int,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 CREATE TABLE sil.table_of_languages (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
   iso_639 char(3),
   language_name varchar(50),
@@ -212,15 +212,15 @@ CREATE TABLE sil.table_of_languages (
   extinct int,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 CREATE TABLE sil.table_of_languages_in_country (
-  id uuid default public.uuid_generate_v4(),
+  id uuid primary key default public.uuid_generate_v4(),
 
   iso_639 char(3),
   language_name varchar(50),
@@ -248,9 +248,9 @@ CREATE TABLE sil.table_of_languages_in_country (
   extinct int,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
