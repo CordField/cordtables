@@ -37,12 +37,17 @@ export class SlackContent {
   handleThreadAddedChange(event: CustomEvent<CommonThread>) {
     this.channelThreads = this.channelThreads?.concat(event.detail);
   }
-  async componentWillRender() {
+  async componentWillLoad() {
+    await this.getThreads(this.selectedDiscussionChannel?.id);
+  }
+
+  @Watch('selectedDiscussionChannel')
+  async handleSelectedChannelChange() {
     await this.getThreads(this.selectedDiscussionChannel?.id);
   }
 
   componentDidRender() {
-    (this.contentThreads.lastChild as HTMLDivElement).scrollIntoView({ behavior: 'smooth' });
+    if (this.channelThreads?.length > 0) (this.contentThreads.lastChild as HTMLDivElement).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
   }
   async getThreads(discussionChannelId: number) {
     this.threadListResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common-threads/list', {

@@ -14,6 +14,8 @@ slack-sidebar {
   flex-direction: column;
   flex: 0 1 250px;
   padding: 0 1.25rem;
+  max-height: 50vh;
+  overflow: auto;
 }
 slack-content {
   margin-left: auto;
@@ -116,6 +118,7 @@ slack-thread {
 .sidebar-form {
   margin-top: 2px;
   margin-left: 0;
+  margin-bottom: 0.5rem;
 }
 .form-button {
   color: var(--color-primary-dark);
@@ -130,6 +133,7 @@ slack-thread {
 
 .form-button:hover,
 .form-button:focus {
+  cursor: pointer;
   background-color: var(--color-primary);
   color: var(--color-primary-lightest);
 }
@@ -144,6 +148,9 @@ slack-thread {
     padding-bottom: 3px;
     max-height: 30vh;
     overflow: auto;
+  }
+  .content-threads {
+    max-height: 80vh;
   }
 
   slack-content {

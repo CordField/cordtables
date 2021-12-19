@@ -5,14 +5,11 @@ import { globals } from '../../../core/global.store';
 import {
   CommonDiscussionChannel,
   CommonDiscussionChannelListResponse,
-  CommonDiscussionChannelUpdateRequest,
-  CommonDiscussionChannelUpdateResponse,
   CreateCommonDiscussionChannelRequest,
   CreateCommonDiscussionChannelResponse,
 } from '../../tables/common/discussion-channels/types';
 import { v4 as uuidv4 } from 'uuid';
 
-// will take discussion channels as a prop
 @Component({
   tag: 'slack-sidebar',
   styleUrl: 'slack-page.css',
@@ -26,15 +23,15 @@ export class SlackSidebar {
   @State() showForm: boolean = false;
 
   componentWillLoad() {
-    console.log('component did load', this.discussionChannels);
     this.selectedDiscussionChannel = this.discussionChannels?.discussion_channels.length > 0 ? this.discussionChannels.discussion_channels[0] : null;
     this.channelSelected.emit(this.selectedDiscussionChannel);
   }
-
-  clickHandler(e) {
-    this.selectedDiscussionChannel = this.discussionChannels.discussion_channels.find(discussion_channel => discussion_channel.name === e.target.innerText);
-    console.log(this.selectedDiscussionChannel);
+  @Listen('channelClicked')
+  handleChannelClicked(e: CustomEvent<number>) {
+    console.log(e, this.discussionChannels);
+    this.selectedDiscussionChannel = this.discussionChannels.discussion_channels.find(discussion_channel => discussion_channel?.id === e.detail);
     this.channelSelected.emit(this.selectedDiscussionChannel);
+    console.log(this.selectedDiscussionChannel);
   }
   handleNameChange(e) {
     this.name = e.target.value;
@@ -44,6 +41,11 @@ export class SlackSidebar {
   }
   async handleCreate(e) {
     e.preventDefault();
+    if (this.name === '') {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'cannot create empty discussion channel', id: uuidv4(), type: 'error' });
+      return;
+    }
+
     const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common-discussion-channels/create-read', {
       token: globals.globalStore.state.token,
       discussion_channel: {
@@ -62,11 +64,12 @@ export class SlackSidebar {
       this.discussionChannels.discussion_channels?.map(discussionChannel => {
         const discussionChannelClassName = `discussion-channel ${discussionChannel.id === this.selectedDiscussionChannel?.id ? 'selected-discussion-channel' : ''}`;
         return (
-          <span>
-            <div class={discussionChannelClassName} onClick={e => this.clickHandler(e)} key={discussionChannel.id}>
-              {discussionChannel.name}
-            </div>
-          </span>
+          <slack-discussion-channel
+            selectedDiscussionChannel={this.selectedDiscussionChannel}
+            discussionChannel={discussionChannel}
+            key={discussionChannel.id}
+            discussionChannelClassName={discussionChannelClassName}
+          ></slack-discussion-channel>
         );
       })
     ) : (
@@ -89,7 +92,6 @@ export class SlackSidebar {
     return (
       <Host>
         <slot></slot>
-        {jsx}
         <span
           class="add-button"
           onClick={() => {
@@ -99,6 +101,7 @@ export class SlackSidebar {
           {this.showForm ? <ion-icon name="remove-circle-outline"></ion-icon> : <ion-icon name="add-circle-outline"></ion-icon>}
         </span>
         {this.showForm && formJsx}
+        {jsx}
       </Host>
     );
   }
