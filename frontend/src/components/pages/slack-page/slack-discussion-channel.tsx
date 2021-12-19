@@ -17,7 +17,7 @@ export class SlackDiscussionChannel {
   @Prop() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() showEditAndDeleteButtons: boolean = false;
   @State() channelName: string;
-  @State() updateMode: boolean = false;
+  @State() mode: 'none' | 'update' | 'delete' = 'none';
   @Event({ eventName: 'channelDeleted' }) channelDeleted: EventEmitter<number>;
   @Prop() discussionChannelClassName: string;
 
@@ -33,35 +33,39 @@ export class SlackDiscussionChannel {
   }
 
   render() {
-    const slackThreadButtonsClass = this.updateMode === false ? 'thread-buttons' : 'thread-buttons thread-buttons-update';
+    const slackThreadButtonsClass = this.mode === 'none' ? 'thread-buttons' : 'thread-buttons thread-buttons-update';
     const editAndDeleteButtons = (
       <span class={slackThreadButtonsClass}>
-        {this.updateMode ? (
+        {this.mode !== 'none' ? (
           <span>
             <span
-              class="thread-update-confirm"
+              class="confirm-icon slack-icon"
               onClick={async e => {
                 e.stopPropagation();
-                this.updateMode = false;
-                const updateResponse = await fetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common-discussion-channels/update-read', {
-                  token: globals.globalStore.state.token,
-                  column: 'name',
-                  id: this.discussionChannel.id,
-                  value: this.channelName !== '' ? this.channelName : this.discussionChannel.name,
-                });
-                if (updateResponse.error === ErrorType.NoError) {
-                  console.log(updateResponse);
-                  this.channelName = updateResponse.discussion_channel.name;
+                if (this.mode === 'update') {
+                  const updateResponse = await fetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common-discussion-channels/update-read', {
+                    token: globals.globalStore.state.token,
+                    column: 'name',
+                    id: this.discussionChannel.id,
+                    value: this.channelName !== '' ? this.channelName : this.discussionChannel.name,
+                  });
+                  if (updateResponse.error === ErrorType.NoError) {
+                    console.log(updateResponse);
+                    this.channelName = updateResponse.discussion_channel.name;
+                  }
+                } else {
+                  this.channelDeleted.emit(this.discussionChannel.id);
                 }
+                this.mode = 'none';
               }}
             >
               <ion-icon name="checkmark-circle-outline"></ion-icon>
             </span>
             <span
-              class="thread-update-cancel"
+              class="cancel-icon slack-icon"
               onClick={e => {
                 e.stopPropagation();
-                this.updateMode = false;
+                this.mode = 'none';
                 this.channelName = this.discussionChannel.name;
               }}
             >
@@ -74,7 +78,7 @@ export class SlackDiscussionChannel {
               class="thread-update"
               onClick={e => {
                 e.stopPropagation();
-                this.updateMode = true;
+                this.mode = 'update';
               }}
             >
               <ion-icon name="create-outline"></ion-icon>
@@ -82,8 +86,7 @@ export class SlackDiscussionChannel {
             <span
               class="thread-delete"
               onClick={e => {
-                e.stopPropagation();
-                this.channelDeleted.emit(this.discussionChannel.id);
+                this.mode = 'delete';
               }}
             >
               <ion-icon name="trash-outline" class="delete-icon"></ion-icon>
@@ -97,7 +100,7 @@ export class SlackDiscussionChannel {
       <Host>
         <slot></slot>
 
-        {this.updateMode ? (
+        {this.mode === 'update' ? (
           <form>
             <input type="text" value={this.channelName} onChange={e => (this.channelName = (e.target as HTMLInputElement).value)} />
           </form>

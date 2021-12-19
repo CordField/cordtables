@@ -4,7 +4,6 @@ import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 import {
   CommonDiscussionChannel,
-  CommonDiscussionChannelListResponse,
   CreateCommonDiscussionChannelRequest,
   CreateCommonDiscussionChannelResponse,
   DeleteCommonDiscussionChannelRequest,

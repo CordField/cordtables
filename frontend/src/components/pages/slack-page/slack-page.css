@@ -83,21 +83,21 @@ slack-thread {
 .thread-posts {
   margin-left: 2.5rem;
 }
-.thread-icon {
+.slack-icon {
   width: 15px;
   height: 15px;
 }
 .delete-icon,
-.update-cancel-icon {
+.cancel-icon {
   color: #b91c1c;
 }
 .delete-icon {
   margin-left: 3px;
 }
-.update-cancel-icon {
+.cancel-icon {
   margin-left: 3px;
 }
-.update-confirm-icon {
+.confirm-icon {
   color: var(--color-primary);
 }
 
@@ -167,7 +167,7 @@ slack-thread {
   .form-last {
     margin-top: 1rem;
   }
-  .update-cancel-icon {
+  .cancel-icon {
     margin-left: 0px;
   }
 }

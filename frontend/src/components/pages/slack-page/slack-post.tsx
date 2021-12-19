@@ -17,7 +17,7 @@ export class SlackThread {
   tinyMceId: string = idService.getNextId();
   @Prop() post: CommonPost;
   @State() showEditAndDeleteButtons: boolean = false;
-  @State() updateMode: boolean = false;
+  @State() mode: 'none' | 'update' | 'delete' = 'none';
   @State() postContent: string = null;
   @Event({ eventName: 'postDeleted' }) postDeleted: EventEmitter<number>;
 
@@ -35,34 +35,38 @@ export class SlackThread {
   }
 
   render() {
-    const slackThreadButtonsClass = this.updateMode === false ? 'thread-buttons' : 'thread-buttons thread-buttons-update';
+    const slackThreadButtonsClass = this.mode === 'none' ? 'thread-buttons' : 'thread-buttons thread-buttons-update';
     const editAndDeleteButtons = (
       <span class={slackThreadButtonsClass}>
-        {this.updateMode ? (
+        {this.mode !== 'none' ? (
           <span>
             <span
-              class="thread-update-confirm"
+              class="confirm-icon slack-icon"
               onClick={async e => {
                 e.stopPropagation();
-                this.updateMode = false;
-                const updateResponse = await fetchAs<CommonPostsUpdateRequest, CommonPostsUpdateResponse>('common-posts/update-read', {
-                  token: globals.globalStore.state.token,
-                  column: 'content',
-                  id: this.post.id,
-                  value: this.postContent !== '' ? this.postContent : this.post.content,
-                });
-                if (updateResponse.error === ErrorType.NoError) {
-                  this.postContent = updateResponse.post.content;
+                if (this.mode === 'update') {
+                  const updateResponse = await fetchAs<CommonPostsUpdateRequest, CommonPostsUpdateResponse>('common-posts/update-read', {
+                    token: globals.globalStore.state.token,
+                    column: 'content',
+                    id: this.post.id,
+                    value: this.postContent !== '' ? this.postContent : this.post.content,
+                  });
+                  if (updateResponse.error === ErrorType.NoError) {
+                    this.postContent = updateResponse.post.content;
+                  }
+                } else {
+                  this.postDeleted.emit(this.post.id);
                 }
+                this.mode = 'none';
               }}
             >
               <ion-icon name="checkmark-circle-outline"></ion-icon>
             </span>
             <span
-              class="thread-update-cancel"
+              class="cancel-icon slack-icon"
               onClick={e => {
                 e.stopPropagation();
-                this.updateMode = false;
+                this.mode = 'none';
                 this.postContent = this.post.content;
               }}
             >
@@ -75,7 +79,7 @@ export class SlackThread {
               class="thread-update"
               onClick={e => {
                 e.stopPropagation();
-                this.updateMode = true;
+                this.mode = 'update';
               }}
             >
               <ion-icon name="create-outline"></ion-icon>
@@ -83,8 +87,7 @@ export class SlackThread {
             <span
               class="thread-delete"
               onClick={e => {
-                e.stopPropagation();
-                this.postDeleted.emit(this.post.id);
+                this.mode = 'delete';
               }}
             >
               <ion-icon name="trash-outline" class="delete-icon"></ion-icon>
@@ -104,7 +107,7 @@ export class SlackThread {
         // }}
         class="thread-header"
       >
-        {this.updateMode ? <cf-tiny initialHTMLContent={this.postContent} uid={this.tinyMceId} /> : <span class="slack-thread-content" innerHTML={this.postContent}></span>}
+        {this.mode === 'update' ? <cf-tiny initialHTMLContent={this.postContent} uid={this.tinyMceId} /> : <span class="slack-thread-content" innerHTML={this.postContent}></span>}
         {editAndDeleteButtons}
       </div>
     );
