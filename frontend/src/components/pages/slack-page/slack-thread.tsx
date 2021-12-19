@@ -33,7 +33,7 @@ export class SlackThread {
     if (e.detail.id === this.tinyMceId) this.threadContent = e.detail.content;
   }
   @Listen('postDeleted')
-  async handleThreadDeletedChange(event: CustomEvent<number>) {
+  async handlePostDeletedChange(event: CustomEvent<number>) {
     const deleteResponse = await fetchAs<DeleteCommonPostsRequest, DeleteCommonPostsResponse>('common-posts/delete', {
       token: globals.globalStore.state.token,
       id: event.detail,
@@ -41,7 +41,7 @@ export class SlackThread {
     if (deleteResponse.error === ErrorType.NoError) {
       this.threadPosts = this.threadPosts?.filter(thread => thread.id !== event.detail);
     } else {
-      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'unable to delete thread', id: v4(), type: 'error' });
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: deleteResponse.error, id: v4(), type: 'error' });
     }
   }
 

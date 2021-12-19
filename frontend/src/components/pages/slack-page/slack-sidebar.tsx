@@ -7,8 +7,10 @@ import {
   CommonDiscussionChannelListResponse,
   CreateCommonDiscussionChannelRequest,
   CreateCommonDiscussionChannelResponse,
+  DeleteCommonDiscussionChannelRequest,
+  DeleteCommonDiscussionChannelResponse,
 } from '../../tables/common/discussion-channels/types';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, v4 } from 'uuid';
 
 @Component({
   tag: 'slack-sidebar',
@@ -16,20 +18,33 @@ import { v4 as uuidv4 } from 'uuid';
   shadow: true,
 })
 export class SlackSidebar {
-  @Prop({ mutable: true }) discussionChannels: CommonDiscussionChannelListResponse;
+  @Prop({ mutable: true }) discussionChannels: CommonDiscussionChannel[];
   @Event({ eventName: 'channelSelected' }) channelSelected: EventEmitter<CommonDiscussionChannel>;
   @State() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() name: string = '';
   @State() showForm: boolean = false;
+  @Prop() loading: boolean = true;
 
   componentWillLoad() {
-    this.selectedDiscussionChannel = this.discussionChannels?.discussion_channels.length > 0 ? this.discussionChannels.discussion_channels[0] : null;
+    this.selectedDiscussionChannel = this.discussionChannels.length > 0 ? this.discussionChannels[0] : null;
     this.channelSelected.emit(this.selectedDiscussionChannel);
+  }
+  @Listen('channelDeleted')
+  async handlePostDeletedChange(event: CustomEvent<number>) {
+    const deleteResponse = await fetchAs<DeleteCommonDiscussionChannelRequest, DeleteCommonDiscussionChannelResponse>('common-discussion-channels/delete', {
+      token: globals.globalStore.state.token,
+      id: event.detail,
+    });
+    if (deleteResponse.error === ErrorType.NoError) {
+      this.discussionChannels = this.discussionChannels?.filter(discussionChannel => discussionChannel.id !== event.detail);
+    } else {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: deleteResponse.error, id: v4(), type: 'error' });
+    }
   }
   @Listen('channelClicked')
   handleChannelClicked(e: CustomEvent<number>) {
     console.log(e, this.discussionChannels);
-    this.selectedDiscussionChannel = this.discussionChannels.discussion_channels.find(discussion_channel => discussion_channel?.id === e.detail);
+    this.selectedDiscussionChannel = this.discussionChannels.find(discussion_channel => discussion_channel?.id === e.detail);
     this.channelSelected.emit(this.selectedDiscussionChannel);
     console.log(this.selectedDiscussionChannel);
   }
@@ -53,15 +68,17 @@ export class SlackSidebar {
       },
     });
     if (createResponse.error === ErrorType.NoError) {
-      this.discussionChannels = { ...this.discussionChannels, discussion_channels: this.discussionChannels?.discussion_channels.concat(createResponse.discussion_channel) };
+      this.discussionChannels = this.discussionChannels.concat(createResponse.discussion_channel);
     } else {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   }
 
   render() {
-    const jsx = this.discussionChannels ? (
-      this.discussionChannels.discussion_channels?.map(discussionChannel => {
+    const jsx = this.loading ? (
+      <div>Loading...</div>
+    ) : (
+      this.discussionChannels.map(discussionChannel => {
         const discussionChannelClassName = `discussion-channel ${discussionChannel.id === this.selectedDiscussionChannel?.id ? 'selected-discussion-channel' : ''}`;
         return (
           <slack-discussion-channel
@@ -72,9 +89,8 @@ export class SlackSidebar {
           ></slack-discussion-channel>
         );
       })
-    ) : (
-      <div>Loading...</div>
     );
+
     const formJsx = (
       <form class="sidebar-form form">
         <input type="text" name="name" id="name" value={this.name} onChange={e => this.handleNameChange(e)} />

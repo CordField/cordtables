@@ -103,7 +103,7 @@ export class SlackDiscussionChannel {
           </form>
         ) : (
           <div slot="name" class={this.discussionChannelClassName} onClick={this.clickHandler.bind(this)} key={this.discussionChannel.id}>
-            {this.discussionChannel.name}
+            {this.channelName}
           </div>
         )}
         {editAndDeleteButtons}

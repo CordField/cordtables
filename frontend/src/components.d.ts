@@ -9,7 +9,7 @@ import { MatchResults, RouterHistory } from "@stencil/router";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
-import { CommonDiscussionChannel, CommonDiscussionChannelListResponse } from "./components/tables/common/discussion-channels/types";
+import { CommonDiscussionChannel } from "./components/tables/common/discussion-channels/types";
 import { CommonThread } from "./components/tables/common/threads/types";
 import { CommonPost } from "./components/tables/common/posts/types";
 export namespace Components {
@@ -291,7 +291,8 @@ export namespace Components {
         "post": CommonPost;
     }
     interface SlackSidebar {
-        "discussionChannels": CommonDiscussionChannelListResponse;
+        "discussionChannels": CommonDiscussionChannel[];
+        "loading": boolean;
     }
     interface SlackThread {
         "thread": CommonThread;
@@ -1577,7 +1578,8 @@ declare namespace LocalJSX {
         "post"?: CommonPost;
     }
     interface SlackSidebar {
-        "discussionChannels"?: CommonDiscussionChannelListResponse;
+        "discussionChannels"?: CommonDiscussionChannel[];
+        "loading"?: boolean;
         "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
     }
     interface SlackThread {

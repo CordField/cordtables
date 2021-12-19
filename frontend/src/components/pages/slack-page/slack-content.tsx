@@ -30,7 +30,7 @@ export class SlackContent {
     if (deleteResponse.error === ErrorType.NoError) {
       this.channelThreads = this.channelThreads?.filter(thread => thread.id !== event.detail);
     } else {
-      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'unable to delete thread', id: uuidv4(), type: 'error' });
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: deleteResponse.error, id: uuidv4(), type: 'error' });
     }
   }
   @Listen('threadAdded')
