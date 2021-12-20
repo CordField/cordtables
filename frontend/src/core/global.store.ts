@@ -11,7 +11,7 @@ const language = localStorage.getItem('language');
 export class Globals {
   storeObject = {
     appState: AppState.Init,
-    language: (language ===null || language === undefined)?'default': language,
+    language: (language === null || language === undefined)?'default': language,
     editMode: false,
     editModeWidth: 0,
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',

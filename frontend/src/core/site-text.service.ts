@@ -93,6 +93,7 @@ export const t = (key: string) => {
   let language: any = globals.globalStore.state.language;
   if (language === 'default') return key;
   language = parseInt(language);
+  if(!globals.globalStore.state.siteTextTranslations[language]) return key;
   const translation = globals.globalStore.state.siteTextTranslations[language][key];
   if (!translation) {
     console.debug(`${key} doesn't exist in translations`);
