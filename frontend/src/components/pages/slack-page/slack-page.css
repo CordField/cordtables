@@ -59,9 +59,10 @@ slack-thread {
 .thread-header {
   display: flex;
   width: 100%;
+  transition: all 0.2s;
 }
 .thread-header:hover {
-  background-color: var(--color-gray-light);
+  background-color: var(--color-gray-lightest);
 }
 .post-indicator {
   user-select: none;
@@ -129,10 +130,10 @@ slack-thread {
   margin-top: 3px;
   outline: none;
   align-self: flex-end;
+  transition: all 0.2s;
 }
 
-.form-button:hover,
-.form-button:focus {
+.form-button:hover {
   cursor: pointer;
   background-color: var(--color-primary);
   color: var(--color-primary-lightest);
