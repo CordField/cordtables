@@ -13,7 +13,7 @@ class AdminPeople {
     private_full_name?: string | undefined;
     public_full_name?: string | undefined;
     sensitivity_clearance?: string | undefined;
-    time_zone?: string | undefined;
+    timezone?: string | undefined;
     title?: string | undefined;
     status?: string | undefined;
 

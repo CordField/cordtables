@@ -5,6 +5,7 @@ import { globals } from '../../../../core/global.store';
 import { t } from '../../../../core/site-text.service';
 import { capitalize, capitalizePhrase } from '../../../../common/utility';
 import { fetchAs } from '../../../../common/utility';
+import * as ion from '@ionic/core';
 
 type SiteTextStringUpdateInput = {
   id: number;
@@ -60,10 +61,40 @@ type SiteTextStringCreateResponse = {
   site_text_string: SiteTextString;
 };
 
+type LanguageIndex = {
+  common_id: number;
+  lang: string;
+  country: string;
+  name_type: string;
+  name: string;
+};
+
+type LanguageIndexListRequest = {
+  token: string;
+  search: string;
+  page?: number;
+  resultsPerPage?: number;
+};
+
+type LanguageIndexListResponse = {
+  error: ErrorType;
+  size: number;
+  languageIndexes: Array<LanguageIndex> | null;
+};
+
+type LanguageIndexListResponseWithPage = LanguageIndexListResponse & { page: number };
+
+type SiteTextLanguageCreateRequest = {
+  token: string;
+  language: number;
+};
+
+const resultsPerPage = 10;
+
 @Component({
   tag: 'site-text',
   styleUrl: 'site-text.css',
-  shadow: true,
+  shadow: false,
 })
 export class SiteText {
   @State() columnData: ColumnDescription[];
@@ -198,15 +229,15 @@ export class SiteText {
       },
       {
         field: 'english',
-        displayName: capitalize(t("english")),
-        width: 50,
+        displayName: capitalize(t('english')),
+        width: 100,
         editable: true,
         deleteFn: this.handleDelete,
         updateFn: this.handleSiteTextStringUpdate,
       },
       {
         field: 'comment',
-        displayName: capitalize(t("comment")),
+        displayName: capitalize(t('comment')),
         width: 200,
         editable: true,
         updateFn: this.handleSiteTextStringUpdate,
@@ -216,7 +247,7 @@ export class SiteText {
       return {
         field: siteTextLanguage.language,
         displayName: capitalize(t(siteTextLanguage.language_name)),
-        width: 50,
+        width: 100,
         editable: true,
         updateFn: this.handleSiteTextTranslationUpdate,
       };
@@ -233,55 +264,202 @@ export class SiteText {
       };
 
       globals.globalStore.state.siteTextLanguages.forEach((siteTextLanguage: SiteTextLanguage) => {
-        row[siteTextLanguage.language] = globals.globalStore.state.siteTextTranslations[siteTextLanguage.language][siteTextString.english];
+        row[siteTextLanguage.language] = globals.globalStore.state.siteTextTranslations[siteTextLanguage.language]
+          ? globals.globalStore.state.siteTextTranslations[siteTextLanguage.language][siteTextString.english]
+          : undefined;
       });
 
       return row;
     });
   };
 
+  loadLanguages = (page: number, search: string = ''): Promise<LanguageIndexListResponseWithPage> => {
+    this.loading = true;
+
+    return new Promise((resolve, reject) => {
+      fetchAs<LanguageIndexListRequest, LanguageIndexListResponse>('sil-language-index/list', {
+        token: globals.globalStore.state.token,
+        search,
+        page,
+        resultsPerPage,
+      })
+        .then(res => {
+          this.loading = false;
+          if (res.error === ErrorType.NoError) {
+            this.totalRows = res.size;
+            this.page = page;
+            this.languages = [...this.languages, ...res.languageIndexes];
+          }
+          resolve({ ...res, page });
+        })
+        .catch(err => {
+          console.debug('error ====> ', err);
+          reject();
+        });
+    });
+  };
+
   componentDidLoad() {
     this.columnData = this.makeColumns();
     this.rowData = this.makeRows();
+    this.loadLanguages(1);
   }
+
+  @State() search: string = '';
+  @State() page = 1;
+  @State() languages: Array<LanguageIndex> = [];
+  @State() totalRows: number = 0;
+  @State() loading: boolean = false;
+  private infiniteScroll: HTMLIonInfiniteScrollElement;
+
+  handleSearch = (event: CustomEvent) => {
+    this.search = event.detail.value;
+    this.languages = [];
+    if (this.infiniteScroll !== undefined && this.infiniteScroll !== null) this.infiniteScroll.disabled = false;
+    this.loadLanguages(1, event.detail.value);
+  };
+
+  loadMore = async () => {
+    const search = this.search;
+    if (this.loading === false && this.page * resultsPerPage < this.totalRows) {
+      const res = await this.loadLanguages(this.page + 1, search);
+      if (this.infiniteScroll !== undefined && this.infiniteScroll !== null) this.infiniteScroll.complete();
+      if (res.error === ErrorType.NoError && (res.page + 1) * resultsPerPage > res.size) {
+        if (this.infiniteScroll !== undefined && this.infiniteScroll !== null) this.infiniteScroll.disabled = true;
+      }
+    }
+  };
+
+  addSiteTextLanguage = (language: LanguageIndex) => {
+    return async (): Promise<boolean> => {
+      const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common-site-text-languages/create', {
+        token: globals.globalStore.state.token,
+        language: language.common_id,
+      });
+
+      if (response.error == ErrorType.NoError) {
+        const newSiteTextLanguages = [...globals.globalStore.state.siteTextLanguages, { language: language.common_id, language_name: language.name }];
+        globals.globalStore.set('siteTextLanguages', newSiteTextLanguages);
+        this.columnData = this.makeColumns();
+        this.rowData = this.makeRows();   
+        return true;
+      } else {
+        return false;
+      }
+    };
+  };
+
+  removeSiteTextLanguage = id => {
+    return async (): Promise<boolean> => {
+      const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common-site-text-languages/delete', {
+        token: globals.globalStore.state.token,
+        language: id,
+      });
+
+      if (response.error == ErrorType.NoError) {
+        const newSiteTextLanguages = globals.globalStore.state.siteTextLanguages.filter(s => s.language !== id);
+        globals.globalStore.set('siteTextLanguages', newSiteTextLanguages);
+        this.columnData = this.makeColumns();
+        this.rowData = this.makeRows();    
+        return true;
+      } else {
+        return false;
+      }
+    };
+  };
 
   render() {
     return (
-      <div class="site-text">
-        <div class="language-select-wrapper">
-          <h4>{capitalizePhrase(`${t("select")} ${t("site")} ${t("language")}`)}</h4>
-          <language-select />
+      <Host>
+        <div class="site-text">
+          <div class="language-select-wrapper">
+            <h4>{capitalizePhrase(`${t('select')} ${t('site')} ${t('language')}`)}</h4>
+            <language-select />
+          </div>
+          <div class="language-add-wrapper">
+            <ion-text color="dark">
+              <h4>Add Site Text Languages</h4>
+            </ion-text>
+            <div class="searchbar-wrapper">
+              <ion-searchbar showClearButton="never" value={this.search} onIonChange={this.handleSearch}></ion-searchbar>
+            </div>
+            <ion-list-header lines="inset">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="2">LANG</ion-col>
+                  <ion-col size="2">COUNTRY</ion-col>
+                  <ion-col size="3">NAME TYPE</ion-col>
+                  <ion-col size="3">NAME</ion-col>
+                  <ion-col size="2">ACTION</ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-list-header>
+
+            <div class="language-content-wrapper">
+              <ion-content>
+                <ion-list>
+                  {this.languages.length > 0 &&
+                    this.languages.map((language: LanguageIndex) => (
+                      <ion-item>
+                        <ion-grid>
+                          <ion-row>
+                            <ion-col size="2">{language.lang}</ion-col>
+                            <ion-col size="2">{language.country}</ion-col>
+                            <ion-col size="3">{language.name_type}</ion-col>
+                            <ion-col size="3">{language.name}</ion-col>
+                            <ion-col size="2">
+                              {globals.globalStore.state.siteTextLanguages.find((s: SiteTextLanguage) => s.language === language.common_id) === undefined ? (
+                                <ion-button expand="block" onClick={this.addSiteTextLanguage(language)}>
+                                  ADD
+                                </ion-button>
+                              ) : (
+                                <ion-button expand="block" onClick={this.removeSiteTextLanguage(language.common_id)}>
+                                  REMOVE
+                                </ion-button>
+                              )}
+                            </ion-col>
+                          </ion-row>
+                        </ion-grid>
+                      </ion-item>
+                    ))}
+                </ion-list>
+                <ion-infinite-scroll ref={el => (this.infiniteScroll = el)} onIonInfinite={this.loadMore}>
+                  <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data..."></ion-infinite-scroll-content>
+                </ion-infinite-scroll>
+              </ion-content>
+            </div>
+          </div>
+          <div class="translations">
+            <h4>{capitalizePhrase(`${t('site')} ${t('text')} ${t('translations')}`)}</h4>
+            {this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}
+          </div>
+          {globals.globalStore.state.editMode === true && (
+            <form class="form-thing">
+              <div id="new-site-text-string-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="new-site-text-string">{capitalize(t('english'))}</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="new-site-text-string" value={this.newSiteText.english} name="english" onInput={this.handleInputChange} />
+                </span>
+              </div>
+              <div id="new-site-text-string-comment-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="site-text-string-comment">{capitalize(t('comment'))}</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="site-text-string-comment" name="comment" value={this.newSiteText.comment} onInput={this.handleInputChange} />
+                </span>
+              </div>
+              <div class="form-thing">
+                <span class="form-thing">
+                  <input id="create-button" type="submit" value={capitalize(t('create'))} onClick={this.handleInsert} />
+                </span>
+              </div>
+            </form>
+          )}
         </div>
-        <div class="translations">
-          <h4>{capitalizePhrase(`${t("site")} ${t("text")} ${t("translations")}`)}</h4>
-          {this.columnData && this.columnData.length > 0 && <cf-table rowData={this.rowData} columnData={this.columnData} />}
-        </div>
-        {globals.globalStore.state.editMode === true && (
-          <form class="form-thing">
-            <div id="new-site-text-string-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="new-site-text-string">{capitalize(t('english'))}</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="new-site-text-string" value={this.newSiteText.english} name="english" onInput={this.handleInputChange} />
-              </span>
-            </div>
-            <div id="new-site-text-string-comment-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="site-text-string-comment">{capitalize(t('comment'))}</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="site-text-string-comment" name="comment" value={this.newSiteText.comment} onInput={this.handleInputChange} />
-              </span>
-            </div>
-            <div class="form-thing">
-              <span class="form-thing">
-                <input id="create-button" type="submit" value={capitalize(t("create"))} onClick={this.handleInsert} />
-              </span>
-            </div>
-          </form>
-        )}
-      </div>
+      </Host>
     );
   }
 }

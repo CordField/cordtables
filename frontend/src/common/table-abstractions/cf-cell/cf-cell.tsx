@@ -38,7 +38,7 @@ export class CfCell {
   };
 
   handleSelect(event, isArray) {
-    if(isArray){
+    if (isArray) {
       var options = event.target.options;
       var value = [];
       for (var i = 0, l = options.length; i < l; i++) {
@@ -48,10 +48,9 @@ export class CfCell {
         }
       }
       console.log(value);
-      this.newValue = "{"+value.toString()+"}";
+      this.newValue = '{' + value.toString() + '}';
       console.log(this.newValue);
-    }
-    else{
+    } else {
       this.newValue = event.target.value;
     }
   }
@@ -88,27 +87,31 @@ export class CfCell {
         <slot></slot>
         {/* holds entire cell - width is calculated based on base value and edit mode */}
         <span
-          id="value-view"
-          class={this.cellType === 'header' ? 'header both' : 'data both'}
+          class={this.cellType === 'header' ? 'value-view header both' : 'value-view data both'}
           style={{ width: this.columnDescription.width + globals.globalStore.state.editModeWidth + 'px' }}
         >
           {/* need to display base on type of value, some types like actions don't like toString() */}
           {!this.showEdit && (this.cellType === 'data' || this.cellType === 'header') && (
-            <span id="value-span">
-              <span>
+            <span class="value-span">
+              <span class="value-wrapper">
                 {typeof this.value === 'boolean' && <span>{this.value.toString()}</span>}
                 {typeof this.value === 'number' && <span>{this.value.toString()}</span>}
                 {typeof this.value === 'object' && <span>{this.value}</span>}
 
                 {/* for header cells - they'll never be enums */}
-                {typeof this.value === 'string' && this.cellType === 'header' && <span>{this.value}</span>}
+                {typeof this.value === 'string' && this.cellType === 'header' && <span title={this.value}>{this.value}</span>}
 
                 {/* for data cell strings that aren't enums */}
-                {typeof this.value === 'string' && this.cellType === 'data' && this.columnDescription.selectOptions === undefined && <span>{this.value}</span>}
+                {typeof this.value === 'string' && this.cellType === 'data' && this.columnDescription.selectOptions === undefined && <span title={this.value}>{this.value}</span>}
 
                 {/* for enums - we need to show their display */}
                 {typeof this.value === 'string' && this.cellType === 'data' && this.columnDescription.selectOptions !== undefined && (
-                  <span>
+                  <span
+                    title={
+                      this.columnDescription.selectOptions.find(item => item.value === this.value) &&
+                      this.columnDescription.selectOptions.find(item => item.value === this.value).display
+                    }
+                  >
                     {this.columnDescription.selectOptions.find(item => item.value === this.value) &&
                       this.columnDescription.selectOptions.find(item => item.value === this.value).display}
                   </span>
@@ -119,16 +122,16 @@ export class CfCell {
               {this.columnDescription && this.columnDescription.field === 'id' && this.cellType === 'data' && globals.globalStore.state.editMode === true && (
                 <span>
                   {this.showDelete === false && (
-                    <span id="delete-span" onClick={this.showDeleteConfirm}>
+                    <span class="delete-span" onClick={this.showDeleteConfirm}>
                       Delete
                     </span>
                   )}
                   {this.showDelete === true && (
                     <span>
-                      <span id="save-icon" class="edit-buttons" onClick={this.handleDelete}>
+                      <span id="save-icon" class="save-icon edit-buttons" onClick={this.handleDelete}>
                         <ion-icon name="checkmark-outline"></ion-icon>
                       </span>
-                      <span id="cancel-icon" class="edit-buttons" onClick={this.showDeleteConfirm}>
+                      <span id="cancel-icon" class="save-icon edit-buttons" onClick={this.showDeleteConfirm}>
                         <ion-icon name="close-outline"></ion-icon>
                       </span>
                     </span>
@@ -147,11 +150,11 @@ export class CfCell {
 
           {/* holds the form and buttons for editing the field */}
           {this.showEdit && (
-            <span id="value-edit">
+            <span class="value-edit">
               <span>
                 {/* might be a select menu or a text input */}
                 {this.columnDescription.selectOptions != null || this.columnDescription.selectOptions != undefined ? (
-                  <select id="select" multiple={this.columnDescription.isMulti} onInput={event => this.handleSelect(event, this.columnDescription.isMulti)}>
+                  <select class="select" multiple={this.columnDescription.isMulti} onInput={event => this.handleSelect(event, this.columnDescription.isMulti)}>
                     {this.columnDescription.selectOptions &&
                       this.columnDescription.selectOptions.length > 0 &&
                       this.columnDescription.selectOptions.map(option => (
@@ -161,7 +164,7 @@ export class CfCell {
                       ))}
                   </select>
                 ) : (
-                  <input type="text" id="value-input" name="value-input" defaultValue={this.value} onInput={event => this.updateValue(event)}>
+                  <input type="text" name="value-input" defaultValue={this.value} onInput={event => this.updateValue(event)}>
                     {this.value}
                   </input>
                 )}
@@ -169,10 +172,10 @@ export class CfCell {
 
               {/* confirm and cancel buttons */}
               <span>
-                <span id="save-icon" class="edit-buttons" onClick={this.submit}>
+                <span class="save-icon edit-buttons" onClick={this.submit}>
                   <ion-icon name="checkmark-outline"></ion-icon>
                 </span>
-                <span id="cancel-icon" class="edit-buttons" onClick={this.clickEdit}>
+                <span id="cancel-icon" class="cancel-icon edit-buttons" onClick={this.clickEdit}>
                   <ion-icon name="close-outline"></ion-icon>
                 </span>
               </span>

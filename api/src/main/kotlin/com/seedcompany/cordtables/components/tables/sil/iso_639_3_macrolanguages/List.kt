@@ -1,29 +1,28 @@
 package com.seedcompany.cordtables.components.tables.sil.iso_639_3_macrolanguages
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sil.iso_639_3_macrolanguages.iso6393Macrolanguage
+import com.seedcompany.cordtables.common.GetPaginatedResultSet
+import com.seedcompany.cordtables.common.GetPaginatedResultSetRequest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
 
 
 data class SilIso6393MacrolanguagesListRequest(
-    val token: String?
+    val token: String?,
+    val page: Int? = 1,
+    val resultsPerPage: Int? = 50
 )
 
 data class SilIso6393MacrolanguagesListResponse(
     val error: ErrorType,
+    val size: Int,
     val iso6393Macrolanguages: MutableList<iso6393Macrolanguage>?
 )
 
@@ -37,7 +36,7 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureListQuery,
+    val secureList: GetPaginatedResultSet,
 ) {
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
@@ -46,15 +45,18 @@ class List(
     @ResponseBody
     fun listHandler(@RequestBody req:SilIso6393MacrolanguagesListRequest): SilIso6393MacrolanguagesListResponse {
         var data: MutableList<iso6393Macrolanguage> = mutableListOf()
-        if (req.token == null) return SilIso6393MacrolanguagesListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return SilIso6393MacrolanguagesListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
 
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", req.token)
+//        val paramSource = MapSqlParameterSource()
+//        paramSource.addValue("token", req.token)
 
-        val query = secureList.getSecureListQueryHandler(
-            GetSecureListQueryRequest(
+        val jdbcResult = secureList.getPaginatedResultSetHandler(
+            GetPaginatedResultSetRequest(
                 tableName = "sil.iso_639_3_macrolanguages",
                 filter = "order by id",
+                token = req.token,
+                page = req.page!!,
+                resultsPerPage = req.resultsPerPage!!,
                 columns = arrayOf(
                     "id",
                     "m_id",
@@ -68,41 +70,41 @@ class List(
                     "owning_group",
                 )
             )
-        ).query
+        )
+        val resultSet = jdbcResult.result
+        val size = jdbcResult.size
+        if (jdbcResult.errorType == ErrorType.NoError){
+            while (resultSet!!.next()) {
 
-        try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()) {
+                var id: Int? = resultSet!!.getInt("id")
+                if (resultSet!!.wasNull()) id = null
 
-                var id: Int? = jdbcResult.getInt("id")
-                if (jdbcResult.wasNull()) id = null
+                var m_id: String? = resultSet!!.getString("m_id")
+                if (resultSet!!.wasNull()) m_id = null
 
-                var m_id: String? = jdbcResult.getString("m_id")
-                if (jdbcResult.wasNull()) m_id = null
+                var i_id: String? = resultSet!!.getString("i_id")
+                if (resultSet!!.wasNull()) i_id = null
 
-                var i_id: String? = jdbcResult.getString("i_id")
-                if (jdbcResult.wasNull()) i_id = null
+                var i_status: String? = resultSet!!.getString("i_status")
+                if (resultSet!!.wasNull()) i_status = null
 
-                var i_status: String? = jdbcResult.getString("i_status")
-                if (jdbcResult.wasNull()) i_status = null
+                var created_by: Int? = resultSet!!.getInt("created_by")
+                if (resultSet!!.wasNull()) created_by = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) created_by = null
+                var created_at: String? = resultSet!!.getString("created_at")
+                if (resultSet!!.wasNull()) created_at = null
 
-                var created_at: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) created_at = null
+                var modified_at: String? = resultSet!!.getString("modified_at")
+                if (resultSet!!.wasNull()) modified_at = null
 
-                var modified_at: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modified_at = null
+                var modified_by: Int? = resultSet!!.getInt("modified_by")
+                if (resultSet!!.wasNull()) modified_by = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modified_by = null
+                var owning_person: Int? = resultSet!!.getInt("owning_person")
+                if (resultSet!!.wasNull()) owning_person = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owning_person = null
-
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owning_group = null
+                var owning_group: Int? = resultSet!!.getInt("owning_group")
+                if (resultSet!!.wasNull()) owning_group = null
 
                 data.add(
                     iso6393Macrolanguage(
@@ -119,12 +121,12 @@ class List(
                     )
                 )
             }
-        } catch (e: SQLException) {
-            println("error while listing ${e.message}")
-            return SilIso6393MacrolanguagesListResponse(ErrorType.SQLReadError, mutableListOf())
+        }
+        else{
+            return SilIso6393MacrolanguagesListResponse(ErrorType.SQLReadError, size = 0, mutableListOf())
         }
 
-        return SilIso6393MacrolanguagesListResponse(ErrorType.NoError, data)
+        return SilIso6393MacrolanguagesListResponse(ErrorType.NoError, size = size, data)
     }
 }
 

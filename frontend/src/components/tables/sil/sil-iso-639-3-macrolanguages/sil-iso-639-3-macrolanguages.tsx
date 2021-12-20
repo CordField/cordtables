@@ -1,4 +1,4 @@
-import { Component, Host, h, State } from '@stencil/core';
+import { Component, Host, h, State, Listen } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
@@ -27,6 +27,14 @@ export class SilIso6393Macrolanguages {
 
   @State() iso6393MacrolanguagesResponse: SilIso6393MacrolanguageListResponse;
   @State() currentPage: number = 1;
+
+  @Listen('pageChanged', { target: 'body' })
+  async getChangedValue(event: CustomEvent) {
+    console.log(event.detail);
+    console.log('page changed');
+    this.currentPage = event.detail;
+    await this.getList(this.currentPage);
+  }
   
   async getList(page) {
     this.iso6393MacrolanguagesResponse = await fetchAs<SilIso6393MacrolanguageListRequest, SilIso6393MacrolanguageListResponse>('sil-iso-639-3-macrolanguages/list', {
@@ -100,10 +108,12 @@ export class SilIso6393Macrolanguages {
   ];
 
   async componentWillLoad() {
+    var url = new URL(window.location.href)
+    if(url.searchParams.has("page")){
+      this.currentPage = parseInt(url.searchParams.get("page"))>0?parseInt(url.searchParams.get("page")):1;
+    }
     await this.getList(this.currentPage);
-    // await this.getFilesList();
   }
-
 
   render() {
     return (

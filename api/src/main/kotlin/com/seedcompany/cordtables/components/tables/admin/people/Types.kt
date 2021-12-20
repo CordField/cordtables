@@ -14,7 +14,7 @@ data class people(
     val private_full_name: String? = null,
     val public_full_name: String? = null,
     val sensitivity_clearance: Sensitivities? = null,
-    val time_zone: String? = null,
+    val timezone: String? = null,
     val title: String? = null,
     val status: String? = null,
 
@@ -25,6 +25,8 @@ data class people(
     val owning_person: Int? = null,
     val owning_group: Int? = null,
 )
+
+
 
 data class peopleInput(
     var id: Int? = null,
@@ -40,7 +42,7 @@ data class peopleInput(
     val private_full_name: String? = null,
     val public_full_name: String? = null,
     val sensitivity_clearance: String? = null,
-    val time_zone: String? = null,
+    val timezone: String? = null,
     val title: String? = null,
     val status: String? = null,
     val created_at: String? = null,

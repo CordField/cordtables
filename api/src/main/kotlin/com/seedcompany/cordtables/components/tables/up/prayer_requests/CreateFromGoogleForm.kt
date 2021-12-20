@@ -25,6 +25,7 @@ data class PrayerForm (
   val translatorEmail: String?, // admin.people // admin.users // translator
   val ethCode: String?, // sil.language_index lang field value
   val sensitivity: String?, // CommonSensitivity = CommonSensitivity.High,
+//  val organization_name: String,
   val location: String?,
   val prayerType: String,
   val title: String,
