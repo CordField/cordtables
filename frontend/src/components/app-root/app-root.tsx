@@ -32,10 +32,13 @@ export class AppRoot {
   }
 
   componentDidLoad() {
-    this.history.listen(() => {
-      this.path = window.location.pathname;
-      this.updateSelect();
-    });
+    if(this.history){
+      this.history.listen(() => {
+        this.path = window.location.pathname;
+        this.updateSelect();
+      });
+    }
+    
     const infoText = 'INSECURE CONNECTION';
     if (!process.env.SERVER_URL.startsWith('https')) {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: infoText, id: uuidv4(), type: 'info' });
