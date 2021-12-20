@@ -153,6 +153,8 @@ export namespace Components {
     }
     interface LocationsTable {
     }
+    interface NewTicketsPage {
+    }
     interface OrganizationsPage {
     }
     interface OrganizationsTable {
@@ -297,6 +299,10 @@ export namespace Components {
     }
     interface TicketGraph {
         "onlyShowCreate": boolean;
+    }
+    interface TicketModal {
+        "isOpen": boolean;
+        "modalTitle": String;
     }
     interface TicketsPage {
     }
@@ -650,6 +656,12 @@ declare global {
     var HTMLLocationsTableElement: {
         prototype: HTMLLocationsTableElement;
         new (): HTMLLocationsTableElement;
+    };
+    interface HTMLNewTicketsPageElement extends Components.NewTicketsPage, HTMLStencilElement {
+    }
+    var HTMLNewTicketsPageElement: {
+        prototype: HTMLNewTicketsPageElement;
+        new (): HTMLNewTicketsPageElement;
     };
     interface HTMLOrganizationsPageElement extends Components.OrganizationsPage, HTMLStencilElement {
     }
@@ -1035,6 +1047,12 @@ declare global {
         prototype: HTMLTicketGraphElement;
         new (): HTMLTicketGraphElement;
     };
+    interface HTMLTicketModalElement extends Components.TicketModal, HTMLStencilElement {
+    }
+    var HTMLTicketModalElement: {
+        prototype: HTMLTicketModalElement;
+        new (): HTMLTicketModalElement;
+    };
     interface HTMLTicketsPageElement extends Components.TicketsPage, HTMLStencilElement {
     }
     var HTMLTicketsPageElement: {
@@ -1128,6 +1146,7 @@ declare global {
         "groups-row-access": HTMLGroupsRowAccessElement;
         "groups-table": HTMLGroupsTableElement;
         "locations-table": HTMLLocationsTableElement;
+        "new-tickets-page": HTMLNewTicketsPageElement;
         "organizations-page": HTMLOrganizationsPageElement;
         "organizations-table": HTMLOrganizationsTableElement;
         "page-not-found": HTMLPageNotFoundElement;
@@ -1192,6 +1211,7 @@ declare global {
         "ticket-assignments": HTMLTicketAssignmentsElement;
         "ticket-feedback": HTMLTicketFeedbackElement;
         "ticket-graph": HTMLTicketGraphElement;
+        "ticket-modal": HTMLTicketModalElement;
         "tickets-page": HTMLTicketsPageElement;
         "tickets-table": HTMLTicketsTableElement;
         "users-table": HTMLUsersTableElement;
@@ -1348,6 +1368,8 @@ declare namespace LocalJSX {
     }
     interface LocationsTable {
     }
+    interface NewTicketsPage {
+    }
     interface OrganizationsPage {
     }
     interface OrganizationsTable {
@@ -1497,6 +1519,13 @@ declare namespace LocalJSX {
     interface TicketGraph {
         "onlyShowCreate"?: boolean;
     }
+    interface TicketModal {
+        "isOpen"?: boolean;
+        "modalTitle"?: String;
+        "onModalClosed"?: (event: CustomEvent<boolean>) => void;
+        "onModalDelete"?: (event: CustomEvent<boolean>) => void;
+        "onModalOkay"?: (event: CustomEvent<boolean>) => void;
+    }
     interface TicketsPage {
     }
     interface TicketsTable {
@@ -1569,6 +1598,7 @@ declare namespace LocalJSX {
         "groups-row-access": GroupsRowAccess;
         "groups-table": GroupsTable;
         "locations-table": LocationsTable;
+        "new-tickets-page": NewTicketsPage;
         "organizations-page": OrganizationsPage;
         "organizations-table": OrganizationsTable;
         "page-not-found": PageNotFound;
@@ -1633,6 +1663,7 @@ declare namespace LocalJSX {
         "ticket-assignments": TicketAssignments;
         "ticket-feedback": TicketFeedback;
         "ticket-graph": TicketGraph;
+        "ticket-modal": TicketModal;
         "tickets-page": TicketsPage;
         "tickets-table": TicketsTable;
         "users-table": UsersTable;
@@ -1701,6 +1732,7 @@ declare module "@stencil/core" {
             "groups-row-access": LocalJSX.GroupsRowAccess & JSXBase.HTMLAttributes<HTMLGroupsRowAccessElement>;
             "groups-table": LocalJSX.GroupsTable & JSXBase.HTMLAttributes<HTMLGroupsTableElement>;
             "locations-table": LocalJSX.LocationsTable & JSXBase.HTMLAttributes<HTMLLocationsTableElement>;
+            "new-tickets-page": LocalJSX.NewTicketsPage & JSXBase.HTMLAttributes<HTMLNewTicketsPageElement>;
             "organizations-page": LocalJSX.OrganizationsPage & JSXBase.HTMLAttributes<HTMLOrganizationsPageElement>;
             "organizations-table": LocalJSX.OrganizationsTable & JSXBase.HTMLAttributes<HTMLOrganizationsTableElement>;
             "page-not-found": LocalJSX.PageNotFound & JSXBase.HTMLAttributes<HTMLPageNotFoundElement>;
@@ -1765,6 +1797,7 @@ declare module "@stencil/core" {
             "ticket-assignments": LocalJSX.TicketAssignments & JSXBase.HTMLAttributes<HTMLTicketAssignmentsElement>;
             "ticket-feedback": LocalJSX.TicketFeedback & JSXBase.HTMLAttributes<HTMLTicketFeedbackElement>;
             "ticket-graph": LocalJSX.TicketGraph & JSXBase.HTMLAttributes<HTMLTicketGraphElement>;
+            "ticket-modal": LocalJSX.TicketModal & JSXBase.HTMLAttributes<HTMLTicketModalElement>;
             "tickets-page": LocalJSX.TicketsPage & JSXBase.HTMLAttributes<HTMLTicketsPageElement>;
             "tickets-table": LocalJSX.TicketsTable & JSXBase.HTMLAttributes<HTMLTicketsTableElement>;
             "users-table": LocalJSX.UsersTable & JSXBase.HTMLAttributes<HTMLUsersTableElement>;

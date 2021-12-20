@@ -18,7 +18,7 @@ export class PageRoot {
         {this.match.params.page === 'organizations' && <organizations-page></organizations-page>}
         {this.match.params.page === 'roles' && <roles-page></roles-page>}
         {this.match.params.page === 'slack' && <slack-page></slack-page>}
-        {this.match.params.page === 'tickets' && <tickets-page></tickets-page>}
+        {this.match.params.page === 'tickets' && <new-tickets-page></new-tickets-page>}
         {this.match.params.page === 'not-found' && <page-not-found></page-not-found>}
 
         {this.match.params.page === 'prayer-requests' && <page-prayer-requests></page-prayer-requests>}

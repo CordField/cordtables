@@ -509,11 +509,10 @@ create type common.ticket_status as enum (
 
 create table common.tickets (
 	id serial primary key,
-
+  title text not null,
 	ticket_status common.ticket_status not null default 'Open',
 	parent int,
 	content text not null,
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

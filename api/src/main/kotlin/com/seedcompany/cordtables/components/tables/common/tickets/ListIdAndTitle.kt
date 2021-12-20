@@ -1,12 +1,9 @@
 package com.seedcompany.cordtables.components.tables.common.tickets
 
-import com.seedcompany.cordtables.common.CommonSensitivity
-import com.seedcompany.cordtables.common.CommonTicketStatus
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sc.languages.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -20,7 +17,10 @@ import javax.sql.DataSource
 
 
 data class CommonTicketsIdNameListRequest(
-  val token: String?
+  val token: String?,
+  val wordToSearch: String?,
+  val limit: Number,
+  val offset: Number
 )
 
 data class CommonTicketsIdNameListResponse(
@@ -29,7 +29,7 @@ data class CommonTicketsIdNameListResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonTicketsListIdName")
+@Controller("CommonTicketsListIdTitle")
 class ListAll(
   @Autowired
   val util: Utility,
@@ -52,10 +52,14 @@ class ListAll(
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
 
+    val filter = if(req.wordToSearch.isNullOrBlank()) "" else "title LIKE '%' || '${req.wordToSearch}' || '%' "
+    println(filter)
+
     val query = secureList.getSecureListQueryHandler(
       GetSecureListQueryRequest(
         tableName = "common.tickets",
-        filter = "order by id",
+        whereClause = filter,
+        filter =  "limit ${req.limit} offset ${req.offset}",
         columns = arrayOf(
           "id",
           "title"

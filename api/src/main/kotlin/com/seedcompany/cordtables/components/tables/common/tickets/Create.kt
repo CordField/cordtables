@@ -57,8 +57,9 @@ class Create(
     // create row with required fields, use id to update cells afterwards one by one
     val id = jdbcTemplate.queryForObject(
             """
-            insert into common.tickets(ticket_status, parent, content, created_by, modified_by, owning_person, owning_group)
+            insert into common.tickets(title, ticket_status, parent, content, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?,
                     ?::common.ticket_status,
                     ?,
                     ?,
@@ -82,6 +83,7 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
+            req.ticket.title,
             req.ticket.ticket_status,
             req.ticket.parent,
             req.ticket.content,

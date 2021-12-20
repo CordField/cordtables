@@ -1,0 +1,133 @@
+:host {
+    display: block;
+  }
+  
+  #main{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+    margin-left: 1%;
+  }
+
+  .create-new-button{
+      float: right;
+  }
+
+  .container{
+	margin: 0 auto;
+	display: flex;
+  padding: 10px;
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin-left: 1%;
+}
+
+.container{
+    display: flex;
+    flex-direction: row;
+}
+
+.sideContainer {
+    margin-left: 4%;
+    padding: 5px 5px 5px 5px;
+    border: 0.5px solid rgb(211, 211, 233);
+    width: 40%;
+}
+
+.creatorLabel {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.creatorName {
+    font-size: 12px;
+}
+
+.assigneeSearchbar {
+    margin-left: -2%;
+}
+
+ion-radio::part(mark){
+    color: blue;
+    opacity: 1;
+}
+
+#fetch {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .fetch-user {
+    background-color: lightseagreen;
+    color: #fff;
+    padding: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .fetch-pagination li {
+    list-style-type: none;
+    float: left;
+    background-color: lightseagreen;
+    color: #fff;
+    padding: 10px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  
+  .fetch-pagination li.active {
+    background-color: #333333;
+    color: #fff;
+  }
+
+  .topnav {
+    overflow: hidden;
+  }
+  
+  
+  .topnav .search-container {
+    float: left;
+  }
+  
+  .topnav input[type=text] {
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
+  }
+  
+  .topnav .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .topnav .search-container {
+      float: none;
+    }
+    .topnav a, .topnav input[type=text], .topnav .search-container button {
+      float: none;
+      display: block;
+      text-align: left;
+      width: 100%;
+      margin: 0;
+      padding: 14px;
+    }
+    .topnav input[type=text] {
+      border: 1px solid #ccc;  
+    }
+  }
