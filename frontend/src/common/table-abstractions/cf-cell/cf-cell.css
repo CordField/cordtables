@@ -32,12 +32,12 @@
   border-right: 1px solid lightgray;
 }
 
-#value-view {
+.value-view {
   display: flex;
   justify-content: space-between;
 }
 
-#value-edit {
+.value-edit {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -48,22 +48,29 @@
   cursor: pointer;
 }
 
-#save-icon {
+.save-icon {
   color: green;
 }
 
-#cancel-icon {
+.cancel-icon {
   color: red;
 }
 
-#value-span {
+.value-span {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  padding-right: 3px;
+  flex: 1;
+  overflow: hidden;
 }
 
-#delete-span {
+.delete-span {
   cursor: pointer;
   color: red;
+}
+
+.value-wrapper {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  content: '...'
 }
