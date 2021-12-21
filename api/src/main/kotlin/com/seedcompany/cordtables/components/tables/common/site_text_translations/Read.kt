@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.common.site_text_strings
+package com.seedcompany.cordtables.components.tables.common.site_text_translations
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -15,18 +15,18 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class SiteTextStringReadRequest(
+data class SiteTextTranslationReadRequest(
   val token: String?,
   val id: Int? = null,
 )
 
-data class SiteTextStringReadResponse(
+data class SiteTextTranslationReadResponse(
   val error: ErrorType,
-  val site_text_string: SiteTextString? = null,
+  val site_text_translation: SiteTextTranslation? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonSiteTextStringRead")
+@Controller("CommonSiteTextTranslationRead")
 class Read(
   @Autowired
   val util: Utility,
@@ -39,12 +39,12 @@ class Read(
 ) {
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-  @PostMapping("common-site-text-strings/read")
+  @PostMapping("common-site-text-translations/read")
   @ResponseBody
-  fun readHandler(@RequestBody req: SiteTextStringReadRequest): SiteTextStringReadResponse {
+  fun readHandler(@RequestBody req: SiteTextTranslationReadRequest): SiteTextTranslationReadResponse {
 
-    if (req.token == null) return SiteTextStringReadResponse(ErrorType.TokenNotFound)
-    if (req.id == null) return SiteTextStringReadResponse(ErrorType.MissingId)
+    if (req.token == null) return SiteTextTranslationReadResponse(ErrorType.TokenNotFound)
+    if (req.id == null) return SiteTextTranslationReadResponse(ErrorType.MissingId)
 
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
@@ -52,12 +52,13 @@ class Read(
 
     val query = secureList.getSecureListQueryHandler(
       GetSecureListQueryRequest(
-        tableName = "common.site_text_strings",
+        tableName = "common.site_text_translations",
         getList = false,
         columns = arrayOf(
           "id",
-          "english",
-          "comment",
+          "language",
+          "site_text",
+          "translation",
           "created_at",
           "created_by",
           "modified_at",
@@ -75,11 +76,14 @@ class Read(
         var id: Int? = jdbcResult.getInt("id")
         if (jdbcResult.wasNull()) id = null
 
-        var english: String? = jdbcResult.getString("english")
-        if (jdbcResult.wasNull()) english = null
+        var language: Int? = jdbcResult.getInt("language")
+        if (jdbcResult.wasNull()) language = null
 
-        var comment: String? = jdbcResult.getString("comment")
-        if (jdbcResult.wasNull()) comment = null
+        var site_text: Int? = jdbcResult.getInt("site_text")
+        if(jdbcResult.wasNull()) site_text = null
+
+        var translation: String? = jdbcResult.getString("translation")
+        if (jdbcResult.wasNull()) translation = null
 
         var created_at: String? = jdbcResult.getString("created_at")
         if (jdbcResult.wasNull()) created_at = null
@@ -99,10 +103,11 @@ class Read(
         var owning_group: Int? = jdbcResult.getInt("owning_group")
         if (jdbcResult.wasNull()) owning_group = null
 
-        val site_text_string = SiteTextString(
+        val site_text_translation = SiteTextTranslation(
           id = id!!,
-          english = english!!,
-          comment = comment,
+          language = language!!,
+          site_text = site_text!!,
+          translation = translation!!,
           created_at = created_at,
           created_by = created_by,
           modified_at = modified_at,
@@ -111,13 +116,13 @@ class Read(
           owning_group = owning_group
         )
 
-        return SiteTextStringReadResponse(ErrorType.NoError, site_text_string = site_text_string)
+        return SiteTextTranslationReadResponse(ErrorType.NoError, site_text_translation = site_text_translation)
       }
     } catch (e: SQLException) {
       println("error while listing ${e.message}")
-      return SiteTextStringReadResponse(ErrorType.SQLReadError)
+      return SiteTextTranslationReadResponse(ErrorType.SQLReadError)
     }
 
-    return SiteTextStringReadResponse(error = ErrorType.UnknownError)
+    return SiteTextTranslationReadResponse(error = ErrorType.UnknownError)
   }
 }

@@ -117,7 +117,7 @@ class GetSecureListQuery() {
                 (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
                 owning_person = (select person from admin.tokens where token = :token) or
                 id in (select row from public_row_level_access)))
-        """.replace('\n', ' ')
+            """.replace('\n', ' ')
 
         }
 
@@ -128,6 +128,7 @@ class GetSecureListQuery() {
       if(req.whereClause!=="") {
         response.query += """
             and ${req.whereClause}
+            
             ${req.filter}            ;
             ;
             """.trimIndent().replace('\n', ' ')

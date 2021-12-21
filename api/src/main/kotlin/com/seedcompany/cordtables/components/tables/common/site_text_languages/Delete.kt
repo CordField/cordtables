@@ -1,4 +1,4 @@
-package com.seedcompany.cordtables.components.tables.common.site_text_strings
+package com.seedcompany.cordtables.components.tables.common.site_text_languages
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
@@ -11,53 +11,53 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class SiteTextStringDeleteRequest(
-  val id: Int,
+data class SiteTextLanguageDeleteRequest(
+  val language: Int,
   val token: String?,
 )
 
-data class SiteTextStringDeleteResponse(
+data class SiteTextLanguageDeleteResponse(
   val error: ErrorType,
   val id: Int?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonSiteTextStringDelete")
+@Controller("CommonSiteTextLanguageDelete")
 class Delete(
   @Autowired
   val util: Utility,
   @Autowired
   val ds: DataSource,
 ) {
-  @PostMapping("common-site-text-strings/delete")
+  @PostMapping("common-site-text-languages/delete")
   @ResponseBody
-  fun deleteHandler(@RequestBody req: SiteTextStringDeleteRequest): SiteTextStringDeleteResponse {
+  fun deleteHandler(@RequestBody req: SiteTextLanguageDeleteRequest): SiteTextLanguageDeleteResponse {
 
-    if (req.token == null) return SiteTextStringDeleteResponse(ErrorType.TokenNotFound, null)
-    if (!util.userHasDeletePermission(req.token, "common.site_text_strings"))
-      return SiteTextStringDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
+    if (req.token == null) return SiteTextLanguageDeleteResponse(ErrorType.TokenNotFound, null)
+    if (!util.userHasDeletePermission(req.token, "common.site_text_languages"))
+      return SiteTextLanguageDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-    var deletedLocationExId: Int? = null
+    var deletedExId: Int? = null
 
     this.ds.connection.use { conn ->
       try {
 
         val deleteStatement = conn.prepareCall(
-          "delete from common.site_text_strings where id = ? returning id"
+          "delete from common.site_text_languages where language = ? returning id"
         )
-        deleteStatement.setInt(1, req.id)
+        deleteStatement.setInt(1, req.language)
 
         val deleteStatementResult = deleteStatement.executeQuery()
 
         if (deleteStatementResult.next()) {
-          deletedLocationExId = deleteStatementResult.getInt("id")
+          deletedExId = deleteStatementResult.getInt("id")
         }
       } catch (e: SQLException) {
         println(e.message)
 
-        return SiteTextStringDeleteResponse(ErrorType.SQLDeleteError, null)
+        return SiteTextLanguageDeleteResponse(ErrorType.SQLDeleteError, null)
       }
     }
-    return SiteTextStringDeleteResponse(ErrorType.NoError, deletedLocationExId)
+    return SiteTextLanguageDeleteResponse(ErrorType.NoError, deletedExId)
   }
 }

@@ -28,7 +28,7 @@ class SilLoader (
     fun loadHandler(@RequestBody req: SilLoaderRequest): SilLoaderResponse {
       if (req.token == null) return SilLoaderResponse(ErrorType.InputMissingToken)
 
-      // if(util.isAdmin(req.token)) return SilLoaderResponse(ErrorType.AdminOnly)
+      if(util.isAdmin(req.token)) return SilLoaderResponse(ErrorType.AdminOnly)
 
       try {
             vc.loadSilData()

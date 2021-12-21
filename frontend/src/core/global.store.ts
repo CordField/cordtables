@@ -6,11 +6,12 @@ interface Notification {
   type: 'error' | 'success' | 'info';
 }
 
+const language = localStorage.getItem('language');
 
 export class Globals {
   storeObject = {
     appState: AppState.Init,
-    language: undefined,
+    language: (language === null || language === undefined)?'default': language,
     editMode: false,
     editModeWidth: 0,
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
@@ -87,11 +88,14 @@ export class Globals {
     });
 
     this.globalStore.onChange('isAdmin', newValue => {
-      if (newValue) {
+      if (newValue !== '' && newValue !== undefined && newValue !== null) {
         localStorage.setItem('isAdmin', 'true');
       } else {
         localStorage.setItem('isAdmin', 'false');
       }
+    });
+    this.globalStore.onChange('language', newValue => {
+      if(newValue !== null) localStorage.setItem('language', newValue);
     });
   }
 }

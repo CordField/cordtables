@@ -1,29 +1,27 @@
 package com.seedcompany.cordtables.components.tables.sil.table_of_languages_in_country
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sil.table_of_languages_in_country.tableOfLanguagesInCountry
+import com.seedcompany.cordtables.common.GetPaginatedResultSet
+import com.seedcompany.cordtables.common.GetPaginatedResultSetRequest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
 
 
 data class SilTableOfLanguagesInCountryListRequest(
-    val token: String?
+    val token: String?,
+    val page: Int? = 1,
+    val resultsPerPage: Int? = 50
 )
 
 data class SilTableOfLanguagesInCountryListResponse(
     val error: ErrorType,
+    val size: Int,
     val tableOfLanguagesInCountries: MutableList<tableOfLanguagesInCountry>?
 )
 
@@ -37,27 +35,29 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureListQuery,
+    val secureList: GetPaginatedResultSet,
 ) {
 
-    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
+//    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
     @PostMapping("sil-table-of-languages-in-country/list")
     @ResponseBody
     fun listHandler(@RequestBody req:SilTableOfLanguagesInCountryListRequest): SilTableOfLanguagesInCountryListResponse {
         var data: MutableList<tableOfLanguagesInCountry> = mutableListOf()
-        if (req.token == null) return SilTableOfLanguagesInCountryListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return SilTableOfLanguagesInCountryListResponse(ErrorType.TokenNotFound, size = 0, mutableListOf())
 
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", req.token)
+//        val paramSource = MapSqlParameterSource()
+//        paramSource.addValue("token", req.token)
 
-        val query = secureList.getSecureListQueryHandler(
-            GetSecureListQueryRequest(
+        val jdbcResult = secureList.getPaginatedResultSetHandler(
+            GetPaginatedResultSetRequest(
                 tableName = "sil.table_of_languages_in_country",
                 filter = "order by id",
+                token = req.token,
+                page = req.page!!,
+                resultsPerPage = req.resultsPerPage!!,
                 columns = arrayOf(
                     "id",
-
                     "iso_639",
                     "language_name",
                     "uninverted_name",
@@ -82,7 +82,6 @@ class List(
                     "in_trouble",
                     "dying",
                     "extinct",
-
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -91,114 +90,108 @@ class List(
                     "owning_group",
                 )
             )
-        ).query
+        )
 
-        try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()) {
+        val resultSet = jdbcResult.result
+        val size = jdbcResult.size
+        if (jdbcResult.errorType == ErrorType.NoError){
+            while (resultSet!!.next()) {
+                var id: Int? = resultSet!!.getInt("id")
+                if (resultSet!!.wasNull()) id = null
 
-                var id: Int? = jdbcResult.getInt("id")
-                if (jdbcResult.wasNull()) id = null
+                var iso_639: String? = resultSet!!.getString("iso_639")
+                if (resultSet!!.wasNull()) iso_639 = null
 
+                var language_name: String? = resultSet!!.getString("language_name")
+                if (resultSet!!.wasNull()) language_name = null
 
-                var iso_639: String? = jdbcResult.getString("iso_639")
-                if (jdbcResult.wasNull()) iso_639 = null
+                var uninverted_name: String? = resultSet!!.getString("uninverted_name")
+                if (resultSet!!.wasNull()) uninverted_name = null
 
-                var language_name: String? = jdbcResult.getString("language_name")
-                if (jdbcResult.wasNull()) language_name = null
+                var country_code: String? = resultSet!!.getString("country_code")
+                if (resultSet!!.wasNull()) country_code = null
 
-                var uninverted_name: String? = jdbcResult.getString("uninverted_name")
-                if (jdbcResult.wasNull()) uninverted_name = null
+                var country_name: String? = resultSet!!.getString("country_name")
+                if (resultSet!!.wasNull()) country_name = null
 
-                var country_code: String? = jdbcResult.getString("country_code")
-                if (jdbcResult.wasNull()) country_code = null
+                var region_code: String? = resultSet!!.getString("region_code")
+                if (resultSet!!.wasNull()) region_code = null
 
-                var country_name: String? = jdbcResult.getString("country_name")
-                if (jdbcResult.wasNull()) country_name = null
+                var region_name: String? = resultSet!!.getString("region_name")
+                if (resultSet!!.wasNull()) region_name = null
 
-                var region_code: String? = jdbcResult.getString("region_code")
-                if (jdbcResult.wasNull()) region_code = null
+                var area: String? = resultSet!!.getString("area")
+                if (resultSet!!.wasNull()) area = null
 
-                var region_name: String? = jdbcResult.getString("region_name")
-                if (jdbcResult.wasNull()) region_name = null
+                var is_primary: String? = resultSet!!.getString("is_primary")
+                if (resultSet!!.wasNull()) is_primary = null
 
-                var area: String? = jdbcResult.getString("area")
-                if (jdbcResult.wasNull()) area = null
+                var is_indigenous: String? = resultSet!!.getString("is_indigenous")
+                if (resultSet!!.wasNull()) is_indigenous = null
 
-                var is_primary: String? = jdbcResult.getString("is_primary")
-                if (jdbcResult.wasNull()) is_primary = null
+                var is_established: String? = resultSet!!.getString("is_established")
+                if (resultSet!!.wasNull()) is_established = null
 
-                var is_indigenous: String? = jdbcResult.getString("is_indigenous")
-                if (jdbcResult.wasNull()) is_indigenous = null
+                var all_users: Int? = resultSet!!.getInt("all_users")
+                if (resultSet!!.wasNull()) all_users = null
 
-                var is_established: String? = jdbcResult.getString("is_established")
-                if (jdbcResult.wasNull()) is_established = null
+                var l1_users: Int? = resultSet!!.getInt("l1_users")
+                if (resultSet!!.wasNull()) l1_users = null
 
+                var l2_users: Int? = resultSet!!.getInt("l2_users")
+                if (resultSet!!.wasNull()) l2_users = null
 
-                var all_users: Int? = jdbcResult.getInt("all_users")
-                if (jdbcResult.wasNull()) all_users = null
+                var family: String? = resultSet!!.getString("family")
+                if (resultSet!!.wasNull()) family = null
 
-                var l1_users: Int? = jdbcResult.getInt("l1_users")
-                if (jdbcResult.wasNull()) l1_users = null
+                var egids: String? = resultSet!!.getString("egids")
+                if (resultSet!!.wasNull()) egids = null
 
-                var l2_users: Int? = jdbcResult.getInt("l2_users")
-                if (jdbcResult.wasNull()) l2_users = null
+                var function_code: String? = resultSet!!.getString("function_code")
+                if (resultSet!!.wasNull()) function_code = null
 
+                var function_label: String? = resultSet!!.getString("function_label")
+                if (resultSet!!.wasNull()) function_label = null
 
-                var family: String? = jdbcResult.getString("family")
-                if (jdbcResult.wasNull()) family = null
+                var institutional: Int? = resultSet!!.getInt("institutional")
+                if (resultSet!!.wasNull()) institutional = null
 
-                var egids: String? = jdbcResult.getString("egids")
-                if (jdbcResult.wasNull()) egids = null
+                var developing: Int? = resultSet!!.getInt("developing")
+                if (resultSet!!.wasNull()) developing = null
 
-                var function_code: String? = jdbcResult.getString("function_code")
-                if (jdbcResult.wasNull()) function_code = null
+                var vigorous: Int? = resultSet!!.getInt("vigorous")
+                if (resultSet!!.wasNull()) vigorous = null
 
-                var function_label: String? = jdbcResult.getString("function_label")
-                if (jdbcResult.wasNull()) function_label = null
+                var in_trouble: Int? = resultSet!!.getInt("in_trouble")
+                if (resultSet!!.wasNull()) in_trouble = null
 
-                var institutional: Int? = jdbcResult.getInt("institutional")
-                if (jdbcResult.wasNull()) institutional = null
+                var dying: Int? = resultSet!!.getInt("dying")
+                if (resultSet!!.wasNull()) dying = null
 
-                var developing: Int? = jdbcResult.getInt("developing")
-                if (jdbcResult.wasNull()) developing = null
+                var extinct: Int? = resultSet!!.getInt("extinct")
+                if (resultSet!!.wasNull()) extinct = null
 
-                var vigorous: Int? = jdbcResult.getInt("vigorous")
-                if (jdbcResult.wasNull()) vigorous = null
+                var created_by: Int? = resultSet!!.getInt("created_by")
+                if (resultSet!!.wasNull()) created_by = null
 
-                var in_trouble: Int? = jdbcResult.getInt("in_trouble")
-                if (jdbcResult.wasNull()) in_trouble = null
+                var created_at: String? = resultSet!!.getString("created_at")
+                if (resultSet!!.wasNull()) created_at = null
 
-                var dying: Int? = jdbcResult.getInt("dying")
-                if (jdbcResult.wasNull()) dying = null
+                var modified_at: String? = resultSet!!.getString("modified_at")
+                if (resultSet!!.wasNull()) modified_at = null
 
-                var extinct: Int? = jdbcResult.getInt("extinct")
-                if (jdbcResult.wasNull()) extinct = null
+                var modified_by: Int? = resultSet!!.getInt("modified_by")
+                if (resultSet!!.wasNull()) modified_by = null
 
+                var owning_person: Int? = resultSet!!.getInt("owning_person")
+                if (resultSet!!.wasNull()) owning_person = null
 
-
-                var created_by: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) created_by = null
-
-                var created_at: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) created_at = null
-
-                var modified_at: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modified_at = null
-
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modified_by = null
-
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owning_person = null
-
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owning_group = null
+                var owning_group: Int? = resultSet!!.getInt("owning_group")
+                if (resultSet!!.wasNull()) owning_group = null
 
                 data.add(
                     tableOfLanguagesInCountry(
                         id = id,
-
                         iso_639 = iso_639,
                         language_name = language_name,
                         uninverted_name = uninverted_name,
@@ -223,7 +216,6 @@ class List(
                         in_trouble = in_trouble,
                         dying = dying,
                         extinct = extinct,
-
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,
@@ -233,12 +225,12 @@ class List(
                     )
                 )
             }
-        } catch (e: SQLException) {
-            println("error while listing ${e.message}")
-            return SilTableOfLanguagesInCountryListResponse(ErrorType.SQLReadError, mutableListOf())
+        }
+        else{
+            return SilTableOfLanguagesInCountryListResponse(ErrorType.SQLReadError, size = 0, mutableListOf())
         }
 
-        return SilTableOfLanguagesInCountryListResponse(ErrorType.NoError, data)
+        return SilTableOfLanguagesInCountryListResponse(ErrorType.NoError, size = size, data)
     }
 }
 

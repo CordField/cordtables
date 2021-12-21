@@ -1,31 +1,26 @@
 package com.seedcompany.cordtables.components.tables.sil.table_of_countries
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sil.table_of_countries.tableOfCountry
+import com.seedcompany.cordtables.common.GetPaginatedResultSet
+import com.seedcompany.cordtables.common.GetPaginatedResultSetRequest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import software.amazon.ion.Decimal
-import java.math.BigDecimal
-import java.sql.SQLException
 import javax.sql.DataSource
 
-
 data class SilTableOfCountriesListRequest(
-    val token: String?
+    val token: String?,
+    val page: Int? = 1,
+    val resultsPerPage: Int? = 50
 )
 
 data class SilTableOfCountriesListResponse(
     val error: ErrorType,
+    val size: Int,
     val tableOfCountries: MutableList<tableOfCountry>?
 )
 
@@ -39,27 +34,29 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureListQuery,
+    val secureList: GetPaginatedResultSet,
 ) {
 
-    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
+    // var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
     @PostMapping("sil-table-of-countries/list")
     @ResponseBody
     fun listHandler(@RequestBody req:SilTableOfCountriesListRequest): SilTableOfCountriesListResponse {
         var data: MutableList<tableOfCountry> = mutableListOf()
-        if (req.token == null) return SilTableOfCountriesListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return SilTableOfCountriesListResponse(ErrorType.TokenNotFound, size = 0, mutableListOf())
 
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", req.token)
+//        val paramSource = MapSqlParameterSource()
+//        paramSource.addValue("token", req.token)
 
-        val query = secureList.getSecureListQueryHandler(
-            GetSecureListQueryRequest(
+        val jdbcResult = secureList.getPaginatedResultSetHandler(
+            GetPaginatedResultSetRequest(
                 tableName = "sil.table_of_countries",
                 filter = "order by id",
+                token = req.token,
+                page = req.page!!,
+                resultsPerPage = req.resultsPerPage!!,
                 columns = arrayOf(
                     "id",
-
                     "country_code",
                     "country_name",
                     "languages",
@@ -74,7 +71,6 @@ class List(
                     "population",
                     "literacy_rate",
                     "conventions",
-
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -83,85 +79,79 @@ class List(
                     "owning_group",
                 )
             )
-        ).query
+        )
 
-        try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()) {
+        val resultSet = jdbcResult.result
+        val size = jdbcResult.size
+        if (jdbcResult.errorType == ErrorType.NoError){
+            while (resultSet!!.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
-                if (jdbcResult.wasNull()) id = null
+                var id: Int? = resultSet!!.getInt("id")
+                if (resultSet!!.wasNull()) id = null
 
+                var country_code: String? = resultSet!!.getString("country_code")
+                if (resultSet!!.wasNull()) country_code = null
 
-                var country_code: String? = jdbcResult.getString("country_code")
-                if (jdbcResult.wasNull()) country_code = null
+                var country_name: String? = resultSet!!.getString("country_name")
+                if (resultSet!!.wasNull()) country_name = null
 
-                var country_name: String? = jdbcResult.getString("country_name")
-                if (jdbcResult.wasNull()) country_name = null
+                var languages: Int? = resultSet!!.getInt("languages")
+                if (resultSet!!.wasNull()) languages = null
 
-                var languages: Int? = jdbcResult.getInt("languages")
-                if (jdbcResult.wasNull()) languages = null
+                var indigenous: Int? = resultSet!!.getInt("indigenous")
+                if (resultSet!!.wasNull()) indigenous = null
 
-                var indigenous: Int? = jdbcResult.getInt("indigenous")
-                if (jdbcResult.wasNull()) indigenous = null
+                var established: Int? = resultSet!!.getInt("established")
+                if (resultSet!!.wasNull()) established = null
 
-                var established: Int? = jdbcResult.getInt("established")
-                if (jdbcResult.wasNull()) established = null
+                var unestablished: Int? = resultSet!!.getInt("unestablished")
+                if (resultSet!!.wasNull()) unestablished = null
 
-                var unestablished: Int? = jdbcResult.getInt("unestablished")
-                if (jdbcResult.wasNull()) unestablished = null
+                var diversity: Float? = resultSet!!.getFloat("diversity")
+                if (resultSet!!.wasNull()) diversity = null
 
-                var diversity: Float? = jdbcResult.getFloat("diversity")
-                if (jdbcResult.wasNull()) diversity = null
+                var included: Int? = resultSet!!.getInt("included")
+                if (resultSet!!.wasNull()) included = null
 
-                var included: Int? = jdbcResult.getInt("included")
-                if (jdbcResult.wasNull()) included = null
+                var sum_of_populations: Int? = resultSet!!.getInt("sum_of_populations")
+                if (resultSet!!.wasNull()) sum_of_populations = null
 
-                var sum_of_populations: Int? = jdbcResult.getInt("sum_of_populations")
-                if (jdbcResult.wasNull()) sum_of_populations = null
+                var mean: Int? = resultSet!!.getInt("mean")
+                if (resultSet!!.wasNull()) mean = null
 
-                var mean: Int? = jdbcResult.getInt("mean")
-                if (jdbcResult.wasNull()) mean = null
+                var median: Int? = resultSet!!.getInt("median")
+                if (resultSet!!.wasNull()) median = null
 
-                var median: Int? = jdbcResult.getInt("median")
-                if (jdbcResult.wasNull()) median = null
+                var population: Int? = resultSet!!.getInt("population")
+                if (resultSet!!.wasNull()) population = null
 
-                var population: Int? = jdbcResult.getInt("population")
-                if (jdbcResult.wasNull()) population = null
+                var literacy_rate: Float? = resultSet!!.getFloat("literacy_rate")
+                if (resultSet!!.wasNull()) literacy_rate = null
 
+                var conventions: Int? = resultSet!!.getInt("conventions")
+                if (resultSet!!.wasNull()) conventions = null
 
-                var literacy_rate: Float? = jdbcResult.getFloat("literacy_rate")
-                if (jdbcResult.wasNull()) literacy_rate = null
+                var created_by: Int? = resultSet!!.getInt("created_by")
+                if (resultSet!!.wasNull()) created_by = null
 
-                var conventions: Int? = jdbcResult.getInt("conventions")
-                if (jdbcResult.wasNull()) conventions = null
+                var created_at: String? = resultSet!!.getString("created_at")
+                if (resultSet!!.wasNull()) created_at = null
 
+                var modified_at: String? = resultSet!!.getString("modified_at")
+                if (resultSet!!.wasNull()) modified_at = null
 
+                var modified_by: Int? = resultSet!!.getInt("modified_by")
+                if (resultSet!!.wasNull()) modified_by = null
 
+                var owning_person: Int? = resultSet!!.getInt("owning_person")
+                if (resultSet!!.wasNull()) owning_person = null
 
-
-                var created_by: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) created_by = null
-
-                var created_at: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) created_at = null
-
-                var modified_at: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modified_at = null
-
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modified_by = null
-
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owning_person = null
-
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owning_group = null
+                var owning_group: Int? = resultSet!!.getInt("owning_group")
+                if (resultSet!!.wasNull()) owning_group = null
 
                 data.add(
                     tableOfCountry(
                         id = id,
-
                         country_code = country_code,
                         country_name = country_name,
                         languages = languages,
@@ -176,7 +166,6 @@ class List(
                         population = population,
                         literacy_rate = literacy_rate,
                         conventions = conventions,
-
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,
@@ -186,12 +175,12 @@ class List(
                     )
                 )
             }
-        } catch (e: SQLException) {
-            println("error while listing ${e.message}")
-            return SilTableOfCountriesListResponse(ErrorType.SQLReadError, mutableListOf())
+        }
+        else{
+            return SilTableOfCountriesListResponse(ErrorType.SQLReadError, size = 0, mutableListOf())
         }
 
-        return SilTableOfCountriesListResponse(ErrorType.NoError, data)
+        return SilTableOfCountriesListResponse(ErrorType.NoError, size = size, data)
     }
 }
 

@@ -15,10 +15,10 @@ export class LanguageSelect {
 
   render() {
     return (
-      <select onInput={this.changeSiteLanguage}>
-        <option value={undefined}>--</option>
+      <select class="language-select" onInput={this.changeSiteLanguage}>
+        <option value="default" selected={globals.globalStore.state.language.toString() === "default"}>--</option>
         {globals.globalStore.state.siteTextLanguages.map(option => (
-          <option value={option.language} selected={globals.globalStore.state.language}>{option.language_name}</option>
+          <option value={option.language} selected={option.language.toString() === globals.globalStore.state.language.toString()}>{option.language_name}</option>
         ))}
     </select>
     );

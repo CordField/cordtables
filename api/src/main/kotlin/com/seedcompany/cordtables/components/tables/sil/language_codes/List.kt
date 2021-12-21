@@ -1,29 +1,26 @@
 package com.seedcompany.cordtables.components.tables.sil.language_codes
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sil.language_codes.languageCode
+import com.seedcompany.cordtables.common.GetPaginatedResultSet
+import com.seedcompany.cordtables.common.GetPaginatedResultSetRequest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import java.sql.SQLException
 import javax.sql.DataSource
 
-
 data class SilLanguageCodesListRequest(
-    val token: String?
+    val token: String?,
+    val page: Int? = 1,
+    val resultsPerPage: Int? = 50
 )
 
 data class SilLanguageCodesListResponse(
     val error: ErrorType,
+    val size: Int,
     val languageCodes: MutableList<languageCode>?
 )
 
@@ -37,24 +34,27 @@ class List(
     val ds: DataSource,
 
     @Autowired
-    val secureList: GetSecureListQuery,
+    val secureList: GetPaginatedResultSet,
 ) {
 
-    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
+//    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
     @PostMapping("sil-language-codes/list")
     @ResponseBody
     fun listHandler(@RequestBody req:SilLanguageCodesListRequest): SilLanguageCodesListResponse {
         var data: MutableList<languageCode> = mutableListOf()
-        if (req.token == null) return SilLanguageCodesListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.token == null) return SilLanguageCodesListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
 
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", req.token)
+//        val paramSource = MapSqlParameterSource()
+//        paramSource.addValue("token", req.token)
 
-        val query = secureList.getSecureListQueryHandler(
-            GetSecureListQueryRequest(
+        val jdbcResult = secureList.getPaginatedResultSetHandler(
+            GetPaginatedResultSetRequest(
                 tableName = "sil.language_codes",
                 filter = "order by id",
+                token = req.token,
+                page = req.page!!,
+                resultsPerPage = req.resultsPerPage!!,
                 columns = arrayOf(
                     "id",
                     "lang",
@@ -69,45 +69,45 @@ class List(
                     "owning_group",
                 )
             )
-        ).query
+        )
 
+        val resultSet = jdbcResult.result
+        val size = jdbcResult.size
+        if (jdbcResult.errorType == ErrorType.NoError){
+            while (resultSet!!.next()) {
 
-        try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()) {
+                var id: Int? = resultSet!!.getInt("id")
+                if (resultSet!!.wasNull()) id = null
 
-                var id: Int? = jdbcResult.getInt("id")
-                if (jdbcResult.wasNull()) id = null
+                var lang: String? = resultSet!!.getString("lang")
+                if (resultSet!!.wasNull()) lang = null
 
-                var lang: String? = jdbcResult.getString("lang")
-                if (jdbcResult.wasNull()) lang = null
+                var country: String? = resultSet!!.getString("country")
+                if (resultSet!!.wasNull()) country = null
 
-                var country: String? = jdbcResult.getString("country")
-                if (jdbcResult.wasNull()) country = null
+                var lang_status: String? = resultSet!!.getString("lang_status")
+                if (resultSet!!.wasNull()) lang_status = null
 
-                var lang_status: String? = jdbcResult.getString("lang_status")
-                if (jdbcResult.wasNull()) lang_status = null
+                var name: String? = resultSet!!.getString("name")
+                if (resultSet!!.wasNull()) name = null
 
-                var name: String? = jdbcResult.getString("name")
-                if (jdbcResult.wasNull()) name = null
+                var created_by: Int? = resultSet!!.getInt("created_by")
+                if (resultSet!!.wasNull()) created_by = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
-                if (jdbcResult.wasNull()) created_by = null
+                var created_at: String? = resultSet!!.getString("created_at")
+                if (resultSet!!.wasNull()) created_at = null
 
-                var created_at: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) created_at = null
+                var modified_at: String? = resultSet!!.getString("modified_at")
+                if (resultSet!!.wasNull()) modified_at = null
 
-                var modified_at: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modified_at = null
+                var modified_by: Int? = resultSet!!.getInt("modified_by")
+                if (resultSet!!.wasNull()) modified_by = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
-                if (jdbcResult.wasNull()) modified_by = null
+                var owning_person: Int? = resultSet!!.getInt("owning_person")
+                if (resultSet!!.wasNull()) owning_person = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
-                if (jdbcResult.wasNull()) owning_person = null
-
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
-                if (jdbcResult.wasNull()) owning_group = null
+                var owning_group: Int? = resultSet!!.getInt("owning_group")
+                if (resultSet!!.wasNull()) owning_group = null
 
                 data.add(
                     languageCode(
@@ -125,12 +125,11 @@ class List(
                     )
                 )
             }
-        } catch (e: SQLException) {
-            println("error while listing ${e.message}")
-            return SilLanguageCodesListResponse(ErrorType.SQLReadError, mutableListOf())
         }
-
-        return SilLanguageCodesListResponse(ErrorType.NoError, data)
+        else{
+            return SilLanguageCodesListResponse(ErrorType.SQLReadError, size = 0, mutableListOf())
+        }
+        return SilLanguageCodesListResponse(ErrorType.NoError, size = size, data)
     }
 }
 

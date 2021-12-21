@@ -52,7 +52,7 @@ class Create(
         val id = jdbcTemplate.queryForObject(
             """
             insert into admin.people(about, phone, picture, private_first_name, private_last_name, public_first_name, public_last_name, primary_location,
-             private_full_name, public_full_name, sensitivity_clearance, time_zone, title, status,  created_by, modified_by, owning_person, owning_group)
+             private_full_name, public_full_name, sensitivity_clearance, timezone, title, status,  created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
                     ?,
@@ -99,7 +99,7 @@ class Create(
             req.people.private_full_name,
             req.people.public_full_name,
             req.people.sensitivity_clearance,
-            req.people.time_zone,
+            req.people.timezone,
             req.people.title,
             req.people.status,
             req.token,

@@ -83,18 +83,20 @@ export class SiteTextService {
     globals.globalStore.set('siteTextStrings', data[1]);
     const translationObject = this.makeReadableTranslations(data[1], data[2]);
     globals.globalStore.set('siteTextTranslations', translationObject);
-    globals.globalStore.set('appState', AppState.TranslationLoaded)
+    globals.globalStore.set('appState', AppState.TranslationLoaded);
   }
 }
 
 export const siteTextService = new SiteTextService();
 
 export const t = (key: string) => {
-  const language = globals.globalStore.state.language;
-  if(!language) return key;
+  let language: any = globals.globalStore.state.language;
+  if (language === 'default') return key;
+  language = parseInt(language);
+  if(!globals.globalStore.state.siteTextTranslations[language]) return key;
   const translation = globals.globalStore.state.siteTextTranslations[language][key];
-  if(!translation) {
+  if (!translation) {
     console.debug(`${key} doesn't exist in translations`);
   }
-  return translation? translation: key;
-}
+  return translation ? translation : key;
+};
