@@ -54,7 +54,7 @@ class List(
           GetPaginatedResultSetRequest(
                 tableName = "up.prayer_requests",
                 token = req.token,
-                filter = "order by id",
+                filter = "order by id desc",
                 columns = arrayOf(
                     "id",
                     "request_language_id",

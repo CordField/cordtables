@@ -18,6 +18,7 @@ repositories {
 	mavenCentral()
 	maven { url = uri("https://repo.spring.io/milestone") }
 	maven { url = uri("https://repo.spring.io/snapshot") }
+  maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
 }
 
 extra["snippetsDir"] = file("build/generated-snippets")
@@ -57,6 +58,8 @@ dependencies {
 //	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("software.aws.rds:aws-postgresql-jdbc:0.1.0")
 
+  testImplementation("io.github.serpro69:kotlin-faker:1.9.0")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 	testImplementation("org.testcontainers:junit-jupiter")
@@ -65,6 +68,7 @@ dependencies {
 	testImplementation("org.seleniumhq.selenium:selenium-support:3.141.59")
 	testImplementation("org.seleniumhq.selenium:selenium-remote-driver:3.141.59")
 	testImplementation("org.seleniumhq.selenium:selenium-chrome-driver:3.141.59")
+
 }
 
 dependencyManagement {

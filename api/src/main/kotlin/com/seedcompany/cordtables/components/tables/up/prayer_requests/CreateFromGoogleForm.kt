@@ -21,6 +21,7 @@ enum class UpPrayerTypes{
   Celebration,
 }
 data class PrayerForm (
+  var id: Int? = null,
   val creatorEmail: String, // admin.people // admin.users // created_by, updated_by, owning_person
   val translatorEmail: String?, // admin.people // admin.users // translator
   val ethCode: String?, // sil.language_index lang field value

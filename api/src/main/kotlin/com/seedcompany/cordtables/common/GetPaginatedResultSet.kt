@@ -15,6 +15,7 @@ data class GetPaginatedResultSetRequest(
   val columns: Array<String>,
   val token: String,
   val filter: String = "",
+  val whereClause: String = "",
   val resultsPerPage: Int = 50,
   val page: Int = 1,
   val custom_columns: String? = null,
@@ -119,6 +120,20 @@ class GetPaginatedResultSet (
                   id in (select row from public_row_level_access)))
               """.replace('\n', ' ')
       }
+
+      if(req.whereClause!=="") {
+          query += """
+              and ${req.whereClause}
+              ${req.filter}
+              """.trimIndent().replace('\n', ' ')
+      }
+      else {
+          query+="""
+              ${req.filter}
+              """.trimIndent().replace('\n',' ')
+      }
+
+      println(query)
 
       var offset = (req.page-1)*req.resultsPerPage
       var limitQuery = "$query LIMIT :limit OFFSET :offset ";
