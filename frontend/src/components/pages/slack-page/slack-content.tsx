@@ -16,6 +16,7 @@ export class SlackContent {
   @Prop() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() threadListResponse: CommonThreadsListResponse = null;
   @State() channelThreads: CommonThread[] = [];
+  contentThreads: HTMLDivElement;
   @Watch('selectedDiscussionChannel')
   async handleSelectedDiscussionChannelChange(newValue: CommonDiscussionChannel, oldValue: CommonDiscussionChannel) {
     if (newValue) await this.getThreads(newValue.id);
@@ -29,7 +30,7 @@ export class SlackContent {
     if (deleteResponse.error === ErrorType.NoError) {
       this.channelThreads = this.channelThreads?.filter(thread => thread.id !== event.detail);
     } else {
-      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'unable to delete thread', id: uuidv4(), type: 'error' });
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: deleteResponse.error, id: uuidv4(), type: 'error' });
     }
   }
   @Listen('threadAdded')
@@ -40,6 +41,14 @@ export class SlackContent {
     await this.getThreads(this.selectedDiscussionChannel?.id);
   }
 
+  @Watch('selectedDiscussionChannel')
+  async handleSelectedChannelChange() {
+    await this.getThreads(this.selectedDiscussionChannel?.id);
+  }
+
+  componentDidRender() {
+    if (this.channelThreads?.length > 0) (this.contentThreads.lastChild as HTMLDivElement).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+  }
   async getThreads(discussionChannelId: number) {
     this.threadListResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common-threads/list', {
       token: globals.globalStore.state.token,
@@ -52,7 +61,7 @@ export class SlackContent {
 
   render() {
     const threadsJsx = (
-      <div class="content-threads">
+      <div class="content-threads" ref={contentThreads => (this.contentThreads = contentThreads)}>
         {this.channelThreads === null
           ? 'Loading..'
           : this.channelThreads.length > 0

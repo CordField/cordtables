@@ -14,18 +14,23 @@ import { CommonDiscussionChannel, CommonDiscussionChannelListRequest, CommonDisc
 //  fetch discussion channels first, then fetch the threads for that discussion channel, then fetch the posts
 // based on selected value select the threads and posts of the discussion channel
 export class SlackPage {
-  @State() discussionChannelsResponse: CommonDiscussionChannelListResponse = { error: null, discussion_channels: null };
+  @State() discussionChannels: CommonDiscussionChannel[] = [];
+  @State() loading = true;
   @State() selectedDiscussionChannel?: CommonDiscussionChannel = null;
   @State() showForm?: boolean = false;
 
   async componentWillLoad() {
     await this.getDiscussionChannels();
-    this.selectedDiscussionChannel = this.discussionChannelsResponse.discussion_channels[0];
+    this.selectedDiscussionChannel = this.discussionChannels[0];
   }
   async getDiscussionChannels() {
-    this.discussionChannelsResponse = await fetchAs<CommonDiscussionChannelListRequest, CommonDiscussionChannelListResponse>('common-discussion-channels/list', {
+    const discussionChannelsResponse = await fetchAs<CommonDiscussionChannelListRequest, CommonDiscussionChannelListResponse>('common-discussion-channels/list', {
       token: globals.globalStore.state.token,
     });
+    if (discussionChannelsResponse.error === ErrorType.NoError) {
+      this.discussionChannels = discussionChannelsResponse.discussion_channels;
+    }
+    this.loading = false;
   }
   @Listen('channelSelected')
   channelSelectedHandler(event: CustomEvent<CommonDiscussionChannel>) {
@@ -38,7 +43,7 @@ export class SlackPage {
       <Host>
         <slot></slot>
         <div class="slack-page">
-          <slack-sidebar discussionChannels={this.discussionChannelsResponse} />
+          <slack-sidebar discussionChannels={this.discussionChannels} loading={this.loading} />
           <slack-content selectedDiscussionChannel={this.selectedDiscussionChannel} />
         </div>
       </Host>

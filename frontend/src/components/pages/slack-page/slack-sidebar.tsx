@@ -4,41 +4,48 @@ import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 import {
   CommonDiscussionChannel,
-  CommonDiscussionChannelListResponse,
   CreateCommonDiscussionChannelRequest,
   CreateCommonDiscussionChannelResponse,
+  DeleteCommonDiscussionChannelRequest,
+  DeleteCommonDiscussionChannelResponse,
 } from '../../tables/common/discussion-channels/types';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, v4 } from 'uuid';
 
-// will take discussion channels as a prop
 @Component({
   tag: 'slack-sidebar',
   styleUrl: 'slack-page.css',
   shadow: true,
 })
 export class SlackSidebar {
-  @Prop({ mutable: true }) discussionChannels: CommonDiscussionChannelListResponse;
+  @Prop({ mutable: true }) discussionChannels: CommonDiscussionChannel[];
   @Event({ eventName: 'channelSelected' }) channelSelected: EventEmitter<CommonDiscussionChannel>;
   @State() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() name: string = '';
   @State() showForm: boolean = false;
+  @Prop() loading: boolean = true;
 
-  @Listen('channelAdded')
-  handleChannelAddedChange(event: CustomEvent<CommonDiscussionChannel>) {
-    if (this.discussionChannels.error === ErrorType.NoError) {
-      this.discussionChannels = { error: ErrorType.NoError, discussion_channels: this.discussionChannels.discussion_channels.concat(event.detail) };
+  componentWillLoad() {
+    this.selectedDiscussionChannel = this.discussionChannels.length > 0 ? this.discussionChannels[0] : null;
+    this.channelSelected.emit(this.selectedDiscussionChannel);
+  }
+  @Listen('channelDeleted')
+  async handlePostDeletedChange(event: CustomEvent<number>) {
+    const deleteResponse = await fetchAs<DeleteCommonDiscussionChannelRequest, DeleteCommonDiscussionChannelResponse>('common-discussion-channels/delete', {
+      token: globals.globalStore.state.token,
+      id: event.detail,
+    });
+    if (deleteResponse.error === ErrorType.NoError) {
+      this.discussionChannels = this.discussionChannels?.filter(discussionChannel => discussionChannel.id !== event.detail);
+    } else {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: deleteResponse.error, id: v4(), type: 'error' });
     }
   }
-  componentWillLoad() {
-    console.log('component did load', this.discussionChannels);
-    this.selectedDiscussionChannel = this.discussionChannels?.discussion_channels.length > 0 ? this.discussionChannels.discussion_channels[0] : null;
+  @Listen('channelClicked')
+  handleChannelClicked(e: CustomEvent<number>) {
+    console.log(e, this.discussionChannels);
+    this.selectedDiscussionChannel = this.discussionChannels.find(discussion_channel => discussion_channel?.id === e.detail);
     this.channelSelected.emit(this.selectedDiscussionChannel);
-  }
-
-  clickHandler(e) {
-    this.selectedDiscussionChannel = this.discussionChannels.discussion_channels.find(discussion_channel => discussion_channel.name === e.target.innerText);
     console.log(this.selectedDiscussionChannel);
-    this.channelSelected.emit(this.selectedDiscussionChannel);
   }
   handleNameChange(e) {
     this.name = e.target.value;
@@ -48,6 +55,11 @@ export class SlackSidebar {
   }
   async handleCreate(e) {
     e.preventDefault();
+    if (this.name === '') {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'cannot create empty discussion channel', id: uuidv4(), type: 'error' });
+      return;
+    }
+
     const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common-discussion-channels/create-read', {
       token: globals.globalStore.state.token,
       discussion_channel: {
@@ -55,34 +67,38 @@ export class SlackSidebar {
       },
     });
     if (createResponse.error === ErrorType.NoError) {
-      this.discussionChannels = { ...this.discussionChannels, discussion_channels: this.discussionChannels?.discussion_channels.concat(createResponse.discussion_channel) };
+      this.discussionChannels = this.discussionChannels.concat(createResponse.discussion_channel);
     } else {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   }
 
   render() {
-    const jsx = this.discussionChannels ? (
-      this.discussionChannels.discussion_channels?.map(discussionChannel => {
+    const jsx = this.loading ? (
+      <div>Loading...</div>
+    ) : (
+      this.discussionChannels.map(discussionChannel => {
         const discussionChannelClassName = `discussion-channel ${discussionChannel.id === this.selectedDiscussionChannel?.id ? 'selected-discussion-channel' : ''}`;
         return (
-          <div class={discussionChannelClassName} onClick={e => this.clickHandler(e)} key={discussionChannel.id}>
-            {discussionChannel.name}
-          </div>
+          <slack-discussion-channel
+            selectedDiscussionChannel={this.selectedDiscussionChannel}
+            discussionChannel={discussionChannel}
+            key={discussionChannel.id}
+            discussionChannelClassName={discussionChannelClassName}
+          ></slack-discussion-channel>
         );
       })
-    ) : (
-      <div>Loading...</div>
     );
+
     const formJsx = (
-      <form class="sidebar-form">
+      <form class="sidebar-form form">
         <input type="text" name="name" id="name" value={this.name} onChange={e => this.handleNameChange(e)} />
         <button
           onClick={e => {
             this.handleCreate(e);
             this.setNameToNull();
           }}
-          class="form-button"
+          class="form-button channel-button"
         >
           submit
         </button>
@@ -91,7 +107,6 @@ export class SlackSidebar {
     return (
       <Host>
         <slot></slot>
-        {jsx}
         <span
           class="add-button"
           onClick={() => {
@@ -101,6 +116,7 @@ export class SlackSidebar {
           {this.showForm ? <ion-icon name="remove-circle-outline"></ion-icon> : <ion-icon name="add-circle-outline"></ion-icon>}
         </span>
         {this.showForm && formJsx}
+        {jsx}
       </Host>
     );
   }

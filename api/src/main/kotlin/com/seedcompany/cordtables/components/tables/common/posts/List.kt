@@ -25,7 +25,8 @@ data class CommonPostsListRequest(
 
 data class CommonPostsListResponse(
   val error: ErrorType,
-  val posts: MutableList<Post>
+  val posts: MutableList<Post>,
+  val peopleDetails: MutableList<Utility.PeopleDetails>
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -46,9 +47,9 @@ class List(
   @ResponseBody
   fun listHandler(@RequestBody req: CommonPostsListRequest): CommonPostsListResponse {
     var data: MutableList<Post> = mutableListOf()
-    var personIds: String = "("
     var whereClause = ""
-    if (req.token == null) return CommonPostsListResponse(ErrorType.TokenNotFound, mutableListOf())
+    var peopleIds: MutableList<Int> = mutableListOf()
+    if (req.token == null) return CommonPostsListResponse(ErrorType.TokenNotFound, mutableListOf(), mutableListOf())
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
     if(req.threadId!==null){
@@ -102,6 +103,7 @@ class List(
 
         var owning_person: Int? = jdbcResult.getInt("owning_person")
         if (jdbcResult.wasNull()) owning_person = null
+        peopleIds.add(owning_person?:0)
 
         var owning_group: Int? = jdbcResult.getInt("owning_group")
         if (jdbcResult.wasNull()) owning_group = null
@@ -119,22 +121,14 @@ class List(
             owning_group = owning_group
           )
         )
-        if(personIds=="(") {
-          personIds+= "$owning_person,"
-        }
-        else{
-          personIds+="$personIds, $owning_person"
-        }
+
       }
     } catch (e: SQLException) {
       println("error while listing ${e.message}")
-      return CommonPostsListResponse(ErrorType.SQLReadError, mutableListOf())
+      return CommonPostsListResponse(ErrorType.SQLReadError, mutableListOf(), mutableListOf())
     }
+    val peopleDetails = util.getPeopleDetailsFromIds(peopleIds)
 
-    personIds+=")"
-    val peopleQuery = """select public_first_name, public_last_name from admin.people where id in $personIds""".trimIndent()
-    val jdbcPeopleResult = jdbcTemplate.queryForRowSet(peopleQuery, paramSource)
-
-    return CommonPostsListResponse(ErrorType.NoError, data)
+    return CommonPostsListResponse(ErrorType.NoError, data, peopleDetails)
   }
 }

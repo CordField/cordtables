@@ -4,34 +4,32 @@ import { ErrorType } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
 import { globals } from '../../../core/global.store';
 import { idService } from '../../../core/id.service';
-import { TinyUpdateEvent } from '../../cf-tiny/types';
-import { CommonPost, CommonPostsUpdateRequest, CommonPostsUpdateResponse } from '../../tables/common/posts/types';
+import { CommonDiscussionChannel, CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse } from '../../tables/common/discussion-channels/types';
 
 // will take discussion channels as a prop
 @Component({
-  tag: 'slack-post',
+  tag: 'slack-discussion-channel',
   styleUrl: 'slack-page.css',
   shadow: true,
 })
-export class SlackThread {
-  tinyMceId: string = idService.getNextId();
-  @Prop() post: CommonPost;
+export class SlackDiscussionChannel {
+  @Prop() discussionChannel: CommonDiscussionChannel;
+  @Prop() selectedDiscussionChannel: CommonDiscussionChannel;
   @State() showEditAndDeleteButtons: boolean = false;
+  @State() channelName: string;
   @State() mode: 'none' | 'update' | 'delete' = 'none';
-  @State() postContent: string = null;
-  @Event({ eventName: 'postDeleted' }) postDeleted: EventEmitter<number>;
+  @Event({ eventName: 'channelDeleted' }) channelDeleted: EventEmitter<number>;
+  @Prop() discussionChannelClassName: string;
+
+  @Event({ eventName: 'channelClicked' }) channelClicked: EventEmitter<number>;
 
   componentWillLoad() {
-    this.postContent = this.post.content;
+    console.log(this.discussionChannel);
+    this.channelName = this.discussionChannel.name;
   }
-
-  @Listen('contentUpdate')
-  handleContentUpdateChange(e: CustomEvent<TinyUpdateEvent>) {
-    if (e.detail.id === this.tinyMceId) this.postContent = e.detail.content;
-  }
-
-  mouseEnterAndLeaveHandler() {
-    if (this.post.owning_person === globals.globalStore.state.userId) this.showEditAndDeleteButtons = !this.showEditAndDeleteButtons;
+  clickHandler() {
+    console.log(this.selectedDiscussionChannel, this.discussionChannel);
+    if (this.selectedDiscussionChannel.id !== this.discussionChannel.id) this.channelClicked.emit(this.discussionChannel.id);
   }
 
   render() {
@@ -45,17 +43,18 @@ export class SlackThread {
               onClick={async e => {
                 e.stopPropagation();
                 if (this.mode === 'update') {
-                  const updateResponse = await fetchAs<CommonPostsUpdateRequest, CommonPostsUpdateResponse>('common-posts/update-read', {
+                  const updateResponse = await fetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common-discussion-channels/update-read', {
                     token: globals.globalStore.state.token,
-                    column: 'content',
-                    id: this.post.id,
-                    value: this.postContent !== '' ? this.postContent : this.post.content,
+                    column: 'name',
+                    id: this.discussionChannel.id,
+                    value: this.channelName !== '' ? this.channelName : this.discussionChannel.name,
                   });
                   if (updateResponse.error === ErrorType.NoError) {
-                    this.postContent = updateResponse.post.content;
+                    console.log(updateResponse);
+                    this.channelName = updateResponse.discussion_channel.name;
                   }
                 } else {
-                  this.postDeleted.emit(this.post.id);
+                  this.channelDeleted.emit(this.discussionChannel.id);
                 }
                 this.mode = 'none';
               }}
@@ -67,13 +66,13 @@ export class SlackThread {
               onClick={e => {
                 e.stopPropagation();
                 this.mode = 'none';
-                this.postContent = this.post.content;
+                this.channelName = this.discussionChannel.name;
               }}
             >
               <ion-icon name="close-circle-outline"></ion-icon>
             </span>
           </span>
-        ) : globals.globalStore.state.editMode && this.post.owning_person === globals.globalStore.state.userId ? (
+        ) : globals.globalStore.state.editMode && this.discussionChannel.owning_person === globals.globalStore.state.userId ? (
           <span>
             <span
               class="thread-update"
@@ -97,25 +96,20 @@ export class SlackThread {
       </span>
     );
 
-    const jsx = (
-      <div
-        // onMouseEnter={() => {
-        //   setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
-        // }}
-        // onMouseLeave={() => {
-        //   setTimeout(this.mouseEnterAndLeaveHandler.bind(this), 100);
-        // }}
-        class="thread-header"
-      >
-        {this.mode === 'update' ? <cf-tiny initialHTMLContent={this.postContent} uid={this.tinyMceId} /> : <span class="slack-thread-content" innerHTML={this.postContent}></span>}
-        {editAndDeleteButtons}
-      </div>
-    );
-
     return (
       <Host>
         <slot></slot>
-        {jsx}
+
+        {this.mode === 'update' ? (
+          <form>
+            <input type="text" value={this.channelName} onChange={e => (this.channelName = (e.target as HTMLInputElement).value)} />
+          </form>
+        ) : (
+          <div slot="name" class={this.discussionChannelClassName} onClick={this.clickHandler.bind(this)} key={this.discussionChannel.id}>
+            {this.channelName}
+          </div>
+        )}
+        {editAndDeleteButtons}
       </Host>
     );
   }

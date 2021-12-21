@@ -9,7 +9,7 @@ import { MatchResults, RouterHistory } from "@stencil/router";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
-import { CommonDiscussionChannel, CommonDiscussionChannelListResponse } from "./components/tables/common/discussion-channels/types";
+import { CommonDiscussionChannel } from "./components/tables/common/discussion-channels/types";
 import { CommonThread } from "./components/tables/common/threads/types";
 import { CommonPost } from "./components/tables/common/posts/types";
 export namespace Components {
@@ -278,6 +278,11 @@ export namespace Components {
     interface SlackContent {
         "selectedDiscussionChannel": CommonDiscussionChannel;
     }
+    interface SlackDiscussionChannel {
+        "discussionChannel": CommonDiscussionChannel;
+        "discussionChannelClassName": string;
+        "selectedDiscussionChannel": CommonDiscussionChannel;
+    }
     interface SlackForm {
         "selectedChannelId": number;
         "selectedThreadId": number;
@@ -289,7 +294,8 @@ export namespace Components {
         "post": CommonPost;
     }
     interface SlackSidebar {
-        "discussionChannels": CommonDiscussionChannelListResponse;
+        "discussionChannels": CommonDiscussionChannel[];
+        "loading": boolean;
     }
     interface SlackThread {
         "thread": CommonThread;
@@ -1019,6 +1025,12 @@ declare global {
         prototype: HTMLSlackContentElement;
         new (): HTMLSlackContentElement;
     };
+    interface HTMLSlackDiscussionChannelElement extends Components.SlackDiscussionChannel, HTMLStencilElement {
+    }
+    var HTMLSlackDiscussionChannelElement: {
+        prototype: HTMLSlackDiscussionChannelElement;
+        new (): HTMLSlackDiscussionChannelElement;
+    };
     interface HTMLSlackFormElement extends Components.SlackForm, HTMLStencilElement {
     }
     var HTMLSlackFormElement: {
@@ -1260,6 +1272,7 @@ declare global {
         "sil-table-of-languages-in-country": HTMLSilTableOfLanguagesInCountryElement;
         "site-text": HTMLSiteTextElement;
         "slack-content": HTMLSlackContentElement;
+        "slack-discussion-channel": HTMLSlackDiscussionChannelElement;
         "slack-form": HTMLSlackFormElement;
         "slack-page": HTMLSlackPageElement;
         "slack-post": HTMLSlackPostElement;
@@ -1556,7 +1569,15 @@ declare namespace LocalJSX {
     interface SlackContent {
         "selectedDiscussionChannel"?: CommonDiscussionChannel;
     }
+    interface SlackDiscussionChannel {
+        "discussionChannel"?: CommonDiscussionChannel;
+        "discussionChannelClassName"?: string;
+        "onChannelClicked"?: (event: CustomEvent<number>) => void;
+        "onChannelDeleted"?: (event: CustomEvent<number>) => void;
+        "selectedDiscussionChannel"?: CommonDiscussionChannel;
+    }
     interface SlackForm {
+        "onContentSubmitted"?: (event: CustomEvent<string>) => void;
         "onPostAdded"?: (event: CustomEvent<CommonPost>) => void;
         "onThreadAdded"?: (event: CustomEvent<CommonThread>) => void;
         "selectedChannelId"?: number;
@@ -1570,7 +1591,8 @@ declare namespace LocalJSX {
         "post"?: CommonPost;
     }
     interface SlackSidebar {
-        "discussionChannels"?: CommonDiscussionChannelListResponse;
+        "discussionChannels"?: CommonDiscussionChannel[];
+        "loading"?: boolean;
         "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
     }
     interface SlackThread {
@@ -1731,6 +1753,7 @@ declare namespace LocalJSX {
         "sil-table-of-languages-in-country": SilTableOfLanguagesInCountry;
         "site-text": SiteText;
         "slack-content": SlackContent;
+        "slack-discussion-channel": SlackDiscussionChannel;
         "slack-form": SlackForm;
         "slack-page": SlackPage;
         "slack-post": SlackPost;
@@ -1872,6 +1895,7 @@ declare module "@stencil/core" {
             "sil-table-of-languages-in-country": LocalJSX.SilTableOfLanguagesInCountry & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesInCountryElement>;
             "site-text": LocalJSX.SiteText & JSXBase.HTMLAttributes<HTMLSiteTextElement>;
             "slack-content": LocalJSX.SlackContent & JSXBase.HTMLAttributes<HTMLSlackContentElement>;
+            "slack-discussion-channel": LocalJSX.SlackDiscussionChannel & JSXBase.HTMLAttributes<HTMLSlackDiscussionChannelElement>;
             "slack-form": LocalJSX.SlackForm & JSXBase.HTMLAttributes<HTMLSlackFormElement>;
             "slack-page": LocalJSX.SlackPage & JSXBase.HTMLAttributes<HTMLSlackPageElement>;
             "slack-post": LocalJSX.SlackPost & JSXBase.HTMLAttributes<HTMLSlackPostElement>;

@@ -23,7 +23,7 @@ export class SlackForm {
   @State() content: string = null;
   @Event({ eventName: 'threadAdded' }) threadAdded: EventEmitter<CommonThread>;
   @Event({ eventName: 'postAdded' }) postAdded: EventEmitter<CommonPost>;
-
+  @Event({ eventName: 'contentSubmitted' }) contentSubmitted: EventEmitter<string>;
   @Listen('contentUpdate')
   handleContentUpdateChange(e: CustomEvent<TinyUpdateEvent>) {
     if (e.detail.id === this.tinyMceId) this.content = e.detail.content;
@@ -49,6 +49,7 @@ export class SlackForm {
       });
       if (createResponse.error === ErrorType.NoError) {
         this.threadAdded.emit(createResponse.thread);
+        this.contentSubmitted.emit(this.tinyMceId);
       } else {
         globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
       }
@@ -62,6 +63,7 @@ export class SlackForm {
       });
       if (createResponse.error === ErrorType.NoError) {
         this.postAdded.emit(createResponse.post);
+        this.contentSubmitted.emit(this.tinyMceId);
       } else {
         globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
       }
