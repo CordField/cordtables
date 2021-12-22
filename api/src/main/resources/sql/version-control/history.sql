@@ -75,8 +75,7 @@ begin
 end; $$; 
 
 -- CREATING HISTORY TRIGGERS FOR ALL BASE TABLES THAT NEED THEM
-create or replace function create_history_triggers()
-returns void 
+create or replace procedure admin.create_history_triggers()
 language plpgsql 
 as $$
 declare
@@ -91,29 +90,30 @@ begin
 	from information_schema.tables
 	where table_schema <> 'pg_catalog' 
 	and table_schema <> 'information_schema' 
+	and table_type <> 'VIEW'
 	and table_name not similar to '%(_peer|_history)'
 	order by table_name) loop 
 		base_table_name := rec1.table_schema || '.' || rec1.table_name;
 		insert_trigger := quote_ident(base_table_name || '_history_insert_trigger');
 		update_trigger := quote_ident(base_table_name || '_history_update_trigger');
 		delete_trigger := quote_ident(base_table_name || '_history_delete_trigger');
-		
 		-- insert trigger
-		-- execute format('drop trigger if exists '|| insert_trigger_name || ' on ' ||base_table_name);
+		execute format('drop trigger if exists '|| insert_trigger || ' on ' ||base_table_name);
 		execute format(
-			'create trigger if not exists ' || insert_trigger_name
+			'create trigger ' || insert_trigger
 			|| ' after insert on ' || base_table_name 
 			|| ' for each row
 			execute procedure admin.history_trigger()');
 		-- update trigger
-		-- execute format('drop trigger if exists ' || update_trigger_name || ' on ' || base_table_name);
+		execute format('drop trigger if exists ' || update_trigger || ' on ' || base_table_name);
 		execute format(
-			'create trigger if not exists ' || update_trigger_name
+			'create trigger ' || update_trigger
   			|| ' after update on ' || base_table_name ||
   			' for each row execute procedure admin.history_trigger()');
 		-- delete trigger 
+		execute format('drop trigger if exists ' || delete_trigger || ' on ' || base_table_name);
 		execute format(
-			'create trigger if not exists ' || delete_trigger_name
+			'create trigger ' || delete_trigger
   			|| ' after delete on ' || base_table_name ||
   			' for each row execute procedure admin.history_trigger()');
 	end loop;
