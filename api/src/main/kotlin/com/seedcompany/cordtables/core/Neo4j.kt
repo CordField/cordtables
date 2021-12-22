@@ -562,62 +562,62 @@ class Neo4j(
 
   suspend fun createRelationship(n: BaseNode, r: Relation, m: BaseNode) {
     when {
-      checkRelationship(n, r, m, "User", "user", "ProjectMember") -> writeRelationship(
-        n,
-        m,
-        "sc.project_members",
-        "sc.people",
-        "person",
-        "id"
-      )
-      checkRelationship(n, r, m, "User", "director", "FieldRegion") -> writeRelationship(
-        n,
-        m,
-        "sc.field_regions",
-        "admin.people",
-        "director",
-        "id"
-      )
-      checkRelationship(n, r, m, "User", "director", "FieldZone") -> writeRelationship(
-        n,
-        m,
-        "sc.field_zones",
-        "admin.people",
-        "director",
-        "id"
-      )
-      checkRelationship(n, r, m, "Budget", "universalTemplateFileNode", "File") -> writeRelationship(
-        m,
-        n,
-        "sc.budgets",
-        "common.files",
-        "universal_template",
-        "id"
-      )
-      checkRelationship(n, r, m, "Budget", "record", "BudgetRecord") -> writeRelationship(
-        n,
-        m,
-        "sc.budget_records",
-        "sc.budgets",
-        "budget",
-        "id"
-      )
-      checkRelationship(n, r, m, "Organization", "organization", "BudgetRecord") -> writeRelationship(
-        n,
-        m,
-        "sc.budget_records",
-        "sc.organizations",
-        "organization",
-        "id"
-      )
-      checkRelationship(n, r, m, "Project", "budget", "Budget") -> writeRelationship(
-        n,
-        m,
-        "sc.budgets",
-        "sc.projects",
-        "project",
-        "id"
-      )
+//      checkRelationship(n, r, m, "User", "user", "ProjectMember") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.project_members",
+//        "sc.people",
+//        "person",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "User", "director", "FieldRegion") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.field_regions",
+//        "admin.people",
+//        "director",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "User", "director", "FieldZone") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.field_zones",
+//        "admin.people",
+//        "director",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Budget", "universalTemplateFileNode", "File") -> writeRelationship(
+//        m,
+//        n,
+//        "sc.budgets",
+//        "common.files",
+//        "universal_template",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Budget", "record", "BudgetRecord") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.budget_records",
+//        "sc.budgets",
+//        "budget",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Organization", "organization", "BudgetRecord") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.budget_records",
+//        "sc.organizations",
+//        "organization",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Project", "budget", "Budget") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.budgets",
+//        "sc.projects",
+//        "project",
+//        "id"
+//      )
       checkRelationship(n, r, m, "Project", "member", "ProjectMember") -> writeRelationship(
         n,
         m,

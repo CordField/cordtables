@@ -881,20 +881,20 @@ create type common.product_mediums as enum (
 
 
 create type common.product_methodologies as enum (
-  'Paratext',
-  'OtherWritten',
-  'Render',
-  'Audacity',
   'AdobeAudition',
-  'OtherOralTranslation',
-  'StoryTogether',
-  'SeedCompanyMethod',
-  'OneStory',
+  'Audacity',
   'Craft2Tell',
-  'OtherOralStories',
   'Film',
+  'OneStory',
+  'OtherOralStories',
+  'OtherOralTranslation',
+  'OtherWritten',
+  'OtherVisual',
+  'Paratext',
+  'Render',
+  'SeedCompanyMethod',
   'SignLanguage',
-  'OtherVisual'
+  'StoryTogether'
  );
 
 create type common.product_approach as enum (
@@ -914,19 +914,21 @@ create type common.product_purposes as enum (
 );
 
 
-create type common.product_type as enum (
+create type sc.product_type as enum (
   'BibleStories',
-  'JesusFilm',
-  'Songs',
-  'LiteracyMaterials',
   'EthnoArts',
+  'Film',
+  'FullBible',
+  'Genesis',
+  'Gospel',
+  'IndividualBooks',
+  'JesusFilm',
+  'LiteracyMaterials',
+  'NewTestamentFull',
   'OldTestamentPortions',
   'OldTestamentFull',
-  'Gospel',
-  'NewTestamentFull',
-  'FullBible',
-  'IndividualBooks',
-  'Genesis'
+  'Songs',
+  'Story'
 );
 create type common.progress_measurement as enum (
   'Percent',
@@ -950,11 +952,6 @@ create type common.product_methodology_step as enum (
     'Completed'
 );
 
-create type sc.product_type as enum (
-  'Film',
-  'Story',
-  'EthnoArt'
-);
 
 create table sc.products (
   id uuid primary key default public.uuid_generate_v4(),
@@ -967,7 +964,6 @@ create table sc.products (
   approach common.product_approach,
   purposes common.product_purposes[],
   steps common.product_methodology_step[],
-  type common.product_type,
   progress_step_measurement common.progress_measurement,
   progress_target decimal,
   engagement uuid references sc.language_engagements(id),
