@@ -63,6 +63,9 @@ export namespace Components {
         "resultsPerPage": number;
         "totalRows": number;
     }
+    interface CfPasswordReset {
+        "history": RouterHistory;
+    }
     interface CfRegister {
         "history": RouterHistory;
     }
@@ -275,6 +278,11 @@ export namespace Components {
     interface SlackContent {
         "selectedDiscussionChannel": CommonDiscussionChannel;
     }
+    interface SlackDiscussionChannel {
+        "discussionChannel": CommonDiscussionChannel;
+        "discussionChannelClassName": string;
+        "selectedDiscussionChannel": CommonDiscussionChannel;
+    }
     interface SlackForm {
         "selectedChannelId": number;
         "selectedThreadId": number;
@@ -439,6 +447,12 @@ declare global {
     var HTMLCfPaginationElement: {
         prototype: HTMLCfPaginationElement;
         new (): HTMLCfPaginationElement;
+    };
+    interface HTMLCfPasswordResetElement extends Components.CfPasswordReset, HTMLStencilElement {
+    }
+    var HTMLCfPasswordResetElement: {
+        prototype: HTMLCfPasswordResetElement;
+        new (): HTMLCfPasswordResetElement;
     };
     interface HTMLCfRegisterElement extends Components.CfRegister, HTMLStencilElement {
     }
@@ -1010,6 +1024,12 @@ declare global {
         prototype: HTMLSlackContentElement;
         new (): HTMLSlackContentElement;
     };
+    interface HTMLSlackDiscussionChannelElement extends Components.SlackDiscussionChannel, HTMLStencilElement {
+    }
+    var HTMLSlackDiscussionChannelElement: {
+        prototype: HTMLSlackDiscussionChannelElement;
+        new (): HTMLSlackDiscussionChannelElement;
+    };
     interface HTMLSlackFormElement extends Components.SlackForm, HTMLStencilElement {
     }
     var HTMLSlackFormElement: {
@@ -1155,6 +1175,7 @@ declare global {
         "cf-login": HTMLCfLoginElement;
         "cf-notif": HTMLCfNotifElement;
         "cf-pagination": HTMLCfPaginationElement;
+        "cf-password-reset": HTMLCfPasswordResetElement;
         "cf-register": HTMLCfRegisterElement;
         "cf-row": HTMLCfRowElement;
         "cf-table": HTMLCfTableElement;
@@ -1250,6 +1271,7 @@ declare global {
         "sil-table-of-languages-in-country": HTMLSilTableOfLanguagesInCountryElement;
         "site-text": HTMLSiteTextElement;
         "slack-content": HTMLSlackContentElement;
+        "slack-discussion-channel": HTMLSlackDiscussionChannelElement;
         "slack-form": HTMLSlackFormElement;
         "slack-page": HTMLSlackPageElement;
         "slack-post": HTMLSlackPostElement;
@@ -1325,6 +1347,9 @@ declare namespace LocalJSX {
         "pageUrl"?: string;
         "resultsPerPage"?: number;
         "totalRows"?: number;
+    }
+    interface CfPasswordReset {
+        "history"?: RouterHistory;
     }
     interface CfRegister {
         "history"?: RouterHistory;
@@ -1543,6 +1568,13 @@ declare namespace LocalJSX {
     interface SlackContent {
         "selectedDiscussionChannel"?: CommonDiscussionChannel;
     }
+    interface SlackDiscussionChannel {
+        "discussionChannel"?: CommonDiscussionChannel;
+        "discussionChannelClassName"?: string;
+        "onChannelClicked"?: (event: CustomEvent<number>) => void;
+        "onChannelDeleted"?: (event: CustomEvent<number>) => void;
+        "selectedDiscussionChannel"?: CommonDiscussionChannel;
+    }
     interface SlackForm {
         "onPostAdded"?: (event: CustomEvent<CommonPost>) => void;
         "onThreadAdded"?: (event: CustomEvent<CommonThread>) => void;
@@ -1622,6 +1654,7 @@ declare namespace LocalJSX {
         "cf-login": CfLogin;
         "cf-notif": CfNotif;
         "cf-pagination": CfPagination;
+        "cf-password-reset": CfPasswordReset;
         "cf-register": CfRegister;
         "cf-row": CfRow;
         "cf-table": CfTable;
@@ -1717,6 +1750,7 @@ declare namespace LocalJSX {
         "sil-table-of-languages-in-country": SilTableOfLanguagesInCountry;
         "site-text": SiteText;
         "slack-content": SlackContent;
+        "slack-discussion-channel": SlackDiscussionChannel;
         "slack-form": SlackForm;
         "slack-page": SlackPage;
         "slack-post": SlackPost;
@@ -1762,6 +1796,7 @@ declare module "@stencil/core" {
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-notif": LocalJSX.CfNotif & JSXBase.HTMLAttributes<HTMLCfNotifElement>;
             "cf-pagination": LocalJSX.CfPagination & JSXBase.HTMLAttributes<HTMLCfPaginationElement>;
+            "cf-password-reset": LocalJSX.CfPasswordReset & JSXBase.HTMLAttributes<HTMLCfPasswordResetElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
             "cf-row": LocalJSX.CfRow & JSXBase.HTMLAttributes<HTMLCfRowElement>;
             "cf-table": LocalJSX.CfTable & JSXBase.HTMLAttributes<HTMLCfTableElement>;
@@ -1857,6 +1892,7 @@ declare module "@stencil/core" {
             "sil-table-of-languages-in-country": LocalJSX.SilTableOfLanguagesInCountry & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesInCountryElement>;
             "site-text": LocalJSX.SiteText & JSXBase.HTMLAttributes<HTMLSiteTextElement>;
             "slack-content": LocalJSX.SlackContent & JSXBase.HTMLAttributes<HTMLSlackContentElement>;
+            "slack-discussion-channel": LocalJSX.SlackDiscussionChannel & JSXBase.HTMLAttributes<HTMLSlackDiscussionChannelElement>;
             "slack-form": LocalJSX.SlackForm & JSXBase.HTMLAttributes<HTMLSlackFormElement>;
             "slack-page": LocalJSX.SlackPage & JSXBase.HTMLAttributes<HTMLSlackPageElement>;
             "slack-post": LocalJSX.SlackPost & JSXBase.HTMLAttributes<HTMLSlackPostElement>;

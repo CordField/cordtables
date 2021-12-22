@@ -156,7 +156,6 @@ create type common.book_name as enum (
 
 create table common.scripture_references (
   id uuid primary key default public.uuid_generate_v4(),
-  neo4j_id varchar(32) unique,
 
   book_start common.book_name,
   book_end common.book_name,
@@ -170,9 +169,7 @@ create table common.scripture_references (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
-
-  unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
+  owning_group uuid not null references admin.groups(id)
 );
 
 -- CHAT ------------------------------------------------------------
