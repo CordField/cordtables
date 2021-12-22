@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.PreparedStatement
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
 import kotlin.math.ceil
 
@@ -77,10 +78,13 @@ class Neo4j2(
 ) {
   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
+  var runCount = AtomicInteger()
+
   @PostMapping("migrate/neo4j2")
   @ResponseBody
   suspend fun createHandler(@RequestBody req: Neo4jMigrationRequest): Neo4jMigrationResponse {
 
+    runCount.set(0)
     migrateBaseNodes()
 
     return Neo4jMigrationResponse(ErrorType.NoError)
@@ -173,7 +177,7 @@ class Neo4j2(
         }
       }
 
-      println("${(DateTime.now().millis - migrationStart) / 1000F}s")
+      println("${runCount.get()} Base Nodes in ${(DateTime.now().millis - migrationStart) / 1000F} seconds")
     }
 
   }
@@ -223,6 +227,7 @@ class Neo4j2(
           insertStmt.executeBatch()
         }
 
+        runCount.addAndGet(totalBaseNodes)
         println("total $baseNode: $totalBaseNodes")
       }
     }
