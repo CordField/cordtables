@@ -144,8 +144,7 @@ class Neo4j2(
       queue.offer(BaseNodeCreate("Ceremony", "sc.ceremonies"))
       queue.offer(BaseNodeCreate("FieldZone", "sc.field_zones"))
       queue.offer(BaseNodeCreate("FieldRegion", "sc.field_regions"))
-
-//      queue.offer(BaseNodeCreate( "ScriptureRange", "common.scripture_references"))
+      queue.offer(BaseNodeCreate("ScriptureRange", "common.scripture_references"))
 
 //      queue.offer(BaseNodeCreate( "Film", "sc.films"))
 //      queue.offer(BaseNodeCreate( "Story", "sc.stories"))
@@ -163,12 +162,22 @@ class Neo4j2(
             while (true) {
               val createRequest = queue.poll() ?: break
               println("coroutine $t, fetching ${createRequest.baseNode}")
-              migrateBaseNodesByLabel(
-                adminPersonId,
-                adminGroupId,
-                createRequest.baseNode,
-                createRequest.tableName
-              )
+              if (createRequest.baseNode.equals("ScriptureRange")) {
+                migrateBaseNodesByLabel(
+                  adminPersonId,
+                  adminGroupId,
+                  createRequest.baseNode,
+                  createRequest.tableName,
+                  true,
+                )
+              } else {
+                migrateBaseNodesByLabel(
+                  adminPersonId,
+                  adminGroupId,
+                  createRequest.baseNode,
+                  createRequest.tableName
+                )
+              }
               delay(1)
             }
             println("coroutine $t: end")
@@ -187,13 +196,19 @@ class Neo4j2(
     adminGroupId: String,
     baseNode: String,
     tableName: String,
+    generateIds: Boolean = false,
   ) {
 
     val batchSize = 2000
 
     ds.connection.use { conn ->
 
-      val insertStmt: PreparedStatement = conn.prepareStatement(
+      val insertStmt: PreparedStatement = if (generateIds) conn.prepareStatement(
+        """
+        insert into $tableName(id, created_by, modified_by, owning_person, owning_group) 
+        values(public.uuid_generate_v4(), '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
+      """.trimIndent()
+      ) else conn.prepareStatement(
         """
         insert into $tableName(id, created_by, modified_by, owning_person, owning_group) 
         values(public.uuid_generate_v5(public.uuid_ns_url(), ?), '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
@@ -207,22 +222,32 @@ class Neo4j2(
 
         for (i in 0..ceil((totalBaseNodes / batchSize).toDouble()).toInt()) {
 
-          session.run("MATCH (n:$baseNode) RETURN n.id skip ${i * batchSize} limit $batchSize")
-            .list()
-            .forEach {
+          if (generateIds) {
 
-              // convert id from neo4j into uuid
-              insertStmt.setString(
-                1,
-                UUID
-                  .nameUUIDFromBytes(
-                    it.get("n.id")
-                      .asString()
-                      .encodeToByteArray()
-                  ).toString()
-              )
-              insertStmt.addBatch()
-            }
+            session.run("MATCH (n:$baseNode) RETURN n.id skip ${i * batchSize} limit $batchSize")
+              .list()
+              .forEach {
+                insertStmt.addBatch()
+              }
+          } else {
+
+            session.run("MATCH (n:$baseNode) RETURN n.id skip ${i * batchSize} limit $batchSize")
+              .list()
+              .forEach {
+
+                // convert id from neo4j into uuid
+                insertStmt.setString(
+                  1,
+                  UUID
+                    .nameUUIDFromBytes(
+                      it.get("n.id")
+                        .asString()
+                        .encodeToByteArray()
+                    ).toString()
+                )
+                insertStmt.addBatch()
+              }
+          }
 
           insertStmt.executeBatch()
         }
