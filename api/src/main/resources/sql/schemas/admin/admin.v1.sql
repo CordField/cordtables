@@ -325,10 +325,9 @@ create table admin.role_memberships (
 -- USERS ---------------------------------------------------------------------
 
 create table admin.users(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key references admin.people(id), -- not null added in v2
 
-  person uuid unique references admin.people(id) unique, -- not null added in v2
-  email varchar(255) unique not null,
+  email varchar(255) unique, -- not null
   password varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,

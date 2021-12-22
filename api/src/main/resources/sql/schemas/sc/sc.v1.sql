@@ -108,7 +108,7 @@ create table sc.locations (
 
 -- extension table from commmon
 create table sc.organizations (
-	id uuid unique not null references common.organizations(id),
+	id uuid primary key references common.organizations(id),
   
 	address varchar(255),
 	sensitivity common.sensitivity,
@@ -138,7 +138,6 @@ create table sc.organization_locations(
 	unique (organization, location)
 );
 
-
 create type sc.periodic_report_type as enum (
   'Financial',
   'Narrative',
@@ -154,7 +153,6 @@ DO $$ BEGIN
 	WHEN duplicate_object THEN null;
 END; $$;
 
-
 DO $$ BEGIN
     create type sc.partner_types as enum (
 		'Managing',
@@ -168,9 +166,8 @@ DO $$ BEGIN
 END; $$;
 
 create table sc.partners (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key references common.organizations(id),
 
-	organization uuid references sc.organizations(id), -- not null
 	active bool,
 	financial_reporting_types sc.financial_reporting_types[],
 	is_innovations_client bool,
@@ -193,7 +190,6 @@ create table sc.partners (
 create table sc.ethnologue (
   id uuid primary key default public.uuid_generate_v4(),
 
-  language_index uuid not null references sil.language_index(id),
   code varchar(32),
   language_name varchar(64), -- override for language_index
   population int,
@@ -455,7 +451,7 @@ create table sc.known_languages_by_person (
 
 -- extension table from commmon
 create table sc.people (
-  id uuid unique references admin.people(id),
+  id uuid primary key references admin.people(id),
 
 	skills varchar(32)[],
 	status varchar(32),

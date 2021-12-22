@@ -313,7 +313,6 @@ ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk fore
 create table common.education_entries (
   id uuid primary key default public.uuid_generate_v4(),
 
-  neo4j_id varchar(32) unique,
   degree varchar(64),
   institution varchar(64),
   major varchar(64),

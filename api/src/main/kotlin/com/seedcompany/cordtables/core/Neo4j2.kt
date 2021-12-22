@@ -88,7 +88,6 @@ class Neo4j2(
 
   suspend fun migrateBaseNodes() {
 
-
     val adminPersonId = jdbcTemplate.queryForObject(
       """
       select id from admin.people order by created_at asc offset 0 limit 1;
@@ -107,23 +106,29 @@ class Neo4j2(
 
       val queue = ConcurrentLinkedQueue<BaseNodeCreate>()
 
+      queue.offer(BaseNodeCreate("User", "admin.people"))
+      queue.offer(BaseNodeCreate("User", "admin.users"))
+      queue.offer(BaseNodeCreate("User", "sc.people"))
+
+      queue.offer(BaseNodeCreate("Organization", "common.organizations"))
+      queue.offer(BaseNodeCreate("Organization", "sc.organizations"))
+      queue.offer(BaseNodeCreate("Organization", "sc.partners"))
+
+      queue.offer(BaseNodeCreate("EthnologueLanguage", "sc.ethnologue"))
+      queue.offer(BaseNodeCreate("Language", "sc.languages"))
+
+      queue.offer(BaseNodeCreate("Location", "common.locations"))
+
       queue.offer(BaseNodeCreate("File", "common.files"))
       queue.offer(BaseNodeCreate("FileVersion", "common.file_versions"))
       queue.offer(BaseNodeCreate("Directory", "common.directories"))
+
       queue.offer(BaseNodeCreate("TranslationProject", "sc.projects"))
       queue.offer(BaseNodeCreate("InternshipProject", "sc.projects"))
       queue.offer(BaseNodeCreate("LanguageEngagement", "sc.language_engagements"))
       queue.offer(BaseNodeCreate("InternshipEngagement", "sc.internship_engagements"))
-      queue.offer(BaseNodeCreate("Language", "common.languages"))
       queue.offer(BaseNodeCreate("Budget", "sc.budgets"))
-      // sc languages
-      queue.offer(BaseNodeCreate("EthnologueLanguage", "sil.table_of_languages"))
-      queue.offer(BaseNodeCreate("Location", "common.locations"))
-      queue.offer(BaseNodeCreate("Organization", "common.organizations"))
-      // sc orgs
       queue.offer(BaseNodeCreate("Partner", "sc.partnerships"))
-      queue.offer(BaseNodeCreate("User", "admin.people"))
-      // sc people
       queue.offer(BaseNodeCreate("ProjectMember", "sc.project_members"))
       queue.offer(BaseNodeCreate("Product", "sc.products"))
       queue.offer(BaseNodeCreate("Education", "common.education_entries"))
@@ -137,9 +142,10 @@ class Neo4j2(
       queue.offer(BaseNodeCreate("FieldRegion", "sc.field_regions"))
 
 //      queue.offer(BaseNodeCreate( "ScriptureRange", "common.scripture_references"))
-//      queue.offer(BaseNodeCreate( "Film", "sc.films")
-//      queue.offer(BaseNodeCreate( "Story", "sc.stories")
-//      queue.offer(BaseNodeCreate( "EthnoArt", "sc.ethno_arts")
+
+//      queue.offer(BaseNodeCreate( "Film", "sc.films"))
+//      queue.offer(BaseNodeCreate( "Story", "sc.stories"))
+//      queue.offer(BaseNodeCreate( "EthnoArt", "sc.ethno_arts"))
 
       val migrationStart = DateTime.now().millis
 
@@ -148,11 +154,12 @@ class Neo4j2(
       coroutineScope {
         for (t in 1..concurrency) {
           launch {
-            println("starting coroutine $t")
+            println("coroutine $t: start")
+            delay(1)
             while (true) {
               val createRequest = queue.poll() ?: break
-              println("$t, starting ${createRequest.baseNode}")
-              getFromNeo4jWriteToPostgres(
+              println("coroutine $t, fetching ${createRequest.baseNode}")
+              migrateBaseNodesByLabel(
                 adminPersonId,
                 adminGroupId,
                 createRequest.baseNode,
@@ -160,19 +167,18 @@ class Neo4j2(
               )
               delay(1)
             }
-            println("end of coroutine $t")
+            println("coroutine $t: end")
           }
+          delay(1)
         }
       }
 
-      val migrationStop = DateTime.now().millis
-
-      println("time: ${(migrationStop - migrationStart) / 1000F}")
+      println("${(DateTime.now().millis - migrationStart) / 1000F}s")
     }
 
   }
 
-  suspend fun getFromNeo4jWriteToPostgres(
+  suspend fun migrateBaseNodesByLabel(
     adminPersonId: String,
     adminGroupId: String,
     baseNode: String,
@@ -186,7 +192,7 @@ class Neo4j2(
       val insertStmt: PreparedStatement = conn.prepareStatement(
         """
         insert into $tableName(id, created_by, modified_by, owning_person, owning_group) 
-        values(?::uuid, '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
+        values(public.uuid_generate_v5(public.uuid_ns_url(), ?), '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
       """.trimIndent()
       )
 
@@ -194,7 +200,6 @@ class Neo4j2(
 
         val totalBaseNodes =
           session.run("MATCH (n:$baseNode) RETURN count(n) as count").single().get("count").asInt()
-
 
         for (i in 0..ceil((totalBaseNodes / batchSize).toDouble()).toInt()) {
 
@@ -216,16 +221,11 @@ class Neo4j2(
             }
 
           insertStmt.executeBatch()
-
         }
 
         println("total $baseNode: $totalBaseNodes")
-
       }
-
     }
-
-
   }
 
 }

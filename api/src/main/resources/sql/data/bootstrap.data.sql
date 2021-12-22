@@ -56,7 +56,7 @@ BEGIN
     into vOrgId;
 
     -- users
-    insert into admin.users(person, email, password, created_by, modified_by, owning_person, owning_group)
+    insert into admin.users(id, email, password, created_by, modified_by, owning_person, owning_group)
     values (vPersonId, p_email, p_password, vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- global roles
@@ -276,7 +276,7 @@ BEGIN
 
 
 -- creating non-admin user
-    insert into admin.users(email,password, person, created_by, modified_by, owning_person,owning_group)
+    insert into admin.users(email,password, id, created_by, modified_by, owning_person,owning_group)
     values
     ('non-admin@tsco.org','$argon2id$v=19$m=4096,t=3,p=1$wrgddJLJEp4iGr1xtX9f9A$7iicFbpW55+8wo0yoLd8kK1yToMIy6FNLXRIAtTAuLU',
      vPublicPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId)
