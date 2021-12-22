@@ -618,38 +618,38 @@ class Neo4j(
 //        "project",
 //        "id"
 //      )
-      checkRelationship(n, r, m, "Project", "member", "ProjectMember") -> writeRelationship(
-        n,
-        m,
-        "sc.project_members",
-        "sc.projects",
-        "project",
-        "id"
-      )
-      checkRelationship(n, r, m, "Project", "partnership", "Partnership") -> writeRelationship(
-        n,
-        m,
-        "sc.partnerships",
-        "sc.projects",
-        "project",
-        "id"
-      )
-      checkRelationship(n, r, m, "BaseFile", "reportFileNode", "PeriodicReport") -> writeRelationship(
-        n,
-        m,
-        "sc.periodic_reports",
-        "common.files",
-        "report_file",
-        "id"
-      )
-      checkRelationship(n, r, m, "FieldRegion", "fieldRegion", "Project") -> writeRelationship(
-        n,
-        m,
-        "sc.projects",
-        "sc.field_regions",
-        "field_region",
-        "id"
-      )
+//      checkRelationship(n, r, m, "Project", "member", "ProjectMember") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.project_members",
+//        "sc.projects",
+//        "project",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Project", "partnership", "Partnership") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.partnerships",
+//        "sc.projects",
+//        "project",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "BaseFile", "reportFileNode", "PeriodicReport") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.periodic_reports",
+//        "common.files",
+//        "report_file",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "FieldRegion", "fieldRegion", "Project") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.projects",
+//        "sc.field_regions",
+//        "field_region",
+//        "id"
+//      )
       checkRelationship(n, r, m, "Directory", "rootDirectory", "Project") -> writeRelationship(
         n,
         m,

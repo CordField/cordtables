@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.PreparedStatement
-import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
@@ -33,6 +32,7 @@ data class RelationshipCreate(
   val type: String,
   val table: String,
   val column: String,
+  val baseNodeToPlaceInColumn: String,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -88,8 +88,8 @@ class Neo4j2(
     )
 
     if (adminPersonId != null && adminGroupId != null) {
-      migrateBaseNodes()
-//      migrateRelationships()
+//      migrateBaseNodes()
+      migrateRelationships()
     }
 
     return Neo4jMigrationResponse(ErrorType.NoError)
@@ -98,104 +98,187 @@ class Neo4j2(
   suspend fun migrateRelationships() {
     val queue = ConcurrentLinkedQueue<RelationshipCreate>()
 
-    queue.offer(
-      RelationshipCreate(
-        fromBaseNode = "User",
-        toBaseNode = "ProjectMember",
-        type = "user",
-        table = "sc.project_members",
-        column = "person",
-      )
-    )
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "User",
+//        type = "user",
+//        toBaseNode = "ProjectMember",
+//        table = "sc.project_members",
+//        column = "person",
+//        baseNodeToPlaceInColumn = "User",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "User",
+//        type = "director",
+//        toBaseNode = "FieldRegion",
+//        table = "sc.field_regions",
+//        column = "director",
+//        baseNodeToPlaceInColumn = "User",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "User",
+//        type = "director",
+//        toBaseNode = "FieldZone",
+//        table = "sc.field_zones",
+//        column = "director",
+//        baseNodeToPlaceInColumn = "User",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "Budget",
+//        type = "universalTemplateFileNode",
+//        toBaseNode = "File",
+//        table = "sc.budgets",
+//        column = "universal_template",
+//        baseNodeToPlaceInColumn = "File",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "Budget",
+//        type = "record",
+//        toBaseNode = "BudgetRecord",
+//        table = "sc.budget_records",
+//        column = "budget",
+//        baseNodeToPlaceInColumn = "Budget",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "Organization",
+//        type = "organization",
+//        toBaseNode = "BudgetRecord",
+//        table = "sc.budget_records",
+//        column = "organization",
+//        baseNodeToPlaceInColumn = "Organization",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "Project",
+//        type = "budget",
+//        toBaseNode = "Budget",
+//        table = "sc.budgets",
+//        column = "project",
+//        baseNodeToPlaceInColumn = "Project",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "Project",
+//        type = "member",
+//        toBaseNode = "ProjectMember",
+//        table = "sc.project_members",
+//        column = "project",
+//        baseNodeToPlaceInColumn = "Project",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "Project",
+//        type = "partnership",
+//        toBaseNode = "Partnership",
+//        table = "sc.partnerships",
+//        column = "project",
+//        baseNodeToPlaceInColumn = "Project",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "BaseFile",
+//        type = "reportFileNode",
+//        toBaseNode = "PeriodicReport",
+//        table = "sc.periodic_reports",
+//        column = "report_file",
+//        baseNodeToPlaceInColumn = "BaseFile",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "FieldRegion",
+//        type = "fieldRegion",
+//        toBaseNode = "Project",
+//        table = "sc.projects",
+//        column = "field_region",
+//        baseNodeToPlaceInColumn = "FieldRegion",
+//      )
+//    )
 
     queue.offer(
       RelationshipCreate(
-        fromBaseNode = "User",
-        toBaseNode = "FieldRegion",
-        type = "director",
-        table = "sc.field_regions",
-        column = "director",
+        fromBaseNode = "Directory",
+        type = "rootDirectory",
+        toBaseNode = "Project",
+        table = "sc.projects",
+        column = "root_directory",
+        baseNodeToPlaceInColumn = "Directory",
       )
     )
 
-    queue.offer(
-      RelationshipCreate(
-        fromBaseNode = "User",
-        toBaseNode = "FieldZone",
-        type = "director",
-        table = "sc.field_zones",
-        column = "director",
-      )
-    )
+    val migrationStart = DateTime.now().millis
 
-    queue.offer(
-      RelationshipCreate(
-        fromBaseNode = "Budget",
-        toBaseNode = "File",
-        type = "universalTemplateFileNode",
-        table = "sc.budgets",
-        column = "universal_template",
-      )
-    )
+    val concurrency = 1
 
-    queue.offer(
-      RelationshipCreate(
-        fromBaseNode = "Budget",
-        toBaseNode = "BudgetRecord",
-        type = "record",
-        table = "sc.budget_records",
-        column = "budget",
-      )
-    )
+    coroutineScope {
+      for (t in 1..concurrency) {
+        launch {
+          println("coroutine $t: start")
+          delay(1)
+          while (true) {
+            val createRequest = queue.poll() ?: break
+            println("coroutine $t, fetching ${createRequest.fromBaseNode}-${createRequest.type}-${createRequest.toBaseNode}")
+            migrateRelationshipByType(
+              adminPersonId = adminPersonId!!,
+              adminGroupId = adminGroupId!!,
+              fromBaseNode = createRequest.fromBaseNode,
+              toBaseNode = createRequest.toBaseNode,
+              type = createRequest.type,
+              tableName = createRequest.table,
+              column = createRequest.column,
+              baseNodeToPlaceInColumn = createRequest.baseNodeToPlaceInColumn,
+            )
+            delay(1)
+          }
+          println("coroutine $t: end")
+        }
+        delay(1)
+      }
+    }
 
-    queue.offer(
-      RelationshipCreate(
-        fromBaseNode = "Organization",
-        toBaseNode = "BudgetRecord",
-        type = "organization",
-        table = "sc.budget_records",
-        column = "organization",
-      )
-    )
-
-    queue.offer(
-      RelationshipCreate(
-        fromBaseNode = "Project",
-        toBaseNode = "Budget",
-        type = "budget",
-        table = "sc.budgets",
-        column = "project",
-      )
-    )
-
-    queue.offer(
-      RelationshipCreate(
-        fromBaseNode = "Project",
-        toBaseNode = "ProjectMember",
-        type = "member",
-        table = "sc.project_members",
-        column = "project",
-      )
-    )
+    println("${relationshipsMigrated.get()} Relationships in ${(DateTime.now().millis - migrationStart) / 1000F} seconds")
   }
 
   suspend fun migrateRelationshipByType(
     adminPersonId: String,
     adminGroupId: String,
     fromBaseNode: String,
-    toBaseNode: String,
     type: String,
+    toBaseNode: String,
     tableName: String,
     column: String,
-    fromId: String,
-    toId: String,
+    baseNodeToPlaceInColumn: String,
   ) {
 
     val batchSize = 2000
 
     ds.connection.use { conn ->
 
-      val insertStmt: PreparedStatement = conn.prepareStatement(
+      val updateStatement: PreparedStatement = conn.prepareStatement(
         """
         update $tableName set $column = public.uuid_generate_v5(public.uuid_ns_url(), ?) where id = public.uuid_generate_v5(public.uuid_ns_url(), ?);
       """.trimIndent()
@@ -209,17 +292,22 @@ class Neo4j2(
 
         for (i in 0..ceil((relationshipsCount / batchSize).toDouble()).toInt()) {
 
-          session.run("MATCH (n:$fromBaseNode)-[r:$type]-(m:$toBaseNode) RETURN n.id, m.id skip ${i * batchSize} limit $batchSize")
+          session.run("MATCH (from:$fromBaseNode)-[r:$type]-(to:$toBaseNode) RETURN from.id, to.id skip ${i * batchSize} limit $batchSize")
             .list()
             .forEach {
-
+//              println("$fromBaseNode ${it.get("from.id").asString()} $toBaseNode ${it.get("to.id").asString()}")
               // convert id from neo4j into uuid
-              insertStmt.setString(1, it.get("m.id").asString())
-              insertStmt.setString(1, it.get("n.id").asString())
-              insertStmt.addBatch()
+              if (baseNodeToPlaceInColumn == toBaseNode){
+                updateStatement.setString(1, it.get("to.id").asString())
+                updateStatement.setString(2, it.get("from.id").asString())
+              } else {
+                updateStatement.setString(1, it.get("from.id").asString())
+                updateStatement.setString(2, it.get("to.id").asString())
+              }
+              updateStatement.addBatch()
             }
 
-          insertStmt.executeBatch()
+          updateStatement.executeBatch()
         }
 
         relationshipsMigrated.addAndGet(relationshipsCount)
@@ -234,41 +322,41 @@ class Neo4j2(
 
     val queue = ConcurrentLinkedQueue<BaseNodeCreate>()
 
-//    queue.offer(BaseNodeCreate("User", "admin.people"))
-//    queue.offer(BaseNodeCreate("User", "admin.users"))
-//    queue.offer(BaseNodeCreate("User", "sc.people"))
-//
-//    queue.offer(BaseNodeCreate("Organization", "common.organizations"))
-//    queue.offer(BaseNodeCreate("Organization", "sc.organizations"))
-//    queue.offer(BaseNodeCreate("Organization", "sc.partners"))
-//
-//    queue.offer(BaseNodeCreate("EthnologueLanguage", "sc.ethnologue"))
-//    queue.offer(BaseNodeCreate("Language", "sc.languages"))
-//
-//    queue.offer(BaseNodeCreate("Location", "common.locations"))
-//    queue.offer(BaseNodeCreate("Location", "sc.locations"))
-//
-//    queue.offer(BaseNodeCreate("File", "common.files"))
-//    queue.offer(BaseNodeCreate("FileVersion", "common.file_versions"))
-//    queue.offer(BaseNodeCreate("Directory", "common.directories"))
-//
-//    queue.offer(BaseNodeCreate("TranslationProject", "sc.projects"))
-//    queue.offer(BaseNodeCreate("InternshipProject", "sc.projects"))
-//    queue.offer(BaseNodeCreate("LanguageEngagement", "sc.language_engagements"))
-//    queue.offer(BaseNodeCreate("InternshipEngagement", "sc.internship_engagements"))
-//    queue.offer(BaseNodeCreate("Budget", "sc.budgets"))
-//    queue.offer(BaseNodeCreate("Partner", "sc.partnerships"))
-//    queue.offer(BaseNodeCreate("ProjectMember", "sc.project_members"))
-//    queue.offer(BaseNodeCreate("Product", "sc.products"))
-//    queue.offer(BaseNodeCreate("Education", "common.education_entries"))
-//    queue.offer(BaseNodeCreate("Unavailability", "sc.person_unavailabilities"))
-//    queue.offer(BaseNodeCreate("FundingAccount", "sc.funding_accounts"))
-//    queue.offer(BaseNodeCreate("BudgetRecord", "sc.budget_records"))
-//    queue.offer(BaseNodeCreate("Post", "sc.posts"))
-//    queue.offer(BaseNodeCreate("PeriodicReport", "sc.periodic_reports"))
-//    queue.offer(BaseNodeCreate("Ceremony", "sc.ceremonies"))
-//    queue.offer(BaseNodeCreate("FieldZone", "sc.field_zones"))
-//    queue.offer(BaseNodeCreate("FieldRegion", "sc.field_regions"))
+    queue.offer(BaseNodeCreate("User", "admin.people"))
+    queue.offer(BaseNodeCreate("User", "admin.users"))
+    queue.offer(BaseNodeCreate("User", "sc.people"))
+
+    queue.offer(BaseNodeCreate("Organization", "common.organizations"))
+    queue.offer(BaseNodeCreate("Organization", "sc.organizations"))
+    queue.offer(BaseNodeCreate("Organization", "sc.partners"))
+
+    queue.offer(BaseNodeCreate("EthnologueLanguage", "sc.ethnologue"))
+    queue.offer(BaseNodeCreate("Language", "sc.languages"))
+
+    queue.offer(BaseNodeCreate("Location", "common.locations"))
+    queue.offer(BaseNodeCreate("Location", "sc.locations"))
+
+    queue.offer(BaseNodeCreate("File", "common.files"))
+    queue.offer(BaseNodeCreate("FileVersion", "common.file_versions"))
+    queue.offer(BaseNodeCreate("Directory", "common.directories"))
+
+    queue.offer(BaseNodeCreate("TranslationProject", "sc.projects"))
+    queue.offer(BaseNodeCreate("InternshipProject", "sc.projects"))
+    queue.offer(BaseNodeCreate("LanguageEngagement", "sc.language_engagements"))
+    queue.offer(BaseNodeCreate("InternshipEngagement", "sc.internship_engagements"))
+    queue.offer(BaseNodeCreate("Budget", "sc.budgets"))
+    queue.offer(BaseNodeCreate("Partner", "sc.partnerships"))
+    queue.offer(BaseNodeCreate("ProjectMember", "sc.project_members"))
+    queue.offer(BaseNodeCreate("Product", "sc.products"))
+    queue.offer(BaseNodeCreate("Education", "common.education_entries"))
+    queue.offer(BaseNodeCreate("Unavailability", "sc.person_unavailabilities"))
+    queue.offer(BaseNodeCreate("FundingAccount", "sc.funding_accounts"))
+    queue.offer(BaseNodeCreate("BudgetRecord", "sc.budget_records"))
+    queue.offer(BaseNodeCreate("Post", "sc.posts"))
+    queue.offer(BaseNodeCreate("PeriodicReport", "sc.periodic_reports"))
+    queue.offer(BaseNodeCreate("Ceremony", "sc.ceremonies"))
+    queue.offer(BaseNodeCreate("FieldZone", "sc.field_zones"))
+    queue.offer(BaseNodeCreate("FieldRegion", "sc.field_regions"))
     queue.offer(BaseNodeCreate("ScriptureRange", "common.scripture_references"))
     queue.offer(BaseNodeCreate("Film", "sc.products"))
     queue.offer(BaseNodeCreate("Story", "sc.products"))

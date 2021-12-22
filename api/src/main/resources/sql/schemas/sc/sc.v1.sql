@@ -622,8 +622,8 @@ create table sc.project_members (
   id uuid primary key default public.uuid_generate_v4(),
 
 	project uuid references sc.projects(id), --not null
-	person uuid unique references sc.people(id), --not null
-	group_id uuid unique  references admin.groups(id), --not null
+	person uuid references sc.people(id), --not null
+	group_id uuid unique references admin.groups(id), --not null
 	role uuid references admin.roles(id), --not null
 	sensitivity common.sensitivity,
 
