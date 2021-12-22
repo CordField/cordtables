@@ -61,14 +61,15 @@ history_table_name text;
 history_row_id int;
 rec1 record; 
 begin 
-	base_table_name := TG_TABLE_SCHEMA || '.' || TG_TABLE_SCHEMA; 
-	history_table_name := replace(base_table_name, '_data', '_history');
+	base_table_name := TG_TABLE_SCHEMA || '.' || TG_TABLE_NAME; 
+	
+	history_table_name := base_table_name || '_history';
 	execute format('insert into '|| history_table_name || '(_history_id) values (default) returning _history_id') into history_row_id; 
 	for rec1 in (select column_name from information_schema.columns where table_schema = TG_TABLE_SCHEMA and  table_name = TG_TABLE_NAME) loop
 		if TG_OP != 'DELETE' then 
-			execute format('update '|| history_schema_table_name || ' set ' || quote_ident(rec1.column_name) || ' = $1.' || quote_ident(rec1.column_name) ||' where _history_id = '|| history_row_id) using new ;
+			execute format('update '|| history_table_name || ' set ' || quote_ident(rec1.column_name) || ' = $1.' || quote_ident(rec1.column_name) ||' where _history_id = '|| history_row_id) using new ;
 		else 
-			execute format('update '|| history_schema_table_name || ' set ' || quote_ident(rec1.column_name) || ' = $1.' || quote_ident(rec1.column_name) ||' where _history_id = '|| history_row_id) using old;
+			execute format('update '|| history_table_name || ' set ' || quote_ident(rec1.column_name) || ' = $1.' || quote_ident(rec1.column_name) ||' where _history_id = '|| history_row_id) using old;
 		end if;
 	end loop; 
 	return new;
