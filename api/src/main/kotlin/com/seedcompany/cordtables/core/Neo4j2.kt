@@ -122,6 +122,7 @@ class Neo4j2(
       queue.offer(BaseNodeCreate("Language", "sc.languages"))
 
       queue.offer(BaseNodeCreate("Location", "common.locations"))
+      queue.offer(BaseNodeCreate("Location", "sc.locations"))
 
       queue.offer(BaseNodeCreate("File", "common.files"))
       queue.offer(BaseNodeCreate("FileVersion", "common.file_versions"))

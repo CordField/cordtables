@@ -950,41 +950,10 @@ create type common.product_methodology_step as enum (
     'Completed'
 );
 
-create type sc.producible_type as enum (
+create type sc.product_type as enum (
   'Film',
   'Story',
   'EthnoArt'
-);
-
-create table sc.producible (
-  id uuid primary key default public.uuid_generate_v4(),
-
-  name varchar(64),
-  type sc.producible_type,
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
-);
-
-create table sc.producible_scripture_references (
-  id uuid primary key default public.uuid_generate_v4(),
-  producible uuid references sc.producible(id), -- not null
-  scripture_reference uuid references common.scripture_references(id), -- not null
-  change_to_plan uuid references sc.change_to_plans(id), -- not null
-  active bool,
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
-
-  unique (id)
 );
 
 create table sc.products (
@@ -1005,7 +974,7 @@ create table sc.products (
   sensitivity common.sensitivity,
   describe_completion text,
   description text,
-  produces uuid references sc.producible,
+  type sc.product_type,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -1019,6 +988,7 @@ create table sc.products (
 
 create table sc.product_scripture_references (
   id uuid primary key default public.uuid_generate_v4(),
+
   product uuid references sc.products(id), -- not null
   scripture_reference uuid references common.scripture_references(id), -- not null
   change_to_plan uuid references sc.change_to_plans(id), -- not null
