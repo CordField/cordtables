@@ -29,7 +29,7 @@ class ScKnownLanguagesByPersonUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScKnownLanguagesByPersonUpdateResponse {
@@ -38,12 +38,12 @@ class ScKnownLanguagesByPersonUpdateResponse {
 }
 
 class DeleteKnownLanguagesByPersonExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteKnownLanguagesByPersonExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -57,7 +57,7 @@ export class ScKnownLanguagesByPersons {
   newPrson: number;
   newKnown_language: number;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScKnownLanguagesByPersonUpdateRequest, ScKnownLanguagesByPersonUpdateResponse>('sc/known-languages-by-person/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

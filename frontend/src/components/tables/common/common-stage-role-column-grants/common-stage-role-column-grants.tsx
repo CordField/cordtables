@@ -32,7 +32,7 @@ class CommonStageRoleColumnGrantUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonStageRoleColumnGrantUpdateResponse {
@@ -41,12 +41,12 @@ class CommonStageRoleColumnGrantUpdateResponse {
 }
 
 class DeleteStageRoleColumnGrantExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteStageRoleColumnGrantExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -63,7 +63,7 @@ export class CommonStageRoleColumnGrants {
   newColumn_name: string;
   newAccess_level: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonStageRoleColumnGrantUpdateRequest, CommonStageRoleColumnGrantUpdateResponse>('common/stage-role-column-grants/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

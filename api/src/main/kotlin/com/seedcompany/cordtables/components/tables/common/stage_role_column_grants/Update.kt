@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.stage_role_column_grants
 
-import com.seedcompany.cordtables.components.tables.common.stage_role_column_grants.CommonStageRoleColumnGrantsUpdateRequest
-import com.seedcompany.cordtables.components.tables.common.stage_role_column_grants.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.common.stage_role_column_grants.CommonStageRoleColumnGrantsUpdateResponse
-import com.seedcompany.cordtables.components.tables.common.stage_role_column_grants.stageRoleColumnGrantInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonStageRoleColumnGrantsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )

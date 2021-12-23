@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.field_regions
 
 data class fieldRegion(
-    var id: Int? = null,
+    var id: String? = null,
     val neo4j_id: String? = null,
     val director: Int? = null,
     val name: String? = null,
@@ -14,7 +14,7 @@ data class fieldRegion(
 )
 
 data class fieldRegionInput(
-    var id: Int? = null,
+    var id: String? = null,
     val neo4j_id: String? = null,
     val director: Int? = null,
     val name: String? = null,

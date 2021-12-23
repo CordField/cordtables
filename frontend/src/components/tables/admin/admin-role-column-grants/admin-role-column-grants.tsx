@@ -31,7 +31,7 @@ class AdminRoleColumnGrantUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminRoleColumnGrantUpdateResponse {
@@ -40,12 +40,12 @@ class AdminRoleColumnGrantUpdateResponse {
 }
 
 class DeleteRoleColumnGrantExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteRoleColumnGrantExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -61,7 +61,7 @@ export class AdminRoleColumnGrants {
   newColumn_name: string;
   newAccess_level: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminRoleColumnGrantUpdateRequest, AdminRoleColumnGrantUpdateResponse>('admin/role-column-grants/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

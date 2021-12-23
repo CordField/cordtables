@@ -4,7 +4,7 @@ import com.seedcompany.cordtables.common.InvolvementOptions
 import com.seedcompany.cordtables.common.GlobalPartnerRoles
 
 data class globalPartnerEngagement(
-    var id: Int? = null,
+    var id: String? = null,
 
     val organization: Int? = null,
     val type: String? = null,
@@ -22,7 +22,7 @@ data class globalPartnerEngagement(
 )
 
 data class globalPartnerEngagementInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val organization: Int? = null,
     val type: String? = null,

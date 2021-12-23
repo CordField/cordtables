@@ -7,7 +7,7 @@ class GroupRowAccessListRequest {
 }
 
 class GroupRowAccessRow {
-  id: number;
+  id: string;
   group: number;
   person: number;
   createdAt: string;
@@ -34,7 +34,7 @@ class GroupRowAccessCreateResponse {
 
 class GroupRowAccessDeleteRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class GroupRowAccessDeleteResponse {
@@ -99,14 +99,14 @@ export class GroupsRowAccess {
     }
   };
 
-  clickRemoveRowIcon = async (value: number): Promise<boolean> => {
+  clickRemoveRowIcon = async (value: string): Promise<boolean> => {
     this.deleteResponse = await fetchAs<GroupRowAccessDeleteRequest, GroupRowAccessDeleteResponse>('admin/group-row-access/delete', {
       token: globals.globalStore.state.token,
       id: value,
     });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('grouprowaccess/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('admin/group-row-access/list', { token: globals.globalStore.state.token });
       return true;
     } else {
       return false;

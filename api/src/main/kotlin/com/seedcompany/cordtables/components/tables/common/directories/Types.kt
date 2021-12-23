@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.directories
 
 data class CommonDirectory(
-    var id: Int? = null,
+    var id: String? = null,
     val parent: Int? = null,
     val name: String? = null,
     val created_at: String? = null,
@@ -13,7 +13,7 @@ data class CommonDirectory(
 )
 
 data class CommonDirectoryInput(
-    var id: Int? = null,
+    var id: String? = null,
     val parent: Int? = null,
     val name: String? = null,
     val created_at: String? = null,

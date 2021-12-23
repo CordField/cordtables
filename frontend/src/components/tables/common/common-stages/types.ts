@@ -1,6 +1,6 @@
 
 class CommonStage {
-    id?: number | undefined;
+    id?: string | undefined;
 
     title?: string | undefined;
 

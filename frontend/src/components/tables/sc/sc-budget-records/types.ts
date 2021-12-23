@@ -1,5 +1,5 @@
 export type ScBudgetRecord = {
-    id?: number | undefined;
+    id?: string | undefined;
     budget?: number;
     change_to_plan?: number | undefined;
     active?: boolean | undefined;

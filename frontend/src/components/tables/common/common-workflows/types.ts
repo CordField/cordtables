@@ -1,6 +1,6 @@
 
 class CommonWorkflow {
-    id?: number | undefined;
+    id?: string | undefined;
 
     title?: string | undefined;
 

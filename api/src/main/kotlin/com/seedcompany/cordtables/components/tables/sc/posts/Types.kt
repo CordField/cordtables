@@ -1,12 +1,12 @@
 package com.seedcompany.cordtables.components.tables.sc.posts
 
 data class post(
-    var id: Int? = null,
+    var id: String? = null,
 
-    val directory: Int? = null, // int not null references sc.posts_directory(id),
-    val type: String? = null, // sc.post_type not null,
-    val shareability: String? = null, // sc.post_shareability not null,
-    val body: String? = null, // text not null,
+    val directory: Int? = null,
+    val type: String? = null,
+    val shareability: String? = null,
+    val body: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -17,12 +17,12 @@ data class post(
 )
 
 data class postInput(
-    var id: Int? = null,
+    var id: String? = null,
 
-    val directory: Int? = null, // int not null references sc.posts_directory(id),
-    val type: String? = null, // sc.post_type not null,
-    val shareability: String? = null, // sc.post_shareability not null,
-    val body: String? = null, // text not null,
+    val directory: Int? = null,
+    val type: String? = null,
+    val shareability: String? = null,
+    val body: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,

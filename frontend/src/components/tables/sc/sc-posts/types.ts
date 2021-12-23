@@ -1,6 +1,6 @@
 
 class ScPost {
-    id?: number | undefined;
+    id?: string | undefined;
 
     directory?: number | undefined; // int not null references sc.posts_directory(id),
     type?: string | undefined; // sc.post_type not null,

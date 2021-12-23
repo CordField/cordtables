@@ -1,6 +1,6 @@
 
 class SilTableOfCountry {
-    id?: number | undefined;
+    id?: string | undefined;
 
     country_code?: string | undefined;
     country_name?: string | undefined;

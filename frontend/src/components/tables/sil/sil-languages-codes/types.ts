@@ -1,6 +1,6 @@
 
 class SilLanguageCode {
-    id?: number | undefined;
+    id?: string | undefined;
 
     lang?: string | undefined;
     country?: string | undefined;

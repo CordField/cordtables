@@ -1,6 +1,6 @@
 
 class ScPinnedProject {
-    id?: number | undefined;
+    id?: string | undefined;
 
     person?: number | undefined;
     project?: number | undefined;

@@ -38,7 +38,7 @@ class UpPrayerRequestUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class UpPrayerRequestUpdateResponse {
@@ -47,12 +47,12 @@ class UpPrayerRequestUpdateResponse {
 }
 
 class DeletePrayerRequestExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePrayerRequestExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -75,7 +75,7 @@ export class UpPrayerRequests {
   newReviewed: boolean;
   newPrayer_type;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<UpPrayerRequestUpdateRequest, UpPrayerRequestUpdateResponse>('up/prayer-requests/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

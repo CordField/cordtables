@@ -33,7 +33,7 @@ class ScGlobalPartnerEngagementUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScGlobalPartnerEngagementUpdateResponse {
@@ -42,12 +42,12 @@ class ScGlobalPartnerEngagementUpdateResponse {
 }
 
 class DeleteGlobalPartnerEngagementExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGlobalPartnerEngagementExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -65,7 +65,7 @@ export class ScGlobalPartnerEngagements {
   newSc_roles: string;
   newPartner_roles: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScGlobalPartnerEngagementUpdateRequest, ScGlobalPartnerEngagementUpdateResponse>('sc/global-partner-engagements/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

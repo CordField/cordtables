@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.discussion_channels
 
 data class DiscussionChannel(
-    var id: Int? = null,
+    var id: String? = null,
 
     var name: String? = null,
 
@@ -14,7 +14,7 @@ data class DiscussionChannel(
 )
 
 data class DiscussionChannelInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     var name: String? = null,
 

@@ -86,6 +86,9 @@ class List(
         if (jdbcResult.errorType == ErrorType.NoError){
             while (resultSet!!.next()) {
 
+                var id: String? = jdbcResult.getString("id")
+                if (jdbcResult.wasNull()) id = null
+
                 var id: Int? = resultSet!!.getInt("id")
                 if (resultSet!!.wasNull()) id = null
 

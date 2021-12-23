@@ -30,7 +30,7 @@ class ScFieldZoneUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScFieldZoneUpdateResponse {
@@ -39,12 +39,12 @@ class ScFieldZoneUpdateResponse {
 }
 
 class DeleteFieldZoneExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFieldZoneExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -59,7 +59,7 @@ export class ScFieldZones {
   newDirector: number;
   newName: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScFieldZoneUpdateRequest, ScFieldZoneUpdateResponse>('sc/field-zones/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

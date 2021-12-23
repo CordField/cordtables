@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.admin.people
 
 data class people(
-    var id: Int? = null,
+    var id: String? = null,
 
     val about: String? = null,
     val phone: String? = null,
@@ -29,7 +29,7 @@ data class people(
 
 
 data class peopleInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val about: String? = null,
     val phone: String? = null,

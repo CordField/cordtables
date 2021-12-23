@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sil.iso_639_3_names
 
 data class iso6393Name(
-    var id: Int? = null,
+    var id: String? = null,
     val _id: String? = null,
     val print_name: String? = null,
     val inverted_name: String? = null,
@@ -14,7 +14,7 @@ data class iso6393Name(
 )
 
 data class iso6393NameInput(
-    var id: Int? = null,
+    var id: String? = null,
     val _id: String? = null,
     val print_name: String? = null,
     val inverted_name: String? = null,

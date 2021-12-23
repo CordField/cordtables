@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.admin.group_memberships
 
 data class groupMembership(
-    var id: Int? = null,
+    var id: String? = null,
     val group_id: Int? = null,
     val person: Int? = null,
     val created_at: String? = null,
@@ -13,7 +13,7 @@ data class groupMembership(
 )
 
 data class groupMembershipInput(
-    var id: Int? = null,
+    var id: String? = null,
     val group_id: Int? = null,
     val person: Int? = null,
     val created_at: String? = null,

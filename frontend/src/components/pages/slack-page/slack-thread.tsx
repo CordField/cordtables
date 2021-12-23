@@ -22,7 +22,7 @@ export class SlackThread {
   @State() showEditAndDeleteButtons: boolean = false;
   @State() mode: 'update' | 'delete' | 'none' = 'none';
   @State() threadContent: string = null;
-  @Event({ eventName: 'threadDeleted' }) threadDeleted: EventEmitter<number>;
+  @Event({ eventName: 'threadDeleted' }) threadDeleted: EventEmitter<string>;
 
   componentWillLoad() {
     this.threadContent = this.thread.content;
@@ -33,7 +33,7 @@ export class SlackThread {
     if (e.detail.id === this.tinyMceId) this.threadContent = e.detail.content;
   }
   @Listen('postDeleted')
-  async handlePostDeletedChange(event: CustomEvent<number>) {
+  async handleThreadDeletedChange(event: CustomEvent<string>) {
     const deleteResponse = await fetchAs<DeleteCommonPostsRequest, DeleteCommonPostsResponse>('common-posts/delete', {
       token: globals.globalStore.state.token,
       id: event.detail,

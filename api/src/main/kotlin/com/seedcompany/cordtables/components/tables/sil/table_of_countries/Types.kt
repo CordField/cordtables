@@ -3,8 +3,7 @@ package com.seedcompany.cordtables.components.tables.sil.table_of_countries
 import software.amazon.ion.Decimal
 
 data class tableOfCountry(
-    var id: Int? = null,
-
+    var id: String? = null,
     val country_code: String? = null,
     val country_name: String? = null,
     val languages: Int? = null,
@@ -19,8 +18,6 @@ data class tableOfCountry(
     val population: Int? = null,
     val literacy_rate: Float? = null,
     val conventions: Int? = null,
-
-
     val created_at: String? = null,
     val created_by: Int? = null,
     val modified_at: String? = null,
@@ -30,7 +27,7 @@ data class tableOfCountry(
 )
 
 data class tableOfCountryInput(
-    var id: Int? = null,
+    var id: String? = null,
     val country_code: String? = null,
     val country_name: String? = null,
     val languages: Int? = null,

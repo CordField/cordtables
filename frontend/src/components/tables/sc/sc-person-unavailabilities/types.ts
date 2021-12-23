@@ -1,6 +1,6 @@
 
 class ScPersonUnavailability {
-    id?: number | undefined;
+    id?: string | undefined;
 
     person?: number | undefined; // int references admin.people(id),
 	period_start?: string | undefined; // timestamp not null,

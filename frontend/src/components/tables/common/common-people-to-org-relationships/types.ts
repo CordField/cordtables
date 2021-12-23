@@ -1,6 +1,6 @@
 
 class CommonPeopleToOrgRelationship {
-    id?: number | undefined;
+    id?: string | undefined;
 
     org?: number | undefined;
     person?: number | undefined;

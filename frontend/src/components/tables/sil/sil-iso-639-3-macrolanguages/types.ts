@@ -1,6 +1,6 @@
 
 class SilIso6393Macrolanguage {
-    id?: number | undefined;
+    id?: string | undefined;
 
     m_id?: string | undefined;
     i_id?: string | undefined;

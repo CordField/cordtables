@@ -22,7 +22,7 @@ export class SlackContent {
     if (newValue) await this.getThreads(newValue.id);
   }
   @Listen('threadDeleted')
-  async handleThreadDeletedChange(event: CustomEvent<number>) {
+  async handleThreadDeletedChange(event: CustomEvent<string>) {
     const deleteResponse = await fetchAs<DeleteCommonThreadsRequest, DeleteCommonThreadsResponse>('common-threads/delete', {
       token: globals.globalStore.state.token,
       id: event.detail,

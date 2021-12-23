@@ -34,7 +34,7 @@ class ScPartnerUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPartnerUpdateResponse {
@@ -43,12 +43,12 @@ class ScPartnerUpdateResponse {
 }
 
 class DeletePartnerExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePartnerExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -67,7 +67,7 @@ export class ScPartners {
   newPoint_of_contact: number;
   newTypes: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScPartnerUpdateRequest, ScPartnerUpdateResponse>('sc/partners/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

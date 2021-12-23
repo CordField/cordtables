@@ -71,12 +71,14 @@ class List(
             )
         )
 
+
         val resultSet = jdbcResult.result
         val size = jdbcResult.size
         if (jdbcResult.errorType == ErrorType.NoError){
             while (resultSet!!.next()) {
-                var id: Int? = resultSet!!.getInt("id")
-                if (resultSet!!.wasNull()) id = null
+
+                var id: String? = jdbcResult.getString("id")
+                if (jdbcResult.wasNull()) id = null
 
                 var country: String? = resultSet!!.getString("country")
                 if (resultSet!!.wasNull()) country = null

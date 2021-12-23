@@ -1,12 +1,12 @@
 package com.seedcompany.cordtables.components.tables.sc.person_unavailabilities
 
 data class personUnavailability(
-    var id: Int? = null,
+    var id: String? = null,
 
-    val person: Int? = null, // int references admin.people(id),
-    val period_start: String? = null, // timestamp not null,
-    val period_end: String? = null, // timestamp not null,
-    val description: String? = null, // text,
+    val person: Int? = null,
+    val period_start: String? = null,
+    val period_end: String? = null,
+    val description: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -17,12 +17,12 @@ data class personUnavailability(
 )
 
 data class personUnavailabilityInput(
-    var id: Int? = null,
+    var id: String? = null,
 
-    val person: Int? = null, // int references admin.people(id),
-    val period_start: String? = null, // timestamp not null,
-    val period_end: String? = null, // timestamp not null,
-    val description: String? = null, // text,
+    val person: Int? = null,
+    val period_start: String? = null,
+    val period_end: String? = null,
+    val description: String? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,

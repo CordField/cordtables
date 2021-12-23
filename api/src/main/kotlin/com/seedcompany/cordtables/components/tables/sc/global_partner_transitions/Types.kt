@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.global_partner_transitions
 
 data class globalPartnerTransition(
-    var id: Int? = null,
+    var id: String? = null,
     val organization: Int? = null,
     val transition_type: String? = null,
     val effective_date: String? = null,
@@ -14,7 +14,7 @@ data class globalPartnerTransition(
 )
 
 data class globalPartnerTransitionInput(
-    var id: Int? = null,
+    var id: String? = null,
     val organization: Int? = null,
     val transition_type: String? = null,
     val effective_date: String? = null,

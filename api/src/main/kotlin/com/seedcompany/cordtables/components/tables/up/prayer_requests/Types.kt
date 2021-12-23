@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.up.prayer_requests
 import javax.security.auth.Subject
 
 data class prayerRequest(
-    var id: Int? = null,
+    var id: String? = null,
 
     val request_language_id:Int? = null,
     val target_language_id:Int? = null,
@@ -26,7 +26,7 @@ data class prayerRequest(
 )
 
 data class prayerRequestInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val request_language_id:Int? = null,
     val target_language_id:Int? = null,

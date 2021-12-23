@@ -32,7 +32,7 @@ class CommonPeopleToOrgRelationshipUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonPeopleToOrgRelationshipUpdateResponse {
@@ -41,12 +41,12 @@ class CommonPeopleToOrgRelationshipUpdateResponse {
 }
 
 class DeletePeopleToOrgRelationshipExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePeopleToOrgRelationshipExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -63,7 +63,7 @@ export class CommonPeopleToOrgRelationships {
   newBegin_at: string;
   newEnd_at: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonPeopleToOrgRelationshipUpdateRequest, CommonPeopleToOrgRelationshipUpdateResponse>(
       'common/people-to-org-relationships/update-read',
       {

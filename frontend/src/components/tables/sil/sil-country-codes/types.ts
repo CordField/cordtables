@@ -1,6 +1,6 @@
 
 class SilCountryCode {
-    id?: number | undefined;
+    id?: string | undefined;
 
     country?: string | undefined;
     name?: string | undefined;

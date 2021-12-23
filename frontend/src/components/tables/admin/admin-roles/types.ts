@@ -1,6 +1,6 @@
 
 class AdminRole {
-    id?: number | undefined;
+    id?: string | undefined;
 
     name?: String | undefined;
 

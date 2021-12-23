@@ -39,7 +39,7 @@ data class UpPrayerRequestsCreateFromFormRequest(
 
 data class UpPrayerRequestsCreateFromFormResponse(
   val error: ErrorType,
-  val id: Int? = null,
+  val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -124,7 +124,7 @@ class CreateFromGoogleForm(
                 )
             returning id;
         """.trimIndent(),
-      Int::class.java,
+      String::class.java,
       langExists!!.common_id,
       req.prayerForm.sensitivity,
       translatorUserId,
@@ -146,7 +146,7 @@ class CreateFromGoogleForm(
       """.trimIndent()
     ){ rs, rowNum ->
       languageIndex(
-        rs.getInt("id"),
+        rs.getString("id"),
         rs.getInt("common_id"),
         rs.getString("lang"),
         rs.getString("country"),

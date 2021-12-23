@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.common.tickets
 import com.seedcompany.cordtables.common.CommonTicketStatus
 
 data class CommonTickets(
-        val id: Int? = null,
+        val id: String? = null,
         val ticket_status: CommonTicketStatus? = null,
         val parent: Int? = null,
         val content: String? = null,

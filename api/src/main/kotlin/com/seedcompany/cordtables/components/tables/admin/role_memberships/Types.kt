@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.admin.role_memberships
 
 data class roleMembership(
-    var id: Int? = null,
+    var id: String? = null,
 
     val role: Int? = null,
     val person: Int? = null,
@@ -15,7 +15,7 @@ data class roleMembership(
 )
 
 data class roleMembershipInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val role: Int? = null,
     val person: Int? = null,

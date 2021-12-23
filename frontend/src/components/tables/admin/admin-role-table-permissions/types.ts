@@ -1,6 +1,6 @@
 
 class AdminRoleTablePermission {
-    id?: number | undefined;
+    id?: string | undefined;
 
     role?: number | undefined;
     table_name?: string | undefined;

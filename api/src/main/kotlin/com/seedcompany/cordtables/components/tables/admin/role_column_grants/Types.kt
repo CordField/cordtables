@@ -4,7 +4,7 @@ import com.seedcompany.cordtables.common.TableNames
 import com.seedcompany.cordtables.common.AccessLevels;
 
 data class roleColumnGrant(
-    var id: Int? = null,
+    var id: String? = null,
 
     val role: Int? = null,
     val table_name: String? = null,
@@ -20,7 +20,7 @@ data class roleColumnGrant(
 )
 
 data class roleColumnGrantInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val role: Int? = null,
     val table_name: String? = null,

@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.stage_graph
 
 data class stageGraph(
-    var id: Int? = null,
+    var id: String? = null,
     val from_stage: Int? = null,
     val to_stage: Int? = null,
     val created_at: String? = null,
@@ -13,7 +13,7 @@ data class stageGraph(
 )
 
 data class stageGraphInput(
-    var id: Int? = null,
+    var id: String? = null,
     val from_stage: Int? = null,
     val to_stage: Int? = null,
     val created_at: String? = null,

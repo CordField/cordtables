@@ -31,7 +31,7 @@ class ScPersonUnavailabilityUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPersonUnavailabilityUpdateResponse {
@@ -40,12 +40,12 @@ class ScPersonUnavailabilityUpdateResponse {
 }
 
 class DeletePersonUnavailabilityExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePersonUnavailabilityExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -61,7 +61,7 @@ export class ScPersonUnavailabilities {
   newPeriod_end: string;
   newDescription: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScPersonUnavailabilityUpdateRequest, ScPersonUnavailabilityUpdateResponse>('sc/person-unavailabilities/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

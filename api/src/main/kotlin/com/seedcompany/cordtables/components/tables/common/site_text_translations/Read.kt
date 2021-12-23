@@ -17,7 +17,7 @@ import javax.sql.DataSource
 
 data class SiteTextTranslationReadRequest(
   val token: String?,
-  val id: Int? = null,
+  val id: String? = null,
 )
 
 data class SiteTextTranslationReadResponse(
@@ -73,7 +73,7 @@ class Read(
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
       while (jdbcResult.next()) {
 
-        var id: Int? = jdbcResult.getInt("id")
+        var id: String? = jdbcResult.getString("id")
         if (jdbcResult.wasNull()) id = null
 
         var language: Int? = jdbcResult.getInt("language")

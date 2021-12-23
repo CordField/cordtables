@@ -1,6 +1,6 @@
 
 class ScGlobalPartnerTransition {
-    id?: number | undefined;
+    id?: string | undefined;
 
     organization?: number | undefined;
     transition_type?: string | undefined;

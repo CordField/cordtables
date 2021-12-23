@@ -21,7 +21,7 @@ data class AdminRolesCreateRequest(
 
 data class AdminRolesCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -73,7 +73,7 @@ class Create(
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.role.name,
             req.token,
             req.token,

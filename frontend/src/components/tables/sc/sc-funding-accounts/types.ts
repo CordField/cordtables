@@ -1,6 +1,6 @@
 
 class ScFundingAccount {
-    id?: number | undefined;
+    id?: string | undefined;
 
     neo4j_id?: string | undefined;
     account_number?: number | undefined;

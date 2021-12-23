@@ -1,6 +1,6 @@
 
 class AdminPeople {
-    id?: number | undefined;
+    id?: string | undefined;
 
     about?: string | undefined;
     phone?: string | undefined;

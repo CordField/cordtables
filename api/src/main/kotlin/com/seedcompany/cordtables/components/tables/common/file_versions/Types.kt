@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.common.file_versions
 import com.seedcompany.cordtables.common.MimeTypes
 
 data class CommonFileVersion(
-    var id: Int? = null,
+    var id: String? = null,
     val category: String? = null,
     val mime_type: MimeTypes? = null,
     val name: String? = null,
@@ -19,7 +19,7 @@ data class CommonFileVersion(
 )
 
 data class CommonFileVersionInput(
-    var id: Int? = null,
+    var id: String? = null,
     val category: String? = null,
     val mime_type: String? = null,
     val name: String? = null,

@@ -1,6 +1,6 @@
 
 class CommonStageNotification {
-    id?: number | undefined;
+    id?: string | undefined;
 
     stage?: number | undefined;
     on_enter?: boolean | undefined;

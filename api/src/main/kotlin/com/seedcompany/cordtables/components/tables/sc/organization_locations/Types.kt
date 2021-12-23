@@ -1,10 +1,10 @@
 package com.seedcompany.cordtables.components.tables.sc.organization_locations
 
 data class organizationLocation(
-    var id: Int? = null,
+    var id: String? = null,
 
-    val organization: Int? = null, // int not null references sc.organizations(id),
-    val location: Int? = null, // int not null references sc.locations(id),
+    val organization: Int? = null,
+    val location: Int? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -15,10 +15,10 @@ data class organizationLocation(
 )
 
 data class organizationLocationInput(
-    var id: Int? = null,
+    var id: String? = null,
 
-    val organization: Int? = null, // int not null references sc.organizations(id),
-    val location: Int? = null, // int not null references sc.locations(id),
+    val organization: Int? = null,
+    val location: Int? = null,
 
     val created_at: String? = null,
     val created_by: Int? = null,

@@ -22,9 +22,9 @@ import {
 export class Threads {
   @State() commonThreadsResponse: CommonThreadsListResponse;
   newContent: string;
-  newChannel: number;
+  newChannel: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common/threads/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

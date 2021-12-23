@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.organizations
 
 data class organization(
-    var id: Int? = null,
+    var id: String? = null,
 
     val neo4j_id: String? = null,
     val address: String? = null,
@@ -15,7 +15,7 @@ data class organization(
 )
 
 data class organizationInput(
-    var id: Int? = null,
+    var id: String? = null,
     val neo4j_id: String? = null,
     val address: String? = null,
     val created_at: String? = null,

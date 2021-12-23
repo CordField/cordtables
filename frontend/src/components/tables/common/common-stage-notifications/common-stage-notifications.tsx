@@ -31,7 +31,7 @@ class CommonStageNotificationUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonStageNotificationUpdateResponse {
@@ -40,12 +40,12 @@ class CommonStageNotificationUpdateResponse {
 }
 
 class DeleteStageNotificationExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteStageNotificationExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -61,7 +61,7 @@ export class CommonStageNotifications {
   newOn_exit: boolean;
   newPerson: number;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonStageNotificationUpdateRequest, CommonStageNotificationUpdateResponse>('common/stage-notifications/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

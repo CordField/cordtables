@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.ticket_assignments
 
 data class CommonTicketAssignments(
-        val id: Int? = null,
+        val id: String? = null,
         val ticket: Int? = null,
         val person: Int? = null,
         val created_at: String? = null,

@@ -32,7 +32,7 @@ class ScPartnershipUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPartnershipUpdateResponse {
@@ -41,12 +41,12 @@ class ScPartnershipUpdateResponse {
 }
 
 class DeletePartnershipExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePartnershipExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -63,7 +63,7 @@ export class ScPartnerships {
   newActive: boolean;
   newAgreement: number;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScPartnershipUpdateRequest, ScPartnershipUpdateResponse>('sc/partnerships/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

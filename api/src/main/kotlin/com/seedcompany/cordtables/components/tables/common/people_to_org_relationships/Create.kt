@@ -21,7 +21,7 @@ data class CommonPeopleToOrgRelationshipsCreateRequest(
 
 data class CommonPeopleToOrgRelationshipsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -77,7 +77,7 @@ class Create(
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.peopleToOrgRelationship.org,
             req.peopleToOrgRelationship.person,
             req.peopleToOrgRelationship.relationship_type,

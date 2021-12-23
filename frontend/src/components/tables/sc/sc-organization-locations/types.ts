@@ -1,6 +1,6 @@
 
 class ScOrganizationLocation {
-    id?: number | undefined;
+    id?: string | undefined;
 
     organization?: number | undefined;
     location?: number | undefined;

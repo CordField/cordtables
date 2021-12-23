@@ -1,5 +1,5 @@
 class CommonCoalition {
-    id?: number | undefined;
+    id?: string | undefined;
     name?: string | undefined;
     created_at?: string | undefined;
     created_by?: number | undefined;

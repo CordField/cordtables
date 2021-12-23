@@ -1,12 +1,10 @@
 package com.seedcompany.cordtables.components.tables.sc.locations
 
-import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsUpdateRequest
 import com.seedcompany.cordtables.components.tables.common.locations.Update as CommonUpdate
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.common.locations.locationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin

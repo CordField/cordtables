@@ -1,6 +1,6 @@
 
 class SilIso6393Name {
-    id?: number | undefined;
+    id?: string | undefined;
 
     _id?: string | undefined;
     print_name?: string | undefined;

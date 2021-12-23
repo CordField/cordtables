@@ -30,7 +30,7 @@ export class CfRow {
 
             {this.columnData &&
               this.columnData.map(columnDescription => (
-                <cf-cell2 rowId={0} value={columnDescription.displayName} columnDescription={columnDescription} cellType={'header'}></cf-cell2>
+                <cf-cell2 rowId={""} value={columnDescription.displayName} columnDescription={columnDescription} cellType={'header'}></cf-cell2>
               ))}
           </div>
         )}

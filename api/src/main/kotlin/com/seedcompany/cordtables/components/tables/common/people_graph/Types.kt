@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.people_graph
 
 data class peopleGraph(
-    var id: Int? = null,
+    var id: String? = null,
     val from_person: Int? = null,
     val to_person: Int? = null,
     val rel_type: String? = null,
@@ -14,7 +14,7 @@ data class peopleGraph(
 )
 
 data class peopleGraphInput(
-    var id: Int? = null,
+    var id: String? = null,
     val from_person: Int? = null,
     val to_person: Int? = null,
     val rel_type: String? = null,

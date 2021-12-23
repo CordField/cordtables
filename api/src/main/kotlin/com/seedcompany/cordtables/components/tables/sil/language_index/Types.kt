@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sil.language_index
 
 data class languageIndex(
-    var id: Int? = null,
+    var id: String? = null,
 
     val common_id: Int? = null,
     val lang: String? = null,
@@ -18,7 +18,7 @@ data class languageIndex(
 )
 
 data class languageIndexInput(
-    var id: Int? = null,
+    var id: String? = null,
     val common_id: Int? = null,
     val lang: String? = null,
     val country: String? = null,

@@ -19,7 +19,7 @@ export class SlackThread {
   @State() showEditAndDeleteButtons: boolean = false;
   @State() mode: 'none' | 'update' | 'delete' = 'none';
   @State() postContent: string = null;
-  @Event({ eventName: 'postDeleted' }) postDeleted: EventEmitter<number>;
+  @Event({ eventName: 'postDeleted' }) postDeleted: EventEmitter<string>;
 
   componentWillLoad() {
     this.postContent = this.post.content;

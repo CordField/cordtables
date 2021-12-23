@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.posts
 
 data class Post(
-        var id: Int? = null,
+        var id: String? = null,
         var thread:Int? = null,
         var content:String?= null,
         val created_at: String? = null,

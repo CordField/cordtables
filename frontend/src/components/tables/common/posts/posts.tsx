@@ -23,9 +23,9 @@ import {
 export class Posts {
   @State() commonPostsResponse: CommonPostsListResponse;
   newContent: string;
-  newThread: number;
+  newThread: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonPostsUpdateRequest, CommonPostsUpdateResponse>('common/posts/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

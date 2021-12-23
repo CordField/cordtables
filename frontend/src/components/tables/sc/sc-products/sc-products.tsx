@@ -35,7 +35,7 @@ class ScProductUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScProductUpdateResponse {
@@ -44,12 +44,12 @@ class ScProductUpdateResponse {
 }
 
 class DeleteProductExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteProductExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -69,7 +69,7 @@ export class ScProducts {
   newPurposes: string;
   newType: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScProductUpdateRequest, ScProductUpdateResponse>('sc/products/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

@@ -1,6 +1,6 @@
 
 class CommonDirectory {
-    id?: number | undefined;
+    id?: string | undefined;
     parent?: number | undefined;
     name?: string | undefined;
     created_at?: string | undefined;

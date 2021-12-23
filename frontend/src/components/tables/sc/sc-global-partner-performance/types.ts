@@ -1,6 +1,6 @@
 
 class ScGlobalPartnerPerformance {
-    id?: number | undefined;
+    id?: string | undefined;
 
     organization?: number | undefined;
     reporting_performance?: string | undefined;

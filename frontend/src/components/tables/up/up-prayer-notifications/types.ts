@@ -1,6 +1,6 @@
 
 class UpPrayerNotification {
-    id?: number | undefined;
+    id?: string | undefined;
 
     request?: number | undefined;
     person?: number | undefined;

@@ -4,7 +4,7 @@ import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.CommonSensitivity
 
 data class location(
-    var id: Int? = null,
+    var id: String? = null,
 
 
     val name: String? = null,
@@ -21,7 +21,7 @@ data class location(
 )
 
 data class locationInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val sensitivity: String? = null,
     val name: String? = null,

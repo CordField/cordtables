@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.common.ticket_graph
 
 
 data class CommonTicketGraph(
-        val id: Int? = null,
+        val id: String? = null,
         val from_ticket: Int? = null,
         val to_ticket: Int? = null,
         val created_at: String? = null,

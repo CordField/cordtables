@@ -1,6 +1,6 @@
 
 class CommonNote {
-    id?: number | undefined;
+    id?: string | undefined;
 
     table_name?: string | undefined;
     column_name?: string | undefined;

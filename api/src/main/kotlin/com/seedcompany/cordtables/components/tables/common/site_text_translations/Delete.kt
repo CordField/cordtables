@@ -12,13 +12,13 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class SiteTextTranslationDeleteRequest(
-  val id: Int,
+  val id: String,
   val token: String?,
 )
 
 data class SiteTextTranslationDeleteResponse(
   val error: ErrorType,
-  val id: Int?
+  val id: String?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -37,7 +37,7 @@ class Delete(
     if (!util.userHasDeletePermission(req.token, "common.site_text_translations"))
       return SiteTextTranslationDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-    var deletedLocationExId: Int? = null
+    var deletedLocationExId: String? = null
 
     this.ds.connection.use { conn ->
       try {
@@ -45,12 +45,12 @@ class Delete(
         val deleteStatement = conn.prepareCall(
           "delete from common.site_text_translations where id = ? returning id"
         )
-        deleteStatement.setInt(1, req.id)
+        deleteStatement.setString(1, req.id)
 
         val deleteStatementResult = deleteStatement.executeQuery()
 
         if (deleteStatementResult.next()) {
-          deletedLocationExId = deleteStatementResult.getInt("id")
+          deletedLocationExId = deleteStatementResult.getString("id")
         }
       } catch (e: SQLException) {
         println(e.message)

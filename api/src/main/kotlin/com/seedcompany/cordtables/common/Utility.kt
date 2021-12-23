@@ -183,7 +183,7 @@ class Utility(
         return userHasDeletePermission;
     }
 
-    fun userHasUpdatePermission(token: String, tableName: String, columnName: String, rowId: Int): Boolean {
+    fun userHasUpdatePermission(token: String, tableName: String, columnName: String, rowId: String): Boolean {
         if (isAdmin(token)) {
             return true;
         }
@@ -336,13 +336,13 @@ class Utility(
             .map { it.replace('_', '-') };
     }
 
-    fun updateField(token: String, table: String, column: String, id: Int, value: Any?, cast: String? = "") {
+    fun updateField(token: String, table: String, column: String, id: String?, value: Any?, cast: String? = "") {
 
         if (userHasUpdatePermission(
                 token = token,
                 tableName = table,
                 columnName = column,
-                rowId = id
+                rowId = id!!
             )
         ) {
             jdbcTemplate.update(

@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.global_partner_performance
 
 data class globalPartnerPerformance(
-    var id: Int? = null,
+    var id: String? = null,
 
     val organization: Int? = null,
     val reporting_performance: PartnerPerformanceOptions? = null,
@@ -17,7 +17,7 @@ data class globalPartnerPerformance(
 )
 
 data class globalPartnerPerformanceInput(
-    var id: Int? = null,
+    var id: String? = null,
     val organization: Int? = null,
     val reporting_performance: String? = null,
     val financial_performance: String? = null,

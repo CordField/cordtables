@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.coalitions
 
 data class coalition(
-    var id: Int? = null,
+    var id: String? = null,
     val name: String? = null,
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -12,7 +12,7 @@ data class coalition(
 )
 
 data class coalitionInput(
-    var id: Int? = null,
+    var id: String? = null,
     val name: String? = null,
     val created_at: String? = null,
     val created_by: Int? = null,

@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.threads
 
 data class Thread(
-        var id: Int? = null,
+        var id: String? = null,
         var channel:Int? = null,
         var content:String?= null,
         val created_at: String? = null,

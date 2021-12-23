@@ -1,6 +1,6 @@
 
 class ScKnownLanguagesByPerson {
-    id?: number | undefined;
+    id?: string | undefined;
 
     person?: number | undefined;
     known_language?: number | undefined;

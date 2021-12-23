@@ -1,6 +1,6 @@
 
 class CommonPeopleGraph {
-    id?: number | undefined;
+    id?: string | undefined;
 
     from_person?: number | undefined;
     to_person?: number | undefined;

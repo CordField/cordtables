@@ -1,6 +1,6 @@
 
 class CommonOrgChartPosition {
-    id?: number | undefined;
+    id?: string | undefined;
 
     organization?: number | undefined;
     name?: string | undefined;

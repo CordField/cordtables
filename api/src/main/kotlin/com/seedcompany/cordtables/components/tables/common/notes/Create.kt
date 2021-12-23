@@ -21,7 +21,7 @@ data class CommonNotesCreateRequest(
 
 data class CommonNotesCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -76,7 +76,7 @@ class Create(
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.note.table_name,
             req.note.column_name,
             req.note.row,

@@ -23,7 +23,7 @@ data class ScriptureReferenceListResponse(
 )
 
 data class ScriptureReference(
-    val id: Int?,
+    val id: String?,
     val book_start: String?,
     val book_end: String?,
     val chapter_start: Int?,
@@ -128,7 +128,7 @@ class List(
     
             while (jdbcResult.next()) {
     
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
     
                 var bookStart: String? = jdbcResult.getString("book_start")

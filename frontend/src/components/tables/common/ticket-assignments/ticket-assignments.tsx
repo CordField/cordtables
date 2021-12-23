@@ -13,7 +13,7 @@ class CreateTicketAssignmentRequest {
 }
 
 class CommonTicketAssignmentRow {
-  id: number;
+  id: string;
   ticket: number;
   person: number;
   created_at: string;
@@ -39,7 +39,7 @@ class CommonTicketAssignmentUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 class CommonTicketAssignmentUpdateResponse {
   error: ErrorType;
@@ -47,12 +47,12 @@ class CommonTicketAssignmentUpdateResponse {
 }
 
 class DeleteTicketRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteTicketResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -66,7 +66,7 @@ export class TicketAssignment {
   newTicketAssignment: number;
   newPerson: number;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonTicketAssignmentUpdateRequest, CommonTicketAssignmentUpdateResponse>('common/ticket-assignments/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

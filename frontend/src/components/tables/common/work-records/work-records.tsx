@@ -16,7 +16,7 @@ class CreateWorkRecordRequest {
 }
 
 class CommonWorkRecordRow {
-  id: number;
+  id: string;
   ticket: number;
   person: number;
   created_at: string;
@@ -43,7 +43,7 @@ class CommonWorkRecordUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 class CommonWorkRecordUpdateResponse {
   error: ErrorType;
@@ -51,12 +51,12 @@ class CommonWorkRecordUpdateResponse {
 }
 
 class DeleteWorkRecordRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteWorkRecordResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -72,7 +72,7 @@ export class WorkRecord {
   newMinutes: number;
   newComment: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonWorkRecordUpdateRequest, CommonWorkRecordUpdateResponse>('common/work-records/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

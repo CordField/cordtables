@@ -29,7 +29,7 @@ class ScOrganizationLocationUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScOrganizationLocationUpdateResponse {
@@ -38,12 +38,12 @@ class ScOrganizationLocationUpdateResponse {
 }
 
 class DeleteOrganizationLocationExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteOrganizationLocationExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -57,7 +57,7 @@ export class ScOrganizationLocations {
   newOrganization: number;
   newLocation: number;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScOrganizationLocationUpdateRequest, ScOrganizationLocationUpdateResponse>('sc/organization-locations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

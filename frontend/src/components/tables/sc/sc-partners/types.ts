@@ -1,6 +1,6 @@
 
 class ScPartner {
-    id?: number | undefined;
+    id?: string | undefined;
 
     organization?: number | undefined; // int not null references sc.organizations(id),
 	active?: boolean | undefined; // bool,

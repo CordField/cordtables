@@ -21,7 +21,7 @@ class CommonOrganizationsListRequest {
 }
 
 class CommonOrganizationsRow {
-  id: number;
+  id: string;
   name: string;
   sensitivity: string;
   primary_location: number;
@@ -46,7 +46,7 @@ class CommonOrganizationsUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonOrganizationsUpdateResponse {
@@ -55,12 +55,12 @@ class CommonOrganizationsUpdateResponse {
 }
 
 class DeleteLanguageExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteLanguageExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 @Component({
   tag: 'common-organizations',
@@ -73,7 +73,7 @@ export class ScLanguages {
   newSensitivity: string;
   newPrimaryLocation: number;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonOrganizationsUpdateRequest, CommonOrganizationsUpdateResponse>('common/organizations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

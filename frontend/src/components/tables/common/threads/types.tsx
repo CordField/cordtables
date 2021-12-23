@@ -1,7 +1,7 @@
 import { ErrorType, GenericResponse } from '../../../../common/types';
 
 export class CommonThread {
-  id?: number | undefined;
+  id?: string | undefined;
   content?: string | undefined;
   channel?: number | undefined;
   created_at?: string | undefined;
@@ -16,7 +16,7 @@ export class CreateCommonThreadsRequest {
   token: string;
   thread: {
     content: string;
-    channel: number;
+    channel: string;
   };
 }
 
@@ -26,7 +26,7 @@ export class CreateCommonThreadsResponse extends GenericResponse {
 
 export class CommonThreadsListRequest {
   token: string;
-  channelId?: number;
+  channelId?: string;
 }
 
 export class CommonThreadsListResponse {
@@ -38,7 +38,7 @@ export class CommonThreadsUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 export class CommonThreadsUpdateResponse {
@@ -47,10 +47,10 @@ export class CommonThreadsUpdateResponse {
 }
 
 export class DeleteCommonThreadsRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 export class DeleteCommonThreadsResponse extends GenericResponse {
-  id: number;
+  id: string;
 }

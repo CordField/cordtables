@@ -10,11 +10,11 @@ class CreateGlobalRoleTablePermissionsRequest {
 }
 
 class DeletePermissionsResponse extends GenericResponse {
-  data: { id: number };
+  data: { id: string };
 }
 
 class DeletePermissionsRequest {
-  id: number;
+  id: string;
 }
 
 class UpdatePermissionsRequest {
@@ -22,7 +22,7 @@ class UpdatePermissionsRequest {
   role: number;
   table_permission: string;
   email: string;
-  id: number;
+  id: string;
 }
 
 class UpdatePermissionsResponse extends GenericResponse {

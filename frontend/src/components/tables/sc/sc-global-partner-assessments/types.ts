@@ -1,6 +1,6 @@
 
 class ScGlobalPartnerAssessment {
-    id?: number | undefined;
+    id?: string | undefined;
 
     partner?: number | undefined;
     governance_trans?: string | undefined;

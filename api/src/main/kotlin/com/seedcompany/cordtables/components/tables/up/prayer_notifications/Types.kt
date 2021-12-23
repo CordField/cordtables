@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.up.prayer_notifications
 
 data class prayerNotification(
-    var id: Int? = null,
+    var id: String? = null,
 
     val request: Int? = null,
     val person: Int? = null,
@@ -15,7 +15,7 @@ data class prayerNotification(
 )
 
 data class prayerNotificationInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val request: Int? = null,
     val person: Int? = null,

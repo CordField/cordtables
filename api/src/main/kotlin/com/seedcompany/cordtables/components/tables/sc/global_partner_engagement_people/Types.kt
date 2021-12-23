@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.sc.global_partner_engagemen
 import com.seedcompany.cordtables.common.PeopleToOrgRelationshipType
 
 data class globalPartnerEngagementPeople(
-    var id: Int? = null,
+    var id: String? = null,
     val engagement: Int? = null,
     val person: Int? = null,
     val role: String? = null,
@@ -16,7 +16,7 @@ data class globalPartnerEngagementPeople(
 )
 
 data class globalPartnerEngagementPeopleInput(
-    var id: Int? = null,
+    var id: String? = null,
     val engagement: Int? = null,
     val person: Int? = null,
     val role: String? = null,

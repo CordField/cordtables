@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.product_scripture_references
 
 data class productScriptureReference(
-    var id: Int? = null,
+    var id: String? = null,
 
     val product: Int? = null,
     val scripture_reference: Int? = null,
@@ -17,7 +17,7 @@ data class productScriptureReference(
 )
 
 data class productScriptureReferenceInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val product: Int? = null,
     val scripture_reference: Int? = null,

@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.admin.role_table_permission
 import com.seedcompany.cordtables.common.TableNames
 
 data class roleTablePermission(
-    var id: Int? = null,
+    var id: String? = null,
 
     val role: Int? = null,
     val table_name: String? = null,
@@ -18,7 +18,7 @@ data class roleTablePermission(
 )
 
 data class roleTablePermissionInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val role: Int? = null,
     val table_name: String? = null,

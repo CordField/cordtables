@@ -15,7 +15,7 @@ class CreateTicketFeedbackRequest {
 }
 
 class CommonTicketFeedbackRow {
-  id: number;
+  id: string;
   ticket: number;
   stake_holder: number;
   feedback: string;
@@ -44,7 +44,7 @@ class CommonTicketFeedbackUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonTicketFeedbackUpdateResponse {
@@ -53,12 +53,12 @@ class CommonTicketFeedbackUpdateResponse {
 }
 
 class DeleteTicketFeedbackRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteTicketFeedbackResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -73,7 +73,7 @@ export class TicketFeedback {
   newStakeHolder: number;
   newFeedback: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonTicketFeedbackUpdateRequest, CommonTicketFeedbackUpdateResponse>('common/ticket-feedback/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

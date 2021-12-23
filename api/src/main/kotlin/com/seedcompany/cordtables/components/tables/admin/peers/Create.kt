@@ -129,7 +129,7 @@ class Create(
             """
                 insert into admin.people(sensitivity_clearance) values ('Low') returning id;
             """.trimIndent(),
-            Int::class.java,
+            String::class.java,
         )
 
         jdbcTemplate.update(

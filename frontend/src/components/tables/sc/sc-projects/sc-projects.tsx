@@ -46,7 +46,7 @@ class ScProjectUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScProjectUpdateResponse {
@@ -55,12 +55,12 @@ class ScProjectUpdateResponse {
 }
 
 class DeleteProjectExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteProjectExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -91,7 +91,7 @@ export class ScProjects {
   newStatus_changed_at: string;
   newStep: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScProjectUpdateRequest, ScProjectUpdateResponse>('sc/projects/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

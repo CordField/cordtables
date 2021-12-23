@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.project_locations
 
 data class projectLocation(
-    var id: Int? = null,
+    var id: String? = null,
 
     val active: Boolean? = null,
     val change_to_plan: Int? = null,
@@ -19,7 +19,7 @@ data class projectLocation(
 )
 
 data class projectLocationInput(
-    var id: Int? = null,
+    var id: String? = null,
     val active: Boolean? = null,
     val change_to_plan: Int? = null,
     val location: Int? = null,

@@ -96,8 +96,9 @@ class List(
         val size = jdbcResult.size
         if (jdbcResult.errorType == ErrorType.NoError){
             while (resultSet!!.next()) {
-                var id: Int? = resultSet!!.getInt("id")
-                if (resultSet!!.wasNull()) id = null
+              
+                var id: String? = jdbcResult.getString("id")
+                if (jdbcResult.wasNull()) id = null
 
                 var iso_639: String? = resultSet!!.getString("iso_639")
                 if (resultSet!!.wasNull()) iso_639 = null

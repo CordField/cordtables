@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.common.ticket_feedback
 import com.seedcompany.cordtables.common.CommonTicketFeedbackOptions
 
 data class CommonTicketFeedback(
-    val id: Int? = null,
+    val id: String? = null,
     val ticket: Int? = null,
     val stake_holder: Int? = null,
     val feedback: CommonTicketFeedbackOptions? = null,

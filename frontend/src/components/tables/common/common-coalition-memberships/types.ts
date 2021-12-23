@@ -1,6 +1,6 @@
 
 class CommonCoalitionMembership {
-    id?: number | undefined;
+    id?: string | undefined;
     coalition?: number | undefined;
     organization?: number | undefined;
     created_at?: string | undefined;

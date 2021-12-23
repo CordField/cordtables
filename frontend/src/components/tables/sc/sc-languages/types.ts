@@ -1,5 +1,5 @@
 class ScLanguage {
-  id?: number | undefined;
+  id?: string | undefined;
   name?: string | undefined;
 
   ethnologue?: number | undefined;
