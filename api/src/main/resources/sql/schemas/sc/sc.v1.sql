@@ -829,7 +829,8 @@ create table sc.language_engagements (
   id uuid primary key default public.uuid_generate_v4(),
 
 	project uuid references sc.projects(id), -- not null
-	ethnologue uuid references sc.ethnologue(id), -- not null
+	language uuid references sc.languages(id), -- not null
+--	ethnologue uuid references sc.ethnologue(id), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
   ceremony uuid references sc.ceremonies(id),

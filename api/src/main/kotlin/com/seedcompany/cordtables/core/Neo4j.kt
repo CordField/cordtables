@@ -650,172 +650,172 @@ class Neo4j(
 //        "field_region",
 //        "id"
 //      )
-      checkRelationship(n, r, m, "Directory", "rootDirectory", "Project") -> writeRelationship(
-        n,
-        m,
-        "sc.projects",
-        "common.directories",
-        "root_directory",
-        "id"
-      )
-      checkRelationship(n, r, m, "EthnologueLanguage", "ethnologue", "Language") -> writeRelationship(
-        n,
-        m,
-        "sc.languages",
-        "sil.table_of_languages",
-        "ethnologue",
-        "id"
-      )
-      checkRelationship(n, r, m, "Project", "engagement", "LanguageEngagement") -> writeRelationship(
-        n,
-        m,
-        "sc.language_engagements",
-        "sc.projects",
-        "project",
-        "id"
-      )
-      checkRelationship(n, r, m, "Language", "language", "LanguageEngagement") -> writeRelationship(
-        n,
-        m,
-        "sc.language_engagements",
-        "sc.languages",
-        "ethnologue",
-        "ethnologue"
-      )
-      checkRelationship(n, r, m, "Project", "engagement", "InternshipEngagement") -> writeRelationship(
-        n,
-        m,
-        "sc.internship_engagements",
-        "sc.projects",
-        "project",
-        "id"
-      )
-      checkRelationship(n, r, m, "Organization", "organization", "Partner") -> writeRelationship(
-        n,
-        m,
-        "sc.partners",
-        "sc.organizations",
-        "organization",
-        "id"
-      )
-      checkRelationship(n, r, m, "Partner", "partner", "Partnership") -> writeRelationship(
-        n,
-        m,
-        "sc.partnerships",
-        "sc.partners",
-        "partner",
-        "organization"
-      )
-      checkRelationship(n, r, m, "User", "pointOfContact", "Partner") -> writeRelationship(
-        n,
-        m,
-        "sc.partners",
-        "admin.people",
-        "point_of_contact",
-        "id"
-      )
-      checkRelationship(n, r, m, "InternshipEngagement", "ceremony", "Ceremony") -> writeRelationship(
-        n,
-        m,
-        "sc.ceremonies",
-        "sc.internship_engagements",
-        "project",
-        "project"
-      )
-      checkRelationship(n, r, m, "LanguageEngagement", "ceremony", "Ceremony") -> {
-        writeRelationship(n, m, "sc.ceremonies", "sc.language_engagements", "project", "project")
-        writeRelationship(n, m, "sc.ceremonies", "sc.language_engagements", "ethnologue", "ethnologue")
-      }
-      checkRelationship(n, r, m, "FundingAccount", "fundingAccount", "Location") -> writeRelationship(
-        n,
-        m,
-        "sc.locations",
-        "sc.funding_accounts",
-        "funding_account",
-        "id"
-      )
-      checkRelationship(n, r, m, "FieldRegion", "defaultFieldRegion", "Location") -> writeRelationship(
-        n,
-        m,
-        "sc.locations",
-        "sc.field_regions",
-        "default_region",
-        "id"
-      )
-      checkRelationship(n, r, m, "Location", "countryOfOrigin", "InternshipEngagement") -> writeRelationship(
-        n,
-        m,
-        "sc.internship_engagements",
-        "sc.locations",
-        "country_of_origin",
-        "id"
-      )
-      checkRelationship(n, r, m, "User", "mentor", "InternshipEngagement") -> writeRelationship(
-        n,
-        m,
-        "sc.internship_engagements",
-        "admin.people",
-        "mentor",
-        "id"
-      )
-      checkRelationship(n, r, m, "User", "intern", "InternshipEngagement") -> writeRelationship(
-        n,
-        m,
-        "sc.internship_engagements",
-        "admin.people",
-        "intern",
-        "id"
-      )
-      checkRelationship(n, r, m, "BaseFile", "pnpNode", "LanguageEngagement") -> writeRelationship(
-        n,
-        m,
-        "sc.language_engagements",
-        "common.files",
-        "pnp_file",
-        "id"
-      )
-      checkRelationship(n, r, m, "Location", "primaryLocation", "Project") -> writeRelationship(
-        n,
-        m,
-        "sc.projects",
-        "sc.locations",
-        "primary_location",
-        "id"
-      )
-      checkRelationship(n, r, m, "Location", "marketingLocation", "Project") -> writeRelationship(
-        n,
-        m,
-        "sc.projects",
-        "sc.locations",
-        "marketing_location",
-        "id"
-      )
-      checkRelationship(n, r, m, "User", "unavailability", "Unavailability") -> writeRelationship(
-        n,
-        m,
-        "sc.person_unavailabilities",
-        "admin.people",
-        "person",
-        "id"
-      )
-      checkRelationship(n, r, m, "User", "createdBy", "BaseFile") -> {
-        writeRelationship(
-          n,
-          m,
-          "common.files",
-          "admin.people",
-          "created_by",
-          "id"
-        )
-      }
-      checkRelationship(n, r, m, "User", "createdBy", "Directory") -> writeRelationship(
-        n,
-        m,
-        "common.directories",
-        "admin.people",
-        "created_by",
-        "id"
-      )
+//      checkRelationship(n, r, m, "Directory", "rootDirectory", "Project") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.projects",
+//        "common.directories",
+//        "root_directory",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "EthnologueLanguage", "ethnologue", "Language") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.languages",
+//        "sil.table_of_languages",
+//        "ethnologue",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Project", "engagement", "LanguageEngagement") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.language_engagements",
+//        "sc.projects",
+//        "project",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Language", "language", "LanguageEngagement") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.language_engagements",
+//        "sc.languages",
+//        "ethnologue",
+//        "ethnologue"
+//      )
+//      checkRelationship(n, r, m, "Project", "engagement", "InternshipEngagement") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.internship_engagements",
+//        "sc.projects",
+//        "project",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Organization", "organization", "Partner") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.partners",
+//        "sc.organizations",
+//        "organization",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Partner", "partner", "Partnership") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.partnerships",
+//        "sc.partners",
+//        "partner",
+//        "organization"
+//      )
+//      checkRelationship(n, r, m, "User", "pointOfContact", "Partner") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.partners",
+//        "admin.people",
+//        "point_of_contact",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "InternshipEngagement", "ceremony", "Ceremony") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.ceremonies",
+//        "sc.internship_engagements",
+//        "project",
+//        "project"
+//      )
+//      checkRelationship(n, r, m, "LanguageEngagement", "ceremony", "Ceremony") -> {
+//        writeRelationship(n, m, "sc.ceremonies", "sc.language_engagements", "project", "project")
+//        writeRelationship(n, m, "sc.ceremonies", "sc.language_engagements", "ethnologue", "ethnologue")
+//      }
+//      checkRelationship(n, r, m, "FundingAccount", "fundingAccount", "Location") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.locations",
+//        "sc.funding_accounts",
+//        "funding_account",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "FieldRegion", "defaultFieldRegion", "Location") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.locations",
+//        "sc.field_regions",
+//        "default_region",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Location", "countryOfOrigin", "InternshipEngagement") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.internship_engagements",
+//        "sc.locations",
+//        "country_of_origin",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "User", "mentor", "InternshipEngagement") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.internship_engagements",
+//        "admin.people",
+//        "mentor",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "User", "intern", "InternshipEngagement") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.internship_engagements",
+//        "admin.people",
+//        "intern",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "BaseFile", "pnpNode", "LanguageEngagement") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.language_engagements",
+//        "common.files",
+//        "pnp_file",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Location", "primaryLocation", "Project") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.projects",
+//        "sc.locations",
+//        "primary_location",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "Location", "marketingLocation", "Project") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.projects",
+//        "sc.locations",
+//        "marketing_location",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "User", "unavailability", "Unavailability") -> writeRelationship(
+//        n,
+//        m,
+//        "sc.person_unavailabilities",
+//        "admin.people",
+//        "person",
+//        "id"
+//      )
+//      checkRelationship(n, r, m, "User", "createdBy", "BaseFile") -> {
+//        writeRelationship(
+//          n,
+//          m,
+//          "common.files",
+//          "admin.people",
+//          "created_by",
+//          "id"
+//        )
+//      }
+//      checkRelationship(n, r, m, "User", "createdBy", "Directory") -> writeRelationship(
+//        n,
+//        m,
+//        "common.directories",
+//        "admin.people",
+//        "created_by",
+//        "id"
+//      )
     }
   }
 

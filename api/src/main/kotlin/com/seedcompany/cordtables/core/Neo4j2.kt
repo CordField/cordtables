@@ -218,15 +218,235 @@ class Neo4j2(
 //        baseNodeToPlaceInColumn = "FieldRegion",
 //      )
 //    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "Directory",
+//        type = "rootDirectory",
+//        toBaseNode = "Project",
+//        table = "sc.projects",
+//        column = "root_directory",
+//        baseNodeToPlaceInColumn = "Directory",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "EthnologueLanguage",
+//        type = "ethnologue",
+//        toBaseNode = "Language",
+//        table = "sc.languages",
+//        column = "ethnologue",
+//        baseNodeToPlaceInColumn = "EthnologueLanguage",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "Project",
+//        type = "engagement",
+//        toBaseNode = "LanguageEngagement",
+//        table = "sc.language_engagements",
+//        column = "project",
+//        baseNodeToPlaceInColumn = "Project",
+//      )
+//    )
+//
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "Language",
+//        type = "language",
+//        toBaseNode = "LanguageEngagement",
+//        table = "sc.language_engagements",
+//        column = "language",
+//        baseNodeToPlaceInColumn = "Language",
+//      )
+//    )
 
     queue.offer(
       RelationshipCreate(
-        fromBaseNode = "Directory",
-        type = "rootDirectory",
+        fromBaseNode = "Project",
+        type = "engagement",
+        toBaseNode = "InternshipEngagement",
+        table = "sc.projects",
+        column = "project",
+        baseNodeToPlaceInColumn = "Project",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Organization",
+        type = "organization",
+        toBaseNode = "Partner",
+        table = "sc.partners",
+        column = "organization",
+        baseNodeToPlaceInColumn = "Organization",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Partner",
+        type = "partner",
+        toBaseNode = "Partnership",
+        table = "sc.partnerships",
+        column = "partner",
+        baseNodeToPlaceInColumn = "Partner",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "User",
+        type = "pointOfContact",
+        toBaseNode = "Partner",
+        table = "sc.partners",
+        column = "point_of_contact",
+        baseNodeToPlaceInColumn = "User",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "InternshipEngagement",
+        type = "ceremony",
+        toBaseNode = "Ceremony",
+        table = "sc.ceremonies",
+        column = "project",
+        baseNodeToPlaceInColumn = "InternshipEngagement",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "LanguageEngagement",
+        type = "ceremony",
+        toBaseNode = "Ceremony",
+        table = "sc.ceremonies",
+        column = "project",
+        baseNodeToPlaceInColumn = "LanguageEngagement",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "FundingAccount",
+        type = "fundingAccount",
+        toBaseNode = "Location",
+        table = "sc.locations",
+        column = "funding_account",
+        baseNodeToPlaceInColumn = "FundingAccount",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "FieldRegion",
+        type = "defaultFieldRegion",
+        toBaseNode = "Location",
+        table = "sc.locations",
+        column = "default_region",
+        baseNodeToPlaceInColumn = "FieldRegion",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Location",
+        type = "countryOfOrigin",
+        toBaseNode = "InternshipEngagement",
+        table = "sc.internship_engagements",
+        column = "country_of_origin",
+        baseNodeToPlaceInColumn = "Location",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "User",
+        type = "mentor",
+        toBaseNode = "InternshipEngagement",
+        table = "sc.internship_engagements",
+        column = "mentor",
+        baseNodeToPlaceInColumn = "User",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "User",
+        type = "intern",
+        toBaseNode = "InternshipEngagement",
+        table = "sc.internship_engagements",
+        column = "intern",
+        baseNodeToPlaceInColumn = "User",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "BaseFile",
+        type = "pnpNode",
+        toBaseNode = "LanguageEngagement",
+        table = "sc.language_engagements",
+        column = "pnp_file",
+        baseNodeToPlaceInColumn = "BaseFile",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Location",
+        type = "primaryLocation",
         toBaseNode = "Project",
         table = "sc.projects",
-        column = "root_directory",
-        baseNodeToPlaceInColumn = "Directory",
+        column = "primary_location",
+        baseNodeToPlaceInColumn = "Location",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Location",
+        type = "marketingLocation",
+        toBaseNode = "Project",
+        table = "sc.projects",
+        column = "marketing_location",
+        baseNodeToPlaceInColumn = "Location",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "User",
+        type = "unavailability",
+        toBaseNode = "Unavailability",
+        table = "sc.person_unavailabilities",
+        column = "person",
+        baseNodeToPlaceInColumn = "User",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "User",
+        type = "createdBy",
+        toBaseNode = "File",
+        table = "common.files",
+        column = "created_by",
+        baseNodeToPlaceInColumn = "User",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "User",
+        type = "createdBy",
+        toBaseNode = "Directory",
+        table = "common.directories",
+        column = "created_by",
+        baseNodeToPlaceInColumn = "User",
       )
     )
 
