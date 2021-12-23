@@ -7,7 +7,7 @@ import { capitalize, capitalizePhrase } from '../../../../common/utility';
 import { fetchAs } from '../../../../common/utility';
 
 type SiteTextStringUpdateInput = {
-  id: number;
+  id: string;
   column: string;
   newValue: string;
 };
@@ -24,7 +24,7 @@ type SiteTextStringUpdateResponse = {
 
 type SiteTextTranslationUpdateInput = {
   language: number;
-  site_text: number;
+  site_text: string;
   newValue: string;
 };
 
@@ -40,7 +40,7 @@ type SiteTextTranslationUpdateResponse = {
 
 type SiteTextStringDeleteRequest = {
   token: string;
-  id: number;
+  id: string;
 };
 
 type SiteTextStringDeleteResponse = GenericResponse;
@@ -97,7 +97,7 @@ export class SiteText {
     this.newSiteText = { ...this.newSiteText, [event.target.name]: event.target.value };
   };
 
-  handleSiteTextStringUpdate = async (id: number, column: string, newValue: string): Promise<boolean> => {
+  handleSiteTextStringUpdate = async (id: string, column: string, newValue: string): Promise<boolean> => {
     const updateResponse = await fetchAs<SiteTextStringUpdateRequest, SiteTextStringUpdateResponse>('common-site-text-strings/update-read', {
       token: globals.globalStore.state.token,
       site_text_string: {
@@ -135,7 +135,7 @@ export class SiteText {
     }
   };
 
-  handleDelete = async (id: number): Promise<boolean> => {
+  handleDelete = async (id: string): Promise<boolean> => {
     const updateResponse = await fetchAs<SiteTextStringDeleteRequest, SiteTextStringDeleteResponse>('common-site-text-strings/delete', {
       token: globals.globalStore.state.token,
       id,
@@ -160,7 +160,7 @@ export class SiteText {
     }
   };
 
-  handleSiteTextTranslationUpdate = async (id: number, column: number, newValue: string): Promise<boolean> => {
+  handleSiteTextTranslationUpdate = async (id: string, column: number, newValue: string): Promise<boolean> => {
     const updateResponse = await fetchAs<SiteTextTranslationUpdateRequest, SiteTextTranslationUpdateResponse>('common-site-text-translations/update-read', {
       token: globals.globalStore.state.token,
       site_text_translation: {

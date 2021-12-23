@@ -21,7 +21,7 @@ data class ScPersonUnavailabilitiesCreateRequest(
 
 data class ScPersonUnavailabilitiesCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -75,7 +75,7 @@ class Create(
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.personUnavailability.person,
             req.personUnavailability.period_start,
             req.personUnavailability.period_end,

@@ -1,7 +1,7 @@
 import { ErrorType, GenericResponse } from '../../../../common/types';
 
 export class CommonPost {
-  id?: number | undefined;
+  id?: string | undefined;
   content?: string | undefined;
   thread?: number | undefined;
   created_at?: string | undefined;
@@ -16,7 +16,7 @@ export class CreateCommonPostsRequest {
   token: string;
   post: {
     content: string;
-    thread: number;
+    thread: string;
   };
 }
 
@@ -26,7 +26,7 @@ export class CreateCommonPostsResponse extends GenericResponse {
 
 export class CommonPostsListRequest {
   token: string;
-  threadId?: number;
+  threadId?: string;
 }
 
 export class CommonPostsListResponse {
@@ -38,7 +38,7 @@ export class CommonPostsUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 export class CommonPostsUpdateResponse {
@@ -47,10 +47,10 @@ export class CommonPostsUpdateResponse {
 }
 
 export class DeleteCommonPostsRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 export class DeleteCommonPostsResponse extends GenericResponse {
-  id: number;
+  id: string;
 }

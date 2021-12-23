@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateOrganizationExRequest {
   token: string;
   organization: {
-    id: number;
+    id: string;
     neo4j_id: string;
     address: string;
   };
@@ -31,7 +31,7 @@ class ScOrganizationUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScOrganizationUpdateResponse {
@@ -40,12 +40,12 @@ class ScOrganizationUpdateResponse {
 }
 
 class DeleteOrganizationExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteOrganizationExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -59,9 +59,9 @@ export class ScOrganizations {
 
   newNeo4j_id: string;
   newAddress: string;
-  newId: number;
+  newId: string;
   
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScOrganizationUpdateRequest, ScOrganizationUpdateResponse>('sc-organizations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.files
 
 data class CommonFile(
-    var id: Int? = null,
+    var id: String? = null,
     val directory: Int? = null,
     val name: String? = null,
     val created_at: String? = null,
@@ -13,7 +13,7 @@ data class CommonFile(
 )
 
 data class CommonFileInput(
-    var id: Int? = null,
+    var id: String? = null,
     val directory: Int? = null,
     val name: String? = null,
     val created_at: String? = null,

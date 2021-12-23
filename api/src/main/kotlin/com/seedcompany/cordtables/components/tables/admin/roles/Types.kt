@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.admin.roles
 
 data class role(
-    var id: Int? = null,
+    var id: String? = null,
 
     val name: String? = null,
 
@@ -14,7 +14,7 @@ data class role(
 )
 
 data class roleInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val name: String? = null,
 

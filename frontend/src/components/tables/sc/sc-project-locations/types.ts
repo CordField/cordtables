@@ -1,6 +1,6 @@
 
 class ScProjectLocation {
-    id?: number | undefined;
+    id?: string | undefined;
 
     active?: boolean | undefined;
     change_to_plan?: number | undefined;

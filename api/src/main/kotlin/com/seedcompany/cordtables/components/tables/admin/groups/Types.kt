@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.admin.groups
 
 data class group(
-    var id: Int? = null,
+    var id: String? = null,
     val name: String? = null,
     val parent_group: Int? = null,
     val created_at: String? = null,
@@ -13,7 +13,7 @@ data class group(
 )
 
 data class groupInput(
-    var id: Int? = null,
+    var id: String? = null,
     val name: String? = null,
     val parent_group: Int? = null,
     val created_at: String? = null,

@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.global_partner_assessments
 
 data class globalPartnerAssessment(
-    var id: Int? = null,
+    var id: String? = null,
     val partner: Int? = null,
     val governance_trans: String? = null,
     val director_trans: String? = null,
@@ -27,7 +27,7 @@ data class globalPartnerAssessment(
 )
 
 data class globalPartnerAssessmentInput(
-    var id: Int? = null,
+    var id: String? = null,
     val partner: Int? = null,
     val governance_trans: String? = null,
     val director_trans: String? = null,

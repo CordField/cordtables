@@ -1,6 +1,6 @@
 
 class ScPartnership {
-    id?: number | undefined;
+    id?: string | undefined;
 
     project?: number | undefined; // int not null references sc.projects(id),
     partner?: number | undefined; // int not null references sc.organizations(id),

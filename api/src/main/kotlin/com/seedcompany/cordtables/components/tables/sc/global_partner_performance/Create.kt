@@ -21,7 +21,7 @@ data class ScGlobalPartnerPerformanceCreateRequest(
 
 data class ScGlobalPartnerPerformanceCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -76,7 +76,7 @@ class Create(
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.globalPartnerPerformance.organization,
             req.globalPartnerPerformance.reporting_performance,
             req.globalPartnerPerformance.financial_performance,

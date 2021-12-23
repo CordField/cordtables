@@ -46,7 +46,7 @@ class ScGlobalPartnerAssessmentUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScGlobalPartnerAssessmentUpdateResponse {
@@ -55,12 +55,12 @@ class ScGlobalPartnerAssessmentUpdateResponse {
 }
 
 class DeleteGlobalPartnerAssessmentExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGlobalPartnerAssessmentExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -90,7 +90,7 @@ export class ScGlobalPartnerAssessments {
   newTech_translation_opp: string;
   
   
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScGlobalPartnerAssessmentUpdateRequest, ScGlobalPartnerAssessmentUpdateResponse>('sc-global-partner-assessments/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

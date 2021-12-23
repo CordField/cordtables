@@ -1,6 +1,6 @@
 
 class ScGlobalPartnerEngagementPeople {
-    id?: number | undefined;
+    id?: string | undefined;
 
     engagement?: number | undefined;
     person?: number | undefined;

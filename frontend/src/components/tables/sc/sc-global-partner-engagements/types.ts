@@ -1,6 +1,6 @@
 
 class ScGlobalPartnerEngagement {
-    id?: number | undefined;
+    id?: string | undefined;
 
     organization?: number | undefined;
     type?: string | undefined;

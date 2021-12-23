@@ -42,7 +42,7 @@ class CommonFileVersionUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonFileVersionUpdateResponse {
@@ -51,12 +51,12 @@ class CommonFileVersionUpdateResponse {
 }
 
 class DeleteFileVersionExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFileVersionExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -77,7 +77,7 @@ export class FileVersions {
   newFileSize: number;
 
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonFileVersionUpdateRequest, CommonFileVersionUpdateResponse>('common-file-versions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

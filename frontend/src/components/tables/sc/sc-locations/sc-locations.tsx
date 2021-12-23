@@ -33,12 +33,12 @@ class ScLocationUpdateResponse {
 }
 
 class DeleteLocationRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteLocationResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 const locationTypeSelectOptions = [
@@ -59,7 +59,7 @@ export class ScLocations {
   newLocationName: string;
   newLocationType: string = 'City';
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLocationsUpdateRequest, ScLocationUpdateResponse>('sc-locations/update-read', {
       token: globals.globalStore.state.token,
       location: {

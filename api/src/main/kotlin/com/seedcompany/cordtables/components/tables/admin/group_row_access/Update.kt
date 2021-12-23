@@ -1,11 +1,6 @@
 package com.seedcompany.cordtables.components.tables.admin.group_row_access
 
 import com.seedcompany.cordtables.common.*
-import com.seedcompany.cordtables.components.tables.admin.group_row_access.AdminGroupRowAccessUpdateRequest
-import com.seedcompany.cordtables.components.tables.admin.group_row_access.Update as CommonUpdate
-import com.seedcompany.cordtables.components.tables.admin.group_row_access.AdminGroupRowAccessUpdateResponse
-import com.seedcompany.cordtables.components.tables.admin.group_row_access.groupRowAccessInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -16,7 +11,7 @@ import javax.sql.DataSource
 
 data class AdminGroupRowAccessUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )

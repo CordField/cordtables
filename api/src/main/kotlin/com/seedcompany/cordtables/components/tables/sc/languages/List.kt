@@ -2072,7 +2072,7 @@ order by id
                         val jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)
                         while (jdbcResult.next()) {
 
-                                var id: Int? = jdbcResult.getInt("id")
+                                var id: String? = jdbcResult.getString("id")
                                 if (jdbcResult.wasNull()) id = null
 
                                 var neo4j_id: String? = jdbcResult.getString("neo4j_id")

@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.pinned_projects
 
 data class pinnedProject(
-    var id: Int? = null,
+    var id: String? = null,
 
     val person: Int? = null,
     val project: Int? = null,
@@ -15,7 +15,7 @@ data class pinnedProject(
 )
 
 data class pinnedProjectInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val person: Int? = null,
     val project: Int? = null,

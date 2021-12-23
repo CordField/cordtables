@@ -7,7 +7,7 @@ class GroupsGlobalRoleMembershipsRequest {
 }
 
 class GroupsGlobalRoleMembershipsRow {
-  id: number;
+  id: string;
   globalRole: number;
   person: number;
   createdAt: string;
@@ -39,7 +39,7 @@ class GroupUpdateRequest {
   role?: number;
   person?: number;
   owning_group?: number;
-  id: number;
+  id: string;
 }
 
 class GroupUpdateResponse {
@@ -48,7 +48,7 @@ class GroupUpdateResponse {
 
 class GroupDeleteRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class GroupDeleteResponse {
@@ -115,7 +115,7 @@ export class GlobalRoleMemberships {
     }
   };
 
-  updateGlobalRole = async (id: number, columnName: string, value: number): Promise<boolean> => {
+  updateGlobalRole = async (id: string, columnName: string, value: number): Promise<boolean> => {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, role: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
@@ -127,7 +127,7 @@ export class GlobalRoleMemberships {
     }
   };
 
-  clickRemoveRowIcon = async (value: number): Promise<boolean> => {
+  clickRemoveRowIcon = async (value: string): Promise<boolean> => {
     this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groups/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {

@@ -33,7 +33,7 @@ class ScLanguagesUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScLanguageUpdateResponse {
@@ -43,12 +43,12 @@ class ScLanguageUpdateResponse {
 }
 
 class DeleteLanguageExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteLanguageExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 @Component({
   tag: 'sc-languages',
@@ -62,7 +62,7 @@ export class ScLanguages {
   newDisplayName: string;
   newEthnologue: number;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

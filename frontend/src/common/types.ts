@@ -19,7 +19,7 @@ export enum AppState {
 //export type EgidsScale = `0` | `1` | `2` | `3` | `4` | `5` | `6a` | `6b` | `7` | `8a` | `8b` | `9` | `10`;
 
 export interface GlobalRole {
-  id: number;
+  id: string;
   created_at: string;
   created_by: number;
   modified_at: string;
@@ -31,7 +31,7 @@ export interface GlobalRole {
 }
 
 export interface LanguageEx {
-  id?: number;
+  id?: string;
   language_name?: string;
   iso?: string;
   prioritization?: number;
@@ -86,7 +86,7 @@ export interface LanguageEx {
   owning_group?: number;
 }
 export interface globalRoleTablePermissions {
-  id: number;
+  id: string;
   createdAt: string;
   createdBy: number;
   globalRole: number;
@@ -105,7 +105,7 @@ export enum ActionType {
 }
 
 export interface ScriptureReference {
-  id: number;
+  id: string;
   book_start: string;
   book_end: string;
   chapter_start: number;
@@ -115,7 +115,7 @@ export interface ScriptureReference {
 }
 
 export interface AdminUser {
-  id?: number;
+  id?: string;
   person?: number;
   email?: string;
   chat?: number;
@@ -133,14 +133,14 @@ export type SiteTextLanguage = {
 }
 
 export type SiteTextString = {
-  id: number,
+  id: string,
   english: string,
   comment: string
 }
 
 export type SiteTextTranslation = {
-  id: number,
-  site_text: number,
+  id: string,
+  site_text: string,
   translation: string
 }
 

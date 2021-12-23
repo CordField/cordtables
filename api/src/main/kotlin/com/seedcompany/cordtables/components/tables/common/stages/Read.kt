@@ -20,7 +20,7 @@ import javax.sql.DataSource
 
 data class CommonStagesReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 data class CommonStagesReadResponse(
@@ -74,7 +74,7 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
                 var title: String? = jdbcResult.getString("title")

@@ -1,6 +1,6 @@
 
 class AdminGroupMembership {
-    id?: number | undefined;
+    id?: string | undefined;
 
     group_id?: number | undefined;
     person?: number | undefined;

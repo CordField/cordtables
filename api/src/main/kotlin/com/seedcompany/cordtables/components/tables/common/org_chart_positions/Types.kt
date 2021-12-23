@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.org_chart_positions
 
 data class orgChartPosition(
-    var id: Int? = null,
+    var id: String? = null,
     val organization: Int? = null,
     val name: String? = null,
     val created_at: String? = null,
@@ -13,7 +13,7 @@ data class orgChartPosition(
 )
 
 data class orgChartPositionInput(
-    var id: Int? = null,
+    var id: String? = null,
     val organization: Int? = null,
     val name: String? = null,
     val created_at: String? = null,

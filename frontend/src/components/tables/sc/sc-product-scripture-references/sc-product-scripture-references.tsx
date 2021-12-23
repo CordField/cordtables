@@ -32,7 +32,7 @@ class ScProductScriptureReferenceUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScProductScriptureReferenceUpdateResponse {
@@ -41,12 +41,12 @@ class ScProductScriptureReferenceUpdateResponse {
 }
 
 class DeleteProductScriptureReferenceExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteProductScriptureReferenceExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -63,7 +63,7 @@ export class ScProductScriptureReferences {
   newChange_to_plan: number;
   newActive: boolean;
   
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScProductScriptureReferenceUpdateRequest, ScProductScriptureReferenceUpdateResponse>('sc-product-scripture-references/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

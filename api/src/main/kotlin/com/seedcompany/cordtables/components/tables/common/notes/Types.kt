@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.notes
 
 data class note(
-    var id: Int? = null,
+    var id: String? = null,
 
     val table_name: String? = null,
     val column_name: String? = null,
@@ -17,7 +17,7 @@ data class note(
 )
 
 data class noteInput(
-    var id: Int? = null,
+    var id: String? = null,
     val table_name: String? = null,
     val column_name: String? = null,
     val row: Int? = null,

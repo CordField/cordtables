@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.sc.locations
 import com.seedcompany.cordtables.common.LocationType
 
 data class ScLocation(
-    var id: Int? = null,
+    var id: String? = null,
 
     val neo4j_id: String? = null,
     val default_region: Int? = null,
@@ -21,7 +21,7 @@ data class ScLocation(
 )
 
 data class ScLocationInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val neo4j_id: String? = null,
     val default_region: Int? = null,

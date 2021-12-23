@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.known_languages_by_person
 
 data class knownLanguagesByPerson(
-    var id: Int? = null,
+    var id: String? = null,
     val person: Int? = null,
     val known_language: Int? = null,
     val created_at: String? = null,
@@ -13,7 +13,7 @@ data class knownLanguagesByPerson(
 )
 
 data class knownLanguagesByPersonInput(
-    var id: Int? = null,
+    var id: String? = null,
     val person: Int? = null,
     val known_language: Int? = null,
     val created_at: String? = null,

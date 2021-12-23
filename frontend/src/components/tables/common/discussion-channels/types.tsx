@@ -1,7 +1,7 @@
 import { ErrorType, GenericResponse } from '../../../../common/types';
 
 export class CommonDiscussionChannel {
-  id?: number;
+  id?: string;
   name?: string;
   created_at?: string;
   created_by?: number;
@@ -35,7 +35,7 @@ export class CommonDiscussionChannelUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 export class CommonDiscussionChannelUpdateResponse {
@@ -44,10 +44,10 @@ export class CommonDiscussionChannelUpdateResponse {
 }
 
 export class DeleteCommonDiscussionChannelRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 export class DeleteCommonDiscussionChannelResponse extends GenericResponse {
-  id: number;
+  id: string;
 }

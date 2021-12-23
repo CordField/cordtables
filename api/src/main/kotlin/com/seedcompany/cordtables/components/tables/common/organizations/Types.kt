@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.common.organizations
 import com.seedcompany.cordtables.common.CommonSensitivity
 
 data class CommonOrganization (
-        val id: Int? = null,
+        val id: String? = null,
         val name: String? = null,
         val sensitivity: CommonSensitivity? = null,
         val primary_location: Int? = null,

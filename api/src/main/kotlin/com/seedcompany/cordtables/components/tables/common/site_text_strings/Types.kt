@@ -6,7 +6,7 @@ data class SiteTextStringInput(
 )
 
 data class SiteTextString(
-  var id: Int,
+  var id: String,
   var english: String,
   var comment: String?,
 

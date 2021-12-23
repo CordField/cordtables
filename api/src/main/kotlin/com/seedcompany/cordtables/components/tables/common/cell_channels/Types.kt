@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.cell_channels
 
 data class CellChannel(
-        val id: Int? = null,
+        val id: String? = null,
         val table_name: String? = null,
         val column_name: String? = null,
         val row: Int? = null,

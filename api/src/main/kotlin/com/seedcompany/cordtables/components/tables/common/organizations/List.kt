@@ -15,7 +15,7 @@ import kotlin.collections.List
 
 
 data class CommonOrganizations(
-        val id: Int?,
+        val id: String?,
         val name: String? = null,
         val sensitivity: String?,
         val primary_location: Int? = null,
@@ -164,7 +164,7 @@ class List(
 
         while (jdbcResult.next()) {
 
-            var id: Int? = jdbcResult.getInt("id")
+            var id: String? = jdbcResult.getString("id")
             if (jdbcResult.wasNull()) id = null
 
             var name: String? = jdbcResult.getString("name")

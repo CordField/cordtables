@@ -7,7 +7,7 @@ data class SiteTextTranslationInput(
 )
 
 data class SiteTextTranslation(
-  var id: Int,
+  var id: String,
   var language: Int,
   var site_text: Int,
   var translation: String,

@@ -21,7 +21,7 @@ data class ScFundingAccountsCreateRequest(
 
 data class ScFundingAccountsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -75,7 +75,7 @@ class Create(
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.fundingAccount.neo4j_id,
             req.fundingAccount.account_number,
             req.fundingAccount.name,

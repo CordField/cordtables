@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.budget_records
 
 data class BudgetRecord(
-    var id: Int? = null,
+    var id: String? = null,
     var budget: Int? = null,
     var change_to_plan: Int? = null,
     var active: Boolean? = null,

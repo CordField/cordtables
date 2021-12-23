@@ -1,6 +1,6 @@
 
 class ScPeople {
-    id?: number | undefined;
+    id?: string | undefined;
 
     neo4j_id?: string | undefined;
     skills?: string | undefined;

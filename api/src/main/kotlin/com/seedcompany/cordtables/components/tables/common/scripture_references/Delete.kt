@@ -13,7 +13,7 @@ import javax.sql.DataSource
 
 data class ScriptureReferenceDeleteRequest(
     val token: String? = null,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 data class ScriptureReferenceDeleteResponse(
@@ -48,7 +48,7 @@ class Delete(
                 """.trimIndent()
                 )
 
-                deleteStatement.setInt(1, req.id)
+                deleteStatement.setString(1, req.id)
 
                 deleteStatement.execute()
             }

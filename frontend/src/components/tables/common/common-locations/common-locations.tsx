@@ -32,7 +32,7 @@ class CommonLocationUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonLocationUpdateResponse {
@@ -41,12 +41,12 @@ class CommonLocationUpdateResponse {
 }
 
 class DeleteLocationExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteLocationExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -63,7 +63,7 @@ export class CommonLocations {
   newType: string;
   newIso_alpha3: string;
   
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonLocationUpdateRequest, CommonLocationUpdateResponse>('common-locations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

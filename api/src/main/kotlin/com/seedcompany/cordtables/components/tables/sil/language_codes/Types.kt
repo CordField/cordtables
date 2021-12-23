@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sil.language_codes
 
 data class languageCode(
-    var id: Int? = null,
+    var id: String? = null,
 
     val lang: String? = null,
     val country: String? = null,
@@ -17,7 +17,7 @@ data class languageCode(
 )
 
 data class languageCodeInput(
-    var id: Int? = null,
+    var id: String? = null,
     val lang: String? = null,
     val country: String? = null,
     val lang_status: String? = null,

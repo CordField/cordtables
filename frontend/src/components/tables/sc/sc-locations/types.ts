@@ -1,5 +1,5 @@
 export type ScLocation = {
-  id?: number | undefined;
+  id?: string | undefined;
   name?: string | undefined;
 
   default_region?: number | undefined;

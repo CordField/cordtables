@@ -1,6 +1,6 @@
 
 class AdminGroupRowAccess {
-    id?: number | undefined;
+    id?: string | undefined;
 
     group_id?: number | undefined;
     table_name?: string | undefined;

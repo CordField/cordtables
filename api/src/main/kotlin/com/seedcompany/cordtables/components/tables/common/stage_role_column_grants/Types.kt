@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.stage_role_column_grants
 
 data class stageRoleColumnGrant(
-    var id: Int? = null,
+    var id: String? = null,
 
     val stage: Int? = null,
     val role: Int? = null,
@@ -18,7 +18,7 @@ data class stageRoleColumnGrant(
 )
 
 data class stageRoleColumnGrantInput(
-    var id: Int? = null,
+    var id: String? = null,
     val stage: Int? = null,
     val role: Int? = null,
     val table_name: String? = null,

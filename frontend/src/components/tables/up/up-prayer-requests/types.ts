@@ -1,6 +1,6 @@
 
 class UpPrayerRequest {
-    id?: number | undefined;
+    id?: string | undefined;
 
     request_language_id?: number | undefined;
     target_language_id?: number | undefined;

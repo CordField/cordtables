@@ -12,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonThreadsUpdateRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
         val column: String? = null,
         val value: Any? = null,
 )
@@ -58,7 +58,7 @@ class Update(
                         column = "channel",
                         id = req.id,
                         value = req.value,
-                        cast="::integer"
+                        cast ="::integer"
                 )
             }
             "owning_person" -> {

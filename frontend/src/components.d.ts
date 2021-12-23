@@ -42,7 +42,7 @@ export namespace Components {
     interface CfCell2 {
         "cellType": CellType;
         "columnDescription": ColumnDescription;
-        "rowId": number;
+        "rowId": string;
         "value": any;
     }
     interface CfHeader {
@@ -276,8 +276,8 @@ export namespace Components {
         "selectedDiscussionChannel": CommonDiscussionChannel;
     }
     interface SlackForm {
-        "selectedChannelId": number;
-        "selectedThreadId": number;
+        "selectedChannelId": string;
+        "selectedThreadId": string;
         "type": 'thread' | 'post';
     }
     interface SlackPage {
@@ -1303,7 +1303,7 @@ declare namespace LocalJSX {
     interface CfCell2 {
         "cellType"?: CellType;
         "columnDescription"?: ColumnDescription;
-        "rowId"?: number;
+        "rowId"?: string;
         "value"?: any;
     }
     interface CfHeader {
@@ -1546,14 +1546,14 @@ declare namespace LocalJSX {
     interface SlackForm {
         "onPostAdded"?: (event: CustomEvent<CommonPost>) => void;
         "onThreadAdded"?: (event: CustomEvent<CommonThread>) => void;
-        "selectedChannelId"?: number;
-        "selectedThreadId"?: number;
+        "selectedChannelId"?: string;
+        "selectedThreadId"?: string;
         "type"?: 'thread' | 'post';
     }
     interface SlackPage {
     }
     interface SlackPost {
-        "onPostDeleted"?: (event: CustomEvent<number>) => void;
+        "onPostDeleted"?: (event: CustomEvent<string>) => void;
         "post"?: CommonPost;
     }
     interface SlackSidebar {
@@ -1561,7 +1561,7 @@ declare namespace LocalJSX {
         "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
     }
     interface SlackThread {
-        "onThreadDeleted"?: (event: CustomEvent<number>) => void;
+        "onThreadDeleted"?: (event: CustomEvent<string>) => void;
         "thread"?: CommonThread;
     }
     interface StageGraph {

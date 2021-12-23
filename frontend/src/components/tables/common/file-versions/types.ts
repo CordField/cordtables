@@ -1,5 +1,5 @@
 class CommonFileVersion {
-    id?: number | undefined;
+    id?: string | undefined;
     category?: string | undefined;
     mime_type?: string | undefined;
     name?: string | undefined;

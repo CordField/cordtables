@@ -1,6 +1,6 @@
 
 class CommonFile {
-    id?: number | undefined;
+    id?: string | undefined;
     directory?: number | undefined;
     name?: string | undefined;
     created_at?: string | undefined;

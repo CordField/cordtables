@@ -1,6 +1,6 @@
 
 class AdminGroup {
-    id?: number | undefined;
+    id?: string | undefined;
 
     name?: string | undefined;
     parent_group?: number | undefined;

@@ -31,7 +31,7 @@ class CommonPeopleGraphUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonPeopleGraphUpdateResponse {
@@ -40,12 +40,12 @@ class CommonPeopleGraphUpdateResponse {
 }
 
 class DeletePeopleGraphExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePeopleGraphExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -61,7 +61,7 @@ export class CommonPeopleGraphs {
   newTo_person: number;
   newRel_type: string;
   
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonPeopleGraphUpdateRequest, CommonPeopleGraphUpdateResponse>('common-people-graph/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

@@ -1,6 +1,6 @@
 
 class SilLanguageIndex {
-    id?: number | undefined;
+    id?: string | undefined;
 
     common_id?: number | undefined;
     lang?: string | undefined;

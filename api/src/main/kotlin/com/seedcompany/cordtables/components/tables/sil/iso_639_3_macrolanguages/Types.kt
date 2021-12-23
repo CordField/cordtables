@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sil.iso_639_3_macrolanguages
 
 data class iso6393Macrolanguage(
-    var id: Int? = null,
+    var id: String? = null,
 
     val m_id: String? = null,
     val i_id: String? = null,
@@ -16,7 +16,7 @@ data class iso6393Macrolanguage(
 )
 
 data class iso6393MacrolanguageInput(
-    var id: Int? = null,
+    var id: String? = null,
     val m_id: String? = null,
     val i_id: String? = null,
     val i_status: String? = null,

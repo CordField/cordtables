@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.sc.products
 import kotlin.collections.List
 
 data class product(
-    var id: Int? = null,
+    var id: String? = null,
 
     val neo4j_id: String? = null,
     val name: String? = null,
@@ -23,7 +23,7 @@ data class product(
 )
 
 data class productInput(
-    var id: Int? = null,
+    var id: String? = null,
     val neo4j_id: String? = null,
     val name: String? = null,
     val change_to_plan: Int? = null,

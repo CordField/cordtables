@@ -58,7 +58,7 @@ export class SiteTextService {
     });
   }
 
-  private findString(strings: SiteTextString[], site_text: number): string {
+  private findString(strings: SiteTextString[], site_text: string): string {
     const siteTextString = strings.find((item: SiteTextString) => item.id === site_text);
     return siteTextString.english;
   }

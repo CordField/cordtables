@@ -12,13 +12,13 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class CommonDiscussionChannelsDeleteRequest(
-    val id: Int,
+    val id: String,
     val token: String?,
 )
 
 data class CommonDiscussionChannelsDeleteResponse(
     val error: ErrorType,
-    val id: Int?
+    val id: String?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -38,7 +38,7 @@ class Delete(
             return CommonDiscussionChannelsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
-        var deletedDiscussionChannelExId: Int? = null
+        var deletedDiscussionChannelExId: String? = null
 
         this.ds.connection.use { conn ->
             try {
@@ -46,12 +46,12 @@ class Delete(
                 val deleteStatement = conn.prepareCall(
                     "delete from common.discussion_channels where id = ? returning id"
                 )
-                deleteStatement.setInt(1, req.id)
+                deleteStatement.setString(1, req.id)
 
                 val deleteStatementResult = deleteStatement.executeQuery()
 
                 if (deleteStatementResult.next()) {
-                  deletedDiscussionChannelExId  = deleteStatementResult.getInt("id")
+                  deletedDiscussionChannelExId  = deleteStatementResult.getString("id")
                 }
             }
             catch (e:SQLException ){

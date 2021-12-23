@@ -1,6 +1,6 @@
 
 class SilTableOfLanguagesInCountry {
-    id?: number | undefined;
+    id?: string | undefined;
 
     iso_639?: string | undefined;
     language_name?: string | undefined;

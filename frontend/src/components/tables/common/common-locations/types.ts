@@ -1,6 +1,6 @@
 
 class CommonLocation {
-    id?: number | undefined;
+    id?: string | undefined;
 
     name?: string | undefined;
     sensitivity?: string | undefined;

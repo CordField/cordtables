@@ -1,5 +1,5 @@
 class ScLanguageEngagement {
-  id?: number | undefined;
+  id?: string | undefined;
 
   neo4j_id?: string | undefined; // varchar(32) not null,
   project?: number | undefined; // int not null references sc.projects(id),

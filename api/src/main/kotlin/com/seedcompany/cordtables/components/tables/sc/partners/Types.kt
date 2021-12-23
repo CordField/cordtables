@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.partners
 
 data class partner(
-    var id: Int? = null,
+    var id: String? = null,
 
     val organization: Int? = null, // int not null references sc.organizations(id),
     val active: Boolean? = null,
@@ -20,7 +20,7 @@ data class partner(
 )
 
 data class partnerInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val organization: Int? = null, // int not null references sc.organizations(id),
     val active: Boolean? = null,

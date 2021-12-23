@@ -13,7 +13,7 @@ data class GetIsCellEditableRequest(
     val token: String? = null,
     val table: String? = null,
     val column: String? = null,
-    val row: Int? = null,
+    val row: String? = null,
 )
 
 data class GetIsCellEditableResponse(

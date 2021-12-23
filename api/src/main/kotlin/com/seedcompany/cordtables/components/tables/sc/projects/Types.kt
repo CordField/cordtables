@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.projects
 
 data class project(
-    var id: Int? = null,
+    var id: String? = null,
 
     val neo4j_id: String? = null,
     val name: String? = null,
@@ -32,7 +32,7 @@ data class project(
 )
 
 data class projectInput(
-    var id: Int? = null,
+    var id: String? = null,
     val neo4j_id: String? = null,
     val name: String? = null,
     val change_to_plan: Int? = null,

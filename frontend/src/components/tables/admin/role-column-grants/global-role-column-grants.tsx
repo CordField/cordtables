@@ -4,7 +4,7 @@ import { GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 
 class readAllResponse extends GenericResponse {
-  id: number;
+  id: string;
   access_level?: String;
   column_name?: String;
   created_at?: String;
@@ -17,7 +17,7 @@ class readAllResponse extends GenericResponse {
 }
 
 class readOneRequest {
-  id: number;
+  id: string;
 }
 
 class create {
@@ -32,7 +32,7 @@ class create {
 }
 
 class update {
-  id: number;
+  id: string;
   access_level?: String;
   column_name?: String;
   created_at?: String;
@@ -46,14 +46,14 @@ class update {
 }
 
 class deleteRow {
-  id: number;
+  id: string;
   token: String;
 }
 
 const tableColumns = ['Id', 'Access Level', 'Column Name', 'Created At', 'Created By', 'Global Role', 'Modified At', 'Modified By', 'Table Name'];
 
 interface readOne {
-  id: number;
+  id: string;
   access_level?: string;
   column_name?: string;
   created_at?: string;
@@ -64,7 +64,7 @@ interface readOne {
   table_name?: string;
 }
 
-let rowId = 0;
+let rowId = '';
 
 @Component({
   tag: 'role-column-grants',
@@ -80,7 +80,7 @@ export class GlobalRoleColumnGrants {
   @State() dataOne: Array<readOne>;
   @State() selectValue: string;
   @State() readOneValues: readOne = {
-    id: 0,
+    id: '',
     access_level: '',
     column_name: '',
     created_at: '',
@@ -132,7 +132,7 @@ export class GlobalRoleColumnGrants {
   @Listen('modalOkay')
   async handleModalOkay(event) {
     if (event && event.detail) {
-      if (this.readOneValues.id === 0) {
+      if (this.readOneValues.id === '') {
         try {
           await fetchAs<create, readAllResponse>('table/role-column-grants-create', {
             access_level: this.selectValue,
@@ -170,7 +170,7 @@ export class GlobalRoleColumnGrants {
   @Listen('modalDelete')
   async handleModalDelete(event) {
     if (event && event.detail) {
-      if (this.readOneValues.id !== 0) {
+      if (this.readOneValues.id !== '') {
         try {
           await fetchAs<deleteRow, readAllResponse>('table/role-column-grants-delete', {
             id: this.readOneValues.id,
@@ -200,7 +200,7 @@ export class GlobalRoleColumnGrants {
   }
 
   cleanFields() {
-    this.readOneValues.id = 0;
+    this.readOneValues.id = '';
     this.readOneValues.column_name = '';
     this.readOneValues.created_at = '';
     this.readOneValues.created_by = null;

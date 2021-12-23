@@ -1,6 +1,6 @@
 
 class ScProductScriptureReference {
-    id?: number | undefined;
+    id?: string | undefined;
 
     product?: number | undefined;
     scripture_reference?: number | undefined;

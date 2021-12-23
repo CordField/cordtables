@@ -21,7 +21,7 @@ data class CommonFileVersionsCreateRequest(
 
 data class CommonFileVersionsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -78,7 +78,7 @@ class Create(
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.fileVersion.name,
             req.fileVersion.category,
             req.fileVersion.mime_type,

@@ -1,6 +1,6 @@
 
 class AdminRoleMembership {
-    id?: number | undefined;
+    id?: string | undefined;
 
     role?: number | undefined;
     person?: number | undefined;

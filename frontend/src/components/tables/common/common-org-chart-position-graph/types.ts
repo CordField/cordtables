@@ -1,6 +1,6 @@
 
 class CommonOrgChartPositionGraph {
-    id?: number | undefined;
+    id?: string | undefined;
 
     from_position?: number | undefined;
     to_position?: number | undefined;

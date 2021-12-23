@@ -1,6 +1,6 @@
 
 class AdminUser {
-    id?: number | undefined;
+    id?: string | undefined;
 
     person?: number | undefined;
     email?: string | undefined;

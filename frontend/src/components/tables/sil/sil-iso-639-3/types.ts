@@ -1,5 +1,5 @@
 class SilIso6393 {
-    id?: number | undefined;
+    id?: string | undefined;
 
     _id?: string | undefined;
     part_2b?: string | undefined;

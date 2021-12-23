@@ -20,7 +20,7 @@ import javax.sql.DataSource
 
 data class SilIso6393MacrolanguagesReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 data class SilIso6393MacrolanguagesReadResponse(
@@ -76,7 +76,7 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
                 var m_id: String? = jdbcResult.getString("m_id")

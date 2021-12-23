@@ -13,7 +13,7 @@ class CreateTicketGraphRequest{
 }
 
 class CommonTicketGraphRow{
-  id : number;
+  id : string;
   from_ticket: number;
   to_ticket : number;
   created_at: string;
@@ -41,7 +41,7 @@ class CommonTicketGraphUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonTicketGraphUpdateResponse {
@@ -50,12 +50,12 @@ class CommonTicketGraphUpdateResponse {
 }
 
 class DeleteTicketRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteTicketResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -72,7 +72,7 @@ export class TicketGraph {
 
 
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> =>{
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> =>{
     const updateResponse = await fetchAs<CommonTicketGraphUpdateRequest, CommonTicketGraphUpdateResponse>('common-ticket-graph/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

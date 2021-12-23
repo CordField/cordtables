@@ -31,7 +31,7 @@ class ScriptureReferenceCreateResponse {
 
 class ScriptureReferenceUpdateRequest {
   token: string;
-  id: number;
+  id: string;
   updatedFields: MutableScriptureReferenceFields;
 }
 
@@ -42,7 +42,7 @@ class ScriptureReferenceUpdateResponse {
 
 class ScriptureReferenceDeleteRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class ScriptureReferenceDeleteResponse {
@@ -117,7 +117,7 @@ export class ScriptureReferences {
     }
   };
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     this.updatedFields[columnName] = value;
     const result = await fetchAs<ScriptureReferenceUpdateRequest, ScriptureReferenceUpdateResponse>('table/common-scripture-references/update', {
       token: globals.globalStore.state.token,
@@ -140,7 +140,7 @@ export class ScriptureReferences {
     }
   };
 
-  handleDelete = async (id: number): Promise<boolean> => {
+  handleDelete = async (id: string): Promise<boolean> => {
     const result = await fetchAs<ScriptureReferenceDeleteRequest, ScriptureReferenceDeleteResponse>('table/common-scripture-references/delete', {
       id,
       token: globals.globalStore.state.token,

@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.people_to_org_relationships
 
 data class peopleToOrgRelationship(
-    var id: Int? = null,
+    var id: String? = null,
 
     val org: Int? = null,
     val person: Int? = null,
@@ -18,7 +18,7 @@ data class peopleToOrgRelationship(
 )
 
 data class peopleToOrgRelationshipInput(
-    var id: Int? = null,
+    var id: String? = null,
     val org: Int? = null,
     val person: Int? = null,
     val relationship_type: String? = null,

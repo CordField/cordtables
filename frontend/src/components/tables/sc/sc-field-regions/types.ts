@@ -1,6 +1,6 @@
 
 class ScFieldRegion {
-    id?: number | undefined;
+    id?: string | undefined;
     neo4j_id?: string | undefined;
     director?: number | undefined;
     name?: string | undefined;

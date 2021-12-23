@@ -7,7 +7,7 @@ class PeopleListRequest {
 }
 
 class People {
-  id: number;
+  id: string;
   phone: string;
   picture: string;
   privateFirstName: string;
@@ -46,7 +46,7 @@ class PeopleCreateResponse {
 class PeopleUpdateRequest {
   token: string;
   name: string;
-  id: number;
+  id: string;
 }
 
 class PeopleUpdateResponse {
@@ -55,7 +55,7 @@ class PeopleUpdateResponse {
 
 class PeopleDeleteRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class PeopleDeleteResponse {
@@ -105,7 +105,7 @@ export class CfGroups {
     }
   };
 
-  updateName = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  updateName = async (id: string, columnName: string, value: string): Promise<boolean> => {
     this.createResponse = await fetchAs<PeopleUpdateRequest, PeopleUpdateResponse>('people/update', { token: globals.globalStore.state.token, name: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
@@ -115,7 +115,7 @@ export class CfGroups {
     }
   };
 
-  clickRemoveRowIcon = async (value: number): Promise<boolean> => {
+  clickRemoveRowIcon = async (value: string): Promise<boolean> => {
     this.deleteResponse = await fetchAs<PeopleDeleteRequest, PeopleDeleteResponse>('people/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {

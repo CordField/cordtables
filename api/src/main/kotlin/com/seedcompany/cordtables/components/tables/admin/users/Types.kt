@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.admin.users
 
 data class user(
-    var id: Int? = null,
+    var id: String? = null,
 
     val person: Int? = null,
     val email: String? = null,
@@ -16,7 +16,7 @@ data class user(
 )
 
 data class userInput(
-    var id: Int? = null,
+    var id: String? = null,
     val person: Int? = null,
     val email: String? = null,
     val password: String? = null,

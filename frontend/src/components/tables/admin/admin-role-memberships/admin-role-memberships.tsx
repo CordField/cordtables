@@ -30,7 +30,7 @@ class AdminRoleMembershipUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminRoleMembershipUpdateResponse {
@@ -39,12 +39,12 @@ class AdminRoleMembershipUpdateResponse {
 }
 
 class DeleteRoleMembershipExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteRoleMembershipExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -59,7 +59,7 @@ export class AdminRoleMemberships {
   newRole: number;
   newPerson: number;
   
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminRoleMembershipUpdateRequest, AdminRoleMembershipUpdateResponse>('admin-role-memberships/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

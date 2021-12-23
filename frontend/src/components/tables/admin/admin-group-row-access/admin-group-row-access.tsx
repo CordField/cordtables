@@ -30,7 +30,7 @@ class AdminGroupRowAccessUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminGroupRowAccessUpdateResponse {
@@ -39,12 +39,12 @@ class AdminGroupRowAccessUpdateResponse {
 }
 
 class DeleteGroupRowAccessExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGroupRowAccessExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -59,7 +59,7 @@ export class AdminGroupRowAccesss {
   newTable_name: string;
   newRow: number;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminGroupRowAccessUpdateRequest, AdminGroupRowAccessUpdateResponse>('admin-group-row-access/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

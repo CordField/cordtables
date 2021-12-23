@@ -39,7 +39,7 @@ class CommonFileUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonFileUpdateResponse {
@@ -48,12 +48,12 @@ class CommonFileUpdateResponse {
 }
 
 class DeleteFileExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFileExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 
@@ -71,7 +71,7 @@ export class FilesTable {
   newFileDirectory: number;
 
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonFileUpdateRequest, CommonFileUpdateResponse>('common-files/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

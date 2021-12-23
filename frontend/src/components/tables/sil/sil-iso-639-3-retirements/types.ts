@@ -1,6 +1,6 @@
 
 class SilIso6393Retirement {
-    id?: number | undefined;
+    id?: string | undefined;
 
     _id?: string | undefined;
     ref_name?: string | undefined;

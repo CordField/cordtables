@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sil.country_codes
 
 data class countryCode(
-    var id: Int? = null,
+    var id: String? = null,
     val country: String? = null,
     val name: String? = null,
     val area: String? = null,
@@ -14,7 +14,7 @@ data class countryCode(
 )
 
 data class countryCodeInput(
-    var id: Int? = null,
+    var id: String? = null,
     val country: String? = null,
     val name: String? = null,
     val area: String? = null,

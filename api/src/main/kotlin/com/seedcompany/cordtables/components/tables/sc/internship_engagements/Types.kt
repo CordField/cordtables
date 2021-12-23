@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.internship_engagements
 
 data class internshipEngagement(
-    var id: Int? = null,
+    var id: String? = null,
 
 
     val project: Int? = null,
@@ -38,7 +38,7 @@ data class internshipEngagement(
 )
 
 data class internshipEngagementInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val project: Int? = null,
     val ethnologue: Int? = null,

@@ -31,7 +31,7 @@ class AdminUserUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminUserUpdateResponse {
@@ -40,12 +40,12 @@ class AdminUserUpdateResponse {
 }
 
 class DeleteUserExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteUserExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -62,7 +62,7 @@ export class AdminUsers {
   newPassword?: string;
   
   
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminUserUpdateRequest, AdminUserUpdateResponse>('admin-users/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

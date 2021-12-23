@@ -1,6 +1,6 @@
 
 class CommonStageGraph {
-    id?: number | undefined;
+    id?: string | undefined;
 
     from_stage?: number | undefined;
     to_stage?: number | undefined;

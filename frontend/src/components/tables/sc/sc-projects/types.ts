@@ -1,6 +1,6 @@
 
 class ScProject {
-    id?: number | undefined;
+    id?: string | undefined;
 
     neo4j_id?: string | undefined;
     name?: string | undefined;

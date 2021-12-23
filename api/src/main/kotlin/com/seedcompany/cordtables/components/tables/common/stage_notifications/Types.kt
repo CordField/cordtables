@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.stage_notifications
 
 data class stageNotification(
-    var id: Int? = null,
+    var id: String? = null,
     val stage: Int? = null,
     val on_enter: Boolean? = null,
     val on_exit: Boolean? = null,
@@ -16,7 +16,7 @@ data class stageNotification(
 )
 
 data class stageNotificationInput(
-    var id: Int? = null,
+    var id: String? = null,
     val stage: Int? = null,
     val on_enter: Boolean? = null,
     val on_exit: Boolean? = null,

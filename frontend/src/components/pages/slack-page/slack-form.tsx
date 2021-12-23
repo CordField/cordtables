@@ -18,8 +18,8 @@ import { idService } from '../../../core/id.service';
 export class SlackForm {
   tinyMceId: string = idService.getNextId();
   @Prop() type: 'thread' | 'post' = 'thread';
-  @Prop() selectedChannelId: number = null;
-  @Prop() selectedThreadId: number = null;
+  @Prop() selectedChannelId: string = null;
+  @Prop() selectedThreadId: string = null;
   @State() content: string = null;
   @Event({ eventName: 'threadAdded' }) threadAdded: EventEmitter<CommonThread>;
   @Event({ eventName: 'postAdded' }) postAdded: EventEmitter<CommonPost>;

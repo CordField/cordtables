@@ -31,7 +31,7 @@ class ScPeopleUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPeopleUpdateResponse {
@@ -40,12 +40,12 @@ class ScPeopleUpdateResponse {
 }
 
 class DeletePeopleExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePeopleExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -61,7 +61,7 @@ export class ScPeoples {
   newSkills: string;
   newStatus: string;
   
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScPeopleUpdateRequest, ScPeopleUpdateResponse>('sc-people/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

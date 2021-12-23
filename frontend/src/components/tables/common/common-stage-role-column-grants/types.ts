@@ -1,6 +1,6 @@
 
 class CommonStageRoleColumnGrant {
-    id?: number | undefined;
+    id?: string | undefined;
 
     stage?: number | undefined;
     role?: number | undefined;

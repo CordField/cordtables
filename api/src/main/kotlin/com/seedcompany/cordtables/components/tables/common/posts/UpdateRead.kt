@@ -12,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonPostsUpdateReadRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
         val column: String? = null,
         val value: Any? = null,
 )

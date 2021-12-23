@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sil.table_of_languages_in_country
 
 data class tableOfLanguagesInCountry(
-    var id: Int? = null,
+    var id: String? = null,
 
     val iso_639: String? = null,
     val language_name: String? = null,
@@ -37,7 +37,7 @@ data class tableOfLanguagesInCountry(
 )
 
 data class tableOfLanguagesInCountryInput(
-    var id: Int? = null,
+    var id: String? = null,
     val iso_639: String? = null,
     val language_name: String? = null,
     val uninverted_name: String? = null,

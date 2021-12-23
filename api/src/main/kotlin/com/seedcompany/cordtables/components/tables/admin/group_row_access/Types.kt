@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.admin.group_row_access
 import com.seedcompany.cordtables.common.TableNames
 
 data class groupRowAccess(
-    var id: Int? = null,
+    var id: String? = null,
 
     val group_id: Int? = null,
     val table_name: String? = null,
@@ -18,7 +18,7 @@ data class groupRowAccess(
 )
 
 data class groupRowAccessInput(
-    var id: Int? = null,
+    var id: String? = null,
 
     val group_id: Int? = null,
     val table_name: String? = null,

@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.funding_accounts
 
 data class fundingAccount(
-    var id: Int? = null,
+    var id: String? = null,
 
     val neo4j_id: String? = null,
     val account_number: Int? = null,
@@ -16,7 +16,7 @@ data class fundingAccount(
 )
 
 data class fundingAccountInput(
-    var id: Int? = null,
+    var id: String? = null,
     val neo4j_id: String? = null,
     val account_number: Int? = null,
     val name: String? = null,

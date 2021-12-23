@@ -21,7 +21,7 @@ data class CommonCellChannelsCreateRequest(
 
 data class CommonCellChannelsCreateResponse(
         val error: ErrorType,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -72,7 +72,7 @@ class Create(
                 )
             returning id;
         """.trimIndent(),
-                Int::class.java,
+                String::class.java,
                 req.cell_channel.table_name,
                 req.cell_channel.column_name,
                 req.cell_channel.row,

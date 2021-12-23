@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sil.iso_639_3_retirements
 
 data class iso6393Retirement(
-    var id: Int? = null,
+    var id: String? = null,
 
     val _id: String? = null,
     val ref_name: String? = null,
@@ -19,7 +19,7 @@ data class iso6393Retirement(
 )
 
 data class iso6393RetirementInput(
-    var id: Int? = null,
+    var id: String? = null,
     val _id: String? = null,
     val ref_name: String? = null,
     val ret_reason: String? = null,

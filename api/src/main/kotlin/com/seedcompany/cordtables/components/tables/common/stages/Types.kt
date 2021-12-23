@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.stages
 
 data class stage(
-    var id: Int? = null,
+    var id: String? = null,
     val title: String? = null,
     val created_at: String? = null,
     val created_by: Int? = null,
@@ -12,7 +12,7 @@ data class stage(
 )
 
 data class stageInput(
-    var id: Int? = null,
+    var id: String? = null,
     val title: String? = null,
     val created_at: String? = null,
     val created_by: Int? = null,

@@ -3,7 +3,7 @@ package com.seedcompany.cordtables.components.tables.sc.languages
 import com.seedcompany.cordtables.common.CommonSensitivity
 
 data class Language(
-    var id: Int? = null,
+    var id: String? = null,
 
     val neo4j_id: String? = null,
     val ethnologue: Int? = null,

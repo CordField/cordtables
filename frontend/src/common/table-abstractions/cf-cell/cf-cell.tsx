@@ -10,7 +10,7 @@ import { CellType, ColumnDescription } from '../types';
 export class CfCell {
   @Element() el: HTMLElement;
 
-  @Prop() rowId: number;
+  @Prop() rowId: string;
   @Prop() value: any;
   @Prop() columnDescription: ColumnDescription;
   @Prop() cellType: CellType = 'data';

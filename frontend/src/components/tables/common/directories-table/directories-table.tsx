@@ -29,7 +29,7 @@ class CommonDirectoryUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonDirectoryUpdateResponse {
@@ -38,12 +38,12 @@ class CommonDirectoryUpdateResponse {
 }
 
 class DeleteDirectoryExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteDirectoryExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -58,7 +58,7 @@ export class DirectoriesTable {
   directoryParent: number;
 
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonDirectoryUpdateRequest, CommonDirectoryUpdateResponse>('common-directories/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
