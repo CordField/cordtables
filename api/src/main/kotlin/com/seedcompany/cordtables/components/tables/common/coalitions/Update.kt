@@ -56,7 +56,6 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
                 )
             }
             "owning_group" -> {
@@ -65,8 +64,7 @@ class Update(
                     table = "common.coalitions",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

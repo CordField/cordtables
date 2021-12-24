@@ -46,8 +46,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "project",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "ethnologue" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "ethnologue",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "change_to_plan" -> {
@@ -66,8 +64,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "change_to_plan",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "active" -> {
@@ -106,8 +103,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "country_of_origin",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "disbursement_complete_date" -> {
@@ -146,8 +142,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "growth_plan",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "initial_end_date" -> {
@@ -166,8 +161,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "intern",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "last_reactivated_at" -> {
@@ -186,8 +180,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "mentor",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "methodology" -> {
@@ -215,8 +208,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "periodic_reports_directory",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "position" -> {
@@ -265,8 +257,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -275,8 +266,7 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

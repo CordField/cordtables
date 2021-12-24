@@ -89,8 +89,8 @@ class List(
                 var area: String? = resultSet!!.getString("area")
                 if (resultSet!!.wasNull()) area = null
 
-                var created_by: Int? = resultSet!!.getInt("created_by")
-                if (resultSet!!.wasNull()) created_by = null
+                var created_by: String? = jdbcResult.getString("created_by")
+                if (jdbcResult.wasNull()) created_by = null
 
                 var created_at: String? = resultSet!!.getString("created_at")
                 if (resultSet!!.wasNull()) created_at = null
@@ -98,14 +98,14 @@ class List(
                 var modified_at: String? = resultSet!!.getString("modified_at")
                 if (resultSet!!.wasNull()) modified_at = null
 
-                var modified_by: Int? = resultSet!!.getInt("modified_by")
-                if (resultSet!!.wasNull()) modified_by = null
+                var modified_by: String? = jdbcResult.getString("modified_by")
+                if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = resultSet!!.getInt("owning_person")
-                if (resultSet!!.wasNull()) owning_person = null
+                var owning_person: String? = jdbcResult.getString("owning_person")
+                if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = resultSet!!.getInt("owning_group")
-                if (resultSet!!.wasNull()) owning_group = null
+                var owning_group: String? = jdbcResult.getString("owning_group")
+                if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
                   countryCode(

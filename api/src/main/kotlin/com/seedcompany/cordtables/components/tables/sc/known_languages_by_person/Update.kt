@@ -46,8 +46,7 @@ class Update(
                     table = "sc.known_languages_by_person",
                     column = "person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "known_language" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "sc.known_languages_by_person",
                     column = "known_language",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_person" -> {
@@ -66,8 +64,7 @@ class Update(
                     table = "sc.known_languages_by_person",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -76,8 +73,7 @@ class Update(
                     table = "sc.known_languages_by_person",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

@@ -89,9 +89,6 @@ class List(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var id: Int? = resultSet!!.getInt("id")
-                if (resultSet!!.wasNull()) id = null
-
                 var country_code: String? = resultSet!!.getString("country_code")
                 if (resultSet!!.wasNull()) country_code = null
 
@@ -140,17 +137,23 @@ class List(
                 var created_at: String? = resultSet!!.getString("created_at")
                 if (resultSet!!.wasNull()) created_at = null
 
+                var created_at: String? = resultSet!!.getString("created_at")
+                if (resultSet!!.wasNull()) created_at = null
+
+                var created_by: String? = jdbcResult.getString("created_by")
+                if (jdbcResult.wasNull()) created_by = null
+
                 var modified_at: String? = resultSet!!.getString("modified_at")
                 if (resultSet!!.wasNull()) modified_at = null
+                
+                var modified_by: String? = jdbcResult.getString("modified_by")
+                if (jdbcResult.wasNull()) modified_by = null
 
-                var modified_by: Int? = resultSet!!.getInt("modified_by")
-                if (resultSet!!.wasNull()) modified_by = null
+                var owning_person: String? = jdbcResult.getString("owning_person")
+                if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_person: Int? = resultSet!!.getInt("owning_person")
-                if (resultSet!!.wasNull()) owning_person = null
-
-                var owning_group: Int? = resultSet!!.getInt("owning_group")
-                if (resultSet!!.wasNull()) owning_group = null
+                var owning_group: String? = jdbcResult.getString("owning_group")
+                if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
                     tableOfCountry(

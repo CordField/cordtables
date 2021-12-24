@@ -101,7 +101,7 @@ class Read(
                 var name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) name = null
 
-                var change_to_plan: Int? = jdbcResult.getInt("change_to_plan")
+                var change_to_plan: String? = jdbcResult.getString("change_to_plan")
                 if (jdbcResult.wasNull()) change_to_plan = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
@@ -113,13 +113,13 @@ class Read(
                 var estimated_submission: String? = jdbcResult.getString("estimated_submission")
                 if (jdbcResult.wasNull()) estimated_submission = null
 
-                var field_region: Int? = jdbcResult.getInt("field_region")
+                var field_region: String? = jdbcResult.getString("field_region")
                 if (jdbcResult.wasNull()) field_region = null
 
                 var initial_mou_end: String? = jdbcResult.getString("initial_mou_end")
                 if (jdbcResult.wasNull()) initial_mou_end = null
 
-                var marketing_location: Int? = jdbcResult.getInt("marketing_location")
+                var marketing_location: String? = jdbcResult.getString("marketing_location")
                 if (jdbcResult.wasNull()) marketing_location = null
 
                 var mou_start: String? = jdbcResult.getString("mou_start")
@@ -128,19 +128,19 @@ class Read(
                 var mou_end: String? = jdbcResult.getString("mou_end")
                 if (jdbcResult.wasNull()) mou_end = null
 
-                var owning_organization: Int? = jdbcResult.getInt("owning_organization")
+                var owning_organization: String? = jdbcResult.getString("owning_organization")
                 if (jdbcResult.wasNull()) owning_organization = null
 
-                var periodic_reports_directory: Int? = jdbcResult.getInt("periodic_reports_directory")
+                var periodic_reports_directory: String? = jdbcResult.getString("periodic_reports_directory")
                 if (jdbcResult.wasNull()) periodic_reports_directory = null
 
-                var posts_directory: Int? = jdbcResult.getInt("posts_directory")
+                var posts_directory: String? = jdbcResult.getString("posts_directory")
                 if (jdbcResult.wasNull()) posts_directory = null
 
-                var primary_location: Int? = jdbcResult.getInt("primary_location")
+                var primary_location: String? = jdbcResult.getString("primary_location")
                 if (jdbcResult.wasNull()) primary_location = null
 
-                var root_directory: Int? = jdbcResult.getInt("root_directory")
+                var root_directory: String? = jdbcResult.getString("root_directory")
                 if (jdbcResult.wasNull()) root_directory = null
 
                 var status: String? = jdbcResult.getString("status")
@@ -155,19 +155,19 @@ class Read(
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val project =

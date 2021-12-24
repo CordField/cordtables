@@ -10,7 +10,7 @@ data class people(
     val private_last_name: String? = null,
     val public_first_name: String? = null,
     val public_last_name: String? = null,
-    val primary_location: Int? = null,
+    val primary_location: String? = null,
     val private_full_name: String? = null,
     val public_full_name: String? = null,
     val sensitivity_clearance: Sensitivities? = null,
@@ -19,11 +19,11 @@ data class people(
     val status: String? = null,
 
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 
 
@@ -38,7 +38,7 @@ data class peopleInput(
     val private_last_name: String? = null,
     val public_first_name: String? = null,
     val public_last_name: String? = null,
-    val primary_location: Int? = null,
+    val primary_location: String? = null,
     val private_full_name: String? = null,
     val public_full_name: String? = null,
     val sensitivity_clearance: String? = null,
@@ -46,11 +46,11 @@ data class peopleInput(
     val title: String? = null,
     val status: String? = null,
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 
 enum class Sensitivities{

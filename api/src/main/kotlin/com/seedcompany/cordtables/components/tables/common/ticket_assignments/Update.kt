@@ -50,8 +50,7 @@ class Update(
                         table = "common.ticket_assignments",
                         column = "ticket",
                         id = req.id,
-                        value = req.value,
-                        cast = "::integer"
+                        value = req.value
                 )
             }
 
@@ -61,8 +60,7 @@ class Update(
                         table = "common.ticket_assignments",
                         column = "person",
                         id = req.id,
-                        value = req.value,
-                        cast = "::integer"
+                        value = req.value
                 )
             }
 

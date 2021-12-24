@@ -67,8 +67,7 @@ class Update(
                         table = "common.tickets",
                         column = "parent",
                         id = req.id,
-                        value = req.value,
-                        cast = "::integer"
+                        value = req.value
                 )
             }
 

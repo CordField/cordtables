@@ -45,8 +45,7 @@ class Update(
                     table = "admin.role_table_permissions",
                     column = "role",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "table_name" -> {
@@ -75,8 +74,7 @@ class Update(
                     table = "admin.role_table_permissions",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -85,8 +83,7 @@ class Update(
                     table = "admin.role_table_permissions",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

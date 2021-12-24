@@ -49,7 +49,6 @@ class Update(
                     value = req.value,
                 )
             }
-
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
@@ -59,7 +58,6 @@ class Update(
                     value = req.value,
                 )
             }
-
             "owning_group" -> {
                 util.updateField(
                     token = req.token,
@@ -69,7 +67,6 @@ class Update(
                     value = req.value,
                 )
             }
-
         }
 
         return CommonDiscussionChannelsUpdateResponse(ErrorType.NoError)

@@ -55,8 +55,7 @@ class Update(
                     table = "sc.ethnologue",
                     column = "language_index",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "code" -> {
@@ -112,8 +111,7 @@ class Update(
                     table = "sc.ethnologue",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -122,8 +120,7 @@ class Update(
                     table = "sc.ethnologue",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

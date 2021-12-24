@@ -48,8 +48,7 @@ class Update(
                     table = "common.ticket_feedback",
                     column = "ticket",
                     id = req.id,
-                    value = req.value,
-                    cast = "::integer"
+                    value = req.value
                 )
             }
 
@@ -59,8 +58,7 @@ class Update(
                     table = "common.ticket_feedback",
                     column = "stake_holder",
                     id = req.id,
-                    value = req.value,
-                    cast = "::integer"
+                    value = req.value
                 )
             }
 

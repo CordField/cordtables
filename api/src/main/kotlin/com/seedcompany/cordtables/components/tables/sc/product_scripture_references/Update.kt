@@ -46,8 +46,7 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "product",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "scripture_reference" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "scripture_reference",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "change_to_plan" -> {
@@ -66,8 +64,7 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "change_to_plan",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "active" -> {
@@ -88,8 +85,7 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -98,8 +94,7 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

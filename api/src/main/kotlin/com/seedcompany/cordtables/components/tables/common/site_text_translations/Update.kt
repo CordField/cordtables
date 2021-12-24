@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
 data class SiteTextTranslationUpdateInput(
-  val site_text: Int,
-  val language: Int,
+  val site_text: String,
+  val language: String,
   val newValue: String?
 )
 

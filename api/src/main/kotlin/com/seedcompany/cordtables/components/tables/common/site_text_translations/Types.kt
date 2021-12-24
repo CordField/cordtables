@@ -1,22 +1,22 @@
 package com.seedcompany.cordtables.components.tables.common.site_text_translations
 
 data class SiteTextTranslationInput(
-  var language: Int,
-  var site_text: Int,
+  var language: String,
+  var site_text: String,
   var translation: String?
 )
 
 data class SiteTextTranslation(
   var id: String,
-  var language: Int,
-  var site_text: Int,
+  var language: String,
+  var site_text: String,
   var translation: String,
 
   val created_at: String? = null,
-  val created_by: Int? = null,
+  val created_by: String? = null,
   val modified_at: String? = null,
-  val modified_by: Int? = null,
-  val owning_person: Int? = null,
-  val owning_group: Int? = null,
+  val modified_by: String? = null,
+  val owning_person: String? = null,
+  val owning_group: String? = null,
   val coordinates: String? = null,
 )

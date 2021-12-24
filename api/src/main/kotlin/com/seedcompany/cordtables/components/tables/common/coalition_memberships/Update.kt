@@ -46,8 +46,7 @@ class Update(
                     table = "common.coalition_memberships",
                     column = "coalition",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "organization" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "common.coalition_memberships",
                     column = "organization",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_person" -> {
@@ -66,8 +64,7 @@ class Update(
                     table = "common.coalition_memberships",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -76,8 +73,7 @@ class Update(
                     table = "common.coalition_memberships",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

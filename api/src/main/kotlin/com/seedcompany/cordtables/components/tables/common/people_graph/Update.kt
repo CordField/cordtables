@@ -46,8 +46,7 @@ class Update(
                     table = "common.people_graph",
                     column = "from_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "to_person" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "common.people_graph",
                     column = "to_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "rel_type" -> {
@@ -76,8 +74,7 @@ class Update(
                     table = "common.people_graph",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -86,8 +83,7 @@ class Update(
                     table = "common.people_graph",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

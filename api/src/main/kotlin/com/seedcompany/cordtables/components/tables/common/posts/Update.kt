@@ -57,8 +57,7 @@ class Update(
                         table = "common.posts",
                         column = "thread",
                         id = req.id,
-                        value = req.value,
-                        cast ="::integer"
+                        value = req.value
                 )
             }
             "owning_person" -> {

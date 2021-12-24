@@ -49,8 +49,7 @@ class Update(
                     table = "common.work_estimates",
                     column = "person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::integer"
+                    value = req.value
                 )
             }
 

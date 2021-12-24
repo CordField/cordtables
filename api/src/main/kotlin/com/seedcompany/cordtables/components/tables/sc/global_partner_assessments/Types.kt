@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.sc.global_partner_assessmen
 
 data class globalPartnerAssessment(
     var id: String? = null,
-    val partner: Int? = null,
+    val partner: String? = null,
     val governance_trans: String? = null,
     val director_trans: String? = null,
     val identity_trans: String? = null,
@@ -19,16 +19,16 @@ data class globalPartnerAssessment(
     val program_design_opp: String? = null,
     val tech_translation_opp: String? = null,
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 
 data class globalPartnerAssessmentInput(
     var id: String? = null,
-    val partner: Int? = null,
+    val partner: String? = null,
     val governance_trans: String? = null,
     val director_trans: String? = null,
     val identity_trans: String? = null,
@@ -45,11 +45,11 @@ data class globalPartnerAssessmentInput(
     val program_design_opp: String? = null,
     val tech_translation_opp: String? = null,
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 
 enum class PartnerMaturityScale{
