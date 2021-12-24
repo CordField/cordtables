@@ -771,32 +771,6 @@ create table sc.project_locations (
 	unique (project, location, change_to_plan)
 );
 
--- CEREMONIES
-
-create type common.ceremony_type as enum (
-  'Dedication',
-  'Certification'
-);
-
-create table sc.ceremonies (
-  id uuid primary key default public.uuid_generate_v4(),
-
-  internship_engagement uuid references sc.internship_engagements(id),
-  language_engagement uuid references sc.language_engagements(id),
-  ethnologue uuid references sil.table_of_languages(id),
-  actual_date timestamp,
-  estimated_date timestamp,
-  is_planned bool,
-  type common.ceremony_type,
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
-);
-
 -- LANGUAGE ENGAGEMENTS
 
 create type common.engagement_status as enum (
@@ -834,7 +808,6 @@ create table sc.language_engagements (
 --	ethnologue uuid references sc.ethnologue(id), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
-  ceremony uuid references sc.ceremonies(id),
   is_open_to_investor_visit bool,
   communications_complete_date timestamp,
   complete_date timestamp,
@@ -865,7 +838,7 @@ create table sc.language_engagements (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id),
 
-	unique (project, ethnologue, change_to_plan)
+	unique (project, language, change_to_plan)
 );
 
 -- PRODUCTS
@@ -1066,7 +1039,6 @@ create table sc.internship_engagements (
 	project uuid references sc.projects(id), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
-  ceremony uuid references sc.ceremonies(id),
   communications_complete_date timestamp,
   complete_date timestamp,
   country_of_origin uuid references common.locations(id),
@@ -1088,6 +1060,32 @@ create table sc.internship_engagements (
   status common.engagement_status,
   status_modified_at timestamp,
   last_suspended_at timestamp,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
+);
+
+-- CEREMONIES
+
+create type common.ceremony_type as enum (
+  'Dedication',
+  'Certification'
+);
+
+create table sc.ceremonies (
+  id uuid primary key default public.uuid_generate_v4(),
+
+  internship_engagement uuid references sc.internship_engagements(id),
+  language_engagement uuid references sc.language_engagements(id),
+  ethnologue uuid references sil.table_of_languages(id),
+  actual_date timestamp,
+  estimated_date timestamp,
+  is_planned bool,
+  type common.ceremony_type,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
