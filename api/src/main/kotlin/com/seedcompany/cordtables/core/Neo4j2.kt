@@ -88,7 +88,7 @@ class Neo4j2(
     )
 
     if (adminPersonId != null && adminGroupId != null) {
-//      migrateBaseNodes()
+      migrateBaseNodes()
       migrateRelationships()
     }
 
@@ -98,179 +98,58 @@ class Neo4j2(
   suspend fun migrateRelationships() {
     val queue = ConcurrentLinkedQueue<RelationshipCreate>()
 
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "User",
-//        type = "user",
-//        toBaseNode = "ProjectMember",
-//        table = "sc.project_members",
-//        column = "person",
-//        baseNodeToPlaceInColumn = "User",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "User",
-//        type = "director",
-//        toBaseNode = "FieldRegion",
-//        table = "sc.field_regions",
-//        column = "director",
-//        baseNodeToPlaceInColumn = "User",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "User",
-//        type = "director",
-//        toBaseNode = "FieldZone",
-//        table = "sc.field_zones",
-//        column = "director",
-//        baseNodeToPlaceInColumn = "User",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "Budget",
-//        type = "universalTemplateFileNode",
-//        toBaseNode = "File",
-//        table = "sc.budgets",
-//        column = "universal_template",
-//        baseNodeToPlaceInColumn = "File",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "Budget",
-//        type = "record",
-//        toBaseNode = "BudgetRecord",
-//        table = "sc.budget_records",
-//        column = "budget",
-//        baseNodeToPlaceInColumn = "Budget",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "Organization",
-//        type = "organization",
-//        toBaseNode = "BudgetRecord",
-//        table = "sc.budget_records",
-//        column = "organization",
-//        baseNodeToPlaceInColumn = "Organization",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "Project",
-//        type = "budget",
-//        toBaseNode = "Budget",
-//        table = "sc.budgets",
-//        column = "project",
-//        baseNodeToPlaceInColumn = "Project",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "Project",
-//        type = "member",
-//        toBaseNode = "ProjectMember",
-//        table = "sc.project_members",
-//        column = "project",
-//        baseNodeToPlaceInColumn = "Project",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "Project",
-//        type = "partnership",
-//        toBaseNode = "Partnership",
-//        table = "sc.partnerships",
-//        column = "project",
-//        baseNodeToPlaceInColumn = "Project",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "BaseFile",
-//        type = "reportFileNode",
-//        toBaseNode = "PeriodicReport",
-//        table = "sc.periodic_reports",
-//        column = "report_file",
-//        baseNodeToPlaceInColumn = "BaseFile",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "FieldRegion",
-//        type = "fieldRegion",
-//        toBaseNode = "Project",
-//        table = "sc.projects",
-//        column = "field_region",
-//        baseNodeToPlaceInColumn = "FieldRegion",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "Directory",
-//        type = "rootDirectory",
-//        toBaseNode = "Project",
-//        table = "sc.projects",
-//        column = "root_directory",
-//        baseNodeToPlaceInColumn = "Directory",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "EthnologueLanguage",
-//        type = "ethnologue",
-//        toBaseNode = "Language",
-//        table = "sc.languages",
-//        column = "ethnologue",
-//        baseNodeToPlaceInColumn = "EthnologueLanguage",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "Project",
-//        type = "engagement",
-//        toBaseNode = "LanguageEngagement",
-//        table = "sc.language_engagements",
-//        column = "project",
-//        baseNodeToPlaceInColumn = "Project",
-//      )
-//    )
-//
-//    queue.offer(
-//      RelationshipCreate(
-//        fromBaseNode = "Language",
-//        type = "language",
-//        toBaseNode = "LanguageEngagement",
-//        table = "sc.language_engagements",
-//        column = "language",
-//        baseNodeToPlaceInColumn = "Language",
-//      )
-//    )
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "User",
+        type = "user",
+        toBaseNode = "ProjectMember",
+        table = "sc.project_members",
+        column = "person",
+        baseNodeToPlaceInColumn = "User",
+      )
+    )
 
     queue.offer(
       RelationshipCreate(
-        fromBaseNode = "Project",
-        type = "engagement",
-        toBaseNode = "InternshipEngagement",
-        table = "sc.projects",
-        column = "project",
-        baseNodeToPlaceInColumn = "Project",
+        fromBaseNode = "User",
+        type = "director",
+        toBaseNode = "FieldRegion",
+        table = "sc.field_regions",
+        column = "director",
+        baseNodeToPlaceInColumn = "User",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "User",
+        type = "director",
+        toBaseNode = "FieldZone",
+        table = "sc.field_zones",
+        column = "director",
+        baseNodeToPlaceInColumn = "User",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Budget",
+        type = "universalTemplateFileNode",
+        toBaseNode = "File",
+        table = "sc.budgets",
+        column = "universal_template",
+        baseNodeToPlaceInColumn = "File",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Budget",
+        type = "record",
+        toBaseNode = "BudgetRecord",
+        table = "sc.budget_records",
+        column = "budget",
+        baseNodeToPlaceInColumn = "Budget",
       )
     )
 
@@ -278,10 +157,120 @@ class Neo4j2(
       RelationshipCreate(
         fromBaseNode = "Organization",
         type = "organization",
-        toBaseNode = "Partner",
-        table = "sc.partners",
+        toBaseNode = "BudgetRecord",
+        table = "sc.budget_records",
         column = "organization",
         baseNodeToPlaceInColumn = "Organization",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Project",
+        type = "budget",
+        toBaseNode = "Budget",
+        table = "sc.budgets",
+        column = "project",
+        baseNodeToPlaceInColumn = "Project",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Project",
+        type = "member",
+        toBaseNode = "ProjectMember",
+        table = "sc.project_members",
+        column = "project",
+        baseNodeToPlaceInColumn = "Project",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Project",
+        type = "partnership",
+        toBaseNode = "Partnership",
+        table = "sc.partnerships",
+        column = "project",
+        baseNodeToPlaceInColumn = "Project",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "BaseFile",
+        type = "reportFileNode",
+        toBaseNode = "PeriodicReport",
+        table = "sc.periodic_reports",
+        column = "report_file",
+        baseNodeToPlaceInColumn = "BaseFile",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "FieldRegion",
+        type = "fieldRegion",
+        toBaseNode = "Project",
+        table = "sc.projects",
+        column = "field_region",
+        baseNodeToPlaceInColumn = "FieldRegion",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Directory",
+        type = "rootDirectory",
+        toBaseNode = "Project",
+        table = "sc.projects",
+        column = "root_directory",
+        baseNodeToPlaceInColumn = "Directory",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "EthnologueLanguage",
+        type = "ethnologue",
+        toBaseNode = "Language",
+        table = "sc.languages",
+        column = "ethnologue",
+        baseNodeToPlaceInColumn = "EthnologueLanguage",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Project",
+        type = "engagement",
+        toBaseNode = "LanguageEngagement",
+        table = "sc.language_engagements",
+        column = "project",
+        baseNodeToPlaceInColumn = "Project",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Language",
+        type = "language",
+        toBaseNode = "LanguageEngagement",
+        table = "sc.language_engagements",
+        column = "language",
+        baseNodeToPlaceInColumn = "Language",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Project",
+        type = "engagement",
+        toBaseNode = "InternshipEngagement",
+        table = "sc.internship_engagements",
+        column = "project",
+        baseNodeToPlaceInColumn = "Project",
       )
     )
 
@@ -313,7 +302,7 @@ class Neo4j2(
         type = "ceremony",
         toBaseNode = "Ceremony",
         table = "sc.ceremonies",
-        column = "project",
+        column = "internship_engagement",
         baseNodeToPlaceInColumn = "InternshipEngagement",
       )
     )
@@ -324,7 +313,7 @@ class Neo4j2(
         type = "ceremony",
         toBaseNode = "Ceremony",
         table = "sc.ceremonies",
-        column = "project",
+        column = "language_engagement",
         baseNodeToPlaceInColumn = "LanguageEngagement",
       )
     )

@@ -467,7 +467,7 @@ create table sc.people (
 create table sc.person_unavailabilities (
   id uuid primary key default public.uuid_generate_v4(),
 
-  person uuid unique references admin.people(id),
+  person uuid references admin.people(id),
 	period_start timestamp not null default CURRENT_TIMESTAMP,
 	period_end timestamp not null default CURRENT_TIMESTAMP,
 	description text,
@@ -781,7 +781,8 @@ create type common.ceremony_type as enum (
 create table sc.ceremonies (
   id uuid primary key default public.uuid_generate_v4(),
 
-  project uuid references sc.projects(id),
+  internship_engagement uuid references sc.internship_engagements(id),
+  language_engagement uuid references sc.language_engagements(id),
   ethnologue uuid references sil.table_of_languages(id),
   actual_date timestamp,
   estimated_date timestamp,
