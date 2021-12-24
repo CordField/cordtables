@@ -46,8 +46,7 @@ class Update(
                     table = "common.org_chart_positions",
                     column = "organization",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "name" -> {
@@ -65,8 +64,7 @@ class Update(
                     table = "common.org_chart_positions",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -75,8 +73,7 @@ class Update(
                     table = "common.org_chart_positions",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

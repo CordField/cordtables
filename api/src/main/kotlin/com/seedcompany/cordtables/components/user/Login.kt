@@ -25,7 +25,7 @@ data class LoginReturn(
     val token: String? = null,
     val readableTables: List<String> = listOf(),
     val isAdmin: Boolean = false,
-    val userId: Int? = null
+    val userId: String? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -52,7 +52,7 @@ class Login (
         var response = LoginReturn(ErrorType.UnknownError)
         var token: String?
         var errorType: ErrorType
-        var userId: Int?
+        var userId: String?
 //        val path = context.filesDir.absolutePath
 //
 //        println(home.resolve("src/Dockerfile").toAbsolutePath())
@@ -72,8 +72,8 @@ class Login (
 
                         val returnList = loginDB(req.email, token!!)
                         errorType = returnList[0] as ErrorType
-                        userId = returnList[1] as Int?
-                        if(userId == -1) userId = null
+                        userId = returnList[1] as String?
+                        if(userId == "") userId = null
 
                         if (errorType === ErrorType.NoError) {
                             response = LoginReturn(errorType, token, util.getReadableTables(token!!), util.isAdmin(token!!), userId)
@@ -97,14 +97,14 @@ class Login (
     fun loginDB(email: String, token: String): List<Any>{
 
         var errorType = ErrorType.UnknownError
-        var userId:Int = -1
+        var userId:String = ""
 
         this.ds.connection.use{conn ->
             val statement = conn.prepareCall("call admin.login(?, ?, ?,?);")
             statement.setString(1, email)
             statement.setString(2, token)
             statement.setString(3, errorType.name)
-            statement.setInt(4,userId)
+            statement.setString(4,userId)
 
             statement.registerOutParameter(3, java.sql.Types.VARCHAR)
             statement.registerOutParameter(4, java.sql.Types.INTEGER)
@@ -113,7 +113,7 @@ class Login (
 
             try {
                 errorType = ErrorType.valueOf(statement.getString(3))
-                userId = statement.getInt(4)
+                userId = statement.getString(4)
             } catch (ex: IllegalArgumentException) {
                 throw ex
             }

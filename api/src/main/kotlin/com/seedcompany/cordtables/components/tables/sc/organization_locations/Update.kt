@@ -47,8 +47,7 @@ class Update(
                     table = "sc.organization_locations",
                     column = "organization",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "location" -> {
@@ -57,8 +56,7 @@ class Update(
                     table = "sc.organization_locations",
                     column = "location",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_person" -> {

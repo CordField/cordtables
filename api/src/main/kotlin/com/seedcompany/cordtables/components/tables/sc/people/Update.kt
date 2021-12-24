@@ -73,8 +73,7 @@ class Update(
                     table = "sc.people",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -83,8 +82,7 @@ class Update(
                     table = "sc.people",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

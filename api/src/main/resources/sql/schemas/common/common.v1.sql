@@ -447,10 +447,7 @@ create table common.directories (
   id uuid primary key default public.uuid_generate_v4(),
 
   parent uuid references common.directories(id),
-  name varchar(255), -- not null
-  
-	-- todo
-	-- add derived data from sub-directories/files
+  name varchar(255),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),

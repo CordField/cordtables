@@ -47,8 +47,7 @@ class Update(
                     table = "sc.global_partner_assessments",
                     column = "partner",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "governance_trans" -> {
@@ -216,8 +215,7 @@ class Update(
                     table = "sc.global_partner_assessments",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -226,8 +224,7 @@ class Update(
                     table = "sc.global_partner_assessments",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

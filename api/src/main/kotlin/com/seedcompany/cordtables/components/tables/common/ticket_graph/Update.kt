@@ -49,8 +49,7 @@ class Update(
                         table = "common.ticket_graph",
                         column = "from_ticket",
                         id = req.id,
-                        value = req.value,
-                        cast = "::integer"
+                        value = req.value
                 )
             }
 
@@ -60,8 +59,7 @@ class Update(
                         table = "common.ticket_graph",
                         column = "to_ticket",
                         id = req.id,
-                        value = req.value,
-                        cast = "::integer"
+                        value = req.value
                 )
             }
 

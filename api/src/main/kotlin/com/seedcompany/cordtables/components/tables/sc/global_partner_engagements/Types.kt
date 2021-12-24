@@ -6,7 +6,7 @@ import com.seedcompany.cordtables.common.GlobalPartnerRoles
 data class globalPartnerEngagement(
     var id: String? = null,
 
-    val organization: Int? = null,
+    val organization: String? = null,
     val type: String? = null,
     val mou_start: String? = null,
     val mou_end: String? = null,
@@ -14,17 +14,17 @@ data class globalPartnerEngagement(
     val partner_roles: String? = null,
 
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 
 data class globalPartnerEngagementInput(
     var id: String? = null,
 
-    val organization: Int? = null,
+    val organization: String? = null,
     val type: String? = null,
     val mou_start: String? = null,
     val mou_end: String? = null,
@@ -32,9 +32,9 @@ data class globalPartnerEngagementInput(
     val partner_roles: String? = null,
 
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )

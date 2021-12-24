@@ -46,8 +46,7 @@ class Update(
                     table = "up.prayer_requests",
                     column = "request_language_id",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "target_language_id" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "up.prayer_requests",
                     column = "target_language_id",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "sensitivity" -> {
@@ -76,8 +74,7 @@ class Update(
                 table = "up.prayer_requests",
                 column = "parent",
                 id = req.id,
-                value = req.value,
-                cast = "::INTEGER"
+                value = req.value
               )
             }
             "translator" -> {
@@ -86,8 +83,7 @@ class Update(
                 table = "up.prayer_requests",
                 column = "translator",
                 id = req.id,
-                value = req.value,
-                cast = "::INTEGER"
+                value = req.value
               )
             }
             "location" -> {
@@ -143,8 +139,7 @@ class Update(
                     table = "up.prayer_requests",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -153,8 +148,7 @@ class Update(
                     table = "up.prayer_requests",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

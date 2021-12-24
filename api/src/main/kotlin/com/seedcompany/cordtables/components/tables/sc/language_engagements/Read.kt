@@ -102,13 +102,13 @@ class Read(
                 var neo4j_id: String? = jdbcResult.getString("neo4j_id")
                 if (jdbcResult.wasNull()) neo4j_id = null
 
-                var project: Int? = jdbcResult.getInt("project")
+                var project: String? = jdbcResult.getString("project")
                 if (jdbcResult.wasNull()) project = null
 
-                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
+                var ethnologue: String? = jdbcResult.getString("ethnologue")
                 if (jdbcResult.wasNull()) ethnologue = null
 
-                var change_to_plan: Int? = jdbcResult.getInt("change_to_plan")
+                var change_to_plan: String? = jdbcResult.getString("change_to_plan")
                 if (jdbcResult.wasNull()) change_to_plan = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
@@ -147,13 +147,13 @@ class Read(
                 var paratext_registry: String? = jdbcResult.getString("paratext_registry")
                 if (jdbcResult.wasNull()) paratext_registry = null
 
-                var periodic_reports_directory: Int? = jdbcResult.getInt("periodic_reports_directory")
+                var periodic_reports_directory: String? = jdbcResult.getString("periodic_reports_directory")
                 if (jdbcResult.wasNull()) periodic_reports_directory = null
 
                 var pnp: String? = jdbcResult.getString("pnp")
                 if (jdbcResult.wasNull()) pnp = null
 
-                var pnp_file: Int? = jdbcResult.getInt("pnp_file")
+                var pnp_file: String? = jdbcResult.getString("pnp_file")
                 if (jdbcResult.wasNull()) pnp_file = null
 
                 var product_engagement_tag: String? = jdbcResult.getString("product_engagement_tag")
@@ -171,19 +171,19 @@ class Read(
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val languageEngagement =

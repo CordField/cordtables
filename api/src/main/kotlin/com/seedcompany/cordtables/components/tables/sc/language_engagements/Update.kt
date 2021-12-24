@@ -55,8 +55,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "project",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "ethnologue" -> {
@@ -65,8 +64,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "ethnologue",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "change_to_plan" -> {
@@ -75,8 +73,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "change_to_plan",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "active" -> {
@@ -205,8 +202,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "periodic_reports_directory",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "pnp" -> {
@@ -224,8 +220,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "pnp_file",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "product_engagement_tag" -> {
@@ -277,8 +272,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -287,8 +281,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }

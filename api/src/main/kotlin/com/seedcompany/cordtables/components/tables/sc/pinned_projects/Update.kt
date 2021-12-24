@@ -46,8 +46,7 @@ class Update(
                     table = "sc.pinned_projects",
                     column = "person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "project" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "sc.pinned_projects",
                     column = "project",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_person" -> {
@@ -66,8 +64,7 @@ class Update(
                     table = "sc.pinned_projects",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -76,8 +73,7 @@ class Update(
                     table = "sc.pinned_projects",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
         }
