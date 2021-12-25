@@ -9,7 +9,7 @@ class CreateFileExRequest {
   token: string;
   file: {
     name: string;
-    directory: number;
+    directory: string;
     // display_name: string;
   };
 }
@@ -65,7 +65,7 @@ export class FilesTable {
   @State() filesResponse: CommonFileListResponse;
   @State() directoriesResponse: CommonDirectoryListResponse;
   newFileName: string;
-  newFileDirectory: number;
+  newFileDirectory: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonFileUpdateRequest, CommonFileUpdateResponse>('common/files/update-read', {

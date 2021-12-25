@@ -8,12 +8,12 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePartnerExRequest {
   token: string;
   partner: {
-    organization: number;
+    organization: string;
     active: boolean;
     financial_reporting_types: string;
     is_innovations_client: boolean;
     pmc_entity_code: string;
-    point_of_contact: number;
+    point_of_contact: string;
     types: string;
   };
 }
@@ -59,12 +59,12 @@ class DeletePartnerExResponse extends GenericResponse {
 export class ScPartners {
   @State() partnersResponse: ScPartnerListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newActive: boolean;
   newFinancial_reporting_types: string;
   newIs_innovations_client: boolean;
   newPmc_entity_code: string;
-  newPoint_of_contact: number;
+  newPoint_of_contact: string;
   newTypes: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
@@ -298,7 +298,7 @@ export class ScPartners {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 
@@ -367,7 +367,7 @@ export class ScPartners {
                 <label htmlFor="point_of_contact">Point Of Contact</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="point_of_contact" name="point_of_contact" onInput={event => this.point_of_contactChange(event)} />
+                <input type="text" id="point_of_contact" name="point_of_contact" onInput={event => this.point_of_contactChange(event)} />
               </span>
             </div>
 

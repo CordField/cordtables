@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerAssessmentExRequest {
   token: string;
   globalPartnerAssessment: {
-    partner: number;
+    partner: string;
     governance_trans: string;
     director_trans: string;
     identity_trans: string;
@@ -68,7 +68,7 @@ class DeleteGlobalPartnerAssessmentExResponse extends GenericResponse {
 export class ScGlobalPartnerAssessments {
   @State() globalPartnerAssessmentsResponse: ScGlobalPartnerAssessmentListResponse;
 
-  newPartner: number;
+  newPartner: string;
   newGovernance_trans: string;
   newDirector_trans: string;
   newIdentity_trans: string;

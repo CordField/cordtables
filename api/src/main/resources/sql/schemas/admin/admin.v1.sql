@@ -352,7 +352,7 @@ create table admin.users(
 create table if not exists admin.tokens (
 	id uuid primary key default public.uuid_generate_v4(),
 	token varchar(64) unique not null,
-	person uuid unique references admin.people(id),
+	person uuid references admin.people(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP
 );
 

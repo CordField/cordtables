@@ -10,20 +10,20 @@ class CreateProjectExRequest {
   project: {
     neo4j_id: string;
     name: string;
-    change_to_plan: number;
+    change_to_plan: string;
     active: boolean;
     department: string;
     estimated_submission: string;
-    field_region: number;
+    field_region: string;
     initial_mou_end: string;
-    marketing_location: number;
+    marketing_location: string;
     mou_start: string;
     mou_end: string;
-    owning_organization: number;
-    periodic_reports_directory: number;
-    posts_directory: number;
-    primary_location: number;
-    root_directory: number;
+    owning_organization: string;
+    periodic_reports_directory: string;
+    posts_directory: string;
+    primary_location: string;
+    root_directory: string;
     status: string;
     status_changed_at: string;
     step: string;
@@ -73,20 +73,20 @@ export class ScProjects {
 
   newNeo4j_id: string;
   newName: string;
-  newChange_to_plan: number;
+  newChange_to_plan: string;
   newActive: boolean;
   newDepartment: string;
   newEstimated_submission: string;
-  newField_region: number;
+  newField_region: string;
   newInitial_mou_end: string;
-  newMarketing_location: number;
+  newMarketing_location: string;
   newMou_start: string;
   newMou_end: string;
-  newOwning_organization: number;
-  newPeriodic_reports_directory: number;
-  newPosts_directory: number;
-  newPrimary_location: number;
-  newRoot_directory: number;
+  newOwning_organization: string;
+  newPeriodic_reports_directory: string;
+  newPosts_directory: string;
+  newPrimary_location: string;
+  newRoot_directory: string;
   newStatus: string;
   newStatus_changed_at: string;
   newStep: string;
@@ -485,7 +485,7 @@ export class ScProjects {
                 <label htmlFor="change_to_plan">Change To Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+                <input type="text" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
             </div>
 
@@ -529,7 +529,7 @@ export class ScProjects {
                 <label htmlFor="field_region">Field Region</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="field_region" name="field_region" onInput={event => this.field_regionChange(event)} />
+                <input type="text" id="field_region" name="field_region" onInput={event => this.field_regionChange(event)} />
               </span>
             </div>
 
@@ -547,7 +547,7 @@ export class ScProjects {
                 <label htmlFor="marketing_location">Marketing Location</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="marketing_location" name="marketing_location" onInput={event => this.marketing_locationChange(event)} />
+                <input type="text" id="marketing_location" name="marketing_location" onInput={event => this.marketing_locationChange(event)} />
               </span>
             </div>
 
@@ -583,7 +583,7 @@ export class ScProjects {
                 <label htmlFor="periodic_reports_directory">Periodic Reports Directory</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="periodic_reports_directory" name="periodic_reports_directory" onInput={event => this.periodic_reports_directoryChange(event)} />
+                <input type="text" id="periodic_reports_directory" name="periodic_reports_directory" onInput={event => this.periodic_reports_directoryChange(event)} />
               </span>
             </div>
 
@@ -592,7 +592,7 @@ export class ScProjects {
                 <label htmlFor="posts_directory">Posts Directory</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="posts_directory" name="posts_directory" onInput={event => this.posts_directoryChange(event)} />
+                <input type="text" id="posts_directory" name="posts_directory" onInput={event => this.posts_directoryChange(event)} />
               </span>
             </div>
 
@@ -601,7 +601,7 @@ export class ScProjects {
                 <label htmlFor="primary_location">Primary Location</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="primary_location" name="primary_location" onInput={event => this.primary_locationChange(event)} />
+                <input type="text" id="primary_location" name="primary_location" onInput={event => this.primary_locationChange(event)} />
               </span>
             </div>
 

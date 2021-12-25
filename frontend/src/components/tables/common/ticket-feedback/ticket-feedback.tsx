@@ -8,23 +8,23 @@ import { globals } from '../../../../core/global.store';
 class CreateTicketFeedbackRequest {
   token: string;
   ticket_feedback: {
-    ticket: number;
-    stake_holder: number;
+    ticket: string;
+    stake_holder: string;
     feedback: string;
   };
 }
 
 class CommonTicketFeedbackRow {
   id: string;
-  ticket: number;
-  stake_holder: number;
+  ticket: string;
+  stake_holder: string;
   feedback: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateTicketFeedbackResponse extends GenericResponse {
@@ -69,8 +69,8 @@ class DeleteTicketFeedbackResponse extends GenericResponse {
 export class TicketFeedback {
   @Prop() onlyShowCreate: boolean = false;
   @State() CommonTicketFeedbackResponse: CommonTicketFeedbackResponse;
-  newTicket: number;
-  newStakeHolder: number;
+  newTicket: string;
+  newStakeHolder: string;
   newFeedback: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {

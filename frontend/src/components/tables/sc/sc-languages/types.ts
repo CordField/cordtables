@@ -2,7 +2,7 @@ class ScLanguage {
   id?: string | undefined;
   name?: string | undefined;
 
-  ethnologue?: number | undefined;
+  ethnologue?: string | undefined;
   display_name?: string | undefined;
   display_name_pronunciation?: string | undefined;
   tags?: string | undefined;
@@ -62,11 +62,11 @@ class ScLanguage {
   suggested_strategies?: string | undefined;
   comments?: string | undefined;
   created_at?: string | undefined;
-  created_by?: number | undefined;
+  created_by?: string | undefined;
   modified_at?: string | undefined;
-  modified_by?: number | undefined;
-  owning_person?: number | undefined;
-  owning_group?: number | undefined;
+  modified_by?: string | undefined;
+  owning_person?: string | undefined;
+  owning_group?: string | undefined;
   coordinates?: string | undefined;
   coordinates_json?: string | undefined;
 }

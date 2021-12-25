@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateRoleMembershipExRequest {
   token: string;
   roleMembership: {
-    role: number;
-    person: number;
+    role: string;
+    person: string;
   };
 }
 class CreateRoleMembershipExResponse extends GenericResponse {
@@ -54,8 +54,8 @@ class DeleteRoleMembershipExResponse extends GenericResponse {
 export class AdminRoleMemberships {
   @State() roleMembershipsResponse: AdminRoleMembershipListResponse;
 
-  newRole: number;
-  newPerson: number;
+  newRole: string;
+  newPerson: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminRoleMembershipUpdateRequest, AdminRoleMembershipUpdateResponse>('admin/role-memberships/update-read', {

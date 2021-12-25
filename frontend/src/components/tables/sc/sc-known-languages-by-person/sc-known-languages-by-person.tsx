@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateKnownLanguagesByPersonExRequest {
   token: string;
   knownLanguagesByPerson: {
-    person: number;
-    known_language: number;
+    person: string;
+    known_language: string;
   };
 }
 class CreateKnownLanguagesByPersonExResponse extends GenericResponse {
@@ -54,8 +54,8 @@ class DeleteKnownLanguagesByPersonExResponse extends GenericResponse {
 export class ScKnownLanguagesByPersons {
   @State() knownLanguagesByPersonsResponse: ScKnownLanguagesByPersonListResponse;
 
-  newPrson: number;
-  newKnown_language: number;
+  newPrson: string;
+  newKnown_language: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScKnownLanguagesByPersonUpdateRequest, ScKnownLanguagesByPersonUpdateResponse>('sc/known-languages-by-person/update-read', {

@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateStageRoleColumnGrantExRequest {
   token: string;
   stageRoleColumnGrant: {
-    stage: number;
-    role: number;
+    stage: string;
+    role: string;
     table_name: string;
     column_name: string;
     access_level: string;
@@ -57,8 +57,8 @@ class DeleteStageRoleColumnGrantExResponse extends GenericResponse {
 export class CommonStageRoleColumnGrants {
   @State() stageRoleColumnGrantsResponse: CommonStageRoleColumnGrantListResponse;
 
-  newStage: number;
-  newRole: number;
+  newStage: string;
+  newRole: string;
   newTable_name: string;
   newColumn_name: string;
   newAccess_level: string;
@@ -344,7 +344,7 @@ export class CommonStageRoleColumnGrants {
                 <label htmlFor="stage">Stage</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="stage" name="stage" onInput={event => this.stageChange(event)} />
+                <input type="text" id="stage" name="stage" onInput={event => this.stageChange(event)} />
               </span>
             </div>
 
@@ -353,7 +353,7 @@ export class CommonStageRoleColumnGrants {
                 <label htmlFor="role">Role</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="role" name="role" onInput={event => this.roleChange(event)} />
+                <input type="text" id="role" name="role" onInput={event => this.roleChange(event)} />
               </span>
             </div>
 

@@ -7,7 +7,8 @@ import { globals } from '../../../../core/global.store';
 class CreateWorkRecordRequest {
   token: string;
   work_record: {
-    person: number;
+    ticket: string;
+    person: string;
     hours: number;
     minutes: number;
     total_time?: number;
@@ -17,14 +18,14 @@ class CreateWorkRecordRequest {
 
 class CommonWorkRecordRow {
   id: string;
-  ticket: number;
-  person: number;
+  ticket: string;
+  person: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateWorkRecordResponse extends GenericResponse {
@@ -67,7 +68,8 @@ class DeleteWorkRecordResponse extends GenericResponse {
 export class WorkRecord {
   @Prop() onlyShowCreate: boolean = false;
   @State() CommonWorkRecordResponse: CommonWorkRecordResponse;
-  newPerson: number;
+  newTicket: string;
+  newPerson: string;
   newHours: number;
   newMinutes: number;
   newComment: string;
@@ -197,6 +199,9 @@ export class WorkRecord {
   async componentWillLoad() {
     await this.getList();
   }
+  ticketChange(event) {
+    this.newTicket = event.target.value;
+  }
 
   async getList() {
     this.CommonWorkRecordResponse = await fetchAs<CommonWorkRecordListRequest, CommonWorkRecordResponse>('common/work-records/list', {
@@ -227,6 +232,7 @@ export class WorkRecord {
     const result = await fetchAs<CreateWorkRecordRequest, CreateWorkRecordResponse>('common/work-records/create-read', {
       token: globals.globalStore.state.token,
       work_record: {
+        ticket: this.newTicket,
         person: this.newPerson,
         hours: this.newHours,
         minutes: this.newMinutes,
@@ -249,6 +255,14 @@ export class WorkRecord {
 
         {(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
+            <div id="ticket-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="ticket">Ticket:</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="ticket" name="ticket" onInput={event => this.ticketChange(event)} />
+              </span>
+            </div>
             <div id="person-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="person">Person:</label>

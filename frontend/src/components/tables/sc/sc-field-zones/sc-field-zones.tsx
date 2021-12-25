@@ -9,7 +9,7 @@ class CreateFieldZoneExRequest {
   token: string;
   fieldZone: {
     neo4j_id: string;
-    director: number;
+    director: string;
     name: string;
   };
 }
@@ -56,7 +56,7 @@ export class ScFieldZones {
   @State() fieldZonesResponse: ScFieldZoneListResponse;
 
   newNeo4j_id: string;
-  newDirector: number;
+  newDirector: string;
   newName: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
@@ -237,7 +237,7 @@ export class ScFieldZones {
                 <label htmlFor="director">Director</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="director" name="director" onInput={event => this.directorChange(event)} />
+                <input type="text" id="director" name="director" onInput={event => this.directorChange(event)} />
               </span>
             </div>
 

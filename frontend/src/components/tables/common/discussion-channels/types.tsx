@@ -4,11 +4,11 @@ export class CommonDiscussionChannel {
   id?: string;
   name?: string;
   created_at?: string;
-  created_by?: number;
+  created_by?: string;
   modified_at?: string;
-  modified_by?: number;
-  owning_person?: number;
-  owning_group?: number;
+  modified_by?: string;
+  owning_person?: string;
+  owning_group?: string;
 }
 
 export class CreateCommonDiscussionChannelRequest {

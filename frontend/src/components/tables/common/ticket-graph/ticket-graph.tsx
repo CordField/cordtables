@@ -7,21 +7,21 @@ import { globals } from '../../../../core/global.store';
 class CreateTicketGraphRequest {
   token: string;
   ticket_graph: {
-    from_ticket: number;
-    to_ticket: number;
+    from_ticket: string;
+    to_ticket: string;
   };
 }
 
 class CommonTicketGraphRow {
   id: string;
-  from_ticket: number;
-  to_ticket: number;
+  from_ticket: string;
+  to_ticket: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateTicketGraphResponse extends GenericResponse {
@@ -66,8 +66,8 @@ class DeleteTicketResponse extends GenericResponse {
 export class TicketGraph {
   @Prop() onlyShowCreate: boolean = false;
   @State() commonTicketGraphResponse: CommonTicketGraphResponse;
-  newFromTicket: number;
-  newToTicket: number;
+  newFromTicket: string;
+  newToTicket: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonTicketGraphUpdateRequest, CommonTicketGraphUpdateResponse>('common/ticket-graph/update-read', {

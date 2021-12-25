@@ -8,9 +8,9 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateProductScriptureReferenceExRequest {
   token: string;
   productScriptureReference: {
-    product: number;
-    scripture_reference: number;
-    change_to_plan: number;
+    product: string;
+    scripture_reference: string;
+    change_to_plan: string;
     active: boolean;
   };
 }
@@ -56,9 +56,9 @@ class DeleteProductScriptureReferenceExResponse extends GenericResponse {
 export class ScProductScriptureReferences {
   @State() productScriptureReferencesResponse: ScProductScriptureReferenceListResponse;
 
-  newProduct: number;
-  newScripture_reference: number;
-  newChange_to_plan: number;
+  newProduct: string;
+  newScripture_reference: string;
+  newChange_to_plan: string;
   newActive: boolean;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
@@ -251,7 +251,7 @@ export class ScProductScriptureReferences {
                 <label htmlFor="product">Product</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="product" name="product" onInput={event => this.productChange(event)} />
+                <input type="text" id="product" name="product" onInput={event => this.productChange(event)} />
               </span>
             </div>
 
@@ -269,7 +269,7 @@ export class ScProductScriptureReferences {
                 <label htmlFor="change_to_plan">Change To Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+                <input type="text" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
             </div>
 

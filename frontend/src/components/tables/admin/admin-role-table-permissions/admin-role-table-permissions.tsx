@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateRoleTablePermissionExRequest {
   token: string;
   roleTablePermission: {
-    role: number;
+    role: string;
     table_name: string;
     table_permission: string;
   };
@@ -55,7 +55,7 @@ class DeleteRoleTablePermissionExResponse extends GenericResponse {
 export class AdminRoleTablePermissions {
   @State() roleTablePermissionsResponse: AdminRoleTablePermissionListResponse;
 
-  newRole: number;
+  newRole: string;
   newTable_name: string;
   newTable_permission: string;
 

@@ -7,7 +7,8 @@ import { globals } from '../../../../core/global.store';
 class CreateWorkEstimateRequest {
   token: string;
   work_estimate: {
-    person: number;
+    ticket: string;
+    person: string;
     hours: number;
     minutes: number;
     total_time?: number;
@@ -17,14 +18,14 @@ class CreateWorkEstimateRequest {
 
 class CommonWorkEstimateRow {
   id: string;
-  ticket: number;
-  person: number;
+  ticket: string;
+  person: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateWorkEstimateResponse extends GenericResponse {
@@ -68,7 +69,8 @@ class DeleteWorkEstimateResponse extends GenericResponse {
 export class WorkRecord {
   @Prop() onlyShowCreate: boolean = false;
   @State() CommonWorkEstimateResponse: CommonWorkEstimateResponse;
-  newPerson: number;
+  newTicket: string;
+  newPerson: string;
   newHours: number;
   newMinutes: number;
   newComment: string;
@@ -198,6 +200,9 @@ export class WorkRecord {
   async componentWillLoad() {
     await this.getList();
   }
+  ticketChange(event) {
+    this.newTicket = event.target.value;
+  }
 
   async getList() {
     this.CommonWorkEstimateResponse = await fetchAs<CommonWorkEstimateListRequest, CommonWorkEstimateResponse>('common/work-estimates/list', {
@@ -225,9 +230,10 @@ export class WorkRecord {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateWorkEstimateRequest, CreateWorkEstimateResponse>('common/work-estimates/create-read', {
+    const result = await fetchAs<CreateWorkEstimateRequest, CreateWorkEstimateResponse>('common-work-estimates/create-read', {
       token: globals.globalStore.state.token,
       work_estimate: {
+        ticket: this.newTicket,
         person: this.newPerson,
         hours: this.newHours,
         minutes: this.newMinutes,
@@ -251,6 +257,15 @@ export class WorkRecord {
 
         {(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
+            <div id="ticket-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="ticket">Ticket:</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="ticket" name="ticket" onInput={event => this.ticketChange(event)} />
+              </span>
+            </div>
+
             <div id="person-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="person">Person:</label>

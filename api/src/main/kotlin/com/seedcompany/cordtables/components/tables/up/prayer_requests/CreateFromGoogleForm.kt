@@ -147,7 +147,7 @@ class CreateFromGoogleForm(
     ){ rs, rowNum ->
       languageIndex(
         rs.getString("id"),
-        rs.getInt("common_id"),
+        rs.getString("common_id"),
         rs.getString("lang"),
         rs.getString("country"),
         rs.getString("name_type"),

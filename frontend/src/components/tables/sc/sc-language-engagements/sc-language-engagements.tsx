@@ -9,9 +9,9 @@ class CreateLanguageEngagementExRequest {
   token: string;
   languageEngagement: {
     neo4j_id: string;
-    project: number;
-    ethnologue: number;
-    change_to_plan: number;
+    project: string;
+    ethnologue: string;
+    change_to_plan: string;
     active: boolean;
     communications_complete_date: string;
     complete_date: string;
@@ -24,9 +24,9 @@ class CreateLanguageEngagementExRequest {
     is_sent_printing: boolean;
     last_reactivated_at: string;
     paratext_registry: string;
-    periodic_reports_directory: number;
+    periodic_reports_directory: string;
     pnp: string;
-    pnp_file: number;
+    pnp_file: string;
     product_engagement_tag: string;
     start_date: string;
     start_date_override: string;
@@ -76,9 +76,9 @@ export class ScLanguageEngagements {
   @State() languageEngagementsResponse: ScLanguageEngagementListResponse;
 
   newNeo4j_id: string;
-  newProject: number;
-  newEthnologue: number;
-  newChange_to_plan: number;
+  newProject: string;
+  newEthnologue: string;
+  newChange_to_plan: string;
   newActive: boolean;
   newCommunications_complete_date: string;
   newComplete_date: string;
@@ -91,9 +91,9 @@ export class ScLanguageEngagements {
   newIs_sent_printing: boolean;
   newLast_reactivated_at: string;
   newParatext_registry: string;
-  newPeriodic_reports_directory: number;
+  newPeriodic_reports_directory: string;
   newPnp: string;
-  newPnp_file: number;
+  newPnp_file: string;
   newProduct_engagement_tag: string;
   newStart_date: string;
   newStart_date_override: string;
@@ -552,7 +552,7 @@ export class ScLanguageEngagements {
                 <label htmlFor="project">Project</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="project" name="project" onInput={event => this.projectChange(event)} />
+                <input type="text" id="project" name="project" onInput={event => this.projectChange(event)} />
               </span>
             </div>
 
@@ -561,7 +561,7 @@ export class ScLanguageEngagements {
                 <label htmlFor="ethnologue">Ethnologue</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
+                <input type="text" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
               </span>
             </div>
 
@@ -570,7 +570,7 @@ export class ScLanguageEngagements {
                 <label htmlFor="change_to_plan">Change To Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+                <input type="text" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
             </div>
 

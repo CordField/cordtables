@@ -19,7 +19,7 @@ class DeletePermissionsRequest {
 
 class UpdatePermissionsRequest {
   table_name: string;
-  role: number;
+  role: string;
   table_permission: string;
   email: string;
   id: string;
@@ -43,7 +43,7 @@ class CreateGlobalRoleTablePermissionsReponse extends GenericResponse {
 export class GlobalRoleTablePermissions {
   //@State()
   //globalRoleTablePermissions: globalRoleTablePermissions[] = [];
-  defaultFields = { tableName: '', globalRole: null, tablePermission: '' };
+  defaultFields = { tableName: '', globalRole: '', tablePermission: '' };
   @State() globalRoleTablePermissions: globalRoleTablePermissions[] = [];
   @State() insertedFields: MutablePermissionsFields = this.defaultFields;
   @State() updatedFields: MutablePermissionsFields = this.defaultFields;

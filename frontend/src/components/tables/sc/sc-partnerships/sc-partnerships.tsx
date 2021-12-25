@@ -8,11 +8,11 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePartnershipExRequest {
   token: string;
   partnership: {
-    project: number;
-    partner: number;
-    change_to_plan: number;
+    project: string;
+    partner: string;
+    change_to_plan: string;
     active: boolean;
-    agreement: number;
+    agreement: string;
   };
 }
 class CreatePartnershipExResponse extends GenericResponse {
@@ -57,11 +57,11 @@ class DeletePartnershipExResponse extends GenericResponse {
 export class ScPartnerships {
   @State() partnershipsResponse: ScPartnershipListResponse;
 
-  newProject: number;
-  newPartner: number;
-  newChange_to_plan: number;
+  newProject: string;
+  newPartner: string;
+  newChange_to_plan: string;
   newActive: boolean;
-  newAgreement: number;
+  newAgreement: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScPartnershipUpdateRequest, ScPartnershipUpdateResponse>('sc/partnerships/update-read', {
@@ -261,7 +261,7 @@ export class ScPartnerships {
                 <label htmlFor="project">Project</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="project" name="project" onInput={event => this.projectChange(event)} />
+                <input type="text" id="project" name="project" onInput={event => this.projectChange(event)} />
               </span>
             </div>
 
@@ -270,7 +270,7 @@ export class ScPartnerships {
                 <label htmlFor="partner">Partner</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="partner" name="partner" onInput={event => this.partnerChange(event)} />
+                <input type="text" id="partner" name="partner" onInput={event => this.partnerChange(event)} />
               </span>
             </div>
 
@@ -279,7 +279,7 @@ export class ScPartnerships {
                 <label htmlFor="change_to_plan">Change To Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+                <input type="text" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
             </div>
 
@@ -305,7 +305,7 @@ export class ScPartnerships {
                 <label htmlFor="agreement">Agreement</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="agreement" name="agreement" onInput={event => this.agreementChange(event)} />
+                <input type="text" id="agreement" name="agreement" onInput={event => this.agreementChange(event)} />
               </span>
             </div>
 

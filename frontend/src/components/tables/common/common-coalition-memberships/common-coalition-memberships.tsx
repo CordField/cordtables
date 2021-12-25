@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateCoalitionMembershipExRequest {
   token: string;
   coalitionMembership: {
-    coalition: number;
-    organization: number;
+    coalition: string;
+    organization: string;
   };
 }
 class CreateCoalitionMembershipExResponse extends GenericResponse {
@@ -54,8 +54,8 @@ class DeleteCoalitionMembershipExResponse extends GenericResponse {
 export class CommonCoalitionMemberships {
   @State() coalitionMembershipsResponse: CommonCoalitionMembershipListResponse;
 
-  newCoalition: number;
-  newOrganization: number;
+  newCoalition: string;
+  newOrganization: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonCoalitionMembershipUpdateRequest, CommonCoalitionMembershipUpdateResponse>('common/coalition-memberships/update-read', {
@@ -225,7 +225,7 @@ export class CommonCoalitionMemberships {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 

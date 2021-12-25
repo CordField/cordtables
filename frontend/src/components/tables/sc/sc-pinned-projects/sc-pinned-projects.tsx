@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePinnedProjectExRequest {
   token: string;
   pinnedProject: {
-    person: number;
-    project: number;
+    person: string;
+    project: string;
   };
 }
 class CreatePinnedProjectExResponse extends GenericResponse {
@@ -54,8 +54,8 @@ class DeletePinnedProjectExResponse extends GenericResponse {
 export class ScPinnedProjects {
   @State() pinnedProjectsResponse: ScPinnedProjectListResponse;
 
-  newPerson: number;
-  newProject: number;
+  newPerson: string;
+  newProject: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScPinnedProjectUpdateRequest, ScPinnedProjectUpdateResponse>('sc/pinned-projects/update-read', {

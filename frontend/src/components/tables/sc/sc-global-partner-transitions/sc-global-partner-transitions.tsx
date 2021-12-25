@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerTransitionExRequest {
   token: string;
   globalPartnerTransition: {
-    organization: number;
+    organization: string;
     transition_type: string;
     effective_date: string;
   };
@@ -55,7 +55,7 @@ class DeleteGlobalPartnerTransitionExResponse extends GenericResponse {
 export class ScGlobalPartnerTransitions {
   @State() globalPartnerTransitionsResponse: ScGlobalPartnerTransitionListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newTransition_type: string;
   newEffective_date: string;
 
@@ -234,7 +234,7 @@ export class ScGlobalPartnerTransitions {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 

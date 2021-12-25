@@ -40,13 +40,13 @@ class Utility(
         return token
     }
 
-    fun getUserIdFromSessionId(sessionId: String): Int? {
+    fun getUserIdFromSessionId(sessionId: String): String? {
         //language=SQL
-        val userId: Int? = jdbcTemplate.queryForObject(
+        val userId: String? = jdbcTemplate.queryForObject(
             """
           select user_id from sessions where session_id = ?;
       """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             sessionId,
         )
 

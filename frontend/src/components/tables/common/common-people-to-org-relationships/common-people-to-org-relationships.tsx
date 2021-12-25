@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePeopleToOrgRelationshipExRequest {
   token: string;
   peopleToOrgRelationship: {
-    org: number;
-    person: number;
+    org: string;
+    person: string;
     relationship_type: string;
     begin_at: string;
     end_at: string;
@@ -57,8 +57,8 @@ class DeletePeopleToOrgRelationshipExResponse extends GenericResponse {
 export class CommonPeopleToOrgRelationships {
   @State() peopleToOrgRelationshipsResponse: CommonPeopleToOrgRelationshipListResponse;
 
-  newOrg: number;
-  newPerson: number;
+  newOrg: string;
+  newPerson: string;
   newRelationship_type: string;
   newBegin_at: string;
   newEnd_at: string;
@@ -278,7 +278,7 @@ export class CommonPeopleToOrgRelationships {
                 <label htmlFor="org">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="org" name="org" onInput={event => this.orgChange(event)} />
+                <input type="text" id="org" name="org" onInput={event => this.orgChange(event)} />
               </span>
             </div>
 
@@ -287,7 +287,7 @@ export class CommonPeopleToOrgRelationships {
                 <label htmlFor="person">Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="person" name="person" onInput={event => this.personChange(event)} />
+                <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
             </div>
 

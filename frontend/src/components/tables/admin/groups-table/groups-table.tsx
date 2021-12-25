@@ -10,11 +10,11 @@ class GroupsRow {
   id: string;
   name: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
-  owningPerson: number;
-  owningGroup: number;
+  modifiedBy: string;
+  owningPerson: string;
+  owningGroup: string;
 }
 
 class GroupsListResponse {

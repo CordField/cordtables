@@ -10,7 +10,7 @@ class CreateLanguageExRequest {
   language: {
     name: string;
     display_name: string;
-    ethnologue: number;
+    ethnologue: string;
   };
 }
 class CreateLanguageExResponse extends GenericResponse {
@@ -60,7 +60,7 @@ export class ScLanguages {
   @State() currentPage: number = 1;
   newLanguageName: string;
   newDisplayName: string;
-  newEthnologue: number;
+  newEthnologue: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc/languages/update-read', {

@@ -8,12 +8,12 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePrayerRequestExRequest {
   token: string;
   prayerRequest: {
-    request_language_id: number;
-    target_language_id: number;
+    request_language_id: string;
+    target_language_id: string;
     sensitivity: string;
     organization_name: string;
-    parent: number;
-    translator: number;
+    parent: string;
+    translator: string;
     location: string;
     title: string;
     content: string;
@@ -63,12 +63,12 @@ class DeletePrayerRequestExResponse extends GenericResponse {
 export class UpPrayerRequests {
   @State() prayerRequestsResponse: UpPrayerRequestListResponse;
 
-  newRequest_language_id: number;
-  newTarget_language_id: number;
+  newRequest_language_id: string;
+  newTarget_language_id: string;
   newSensitivity: string;
   newOrganization_name: string;
-  newParent: number;
-  newTranslator: number;
+  newParent: string;
+  newTranslator: string;
   newLocation: string;
   newTitle: string;
   newContent: string;
@@ -359,7 +359,7 @@ export class UpPrayerRequests {
                 <label htmlFor="request_language_id">Request Language ID</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="request_language_id" name="request_language_id" onInput={event => this.request_language_idChange(event)} />
+                <input type="text" id="request_language_id" name="request_language_id" onInput={event => this.request_language_idChange(event)} />
               </span>
             </div>
 
@@ -368,7 +368,7 @@ export class UpPrayerRequests {
                 <label htmlFor="target_language_id">Target Language ID</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="target_language_id" name="target_language_id" onInput={event => this.target_language_idChange(event)} />
+                <input type="text" id="target_language_id" name="target_language_id" onInput={event => this.target_language_idChange(event)} />
               </span>
             </div>
 
@@ -406,7 +406,7 @@ export class UpPrayerRequests {
                 <label htmlFor="parent">Parent</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="parent" name="parent" onInput={event => this.parentChange(event)} />
+                <input type="text" id="parent" name="parent" onInput={event => this.parentChange(event)} />
               </span>
             </div>
 
@@ -415,7 +415,7 @@ export class UpPrayerRequests {
                 <label htmlFor="translator">Translator</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="translator" name="translator" onInput={event => this.translatorChange(event)} />
+                <input type="text" id="translator" name="translator" onInput={event => this.translatorChange(event)} />
               </span>
             </div>
 

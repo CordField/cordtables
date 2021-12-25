@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePostExRequest {
   token: string;
   post: {
-    directory: number;
+    directory: string;
     type: string;
     shareability: string;
     body: string;
@@ -56,7 +56,7 @@ class DeletePostExResponse extends GenericResponse {
 export class ScPosts {
   @State() postsResponse: ScPostListResponse;
 
-  newDirectory: number;
+  newDirectory: string;
   newType: string;
   newShareability: string;
   newBody: string;

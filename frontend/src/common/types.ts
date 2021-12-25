@@ -21,12 +21,12 @@ export enum AppState {
 export interface GlobalRole {
   id: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
+  modified_by: string;
   name: string;
-  owning_group: number;
-  owning_person: number;
+  owning_group: string;
+  owning_person: string;
   chat: number;
 }
 
@@ -79,19 +79,19 @@ export interface LanguageEx {
   suggested_strategies?: string;
   comments?: string;
   created_at?: string;
-  created_by?: number;
+  created_by?: string;
   modified_at?: string;
-  modified_by?: number;
-  owning_person?: number;
-  owning_group?: number;
+  modified_by?: string;
+  owning_person?: string;
+  owning_group?: string;
 }
 export interface globalRoleTablePermissions {
   id: string;
   createdAt: string;
-  createdBy: number;
-  globalRole: number;
+  createdBy: string;
+  globalRole: string;
   modifiedAt: string;
-  modifiedBy: number;
+  modifiedBy: string;
   tableName: string;
   tablePermission: string;
 }
@@ -116,19 +116,19 @@ export interface ScriptureReference {
 
 export interface AdminUser {
   id?: string;
-  person?: number;
+  person?: string;
   email?: string;
   chat?: number;
   created_at?: string;
-  created_by?: number;
+  created_by?: string;
   modified_at?: string;
-  modified_by?: number;
-  owning_person?: number;
-  owning_group?: number;
+  modified_by?: string;
+  owning_person?: string;
+  owning_group?: string;
 }
 
 export type SiteTextLanguage = {
-  language: number;
+  language: string;
   language_name: string;
 }
 
@@ -145,6 +145,6 @@ export type SiteTextTranslation = {
 }
 
 export type SiteTextTranslationList = {
-  language: number,
+  language: string,
   translations: Array<SiteTextTranslation>
 }

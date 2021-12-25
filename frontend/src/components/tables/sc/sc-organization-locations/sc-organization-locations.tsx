@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateOrganizationLocationExRequest {
   token: string;
   organizationLocation: {
-    organization: number;
-    location: number;
+    organization: string;
+    location: string;
   };
 }
 class CreateOrganizationLocationExResponse extends GenericResponse {
@@ -54,8 +54,8 @@ class DeleteOrganizationLocationExResponse extends GenericResponse {
 export class ScOrganizationLocations {
   @State() organizationLocationsResponse: ScOrganizationLocationListResponse;
 
-  newOrganization: number;
-  newLocation: number;
+  newOrganization: string;
+  newLocation: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScOrganizationLocationUpdateRequest, ScOrganizationLocationUpdateResponse>('sc/organization-locations/update-read', {
@@ -216,7 +216,7 @@ export class ScOrganizationLocations {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 
@@ -225,7 +225,7 @@ export class ScOrganizationLocations {
                 <label htmlFor="location">Location</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="location" name="location" onInput={event => this.locationChange(event)} />
+                <input type="text" id="location" name="location" onInput={event => this.locationChange(event)} />
               </span>
             </div>
 

@@ -8,14 +8,14 @@ class GroupsGlobalRoleMembershipsRequest {
 
 class GroupsGlobalRoleMembershipsRow {
   id: string;
-  globalRole: number;
-  person: number;
+  globalRole: string;
+  person: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
-  owningPerson: number;
-  owningGroup: number;
+  modifiedBy: string;
+  owningPerson: string;
+  owningGroup: string;
 }
 
 class GlobalRoleMembershipsListResponse {
@@ -25,9 +25,9 @@ class GlobalRoleMembershipsListResponse {
 
 class GlobalRoleMembershipCreateRequest {
   token: string;
-  role: number;
-  person: number;
-  owning_group: number;
+  role: string;
+  person: string;
+  owning_group: string;
 }
 
 class GroupCreateResponse {
@@ -36,9 +36,9 @@ class GroupCreateResponse {
 
 class GroupUpdateRequest {
   token: string;
-  role?: number;
-  person?: number;
-  owning_group?: number;
+  role?: string;
+  person?: string;
+  owning_group?: string;
   id: string;
 }
 
@@ -67,9 +67,9 @@ export class GlobalRoleMemberships {
   createResponse: GroupCreateResponse;
   deleteResponse: GroupDeleteResponse;
 
-  newGlobalRole: number;
-  newPerson: number;
-  newOwningGroup: number;
+  newGlobalRole: string;
+  newPerson: string;
+  newOwningGroup: string;
 
   editableKeys = ['name'];
 
@@ -115,7 +115,7 @@ export class GlobalRoleMemberships {
     }
   };
 
-  updateGlobalRole = async (id: string, columnName: string, value: number): Promise<boolean> => {
+  updateGlobalRole = async (id: string, columnName: string, value: string): Promise<boolean> => {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, role: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
