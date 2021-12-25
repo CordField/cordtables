@@ -19,7 +19,7 @@ export class Globals {
     readableTables: (JSON.parse(localStorage.getItem('readableTables')) ?? []) as string[],
     isAdmin: localStorage.getItem('isAdmin'),
     notifications: (JSON.parse(localStorage.getItem('notifications')) ?? []) as Notification[],
-    userId: JSON.parse(localStorage.getItem('userId')) as number | undefined,
+    userId: JSON.parse(localStorage.getItem('userId')) as string | undefined,
     siteTextLanguages: [],
     siteTextStrings: [],
     siteTextTranslations: {}

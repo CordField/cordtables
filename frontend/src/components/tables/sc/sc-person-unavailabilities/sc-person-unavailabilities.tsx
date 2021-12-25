@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePersonUnavailabilityExRequest {
   token: string;
   personUnavailability: {
-    person: number;
+    person: string;
     period_start: string;
     period_end: string;
     description: string;
@@ -58,7 +58,7 @@ export class ScPersonUnavailabilities {
 
   @State() SpersonUnavailabilitiesResponse: ScPersonUnavailabilityListResponse;
 
-  newPerson: number;
+  newPerson: string;
   newPeriod_start: string;
   newPeriod_end: string;
   newDescription: string;

@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGroupExRequest {
   token: string;
   group: {
-    parent_group: number;
+    parent_group: string;
     name: string;
   };
 }
@@ -56,7 +56,7 @@ export class AdminGroups {
 
   @State() groupsResponse: AdminGroupListResponse;
 
-  newParent_group: number;
+  newParent_group: string;
   newName: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {

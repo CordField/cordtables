@@ -11,7 +11,7 @@ class CreateFileVersionExRequest {
     category: string;
     mime_type: string;
     name: string;
-    file: number;
+    file: string;
     file_url: string;
     file_size: number;
   };
@@ -72,7 +72,7 @@ export class FileVersions {
   newCategory: string;
   newMimeType: string;
   newName: string;
-  newFile: number;
+  newFile: string;
   newFileUrl: string;
   newFileSize: number;
 

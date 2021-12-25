@@ -10,7 +10,7 @@ class CreateProductExRequest {
   product: {
     neo4j_id: string;
     name: string;
-    change_to_plan: number;
+    change_to_plan: string;
     active: boolean;
     mediums: string[];
     methodologies: string;
@@ -64,7 +64,7 @@ export class ScProducts {
 
   newNeo4j_id: string;
   newName: string;
-  newChange_to_plan: number;
+  newChange_to_plan: string;
   newActive: boolean;
   newMediums: string[] = [];
   newMethodologies: string;
@@ -365,7 +365,7 @@ export class ScProducts {
                 <label htmlFor="change_to_plan">Change To Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+                <input type="text" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
             </div>
 

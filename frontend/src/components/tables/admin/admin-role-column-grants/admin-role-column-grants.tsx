@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateRoleColumnGrantExRequest {
   token: string;
   roleColumnGrant: {
-    role: number;
+    role: string;
     table_name: string;
     column_name: string;
     access_level: string;
@@ -56,7 +56,7 @@ class DeleteRoleColumnGrantExResponse extends GenericResponse {
 export class AdminRoleColumnGrants {
   @State() roleColumnGrantsResponse: AdminRoleColumnGrantListResponse;
 
-  newRole: number;
+  newRole: string;
   newTable_name: string;
   newColumn_name: string;
   newAccess_level: string;

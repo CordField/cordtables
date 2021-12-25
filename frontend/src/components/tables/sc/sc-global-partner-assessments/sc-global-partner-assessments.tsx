@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerAssessmentExRequest {
   token: string;
   globalPartnerAssessment: {
-    partner: number;
+    partner: string;
     governance_trans: string;
     director_trans: string;
     identity_trans: string;
@@ -72,7 +72,7 @@ export class ScGlobalPartnerAssessments {
 
   @State() globalPartnerAssessmentsResponse: ScGlobalPartnerAssessmentListResponse;
 
-  newPartner: number;
+  newPartner: string;
   newGovernance_trans: string;
   newDirector_trans: string;
   newIdentity_trans: string;
@@ -501,13 +501,6 @@ export class ScGlobalPartnerAssessments {
                 <input type="text" id="partner" name="partner" onInput={event => this.partnerChange(event)} />
               </span>
             </div>
-
-
-
-
-
-
-
 
             <div id="governance_trans-holder" class="form-input-item form-thing">
               <span class="form-thing">

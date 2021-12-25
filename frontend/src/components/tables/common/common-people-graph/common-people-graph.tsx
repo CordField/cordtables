@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePeopleGraphExRequest {
   token: string;
   peopleGraph: {
-    from_person: number;
-    to_person: number;
+    from_person: string;
+    to_person: string;
     rel_type: string;
   };
 }
@@ -57,8 +57,8 @@ export class CommonPeopleGraphs {
 
   @State() peopleGraphsResponse: CommonPeopleGraphListResponse;
 
-  newFrom_person: number;
-  newTo_person: number;
+  newFrom_person: string;
+  newTo_person: string;
   newRel_type: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
@@ -241,7 +241,7 @@ export class CommonPeopleGraphs {
                 <label htmlFor="from_person">From Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="from_person" name="from_person" onInput={event => this.from_personChange(event)} />
+                <input type="text" id="from_person" name="from_person" onInput={event => this.from_personChange(event)} />
               </span>
             </div>
 
@@ -250,7 +250,7 @@ export class CommonPeopleGraphs {
                 <label htmlFor="to_person">To Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="to_person" name="to_person" onInput={event => this.to_personChange(event)} />
+                <input type="text" id="to_person" name="to_person" onInput={event => this.to_personChange(event)} />
               </span>
             </div>      
 

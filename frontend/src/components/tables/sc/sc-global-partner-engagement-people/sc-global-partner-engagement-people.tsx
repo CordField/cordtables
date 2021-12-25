@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerEngagementPeopleExRequest {
   token: string;
   globalPartnerEngagementPeople: {
-    engagement: number;
-    person: number;
+    engagement: string;
+    person: string;
     role: string;
   };
 }
@@ -57,8 +57,8 @@ export class ScGlobalPartnerEngagementPeoples {
 
   @State() globalPartnerEngagementPeoplesResponse: ScGlobalPartnerEngagementPeopleListResponse;
 
-  newEngagement: number;
-  newPerson: number;
+  newEngagement: string;
+  newPerson: string;
   newRole: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
@@ -259,7 +259,7 @@ export class ScGlobalPartnerEngagementPeoples {
                 <label htmlFor="person">Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="person" name="person" onInput={event => this.personChange(event)} />
+                <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
             </div>
 

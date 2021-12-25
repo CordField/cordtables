@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateOrgChartPositionExRequest {
   token: string;
   orgChartPosition: {
-    organization: number;
+    organization: string;
     name: string;
   };
 }
@@ -56,7 +56,7 @@ export class CommonOrgChartPositions {
 
   @State() orgChartPositionsResponse: CommonOrgChartPositionListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newName: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
@@ -222,7 +222,7 @@ export class CommonOrgChartPositions {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 

@@ -14,7 +14,7 @@ class People {
   privateLastName: string;
   publicFirstName: string;
   publicLastName: string;
-  primaryLocation: number;
+  primaryLocation: string;
   privateFullName: string;
   publicFullName: string;
   //sensitivityClearance: CommonSensitivity? *Ask for help here*
@@ -22,11 +22,11 @@ class People {
   title: string;
   status: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
-  owningPerson: number;
-  owningGroup: number;
+  modifiedBy: string;
+  owningPerson: string;
+  owningGroup: string;
 }
 
 class PeopleListResponse {

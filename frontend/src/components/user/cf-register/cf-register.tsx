@@ -13,7 +13,7 @@ class RegisterResponse extends GenericResponse {
   token: string;
   readableTables: string[];
   isAdmin: string;
-  userId: number;
+  userId: string;
 }
 
 @Component({

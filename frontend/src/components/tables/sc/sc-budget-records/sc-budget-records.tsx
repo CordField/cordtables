@@ -50,8 +50,8 @@ class DeleteBudgetRecordResponse extends GenericResponse {
 })
 export class ScBudgetRecords {
   @State() budgetrecordsResponse: ScBudgetRecordsListResponse;
-  newBudgetRecordId: number;
-  newBudgetChangeToPlan: number;
+  newBudgetRecordId: string;
+  newBudgetChangeToPlan: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScBudgetRecordsUpdateRequest, ScBudgetRecordUpdateResponse>('sc-budget-records/update-read', {

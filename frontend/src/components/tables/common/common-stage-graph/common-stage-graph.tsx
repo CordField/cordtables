@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateStageGraphExRequest {
   token: string;
   stageGraph: {
-    from_stage: number;
-    to_stage: number;
+    from_stage: string;
+    to_stage: string;
   };
 }
 class CreateStageGraphExResponse extends GenericResponse {
@@ -56,8 +56,8 @@ export class CommonStageGraphs {
 
   @State() stageGraphsResponse: CommonStageGraphListResponse;
 
-  newFrom_stage: number;
-  newTo_stage: number;
+  newFrom_stage: string;
+  newTo_stage: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonStageGraphUpdateRequest, CommonStageGraphUpdateResponse>('common-stage-graph/update-read', {
@@ -223,7 +223,7 @@ export class CommonStageGraphs {
                 <label htmlFor="from_stage">From Stage</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="from_stage" name="from_stage" onInput={event => this.from_stageChange(event)} />
+                <input type="text" id="from_stage" name="from_stage" onInput={event => this.from_stageChange(event)} />
               </span>
             </div>
 

@@ -15,7 +15,7 @@ class CreatePeopleExRequest {
     private_last_name: string;
     public_first_name: string;
     public_last_name: string;
-    primary_location: number;
+    primary_location: string;
     private_full_name: string;
     public_full_name: string;
     sensitivity_clearance: string;
@@ -75,7 +75,7 @@ export class AdminPeoples {
   newPrivate_last_name: string;
   newPublic_first_name: string;
   newPublic_last_name: string;
-  newPrimary_location: number;
+  newPrimary_location: string;
   newPrivate_full_name: string;
   newPublic_full_name: string;
   newSensitivity_clearance: string;

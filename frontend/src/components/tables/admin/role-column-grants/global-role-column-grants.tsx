@@ -8,10 +8,10 @@ class readAllResponse extends GenericResponse {
   access_level?: String;
   column_name?: String;
   created_at?: String;
-  created_by?: number;
-  role?: number;
+  created_by?: string;
+  role?: string;
   modified_at?: String;
-  modified_by?: number;
+  modified_by?: string;
   table_name?: String;
   response?: Array<any>;
 }
@@ -24,8 +24,8 @@ class create {
   access_level?: String;
   column_name?: String;
   created_at?: String;
-  created_by?: number;
-  role?: number;
+  created_by?: string;
+  role?: string;
   table_name?: String;
   response?: Array<any>;
   token: String;
@@ -36,10 +36,10 @@ class update {
   access_level?: String;
   column_name?: String;
   created_at?: String;
-  created_by?: number;
+  created_by?: string;
   modified_at?: String;
-  modified_by?: number;
-  role?: number;
+  modified_by?: string;
+  role?: string;
   table_name?: String;
   response?: Array<any>;
   token: String;
@@ -57,10 +57,10 @@ interface readOne {
   access_level?: string;
   column_name?: string;
   created_at?: string;
-  created_by?: number;
-  role?: number;
+  created_by?: string;
+  role?: string;
   modified_at?: string;
-  modified_by?: number;
+  modified_by?: string;
   table_name?: string;
 }
 
@@ -84,10 +84,10 @@ export class GlobalRoleColumnGrants {
     access_level: '',
     column_name: '',
     created_at: '',
-    created_by: 0,
-    role: 0,
+    created_by:'',
+    role: '',
     modified_at: '',
-    modified_by: 0,
+    modified_by: '',
     table_name: '',
   };
 
@@ -193,7 +193,7 @@ export class GlobalRoleColumnGrants {
     this.readOneValues.column_name = event.target.value;
   }
   handleChangeGlobalRole(event) {
-    this.readOneValues.role = parseInt(event.target.value);
+    this.readOneValues.role = event.target.value;
   }
   handleChangeTableName(event) {
     this.readOneValues.table_name = event.target.value;

@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateUserExRequest {
   token: string;
   user: {
-    person?: number;
+    person?: string;
     email?: string;
     password?: string;
   };
@@ -57,7 +57,7 @@ export class AdminUsers {
 
   @State() usersResponse: AdminUserListResponse;
 
-  newPerson: number;
+  newPerson: string;
   newEmail?: string;
   newPassword?: string;
   
@@ -230,7 +230,7 @@ export class AdminUsers {
                 <label htmlFor="person">Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="person" name="person" onInput={event => this.personChange(event)} />
+                <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
             </div>
 

@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateOrgChartPositionGraphExRequest {
   token: string;
   orgChartPositionGraph: {
-    from_position: number;
-    to_position: number;
+    from_position: string;
+    to_position: string;
     relationship_type: string;
   };
 }
@@ -57,8 +57,8 @@ export class CommonOrgChartPositionGraphs {
 
   @State() orgChartPositionGraphsResponse: CommonOrgChartPositionGraphListResponse;
 
-  newFrom_position: number;
-  newTo_position: number;
+  newFrom_position: string;
+  newTo_position: string;
   newRelationship_type: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
@@ -240,7 +240,7 @@ export class CommonOrgChartPositionGraphs {
                 <label htmlFor="from_position">From Position</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="from_position" name="from_position" onInput={event => this.from_positionChange(event)} />
+                <input type="text" id="from_position" name="from_position" onInput={event => this.from_positionChange(event)} />
               </span>
             </div>
 

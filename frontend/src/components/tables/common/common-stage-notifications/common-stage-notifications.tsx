@@ -8,10 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateStageNotificationExRequest {
   token: string;
   stageNotification: {
-    stage: number;
+    stage: string;
     on_enter: boolean;
     on_exit: boolean;
-    person: number;
+    person: string;
   };
 }
 class CreateStageNotificationExResponse extends GenericResponse {
@@ -58,10 +58,10 @@ export class CommonStageNotifications {
 
   @State() stageNotificationsResponse: CommonStageNotificationListResponse;
 
-  newStage: number;
+  newStage: string;
     newOn_enter: boolean;
     newOn_exit: boolean;
-    newPerson: number;
+    newPerson: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonStageNotificationUpdateRequest, CommonStageNotificationUpdateResponse>('common-stage-notifications/update-read', {
@@ -258,7 +258,7 @@ export class CommonStageNotifications {
                 <label htmlFor="stage">Stage</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="stage" name="stage" onInput={event => this.stageChange(event)} />
+                <input type="text" id="stage" name="stage" onInput={event => this.stageChange(event)} />
               </span>
             </div>
 

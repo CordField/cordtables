@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGroupRowAccessExRequest {
   token: string;
   groupRowAccess: {
-    group_id: number;
+    group_id: string;
     table_name: string;
     row: number;
   };
@@ -55,7 +55,7 @@ class DeleteGroupRowAccessExResponse extends GenericResponse {
 export class AdminGroupRowAccesss {
   @State() groupRowAccessesResponse: AdminGroupRowAccessListResponse;
 
-  newGroup_id: number;
+  newGroup_id: string;
   newTable_name: string;
   newRow: number;
 

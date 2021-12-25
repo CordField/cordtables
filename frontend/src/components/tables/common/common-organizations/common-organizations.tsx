@@ -9,7 +9,7 @@ class CreateOrganizationRequest {
   organization: {
     name: string;
     sensitivity: string;
-    primary_location: number;
+    primary_location: string;
   };
 }
 class CreateOrganizationResponse extends GenericResponse {
@@ -24,13 +24,13 @@ class CommonOrganizationsRow {
   id: string;
   name: string;
   sensitivity: string;
-  primary_location: number;
+  primary_location: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CommonOrganizationsListResponse {
@@ -71,7 +71,7 @@ export class ScLanguages {
   @State() commonOrganizationsResponse: CommonOrganizationsListResponse;
   newOrganizationName: string;
   newSensitivity: string;
-  newPrimaryLocation: number;
+  newPrimaryLocation: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonOrganizationsUpdateRequest, CommonOrganizationsUpdateResponse>('common-organizations/update-read', {

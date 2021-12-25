@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerEngagementExRequest {
   token: string;
   globalPartnerEngagement: {
-    organization: number;
+    organization: string;
     type: string;
     mou_start: string;
     mou_end: string;
@@ -60,7 +60,7 @@ export class ScGlobalPartnerEngagements {
 
   @State() globalPartnerEngagementsResponse: ScGlobalPartnerEngagementListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newType: string;
   newMou_start: string;
   newMou_end: string;

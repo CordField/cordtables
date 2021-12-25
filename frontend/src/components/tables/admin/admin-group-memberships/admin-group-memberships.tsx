@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGroupMembershipExRequest {
   token: string;
   groupMembership: {
-    group_id: number;
-    person: number;
+    group_id: string;
+    person: string;
   };
 }
 class CreateGroupMembershipExResponse extends GenericResponse {
@@ -56,8 +56,8 @@ export class AdminGroupMemberships {
 
   @State() groupMembershipsResponse: AdminGroupMembershipListResponse;
 
-  newGroup_id: number;
-  newPerson: number;
+  newGroup_id: string;
+  newPerson: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminGroupMembershipUpdateRequest, AdminGroupMembershipUpdateResponse>('admin-group-memberships/update-read', {
@@ -223,7 +223,7 @@ export class AdminGroupMemberships {
                 <label htmlFor="group_id">Group ID</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="director" name="director" onInput={event => this.group_idChange(event)} />
+                <input type="text" id="director" name="director" onInput={event => this.group_idChange(event)} />
               </span>
             </div>
 

@@ -9,7 +9,7 @@ class CreateEthnologueExRequest {
   token: string;
   ethnologue: {
     neo4j_id: string;
-    language_index: number;
+    language_index: string;
     code: string;
     language_name: string;
     population: number;
@@ -63,7 +63,7 @@ export class ScEthnologues {
   @State() ethnologuesResponse: ScEthnologueListResponse;
 
   newNeo4j_id: string;
-  newLanguage_index: number;
+  newLanguage_index: string;
   newCode: string;
   newLanguage_name: string;
   newPopulation: number;
@@ -309,7 +309,7 @@ export class ScEthnologues {
                 <label htmlFor="language_index">Language Index</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="language_index" name="language_index" onInput={event => this.language_indexChange(event)} />
+                <input type="text" id="language_index" name="language_index" onInput={event => this.language_indexChange(event)} />
               </span>
             </div>   
 

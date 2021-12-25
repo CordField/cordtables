@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerPerformanceExRequest {
   token: string;
   globalPartnerPerformance: {
-    organization: number;
+    organization: string;
     reporting_performance: string;
     financial_performance: string;
     translation_performance: string;
@@ -58,7 +58,7 @@ export class ScGlobalPartnerPerformances {
 
   @State() globalPartnerPerformancesResponse: ScGlobalPartnerPerformanceListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newReporting_performance: string;
   newFinancial_performance: string;
   newTranslation_performance: string;

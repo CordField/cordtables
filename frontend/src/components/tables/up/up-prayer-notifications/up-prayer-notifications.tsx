@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePrayerNotificationExRequest {
   token: string;
   prayerNotification: {
-    request: number;
-    person: number;
+    request: string;
+    person: string;
   };
 }
 class CreatePrayerNotificationExResponse extends GenericResponse {
@@ -56,8 +56,8 @@ export class UpPrayerNotifications {
 
   @State() prayerNotificationsResponse: UpPrayerNotificationListResponse;
 
-  newRequest: number;
-  newPerson: number;
+  newRequest: string;
+  newPerson: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<UpPrayerNotificationUpdateRequest, UpPrayerNotificationUpdateResponse>('up-prayer-notifications/update-read', {
@@ -223,7 +223,7 @@ export class UpPrayerNotifications {
                 <label htmlFor="request">Request</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="request" name="request" onInput={event => this.requestChange(event)} />
+                <input type="text" id="request" name="request" onInput={event => this.requestChange(event)} />
               </span>
             </div>
 

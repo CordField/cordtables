@@ -7,21 +7,21 @@ import { globals } from '../../../../core/global.store';
 class CreateTicketAssignmentRequest{
   token: string;
   ticket_assignment:{
-    ticket: number;
-    person: number;
+    ticket: string;
+    person: string;
   }
 }
 
 class CommonTicketAssignmentRow{
   id : string;
-  ticket: number;
-  person : number;
+  ticket: string;
+  person : string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateTicketAssignmentResponse extends GenericResponse {
@@ -64,8 +64,8 @@ export class TicketAssignment{
 
   @Prop() onlyShowCreate: boolean = false;
   @State() commonTicketAssignmentResponse: CommonTicketAssignmentResponse;
-  newTicketAssignment: number;
-  newPerson: number;
+  newTicketAssignment: string;
+  newPerson: string;
 
 
 

@@ -9,12 +9,12 @@ class GroupMembershipsListRequest {
 
 class GroupMembershipsRow {
   id: string;
-  group: number;
-  person: number;
+  group: string;
+  person: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
+  modifiedBy: string;
 }
 
 class GroupMembershipsListResponse {
@@ -24,8 +24,8 @@ class GroupMembershipsListResponse {
 
 class GroupCreateRequest {
   token: string;
-  group: number;
-  person: number;
+  group: string;
+  person: string;
 }
 
 class GroupCreateResponse {
@@ -63,8 +63,8 @@ export class GroupMemberships {
   createResponse: GroupCreateResponse;
   deleteResponse: GroupDeleteResponse;
 
-  newRowGroup: number;
-  newRowPerson: number;
+  newRowGroup: string;
+  newRowPerson: string;
 
   editableKeys = [];
 
@@ -81,11 +81,11 @@ export class GroupMemberships {
   };
 
   inputGroup(event) {
-    this.newRowGroup = +event.target.value;
+    this.newRowGroup = event.target.value;
   }
 
   inputPerson(event) {
-    this.newRowPerson = +event.target.value;
+    this.newRowPerson = event.target.value;
   }
 
   submit = async () => {
@@ -168,7 +168,7 @@ export class GroupMemberships {
                   <input type="text" id="group-input" name="group" onInput={event => this.inputGroup(event)}></input>
                 </td>
                 <td>
-                  <input type="text" id="group-input" name="group" onInput={event => this.inputPerson(event)}></input>
+                  <input type="text" id="person-input" name="person" onInput={event => this.inputPerson(event)}></input>
                 </td>
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>

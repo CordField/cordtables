@@ -8,12 +8,12 @@ class GroupRowAccessListRequest {
 
 class GroupRowAccessRow {
   id: string;
-  group: number;
-  person: number;
+  group: string;
+  person: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
+  modifiedBy: string;
 }
 
 class GroupRowAccessListResponse {
@@ -23,7 +23,7 @@ class GroupRowAccessListResponse {
 
 class GroupRowAccessCreateRequest {
   token: string;
-  group: number;
+  group: string;
   tableName: string;
   row: number;
 }
@@ -53,7 +53,7 @@ export class GroupsRowAccess {
   createResponse: GroupRowAccessCreateResponse;
   deleteResponse: GroupRowAccessDeleteResponse;
 
-  newRowGroup: number;
+  newRowGroup: string;
   newRowTableName: string;
   newRowRow: number;
 
@@ -72,7 +72,7 @@ export class GroupsRowAccess {
   };
 
   inputGroup(event) {
-    this.newRowGroup = +event.target.value;
+    this.newRowGroup = event.target.value;
   }
 
   inputTableName(event) {

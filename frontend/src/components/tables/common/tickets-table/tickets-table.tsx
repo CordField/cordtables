@@ -7,7 +7,7 @@ class CreateTicketRequest{
   token: string;
   ticket:{
     ticket_status: string;
-    parent: number;
+    parent: string;
     content : string;
   }
 }
@@ -15,14 +15,14 @@ class CreateTicketRequest{
 class CommonTicketsRow{
   id : string;
   ticket_status : string;
-  parent : number;
+  parent : string;
   content : string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateTicketResponse extends GenericResponse {
@@ -69,7 +69,7 @@ export class TicketsTable {
   @Prop() onlyShowCreate : boolean = false;
   @State() commonTicketsResponse: CommonTicketsListResponse;
   newTicketStatusName: string;
-  newParent: number;
+  newParent: string;
   newContent: string;
 
 

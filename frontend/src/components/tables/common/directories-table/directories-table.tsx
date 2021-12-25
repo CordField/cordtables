@@ -9,7 +9,7 @@ class CreateDirectoryExRequest {
   token: string;
   directory: {
     name: string;
-    parent: number;
+    parent: string;
   };
 }
 class CreateDirectoryExResponse extends GenericResponse {
@@ -55,7 +55,7 @@ export class DirectoriesTable {
 
   @State() directoriesResponse: CommonDirectoryListResponse;
   newDirectoryName: string;
-  directoryParent: number;
+  directoryParent: string;
 
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
