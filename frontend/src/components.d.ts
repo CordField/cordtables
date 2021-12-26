@@ -125,6 +125,12 @@ export namespace Components {
         "isOpen": boolean;
         "modalTitle": String;
     }
+    interface CustomAccordion {
+        "color": string;
+        "label": string;
+        "marginLeft": string;
+        "width": string;
+    }
     interface DirectoriesTable {
     }
     interface DiscussionChannels {
@@ -598,6 +604,12 @@ declare global {
     var HTMLCreateUpdateModalElement: {
         prototype: HTMLCreateUpdateModalElement;
         new (): HTMLCreateUpdateModalElement;
+    };
+    interface HTMLCustomAccordionElement extends Components.CustomAccordion, HTMLStencilElement {
+    }
+    var HTMLCustomAccordionElement: {
+        prototype: HTMLCustomAccordionElement;
+        new (): HTMLCustomAccordionElement;
     };
     interface HTMLDirectoriesTableElement extends Components.DirectoriesTable, HTMLStencilElement {
     }
@@ -1201,6 +1213,7 @@ declare global {
         "common-threads": HTMLCommonThreadsElement;
         "common-workflows": HTMLCommonWorkflowsElement;
         "create-update-modal": HTMLCreateUpdateModalElement;
+        "custom-accordion": HTMLCustomAccordionElement;
         "directories-table": HTMLDirectoriesTableElement;
         "discussion-channels": HTMLDiscussionChannelsElement;
         "education-by-person": HTMLEducationByPersonElement;
@@ -1414,6 +1427,13 @@ declare namespace LocalJSX {
         "onModalClosed"?: (event: CustomEvent<boolean>) => void;
         "onModalDelete"?: (event: CustomEvent<boolean>) => void;
         "onModalOkay"?: (event: CustomEvent<boolean>) => void;
+    }
+    interface CustomAccordion {
+        "color"?: string;
+        "label"?: string;
+        "marginLeft"?: string;
+        "onOnToggle"?: (event: CustomEvent<any>) => void;
+        "width"?: string;
     }
     interface DirectoriesTable {
     }
@@ -1682,6 +1702,7 @@ declare namespace LocalJSX {
         "common-threads": CommonThreads;
         "common-workflows": CommonWorkflows;
         "create-update-modal": CreateUpdateModal;
+        "custom-accordion": CustomAccordion;
         "directories-table": DirectoriesTable;
         "discussion-channels": DiscussionChannels;
         "education-by-person": EducationByPerson;
@@ -1824,6 +1845,7 @@ declare module "@stencil/core" {
             "common-threads": LocalJSX.CommonThreads & JSXBase.HTMLAttributes<HTMLCommonThreadsElement>;
             "common-workflows": LocalJSX.CommonWorkflows & JSXBase.HTMLAttributes<HTMLCommonWorkflowsElement>;
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
+            "custom-accordion": LocalJSX.CustomAccordion & JSXBase.HTMLAttributes<HTMLCustomAccordionElement>;
             "directories-table": LocalJSX.DirectoriesTable & JSXBase.HTMLAttributes<HTMLDirectoriesTableElement>;
             "discussion-channels": LocalJSX.DiscussionChannels & JSXBase.HTMLAttributes<HTMLDiscussionChannelsElement>;
             "education-by-person": LocalJSX.EducationByPerson & JSXBase.HTMLAttributes<HTMLEducationByPersonElement>;
