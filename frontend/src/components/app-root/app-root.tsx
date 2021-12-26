@@ -80,32 +80,56 @@ export class AppRoot {
               {!globals.globalStore.state.isLoggedIn && <div>Please login or register</div>}
 
               {globals.globalStore.state.isLoggedIn && this.showSelect && (
-                <div id="top-thing">
-                  <div id="nav-menu">
-                    <div>
-                      <select name="tables" id="tables" onChange={event => this.selectChange(event)}>
-                        <option selected={this.path === '/'} value="-">
-                          -
-                        </option>
-
-                        {this.pages.map(page => (
-                          <option selected={this.path === `/page/${page.toLowerCase()}`} value={page}>
-                            {page} Page
-                          </option>
-                        ))}
-
-                        {globals.globalStore.state.readableTables.map(table => (
-                          <option selected={this.path === `/table/${table.split('.').join('-')}`} value={table.split('.').join('-')}>
-                            {table}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                <div id="container">
+                  <div id="top-thing">
+                    <div id="nav-menu">
+                      <div id="full-width">
+                        <custom-accordion
+                          width='100%' 
+                          label='Menu'
+                          color='green' 
+                          >
+                          <custom-accordion
+                            width='100%' 
+                            label='Pages'
+                            color='#64b145'
+                            marginLeft="10px"
+                          >
+                            <div class="scrollable">
+                              <ion-list style={{marginLeft: "10px"}}>
+                                {this.pages.map(page => (
+                                  <ion-item href={`/page/${page.toLowerCase()}`}>
+                                    <ion-label>{page} Page</ion-label>
+                                  </ion-item>
+                                ))}
+                              </ion-list>
+                            </div>
+                          </custom-accordion>
+                          <custom-accordion
+                            width='100%' 
+                            label='Tables'
+                            color='#64b145'
+                            marginLeft="10px"
+                          >
+                            <div class="scrollable">
+                              <ion-list style={{marginLeft: "10px"}}>
+                                {globals.globalStore.state.readableTables.map(table => (
+                                  <ion-item href={`/table/${table.split('.').join('-')}`}>
+                                    <ion-label>{table} </ion-label>
+                                  </ion-item>
+                                ))}
+                              </ion-list>
+                            </div>
+                          </custom-accordion>
+                        </custom-accordion>
+                      </div>
                   </div>
-
-                  {this.path != '/page/tickets' && <button onClick={this.toggleEditMode}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>}
                 </div>
-              )}
+                <div class="edit-button">
+                  {this.path != '/page/tickets' && <button onClick={this.toggleEditMode} style={{"float":"right"}}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>}
+                  </div>
+                </div>
+              )} 
             </div>
             <main>
               <stencil-router>
