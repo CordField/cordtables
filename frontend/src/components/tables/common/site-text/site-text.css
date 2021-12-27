@@ -1,3 +1,36 @@
 :host {
   display: block;
 }
+
+.site-text {
+  padding: 5px 40px;
+}
+
+.language-select-wrapper h4 {
+  margin: 0.5rem 0rem;
+}
+
+.form-thing {
+  margin: 8px;
+}
+
+.language-add-wrapper {
+  width: 600px;
+}
+
+.language-add-select {
+  margin-right: 32px;
+  width: 200px;
+}
+
+.searchbar-wrapper {
+  width: 300px;
+}
+
+.language-content-wrapper {
+  height: 400px;
+}
+
+.translations {
+  margin-bottom: 40px;
+}

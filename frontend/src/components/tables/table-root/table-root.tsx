@@ -64,8 +64,8 @@ export class TableRoot {
         {this.match.params.table === 'common-coalitions' && <common-coalitions></common-coalitions>}
         {this.match.params.table === 'common-coalition-memberships' && <common-coalition-memberships></common-coalition-memberships>}
 
-        {this.match.params.table === 'common-prayer-requests' && <common-prayer-requests></common-prayer-requests>}
-        {this.match.params.table === 'common-prayer-notifications' && <common-prayer-notifications></common-prayer-notifications>}
+        {this.match.params.table === 'up-prayer-requests' && <up-prayer-requests></up-prayer-requests>}
+        {this.match.params.table === 'up-prayer-notifications' && <up-prayer-notifications></up-prayer-notifications>}
 
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
@@ -100,7 +100,19 @@ export class TableRoot {
         {this.match.params.table === 'sc-ethnologue' && <sc-ethnologue></sc-ethnologue>} 
         {this.match.params.table === 'sc-global-partner-transitions' && <sc-global-partner-transitions></sc-global-partner-transitions>}
         {this.match.params.table === 'sc-people' && <sc-people></sc-people>}
-        
+
+        {['common-site-text', 'common-site-text-languages', 'common-site-text-strings', 'common-site-text-translations'].includes(this.match.params.table) && <site-text></site-text>}
+
+        {this.match.params.table === 'sil-country-codes' && <sil-country-codes></sil-country-codes>}
+        {this.match.params.table === 'sil-language-codes' && <sil-language-codes></sil-language-codes>}
+        {this.match.params.table === 'sil-language-index' && <sil-language-index></sil-language-index>}
+        {this.match.params.table === 'sil-table-of-languages' && <sil-table-of-languages></sil-table-of-languages>}
+        {this.match.params.table === 'sil-iso-639-3' && <sil-iso-639-3></sil-iso-639-3>}
+        {this.match.params.table === 'sil-iso-639-3-names' && <sil-iso-639-3-names></sil-iso-639-3-names>}
+        {this.match.params.table === 'sil-iso-639-3-macrolanguages' && <sil-iso-639-3-macrolanguages></sil-iso-639-3-macrolanguages>}
+        {this.match.params.table === 'sil-iso-639-3-retirements' && <sil-iso-639-3-retirements></sil-iso-639-3-retirements>}
+        {this.match.params.table === 'sil-table-of-countries' && <sil-table-of-countries></sil-table-of-countries>}
+        {this.match.params.table === 'sil-table-of-languages-in-country' && <sil-table-of-languages-in-country></sil-table-of-languages-in-country>}
 
 
 

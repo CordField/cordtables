@@ -707,7 +707,6 @@ export class ScLanguages {
   ];
 
   async componentWillLoad() {
-    console.log('Current Page: ' + this.currentPage);
     await this.getList(this.currentPage);
   }
 

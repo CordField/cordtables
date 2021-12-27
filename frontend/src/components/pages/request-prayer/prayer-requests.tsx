@@ -141,7 +141,7 @@ export class PagePrayerRequests {
                 {this.prayerRequestsResponse.prayerRequests.map(prayerRequest => (
                     <ion-item>
                         <ion-label>
-                            <h2>{ prayerRequest.subject }</h2>
+                            <h2>{ prayerRequest.title }</h2>
                             <h3>{ prayerRequest.content }</h3>
                             <p>Created By: { prayerRequest.requestedBy }</p>
                         </ion-label>

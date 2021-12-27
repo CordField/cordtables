@@ -53,8 +53,8 @@ create type admin.table_name as enum (
   'common.people_graph',
   'common.people_to_org_relationships',
   'common.posts',
-  'common.prayer_requests',
-  'common.prayer_notifications',
+  'up.prayer_requests',
+  'up.prayer_notifications',
   'common.scripture_references',
   'common.site_text_strings',
   'common.site_text_translations',
@@ -161,7 +161,8 @@ create table admin.people (
   sensitivity_clearance common.sensitivity default 'Low',
   timezone varchar(32),
   title varchar(255),
-  
+  status varchar(32),
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int, -- not null doesn't work here, on startup
   modified_at timestamp not null default CURRENT_TIMESTAMP,

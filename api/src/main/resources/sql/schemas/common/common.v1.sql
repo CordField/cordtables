@@ -56,7 +56,7 @@ create table common.site_text_translations(
   id serial primary key,
 
   language int not null references common.languages(id),
-  site_text int not null references common.site_text_strings(id),
+  site_text int not null references common.site_text_strings(id) on delete cascade,
   translation varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -681,37 +681,6 @@ create table common.stage_notifications(
 	on_exit bool default false,
 	person int references admin.people(id),
   
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
--- PRAYER --------------------------------------------------------------
-
-create table common.prayer_requests(
-	id serial primary key,
-
-  parent int references common.prayer_requests(id),
-  subject varchar(255) default null,
-  content text not null,
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
-);
-
-create table common.prayer_notifications(
-	id serial primary key,
-
-  request int references common.prayer_requests(id),
-  person int references admin.people(id),
-
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by int not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

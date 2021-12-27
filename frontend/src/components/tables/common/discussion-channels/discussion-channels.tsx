@@ -38,7 +38,7 @@ export class DiscussionChannels {
       this.discussionchannelsResponse = {
         error: ErrorType.NoError,
         discussion_channels: this.discussionchannelsResponse.discussion_channels.map(discussion_channels =>
-          discussion_channels.id === id ? updateResponse.discussion_channels : discussion_channels,
+          discussion_channels.id === id ? updateResponse.discussion_channel : discussion_channels,
         ),
       };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });

@@ -13,6 +13,7 @@
     "lint": "eslint src/**/*{.ts,.tsx}"
   },
   "devDependencies": {
+    "@ionic/core": "^5.9.3",
     "@stencil/core": "^2.7.0",
     "@stencil/eslint-plugin": "^0.4.0",
     "@stencil/router": "^1.0.1",
@@ -36,7 +37,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ionic/core": "^5.8.0",
     "@stencil/store": "^1.4.1",
     "date-fns": "^2.24.0",
     "date-fns-tz": "^1.1.6",

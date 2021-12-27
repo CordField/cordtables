@@ -69,7 +69,7 @@ class List(
                     "private_full_name",
                     "public_full_name",
                     "sensitivity_clearance",
-                    "time_zone",
+                    "timezone",
                     "title",
                     "status",
                     "created_at",
@@ -122,8 +122,8 @@ class List(
                 var sensitivity_clearance: String? = jdbcResult.getString("sensitivity_clearance")
                 if (jdbcResult.wasNull()) sensitivity_clearance = null
 
-                var time_zone: String? = jdbcResult.getString("time_zone")
-                if (jdbcResult.wasNull()) time_zone = null
+                var timezone: String? = jdbcResult.getString("timezone")
+                if (jdbcResult.wasNull()) timezone = null
 
                 var title: String? = jdbcResult.getString("title")
                 if (jdbcResult.wasNull()) title = null
@@ -163,7 +163,7 @@ class List(
                         private_full_name = private_full_name,
                         public_full_name = public_full_name,
                         sensitivity_clearance = if (sensitivity_clearance == null) null else Sensitivities.valueOf(sensitivity_clearance),
-                        time_zone = time_zone,
+                        timezone = timezone,
                         title = title,
                         status = status,
                         created_at = created_at,

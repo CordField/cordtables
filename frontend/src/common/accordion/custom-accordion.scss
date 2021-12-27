@@ -1,0 +1,39 @@
+* {
+    font-family: 'Lato', sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+
+.accordion {
+    cursor: pointer;
+    padding: 18px;
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: bold;
+    outline: 0;
+    border: none;
+    border-bottom: 1px solid #969795;
+    span {
+        float: right;
+    }
+}
+ 
+ .open {
+    display: block;
+    height: auto;
+    width: 200px;
+ }
+
+ p {
+    padding: 18px;
+ }
+
+ .close {
+    display: none;
+ }
+

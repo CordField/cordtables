@@ -40,7 +40,7 @@ export class CommonDiscussionChannelUpdateRequest {
 
 export class CommonDiscussionChannelUpdateResponse {
   error: ErrorType;
-  discussion_channels: CommonDiscussionChannel | null = null;
+  discussion_channel: CommonDiscussionChannel | null = null;
 }
 
 export class DeleteCommonDiscussionChannelRequest {

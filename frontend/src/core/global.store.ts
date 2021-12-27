@@ -1,12 +1,17 @@
 import { createStore } from '@stencil/store';
+import { AppState } from '../common/types';
 interface Notification {
   id: string;
   text: string;
   type: 'error' | 'success' | 'info';
 }
 
+const language = localStorage.getItem('language');
+
 export class Globals {
   storeObject = {
+    appState: AppState.Init,
+    language: (language === null || language === undefined)?'default': language,
     editMode: false,
     editModeWidth: 0,
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
@@ -16,6 +21,9 @@ export class Globals {
     isAdmin: localStorage.getItem('isAdmin'),
     notifications: (JSON.parse(localStorage.getItem('notifications')) ?? []) as Notification[],
     userId: JSON.parse(localStorage.getItem('userId')) as number | undefined,
+    siteTextLanguages: [],
+    siteTextStrings: [],
+    siteTextTranslations: {}
   };
   public globalStore = createStore(this.storeObject);
 
@@ -80,11 +88,14 @@ export class Globals {
     });
 
     this.globalStore.onChange('isAdmin', newValue => {
-      if (newValue) {
+      if (newValue !== '' && newValue !== undefined && newValue !== null) {
         localStorage.setItem('isAdmin', 'true');
       } else {
         localStorage.setItem('isAdmin', 'false');
       }
+    });
+    this.globalStore.onChange('language', newValue => {
+      if(newValue !== null) localStorage.setItem('language', newValue);
     });
   }
 }

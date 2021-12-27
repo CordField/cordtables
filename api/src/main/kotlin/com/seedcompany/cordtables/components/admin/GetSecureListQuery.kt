@@ -11,6 +11,8 @@ data class GetSecureListQueryRequest(
     val columns: Array<String>,
     val custom_columns: String? = null,
     val filter: String = "",
+    val searchField: String = "",
+    val searchKeyword: String = "",
     val getList: Boolean = true, // get read if false
     val whereClause: String = ""
 )
@@ -115,12 +117,18 @@ class GetSecureListQuery() {
                 (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
                 owning_person = (select person from admin.tokens where token = :token) or
                 id in (select row from public_row_level_access)))
-        """.replace('\n', ' ')
+            """.replace('\n', ' ')
 
         }
+
+//        if(req.searchField != "" && req.searchKeyword!=""){
+//
+//        }
+
       if(req.whereClause!=="") {
         response.query += """
             and ${req.whereClause}
+            
             ${req.filter}            ;
             ;
             """.trimIndent().replace('\n', ' ')
@@ -130,7 +138,6 @@ class GetSecureListQuery() {
           ${req.filter};
           """.trimIndent().replace('\n',' ')
       }
-//      println(response.query)
         return response
     }
 

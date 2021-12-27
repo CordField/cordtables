@@ -73,8 +73,8 @@ class SiteTextService(
     val paramSource = MapSqlParameterSource()
 
     val query = """
-            select sl.language, li.name
-            from common.site_text_languages sl
+            select stl.language, li.name
+            from common.site_text_languages stl
             inner join sil.language_index li on li.common_id = stl.language
         """.replace('\n', ' ')
 
