@@ -90,9 +90,14 @@ class Neo4j2(
     if (adminPersonId != null && adminGroupId != null) {
       migrateBaseNodes()
       migrateRelationships()
+      migrateProperties()
     }
 
     return Neo4jMigrationResponse(ErrorType.NoError)
+  }
+
+  suspend fun migrateProperties(){
+
   }
 
   suspend fun migrateRelationships() {
