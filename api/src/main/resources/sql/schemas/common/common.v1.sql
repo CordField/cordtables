@@ -469,9 +469,7 @@ create table common.files (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
-
-  unique (directory, name)
+  owning_group uuid not null references admin.groups(id)
 );
 
 create table common.file_versions (
