@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-product-scripture-references/create")
+    @PostMapping("sc/product-scripture-references/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScProductScriptureReferencesCreateRequest): ScProductScriptureReferencesCreateResponse {
 

@@ -30,7 +30,7 @@ class Delete(
     val ds: DataSource,
 ) {
   
-    @PostMapping("sc-budget-records/delete")
+    @PostMapping("sc/budget-records/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScBudgetRecordsDeleteRequest): ScBudgetRecordsDeleteResponse {
 

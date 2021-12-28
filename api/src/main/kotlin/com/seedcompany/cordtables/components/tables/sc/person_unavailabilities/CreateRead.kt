@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-person-unavailabilities/create-read")
+    @PostMapping("sc/person-unavailabilities/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: ScPersonUnavailabilitiesCreateReadRequest): ScPersonUnavailabilitiesCreateReadResponse {
 

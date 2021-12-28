@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-project-memberships/create-read")
+    @PostMapping("sc/project-memberships/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: ScProjectMembershipsCreateReadRequest): ScProjectMembershipsCreateReadResponse {
 

@@ -26,7 +26,6 @@ class ScPeopleListResponse {
   peoples: ScPeople[];
 }
 
-
 class ScPeopleUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +53,14 @@ class DeletePeopleExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScPeoples {
-
   @State() peoplesResponse: ScPeopleListResponse;
 
   newNeo4j_id: string;
   newSkills: string;
   newStatus: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScPeopleUpdateRequest, ScPeopleUpdateResponse>('sc-people/update-read', {
+    const updateResponse = await fetchAs<ScPeopleUpdateRequest, ScPeopleUpdateResponse>('sc/people/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -82,7 +80,7 @@ export class ScPeoples {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePeopleExRequest, DeletePeopleExResponse>('sc-people/delete', {
+    const deleteResponse = await fetchAs<DeletePeopleExRequest, DeletePeopleExResponse>('sc/people/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,17 +95,10 @@ export class ScPeoples {
   };
 
   async getList() {
-    this.peoplesResponse = await fetchAs<ScPeopleListRequest, ScPeopleListResponse>('sc-people/list', {
+    this.peoplesResponse = await fetchAs<ScPeopleListRequest, ScPeopleListResponse>('sc/people/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   neo4j_idChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -217,7 +208,6 @@ export class ScPeoples {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -230,7 +220,6 @@ export class ScPeoples {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">Neo4j ID</label>
@@ -257,7 +246,6 @@ export class ScPeoples {
                 <input type="text" id="status" name="status" onInput={event => this.statusChange(event)} />
               </span>
             </div>
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -267,5 +255,4 @@ export class ScPeoples {
       </Host>
     );
   }
-
 }

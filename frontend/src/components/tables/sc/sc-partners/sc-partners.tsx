@@ -68,7 +68,7 @@ export class ScPartners {
   newTypes: string;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScPartnerUpdateRequest, ScPartnerUpdateResponse>('sc-partners/update-read', {
+    const updateResponse = await fetchAs<ScPartnerUpdateRequest, ScPartnerUpdateResponse>('sc/partners/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -88,7 +88,7 @@ export class ScPartners {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePartnerExRequest, DeletePartnerExResponse>('sc-partners/delete', {
+    const deleteResponse = await fetchAs<DeletePartnerExRequest, DeletePartnerExResponse>('sc/partners/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -103,16 +103,10 @@ export class ScPartners {
   };
 
   async getList() {
-    this.partnersResponse = await fetchAs<ScPartnerListRequest, ScPartnerListResponse>('sc-partners/list', {
+    this.partnersResponse = await fetchAs<ScPartnerListRequest, ScPartnerListResponse>('sc/partners/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
 
   organizationChange(event) {
     this.newOrganization = event.target.value;
@@ -142,7 +136,7 @@ export class ScPartners {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePartnerExRequest, CreatePartnerExResponse>('sc-partners/create-read', {
+    const createResponse = await fetchAs<CreatePartnerExRequest, CreatePartnerExResponse>('sc/partners/create-read', {
       token: globals.globalStore.state.token,
       partner: {
         organization: this.newOrganization,

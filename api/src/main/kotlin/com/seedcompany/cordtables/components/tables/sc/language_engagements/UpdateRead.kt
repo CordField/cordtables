@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-language-engagements/update-read")
+    @PostMapping("sc/language-engagements/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScLanguageEngagementsUpdateReadRequest): ScLanguageEngagementsUpdateReadResponse {
 

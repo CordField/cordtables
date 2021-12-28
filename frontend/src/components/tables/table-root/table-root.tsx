@@ -14,6 +14,7 @@ export class TableRoot {
     return (
       <Host>
         <slot></slot>
+        {console.log('params', this.match)}
         {this.match.params.table === 'admin-users' && <admin-users></admin-users>}
 
         {/* {this.match.params.table === 'admin-roles' && <roles-table></roles-table>}
@@ -34,33 +35,33 @@ export class TableRoot {
         {this.match.params.table === 'admin-roles' && <admin-roles></admin-roles>}
         {this.match.params.table === 'admin-people' && <admin-people></admin-people>}
 
-        {this.match.params.table === 'sc-funding-accounts' && <sc-funding-accounts></sc-funding-accounts>}
-        {this.match.params.table === 'sc-internship-engagements' && <sc-internship-engagements></sc-internship-engagements>}
-        {this.match.params.table === 'sc-known-languages-by-person' && <sc-known-languages-by-person></sc-known-languages-by-person>}
-        {this.match.params.table === 'sc-language-engagements' && <sc-language-engagements></sc-language-engagements>}
-        {this.match.params.table === 'sc-organization-locations' && <sc-organization-locations></sc-organization-locations>}
-        {this.match.params.table === 'sc-organizations' && <sc-organizations></sc-organizations>}
-        {this.match.params.table === 'sc-partners' && <sc-partners></sc-partners>}
-        {this.match.params.table === 'sc-partnerships' && <sc-partnerships></sc-partnerships>}
-        {this.match.params.table === 'sc-person-unavailabilities' && <sc-person-unavailabilities></sc-person-unavailabilities>}
-        {this.match.params.table === 'sc-pinned-projects' && <sc-pinned-projects></sc-pinned-projects>}
-        {this.match.params.table === 'sc-posts' && <sc-posts></sc-posts>}
+        <stencil-route url={'/table/sc/funding-accounts'} exact={true} component="sc-funding-accounts" />
+        <stencil-route url={'/table/sc/internship-engagements'} exact={true} component="sc-internship-engagements" />
+        <stencil-route url={'/table/sc/known-languages-by-person'} exact={true} component="sc-known-languages-by-person" />
+        <stencil-route url={'/table/sc/language-engagements'} exact={true} component="sc-language-engagements" />
+        <stencil-route url={'/table/sc/organization-locations'} exact={true} component="sc-organization-locations" />
+        <stencil-route url={'/table/sc/organizations'} exact={true} component="sc-organizations" />
+        <stencil-route url={'/table/sc/partners'} exact={true} component="sc-partners" />
+        <stencil-route url={'/table/sc/partnerships'} exact={true} component="sc-partnerships" />
+        <stencil-route url={'/table/sc/person-unavailabilities'} exact={true} component="sc-person-unavailabilities" />
+        <stencil-route url={'/table/sc/pinned-projects'} exact={true} component="sc-pinned-projects" />
+        <stencil-route url={'/table/sc/posts'} exact={true} component="sc-posts" />
 
-        {this.match.params.table === 'sc-product-scripture-references' && <sc-product-scripture-references></sc-product-scripture-references>}
-        {this.match.params.table === 'sc-products' && <sc-products></sc-products>}
-        {this.match.params.table === 'sc-project-locations' && <sc-project-locations></sc-project-locations>}
-        {this.match.params.table === 'sc-projects' && <sc-projects></sc-projects>}
+        <stencil-route url={'/table/sc/product-scripture-references'} exact={true} component="sc-product-scripture-references" />
+        <stencil-route url={'/table/sc/products'} exact={true} component="sc-products" />
+        <stencil-route url={'/table/sc/project-locations'} exact={true} component="sc-project-locations" />
+        <stencil-route url={'/table/sc/projects'} exact={true} component="sc-projects" />
 
         {this.match.params.table === 'common-directories' && <directories-table></directories-table>}
         {this.match.params.table === 'common-files' && <files-table></files-table>}
         {this.match.params.table === 'common-file-versions' && <file-versions></file-versions>}
-        {this.match.params.table === 'sc-field-regions' && <sc-field-regions-table></sc-field-regions-table>}
-        {this.match.params.table === 'sc-field-zones' && <sc-field-zones></sc-field-zones>}
+        <stencil-route url={'/table/sc/field-regions'} exact={true} component="sc-field-regions-table" />
+        <stencil-route url={'/table/sc/field-zones'} exact={true} component="sc-field-zones" />
 
-        {this.match.params.table === 'sc-global-partner-assessments' && <sc-global-partner-assessments></sc-global-partner-assessments>}
-        {this.match.params.table === 'sc-global-partner-engagements' && <sc-global-partner-engagements></sc-global-partner-engagements>}
-        {this.match.params.table === 'sc-global-partner-engagement-people' && <sc-global-partner-engagement-people></sc-global-partner-engagement-people>}
-        {this.match.params.table === 'sc-global-partner-performance' && <sc-global-partner-performance></sc-global-partner-performance>}
+        <stencil-route url={'/table/sc/global-partner-assessments'} exact={true} component="sc-global-partner-assessments" />
+        <stencil-route url={'/table/sc/global-partner-engagements'} exact={true} component="sc-global-partner-engagements" />
+        <stencil-route url={'/table/sc/global-partner-engagement-people'} exact={true} component="sc-global-partner-engagement-people" />
+        <stencil-route url={'/table/sc/global-partner-performance'} exact={true} component="sc-global-partner-performance" />
         {this.match.params.table === 'common-coalitions' && <common-coalitions></common-coalitions>}
         {this.match.params.table === 'common-coalition-memberships' && <common-coalition-memberships></common-coalition-memberships>}
 
@@ -71,21 +72,18 @@ export class TableRoot {
         {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
         {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}
         {this.match.params.table === 'common-ticket-graph' && <ticket-graph></ticket-graph>}
-        {this.match.params.table === 'sc-budget-records' && <sc-budget-records></sc-budget-records>}
+        <stencil-route url={'/table/sc/budget-records'} exact={true} component="sc-budget-records" />
         {this.match.params.table === 'common-ticket-assignments' && <ticket-assignments></ticket-assignments>}
         {this.match.params.table === 'common-work-records' && <work-records></work-records>}
         {this.match.params.table === 'common-work-estimates' && <work-estimates></work-estimates>}
         {this.match.params.table === 'common-ticket-feedback' && <ticket-feedback></ticket-feedback>}
         {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
-        {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
+        <stencil-route url={'/table/sc/locations'} exact={true} component="sc-locations" />
         {this.match.params.table === 'common-cell-channels' && <common-cell-channels></common-cell-channels>}
         {this.match.params.table === 'common-threads' && <common-threads></common-threads>}
         {this.match.params.table === 'common-posts' && <common-posts></common-posts>}
-        {this.match.params.table === 'sc-languages' && <sc-languages></sc-languages>}
-        
+        <stencil-route url={'/table/sc/languages'} exact={true} component="sc-languages" />
 
-
-        {/* {this.match.params.table === 'admin-users' && <admin-users></admin-users>} */}
         {this.match.params.table === 'common-locations' && <common-locations></common-locations>}
         {this.match.params.table === 'common-notes' && <common-notes></common-notes>}
         {this.match.params.table === 'common-org-chart-positions' && <common-org-chart-positions></common-org-chart-positions>}
@@ -97,11 +95,13 @@ export class TableRoot {
         {this.match.params.table === 'common-stage-role-column-grants' && <common-stage-role-column-grants></common-stage-role-column-grants>}
         {this.match.params.table === 'common-stages' && <common-stages></common-stages>}
         {this.match.params.table === 'common-workflows' && <common-workflows></common-workflows>}
-        {this.match.params.table === 'sc-ethnologue' && <sc-ethnologue></sc-ethnologue>} 
-        {this.match.params.table === 'sc-global-partner-transitions' && <sc-global-partner-transitions></sc-global-partner-transitions>}
-        {this.match.params.table === 'sc-people' && <sc-people></sc-people>}
+        <stencil-route url={'/table/sc/ethnologue'} exact={true} component="sc-ethnologue" />
+        <stencil-route url={'/table/sc/global-partner-transitions'} exact={true} component="sc-global-partner-transitions" />
+        <stencil-route url={'/table/sc/people'} exact={true} component="sc-people" />
 
-        {['common-site-text', 'common-site-text-languages', 'common-site-text-strings', 'common-site-text-translations'].includes(this.match.params.table) && <site-text></site-text>}
+        {['common-site-text', 'common-site-text-languages', 'common-site-text-strings', 'common-site-text-translations'].includes(this.match.params.table) && (
+          <site-text></site-text>
+        )}
 
         {this.match.params.table === 'sil-country-codes' && <sil-country-codes></sil-country-codes>}
         {this.match.params.table === 'sil-language-codes' && <sil-language-codes></sil-language-codes>}
@@ -113,9 +113,6 @@ export class TableRoot {
         {this.match.params.table === 'sil-iso-639-3-retirements' && <sil-iso-639-3-retirements></sil-iso-639-3-retirements>}
         {this.match.params.table === 'sil-table-of-countries' && <sil-table-of-countries></sil-table-of-countries>}
         {this.match.params.table === 'sil-table-of-languages-in-country' && <sil-table-of-languages-in-country></sil-table-of-languages-in-country>}
-
-
-
       </Host>
     );
   }

@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-project-locations/create")
+    @PostMapping("sc/project-locations/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScProjectLocationsCreateRequest): ScProjectLocationsCreateResponse {
 

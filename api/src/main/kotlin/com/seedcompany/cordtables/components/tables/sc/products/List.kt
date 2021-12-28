@@ -46,7 +46,7 @@ class List<T>(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-products/list")
+    @PostMapping("sc/products/list")
     @ResponseBody
     fun listHandler(@RequestBody req:ScProductsListRequest): ScProductsListResponse {
         var data: MutableList<product> = mutableListOf()

@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-product-scripture-references/update-read")
+    @PostMapping("sc/product-scripture-references/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScProductScriptureReferencesUpdateReadRequest): ScProductScriptureReferencesUpdateReadResponse {
 

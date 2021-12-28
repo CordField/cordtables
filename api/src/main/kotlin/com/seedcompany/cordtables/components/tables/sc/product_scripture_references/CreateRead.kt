@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-product-scripture-references/create-read")
+    @PostMapping("sc/product-scripture-references/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: ScProductScriptureReferencesCreateReadRequest): ScProductScriptureReferencesCreateReadResponse {
 
