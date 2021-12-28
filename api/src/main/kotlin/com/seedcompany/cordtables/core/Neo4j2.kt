@@ -152,7 +152,7 @@ class Neo4j2(
       }
     }
 
-    println("${relationshipsMigrated.get()} Relationships in ${(DateTime.now().millis - migrationStart) / 1000F} seconds")
+    println("${propertiesMigrated.get()} Properties in ${(DateTime.now().millis - migrationStart) / 1000F} seconds")
   }
 
   suspend fun migratePropertyByType(
@@ -191,7 +191,7 @@ class Neo4j2(
           updateStatement.executeBatch()
         }
 
-        relationshipsMigrated.addAndGet(propertyCount)
+        propertiesMigrated.addAndGet(propertyCount)
         println("total $property: $propertyCount")
       }
 
