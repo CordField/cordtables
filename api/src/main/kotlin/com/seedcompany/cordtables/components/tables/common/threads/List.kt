@@ -39,7 +39,7 @@ class List(
 ){
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-threads/list")
+    @PostMapping("common/threads/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonThreadsListRequest): CommonThreadsListResponse
     {

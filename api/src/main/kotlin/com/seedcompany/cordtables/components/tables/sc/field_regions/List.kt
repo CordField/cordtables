@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-field-regions/list")
+    @PostMapping("sc/field-regions/list")
     @ResponseBody
     fun listHandler(@RequestBody req:ScFieldRegionsListRequest): ScFieldRegionsListResponse {
         var data: MutableList<fieldRegion> = mutableListOf()

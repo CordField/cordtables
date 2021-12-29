@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("admin-role-table-permissions/delete")
+    @PostMapping("admin/role-table-permissions/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: AdminRoleTablePermissionsDeleteRequest): AdminRoleTablePermissionsDeleteResponse {
 

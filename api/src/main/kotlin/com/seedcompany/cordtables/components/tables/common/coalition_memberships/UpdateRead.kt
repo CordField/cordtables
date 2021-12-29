@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-coalition-memberships/update-read")
+    @PostMapping("common/coalition-memberships/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonCoalitionMembershipsUpdateReadRequest): CommonCoalitionMembershipsUpdateReadResponse {
 

@@ -41,7 +41,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-cell-channels/list")
+    @PostMapping("common/cell-channels/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonCellChannelsListRequest): CommonCellChannelsListResponse {
         var data: MutableList<CellChannel> = mutableListOf()

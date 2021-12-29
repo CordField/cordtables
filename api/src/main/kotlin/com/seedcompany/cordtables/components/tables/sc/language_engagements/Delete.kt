@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-language-engagements/delete")
+    @PostMapping("sc/language-engagements/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScLanguageEngagementsDeleteRequest): ScLanguageEngagementsDeleteResponse {
 

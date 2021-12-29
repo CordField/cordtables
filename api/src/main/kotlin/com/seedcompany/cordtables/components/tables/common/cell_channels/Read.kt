@@ -42,7 +42,7 @@ class Read(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-cell-channels/read")
+    @PostMapping("common/cell-channels/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonCellChannelsReadRequest): CommonCellChannelsReadResponse {
         if (req.token == null) return CommonCellChannelsReadResponse(ErrorType.TokenNotFound, null)

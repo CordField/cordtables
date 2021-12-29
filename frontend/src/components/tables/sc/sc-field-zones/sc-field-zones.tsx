@@ -26,7 +26,6 @@ class ScFieldZoneListResponse {
   fieldZones: ScFieldZone[];
 }
 
-
 class ScFieldZoneUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +53,14 @@ class DeleteFieldZoneExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScFieldZones {
-
   @State() fieldZonesResponse: ScFieldZoneListResponse;
 
   newNeo4j_id: string;
   newDirector: number;
   newName: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScFieldZoneUpdateRequest, ScFieldZoneUpdateResponse>('sc-field-zones/update-read', {
+    const updateResponse = await fetchAs<ScFieldZoneUpdateRequest, ScFieldZoneUpdateResponse>('sc/field-zones/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +70,10 @@ export class ScFieldZones {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.fieldZonesResponse = { error: ErrorType.NoError, fieldZones: this.fieldZonesResponse.fieldZones.map(fieldZone => (fieldZone.id === id ? updateResponse.fieldZone : fieldZone)) };
+      this.fieldZonesResponse = {
+        error: ErrorType.NoError,
+        fieldZones: this.fieldZonesResponse.fieldZones.map(fieldZone => (fieldZone.id === id ? updateResponse.fieldZone : fieldZone)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +83,7 @@ export class ScFieldZones {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFieldZoneExRequest, DeleteFieldZoneExResponse>('sc-field-zones/delete', {
+    const deleteResponse = await fetchAs<DeleteFieldZoneExRequest, DeleteFieldZoneExResponse>('sc/field-zones/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,17 +98,10 @@ export class ScFieldZones {
   };
 
   async getList() {
-    this.fieldZonesResponse = await fetchAs<ScFieldZoneListRequest, ScFieldZoneListResponse>('sc-field-zones/list', {
+    this.fieldZonesResponse = await fetchAs<ScFieldZoneListRequest, ScFieldZoneListResponse>('sc/field-zones/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   neo4jChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -121,12 +115,11 @@ export class ScFieldZones {
     this.newName = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateFieldZoneExRequest, CreateFieldZoneExResponse>('sc-field-zones/create-read', {
+    const createResponse = await fetchAs<CreateFieldZoneExRequest, CreateFieldZoneExResponse>('sc/field-zones/create-read', {
       token: globals.globalStore.state.token,
       fieldZone: {
         neo4j_id: this.newNeo4j_id,
@@ -143,7 +136,6 @@ export class ScFieldZones {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
 
   columnData: ColumnDescription[] = [
     {
@@ -169,7 +161,7 @@ export class ScFieldZones {
     },
     {
       field: 'name',
-      displayName: 'File Version Name',
+      displayName: 'Name',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
@@ -256,8 +248,7 @@ export class ScFieldZones {
               <span class="form-thing">
                 <input type="text" id="field-Zone-name" name="field-Zone-name" onInput={event => this.fieldZoneNameChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -267,5 +258,4 @@ export class ScFieldZones {
       </Host>
     );
   }
-
 }

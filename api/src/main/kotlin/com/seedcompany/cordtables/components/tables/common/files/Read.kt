@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-files/read")
+    @PostMapping("common/files/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonFilesReadRequest): CommonFilesReadResponse {
 

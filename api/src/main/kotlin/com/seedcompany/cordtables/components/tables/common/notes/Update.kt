@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-notes/update")
+    @PostMapping("common/notes/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonNotesUpdateRequest): CommonNotesUpdateResponse {
 

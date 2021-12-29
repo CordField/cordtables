@@ -4,7 +4,6 @@ import { ErrorType } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
-
 class SilTableOfLanguageListRequest {
   token: string;
   page: number;
@@ -16,7 +15,6 @@ class SilTableOfLanguageListResponse {
   size: number;
   tableOfLanguages: SilTableOfLanguage[];
 }
-
 
 @Component({
   tag: 'sil-table-of-languages',
@@ -36,7 +34,7 @@ export class SilTableOfLanguages {
   }
 
   async getList(page) {
-    this.tableOfLanguagesResponse = await fetchAs<SilTableOfLanguageListRequest, SilTableOfLanguageListResponse>('sil-table-of-languages/list', {
+    this.tableOfLanguagesResponse = await fetchAs<SilTableOfLanguageListRequest, SilTableOfLanguageListResponse>('sil/table-of-languages/list', {
       token: globals.globalStore.state.token,
       page: page,
       resultsPerPage: 50,
@@ -234,13 +232,12 @@ export class SilTableOfLanguages {
   ];
 
   async componentWillLoad() {
-    var url = new URL(window.location.href)
-    if(url.searchParams.has("page")){
-      this.currentPage = parseInt(url.searchParams.get("page"))>0?parseInt(url.searchParams.get("page")):1;
+    var url = new URL(window.location.href);
+    if (url.searchParams.has('page')) {
+      this.currentPage = parseInt(url.searchParams.get('page')) > 0 ? parseInt(url.searchParams.get('page')) : 1;
     }
     await this.getList(this.currentPage);
   }
-
 
   render() {
     return (
@@ -248,12 +245,10 @@ export class SilTableOfLanguages {
         <slot></slot>
         {/* table abstraction */}
         {this.tableOfLanguagesResponse && <cf-table rowData={this.tableOfLanguagesResponse.tableOfLanguages} columnData={this.columnData}></cf-table>}
-        <cf-pagination current-page={this.currentPage} total-rows={this.tableOfLanguagesResponse.size} results-per-page="50" page-url="sil-table-of-languages"></cf-pagination>
+        <cf-pagination current-page={this.currentPage} total-rows={this.tableOfLanguagesResponse.size} results-per-page="50" page-url="table-of-languages"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
-
       </Host>
     );
   }
-
 }

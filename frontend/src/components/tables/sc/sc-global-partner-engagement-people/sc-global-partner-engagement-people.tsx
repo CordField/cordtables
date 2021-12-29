@@ -26,7 +26,6 @@ class ScGlobalPartnerEngagementPeopleListResponse {
   globalPartnerEngagementPeoples: ScGlobalPartnerEngagementPeople[];
 }
 
-
 class ScGlobalPartnerEngagementPeopleUpdateRequest {
   token: string;
   column: string;
@@ -54,25 +53,32 @@ class DeleteGlobalPartnerEngagementPeopleExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScGlobalPartnerEngagementPeoples {
-
   @State() globalPartnerEngagementPeoplesResponse: ScGlobalPartnerEngagementPeopleListResponse;
 
   newEngagement: number;
   newPerson: number;
   newRole: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScGlobalPartnerEngagementPeopleUpdateRequest, ScGlobalPartnerEngagementPeopleUpdateResponse>('sc-global-partner-engagement-people/update-read', {
-      token: globals.globalStore.state.token,
-      column: columnName,
-      id: id,
-      value: value !== '' ? value : null,
-    });
+    const updateResponse = await fetchAs<ScGlobalPartnerEngagementPeopleUpdateRequest, ScGlobalPartnerEngagementPeopleUpdateResponse>(
+      'sc/global-partner-engagement-people/update-read',
+      {
+        token: globals.globalStore.state.token,
+        column: columnName,
+        id: id,
+        value: value !== '' ? value : null,
+      },
+    );
 
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.globalPartnerEngagementPeoplesResponse = { error: ErrorType.NoError, globalPartnerEngagementPeoples: this.globalPartnerEngagementPeoplesResponse.globalPartnerEngagementPeoples.map(globalPartnerEngagementPeople => (globalPartnerEngagementPeople.id === id ? updateResponse.globalPartnerEngagementPeople : globalPartnerEngagementPeople)) };
+      this.globalPartnerEngagementPeoplesResponse = {
+        error: ErrorType.NoError,
+        globalPartnerEngagementPeoples: this.globalPartnerEngagementPeoplesResponse.globalPartnerEngagementPeoples.map(globalPartnerEngagementPeople =>
+          globalPartnerEngagementPeople.id === id ? updateResponse.globalPartnerEngagementPeople : globalPartnerEngagementPeople,
+        ),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,10 +88,13 @@ export class ScGlobalPartnerEngagementPeoples {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteGlobalPartnerEngagementPeopleExRequest, DeleteGlobalPartnerEngagementPeopleExResponse>('sc-global-partner-engagement-people/delete', {
-      id,
-      token: globals.globalStore.state.token,
-    });
+    const deleteResponse = await fetchAs<DeleteGlobalPartnerEngagementPeopleExRequest, DeleteGlobalPartnerEngagementPeopleExResponse>(
+      'sc/global-partner-engagement-people/delete',
+      {
+        id,
+        token: globals.globalStore.state.token,
+      },
+    );
     if (deleteResponse.error === ErrorType.NoError) {
       this.getList();
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item deleted successfully', id: uuidv4(), type: 'success' });
@@ -97,17 +106,13 @@ export class ScGlobalPartnerEngagementPeoples {
   };
 
   async getList() {
-    this.globalPartnerEngagementPeoplesResponse = await fetchAs<ScGlobalPartnerEngagementPeopleListRequest, ScGlobalPartnerEngagementPeopleListResponse>('sc-global-partner-engagement-people/list', {
-      token: globals.globalStore.state.token,
-    });
+    this.globalPartnerEngagementPeoplesResponse = await fetchAs<ScGlobalPartnerEngagementPeopleListRequest, ScGlobalPartnerEngagementPeopleListResponse>(
+      'sc/global-partner-engagement-people/list',
+      {
+        token: globals.globalStore.state.token,
+      },
+    );
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   engagementChange(event) {
     this.newEngagement = event.target.value;
@@ -125,14 +130,17 @@ export class ScGlobalPartnerEngagementPeoples {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateGlobalPartnerEngagementPeopleExRequest, CreateGlobalPartnerEngagementPeopleExResponse>('sc-global-partner-engagement-people/create-read', {
-      token: globals.globalStore.state.token,
-      globalPartnerEngagementPeople: {
-        engagement: this.newEngagement,
-        person: this.newPerson,
-        role: this.newRole,
+    const createResponse = await fetchAs<CreateGlobalPartnerEngagementPeopleExRequest, CreateGlobalPartnerEngagementPeopleExResponse>(
+      'sc/global-partner-engagement-people/create-read',
+      {
+        token: globals.globalStore.state.token,
+        globalPartnerEngagementPeople: {
+          engagement: this.newEngagement,
+          person: this.newPerson,
+          role: this.newRole,
+        },
       },
-    });
+    );
 
     if (createResponse.error === ErrorType.NoError) {
       globals.globalStore.state.editMode = false;
@@ -142,7 +150,6 @@ export class ScGlobalPartnerEngagementPeoples {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
 
   columnData: ColumnDescription[] = [
     {
@@ -172,18 +179,17 @@ export class ScGlobalPartnerEngagementPeoples {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "Vendor", value: "Vendor"},
-        {display: "Customer", value: "Customer"},
-        {display: "Investor", value: "Investor"},
-        {display: "Associate", value: "Associate"},
-        {display: "Employee", value: "Employee"},
-        {display: "Member", value: "Member"},
-        {display: "Executive", value: "Executive"},
-        {display: "President/CEO", value: "President/CEO"},
-        {display: "Board of Directors", value: "Board of Directors"},
-        {display: "Retired", value: "Retired"},
-        {display: "Other", value: "Other"},
-        
+        { display: 'Vendor', value: 'Vendor' },
+        { display: 'Customer', value: 'Customer' },
+        { display: 'Investor', value: 'Investor' },
+        { display: 'Associate', value: 'Associate' },
+        { display: 'Employee', value: 'Employee' },
+        { display: 'Member', value: 'Member' },
+        { display: 'Executive', value: 'Executive' },
+        { display: 'President/CEO', value: 'President/CEO' },
+        { display: 'Board of Directors', value: 'Board of Directors' },
+        { display: 'Retired', value: 'Retired' },
+        { display: 'Other', value: 'Other' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -232,13 +238,14 @@ export class ScGlobalPartnerEngagementPeoples {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
         <slot></slot>
         {/* table abstraction */}
-        {this.globalPartnerEngagementPeoplesResponse && <cf-table rowData={this.globalPartnerEngagementPeoplesResponse.globalPartnerEngagementPeoples} columnData={this.columnData}></cf-table>}
+        {this.globalPartnerEngagementPeoplesResponse && (
+          <cf-table rowData={this.globalPartnerEngagementPeoplesResponse.globalPartnerEngagementPeoples} columnData={this.columnData}></cf-table>
+        )}
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
@@ -269,21 +276,43 @@ export class ScGlobalPartnerEngagementPeoples {
               </span>
               <span class="form-thing">
                 <select id="role" name="role" onInput={event => this.roleChange(event)}>
-                    <option value="">Select Role</option>
-                    <option value="Vendor" selected={this.newRole === "Vendor"}>Vendor</option>
-                    <option value="Customer" selected={this.newRole === "Customer"}>Customer</option>
-                    <option value="Investor" selected={this.newRole === "Investor"}>Investor</option>
-                    <option value="Associate" selected={this.newRole === "Associate"}>Associate</option>
-                    <option value="Employee" selected={this.newRole === "Employee"}>Employee</option>
-                    <option value="Member" selected={this.newRole === "Member"}>Member</option>
-                    <option value="Executive" selected={this.newRole === "Executive"}>Executive</option>
-                    <option value="President/CEO" selected={this.newRole === "President/CEO"}>President/CEO</option>
-                    <option value="Board of Directors" selected={this.newRole === "Board of Directors"}>Board of Directors</option>
-                    <option value="Retired" selected={this.newRole === "Retired"}>Retired</option>
-                    <option value="Other" selected={this.newRole === "Other"}>Other</option>
+                  <option value="">Select Role</option>
+                  <option value="Vendor" selected={this.newRole === 'Vendor'}>
+                    Vendor
+                  </option>
+                  <option value="Customer" selected={this.newRole === 'Customer'}>
+                    Customer
+                  </option>
+                  <option value="Investor" selected={this.newRole === 'Investor'}>
+                    Investor
+                  </option>
+                  <option value="Associate" selected={this.newRole === 'Associate'}>
+                    Associate
+                  </option>
+                  <option value="Employee" selected={this.newRole === 'Employee'}>
+                    Employee
+                  </option>
+                  <option value="Member" selected={this.newRole === 'Member'}>
+                    Member
+                  </option>
+                  <option value="Executive" selected={this.newRole === 'Executive'}>
+                    Executive
+                  </option>
+                  <option value="President/CEO" selected={this.newRole === 'President/CEO'}>
+                    President/CEO
+                  </option>
+                  <option value="Board of Directors" selected={this.newRole === 'Board of Directors'}>
+                    Board of Directors
+                  </option>
+                  <option value="Retired" selected={this.newRole === 'Retired'}>
+                    Retired
+                  </option>
+                  <option value="Other" selected={this.newRole === 'Other'}>
+                    Other
+                  </option>
                 </select>
               </span>
-            </div>                 
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -293,5 +322,4 @@ export class ScGlobalPartnerEngagementPeoples {
       </Host>
     );
   }
-
 }

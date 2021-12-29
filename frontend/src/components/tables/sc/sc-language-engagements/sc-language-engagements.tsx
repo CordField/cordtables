@@ -5,8 +5,6 @@ import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
 
-
-
 class CreateLanguageEngagementExRequest {
   token: string;
   languageEngagement: {
@@ -24,9 +22,9 @@ class CreateLanguageEngagementExRequest {
     is_first_scripture: boolean;
     is_luke_partnership: boolean;
     is_sent_printing: boolean;
-    last_reactivated_at: string; 
-    paratext_registry: string; 
-    periodic_reports_directory: number; 
+    last_reactivated_at: string;
+    paratext_registry: string;
+    periodic_reports_directory: number;
     pnp: string;
     pnp_file: number;
     product_engagement_tag: string;
@@ -47,7 +45,6 @@ class ScLanguageEngagementListResponse {
   error: ErrorType;
   languageEngagements: ScLanguageEngagement[];
 }
-
 
 class ScLanguageEngagementUpdateRequest {
   token: string;
@@ -76,7 +73,6 @@ class DeleteLanguageEngagementExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScLanguageEngagements {
-
   @State() languageEngagementsResponse: ScLanguageEngagementListResponse;
 
   newNeo4j_id: string;
@@ -93,18 +89,18 @@ export class ScLanguageEngagements {
   newIs_first_scripture: boolean;
   newIs_luke_partnership: boolean;
   newIs_sent_printing: boolean;
-  newLast_reactivated_at: string; 
-  newParatext_registry: string; 
-  newPeriodic_reports_directory: number; 
+  newLast_reactivated_at: string;
+  newParatext_registry: string;
+  newPeriodic_reports_directory: number;
   newPnp: string;
   newPnp_file: number;
   newProduct_engagement_tag: string;
   newStart_date: string;
   newStart_date_override: string;
   newStatus: string;
- 
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScLanguageEngagementUpdateRequest, ScLanguageEngagementUpdateResponse>('sc-language-engagements/update-read', {
+    const updateResponse = await fetchAs<ScLanguageEngagementUpdateRequest, ScLanguageEngagementUpdateResponse>('sc/language-engagements/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -114,7 +110,12 @@ export class ScLanguageEngagements {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.languageEngagementsResponse = { error: ErrorType.NoError, languageEngagements: this.languageEngagementsResponse.languageEngagements.map(languageEngagement => (languageEngagement.id === id ? updateResponse.languageEngagement : languageEngagement)) };
+      this.languageEngagementsResponse = {
+        error: ErrorType.NoError,
+        languageEngagements: this.languageEngagementsResponse.languageEngagements.map(languageEngagement =>
+          languageEngagement.id === id ? updateResponse.languageEngagement : languageEngagement,
+        ),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -124,7 +125,7 @@ export class ScLanguageEngagements {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteLanguageEngagementExRequest, DeleteLanguageEngagementExResponse>('sc-language-engagements/delete', {
+    const deleteResponse = await fetchAs<DeleteLanguageEngagementExRequest, DeleteLanguageEngagementExResponse>('sc/language-engagements/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -139,7 +140,7 @@ export class ScLanguageEngagements {
   };
 
   async getList() {
-    this.languageEngagementsResponse = await fetchAs<ScLanguageEngagementListRequest, ScLanguageEngagementListResponse>('sc-language-engagements/list', {
+    this.languageEngagementsResponse = await fetchAs<ScLanguageEngagementListRequest, ScLanguageEngagementListResponse>('sc/language-engagements/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -149,8 +150,6 @@ export class ScLanguageEngagements {
   //     token: globals.globalStore.state.token,
   //   });
   // }
-
-
 
   neo4j_idChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -248,7 +247,7 @@ export class ScLanguageEngagements {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateLanguageEngagementExRequest, CreateLanguageEngagementExResponse>('sc-language-engagements/create-read', {
+    const createResponse = await fetchAs<CreateLanguageEngagementExRequest, CreateLanguageEngagementExResponse>('sc/language-engagements/create-read', {
       token: globals.globalStore.state.token,
       languageEngagement: {
         neo4j_id: this.newNeo4j_id,
@@ -295,7 +294,6 @@ export class ScLanguageEngagements {
       deleteFn: this.handleDelete,
     },
 
-
     {
       field: 'neo4j_id',
       displayName: 'neo4j_id',
@@ -330,8 +328,8 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -383,8 +381,8 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -394,8 +392,8 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -405,8 +403,8 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -451,9 +449,9 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -477,9 +475,9 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -528,7 +526,6 @@ export class ScLanguageEngagements {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -541,12 +538,9 @@ export class ScLanguageEngagements {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
-
             <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="neo4j_id">neo4j_id
-                </label>
+                <label htmlFor="neo4j_id">neo4j_id</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
@@ -560,7 +554,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="number" id="project" name="project" onInput={event => this.projectChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="ethnologue-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -578,7 +572,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="active-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -587,8 +581,12 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>True</option>
-                   <option value="false" selected={this.newActive === false}>False</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
                 </select>
               </span>
             </div>
@@ -600,7 +598,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="communications_complete_date" name="communications_complete_date" onInput={event => this.communications_complete_dateChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="complete_date-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -618,7 +616,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="disbursement_complete_date" name="disbursement_complete_date" onInput={event => this.disbursement_complete_dateChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="end_date-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -636,7 +634,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="end_date_override" name="end_date_override" onInput={event => this.end_date_overrideChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="initial_end_date-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -654,11 +652,15 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="is_first_scripture" name="is_first_scripture" onInput={event => this.is_first_scriptureChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newIs_first_scripture === true}>True</option>
-                   <option value="false" selected={this.newIs_first_scripture === false}>False</option>
+                  <option value="true" selected={this.newIs_first_scripture === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newIs_first_scripture === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
 
             <div id="is_luke_partnership-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -667,8 +669,12 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="is_luke_partnership" name="is_luke_partnership" onInput={event => this.is_luke_partnershipChange(event)}>
                   <option value="">Select Is Luke Partnership</option>
-                  <option value="true" selected={this.newIs_luke_partnership === true}>True</option>
-                   <option value="false" selected={this.newIs_luke_partnership === false}>False</option>
+                  <option value="true" selected={this.newIs_luke_partnership === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newIs_luke_partnership === false}>
+                    False
+                  </option>
                 </select>
               </span>
             </div>
@@ -680,11 +686,15 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="is_sent_printing" name="is_sent_printing" onInput={event => this.is_sent_printingChange(event)}>
                   <option value="">Select Is Sent Printing</option>
-                  <option value="true" selected={this.newIs_sent_printing === true}>True</option>
-                   <option value="false" selected={this.newIs_sent_printing === false}>False</option>
+                  <option value="true" selected={this.newIs_sent_printing === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newIs_sent_printing === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
 
             <div id="last_reactivated_at-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -702,7 +712,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="paratext_registry" name="paratext_registry" onInput={event => this.paratext_registryChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="periodic_reports_directory-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -720,7 +730,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="pnp" name="pnp" onInput={event => this.pnpChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="pnp_file-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -738,12 +748,18 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="product_engagement_tag" name="product_engagement_tag" onInput={event => this.product_engagement_tagChange(event)}>
                   <option value="">Select Product Engagement Tag</option>
-                  <option value="A" selected={this.newProduct_engagement_tag === 'A'}>A</option>
-                   <option value="B" selected={this.newProduct_engagement_tag === 'B'}>B</option>
-                   <option value="C" selected={this.newProduct_engagement_tag === 'C'}>C</option>
+                  <option value="A" selected={this.newProduct_engagement_tag === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newProduct_engagement_tag === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newProduct_engagement_tag === 'C'}>
+                    C
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
 
             <div id="start_date-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -761,7 +777,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="start_date_override" name="start_date_override" onInput={event => this.start_date_overrideChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="status-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -770,14 +786,18 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="status" name="status" onInput={event => this.statusChange(event)}>
                   <option value="">Select Status</option>
-                  <option value="A" selected={this.newStatus === 'A'}>A</option>
-                   <option value="B" selected={this.newStatus === 'B'}>B</option>
-                   <option value="C" selected={this.newStatus === 'C'}>C</option>
+                  <option value="A" selected={this.newStatus === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newStatus === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newStatus === 'C'}>
+                    C
+                  </option>
                 </select>
               </span>
-            </div> 
-            
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -787,5 +807,4 @@ export class ScLanguageEngagements {
       </Host>
     );
   }
-
 }

@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("up-prayer-requests/read")
+    @PostMapping("up/prayer-requests/read")
     @ResponseBody
     fun readHandler(@RequestBody req: UpPrayerRequestsReadRequest): UpPrayerRequestsReadResponse {
 

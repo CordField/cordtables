@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-notes/create")
+    @PostMapping("common/notes/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonNotesCreateRequest): CommonNotesCreateResponse {
 

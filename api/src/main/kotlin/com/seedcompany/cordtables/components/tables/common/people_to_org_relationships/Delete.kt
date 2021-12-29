@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-people-to-org-relationships/delete")
+    @PostMapping("common/people-to-org-relationships/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonPeopleToOrgRelationshipsDeleteRequest): CommonPeopleToOrgRelationshipsDeleteResponse {
 

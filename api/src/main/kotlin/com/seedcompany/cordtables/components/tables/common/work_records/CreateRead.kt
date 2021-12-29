@@ -35,7 +35,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-work-records/create-read")
+    @PostMapping("common/work-records/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonWorkRecordCreateReadRequest): CommonWorkRecordCreateReadResponse {
 

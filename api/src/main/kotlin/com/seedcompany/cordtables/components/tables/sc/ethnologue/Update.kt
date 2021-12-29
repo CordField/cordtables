@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-ethnologue/update")
+    @PostMapping("sc/ethnologue/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScEthnologueUpdateRequest): ScEthnologueUpdateResponse {
 

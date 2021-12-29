@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-global-partner-performance/read")
+    @PostMapping("sc/global-partner-performance/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScGlobalPartnerPerformanceReadRequest): ScGlobalPartnerPerformanceReadResponse {
 

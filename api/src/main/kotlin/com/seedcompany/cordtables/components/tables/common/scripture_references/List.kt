@@ -43,7 +43,7 @@ class List(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("table/common-scripture-references/list")
+    @PostMapping("common/scripture-references/list")
     @ResponseBody
     fun listHandler(@RequestBody req: ScriptureReferenceListRequest): ScriptureReferenceListResponse {
 

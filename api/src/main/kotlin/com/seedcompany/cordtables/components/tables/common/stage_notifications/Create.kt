@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-stage-notifications/create")
+    @PostMapping("common/stage-notifications/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonStageNotificationsCreateRequest): CommonStageNotificationsCreateResponse {
 

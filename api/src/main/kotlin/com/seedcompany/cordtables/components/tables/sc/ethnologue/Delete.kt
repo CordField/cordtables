@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-ethnologue/delete")
+    @PostMapping("sc/ethnologue/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScEthnologueDeleteRequest): ScEthnologueDeleteResponse {
 

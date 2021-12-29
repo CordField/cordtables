@@ -38,7 +38,7 @@ class UpdateRead(
         @Autowired
         val read: Read,
 ) {
-    @PostMapping("common-cell-channels/update-read")
+    @PostMapping("common/cell-channels/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonCellChannelsUpdateReadRequest): CommonCellChannelsUpdateReadResponse {
 

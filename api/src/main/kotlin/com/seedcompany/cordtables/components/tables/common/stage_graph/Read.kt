@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-stage-graph/read")
+    @PostMapping("common/stage-graph/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonStageGraphReadRequest): CommonStageGraphReadResponse {
 

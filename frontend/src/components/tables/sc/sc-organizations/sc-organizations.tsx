@@ -26,7 +26,6 @@ class ScOrganizationListResponse {
   organizations: ScOrganization[];
 }
 
-
 class ScOrganizationUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +53,14 @@ class DeleteOrganizationExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScOrganizations {
-
   @State() organizationsResponse: ScOrganizationListResponse;
 
   newNeo4j_id: string;
   newAddress: string;
   newId: number;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScOrganizationUpdateRequest, ScOrganizationUpdateResponse>('sc-organizations/update-read', {
+    const updateResponse = await fetchAs<ScOrganizationUpdateRequest, ScOrganizationUpdateResponse>('sc/organizations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +70,10 @@ export class ScOrganizations {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.organizationsResponse = { error: ErrorType.NoError, organizations: this.organizationsResponse.organizations.map(organization => (organization.id === id ? updateResponse.organization : organization)) };
+      this.organizationsResponse = {
+        error: ErrorType.NoError,
+        organizations: this.organizationsResponse.organizations.map(organization => (organization.id === id ? updateResponse.organization : organization)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +83,7 @@ export class ScOrganizations {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteOrganizationExRequest, DeleteOrganizationExResponse>('sc-organizations/delete', {
+    const deleteResponse = await fetchAs<DeleteOrganizationExRequest, DeleteOrganizationExResponse>('sc/organizations/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,17 +98,10 @@ export class ScOrganizations {
   };
 
   async getList() {
-    this.organizationsResponse = await fetchAs<ScOrganizationListRequest, ScOrganizationListResponse>('sc-organizations/list', {
+    this.organizationsResponse = await fetchAs<ScOrganizationListRequest, ScOrganizationListResponse>('sc/organizations/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   neo4j_idChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -121,12 +115,11 @@ export class ScOrganizations {
     this.newAddress = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateOrganizationExRequest, CreateOrganizationExResponse>('sc-organizations/create-read', {
+    const createResponse = await fetchAs<CreateOrganizationExRequest, CreateOrganizationExResponse>('sc/organizations/create-read', {
       token: globals.globalStore.state.token,
       organization: {
         id: this.newId,
@@ -143,8 +136,6 @@ export class ScOrganizations {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
-
 
   columnData: ColumnDescription[] = [
     {
@@ -213,7 +204,6 @@ export class ScOrganizations {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -226,7 +216,6 @@ export class ScOrganizations {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="id">Common Organization ID</label>
@@ -252,8 +241,7 @@ export class ScOrganizations {
               <span class="form-thing">
                 <input type="text" id="address" name="address" onInput={event => this.addressChange(event)} />
               </span>
-            </div> 
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -263,5 +251,4 @@ export class ScOrganizations {
       </Host>
     );
   }
-
 }

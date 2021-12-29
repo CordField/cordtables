@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-stages/update")
+    @PostMapping("common/stages/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonStagesUpdateRequest): CommonStagesUpdateResponse {
 

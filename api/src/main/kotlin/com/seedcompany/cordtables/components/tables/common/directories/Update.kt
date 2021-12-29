@@ -35,7 +35,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-directories/update")
+    @PostMapping("common/directories/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonDirectoriesUpdateRequest): CommonDirectoriesUpdateResponse {
 

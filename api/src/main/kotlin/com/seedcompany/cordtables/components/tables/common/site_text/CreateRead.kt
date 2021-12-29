@@ -35,7 +35,7 @@ class CreateRead(
         @Autowired
         val read: Read,
 ) {
-    @PostMapping("common-site-texts/create-read")
+    @PostMapping("common/site-texts/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonSiteTextCreateReadRequest): CommonSiteTextCreateReadResponse {
 

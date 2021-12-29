@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("up-prayer-requests/create")
+    @PostMapping("up/prayer-requests/create")
     @ResponseBody
     fun createHandler(@RequestBody req: UpPrayerRequestsCreateRequest): UpPrayerRequestsCreateResponse {
 

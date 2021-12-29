@@ -33,7 +33,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-languages/update")
+    @PostMapping("sc/languages/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScLanguagesUpdateRequest): ScLanguagesUpdateResponse {
 

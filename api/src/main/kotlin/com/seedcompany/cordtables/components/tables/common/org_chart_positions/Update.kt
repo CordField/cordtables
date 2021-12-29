@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-org-chart-positions/update")
+    @PostMapping("common/org-chart-positions/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonOrgChartPositionsUpdateRequest): CommonOrgChartPositionsUpdateResponse {
 

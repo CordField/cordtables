@@ -30,7 +30,7 @@ class Delete(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common-posts/delete")
+    @PostMapping("common/posts/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonPostsDeleteRequest): CommonPostsDeleteResponse {
 

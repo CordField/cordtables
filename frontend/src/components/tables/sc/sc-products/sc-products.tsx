@@ -31,7 +31,6 @@ class ScProductListResponse {
   products: ScProduct[];
 }
 
-
 class ScProductUpdateRequest {
   token: string;
   column: string;
@@ -59,7 +58,6 @@ class DeleteProductExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScProducts {
-
   @State() productsResponse: ScProductListResponse;
 
   newNeo4j_id: string;
@@ -70,9 +68,9 @@ export class ScProducts {
   newMethodologies: string;
   newPurposes: string;
   newType: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScProductUpdateRequest, ScProductUpdateResponse>('sc-products/update-read', {
+    const updateResponse = await fetchAs<ScProductUpdateRequest, ScProductUpdateResponse>('sc/products/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -92,7 +90,7 @@ export class ScProducts {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteProductExRequest, DeleteProductExResponse>('sc-products/delete', {
+    const deleteResponse = await fetchAs<DeleteProductExRequest, DeleteProductExResponse>('sc/products/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -107,17 +105,10 @@ export class ScProducts {
   };
 
   async getList() {
-    this.productsResponse = await fetchAs<ScProductListRequest, ScProductListResponse>('sc-products/list', {
+    this.productsResponse = await fetchAs<ScProductListRequest, ScProductListResponse>('sc/products/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   neo4j_idChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -136,16 +127,14 @@ export class ScProducts {
   }
 
   mediumsChange(event) {
-    
     var options = event.target.options;
     var value = [];
     for (var i = 0, l = options.length; i < l; i++) {
       if (options[i].selected) {
         value.push(options[i].value);
-        //console.log(options[i].value);
       }
     }
-   this.newMediums = value;
+    this.newMediums = value;
   }
 
   methodologiesChange(event) {
@@ -159,13 +148,12 @@ export class ScProducts {
   typeChange(event) {
     this.newType = event.target.value;
   }
-  
 
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateProductExRequest, CreateProductExResponse>('sc-products/create-read', {
+    const createResponse = await fetchAs<CreateProductExRequest, CreateProductExResponse>('sc/products/create-read', {
       token: globals.globalStore.state.token,
       product: {
         neo4j_id: this.newNeo4j_id,
@@ -223,8 +211,8 @@ export class ScProducts {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -235,9 +223,9 @@ export class ScProducts {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -248,9 +236,9 @@ export class ScProducts {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -261,9 +249,9 @@ export class ScProducts {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -273,15 +261,14 @@ export class ScProducts {
       width: 250,
       editable: true,
       selectOptions: [
-        {display: "Film", value: "Film"},
-        {display: "Literacy Material", value: "Literacy Material"},
-        {display: "Scripture", value: "Scripture"},
-        {display: "Song", value: "Song"},
-        {display: "Story", value: "Story"},
+        { display: 'Film', value: 'Film' },
+        { display: 'Literacy Material', value: 'Literacy Material' },
+        { display: 'Scripture', value: 'Scripture' },
+        { display: 'Song', value: 'Song' },
+        { display: 'Story', value: 'Story' },
       ],
       updateFn: this.handleUpdate,
     },
-
 
     {
       field: 'created_at',
@@ -328,7 +315,6 @@ export class ScProducts {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -341,7 +327,6 @@ export class ScProducts {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">neo4j_id</label>
@@ -358,7 +343,7 @@ export class ScProducts {
               <span class="form-thing">
                 <input type="text" id="name" name="name" onInput={event => this.nameChange(event)} />
               </span>
-            </div>        
+            </div>
 
             <div id="change_to_plan-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -376,22 +361,32 @@ export class ScProducts {
               <span class="form-thing">
                 <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>True</option>
-                   <option value="false" selected={this.newActive === false}>False</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div>  
+            </div>
 
             <div id="mediums-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="mediums">Mediums</label>
               </span>
               <span class="form-thing">
-              <select id="mediums" name="mediums" multiple onInput={event => this.mediumsChange(event)}>
+                <select id="mediums" name="mediums" multiple onInput={event => this.mediumsChange(event)}>
                   <option value="">Select Mediums</option>
-                  <option value="A" selected={this.newMediums.includes("A")}>A</option>
-                  <option value="B" selected={this.newMediums.includes("B")}>B</option>
-                  <option value="C" selected={this.newMediums.includes("B")}>C</option>
+                  <option value="A" selected={this.newMediums.includes('A')}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newMediums.includes('B')}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newMediums.includes('B')}>
+                    C
+                  </option>
                 </select>
               </span>
             </div>
@@ -403,23 +398,35 @@ export class ScProducts {
               <span class="form-thing">
                 <select id="methodologies" name="methodologies" multiple onInput={event => this.methodologiesChange(event)}>
                   <option value="">Select Methodologies</option>
-                  <option value="A" selected={this.newMethodologies === "A"}>A</option>
-                  <option value="B" selected={this.newMethodologies === "B"}>B</option>
-                  <option value="C" selected={this.newMethodologies === "C"}>C</option>
+                  <option value="A" selected={this.newMethodologies === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newMethodologies === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newMethodologies === 'C'}>
+                    C
+                  </option>
                 </select>
               </span>
-            </div>  
+            </div>
 
             <div id="purposes-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="purposes">Purposes</label>
               </span>
               <span class="form-thing">
-              <select id="purposes" name="purposes" multiple onInput={event => this.purposesChange(event)}>
+                <select id="purposes" name="purposes" multiple onInput={event => this.purposesChange(event)}>
                   <option value="">Select Purposes</option>
-                  <option value="A" selected={this.newPurposes === "A"}>A</option>
-                  <option value="B" selected={this.newPurposes === "B"}>B</option>
-                  <option value="C" selected={this.newPurposes === "C"}>C</option>
+                  <option value="A" selected={this.newPurposes === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newPurposes === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newPurposes === 'C'}>
+                    C
+                  </option>
                 </select>
               </span>
             </div>
@@ -429,16 +436,26 @@ export class ScProducts {
                 <label htmlFor="type">Type</label>
               </span>
               <span class="form-thing">
-              <select id="type" name="type" onInput={event => this.typeChange(event)}>
+                <select id="type" name="type" onInput={event => this.typeChange(event)}>
                   <option value="">Select Type</option>
-                  <option value="Film" selected={this.newType === "Film"}>Film</option>
-                  <option value="Literacy Material" selected={this.newType === "Literacy Material"}>Literacy Material</option>
-                  <option value="Scripture" selected={this.newType === "Scripture"}>Scripture</option>
-                  <option value="Song" selected={this.newType === "Song"}>Song</option>
-                  <option value="Story" selected={this.newType === "Story"}>Story</option>
+                  <option value="Film" selected={this.newType === 'Film'}>
+                    Film
+                  </option>
+                  <option value="Literacy Material" selected={this.newType === 'Literacy Material'}>
+                    Literacy Material
+                  </option>
+                  <option value="Scripture" selected={this.newType === 'Scripture'}>
+                    Scripture
+                  </option>
+                  <option value="Song" selected={this.newType === 'Song'}>
+                    Song
+                  </option>
+                  <option value="Story" selected={this.newType === 'Story'}>
+                    Story
+                  </option>
                 </select>
               </span>
-            </div>  
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -448,5 +465,4 @@ export class ScProducts {
       </Host>
     );
   }
-
 }

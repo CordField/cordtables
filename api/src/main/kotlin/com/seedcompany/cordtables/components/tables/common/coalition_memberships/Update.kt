@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-coalition-memberships/update")
+    @PostMapping("common/coalition-memberships/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonCoalitionMembershipsUpdateRequest): CommonCoalitionMembershipsUpdateResponse {
 

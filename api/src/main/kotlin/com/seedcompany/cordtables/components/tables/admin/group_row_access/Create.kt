@@ -42,7 +42,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin-group-row-access/create")
+    @PostMapping("admin/group-row-access/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminGroupRowAccessCreateRequest): AdminGroupRowAccessCreateResponse {
 

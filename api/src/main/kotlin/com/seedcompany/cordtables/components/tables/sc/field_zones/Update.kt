@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-field-zones/update")
+    @PostMapping("sc/field-zones/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScFieldZonesUpdateRequest): ScFieldZonesUpdateResponse {
 

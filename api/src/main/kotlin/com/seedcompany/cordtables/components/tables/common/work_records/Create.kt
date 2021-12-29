@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-work-records/create")
+    @PostMapping("common/work-records/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonWorkRecordCreateRequest): CommonWorkRecordCreateResponse {
 
