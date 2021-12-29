@@ -42,7 +42,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc/products/create")
+    @PostMapping("sc-products/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScProductsCreateRequest): ScProductsCreateResponse {
 

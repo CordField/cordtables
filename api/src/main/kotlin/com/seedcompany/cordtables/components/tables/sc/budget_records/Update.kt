@@ -32,7 +32,7 @@ class Update(
     val ds: DataSource,
 ) {
 
-    @PostMapping("sc/budget-records/update")
+    @PostMapping("sc-budget-records/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScBudgetRecordsUpdateRequest): ScBudgetRecordsUpdateResponse {
 

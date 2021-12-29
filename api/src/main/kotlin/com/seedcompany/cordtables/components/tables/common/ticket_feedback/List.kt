@@ -41,7 +41,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/ticket-feedback/list")
+    @PostMapping("common-ticket-feedback/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonTicketFeedbackRequest): CommonTicketFeedbackListResponse{
         var data: MutableList<CommonTicketFeedback> = mutableListOf()

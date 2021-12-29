@@ -33,7 +33,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common/ticket-graph/update")
+    @PostMapping("common-ticket-graph/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonTicketGraphUpdateRequest): CommonTicketGraphUpdateResponse {
 

@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/stage-notifications/create-read")
+    @PostMapping("common-stage-notifications/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonStageNotificationsCreateReadRequest): CommonStageNotificationsCreateReadResponse {
 

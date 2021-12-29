@@ -107,7 +107,7 @@ export class SiteText {
   handleInsert = async event => {
     event.preventDefault();
     if (this.newSiteText.english === '') return;
-    const createResponse = await fetchAs<SiteTextStringCreateRequest, SiteTextStringCreateResponse>('common/site-text-strings/create-read', {
+    const createResponse = await fetchAs<SiteTextStringCreateRequest, SiteTextStringCreateResponse>('common-site-text-strings/create-read', {
       token: globals.globalStore.state.token,
       site_text_string: {
         english: this.newSiteText.english,
@@ -129,7 +129,7 @@ export class SiteText {
   };
 
   handleSiteTextStringUpdate = async (id: number, column: string, newValue: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<SiteTextStringUpdateRequest, SiteTextStringUpdateResponse>('common/site-text-strings/update-read', {
+    const updateResponse = await fetchAs<SiteTextStringUpdateRequest, SiteTextStringUpdateResponse>('common-site-text-strings/update-read', {
       token: globals.globalStore.state.token,
       site_text_string: {
         column,
@@ -167,7 +167,7 @@ export class SiteText {
   };
 
   handleDelete = async (id: number): Promise<boolean> => {
-    const updateResponse = await fetchAs<SiteTextStringDeleteRequest, SiteTextStringDeleteResponse>('common/site-text-strings/delete', {
+    const updateResponse = await fetchAs<SiteTextStringDeleteRequest, SiteTextStringDeleteResponse>('common-site-text-strings/delete', {
       token: globals.globalStore.state.token,
       id,
     });
@@ -192,7 +192,7 @@ export class SiteText {
   };
 
   handleSiteTextTranslationUpdate = async (id: number, column: number, newValue: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<SiteTextTranslationUpdateRequest, SiteTextTranslationUpdateResponse>('common/site-text-translations/update-read', {
+    const updateResponse = await fetchAs<SiteTextTranslationUpdateRequest, SiteTextTranslationUpdateResponse>('common-site-text-translations/update-read', {
       token: globals.globalStore.state.token,
       site_text_translation: {
         language: column,
@@ -332,7 +332,7 @@ export class SiteText {
 
   addSiteTextLanguage = (language: LanguageIndex) => {
     return async (): Promise<boolean> => {
-      const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common/site-text-languages/create', {
+      const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common-site-text-languages/create', {
         token: globals.globalStore.state.token,
         language: language.common_id,
       });
@@ -341,7 +341,7 @@ export class SiteText {
         const newSiteTextLanguages = [...globals.globalStore.state.siteTextLanguages, { language: language.common_id, language_name: language.name }];
         globals.globalStore.set('siteTextLanguages', newSiteTextLanguages);
         this.columnData = this.makeColumns();
-        this.rowData = this.makeRows();
+        this.rowData = this.makeRows();   
         return true;
       } else {
         return false;
@@ -351,7 +351,7 @@ export class SiteText {
 
   removeSiteTextLanguage = id => {
     return async (): Promise<boolean> => {
-      const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common/site-text-languages/delete', {
+      const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common-site-text-languages/delete', {
         token: globals.globalStore.state.token,
         language: id,
       });
@@ -360,7 +360,7 @@ export class SiteText {
         const newSiteTextLanguages = globals.globalStore.state.siteTextLanguages.filter(s => s.language !== id);
         globals.globalStore.set('siteTextLanguages', newSiteTextLanguages);
         this.columnData = this.makeColumns();
-        this.rowData = this.makeRows();
+        this.rowData = this.makeRows();    
         return true;
       } else {
         return false;

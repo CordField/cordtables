@@ -35,7 +35,7 @@ class CreateRead(
   @Autowired
   val read: Read,
 ) {
-  @PostMapping("common/site-text-translations/create-read")
+  @PostMapping("common-site-text-translations/create-read")
   @ResponseBody
   fun createReadHandler(@RequestBody req: SiteTextTranslationCreateReadRequest): SiteTextTranslationCreateReadResponse {
 

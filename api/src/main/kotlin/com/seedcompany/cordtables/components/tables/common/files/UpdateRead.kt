@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/files/update-read")
+    @PostMapping("common-files/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonFilesUpdateReadRequest): CommonFilesUpdateReadResponse {
 

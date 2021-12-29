@@ -39,7 +39,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/posts/read")
+    @PostMapping("common-posts/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonPostsReadRequest): CommonPostsReadResponse {
         var data: MutableList<Thread> = mutableListOf()

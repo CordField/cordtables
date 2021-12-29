@@ -41,7 +41,7 @@ class Update(
 ) {
   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-  @PostMapping("common/site-text-translations/update")
+  @PostMapping("common-site-text-translations/update")
   @ResponseBody
   fun updateHandler(@RequestBody req: SiteTextTranslationUpdateRequest): SiteTextTranslationUpdateResponse {
 

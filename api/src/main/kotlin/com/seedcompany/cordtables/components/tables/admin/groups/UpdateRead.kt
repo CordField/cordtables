@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("admin/groups/update-read")
+    @PostMapping("admin-groups/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: AdminGroupsUpdateReadRequest): AdminGroupsUpdateReadResponse {
 

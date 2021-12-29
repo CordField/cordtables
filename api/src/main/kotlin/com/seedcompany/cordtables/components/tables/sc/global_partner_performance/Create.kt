@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc/global-partner-performance/create")
+    @PostMapping("sc-global-partner-performance/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScGlobalPartnerPerformanceCreateRequest): ScGlobalPartnerPerformanceCreateResponse {
 

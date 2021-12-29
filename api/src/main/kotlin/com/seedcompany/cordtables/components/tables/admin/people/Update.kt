@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("admin/people/update")
+    @PostMapping("admin-people/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminPeopleUpdateRequest): AdminPeopleUpdateResponse {
 

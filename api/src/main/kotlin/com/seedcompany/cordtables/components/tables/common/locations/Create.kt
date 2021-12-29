@@ -40,7 +40,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common/locations/create")
+    @PostMapping("common-locations/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonLocationsCreateRequest): CommonLocationsCreateResponse {
 

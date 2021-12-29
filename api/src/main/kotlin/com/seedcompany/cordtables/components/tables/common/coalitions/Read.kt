@@ -40,7 +40,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/coalitions/read")
+    @PostMapping("common-coalitions/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonCoalitionsReadRequest): CommonCoalitionsReadResponse {
 

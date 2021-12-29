@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/locations/update-read")
+    @PostMapping("common-locations/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonLocationsUpdateReadRequest): CommonLocationsUpdateReadResponse {
 

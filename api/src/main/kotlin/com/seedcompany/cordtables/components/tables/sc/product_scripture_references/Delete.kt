@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc/product-scripture-references/delete")
+    @PostMapping("sc-product-scripture-references/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScProductScriptureReferencesDeleteRequest): ScProductScriptureReferencesDeleteResponse {
 

@@ -42,7 +42,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common/files/create")
+    @PostMapping("common-files/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonFilesCreateRequest): CommonFilesCreateResponse {
 

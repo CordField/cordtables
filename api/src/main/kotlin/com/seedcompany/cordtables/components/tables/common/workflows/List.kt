@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/workflows/list")
+    @PostMapping("common-workflows/list")
     @ResponseBody
     fun listHandler(@RequestBody req:CommonWorkflowsListRequest): CommonWorkflowsListResponse {
         var data: MutableList<workflow> = mutableListOf()

@@ -4,6 +4,7 @@ import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
+
 class SilIso6393ListRequest {
   token: string;
   page: number;
@@ -22,6 +23,7 @@ class SilIso6393ListResponse {
   shadow: true,
 })
 export class SilIso6393s {
+
   @State() iso6393sResponse: SilIso6393ListResponse;
   @State() currentPage: number = 1;
 
@@ -34,7 +36,7 @@ export class SilIso6393s {
   }
 
   async getList(page) {
-    this.iso6393sResponse = await fetchAs<SilIso6393ListRequest, SilIso6393ListResponse>('sil/iso-639-3/list', {
+    this.iso6393sResponse = await fetchAs<SilIso6393ListRequest, SilIso6393ListResponse>('sil-iso-639-3/list', {
       token: globals.globalStore.state.token,
       page: page,
       resultsPerPage: 50,
@@ -61,41 +63,41 @@ export class SilIso6393s {
       editable: false,
     },
     {
-      field: 'part_2t',
-      displayName: 'Part 2t',
-      width: 200,
-      editable: false,
-    },
-    {
-      field: 'part_1',
-      displayName: 'Part 1',
-      width: 200,
-      editable: false,
-    },
-    {
-      field: 'scope',
-      displayName: 'Scope',
-      width: 200,
-      editable: false,
-    },
-    {
-      field: 'type',
-      displayName: 'Type',
-      width: 200,
-      editable: false,
-    },
-    {
-      field: 'ref_name',
-      displayName: 'Ref Name',
-      width: 200,
-      editable: false,
-    },
-    {
-      field: 'comment',
-      displayName: 'Comment',
-      width: 200,
-      editable: false,
-    },
+        field: 'part_2t',
+        displayName: 'Part 2t',
+        width: 200,
+        editable: false,
+      },
+      {
+        field: 'part_1',
+        displayName: 'Part 1',
+        width: 200,
+        editable: false,
+      },
+      {
+        field: 'scope',
+        displayName: 'Scope',
+        width: 200,
+        editable: false,
+      },
+      {
+        field: 'type',
+        displayName: 'Type',
+        width: 200,
+        editable: false,
+      },
+      {
+        field: 'ref_name',
+        displayName: 'Ref Name',
+        width: 200,
+        editable: false,
+      },
+      {
+        field: 'comment',
+        displayName: 'Comment',
+        width: 200,
+        editable: false,
+      },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -135,9 +137,9 @@ export class SilIso6393s {
   ];
 
   async componentWillLoad() {
-    var url = new URL(window.location.href);
-    if (url.searchParams.has('page')) {
-      this.currentPage = parseInt(url.searchParams.get('page')) > 0 ? parseInt(url.searchParams.get('page')) : 1;
+    var url = new URL(window.location.href)
+    if(url.searchParams.has("page")){
+      this.currentPage = parseInt(url.searchParams.get("page"))>0?parseInt(url.searchParams.get("page")):1;
     }
     await this.getList(this.currentPage);
   }
@@ -147,12 +149,14 @@ export class SilIso6393s {
       <Host>
         <slot></slot>
         {/* table abstraction */}
-        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393sResponse.size} results-per-page="50" page-url="iso-639-3"></cf-pagination>
+        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393sResponse.size} results-per-page="50" page-url="sil-iso-639-3"></cf-pagination>
         {this.iso6393sResponse && <cf-table rowData={this.iso6393sResponse.iso6393s} columnData={this.columnData}></cf-table>}
-        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393sResponse.size} results-per-page="50" page-url="iso-639-3"></cf-pagination>
+        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393sResponse.size} results-per-page="50" page-url="sil-iso-639-3"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
+
       </Host>
     );
   }
+
 }

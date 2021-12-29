@@ -29,7 +29,7 @@ class Delete(
   @Autowired
   val ds: DataSource,
 ) {
-  @PostMapping("common/site-text-strings/delete")
+  @PostMapping("common-site-text-strings/delete")
   @ResponseBody
   fun deleteHandler(@RequestBody req: SiteTextStringDeleteRequest): SiteTextStringDeleteResponse {
 

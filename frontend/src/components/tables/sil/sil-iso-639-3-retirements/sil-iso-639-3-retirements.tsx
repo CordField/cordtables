@@ -4,6 +4,7 @@ import { ErrorType } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
+
 class SilIso6393RetirementListRequest {
   token: string;
   page: number;
@@ -16,15 +17,17 @@ class SilIso6393RetirementListResponse {
   iso6393Retirements: SilIso6393Retirement[];
 }
 
+
 @Component({
   tag: 'sil-iso-639-3-retirements',
   styleUrl: 'sil-iso-639-3-retirements.css',
   shadow: true,
 })
 export class SilIso6393Retirements {
+
   @State() iso6393RetirementsResponse: SilIso6393RetirementListResponse;
   @State() currentPage: number = 1;
-
+  
   @Listen('pageChanged', { target: 'body' })
   async getChangedValue(event: CustomEvent) {
     console.log(event.detail);
@@ -34,7 +37,7 @@ export class SilIso6393Retirements {
   }
 
   async getList(page) {
-    this.iso6393RetirementsResponse = await fetchAs<SilIso6393RetirementListRequest, SilIso6393RetirementListResponse>('sil/iso-639-3-retirements/list', {
+    this.iso6393RetirementsResponse = await fetchAs<SilIso6393RetirementListRequest, SilIso6393RetirementListResponse>('sil-iso-639-3-retirements/list', {
       token: globals.globalStore.state.token,
       page: page,
       resultsPerPage: 50,
@@ -123,9 +126,9 @@ export class SilIso6393Retirements {
   ];
 
   async componentWillLoad() {
-    var url = new URL(window.location.href);
-    if (url.searchParams.has('page')) {
-      this.currentPage = parseInt(url.searchParams.get('page')) > 0 ? parseInt(url.searchParams.get('page')) : 1;
+    var url = new URL(window.location.href)
+    if(url.searchParams.has("page")){
+      this.currentPage = parseInt(url.searchParams.get("page"))>0?parseInt(url.searchParams.get("page")):1;
     }
     await this.getList(this.currentPage);
   }
@@ -136,10 +139,12 @@ export class SilIso6393Retirements {
         <slot></slot>
         {/* table abstraction */}
         {this.iso6393RetirementsResponse && <cf-table rowData={this.iso6393RetirementsResponse.iso6393Retirements} columnData={this.columnData}></cf-table>}
-        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393RetirementsResponse.size} results-per-page="50" page-url="iso-639-3-retirements"></cf-pagination>
+        <cf-pagination current-page={this.currentPage} total-rows={this.iso6393RetirementsResponse.size} results-per-page="50" page-url="sil-iso-639-3-retirements"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
+
       </Host>
     );
   }
+
 }

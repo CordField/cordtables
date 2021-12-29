@@ -74,7 +74,7 @@ export class ScLanguages {
   newPrimaryLocation: number;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonOrganizationsUpdateRequest, CommonOrganizationsUpdateResponse>('common/organizations/update-read', {
+    const updateResponse = await fetchAs<CommonOrganizationsUpdateRequest, CommonOrganizationsUpdateResponse>('common-organizations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -94,7 +94,7 @@ export class ScLanguages {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('common/organizations/delete', {
+    const result = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('common-organizations/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -186,7 +186,7 @@ export class ScLanguages {
   }
 
   async getList() {
-    this.commonOrganizationsResponse = await fetchAs<CommonOrganizationsListRequest, organizationsListResponse>('common/organizations/list', {
+    this.commonOrganizationsResponse = await fetchAs<CommonOrganizationsListRequest, organizationsListResponse>('common-organizations/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -207,7 +207,7 @@ export class ScLanguages {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateOrganizationRequest, CreateOrganizationResponse>('common/organizations/create-read', {
+    const result = await fetchAs<CreateOrganizationRequest, CreateOrganizationResponse>('common-organizations/create-read', {
       token: globals.globalStore.state.token,
       organization: {
         name: this.newOrganizationName,

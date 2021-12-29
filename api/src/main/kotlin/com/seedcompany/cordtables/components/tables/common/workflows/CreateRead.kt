@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/workflows/create-read")
+    @PostMapping("common-workflows/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonWorkflowsCreateReadRequest): CommonWorkflowsCreateReadResponse {
 

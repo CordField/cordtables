@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/stage-role-column-grants/read")
+    @PostMapping("common-stage-role-column-grants/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonStageRoleColumnGrantsReadRequest): CommonStageRoleColumnGrantsReadResponse {
 

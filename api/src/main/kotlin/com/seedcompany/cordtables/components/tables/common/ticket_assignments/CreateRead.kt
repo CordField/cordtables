@@ -40,7 +40,7 @@ class CreateRead(
         @Autowired
         val read: Read,
 ) {
-    @PostMapping("common/ticket-assignments/create-read")
+    @PostMapping("common-ticket-assignments/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonTicketAssignmentCreateReadRequest): CommonTicketAssignmentCreateReadResponse {
 

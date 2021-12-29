@@ -40,7 +40,7 @@ class List(
 
 //    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sil/iso-639-3-names/list")
+    @PostMapping("sil-iso-639-3-names/list")
     @ResponseBody
     fun listHandler(@RequestBody req:SilIso6393NamesListRequest): SilIso6393NamesListResponse {
         var data: MutableList<iso6393Name> = mutableListOf()

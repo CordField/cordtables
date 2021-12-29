@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/notes/create-read")
+    @PostMapping("common-notes/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonNotesCreateReadRequest): CommonNotesCreateReadResponse {
 

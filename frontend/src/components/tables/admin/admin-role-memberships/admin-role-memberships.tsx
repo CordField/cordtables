@@ -25,6 +25,7 @@ class AdminRoleMembershipListResponse {
   roleMemberships: AdminRoleMembership[];
 }
 
+
 class AdminRoleMembershipUpdateRequest {
   token: string;
   column: string;
@@ -52,13 +53,14 @@ class DeleteRoleMembershipExResponse extends GenericResponse {
   shadow: true,
 })
 export class AdminRoleMemberships {
+
   @State() roleMembershipsResponse: AdminRoleMembershipListResponse;
 
   newRole: number;
   newPerson: number;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminRoleMembershipUpdateRequest, AdminRoleMembershipUpdateResponse>('admin/role-memberships/update-read', {
+    const updateResponse = await fetchAs<AdminRoleMembershipUpdateRequest, AdminRoleMembershipUpdateResponse>('admin-role-memberships/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -68,10 +70,7 @@ export class AdminRoleMemberships {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.roleMembershipsResponse = {
-        error: ErrorType.NoError,
-        roleMemberships: this.roleMembershipsResponse.roleMemberships.map(roleMembership => (roleMembership.id === id ? updateResponse.roleMembership : roleMembership)),
-      };
+      this.roleMembershipsResponse = { error: ErrorType.NoError, roleMemberships: this.roleMembershipsResponse.roleMemberships.map(roleMembership => (roleMembership.id === id ? updateResponse.roleMembership : roleMembership)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -81,7 +80,7 @@ export class AdminRoleMemberships {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteRoleMembershipExRequest, DeleteRoleMembershipExResponse>('admin/role-memberships/delete', {
+    const deleteResponse = await fetchAs<DeleteRoleMembershipExRequest, DeleteRoleMembershipExResponse>('admin-role-memberships/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -96,10 +95,17 @@ export class AdminRoleMemberships {
   };
 
   async getList() {
-    this.roleMembershipsResponse = await fetchAs<AdminRoleMembershipListRequest, AdminRoleMembershipListResponse>('admin/role-memberships/list', {
+    this.roleMembershipsResponse = await fetchAs<AdminRoleMembershipListRequest, AdminRoleMembershipListResponse>('admin-role-memberships/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   roleChange(event) {
     this.newRole = event.target.value;
@@ -109,11 +115,12 @@ export class AdminRoleMemberships {
     this.newPerson = event.target.value;
   }
 
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateRoleMembershipExRequest, CreateRoleMembershipExResponse>('admin/role-memberships/create-read', {
+    const createResponse = await fetchAs<CreateRoleMembershipExRequest, CreateRoleMembershipExResponse>('admin-role-memberships/create-read', {
       token: globals.globalStore.state.token,
       roleMembership: {
         role: this.newRole,
@@ -129,6 +136,7 @@ export class AdminRoleMemberships {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
+
 
   columnData: ColumnDescription[] = [
     {
@@ -197,6 +205,7 @@ export class AdminRoleMemberships {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -225,7 +234,8 @@ export class AdminRoleMemberships {
               <span class="form-thing">
                 <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
-            </div>
+            </div> 
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -235,4 +245,5 @@ export class AdminRoleMemberships {
       </Host>
     );
   }
+
 }

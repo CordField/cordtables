@@ -27,6 +27,7 @@ class ScPersonUnavailabilityListResponse {
   personUnavailabilities: ScPersonUnavailability[];
 }
 
+
 class ScPersonUnavailabilityUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +55,16 @@ class DeletePersonUnavailabilityExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScPersonUnavailabilities {
+
   @State() SpersonUnavailabilitiesResponse: ScPersonUnavailabilityListResponse;
 
   newPerson: number;
   newPeriod_start: string;
   newPeriod_end: string;
   newDescription: string;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScPersonUnavailabilityUpdateRequest, ScPersonUnavailabilityUpdateResponse>('sc/person-unavailabilities/update-read', {
+    const updateResponse = await fetchAs<ScPersonUnavailabilityUpdateRequest, ScPersonUnavailabilityUpdateResponse>('sc-person-unavailabilities/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,12 +74,7 @@ export class ScPersonUnavailabilities {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.SpersonUnavailabilitiesResponse = {
-        error: ErrorType.NoError,
-        personUnavailabilities: this.SpersonUnavailabilitiesResponse.personUnavailabilities.map(personUnavailability =>
-          personUnavailability.id === id ? updateResponse.personUnavailability : personUnavailability,
-        ),
-      };
+      this.SpersonUnavailabilitiesResponse = { error: ErrorType.NoError, personUnavailabilities: this.SpersonUnavailabilitiesResponse.personUnavailabilities.map(personUnavailability => (personUnavailability.id === id ? updateResponse.personUnavailability : personUnavailability)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -87,7 +84,7 @@ export class ScPersonUnavailabilities {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePersonUnavailabilityExRequest, DeletePersonUnavailabilityExResponse>('sc/person-unavailabilities/delete', {
+    const deleteResponse = await fetchAs<DeletePersonUnavailabilityExRequest, DeletePersonUnavailabilityExResponse>('sc-person-unavailabilities/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -102,10 +99,17 @@ export class ScPersonUnavailabilities {
   };
 
   async getList() {
-    this.SpersonUnavailabilitiesResponse = await fetchAs<ScPersonUnavailabilityListRequest, ScPersonUnavailabilityListResponse>('sc/person-unavailabilities/list', {
+    this.SpersonUnavailabilitiesResponse = await fetchAs<ScPersonUnavailabilityListRequest, ScPersonUnavailabilityListResponse>('sc-person-unavailabilities/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   personChange(event) {
     this.newPerson = event.target.value;
@@ -123,11 +127,12 @@ export class ScPersonUnavailabilities {
     this.newDescription = event.target.value;
   }
 
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePersonUnavailabilityExRequest, CreatePersonUnavailabilityExResponse>('sc/person-unavailabilities/create-read', {
+    const createResponse = await fetchAs<CreatePersonUnavailabilityExRequest, CreatePersonUnavailabilityExResponse>('sc-person-unavailabilities/create-read', {
       token: globals.globalStore.state.token,
       personUnavailability: {
         person: this.newPerson,
@@ -183,6 +188,7 @@ export class ScPersonUnavailabilities {
       updateFn: this.handleUpdate,
     },
 
+
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -228,6 +234,7 @@ export class ScPersonUnavailabilities {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -240,6 +247,7 @@ export class ScPersonUnavailabilities {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="person-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="person">Person</label>
@@ -247,7 +255,8 @@ export class ScPersonUnavailabilities {
               <span class="form-thing">
                 <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
-            </div>
+            </div> 
+
 
             <div id="period_start-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -257,6 +266,8 @@ export class ScPersonUnavailabilities {
                 <input type="text" id="period_start" name="period_start" onInput={event => this.period_startChange(event)} />
               </span>
             </div>
+
+            
 
             <div id="period_end-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -274,7 +285,8 @@ export class ScPersonUnavailabilities {
               <span class="form-thing">
                 <textarea id="description" name="description" onInput={event => this.descriptionChange(event)}></textarea>
               </span>
-            </div>
+            </div> 
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -284,4 +296,6 @@ export class ScPersonUnavailabilities {
       </Host>
     );
   }
+
 }
+

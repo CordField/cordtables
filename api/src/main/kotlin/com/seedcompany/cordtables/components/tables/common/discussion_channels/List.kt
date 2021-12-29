@@ -40,7 +40,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/discussion-channels/list")
+    @PostMapping("common-discussion-channels/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonDiscussionChannelsListRequest): CommonDiscussionChannelsListResponse {
         var data: MutableList<DiscussionChannel> = mutableListOf()

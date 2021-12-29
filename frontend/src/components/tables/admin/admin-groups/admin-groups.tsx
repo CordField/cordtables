@@ -25,6 +25,7 @@ class AdminGroupListResponse {
   groups: AdminGroup[];
 }
 
+
 class AdminGroupUpdateRequest {
   token: string;
   column: string;
@@ -52,13 +53,14 @@ class DeleteGroupExResponse extends GenericResponse {
   shadow: true,
 })
 export class AdminGroups {
+
   @State() groupsResponse: AdminGroupListResponse;
 
   newParent_group: number;
   newName: string;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminGroupUpdateRequest, AdminGroupUpdateResponse>('admin/groups/update-read', {
+    const updateResponse = await fetchAs<AdminGroupUpdateRequest, AdminGroupUpdateResponse>('admin-groups/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -78,7 +80,7 @@ export class AdminGroups {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteGroupExRequest, DeleteGroupExResponse>('admin/groups/delete', {
+    const deleteResponse = await fetchAs<DeleteGroupExRequest, DeleteGroupExResponse>('admin-groups/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -93,10 +95,17 @@ export class AdminGroups {
   };
 
   async getList() {
-    this.groupsResponse = await fetchAs<AdminGroupListRequest, AdminGroupListResponse>('admin/groups/list', {
+    this.groupsResponse = await fetchAs<AdminGroupListRequest, AdminGroupListResponse>('admin-groups/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   parent_groupChange(event) {
     this.newParent_group = event.target.value;
@@ -106,11 +115,12 @@ export class AdminGroups {
     this.newName = event.target.value;
   }
 
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateGroupExRequest, CreateGroupExResponse>('admin/groups/create-read', {
+    const createResponse = await fetchAs<CreateGroupExRequest, CreateGroupExResponse>('admin-groups/create-read', {
       token: globals.globalStore.state.token,
       group: {
         parent_group: this.newParent_group,
@@ -126,6 +136,7 @@ export class AdminGroups {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
+
 
   columnData: ColumnDescription[] = [
     {
@@ -194,6 +205,7 @@ export class AdminGroups {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -222,7 +234,8 @@ export class AdminGroups {
               <span class="form-thing">
                 <input type="text" id="field-region-name" name="field-region-name" onInput={event => this.nameChange(event)} />
               </span>
-            </div>
+            </div>        
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -232,4 +245,5 @@ export class AdminGroups {
       </Host>
     );
   }
+
 }

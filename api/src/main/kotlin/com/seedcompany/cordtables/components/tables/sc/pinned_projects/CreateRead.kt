@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc/pinned-projects/create-read")
+    @PostMapping("sc-pinned-projects/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: ScPinnedProjectsCreateReadRequest): ScPinnedProjectsCreateReadResponse {
 

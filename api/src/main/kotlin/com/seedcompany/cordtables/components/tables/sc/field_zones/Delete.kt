@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc/field-zones/delete")
+    @PostMapping("sc-field-zones/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScFieldZonesDeleteRequest): ScFieldZonesDeleteResponse {
 

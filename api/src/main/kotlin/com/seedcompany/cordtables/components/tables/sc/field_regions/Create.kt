@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc/field-regions/create")
+    @PostMapping("sc-field-regions/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScFieldRegionsCreateRequest): ScFieldRegionsCreateResponse {
 

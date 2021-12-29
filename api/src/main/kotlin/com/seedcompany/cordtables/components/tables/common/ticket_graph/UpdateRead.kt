@@ -37,7 +37,7 @@ class UpdateRead(
         @Autowired
         val read: Read,
 ) {
-    @PostMapping("common/ticket-graph/update-read")
+    @PostMapping("common-ticket-graph/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonTicketGraphUpdateReadRequest): CommonTicketGraphUpdateReadResponse {
 

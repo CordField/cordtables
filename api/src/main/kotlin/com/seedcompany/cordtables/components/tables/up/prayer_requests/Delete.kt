@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("up/prayer-requests/delete")
+    @PostMapping("up-prayer-requests/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: UpPrayerRequestsDeleteRequest): UpPrayerRequestsDeleteResponse {
 

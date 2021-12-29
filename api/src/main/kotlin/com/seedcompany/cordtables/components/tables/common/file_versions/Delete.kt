@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/file-versions/delete")
+    @PostMapping("common-file-versions/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonFileVersionsDeleteRequest): CommonFileVersionsDeleteResponse {
 

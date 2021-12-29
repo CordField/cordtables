@@ -73,7 +73,7 @@ export class GroupMemberships {
   }
 
   async getList() {
-    this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin/group-memberships/list', { token: globals.globalStore.state.token });
+    this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin-group-memberships/list', { token: globals.globalStore.state.token });
   }
 
   toggleNewForm = () => {
@@ -89,7 +89,7 @@ export class GroupMemberships {
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('admin/group-memberships/create', {
+    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('admin-group-memberships/create', {
       token: globals.globalStore.state.token,
       group: this.newRowGroup,
       person: this.newRowPerson,
@@ -97,7 +97,7 @@ export class GroupMemberships {
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin/group-memberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin-group-memberships/list', { token: globals.globalStore.state.token });
     } else {
       console.warn('Error creating group');
     }
@@ -107,7 +107,7 @@ export class GroupMemberships {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groupmemberships/update', { token: globals.globalStore.state.token, name: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin/group-memberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin-group-memberships/list', { token: globals.globalStore.state.token });
       return true;
     } else {
     }
@@ -117,7 +117,7 @@ export class GroupMemberships {
     this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groupmemberships/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin/group-memberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin-group-memberships/list', { token: globals.globalStore.state.token });
       return true;
     } else {
       return false;

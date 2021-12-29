@@ -33,7 +33,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common/organizations/update")
+    @PostMapping("common-organizations/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonOrganizationsUpdateRequest): CommonOrganizationsUpdateResponse {
 

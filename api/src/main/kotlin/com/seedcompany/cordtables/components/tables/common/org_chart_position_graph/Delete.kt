@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/org-chart-position-graph/delete")
+    @PostMapping("common-org-chart-position-graph/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonOrgChartPositionGraphDeleteRequest): CommonOrgChartPositionGraphDeleteResponse {
 

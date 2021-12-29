@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("admin/group-memberships/create-read")
+    @PostMapping("admin-group-memberships/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: AdminGroupMembershipsCreateReadRequest): AdminGroupMembershipsCreateReadResponse {
 

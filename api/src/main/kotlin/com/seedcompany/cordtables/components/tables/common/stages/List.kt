@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/stages/list")
+    @PostMapping("common-stages/list")
     @ResponseBody
     fun listHandler(@RequestBody req:CommonStagesListRequest): CommonStagesListResponse {
         var data: MutableList<stage> = mutableListOf()

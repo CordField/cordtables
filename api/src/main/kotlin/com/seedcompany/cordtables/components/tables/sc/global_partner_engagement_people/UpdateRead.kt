@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc/global-partner-engagement-people/update-read")
+    @PostMapping("sc-global-partner-engagement-people/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScGlobalPartnerEngagementPeopleUpdateReadRequest): ScGlobalPartnerEngagementPeopleUpdateReadResponse {
 

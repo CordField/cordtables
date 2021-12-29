@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/workflows/delete")
+    @PostMapping("common-workflows/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonWorkflowsDeleteRequest): CommonWorkflowsDeleteResponse {
 

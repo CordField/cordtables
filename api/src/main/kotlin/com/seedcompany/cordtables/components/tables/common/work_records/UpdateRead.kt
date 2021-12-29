@@ -37,7 +37,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/work-records/update-read")
+    @PostMapping("common-work-records/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonWorkRecordUpdateReadRequest): CommonWorkRecordUpdateReadResponse {
 

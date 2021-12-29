@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/org-chart-positions/update-read")
+    @PostMapping("common-org-chart-positions/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonOrgChartPositionsUpdateReadRequest): CommonOrgChartPositionsUpdateReadResponse {
 

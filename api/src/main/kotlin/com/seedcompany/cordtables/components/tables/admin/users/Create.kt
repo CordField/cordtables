@@ -42,7 +42,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin/users/create")
+    @PostMapping("admin-users/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminUsersCreateRequest): AdminUsersCreateResponse {
 

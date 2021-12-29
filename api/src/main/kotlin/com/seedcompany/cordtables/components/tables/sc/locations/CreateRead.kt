@@ -35,7 +35,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc/locations/create-read")
+    @PostMapping("sc-locations/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: ScLocationsCreateReadRequest): ScLocationsCreateReadResponse {
 

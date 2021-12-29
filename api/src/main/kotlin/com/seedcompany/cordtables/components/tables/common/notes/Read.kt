@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/notes/read")
+    @PostMapping("common-notes/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonNotesReadRequest): CommonNotesReadResponse {
 

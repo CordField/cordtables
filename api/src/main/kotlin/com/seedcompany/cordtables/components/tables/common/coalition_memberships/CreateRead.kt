@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/coalition-memberships/create-read")
+    @PostMapping("common-coalition-memberships/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonCoalitionMembershipsCreateReadRequest): CommonCoalitionMembershipsCreateReadResponse {
 

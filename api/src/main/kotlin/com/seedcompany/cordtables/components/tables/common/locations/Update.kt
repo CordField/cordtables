@@ -37,7 +37,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/locations/update")
+    @PostMapping("common-locations/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonLocationsUpdateRequest): CommonLocationsUpdateResponse {
 

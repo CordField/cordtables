@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("admin/roles/update-read")
+    @PostMapping("admin-roles/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: AdminRolesUpdateReadRequest): AdminRolesUpdateReadResponse {
 
