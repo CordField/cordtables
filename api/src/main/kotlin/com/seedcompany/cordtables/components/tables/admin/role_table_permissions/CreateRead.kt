@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("admin-role-table-permissions/create-read")
+    @PostMapping("admin/role-table-permissions/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: AdminRoleTablePermissionsCreateReadRequest): AdminRoleTablePermissionsCreateReadResponse {
 

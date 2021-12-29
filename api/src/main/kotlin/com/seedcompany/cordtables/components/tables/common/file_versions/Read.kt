@@ -41,7 +41,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-file-versions/read")
+    @PostMapping("sc/file-versions/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonFileVersionsReadRequest): CommonFileVersionsReadResponse {
 

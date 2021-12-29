@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("up-prayer-notifications/create-read")
+    @PostMapping("up/prayer-notifications/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: UpPrayerNotificationsCreateReadRequest): UpPrayerNotificationsCreateReadResponse {
 

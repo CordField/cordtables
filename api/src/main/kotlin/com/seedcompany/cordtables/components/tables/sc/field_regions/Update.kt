@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-field-regions/update")
+    @PostMapping("sc/field-regions/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScFieldRegionsUpdateRequest): ScFieldRegionsUpdateResponse {
 

@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("up-prayer-requests/update")
+    @PostMapping("up/prayer-requests/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: UpPrayerRequestsUpdateRequest): UpPrayerRequestsUpdateResponse {
 

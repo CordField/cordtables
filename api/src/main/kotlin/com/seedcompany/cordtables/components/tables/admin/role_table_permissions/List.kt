@@ -43,7 +43,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("admin-role-table-permissions/list")
+    @PostMapping("admin/role-table-permissions/list")
     @ResponseBody
     fun listHandler(@RequestBody req:AdminRoleTablePermissionsListRequest): AdminRoleTablePermissionsListResponse {
         var data: MutableList<roleTablePermission> = mutableListOf()

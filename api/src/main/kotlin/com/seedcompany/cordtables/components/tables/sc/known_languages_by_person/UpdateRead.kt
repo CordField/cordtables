@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-known-languages-by-person/update-read")
+    @PostMapping("sc/known-languages-by-person/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScKnownLanguagesByPersonUpdateReadRequest): ScKnownLanguagesByPersonUpdateReadResponse {
 

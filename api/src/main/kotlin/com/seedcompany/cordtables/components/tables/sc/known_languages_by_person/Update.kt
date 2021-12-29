@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-known-languages-by-person/update")
+    @PostMapping("sc/known-languages-by-person/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScKnownLanguagesByPersonUpdateRequest): ScKnownLanguagesByPersonUpdateResponse {
 

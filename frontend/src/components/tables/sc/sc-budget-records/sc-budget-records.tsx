@@ -1,9 +1,9 @@
-import { Component, Host, State, h } from '@stencil/core'
-import { ColumnDescription } from '../../../../common/table-abstractions/types'
-import { ErrorType, GenericResponse } from '../../../../common/types'
+import { Component, Host, State, h } from '@stencil/core';
+import { ColumnDescription } from '../../../../common/table-abstractions/types';
+import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
-import { globals } from '../../../../core/global.store'
-import { ScBudgetRecord } from './types'
+import { globals } from '../../../../core/global.store';
+import { ScBudgetRecord } from './types';
 
 class CreateBudgetRecordRequest {
   token: string;
@@ -54,7 +54,7 @@ export class ScBudgetRecords {
   newBudgetChangeToPlan: number;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScBudgetRecordsUpdateRequest, ScBudgetRecordUpdateResponse>('sc-budget-records/update-read', {
+    const updateResponse = await fetchAs<ScBudgetRecordsUpdateRequest, ScBudgetRecordUpdateResponse>('sc/budget-records/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +72,7 @@ export class ScBudgetRecords {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteBudgetRecordRequest, DeleteBudgetRecordResponse>('sc-budget-records/delete', {
+    const result = await fetchAs<DeleteBudgetRecordRequest, DeleteBudgetRecordResponse>('sc/budget-records/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -179,7 +179,7 @@ export class ScBudgetRecords {
   }
 
   async getList() {
-    this.budgetrecordsResponse = await fetchAs<ScBudgetRecordsListRequest, ScBudgetRecordsListResponse>('sc-budget-records/list', {
+    this.budgetrecordsResponse = await fetchAs<ScBudgetRecordsListRequest, ScBudgetRecordsListResponse>('sc/budget-records/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -196,11 +196,11 @@ export class ScBudgetRecords {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateBudgetRecordRequest, CreateBudgetRecordResponse>('sc-budget-records/create-read', {
+    const result = await fetchAs<CreateBudgetRecordRequest, CreateBudgetRecordResponse>('sc/budget-records/create-read', {
       token: globals.globalStore.state.token,
       budget_record: {
         budget: this.newBudgetRecordId,
-        change_to_plan: this.newBudgetChangeToPlan
+        change_to_plan: this.newBudgetChangeToPlan,
       },
     });
 

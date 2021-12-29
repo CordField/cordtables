@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-language-engagements/read")
+    @PostMapping("sc/language-engagements/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScLanguageEngagementsReadRequest): ScLanguageEngagementsReadResponse {
 

@@ -39,7 +39,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-budget-records/read")
+    @PostMapping("sc/budget-records/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScBudgetRecordsReadRequest): ScBudgetRecordsReadResponse {
 

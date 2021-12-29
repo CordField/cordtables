@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("up-prayer-notifications/delete")
+    @PostMapping("up/prayer-notifications/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: UpPrayerNotificationsDeleteRequest): UpPrayerNotificationsDeleteResponse {
 

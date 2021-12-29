@@ -26,7 +26,6 @@ class ScFieldRegionListResponse {
   fieldRegions: ScFieldRegion[];
 }
 
-
 class ScFieldRegionUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +53,14 @@ class DeleteFieldRegionExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScFieldRegions {
-
   @State() fieldRegionsResponse: ScFieldRegionListResponse;
 
   newNeo4j_id: string;
   newDirector: number;
   newName: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScFieldRegionUpdateRequest, ScFieldRegionUpdateResponse>('sc-field-regions/update-read', {
+    const updateResponse = await fetchAs<ScFieldRegionUpdateRequest, ScFieldRegionUpdateResponse>('sc/field-regions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +70,10 @@ export class ScFieldRegions {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.fieldRegionsResponse = { error: ErrorType.NoError, fieldRegions: this.fieldRegionsResponse.fieldRegions.map(fieldRegion => (fieldRegion.id === id ? updateResponse.fieldRegion : fieldRegion)) };
+      this.fieldRegionsResponse = {
+        error: ErrorType.NoError,
+        fieldRegions: this.fieldRegionsResponse.fieldRegions.map(fieldRegion => (fieldRegion.id === id ? updateResponse.fieldRegion : fieldRegion)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +83,7 @@ export class ScFieldRegions {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFieldRegionExRequest, DeleteFieldRegionExResponse>('sc-field-regions/delete', {
+    const deleteResponse = await fetchAs<DeleteFieldRegionExRequest, DeleteFieldRegionExResponse>('sc/field-regions/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,17 +98,10 @@ export class ScFieldRegions {
   };
 
   async getList() {
-    this.fieldRegionsResponse = await fetchAs<ScFieldRegionListRequest, ScFieldRegionListResponse>('sc-field-regions/list', {
+    this.fieldRegionsResponse = await fetchAs<ScFieldRegionListRequest, ScFieldRegionListResponse>('sc/field-regions/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   neo4jChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -121,12 +115,11 @@ export class ScFieldRegions {
     this.newName = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateFieldRegionExRequest, CreateFieldRegionExResponse>('sc-field-regions/create-read', {
+    const createResponse = await fetchAs<CreateFieldRegionExRequest, CreateFieldRegionExResponse>('sc/field-regions/create-read', {
       token: globals.globalStore.state.token,
       fieldRegion: {
         neo4j_id: this.newNeo4j_id,
@@ -143,7 +136,6 @@ export class ScFieldRegions {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
 
   columnData: ColumnDescription[] = [
     {
@@ -169,7 +161,7 @@ export class ScFieldRegions {
     },
     {
       field: 'name',
-      displayName: 'File Version Name',
+      displayName: 'Name',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
@@ -219,7 +211,6 @@ export class ScFieldRegions {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -257,8 +248,7 @@ export class ScFieldRegions {
               <span class="form-thing">
                 <input type="text" id="field-region-name" name="field-region-name" onInput={event => this.fieldRegionNameChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -268,5 +258,4 @@ export class ScFieldRegions {
       </Host>
     );
   }
-
 }

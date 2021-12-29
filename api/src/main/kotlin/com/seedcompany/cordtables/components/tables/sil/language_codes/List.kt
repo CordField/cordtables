@@ -39,7 +39,7 @@ class List(
 
 //    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sil-language-codes/list")
+    @PostMapping("sil/language-codes/list")
     @ResponseBody
     fun listHandler(@RequestBody req:SilLanguageCodesListRequest): SilLanguageCodesListResponse {
         var data: MutableList<languageCode> = mutableListOf()

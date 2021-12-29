@@ -30,7 +30,7 @@ class Delete(
     val ds: DataSource,
 ) {
 
-    @PostMapping("table/common-scripture-references/delete")
+    @PostMapping("common/scripture-references/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScriptureReferenceDeleteRequest): ScriptureReferenceDeleteResponse {
 

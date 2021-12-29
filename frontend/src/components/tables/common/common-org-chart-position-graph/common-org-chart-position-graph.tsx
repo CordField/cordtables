@@ -26,7 +26,6 @@ class CommonOrgChartPositionGraphListResponse {
   orgChartPositionGraphs: CommonOrgChartPositionGraph[];
 }
 
-
 class CommonOrgChartPositionGraphUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +53,14 @@ class DeleteOrgChartPositionGraphExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonOrgChartPositionGraphs {
-
   @State() orgChartPositionGraphsResponse: CommonOrgChartPositionGraphListResponse;
 
   newFrom_position: number;
   newTo_position: number;
   newRelationship_type: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonOrgChartPositionGraphUpdateRequest, CommonOrgChartPositionGraphUpdateResponse>('common-org-chart-position-graph/update-read', {
+    const updateResponse = await fetchAs<CommonOrgChartPositionGraphUpdateRequest, CommonOrgChartPositionGraphUpdateResponse>('common/org-chart-position-graph/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +70,12 @@ export class CommonOrgChartPositionGraphs {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.orgChartPositionGraphsResponse = { error: ErrorType.NoError, orgChartPositionGraphs: this.orgChartPositionGraphsResponse.orgChartPositionGraphs.map(orgChartPositionGraph => (orgChartPositionGraph.id === id ? updateResponse.orgChartPositionGraph : orgChartPositionGraph)) };
+      this.orgChartPositionGraphsResponse = {
+        error: ErrorType.NoError,
+        orgChartPositionGraphs: this.orgChartPositionGraphsResponse.orgChartPositionGraphs.map(orgChartPositionGraph =>
+          orgChartPositionGraph.id === id ? updateResponse.orgChartPositionGraph : orgChartPositionGraph,
+        ),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +85,7 @@ export class CommonOrgChartPositionGraphs {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteOrgChartPositionGraphExRequest, DeleteOrgChartPositionGraphExResponse>('common-org-chart-position-graph/delete', {
+    const deleteResponse = await fetchAs<DeleteOrgChartPositionGraphExRequest, DeleteOrgChartPositionGraphExResponse>('common/org-chart-position-graph/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,17 +100,10 @@ export class CommonOrgChartPositionGraphs {
   };
 
   async getList() {
-    this.orgChartPositionGraphsResponse = await fetchAs<CommonOrgChartPositionGraphListRequest, CommonOrgChartPositionGraphListResponse>('common-org-chart-position-graph/list', {
+    this.orgChartPositionGraphsResponse = await fetchAs<CommonOrgChartPositionGraphListRequest, CommonOrgChartPositionGraphListResponse>('common/org-chart-position-graph/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   from_positionChange(event) {
     this.newFrom_position = event.target.value;
@@ -116,7 +112,7 @@ export class CommonOrgChartPositionGraphs {
   to_positionChange(event) {
     this.newTo_position = event.target.value;
   }
-  
+
   relationship_typeChange(event) {
     this.newRelationship_type = event.target.value;
   }
@@ -125,7 +121,7 @@ export class CommonOrgChartPositionGraphs {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateOrgChartPositionGraphExRequest, CreateOrgChartPositionGraphExResponse>('common-org-chart-position-graph/create-read', {
+    const createResponse = await fetchAs<CreateOrgChartPositionGraphExRequest, CreateOrgChartPositionGraphExResponse>('common/org-chart-position-graph/create-read', {
       token: globals.globalStore.state.token,
       orgChartPositionGraph: {
         from_position: this.newFrom_position,
@@ -159,15 +155,15 @@ export class CommonOrgChartPositionGraphs {
       updateFn: this.handleUpdate,
     },
     {
-        field: 'relationship_type',
-        displayName: 'Relationship Type',
-        width: 200,
-        editable: true,
-        selectOptions: [
-            {display: 'Reports To', value: 'Reports To'},
-            {display: 'Works With', value: 'Works With'},
-        ],
-        updateFn: this.handleUpdate,
+      field: 'relationship_type',
+      displayName: 'Relationship Type',
+      width: 200,
+      editable: true,
+      selectOptions: [
+        { display: 'Reports To', value: 'Reports To' },
+        { display: 'Works With', value: 'Works With' },
+      ],
+      updateFn: this.handleUpdate,
     },
     {
       field: 'to_position',
@@ -221,7 +217,6 @@ export class CommonOrgChartPositionGraphs {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -234,7 +229,6 @@ export class CommonOrgChartPositionGraphs {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="from_position-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="from_position">From Position</label>
@@ -251,7 +245,7 @@ export class CommonOrgChartPositionGraphs {
               <span class="form-thing">
                 <input type="text" id="to_position" name="to_position" onInput={event => this.to_positionChange(event)} />
               </span>
-            </div>     
+            </div>
 
             <div id="relationship_type-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -259,13 +253,16 @@ export class CommonOrgChartPositionGraphs {
               </span>
               <span class="form-thing">
                 <select id="relationship_type" name="relationship_type" onInput={event => this.relationship_typeChange(event)}>
-                    <option value="">Select Relationship Type</option>
-                    <option value="Reports To" selected={this.newRelationship_type === "Reports To"}>Reports To</option>
-                    <option value="Works With" selected={this.newRelationship_type === "Works With"}>Works With</option>
+                  <option value="">Select Relationship Type</option>
+                  <option value="Reports To" selected={this.newRelationship_type === 'Reports To'}>
+                    Reports To
+                  </option>
+                  <option value="Works With" selected={this.newRelationship_type === 'Works With'}>
+                    Works With
+                  </option>
                 </select>
               </span>
-            </div>   
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -275,5 +272,4 @@ export class CommonOrgChartPositionGraphs {
       </Host>
     );
   }
-
 }

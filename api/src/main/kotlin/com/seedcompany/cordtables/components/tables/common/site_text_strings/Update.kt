@@ -35,7 +35,7 @@ class Update(
   @Autowired
   val ds: DataSource,
 ) {
-  @PostMapping("common-site-text-strings/update")
+  @PostMapping("common/site-text-strings/update")
   @ResponseBody
   fun updateHandler(@RequestBody req: SiteTextStringUpdateRequest): SiteTextStringUpdateResponse {
 

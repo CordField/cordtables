@@ -14,9 +14,10 @@ export class TableRoot {
     return (
       <Host>
         <slot></slot>
-        {this.match.params.table === 'admin-users' && <admin-users></admin-users>}
+        <stencil-router>
+          <stencil-route url={'/table/admin/users'} component="admin-users" />
 
-        {/* {this.match.params.table === 'admin-roles' && <roles-table></roles-table>}
+          {/* {this.match.params.table === 'admin-roles' && <roles-table></roles-table>}
         {this.match.params.table === 'admin-role-column-grants' && <role-column-grants></role-column-grants>}
         {this.match.params.table === 'admin-role-membership' && <role-memberships></role-memberships>}
         {this.match.params.table === 'admin-role-table-permissions' && <role-table-permissions></role-table-permissions>}
@@ -24,98 +25,96 @@ export class TableRoot {
         {this.match.params.table === 'admin-group-membership' && <group-memberships></group-memberships>}
         {this.match.params.table === 'admin-group-row-access' && <groups-row-access></groups-row-access>} */}
 
-        {this.match.params.table === 'admin-group-memberships' && <admin-group-memberships></admin-group-memberships>}
-        {this.match.params.table === 'admin-group-row-access' && <admin-group-row-access></admin-group-row-access>}
-        {this.match.params.table === 'admin-groups' && <admin-groups></admin-groups>}
-        {this.match.params.table === 'admin-role-column-grants' && <admin-role-column-grants></admin-role-column-grants>}
+          <stencil-route url={'/table/admin/group-memberships'} component="admin-group-memberships" />
+          <stencil-route url={'/table/admin/group-row-access'} component="admin-group-row-access" />
+          <stencil-route url={'/table/admin/groups'} component="admin-groups" />
+          <stencil-route url={'/table/admin/role-column-grants'} component="admin-role-column-grants" />
 
-        {this.match.params.table === 'admin-role-memberships' && <admin-role-memberships></admin-role-memberships>}
-        {this.match.params.table === 'admin-role-table-permissions' && <admin-role-table-permissions></admin-role-table-permissions>}
-        {this.match.params.table === 'admin-roles' && <admin-roles></admin-roles>}
-        {this.match.params.table === 'admin-people' && <admin-people></admin-people>}
+          <stencil-route url={'/table/admin/role-memberships'} component="admin-role-memberships" />
+          <stencil-route url={'/table/admin/role-table-permissions'} component="admin-role-table-permissions" />
+          <stencil-route url={'/table/admin/roles'} component="admin-roles" />
+          <stencil-route url={'/table/admin/people'} component="admin-people" />
 
-        {this.match.params.table === 'sc-funding-accounts' && <sc-funding-accounts></sc-funding-accounts>}
-        {this.match.params.table === 'sc-internship-engagements' && <sc-internship-engagements></sc-internship-engagements>}
-        {this.match.params.table === 'sc-known-languages-by-person' && <sc-known-languages-by-person></sc-known-languages-by-person>}
-        {this.match.params.table === 'sc-language-engagements' && <sc-language-engagements></sc-language-engagements>}
-        {this.match.params.table === 'sc-organization-locations' && <sc-organization-locations></sc-organization-locations>}
-        {this.match.params.table === 'sc-organizations' && <sc-organizations></sc-organizations>}
-        {this.match.params.table === 'sc-partners' && <sc-partners></sc-partners>}
-        {this.match.params.table === 'sc-partnerships' && <sc-partnerships></sc-partnerships>}
-        {this.match.params.table === 'sc-person-unavailabilities' && <sc-person-unavailabilities></sc-person-unavailabilities>}
-        {this.match.params.table === 'sc-pinned-projects' && <sc-pinned-projects></sc-pinned-projects>}
-        {this.match.params.table === 'sc-posts' && <sc-posts></sc-posts>}
+          <stencil-route url={'/table/sc/funding-accounts'} component="sc-funding-accounts" />
+          <stencil-route url={'/table/sc/internship-engagements'} component="sc-internship-engagements" />
+          <stencil-route url={'/table/sc/known-languages-by-person'} component="sc-known-languages-by-person" />
+          <stencil-route url={'/table/sc/language-engagements'} component="sc-language-engagements" />
+          <stencil-route url={'/table/sc/organization-locations'} component="sc-organization-locations" />
+          <stencil-route url={'/table/sc/organizations'} component="sc-organizations" />
+          <stencil-route url={'/table/sc/partners'} component="sc-partners" />
+          <stencil-route url={'/table/sc/partnerships'} component="sc-partnerships" />
+          <stencil-route url={'/table/sc/person-unavailabilities'} component="sc-person-unavailabilities" />
+          <stencil-route url={'/table/sc/pinned-projects'} component="sc-pinned-projects" />
+          <stencil-route url={'/table/sc/posts'} component="sc-posts" />
 
-        {this.match.params.table === 'sc-product-scripture-references' && <sc-product-scripture-references></sc-product-scripture-references>}
-        {this.match.params.table === 'sc-products' && <sc-products></sc-products>}
-        {this.match.params.table === 'sc-project-locations' && <sc-project-locations></sc-project-locations>}
-        {this.match.params.table === 'sc-projects' && <sc-projects></sc-projects>}
+          <stencil-route url={'/table/sc/product-scripture-references'} component="sc-product-scripture-references" />
+          <stencil-route url={'/table/sc/products'} component="sc-products" />
+          <stencil-route url={'/table/sc/project-locations'} component="sc-project-locations" />
+          <stencil-route url={'/table/sc/projects'} component="sc-projects" />
 
-        {this.match.params.table === 'common-directories' && <directories-table></directories-table>}
-        {this.match.params.table === 'common-files' && <files-table></files-table>}
-        {this.match.params.table === 'common-file-versions' && <file-versions></file-versions>}
-        {this.match.params.table === 'sc-field-regions' && <sc-field-regions-table></sc-field-regions-table>}
-        {this.match.params.table === 'sc-field-zones' && <sc-field-zones></sc-field-zones>}
+          <stencil-route url={'/table/common/directories'} component="directories-table" />
+          <stencil-route url={'/table/common/files'} component="files-table" />
+          <stencil-route url={'/table/common/file-versions'} component="file-versions" />
+          <stencil-route url={'/table/sc/field-regions'} component="sc-field-regions-table" />
+          <stencil-route url={'/table/sc/field-zones'} component="sc-field-zones" />
 
-        {this.match.params.table === 'sc-global-partner-assessments' && <sc-global-partner-assessments></sc-global-partner-assessments>}
-        {this.match.params.table === 'sc-global-partner-engagements' && <sc-global-partner-engagements></sc-global-partner-engagements>}
-        {this.match.params.table === 'sc-global-partner-engagement-people' && <sc-global-partner-engagement-people></sc-global-partner-engagement-people>}
-        {this.match.params.table === 'sc-global-partner-performance' && <sc-global-partner-performance></sc-global-partner-performance>}
-        {this.match.params.table === 'common-coalitions' && <common-coalitions></common-coalitions>}
-        {this.match.params.table === 'common-coalition-memberships' && <common-coalition-memberships></common-coalition-memberships>}
+          <stencil-route url={'/table/sc/global-partner-assessments'} component="sc-global-partner-assessments" />
+          <stencil-route url={'/table/sc/global-partner-engagements'} component="sc-global-partner-engagements" />
+          <stencil-route url={'/table/sc/global-partner-engagement-people'} component="sc-global-partner-engagement-people" />
+          <stencil-route url={'/table/sc/global-partner-performance'} component="sc-global-partner-performance" />
+          <stencil-route url={'/table/common/coalitions'} component="common-coalitions" />
+          <stencil-route url={'/table/common/coalition-memberships'} component="common-coalition-memberships" />
 
-        {this.match.params.table === 'up-prayer-requests' && <up-prayer-requests></up-prayer-requests>}
-        {this.match.params.table === 'up-prayer-notifications' && <up-prayer-notifications></up-prayer-notifications>}
+          <stencil-route url={'/table/up/prayer-requests'} component="up-prayer-requests" />
+          <stencil-route url={'/table/up/prayer-notifications'} component="up-prayer-notifications" />
 
-        {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
-        {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
-        {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}
-        {this.match.params.table === 'common-ticket-graph' && <ticket-graph></ticket-graph>}
-        {this.match.params.table === 'sc-budget-records' && <sc-budget-records></sc-budget-records>}
-        {this.match.params.table === 'common-ticket-assignments' && <ticket-assignments></ticket-assignments>}
-        {this.match.params.table === 'common-work-records' && <work-records></work-records>}
-        {this.match.params.table === 'common-work-estimates' && <work-estimates></work-estimates>}
-        {this.match.params.table === 'common-ticket-feedback' && <ticket-feedback></ticket-feedback>}
-        {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
-        {this.match.params.table === 'sc-locations' && <sc-locations></sc-locations>}
-        {this.match.params.table === 'common-cell-channels' && <common-cell-channels></common-cell-channels>}
-        {this.match.params.table === 'common-threads' && <common-threads></common-threads>}
-        {this.match.params.table === 'common-posts' && <common-posts></common-posts>}
-        {this.match.params.table === 'sc-languages' && <sc-languages></sc-languages>}
-        
+          <stencil-route url={'/table/common/organizations'} component="common-organizations" />
+          <stencil-route url={'/table/common/tickets'} component="tickets-table" />
+          <stencil-route url={'/table/common/ticket-graph'} component="ticket-graph" />
+          <stencil-route url={'/table/sc/budget-records'} component="sc-budget-records" />
+          <stencil-route url={'/table/common/ticket-assignments'} component="ticket-assignments" />
+          <stencil-route url={'/table/common/work-records'} component="work-records" />
+          <stencil-route url={'/table/common/work-estimates'} component="work-estimates" />
+          <stencil-route url={'/table/common/ticket-feedback'} component="ticket-feedback" />
+          <stencil-route url={'/table/common/scripture-reference'} component="scripture-references" />
 
+          <stencil-route url={'/table/sc/locations'} component="sc-locations" />
+          <stencil-route url={'/table/common/cell-channels'} component="common-cell-channels" />
+          <stencil-route url={'/table/common/discussion-channels'} component="discussion-channels" />
+          <stencil-route url={'/table/common/threads'} component="common-threads" />
+          <stencil-route url={'/table/common/posts'} component="common-posts" />
+          <stencil-route url={'/table/sc/languages'} component="sc-languages" />
 
-        {/* {this.match.params.table === 'admin-users' && <admin-users></admin-users>} */}
-        {this.match.params.table === 'common-locations' && <common-locations></common-locations>}
-        {this.match.params.table === 'common-notes' && <common-notes></common-notes>}
-        {this.match.params.table === 'common-org-chart-positions' && <common-org-chart-positions></common-org-chart-positions>}
-        {this.match.params.table === 'common-org-chart-position-graph' && <common-org-chart-position-graph></common-org-chart-position-graph>}
-        {this.match.params.table === 'common-people-graph' && <common-people-graph></common-people-graph>}
-        {this.match.params.table === 'common-people-to-org-relationships' && <common-people-to-org-relationships></common-people-to-org-relationships>}
-        {this.match.params.table === 'common-stage-graph' && <common-stage-graph></common-stage-graph>}
-        {this.match.params.table === 'common-stage-notifications' && <common-stage-notifications></common-stage-notifications>}
-        {this.match.params.table === 'common-stage-role-column-grants' && <common-stage-role-column-grants></common-stage-role-column-grants>}
-        {this.match.params.table === 'common-stages' && <common-stages></common-stages>}
-        {this.match.params.table === 'common-workflows' && <common-workflows></common-workflows>}
-        {this.match.params.table === 'sc-ethnologue' && <sc-ethnologue></sc-ethnologue>} 
-        {this.match.params.table === 'sc-global-partner-transitions' && <sc-global-partner-transitions></sc-global-partner-transitions>}
-        {this.match.params.table === 'sc-people' && <sc-people></sc-people>}
+          <stencil-route url={'/table/common/locations'} component="common-locations" />
+          <stencil-route url={'/table/common/notes'} component="common-notes" />
+          <stencil-route url={'/table/common/org-chart-positions'} component="common-org-chart-positions" />
+          <stencil-route url={'/table/common/org-chart-position-graph'} component="common-org-chart-position-graph" />
+          <stencil-route url={'/table/common/people-graph'} component="common-people-graph" />
+          <stencil-route url={'/table/common/people-to-org-relationships'} component="common-people-to-org-relationships" />
+          <stencil-route url={'/table/common/stage-graph'} component="common-stage-graph" />
+          <stencil-route url={'/table/common/stage-notifications'} component="common-stage-notifications" />
+          <stencil-route url={'/table/common/stage-role-column-grants'} component="common-stage-role-column-grants" />
+          <stencil-route url={'/table/common/stages'} component="common-stages" />
+          <stencil-route url={'/table/common/workflows'} component="common-workflows" />
+          <stencil-route url={'/table/sc/ethnologue'} component="sc-ethnologue" />
+          <stencil-route url={'/table/sc/global-partner-transitions'} component="sc-global-partner-transitions" />
+          <stencil-route url={'/table/sc/people'} component="sc-people" />
+          <stencil-route
+            url={['/table/common/site-text', '/table/common/site-text-languages', '/table/common/site-text-translations', '/table/common/site-text-strings']}
+            component="site-text"
+          />
 
-        {['common-site-text', 'common-site-text-languages', 'common-site-text-strings', 'common-site-text-translations'].includes(this.match.params.table) && <site-text></site-text>}
-
-        {this.match.params.table === 'sil-country-codes' && <sil-country-codes></sil-country-codes>}
-        {this.match.params.table === 'sil-language-codes' && <sil-language-codes></sil-language-codes>}
-        {this.match.params.table === 'sil-language-index' && <sil-language-index></sil-language-index>}
-        {this.match.params.table === 'sil-table-of-languages' && <sil-table-of-languages></sil-table-of-languages>}
-        {this.match.params.table === 'sil-iso-639-3' && <sil-iso-639-3></sil-iso-639-3>}
-        {this.match.params.table === 'sil-iso-639-3-names' && <sil-iso-639-3-names></sil-iso-639-3-names>}
-        {this.match.params.table === 'sil-iso-639-3-macrolanguages' && <sil-iso-639-3-macrolanguages></sil-iso-639-3-macrolanguages>}
-        {this.match.params.table === 'sil-iso-639-3-retirements' && <sil-iso-639-3-retirements></sil-iso-639-3-retirements>}
-        {this.match.params.table === 'sil-table-of-countries' && <sil-table-of-countries></sil-table-of-countries>}
-        {this.match.params.table === 'sil-table-of-languages-in-country' && <sil-table-of-languages-in-country></sil-table-of-languages-in-country>}
-
-
-
+          <stencil-route url={'/table/sil/country-codes'} component="sil-country-codes" />
+          <stencil-route url={'/table/sil/language-codes'} component="sil-language-codes" />
+          <stencil-route url={'/table/sil/language-index'} component="sil-language-index" />
+          <stencil-route url={'/table/sil/table-of-languages'} component="sil-table-of-languages" />
+          <stencil-route url={'/table/sil/iso-639-3'} component="sil-iso-639-3" />
+          <stencil-route url={'/table/sil/iso-639-3-names'} component="sil-iso-639-3-names" />
+          <stencil-route url={'/table/sil/iso-639-3-macrolanguages'} component="sil-iso-639-3-macrolanguages" />
+          <stencil-route url={'/table/sil/iso-639-3-retirements'} component="sil-iso-639-3-retirements" />
+          <stencil-route url={'/table/sil/table-of-countries'} component="sil-table-of-countries" />
+          <stencil-route url={'/table/sil/table-of-languages-in-country'} component="sil-table-of-languages-in-country" />
+        </stencil-router>
       </Host>
     );
   }

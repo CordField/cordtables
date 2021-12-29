@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-pinned-projects/list")
+    @PostMapping("sc/pinned-projects/list")
     @ResponseBody
     fun listHandler(@RequestBody req:ScPinnedProjectsListRequest): ScPinnedProjectsListResponse {
         var data: MutableList<pinnedProject> = mutableListOf()

@@ -39,7 +39,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-directories/update-read")
+    @PostMapping("common/directories/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonDirectoriesUpdateReadRequest): CommonDirectoriesUpdateReadResponse {
 

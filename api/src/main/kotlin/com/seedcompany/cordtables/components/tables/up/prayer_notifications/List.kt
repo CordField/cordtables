@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("up-prayer-notifications/list")
+    @PostMapping("up/prayer-notifications/list")
     @ResponseBody
     fun listHandler(@RequestBody req:UpPrayerNotificationsListRequest): UpPrayerNotificationsListResponse {
         var data: MutableList<prayerNotification> = mutableListOf()

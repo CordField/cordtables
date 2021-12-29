@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-file-versions/update")
+    @PostMapping("common/file-versions/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonFileVersionsUpdateRequest): CommonFileVersionsUpdateResponse {
 

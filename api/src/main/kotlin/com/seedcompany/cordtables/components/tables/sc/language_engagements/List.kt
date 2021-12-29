@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-language-engagements/list")
+    @PostMapping("sc/language-engagements/list")
     @ResponseBody
     fun listHandler(@RequestBody req:ScLanguageEngagementsListRequest): ScLanguageEngagementsListResponse {
         var data: MutableList<languageEngagement> = mutableListOf()

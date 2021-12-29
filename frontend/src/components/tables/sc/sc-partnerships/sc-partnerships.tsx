@@ -28,7 +28,6 @@ class ScPartnershipListResponse {
   partnerships: ScPartnership[];
 }
 
-
 class ScPartnershipUpdateRequest {
   token: string;
   column: string;
@@ -56,7 +55,6 @@ class DeletePartnershipExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScPartnerships {
-
   @State() partnershipsResponse: ScPartnershipListResponse;
 
   newProject: number;
@@ -64,9 +62,9 @@ export class ScPartnerships {
   newChange_to_plan: number;
   newActive: boolean;
   newAgreement: number;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScPartnershipUpdateRequest, ScPartnershipUpdateResponse>('sc-partnerships/update-read', {
+    const updateResponse = await fetchAs<ScPartnershipUpdateRequest, ScPartnershipUpdateResponse>('sc/partnerships/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -76,7 +74,10 @@ export class ScPartnerships {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.partnershipsResponse = { error: ErrorType.NoError, partnerships: this.partnershipsResponse.partnerships.map(partnership => (partnership.id === id ? updateResponse.partnership : partnership)) };
+      this.partnershipsResponse = {
+        error: ErrorType.NoError,
+        partnerships: this.partnershipsResponse.partnerships.map(partnership => (partnership.id === id ? updateResponse.partnership : partnership)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -86,7 +87,7 @@ export class ScPartnerships {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePartnershipExRequest, DeletePartnershipExResponse>('sc-partnerships/delete', {
+    const deleteResponse = await fetchAs<DeletePartnershipExRequest, DeletePartnershipExResponse>('sc/partnerships/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -101,17 +102,10 @@ export class ScPartnerships {
   };
 
   async getList() {
-    this.partnershipsResponse = await fetchAs<ScPartnershipListRequest, ScPartnershipListResponse>('sc-partnerships/list', {
+    this.partnershipsResponse = await fetchAs<ScPartnershipListRequest, ScPartnershipListResponse>('sc/partnerships/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   projectChange(event) {
     this.newProject = event.target.value;
@@ -137,7 +131,7 @@ export class ScPartnerships {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePartnershipExRequest, CreatePartnershipExResponse>('sc-partnerships/create-read', {
+    const createResponse = await fetchAs<CreatePartnershipExRequest, CreatePartnershipExResponse>('sc/partnerships/create-read', {
       token: globals.globalStore.state.token,
       partnership: {
         project: this.newProject,
@@ -156,7 +150,6 @@ export class ScPartnerships {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
 
   columnData: ColumnDescription[] = [
     {
@@ -193,8 +186,8 @@ export class ScPartnerships {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -205,7 +198,7 @@ export class ScPartnerships {
       editable: true,
       updateFn: this.handleUpdate,
     },
-    
+
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -251,7 +244,6 @@ export class ScPartnerships {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -264,7 +256,6 @@ export class ScPartnerships {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="project-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="project">Project</label>
@@ -281,7 +272,7 @@ export class ScPartnerships {
               <span class="form-thing">
                 <input type="number" id="partner" name="partner" onInput={event => this.partnerChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="change_to_plan-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -299,11 +290,15 @@ export class ScPartnerships {
               <span class="form-thing">
                 <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>True</option>
-                   <option value="false" selected={this.newActive === false}>False</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
 
             <div id="agreement-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -313,7 +308,6 @@ export class ScPartnerships {
                 <input type="number" id="agreement" name="agreement" onInput={event => this.agreementChange(event)} />
               </span>
             </div>
-           
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -323,5 +317,4 @@ export class ScPartnerships {
       </Host>
     );
   }
-
 }

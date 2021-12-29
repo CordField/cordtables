@@ -43,7 +43,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin-role-column-grants/create")
+    @PostMapping("admin/role-column-grants/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminRoleColumnGrantsCreateRequest): AdminRoleColumnGrantsCreateResponse {
 

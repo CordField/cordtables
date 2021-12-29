@@ -26,7 +26,6 @@ class CommonPeopleGraphListResponse {
   peopleGraphs: CommonPeopleGraph[];
 }
 
-
 class CommonPeopleGraphUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +53,14 @@ class DeletePeopleGraphExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonPeopleGraphs {
-
   @State() peopleGraphsResponse: CommonPeopleGraphListResponse;
 
   newFrom_person: number;
   newTo_person: number;
   newRel_type: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonPeopleGraphUpdateRequest, CommonPeopleGraphUpdateResponse>('common-people-graph/update-read', {
+    const updateResponse = await fetchAs<CommonPeopleGraphUpdateRequest, CommonPeopleGraphUpdateResponse>('common/people-graph/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +70,10 @@ export class CommonPeopleGraphs {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.peopleGraphsResponse = { error: ErrorType.NoError, peopleGraphs: this.peopleGraphsResponse.peopleGraphs.map(peopleGraph => (peopleGraph.id === id ? updateResponse.peopleGraph : peopleGraph)) };
+      this.peopleGraphsResponse = {
+        error: ErrorType.NoError,
+        peopleGraphs: this.peopleGraphsResponse.peopleGraphs.map(peopleGraph => (peopleGraph.id === id ? updateResponse.peopleGraph : peopleGraph)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +83,7 @@ export class CommonPeopleGraphs {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePeopleGraphExRequest, DeletePeopleGraphExResponse>('common-people-graph/delete', {
+    const deleteResponse = await fetchAs<DeletePeopleGraphExRequest, DeletePeopleGraphExResponse>('common/people-graph/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,17 +98,10 @@ export class CommonPeopleGraphs {
   };
 
   async getList() {
-    this.peopleGraphsResponse = await fetchAs<CommonPeopleGraphListRequest, CommonPeopleGraphListResponse>('common-people-graph/list', {
+    this.peopleGraphsResponse = await fetchAs<CommonPeopleGraphListRequest, CommonPeopleGraphListResponse>('common/people-graph/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   from_personChange(event) {
     this.newFrom_person = event.target.value;
@@ -125,7 +119,7 @@ export class CommonPeopleGraphs {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePeopleGraphExRequest, CreatePeopleGraphExResponse>('common-people-graph/create-read', {
+    const createResponse = await fetchAs<CreatePeopleGraphExRequest, CreatePeopleGraphExResponse>('common/people-graph/create-read', {
       token: globals.globalStore.state.token,
       peopleGraph: {
         from_person: this.newFrom_person,
@@ -166,16 +160,16 @@ export class CommonPeopleGraphs {
       updateFn: this.handleUpdate,
     },
     {
-        field: 'rel_type',
-        displayName: 'Rel Type',
-        width: 200,
-        editable: true,
-        selectOptions: [
-            {display: 'Friend', value: 'Friend'},
-            {display: 'Colleague', value: 'Colleague'},
-            {display: 'Other', value: 'Other'},
-        ],
-        updateFn: this.handleUpdate,
+      field: 'rel_type',
+      displayName: 'Rel Type',
+      width: 200,
+      editable: true,
+      selectOptions: [
+        { display: 'Friend', value: 'Friend' },
+        { display: 'Colleague', value: 'Colleague' },
+        { display: 'Other', value: 'Other' },
+      ],
+      updateFn: this.handleUpdate,
     },
     {
       field: 'created_at',
@@ -222,7 +216,6 @@ export class CommonPeopleGraphs {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -235,7 +228,6 @@ export class CommonPeopleGraphs {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="from_person-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="from_person">From Person</label>
@@ -252,7 +244,7 @@ export class CommonPeopleGraphs {
               <span class="form-thing">
                 <input type="number" id="to_person" name="to_person" onInput={event => this.to_personChange(event)} />
               </span>
-            </div>      
+            </div>
 
             <div id="rel_type-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -260,14 +252,19 @@ export class CommonPeopleGraphs {
               </span>
               <span class="form-thing">
                 <select id="rel_type" name="rel_type" onInput={event => this.rel_typeChange(event)}>
-                    <option value="">Select Relationship Type</option>
-                    <option value="Friend" selected={this.newRel_type === "Friend"}>Friend</option>
-                    <option value="Colleague" selected={this.newRel_type === "Colleague"}>Colleague</option>
-                    <option value="Other" selected={this.newRel_type === "Other"}>Other</option>
+                  <option value="">Select Relationship Type</option>
+                  <option value="Friend" selected={this.newRel_type === 'Friend'}>
+                    Friend
+                  </option>
+                  <option value="Colleague" selected={this.newRel_type === 'Colleague'}>
+                    Colleague
+                  </option>
+                  <option value="Other" selected={this.newRel_type === 'Other'}>
+                    Other
+                  </option>
                 </select>
               </span>
-            </div>   
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -277,5 +274,4 @@ export class CommonPeopleGraphs {
       </Host>
     );
   }
-
 }

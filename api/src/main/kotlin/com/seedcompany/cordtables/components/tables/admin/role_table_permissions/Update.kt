@@ -35,7 +35,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("admin-role-table-permissions/update")
+    @PostMapping("admin/role-table-permissions/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminRoleTablePermissionsUpdateRequest): AdminRoleTablePermissionsUpdateResponse {
 

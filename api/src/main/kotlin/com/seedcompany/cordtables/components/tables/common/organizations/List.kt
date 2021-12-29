@@ -47,7 +47,7 @@ class List(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-organizations/list")
+    @PostMapping("common/organizations/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonOrganizationsRequest): CommonOrganizationsReturn{
 

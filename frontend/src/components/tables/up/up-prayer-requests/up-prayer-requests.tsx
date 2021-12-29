@@ -34,7 +34,6 @@ class UpPrayerRequestListResponse {
   prayerRequests: UpPrayerRequest[];
 }
 
-
 class UpPrayerRequestUpdateRequest {
   token: string;
   column: string;
@@ -62,7 +61,6 @@ class DeletePrayerRequestExResponse extends GenericResponse {
   shadow: true,
 })
 export class UpPrayerRequests {
-
   @State() prayerRequestsResponse: UpPrayerRequestListResponse;
 
   newRequest_language_id: number;
@@ -75,10 +73,10 @@ export class UpPrayerRequests {
   newTitle: string;
   newContent: string;
   newReviewed: boolean;
-  newPrayer_type
-  
+  newPrayer_type;
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<UpPrayerRequestUpdateRequest, UpPrayerRequestUpdateResponse>('up-prayer-requests/update-read', {
+    const updateResponse = await fetchAs<UpPrayerRequestUpdateRequest, UpPrayerRequestUpdateResponse>('up/prayer-requests/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -88,7 +86,10 @@ export class UpPrayerRequests {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.prayerRequestsResponse = { error: ErrorType.NoError, prayerRequests: this.prayerRequestsResponse.prayerRequests.map(prayerRequest => (prayerRequest.id === id ? updateResponse.prayerRequest : prayerRequest)) };
+      this.prayerRequestsResponse = {
+        error: ErrorType.NoError,
+        prayerRequests: this.prayerRequestsResponse.prayerRequests.map(prayerRequest => (prayerRequest.id === id ? updateResponse.prayerRequest : prayerRequest)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -98,7 +99,7 @@ export class UpPrayerRequests {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePrayerRequestExRequest, DeletePrayerRequestExResponse>('up-prayer-requests/delete', {
+    const deleteResponse = await fetchAs<DeletePrayerRequestExRequest, DeletePrayerRequestExResponse>('up/prayer-requests/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -113,17 +114,10 @@ export class UpPrayerRequests {
   };
 
   async getList() {
-    this.prayerRequestsResponse = await fetchAs<UpPrayerRequestListRequest, UpPrayerRequestListResponse>('up-prayer-requests/list', {
+    this.prayerRequestsResponse = await fetchAs<UpPrayerRequestListRequest, UpPrayerRequestListResponse>('up/prayer-requests/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   request_language_idChange(event) {
     this.newRequest_language_id = event.target.value;
@@ -133,11 +127,11 @@ export class UpPrayerRequests {
     this.newTarget_language_id = event.target.value;
   }
 
-  sensitivityChange(event){
+  sensitivityChange(event) {
     this.newSensitivity = event.target.value;
   }
 
-  organization_nameChange(event){
+  organization_nameChange(event) {
     this.newOrganization_name = event.target.value;
   }
 
@@ -149,7 +143,7 @@ export class UpPrayerRequests {
     this.newTranslator = event.target.value;
   }
 
-  locationChange(event){
+  locationChange(event) {
     this.newLocation = event.target.value;
   }
 
@@ -157,7 +151,7 @@ export class UpPrayerRequests {
     this.newTitle = event.target.value;
   }
 
-  contentChange(event){
+  contentChange(event) {
     this.newContent = event.target.value;
   }
 
@@ -173,7 +167,7 @@ export class UpPrayerRequests {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePrayerRequestExRequest, CreatePrayerRequestExResponse>('up-prayer-requests/create-read', {
+    const createResponse = await fetchAs<CreatePrayerRequestExRequest, CreatePrayerRequestExResponse>('up/prayer-requests/create-read', {
       token: globals.globalStore.state.token,
       prayerRequest: {
         request_language_id: this.newRequest_language_id,
@@ -227,9 +221,9 @@ export class UpPrayerRequests {
       width: 200,
       editable: true,
       selectOptions: [
-        {display:  "Low", value: "Low"},
-        {display:  "Medium", value: "Medium"},
-        {display:  "High", value: "High"},
+        { display: 'Low', value: 'Low' },
+        { display: 'Medium', value: 'Medium' },
+        { display: 'High', value: 'High' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -281,8 +275,8 @@ export class UpPrayerRequests {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: 'True', value: 'true'},
-        {display: 'False', value: 'false'},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -292,9 +286,9 @@ export class UpPrayerRequests {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: 'Request', value: 'Request'},
-        {display: 'Update', value: 'Update'},
-        {display: 'Celebration', value: 'Celebration'},
+        { display: 'Request', value: 'Request' },
+        { display: 'Update', value: 'Update' },
+        { display: 'Celebration', value: 'Celebration' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -360,7 +354,6 @@ export class UpPrayerRequests {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="request_language_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="request_language_id">Request Language ID</label>
@@ -385,10 +378,16 @@ export class UpPrayerRequests {
               </span>
               <span class="form-thing">
                 <select id="sensitivity" name="sensitivity" onInput={event => this.sensitivityChange(event)}>
-                    <option value="">Select Sensitivity</option>
-                    <option value="Low" selected={this.newSensitivity === "Low"}>Low</option>
-                    <option value="Medium" selected={this.newSensitivity === "Medium"}>Medium</option>
-                    <option value="High" selected={this.newSensitivity === "High"}>High</option>
+                  <option value="">Select Sensitivity</option>
+                  <option value="Low" selected={this.newSensitivity === 'Low'}>
+                    Low
+                  </option>
+                  <option value="Medium" selected={this.newSensitivity === 'Medium'}>
+                    Medium
+                  </option>
+                  <option value="High" selected={this.newSensitivity === 'High'}>
+                    High
+                  </option>
                 </select>
               </span>
             </div>
@@ -445,7 +444,7 @@ export class UpPrayerRequests {
               <span class="form-thing">
                 <textarea id="content" name="content" onInput={event => this.contentChange(event)}></textarea>
               </span>
-            </div>        
+            </div>
 
             <div id="reviewed-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -453,12 +452,16 @@ export class UpPrayerRequests {
               </span>
               <span class="form-thing">
                 <select id="reviewed" name="reviewed" onInput={event => this.reviewedChange(event)}>
-                    <option value="">Select Reviewed</option>
-                    <option value="true" selected={this.newReviewed === true}>True</option>
-                    <option value="false" selected={this.newReviewed === false}>False</option>
+                  <option value="">Select Reviewed</option>
+                  <option value="true" selected={this.newReviewed === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newReviewed === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div>  
+            </div>
 
             <div id="prayer_type-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -466,13 +469,19 @@ export class UpPrayerRequests {
               </span>
               <span class="form-thing">
                 <select id="prayer_type" name="prayer_type" onInput={event => this.prayer_typeChange(event)}>
-                    <option value="">Select Prayer Type</option>
-                    <option value="Request" selected={this.newPrayer_type === 'Request'}>Request</option>
-                    <option value="Update" selected={this.newPrayer_type === 'Update'}>Update</option>
-                    <option value="Celebration" selected={this.newPrayer_type === 'Celebration'}>Celebration</option>
+                  <option value="">Select Prayer Type</option>
+                  <option value="Request" selected={this.newPrayer_type === 'Request'}>
+                    Request
+                  </option>
+                  <option value="Update" selected={this.newPrayer_type === 'Update'}>
+                    Update
+                  </option>
+                  <option value="Celebration" selected={this.newPrayer_type === 'Celebration'}>
+                    Celebration
+                  </option>
                 </select>
               </span>
-            </div>  
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -482,5 +491,4 @@ export class UpPrayerRequests {
       </Host>
     );
   }
-
 }

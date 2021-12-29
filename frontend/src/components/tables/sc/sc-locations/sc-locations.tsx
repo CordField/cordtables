@@ -60,7 +60,7 @@ export class ScLocations {
   newLocationType: string = 'City';
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScLocationsUpdateRequest, ScLocationUpdateResponse>('sc-locations/update-read', {
+    const updateResponse = await fetchAs<ScLocationsUpdateRequest, ScLocationUpdateResponse>('sc/locations/update-read', {
       token: globals.globalStore.state.token,
       location: {
         id: id,
@@ -79,7 +79,7 @@ export class ScLocations {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteLocationRequest, DeleteLocationResponse>('sc-locations/delete', {
+    const result = await fetchAs<DeleteLocationRequest, DeleteLocationResponse>('sc/locations/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -180,7 +180,7 @@ export class ScLocations {
   }
 
   async getList() {
-    this.locationsResponse = await fetchAs<ScLocationsListRequest, ScLocationsListResponse>('sc-locations/list', {
+    this.locationsResponse = await fetchAs<ScLocationsListRequest, ScLocationsListResponse>('sc/locations/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -196,8 +196,9 @@ export class ScLocations {
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
+    console.log('inserting location???');
 
-    const result = await fetchAs<CreateLocationRequest, CreateLocationResponse>('sc-locations/create-read', {
+    const result = await fetchAs<CreateLocationRequest, CreateLocationResponse>('sc/locations/create-read', {
       token: globals.globalStore.state.token,
       location: {
         name: this.newLocationName,

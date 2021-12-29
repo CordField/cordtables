@@ -27,7 +27,6 @@ class ScProjectLocationListResponse {
   projectLocations: ScProjectLocation[];
 }
 
-
 class ScProjectLocationUpdateRequest {
   token: string;
   column: string;
@@ -55,16 +54,15 @@ class DeleteProjectLocationExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScProjectLocations {
-
   @State() projectLocationsResponse: ScProjectLocationListResponse;
 
   newActive: boolean;
   newChange_to_plan: number;
   newLocation: number;
   newProject: number;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScProjectLocationUpdateRequest, ScProjectLocationUpdateResponse>('sc-project-locations/update-read', {
+    const updateResponse = await fetchAs<ScProjectLocationUpdateRequest, ScProjectLocationUpdateResponse>('sc/project-locations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -74,7 +72,10 @@ export class ScProjectLocations {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.projectLocationsResponse = { error: ErrorType.NoError, projectLocations: this.projectLocationsResponse.projectLocations.map(projectLocation => (projectLocation.id === id ? updateResponse.projectLocation : projectLocation)) };
+      this.projectLocationsResponse = {
+        error: ErrorType.NoError,
+        projectLocations: this.projectLocationsResponse.projectLocations.map(projectLocation => (projectLocation.id === id ? updateResponse.projectLocation : projectLocation)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -84,7 +85,7 @@ export class ScProjectLocations {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteProjectLocationExRequest, DeleteProjectLocationExResponse>('sc-project-locations/delete', {
+    const deleteResponse = await fetchAs<DeleteProjectLocationExRequest, DeleteProjectLocationExResponse>('sc/project-locations/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -99,17 +100,10 @@ export class ScProjectLocations {
   };
 
   async getList() {
-    this.projectLocationsResponse = await fetchAs<ScProjectLocationListRequest, ScProjectLocationListResponse>('sc-project-locations/list', {
+    this.projectLocationsResponse = await fetchAs<ScProjectLocationListRequest, ScProjectLocationListResponse>('sc/project-locations/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   activeChange(event) {
     this.newActive = event.target.value;
@@ -131,7 +125,7 @@ export class ScProjectLocations {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateProjectLocationExRequest, CreateProjectLocationExResponse>('sc-project-locations/create-read', {
+    const createResponse = await fetchAs<CreateProjectLocationExRequest, CreateProjectLocationExResponse>('sc/project-locations/create-read', {
       token: globals.globalStore.state.token,
       projectLocation: {
         active: this.newActive,
@@ -164,8 +158,8 @@ export class ScProjectLocations {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -235,7 +229,6 @@ export class ScProjectLocations {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -248,7 +241,6 @@ export class ScProjectLocations {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="active-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="active">Active</label>
@@ -256,11 +248,15 @@ export class ScProjectLocations {
               <span class="form-thing">
                 <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>True</option>
-                   <option value="false" selected={this.newActive === false}>False</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div>  
+            </div>
 
             <div id="change_to_plan-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -269,7 +265,7 @@ export class ScProjectLocations {
               <span class="form-thing">
                 <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
-            </div>        
+            </div>
 
             <div id="location-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -287,8 +283,7 @@ export class ScProjectLocations {
               <span class="form-thing">
                 <input type="number" id="project" name="project" onInput={event => this.projectChange(event)} />
               </span>
-            </div>  
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -298,5 +293,4 @@ export class ScProjectLocations {
       </Host>
     );
   }
-
 }

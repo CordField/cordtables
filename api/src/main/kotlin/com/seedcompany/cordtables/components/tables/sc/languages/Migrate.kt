@@ -41,7 +41,7 @@ class Migrate(
 
 
 
-    @PostMapping("migrate/sc-languages")
+    @PostMapping("migrate/sc/languages")
     @ResponseBody
     fun registerHandler() {
 

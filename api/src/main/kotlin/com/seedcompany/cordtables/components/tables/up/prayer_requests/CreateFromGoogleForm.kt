@@ -80,7 +80,7 @@ class CreateFromGoogleForm(
    *
    */
 
-  @PostMapping("up-prayer-requests/create-from-form")
+  @PostMapping("up/prayer-requests/create-from-form")
   @ResponseBody
   fun createHandler(@RequestBody req: UpPrayerRequestsCreateFromFormRequest): UpPrayerRequestsCreateFromFormResponse {
     var creatorUserId: Int?
