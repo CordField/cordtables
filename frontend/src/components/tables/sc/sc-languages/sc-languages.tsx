@@ -117,6 +117,10 @@ export class ScLanguages {
     this.newDisplayName = event.target.value;
   }
 
+  ethnologueChange(event) {
+    this.newEthnologue = event.target.value;
+  }
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -752,7 +756,7 @@ export class ScLanguages {
                 <label htmlFor="ethnologue">Ethnologue</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />
+                <input type="text" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
               </span>
             </div>
             <span class="form-thing">
