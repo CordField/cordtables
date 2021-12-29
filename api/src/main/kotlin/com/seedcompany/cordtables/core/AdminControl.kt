@@ -14,6 +14,7 @@ import javax.sql.DataSource
 
 enum class AdminControlRequestType {
   LoadSilData,
+  LoadRoles,
   UpdateDbToVersion,
 }
 
@@ -53,6 +54,9 @@ class AdminControl(
       AdminControlRequestType.UpdateDbToVersion -> {
         if (req.version == null) return GenericResponse(error = ErrorType.InputMissingVersion)
         vc.updateSchemaIdempotent(req.version)
+      }
+      AdminControlRequestType.LoadRoles -> {
+        vc.loadRoles()
       }
     }
 

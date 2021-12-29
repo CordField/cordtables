@@ -747,3 +747,5 @@ insert into admin.role_column_grants(access_level, column_name, role, table_name
 
 
 END; $$;
+
+call roles_migration();

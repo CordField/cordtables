@@ -66,6 +66,10 @@ class DatabaseVersionControl(
 
   }
 
+  fun loadRoles(){
+    runSqlFile("sql/data/roles.data.sql")
+  }
+
   fun loadSilData() {
     var adminPeopleId = 0
     println("loadSil Data")
@@ -168,7 +172,6 @@ class DatabaseVersionControl(
 
     // load data functions
     runSqlFile("sql/data/bootstrap.data.sql")
-    runSqlFile("sql/data/roles.data.sql")
 
     // user
     runSqlFile("sql/modules/user/register.sql")
