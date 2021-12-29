@@ -44,7 +44,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("up-prayer-requests/list")
+    @PostMapping("up/prayer-requests/list")
     @ResponseBody
     fun listHandler(@RequestBody req:UpPrayerRequestsListRequest): UpPrayerRequestsListResponse {
         var data: MutableList<prayerRequest> = mutableListOf()

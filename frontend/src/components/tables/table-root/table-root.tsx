@@ -65,8 +65,8 @@ export class TableRoot {
         <stencil-route url={'/table/common/coalitions'} component="common-coalitions" />
         <stencil-route url={'/table/common/coalition-memberships'} component="common-coalition-memberships" />
 
-        {this.match.params.table === 'up-prayer-requests' && <up-prayer-requests></up-prayer-requests>}
-        {this.match.params.table === 'up-prayer-notifications' && <up-prayer-notifications></up-prayer-notifications>}
+        <stencil-route url={'/table/up/prayer-requests'} component="up-prayer-requests" />
+        <stencil-route url={'/table/up/prayer-notifications'} component="up-prayer-notifications" />
 
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
 

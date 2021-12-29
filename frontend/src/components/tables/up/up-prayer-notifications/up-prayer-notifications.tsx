@@ -25,7 +25,6 @@ class UpPrayerNotificationListResponse {
   prayerNotifications: UpPrayerNotification[];
 }
 
-
 class UpPrayerNotificationUpdateRequest {
   token: string;
   column: string;
@@ -53,14 +52,13 @@ class DeletePrayerNotificationExResponse extends GenericResponse {
   shadow: true,
 })
 export class UpPrayerNotifications {
-
   @State() prayerNotificationsResponse: UpPrayerNotificationListResponse;
 
   newRequest: number;
   newPerson: number;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<UpPrayerNotificationUpdateRequest, UpPrayerNotificationUpdateResponse>('up-prayer-notifications/update-read', {
+    const updateResponse = await fetchAs<UpPrayerNotificationUpdateRequest, UpPrayerNotificationUpdateResponse>('up/prayer-notifications/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -70,7 +68,12 @@ export class UpPrayerNotifications {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.prayerNotificationsResponse = { error: ErrorType.NoError, prayerNotifications: this.prayerNotificationsResponse.prayerNotifications.map(prayerNotification => (prayerNotification.id === id ? updateResponse.prayerNotification : prayerNotification)) };
+      this.prayerNotificationsResponse = {
+        error: ErrorType.NoError,
+        prayerNotifications: this.prayerNotificationsResponse.prayerNotifications.map(prayerNotification =>
+          prayerNotification.id === id ? updateResponse.prayerNotification : prayerNotification,
+        ),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -80,7 +83,7 @@ export class UpPrayerNotifications {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePrayerNotificationExRequest, DeletePrayerNotificationExResponse>('up-prayer-notifications/delete', {
+    const deleteResponse = await fetchAs<DeletePrayerNotificationExRequest, DeletePrayerNotificationExResponse>('up/prayer-notifications/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -95,17 +98,10 @@ export class UpPrayerNotifications {
   };
 
   async getList() {
-    this.prayerNotificationsResponse = await fetchAs<UpPrayerNotificationListRequest, UpPrayerNotificationListResponse>('up-prayer-notifications/list', {
+    this.prayerNotificationsResponse = await fetchAs<UpPrayerNotificationListRequest, UpPrayerNotificationListResponse>('up/prayer-notifications/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   requestChange(event) {
     this.newRequest = event.target.value;
@@ -119,7 +115,7 @@ export class UpPrayerNotifications {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePrayerNotificationExRequest, CreatePrayerNotificationExResponse>('up-prayer-notifications/create-read', {
+    const createResponse = await fetchAs<CreatePrayerNotificationExRequest, CreatePrayerNotificationExResponse>('up/prayer-notifications/create-read', {
       token: globals.globalStore.state.token,
       prayerNotification: {
         request: this.newRequest,
@@ -135,7 +131,6 @@ export class UpPrayerNotifications {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
 
   columnData: ColumnDescription[] = [
     {
@@ -204,7 +199,6 @@ export class UpPrayerNotifications {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -217,7 +211,6 @@ export class UpPrayerNotifications {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="request-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="request">Request</label>
@@ -234,8 +227,7 @@ export class UpPrayerNotifications {
               <span class="form-thing">
                 <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -245,5 +237,4 @@ export class UpPrayerNotifications {
       </Host>
     );
   }
-
 }
