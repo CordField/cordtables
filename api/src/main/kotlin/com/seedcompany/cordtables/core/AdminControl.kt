@@ -14,12 +14,13 @@ import javax.sql.DataSource
 
 enum class AdminControlRequestType {
   LoadSilData,
-  UpdateDbToVersion2,
+  UpdateDbToVersion,
 }
 
 data class AdminControlRequest(
   val token: String,
   val type: AdminControlRequestType,
+  val version: Int? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -49,8 +50,9 @@ class AdminControl(
       AdminControlRequestType.LoadSilData -> {
         vc.loadSilData()
       }
-      AdminControlRequestType.UpdateDbToVersion2 -> {
-        vc.migrateToVersion2()
+      AdminControlRequestType.UpdateDbToVersion -> {
+        if (req.version == null) return GenericResponse(error = ErrorType.InputMissingVersion)
+        vc.updateSchemaIdempotent(req.version)
       }
     }
 

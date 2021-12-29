@@ -20,6 +20,7 @@ enum class ErrorType {
     SQLReadError,
     SQLUpdateError,
     SQLDeleteError,
+    InputMissingVersion,
     InputMissingName,
     InputMissingGroup,
     InputMissingPerson,

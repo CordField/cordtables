@@ -35,7 +35,7 @@ class DatabaseVersionControl(
     if (!isDbInit()) {
       toVersion1()
       if (appConfig.loadDbVersion > 1){
-        updateSchemaIdempotent()
+        updateSchemaIdempotent(appConfig.loadDbVersion)
       }
       updateHistoryTables()
       updatePeerTables()
@@ -43,12 +43,20 @@ class DatabaseVersionControl(
     }
   }
 
-  private fun updateSchemaIdempotent() {
-    while (true) {
+  fun updateSchemaIdempotent(version: Int) {
+    while (getSchemaVersion() < version) {
       when (getSchemaVersion()) {
         1 -> {
           println("upgrading schema to version 2")
           toVersion2()
+        }
+        2 -> {
+          println("upgrading schema to version 3")
+          toVersion3()
+        }
+        3 -> {
+          println("upgrading schema to version 4")
+          toVersion4()
         }
         else -> {
           break
@@ -56,15 +64,6 @@ class DatabaseVersionControl(
       }
     }
 
-  }
-
-  fun migrateToVersion2() {
-    if (getSchemaVersion() == 1) {
-      toVersion2()
-      updateHistoryTables()
-      updatePeerTables()
-      println("database schema update to version 2 complete")
-    }
   }
 
   fun loadSilData() {
@@ -88,19 +87,12 @@ class DatabaseVersionControl(
     }
 
     loadCountryCodes(adminPeopleId)
-
     loadLanguageCodes(adminPeopleId)
-
     loadLanguageIndexes(adminPeopleId)
-
     loadIso_639_3_Name_Index(adminPeopleId)
-
     loadIso_639_3(adminPeopleId)
-
     loadIso_639_3_Retirements(adminPeopleId)
-
     loadIso_639_3_Macrolanguages(adminPeopleId)
-
   }
 
   private fun updateHistoryTables() {
@@ -111,27 +103,17 @@ class DatabaseVersionControl(
     runSqlFile("sql/version-control/peer.sql")
   }
 
-  private fun toVersion2() {
-    // admin
-    runSqlFile("sql/schemas/admin/admin.v2.sql")
 
-    // common
-    runSqlFile("sql/schemas/common/common.v2.sql")
-
-    // sc
-    runSqlFile("sql/schemas/sc/sc.v2.sql")
-    setVersionNumber(2)
-  }
-
-  private fun getSchemaVersion(): Int? {
+  private fun getSchemaVersion(): Int {
     return jdbcTemplate.queryForObject(
       """
                 select version 
                 from admin.database_version_control 
                 order by version 
                 desc limit 1;
-            """.trimIndent()
-    )
+            """.trimIndent(),
+      Int::class.java
+    ) ?: return 0
   }
 
   private fun isDbInit(): Boolean {
@@ -146,6 +128,28 @@ class DatabaseVersionControl(
     )
   }
 
+  private fun toVersion4(){
+    // sc
+    runSqlFile("sql/schemas/sc/sc.v4.sql")
+    setVersionNumber(4)
+  }
+
+  private fun toVersion3(){
+    // sc
+    runSqlFile("sql/schemas/sc/sc.v3.sql")
+    setVersionNumber(3)
+  }
+
+  private fun toVersion2() {
+    // admin
+    runSqlFile("sql/schemas/admin/admin.v2.sql")
+
+    // common
+    runSqlFile("sql/schemas/common/common.v2.sql")
+
+    setVersionNumber(2)
+  }
+
   private fun toVersion1() {
     println("version 1 not found. creating schema.")
 
@@ -157,11 +161,7 @@ class DatabaseVersionControl(
 
     // sil
     runSqlFile("sql/schemas/sil/sil.v1.sql")
-    runSqlFile("sql/migration/language_index.migration.sql")
 
-    // sc
-    runSqlFile("sql/schemas/sc/sc.v1.sql")
-    runSqlFile("sql/migration/ethnologue.migration.sql")
 
     // up (unceasing prayer)
     runSqlFile("sql/schemas/up/up.v1.sql")
