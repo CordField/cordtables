@@ -25,6 +25,7 @@ class CommonOrgChartPositionListResponse {
   orgChartPositions: CommonOrgChartPosition[];
 }
 
+
 class CommonOrgChartPositionUpdateRequest {
   token: string;
   column: string;
@@ -52,13 +53,14 @@ class DeleteOrgChartPositionExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonOrgChartPositions {
+
   @State() orgChartPositionsResponse: CommonOrgChartPositionListResponse;
 
   newOrganization: number;
   newName: string;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonOrgChartPositionUpdateRequest, CommonOrgChartPositionUpdateResponse>('common/org-chart-positions/update-read', {
+    const updateResponse = await fetchAs<CommonOrgChartPositionUpdateRequest, CommonOrgChartPositionUpdateResponse>('common-org-chart-positions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -68,12 +70,7 @@ export class CommonOrgChartPositions {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.orgChartPositionsResponse = {
-        error: ErrorType.NoError,
-        orgChartPositions: this.orgChartPositionsResponse.orgChartPositions.map(orgChartPosition =>
-          orgChartPosition.id === id ? updateResponse.orgChartPosition : orgChartPosition,
-        ),
-      };
+      this.orgChartPositionsResponse = { error: ErrorType.NoError, orgChartPositions: this.orgChartPositionsResponse.orgChartPositions.map(orgChartPosition => (orgChartPosition.id === id ? updateResponse.orgChartPosition : orgChartPosition)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -83,7 +80,7 @@ export class CommonOrgChartPositions {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteOrgChartPositionExRequest, DeleteOrgChartPositionExResponse>('common/org-chart-positions/delete', {
+    const deleteResponse = await fetchAs<DeleteOrgChartPositionExRequest, DeleteOrgChartPositionExResponse>('common-org-chart-positions/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -98,10 +95,17 @@ export class CommonOrgChartPositions {
   };
 
   async getList() {
-    this.orgChartPositionsResponse = await fetchAs<CommonOrgChartPositionListRequest, CommonOrgChartPositionListResponse>('common/org-chart-positions/list', {
+    this.orgChartPositionsResponse = await fetchAs<CommonOrgChartPositionListRequest, CommonOrgChartPositionListResponse>('common-org-chart-positions/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   organizationChange(event) {
     this.newOrganization = event.target.value;
@@ -115,7 +119,7 @@ export class CommonOrgChartPositions {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateOrgChartPositionExRequest, CreateOrgChartPositionExResponse>('common/org-chart-positions/create-read', {
+    const createResponse = await fetchAs<CreateOrgChartPositionExRequest, CreateOrgChartPositionExResponse>('common-org-chart-positions/create-read', {
       token: globals.globalStore.state.token,
       orgChartPosition: {
         organization: this.newOrganization,
@@ -199,6 +203,7 @@ export class CommonOrgChartPositions {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -211,6 +216,7 @@ export class CommonOrgChartPositions {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="organization-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="organization">Organization</label>
@@ -227,7 +233,8 @@ export class CommonOrgChartPositions {
               <span class="form-thing">
                 <input type="text" id="name" name="name" onInput={event => this.nameChange(event)} />
               </span>
-            </div>
+            </div>        
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -237,4 +244,5 @@ export class CommonOrgChartPositions {
       </Host>
     );
   }
+
 }

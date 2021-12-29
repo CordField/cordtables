@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/people-to-org-relationships/update")
+    @PostMapping("common-people-to-org-relationships/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonPeopleToOrgRelationshipsUpdateRequest): CommonPeopleToOrgRelationshipsUpdateResponse {
 

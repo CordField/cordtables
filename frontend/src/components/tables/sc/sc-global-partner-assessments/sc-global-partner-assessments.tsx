@@ -5,6 +5,8 @@ import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
 
+    
+
 class CreateGlobalPartnerAssessmentExRequest {
   token: string;
   globalPartnerAssessment: {
@@ -39,6 +41,7 @@ class ScGlobalPartnerAssessmentListResponse {
   globalPartnerAssessments: ScGlobalPartnerAssessment[];
 }
 
+
 class ScGlobalPartnerAssessmentUpdateRequest {
   token: string;
   column: string;
@@ -66,6 +69,7 @@ class DeleteGlobalPartnerAssessmentExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScGlobalPartnerAssessments {
+
   @State() globalPartnerAssessmentsResponse: ScGlobalPartnerAssessmentListResponse;
 
   newPartner: number;
@@ -84,9 +88,10 @@ export class ScGlobalPartnerAssessments {
   newFinancial_management_opp: string;
   newProgram_design_opp: string;
   newTech_translation_opp: string;
-
+  
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScGlobalPartnerAssessmentUpdateRequest, ScGlobalPartnerAssessmentUpdateResponse>('sc/global-partner-assessments/update-read', {
+    const updateResponse = await fetchAs<ScGlobalPartnerAssessmentUpdateRequest, ScGlobalPartnerAssessmentUpdateResponse>('sc-global-partner-assessments/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -96,12 +101,7 @@ export class ScGlobalPartnerAssessments {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.globalPartnerAssessmentsResponse = {
-        error: ErrorType.NoError,
-        globalPartnerAssessments: this.globalPartnerAssessmentsResponse.globalPartnerAssessments.map(globalPartnerAssessment =>
-          globalPartnerAssessment.id === id ? updateResponse.globalPartnerAssessment : globalPartnerAssessment,
-        ),
-      };
+      this.globalPartnerAssessmentsResponse = { error: ErrorType.NoError, globalPartnerAssessments: this.globalPartnerAssessmentsResponse.globalPartnerAssessments.map(globalPartnerAssessment => (globalPartnerAssessment.id === id ? updateResponse.globalPartnerAssessment : globalPartnerAssessment)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -111,7 +111,7 @@ export class ScGlobalPartnerAssessments {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteGlobalPartnerAssessmentExRequest, DeleteGlobalPartnerAssessmentExResponse>('sc/global-partner-assessments/delete', {
+    const deleteResponse = await fetchAs<DeleteGlobalPartnerAssessmentExRequest, DeleteGlobalPartnerAssessmentExResponse>('sc-global-partner-assessments/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -126,10 +126,16 @@ export class ScGlobalPartnerAssessments {
   };
 
   async getList() {
-    this.globalPartnerAssessmentsResponse = await fetchAs<ScGlobalPartnerAssessmentListRequest, ScGlobalPartnerAssessmentListResponse>('sc/global-partner-assessments/list', {
+    this.globalPartnerAssessmentsResponse = await fetchAs<ScGlobalPartnerAssessmentListRequest, ScGlobalPartnerAssessmentListResponse>('sc-global-partner-assessments/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
 
   partnerChange(event) {
     this.newPartner = event.target.value;
@@ -184,7 +190,7 @@ export class ScGlobalPartnerAssessments {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateGlobalPartnerAssessmentExRequest, CreateGlobalPartnerAssessmentExResponse>('sc/global-partner-assessments/create-read', {
+    const createResponse = await fetchAs<CreateGlobalPartnerAssessmentExRequest, CreateGlobalPartnerAssessmentExResponse>('sc-global-partner-assessments/create-read', {
       token: globals.globalStore.state.token,
       globalPartnerAssessment: {
         partner: this.newPartner,
@@ -215,6 +221,7 @@ export class ScGlobalPartnerAssessments {
     }
   };
 
+
   columnData: ColumnDescription[] = [
     {
       field: 'id',
@@ -223,6 +230,7 @@ export class ScGlobalPartnerAssessments {
       editable: false,
       deleteFn: this.handleDelete,
     },
+
 
     {
       field: 'partner',
@@ -237,10 +245,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -250,10 +258,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -263,10 +271,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -276,10 +284,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -289,10 +297,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -302,10 +310,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -315,10 +323,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -328,10 +336,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -341,10 +349,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -354,10 +362,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -367,10 +375,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -380,10 +388,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -393,10 +401,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -406,10 +414,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -419,10 +427,10 @@ export class ScGlobalPartnerAssessments {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Level 1', value: 'Level 1' },
-        { display: 'Level 2', value: 'Level 2' },
-        { display: 'Level 3', value: 'Level 3' },
-        { display: 'Level 4', value: 'Level 4' },
+        {display: "Level 1", value: "Level 1"},
+        {display: "Level 2", value: "Level 2"},
+        {display: "Level 3", value: "Level 3"},
+        {display: "Level 4", value: "Level 4"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -471,6 +479,7 @@ export class ScGlobalPartnerAssessments {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -483,6 +492,7 @@ export class ScGlobalPartnerAssessments {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="partner-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="partner">Partner</label>
@@ -492,6 +502,13 @@ export class ScGlobalPartnerAssessments {
               </span>
             </div>
 
+
+
+
+
+
+
+
             <div id="governance_trans-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="governance_transtner">Governance Trans</label>
@@ -499,19 +516,11 @@ export class ScGlobalPartnerAssessments {
               <span class="form-thing">
                 <select id="governance_transtner" name="governance_trans" onInput={event => this.governance_transChange(event)}>
                   <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newGovernance_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newGovernance_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newGovernance_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newGovernance_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                    <option value="Level 1" selected={this.newGovernance_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newGovernance_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newGovernance_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newGovernance_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -521,20 +530,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="director_trans" name="director_trans" onInput={event => this.director_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newDirector_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newDirector_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newDirector_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newDirector_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newDirector_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newDirector_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newDirector_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newDirector_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -544,20 +545,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="identity_trans" name="identity_trans" onInput={event => this.identity_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newIdentity_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newIdentity_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newIdentity_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newIdentity_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newIdentity_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newIdentity_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newIdentity_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newIdentity_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -567,20 +560,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="growth_trans" name="growth_trans" onInput={event => this.growth_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newGrowth_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newGrowth_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newGrowth_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newGrowth_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newGrowth_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newGrowth_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newGrowth_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newGrowth_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -590,20 +575,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="comm_support_trans" name="comm_support_trans" onInput={event => this.comm_support_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newComm_support_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newComm_support_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newComm_support_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newComm_support_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newComm_support_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newComm_support_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newComm_support_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newComm_support_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -613,20 +590,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="systems_trans" name="systems_trans" onInput={event => this.systems_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newSystems_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newSystems_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newSystems_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newSystems_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newSystems_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newSystems_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newSystems_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newSystems_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -636,20 +605,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="fin_management_trans" name="fin_management_trans" onInput={event => this.fin_management_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newFin_management_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newFin_management_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newFin_management_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newFin_management_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newFin_management_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newFin_management_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newFin_management_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newFin_management_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -659,20 +620,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="hr_trans" name="hr_trans" onInput={event => this.hr_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newHr_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newHr_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newHr_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newHr_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newHr_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newHr_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newHr_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newHr_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -682,20 +635,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="it_trans" name="it_trans" onInput={event => this.it_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newIt_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newIt_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newIt_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newIt_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newIt_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newIt_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newIt_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newIt_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -705,20 +650,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="program_design_trans" name="program_design_trans" onInput={event => this.program_design_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newProgram_design_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newProgram_design_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newProgram_design_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newProgram_design_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newProgram_design_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newProgram_design_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newProgram_design_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newProgram_design_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -728,20 +665,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="tech_translation_trans" name="tech_translation_trans" onInput={event => this.tech_translation_transChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newTech_translation_trans === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newTech_translation_trans === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newTech_translation_trans === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newTech_translation_trans === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newTech_translation_trans === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newTech_translation_trans === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newTech_translation_trans === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newTech_translation_trans === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -751,20 +680,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="director_opp" name="director_opp" onInput={event => this.director_oppChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newDirector_opp === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newDirector_opp === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newDirector_opp === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newDirector_opp === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newDirector_opp === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newDirector_opp === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newDirector_opp === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newDirector_opp === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -774,20 +695,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="financial_management_opp" name="financial_management_opp" onInput={event => this.financial_management_oppChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newFinancial_management_opp === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newFinancial_management_opp === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newFinancial_management_opp === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newFinancial_management_opp === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newFinancial_management_opp === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newFinancial_management_opp === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newFinancial_management_opp === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newFinancial_management_opp === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -797,20 +710,12 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="program_design_opp" name="program_design_opp" onInput={event => this.program_design_oppChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newProgram_design_opp === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newProgram_design_opp === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newProgram_design_opp === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newProgram_design_opp === 'Level 4'}>
-                    Level 4
-                  </option>
-                </select>
+                <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newProgram_design_opp === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newProgram_design_opp === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newProgram_design_opp === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newProgram_design_opp === "Level 4"}>Level 4</option>
+                  </select>
               </span>
             </div>
 
@@ -820,22 +725,18 @@ export class ScGlobalPartnerAssessments {
               </span>
               <span class="form-thing">
                 <select id="tech_translation_opp" name="tech_translation_opp" onInput={event => this.tech_translation_oppChange(event)}>
-                  <option value="">Select Level</option>
-                  <option value="Level 1" selected={this.newTech_translation_opp === 'Level 1'}>
-                    Level 1
-                  </option>
-                  <option value="Level 2" selected={this.newTech_translation_opp === 'Level 2'}>
-                    Level 2
-                  </option>
-                  <option value="Level 3" selected={this.newTech_translation_opp === 'Level 3'}>
-                    Level 3
-                  </option>
-                  <option value="Level 4" selected={this.newTech_translation_opp === 'Level 4'}>
-                    Level 4
-                  </option>
+                    <option value="">Select Level</option>
+                    <option value="Level 1" selected={this.newTech_translation_opp === "Level 1"}>Level 1</option>
+                    <option value="Level 2" selected={this.newTech_translation_opp === "Level 2"}>Level 2</option>
+                    <option value="Level 3" selected={this.newTech_translation_opp === "Level 3"}>Level 3</option>
+                    <option value="Level 4" selected={this.newTech_translation_opp === "Level 4"}>Level 4</option>
                 </select>
               </span>
             </div>
+            
+            
+   
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -845,4 +746,5 @@ export class ScGlobalPartnerAssessments {
       </Host>
     );
   }
+
 }

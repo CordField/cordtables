@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("admin/group-row-access/delete")
+    @PostMapping("admin-group-row-access/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: AdminGroupRowAccessDeleteRequest): AdminGroupRowAccessDeleteResponse {
 

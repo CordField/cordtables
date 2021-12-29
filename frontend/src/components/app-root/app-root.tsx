@@ -32,13 +32,13 @@ export class AppRoot {
   }
 
   componentDidLoad() {
-    if (this.history) {
+    if(this.history){
       this.history.listen(() => {
         this.path = window.location.pathname;
         this.updateSelect();
       });
     }
-
+    
     const infoText = 'INSECURE CONNECTION';
     if (!process.env.SERVER_URL.startsWith('https')) {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: infoText, id: uuidv4(), type: 'info' });
@@ -69,7 +69,7 @@ export class AppRoot {
   };
 
   render() {
-    console.debug('globals.globalStore.state.appState', globals.globalStore.state.appState);
+    console.debug("globals.globalStore.state.appState", globals.globalStore.state.appState);
     return (
       <div id="root-wrap-outer">
         <cf-notif />
@@ -84,10 +84,19 @@ export class AppRoot {
                   <div id="top-thing">
                     <div id="nav-menu">
                       <div id="full-width">
-                        <custom-accordion width="100%" label="Menu" color="green">
-                          <custom-accordion width="100%" label="Pages" color="#64b145" marginLeft="10px">
+                        <custom-accordion
+                          width='100%' 
+                          label='Menu'
+                          color='green' 
+                          >
+                          <custom-accordion
+                            width='100%' 
+                            label='Pages'
+                            color='#64b145'
+                            marginLeft="10px"
+                          >
                             <div class="scrollable">
-                              <ion-list style={{ marginLeft: '10px' }}>
+                              <ion-list style={{marginLeft: "10px"}}>
                                 {this.pages.map(page => (
                                   <ion-item href={`/page/${page.toLowerCase()}`}>
                                     <ion-label>{page} Page</ion-label>
@@ -96,11 +105,16 @@ export class AppRoot {
                               </ion-list>
                             </div>
                           </custom-accordion>
-                          <custom-accordion width="100%" label="Tables" color="#64b145" marginLeft="10px">
+                          <custom-accordion
+                            width='100%' 
+                            label='Tables'
+                            color='#64b145'
+                            marginLeft="10px"
+                          >
                             <div class="scrollable">
-                              <ion-list style={{ marginLeft: '10px' }}>
+                              <ion-list style={{marginLeft: "10px"}}>
                                 {globals.globalStore.state.readableTables.map(table => (
-                                  <ion-item href={`/table/${table.split('.').join('/')}`}>
+                                  <ion-item href={`/table/${table.split('.').join('-')}`}>
                                     <ion-label>{table} </ion-label>
                                   </ion-item>
                                 ))}
@@ -109,17 +123,13 @@ export class AppRoot {
                           </custom-accordion>
                         </custom-accordion>
                       </div>
-                    </div>
-                  </div>
-                  <div class="edit-button">
-                    {this.path != '/page/tickets' && (
-                      <button onClick={this.toggleEditMode} style={{ float: 'right' }}>
-                        Edit Mode: {globals.globalStore.state.editMode.toString()}
-                      </button>
-                    )}
                   </div>
                 </div>
-              )}
+                <div class="edit-button">
+                  {this.path != '/page/tickets' && <button onClick={this.toggleEditMode} style={{"float":"right"}}>Edit Mode: {globals.globalStore.state.editMode.toString()}</button>}
+                  </div>
+                </div>
+              )} 
             </div>
             <main>
               <stencil-router>

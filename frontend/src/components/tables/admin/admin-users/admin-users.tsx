@@ -26,6 +26,7 @@ class AdminUserListResponse {
   users: AdminUser[];
 }
 
+
 class AdminUserUpdateRequest {
   token: string;
   column: string;
@@ -53,14 +54,16 @@ class DeleteUserExResponse extends GenericResponse {
   shadow: true,
 })
 export class AdminUsers {
+
   @State() usersResponse: AdminUserListResponse;
 
   newPerson: number;
   newEmail?: string;
   newPassword?: string;
-
+  
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminUserUpdateRequest, AdminUserUpdateResponse>('admin/users/update-read', {
+    const updateResponse = await fetchAs<AdminUserUpdateRequest, AdminUserUpdateResponse>('admin-users/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -80,7 +83,7 @@ export class AdminUsers {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteUserExRequest, DeleteUserExResponse>('admin/users/delete', {
+    const deleteResponse = await fetchAs<DeleteUserExRequest, DeleteUserExResponse>('admin-users/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -95,10 +98,17 @@ export class AdminUsers {
   };
 
   async getList() {
-    this.usersResponse = await fetchAs<AdminUserListRequest, AdminUserListResponse>('admin/users/list', {
+    this.usersResponse = await fetchAs<AdminUserListRequest, AdminUserListResponse>('admin-users/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   personChange(event) {
     this.newPerson = event.target.value;
@@ -116,12 +126,12 @@ export class AdminUsers {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateUserExRequest, CreateUserExResponse>('admin/users/create-read', {
+    const createResponse = await fetchAs<CreateUserExRequest, CreateUserExResponse>('admin-users/create-read', {
       token: globals.globalStore.state.token,
       user: {
         person: this.newPerson,
         email: this.newEmail,
-        password: this.newPassword,
+        password: this.newPassword
       },
     });
 
@@ -201,6 +211,7 @@ export class AdminUsers {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -213,6 +224,7 @@ export class AdminUsers {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="person-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="person">Person</label>
@@ -229,7 +241,7 @@ export class AdminUsers {
               <span class="form-thing">
                 <input type="text" id="email" name="email" onInput={event => this.emailChange(event)} />
               </span>
-            </div>
+            </div>        
 
             <div id="password-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -238,7 +250,8 @@ export class AdminUsers {
               <span class="form-thing">
                 <input type="password" id="password" name="password" onInput={event => this.passwordChange(event)} />
               </span>
-            </div>
+            </div>       
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -248,4 +261,6 @@ export class AdminUsers {
       </Host>
     );
   }
+
 }
+

@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/workflows/update-read")
+    @PostMapping("common-workflows/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonWorkflowsUpdateReadRequest): CommonWorkflowsUpdateReadResponse {
 

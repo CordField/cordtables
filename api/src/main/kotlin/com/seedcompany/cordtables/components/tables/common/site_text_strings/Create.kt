@@ -33,7 +33,7 @@ class Create(
 ) {
   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-  @PostMapping("common/site-text-strings/create")
+  @PostMapping("common-site-text-strings/create")
   @ResponseBody
   fun createHandler(@RequestBody req: SiteTextStringCreateRequest): SiteTextStringCreateResponse {
 

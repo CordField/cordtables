@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/stage-role-column-grants/create-read")
+    @PostMapping("common-stage-role-column-grants/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonStageRoleColumnGrantsCreateReadRequest): CommonStageRoleColumnGrantsCreateReadResponse {
 

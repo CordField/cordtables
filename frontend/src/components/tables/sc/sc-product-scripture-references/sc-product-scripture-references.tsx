@@ -27,6 +27,7 @@ class ScProductScriptureReferenceListResponse {
   productScriptureReferences: ScProductScriptureReference[];
 }
 
+
 class ScProductScriptureReferenceUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +55,16 @@ class DeleteProductScriptureReferenceExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScProductScriptureReferences {
+
   @State() productScriptureReferencesResponse: ScProductScriptureReferenceListResponse;
 
   newProduct: number;
   newScripture_reference: number;
   newChange_to_plan: number;
   newActive: boolean;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScProductScriptureReferenceUpdateRequest, ScProductScriptureReferenceUpdateResponse>('sc/product-scripture-references/update-read', {
+    const updateResponse = await fetchAs<ScProductScriptureReferenceUpdateRequest, ScProductScriptureReferenceUpdateResponse>('sc-product-scripture-references/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,12 +74,7 @@ export class ScProductScriptureReferences {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.productScriptureReferencesResponse = {
-        error: ErrorType.NoError,
-        productScriptureReferences: this.productScriptureReferencesResponse.productScriptureReferences.map(productScriptureReference =>
-          productScriptureReference.id === id ? updateResponse.productScriptureReference : productScriptureReference,
-        ),
-      };
+      this.productScriptureReferencesResponse = { error: ErrorType.NoError, productScriptureReferences: this.productScriptureReferencesResponse.productScriptureReferences.map(productScriptureReference => (productScriptureReference.id === id ? updateResponse.productScriptureReference : productScriptureReference)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -87,7 +84,7 @@ export class ScProductScriptureReferences {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteProductScriptureReferenceExRequest, DeleteProductScriptureReferenceExResponse>('sc/product-scripture-references/delete', {
+    const deleteResponse = await fetchAs<DeleteProductScriptureReferenceExRequest, DeleteProductScriptureReferenceExResponse>('sc-product-scripture-references/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -102,13 +99,17 @@ export class ScProductScriptureReferences {
   };
 
   async getList() {
-    this.productScriptureReferencesResponse = await fetchAs<ScProductScriptureReferenceListRequest, ScProductScriptureReferenceListResponse>(
-      'sc/product-scripture-references/list',
-      {
-        token: globals.globalStore.state.token,
-      },
-    );
+    this.productScriptureReferencesResponse = await fetchAs<ScProductScriptureReferenceListRequest, ScProductScriptureReferenceListResponse>('sc-product-scripture-references/list', {
+      token: globals.globalStore.state.token,
+    });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   productChange(event) {
     this.newProduct = event.target.value;
@@ -130,7 +131,7 @@ export class ScProductScriptureReferences {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateProductScriptureReferenceExRequest, CreateProductScriptureReferenceExResponse>('sc/product-scripture-references/create-read', {
+    const createResponse = await fetchAs<CreateProductScriptureReferenceExRequest, CreateProductScriptureReferenceExResponse>('sc-product-scripture-references/create-read', {
       token: globals.globalStore.state.token,
       productScriptureReference: {
         product: this.newProduct,
@@ -148,6 +149,7 @@ export class ScProductScriptureReferences {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
+
 
   columnData: ColumnDescription[] = [
     {
@@ -184,8 +186,8 @@ export class ScProductScriptureReferences {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'True', value: 'true' },
-        { display: 'False', value: 'false' },
+        {display: "True", value: "true"},
+        {display: "False", value: "false"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -234,6 +236,7 @@ export class ScProductScriptureReferences {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -246,6 +249,7 @@ export class ScProductScriptureReferences {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="product-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="product">Product</label>
@@ -262,7 +266,7 @@ export class ScProductScriptureReferences {
               <span class="form-thing">
                 <input type="text" id="scripture_reference" name="scripture_reference" onInput={event => this.scripture_referenceChange(event)} />
               </span>
-            </div>
+            </div>        
 
             <div id="change_to_plan-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -278,17 +282,14 @@ export class ScProductScriptureReferences {
                 <label htmlFor="active">Active</label>
               </span>
               <span class="form-thing">
-                <select id="active" name="active" onInput={event => this.activeChange(event)}>
+              <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>
-                    True
-                  </option>
-                  <option value="false" selected={this.newActive === false}>
-                    False
-                  </option>
+                  <option value="true" selected={this.newActive === true}>True</option>
+                   <option value="false" selected={this.newActive === false}>False</option>
                 </select>
               </span>
-            </div>
+            </div>        
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -298,4 +299,5 @@ export class ScProductScriptureReferences {
       </Host>
     );
   }
+
 }

@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("admin/groups/list")
+    @PostMapping("admin-groups/list")
     @ResponseBody
     fun listHandler(@RequestBody req:AdminGroupsListRequest): AdminGroupsListResponse {
         var data: MutableList<group> = mutableListOf()

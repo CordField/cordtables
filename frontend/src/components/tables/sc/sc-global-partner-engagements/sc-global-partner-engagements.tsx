@@ -29,6 +29,7 @@ class ScGlobalPartnerEngagementListResponse {
   globalPartnerEngagements: ScGlobalPartnerEngagement[];
 }
 
+
 class ScGlobalPartnerEngagementUpdateRequest {
   token: string;
   column: string;
@@ -56,6 +57,7 @@ class DeleteGlobalPartnerEngagementExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScGlobalPartnerEngagements {
+
   @State() globalPartnerEngagementsResponse: ScGlobalPartnerEngagementListResponse;
 
   newOrganization: number;
@@ -64,9 +66,9 @@ export class ScGlobalPartnerEngagements {
   newMou_end: string;
   newSc_roles: string;
   newPartner_roles: string;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScGlobalPartnerEngagementUpdateRequest, ScGlobalPartnerEngagementUpdateResponse>('sc/global-partner-engagements/update-read', {
+    const updateResponse = await fetchAs<ScGlobalPartnerEngagementUpdateRequest, ScGlobalPartnerEngagementUpdateResponse>('sc-global-partner-engagements/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -76,12 +78,7 @@ export class ScGlobalPartnerEngagements {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.globalPartnerEngagementsResponse = {
-        error: ErrorType.NoError,
-        globalPartnerEngagements: this.globalPartnerEngagementsResponse.globalPartnerEngagements.map(globalPartnerEngagement =>
-          globalPartnerEngagement.id === id ? updateResponse.globalPartnerEngagement : globalPartnerEngagement,
-        ),
-      };
+      this.globalPartnerEngagementsResponse = { error: ErrorType.NoError, globalPartnerEngagements: this.globalPartnerEngagementsResponse.globalPartnerEngagements.map(globalPartnerEngagement => (globalPartnerEngagement.id === id ? updateResponse.globalPartnerEngagement : globalPartnerEngagement)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -91,7 +88,7 @@ export class ScGlobalPartnerEngagements {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteGlobalPartnerEngagementExRequest, DeleteGlobalPartnerEngagementExResponse>('sc/global-partner-engagements/delete', {
+    const deleteResponse = await fetchAs<DeleteGlobalPartnerEngagementExRequest, DeleteGlobalPartnerEngagementExResponse>('sc-global-partner-engagements/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -106,10 +103,17 @@ export class ScGlobalPartnerEngagements {
   };
 
   async getList() {
-    this.globalPartnerEngagementsResponse = await fetchAs<ScGlobalPartnerEngagementListRequest, ScGlobalPartnerEngagementListResponse>('sc/global-partner-engagements/list', {
+    this.globalPartnerEngagementsResponse = await fetchAs<ScGlobalPartnerEngagementListRequest, ScGlobalPartnerEngagementListResponse>('sc-global-partner-engagements/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   organizationChange(event) {
     this.newOrganization = event.target.value;
@@ -135,11 +139,12 @@ export class ScGlobalPartnerEngagements {
     this.newPartner_roles = event.target.value;
   }
 
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateGlobalPartnerEngagementExRequest, CreateGlobalPartnerEngagementExResponse>('sc/global-partner-engagements/create-read', {
+    const createResponse = await fetchAs<CreateGlobalPartnerEngagementExRequest, CreateGlobalPartnerEngagementExResponse>('sc-global-partner-engagements/create-read', {
       token: globals.globalStore.state.token,
       globalPartnerEngagement: {
         organization: this.newOrganization,
@@ -159,6 +164,7 @@ export class ScGlobalPartnerEngagements {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
+
 
   columnData: ColumnDescription[] = [
     {
@@ -181,8 +187,8 @@ export class ScGlobalPartnerEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'CIT', value: 'CIT' },
-        { display: 'Engagements', value: 'Engagements' },
+        {display: "CIT", value: "CIT"},
+        {display: "Engagements", value: "Engagements"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -207,8 +213,8 @@ export class ScGlobalPartnerEngagements {
       editable: true,
       isMulti: true,
       selectOptions: [
-        { display: 'A', value: 'A' },
-        { display: 'B', value: 'B' },
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -218,8 +224,8 @@ export class ScGlobalPartnerEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'A', value: 'A' },
-        { display: 'B', value: 'B' },
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -268,6 +274,7 @@ export class ScGlobalPartnerEngagements {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -295,13 +302,9 @@ export class ScGlobalPartnerEngagements {
               </span>
               <span class="form-thing">
                 <select id="type" name="type" onInput={event => this.typeChange(event)}>
-                  <option value="">Select Type</option>
-                  <option value="CIT" selected={this.newType === 'CIT'}>
-                    CIT
-                  </option>
-                  <option value="Engagements" selected={this.newType === 'Engagements'}>
-                    Engagements
-                  </option>
+                    <option value="">Select Type</option>
+                    <option value="CIT" selected={this.newType === "CIT"}>CIT</option>
+                    <option value="Engagements" selected={this.newType === "Engagements"}>Engagements</option>
                 </select>
               </span>
             </div>
@@ -313,7 +316,7 @@ export class ScGlobalPartnerEngagements {
               <span class="form-thing">
                 <input type="text" id="mou_start" name="mou_start" onInput={event => this.mou_startChange(event)} />
               </span>
-            </div>
+            </div>        
 
             <div id="mou_end-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -330,13 +333,9 @@ export class ScGlobalPartnerEngagements {
               </span>
               <span class="form-thing">
                 <select id="sc_roles" multiple name="sc_roles" onInput={event => this.sc_rolesChange(event)}>
-                  <option value="">Select SC Roles</option>
-                  <option value="A" selected={this.newSc_roles === 'A'}>
-                    A
-                  </option>
-                  <option value="B" selected={this.newSc_roles === 'B'}>
-                    B
-                  </option>
+                    <option value="">Select SC Roles</option>
+                    <option value="A" selected={this.newSc_roles === "A"}>A</option>
+                    <option value="B" selected={this.newSc_roles === "B"}>B</option>
                 </select>
               </span>
             </div>
@@ -347,16 +346,13 @@ export class ScGlobalPartnerEngagements {
               </span>
               <span class="form-thing">
                 <select id="partner_roles" multiple name="partner_roles" onInput={event => this.partner_rolesChange(event)}>
-                  <option value="">Select Partner Roles</option>
-                  <option value="A" selected={this.newPartner_roles === 'A'}>
-                    A
-                  </option>
-                  <option value="B" selected={this.newPartner_roles === 'B'}>
-                    B
-                  </option>
+                    <option value="">Select Partner Roles</option>
+                    <option value="A" selected={this.newPartner_roles === "A"}>A</option>
+                    <option value="B" selected={this.newPartner_roles === "B"}>B</option>
                 </select>
               </span>
-            </div>
+            </div>  
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -366,4 +362,5 @@ export class ScGlobalPartnerEngagements {
       </Host>
     );
   }
+
 }

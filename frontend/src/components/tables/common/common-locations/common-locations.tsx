@@ -27,6 +27,7 @@ class CommonLocationListResponse {
   locations: CommonLocation[];
 }
 
+
 class CommonLocationUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +55,16 @@ class DeleteLocationExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonLocations {
+
   @State() locationsResponse: CommonLocationListResponse;
 
   newName: string;
   newSensitivity: string;
   newType: string;
   newIso_alpha3: string;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonLocationUpdateRequest, CommonLocationUpdateResponse>('common/locations/update-read', {
+    const updateResponse = await fetchAs<CommonLocationUpdateRequest, CommonLocationUpdateResponse>('common-locations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -82,7 +84,7 @@ export class CommonLocations {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteLocationExRequest, DeleteLocationExResponse>('common/locations/delete', {
+    const deleteResponse = await fetchAs<DeleteLocationExRequest, DeleteLocationExResponse>('common-locations/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,10 +99,17 @@ export class CommonLocations {
   };
 
   async getList() {
-    this.locationsResponse = await fetchAs<CommonLocationListRequest, CommonLocationListResponse>('common/locations/list', {
+    this.locationsResponse = await fetchAs<CommonLocationListRequest, CommonLocationListResponse>('common-locations/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   nameChange(event) {
     this.newName = event.target.value;
@@ -122,7 +131,7 @@ export class CommonLocations {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateLocationExRequest, CreateLocationExResponse>('common/locations/create-read', {
+    const createResponse = await fetchAs<CreateLocationExRequest, CreateLocationExResponse>('common-locations/create-read', {
       token: globals.globalStore.state.token,
       location: {
         name: this.newName,
@@ -162,33 +171,33 @@ export class CommonLocations {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Low', value: 'Low' },
-        { display: 'Medium', value: 'Medium' },
-        { display: 'High', value: 'High' },
+        {display:  "Low", value: "Low"},
+        {display:  "Medium", value: "Medium"},
+        {display:  "High", value: "High"},
       ],
       updateFn: this.handleUpdate,
     },
     {
-      field: 'type',
-      displayName: 'Type',
-      width: 200,
-      editable: true,
-      selectOptions: [
-        { display: 'City', value: 'City' },
-        { display: 'County', value: 'County' },
-        { display: 'State', value: 'State' },
-        { display: 'Country', value: 'Country' },
-        { display: 'CrossBorderArea', value: 'CrossBorderArea' },
-      ],
-      updateFn: this.handleUpdate,
-    },
-    {
-      field: 'iso_alpha3',
-      displayName: 'ISO Alpha3',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
+        field: 'type',
+        displayName: 'Type',
+        width: 200,
+        editable: true,
+        selectOptions: [
+            {display:  "City", value: "City"},
+            {display:  "County", value: "County"},
+            {display:  "State", value: "State"},
+            {display:  "Country", value: "Country"},
+            {display:  "CrossBorderArea", value: "CrossBorderArea"},
+        ],
+        updateFn: this.handleUpdate,
+      },
+      {
+        field: 'iso_alpha3',
+        displayName: 'ISO Alpha3',
+        width: 200,
+        editable: true,
+        updateFn: this.handleUpdate,
+      },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -234,6 +243,7 @@ export class CommonLocations {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -246,6 +256,7 @@ export class CommonLocations {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="name">Name</label>
@@ -261,16 +272,10 @@ export class CommonLocations {
               </span>
               <span class="form-thing">
                 <select id="sensitivity" name="sensitivity" onInput={event => this.sensitivityChange(event)}>
-                  <option value="">Select Sensitivity</option>
-                  <option value="Low" selected={this.newSensitivity === 'Low'}>
-                    Low
-                  </option>
-                  <option value="Medium" selected={this.newSensitivity === 'Medium'}>
-                    Medium
-                  </option>
-                  <option value="High" selected={this.newSensitivity === 'High'}>
-                    High
-                  </option>
+                    <option value="">Select Sensitivity</option>
+                    <option value="Low" selected={this.newSensitivity === "Low"}>Low</option>
+                    <option value="Medium" selected={this.newSensitivity === "Medium"}>Medium</option>
+                    <option value="High" selected={this.newSensitivity === "High"}>High</option>
                 </select>
               </span>
             </div>
@@ -281,22 +286,12 @@ export class CommonLocations {
               </span>
               <span class="form-thing">
                 <select id="type" name="type" onInput={event => this.typeChange(event)}>
-                  <option value="">Select Type</option>
-                  <option value="City" selected={this.newType === 'City'}>
-                    City
-                  </option>
-                  <option value="County" selected={this.newType === 'County'}>
-                    County
-                  </option>
-                  <option value="State" selected={this.newType === 'State'}>
-                    State
-                  </option>
-                  <option value="Country" selected={this.newType === 'Country'}>
-                    Country
-                  </option>
-                  <option value="CrossBorderArea" selected={this.newType === 'CrossBorderArea'}>
-                    CrossBorderArea
-                  </option>
+                    <option value="">Select Type</option>
+                    <option value="City" selected={this.newType === "City"}>City</option>
+                    <option value="County" selected={this.newType === "County"}>County</option>
+                    <option value="State" selected={this.newType === "State"}>State</option>
+                    <option value="Country" selected={this.newType === "Country"}>Country</option>
+                    <option value="CrossBorderArea" selected={this.newType === "CrossBorderArea"}>CrossBorderArea</option>
                 </select>
               </span>
             </div>
@@ -308,7 +303,8 @@ export class CommonLocations {
               <span class="form-thing">
                 <input type="text" id="iso_alpha3" name="iso_alpha3" onInput={event => this.iso_alpha3Change(event)} />
               </span>
-            </div>
+            </div>        
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -318,4 +314,5 @@ export class CommonLocations {
       </Host>
     );
   }
+
 }

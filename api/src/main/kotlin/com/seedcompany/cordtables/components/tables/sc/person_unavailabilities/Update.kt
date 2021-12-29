@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc/person-unavailabilities/update")
+    @PostMapping("sc-person-unavailabilities/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScPersonUnavailabilitiesUpdateRequest): ScPersonUnavailabilitiesUpdateResponse {
 

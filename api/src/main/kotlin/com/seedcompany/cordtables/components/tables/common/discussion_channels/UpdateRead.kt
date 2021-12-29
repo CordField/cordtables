@@ -37,7 +37,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/discussion-channels/update-read")
+    @PostMapping("common-discussion-channels/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonDiscussionChannelsUpdateReadRequest): CommonDiscussionChannelsUpdateReadResponse {
 

@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc/person-unavailabilities/delete")
+    @PostMapping("sc-person-unavailabilities/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScPersonUnavailabilitiesDeleteRequest): ScPersonUnavailabilitiesDeleteResponse {
 

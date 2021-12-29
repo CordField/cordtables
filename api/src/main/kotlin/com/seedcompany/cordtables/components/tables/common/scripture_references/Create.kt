@@ -36,7 +36,7 @@ class Create(
     val ds: DataSource,
 ) {
 
-    @PostMapping("common/scripture-references/create")
+    @PostMapping("table/common-scripture-references/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScriptureReferenceCreateRequest): ScriptureReferenceCreateResponse {
 

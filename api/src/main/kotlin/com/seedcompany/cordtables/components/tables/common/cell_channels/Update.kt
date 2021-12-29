@@ -33,7 +33,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common/cell-channels/update")
+    @PostMapping("common-cell-channels/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonCellChannelsUpdateRequest): CommonCellChannelsUpdateResponse {
 

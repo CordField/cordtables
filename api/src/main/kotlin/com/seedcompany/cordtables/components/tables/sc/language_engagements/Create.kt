@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc/language-engagements/create")
+    @PostMapping("sc-language-engagements/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScLanguageEngagementsCreateRequest): ScLanguageEngagementsCreateResponse {
 

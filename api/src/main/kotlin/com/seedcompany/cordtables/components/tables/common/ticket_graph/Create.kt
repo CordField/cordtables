@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common/ticket-graph/create")
+    @PostMapping("common-ticket-graph/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonTicketGraphCreateRequest): CommonTicketGraphCreateResponse {
 

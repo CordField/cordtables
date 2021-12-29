@@ -26,6 +26,7 @@ class ScGlobalPartnerTransitionListResponse {
   globalPartnerTransitions: ScGlobalPartnerTransition[];
 }
 
+
 class ScGlobalPartnerTransitionUpdateRequest {
   token: string;
   column: string;
@@ -53,6 +54,7 @@ class DeleteGlobalPartnerTransitionExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScGlobalPartnerTransitions {
+
   @State() globalPartnerTransitionsResponse: ScGlobalPartnerTransitionListResponse;
 
   newOrganization: number;
@@ -60,7 +62,7 @@ export class ScGlobalPartnerTransitions {
   newEffective_date: string;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScGlobalPartnerTransitionUpdateRequest, ScGlobalPartnerTransitionUpdateResponse>('sc/global-partner-transitions/update-read', {
+    const updateResponse = await fetchAs<ScGlobalPartnerTransitionUpdateRequest, ScGlobalPartnerTransitionUpdateResponse>('sc-global-partner-transitions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -70,12 +72,7 @@ export class ScGlobalPartnerTransitions {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.globalPartnerTransitionsResponse = {
-        error: ErrorType.NoError,
-        globalPartnerTransitions: this.globalPartnerTransitionsResponse.globalPartnerTransitions.map(globalPartnerTransition =>
-          globalPartnerTransition.id === id ? updateResponse.globalPartnerTransition : globalPartnerTransition,
-        ),
-      };
+      this.globalPartnerTransitionsResponse = { error: ErrorType.NoError, globalPartnerTransitions: this.globalPartnerTransitionsResponse.globalPartnerTransitions.map(globalPartnerTransition => (globalPartnerTransition.id === id ? updateResponse.globalPartnerTransition : globalPartnerTransition)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -85,7 +82,7 @@ export class ScGlobalPartnerTransitions {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteGlobalPartnerTransitionExRequest, DeleteGlobalPartnerTransitionExResponse>('sc/global-partner-transitions/delete', {
+    const deleteResponse = await fetchAs<DeleteGlobalPartnerTransitionExRequest, DeleteGlobalPartnerTransitionExResponse>('sc-global-partner-transitions/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -100,10 +97,17 @@ export class ScGlobalPartnerTransitions {
   };
 
   async getList() {
-    this.globalPartnerTransitionsResponse = await fetchAs<ScGlobalPartnerTransitionListRequest, ScGlobalPartnerTransitionListResponse>('sc/global-partner-transitions/list', {
+    this.globalPartnerTransitionsResponse = await fetchAs<ScGlobalPartnerTransitionListRequest, ScGlobalPartnerTransitionListResponse>('sc-global-partner-transitions/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   organizationChange(event) {
     this.newOrganization = event.target.value;
@@ -121,7 +125,7 @@ export class ScGlobalPartnerTransitions {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateGlobalPartnerTransitionExRequest, CreateGlobalPartnerTransitionExResponse>('sc/global-partner-transitions/create-read', {
+    const createResponse = await fetchAs<CreateGlobalPartnerTransitionExRequest, CreateGlobalPartnerTransitionExResponse>('sc-global-partner-transitions/create-read', {
       token: globals.globalStore.state.token,
       globalPartnerTransition: {
         organization: this.newOrganization,
@@ -160,8 +164,8 @@ export class ScGlobalPartnerTransitions {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'Organization Assessment', value: 'Organization Assessment' },
-        { display: 'Development', value: 'Development' },
+        {display: 'Organization Assessment', value: 'Organization Assessment'},
+        {display: 'Development', value: 'Development'},
       ],
       updateFn: this.handleUpdate,
     },
@@ -217,6 +221,7 @@ export class ScGlobalPartnerTransitions {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -229,6 +234,7 @@ export class ScGlobalPartnerTransitions {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="organization-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="organization">Organization</label>
@@ -238,19 +244,16 @@ export class ScGlobalPartnerTransitions {
               </span>
             </div>
 
+
             <div id="transition_type-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="transition_type">Transition Type</label>
               </span>
               <span class="form-thing">
                 <select id="transition_type" name="transition_type" onInput={event => this.transition_typeChange(event)}>
-                  <option value="">Select Transition Type</option>
-                  <option value="Organization Assessment" selected={this.newTransition_type === 'Organization Assessment'}>
-                    Organization Assessment
-                  </option>
-                  <option value="Development" selected={this.newTransition_type === 'Development'}>
-                    Development
-                  </option>
+                    <option value="">Select Transition Type</option>
+                    <option value="Organization Assessment" selected={this.newTransition_type === "Organization Assessment"}>Organization Assessment</option>
+                    <option value="Development" selected={this.newTransition_type === "Development"}>Development</option>
                 </select>
               </span>
             </div>
@@ -262,7 +265,8 @@ export class ScGlobalPartnerTransitions {
               <span class="form-thing">
                 <input type="text" id="effective_date" name="effective_date" onInput={event => this.effective_dateChange(event)} />
               </span>
-            </div>
+            </div>        
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -272,4 +276,5 @@ export class ScGlobalPartnerTransitions {
       </Host>
     );
   }
+
 }

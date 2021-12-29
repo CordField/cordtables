@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/notes/delete")
+    @PostMapping("common-notes/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonNotesDeleteRequest): CommonNotesDeleteResponse {
 

@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc/known-languages-by-person/create")
+    @PostMapping("sc-known-languages-by-person/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScKnownLanguagesByPersonCreateRequest): ScKnownLanguagesByPersonCreateResponse {
 

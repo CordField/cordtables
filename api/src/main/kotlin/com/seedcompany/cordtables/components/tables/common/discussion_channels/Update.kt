@@ -31,7 +31,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common/discussion-channels/update")
+    @PostMapping("common-discussion-channels/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonDiscussionChannelsUpdateRequest): CommonDiscussionChannelsUpdateResponse {
 

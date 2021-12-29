@@ -40,7 +40,7 @@ class Update(
     val ds: DataSource,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
-    @PostMapping("sc/products/update")
+    @PostMapping("sc-products/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScProductsUpdateRequest): ScProductsUpdateResponse {
 

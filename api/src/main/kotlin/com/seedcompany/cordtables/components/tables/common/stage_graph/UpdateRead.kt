@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/stage-graph/update-read")
+    @PostMapping("common-stage-graph/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonStageGraphUpdateReadRequest): CommonStageGraphUpdateReadResponse {
 

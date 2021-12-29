@@ -29,7 +29,7 @@ class Delete(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common/tickets/delete")
+    @PostMapping("common-tickets/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonTicketsDeleteRequest): CommonTicketsDeleteResponse {
 

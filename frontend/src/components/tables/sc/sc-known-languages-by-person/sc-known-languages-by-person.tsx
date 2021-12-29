@@ -5,6 +5,7 @@ import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
 
+
 class CreateKnownLanguagesByPersonExRequest {
   token: string;
   knownLanguagesByPerson: {
@@ -24,6 +25,7 @@ class ScKnownLanguagesByPersonListResponse {
   error: ErrorType;
   knownLanguagesByPersons: ScKnownLanguagesByPerson[];
 }
+
 
 class ScKnownLanguagesByPersonUpdateRequest {
   token: string;
@@ -52,13 +54,15 @@ class DeleteKnownLanguagesByPersonExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScKnownLanguagesByPersons {
+
   @State() knownLanguagesByPersonsResponse: ScKnownLanguagesByPersonListResponse;
 
   newPrson: number;
   newKnown_language: number;
 
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScKnownLanguagesByPersonUpdateRequest, ScKnownLanguagesByPersonUpdateResponse>('sc/known-languages-by-person/update-read', {
+    const updateResponse = await fetchAs<ScKnownLanguagesByPersonUpdateRequest, ScKnownLanguagesByPersonUpdateResponse>('sc-known-languages-by-person/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -68,12 +72,7 @@ export class ScKnownLanguagesByPersons {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.knownLanguagesByPersonsResponse = {
-        error: ErrorType.NoError,
-        knownLanguagesByPersons: this.knownLanguagesByPersonsResponse.knownLanguagesByPersons.map(knownLanguagesByPerson =>
-          knownLanguagesByPerson.id === id ? updateResponse.knownLanguagesByPerson : knownLanguagesByPerson,
-        ),
-      };
+      this.knownLanguagesByPersonsResponse = { error: ErrorType.NoError, knownLanguagesByPersons: this.knownLanguagesByPersonsResponse.knownLanguagesByPersons.map(knownLanguagesByPerson => (knownLanguagesByPerson.id === id ? updateResponse.knownLanguagesByPerson : knownLanguagesByPerson)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -83,7 +82,7 @@ export class ScKnownLanguagesByPersons {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteKnownLanguagesByPersonExRequest, DeleteKnownLanguagesByPersonExResponse>('sc/known-languages-by-person/delete', {
+    const deleteResponse = await fetchAs<DeleteKnownLanguagesByPersonExRequest, DeleteKnownLanguagesByPersonExResponse>('sc-known-languages-by-person/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -98,10 +97,17 @@ export class ScKnownLanguagesByPersons {
   };
 
   async getList() {
-    this.knownLanguagesByPersonsResponse = await fetchAs<ScKnownLanguagesByPersonListRequest, ScKnownLanguagesByPersonListResponse>('sc/known-languages-by-person/list', {
+    this.knownLanguagesByPersonsResponse = await fetchAs<ScKnownLanguagesByPersonListRequest, ScKnownLanguagesByPersonListResponse>('sc-known-languages-by-person/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   personChange(event) {
     this.newPrson = event.target.value;
@@ -115,7 +121,7 @@ export class ScKnownLanguagesByPersons {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateKnownLanguagesByPersonExRequest, CreateKnownLanguagesByPersonExResponse>('sc/known-languages-by-person/create-read', {
+    const createResponse = await fetchAs<CreateKnownLanguagesByPersonExRequest, CreateKnownLanguagesByPersonExResponse>('sc-known-languages-by-person/create-read', {
       token: globals.globalStore.state.token,
       knownLanguagesByPerson: {
         person: this.newPrson,
@@ -131,6 +137,8 @@ export class ScKnownLanguagesByPersons {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
+
+
 
   columnData: ColumnDescription[] = [
     {
@@ -199,6 +207,7 @@ export class ScKnownLanguagesByPersons {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -227,7 +236,8 @@ export class ScKnownLanguagesByPersons {
               <span class="form-thing">
                 <input type="text" id="known_language" name="known_language" onInput={event => this.known_languageChange(event)} />
               </span>
-            </div>
+            </div> 
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -237,4 +247,6 @@ export class ScKnownLanguagesByPersons {
       </Host>
     );
   }
+
 }
+

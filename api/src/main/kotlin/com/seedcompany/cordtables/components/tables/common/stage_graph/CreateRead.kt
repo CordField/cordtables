@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/stage-graph/create-read")
+    @PostMapping("common-stage-graph/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonStageGraphCreateReadRequest): CommonStageGraphCreateReadResponse {
 

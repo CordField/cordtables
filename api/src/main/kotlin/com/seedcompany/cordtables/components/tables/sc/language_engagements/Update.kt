@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc/language-engagements/update")
+    @PostMapping("sc-language-engagements/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScLanguageEngagementsUpdateRequest): ScLanguageEngagementsUpdateResponse {
 

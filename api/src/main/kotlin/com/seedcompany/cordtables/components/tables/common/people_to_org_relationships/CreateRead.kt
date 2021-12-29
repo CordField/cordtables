@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/people-to-org-relationships/create-read")
+    @PostMapping("common-people-to-org-relationships/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonPeopleToOrgRelationshipsCreateReadRequest): CommonPeopleToOrgRelationshipsCreateReadResponse {
 

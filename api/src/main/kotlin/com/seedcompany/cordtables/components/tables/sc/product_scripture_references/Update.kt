@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc/product-scripture-references/update")
+    @PostMapping("sc-product-scripture-references/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScProductScriptureReferencesUpdateRequest): ScProductScriptureReferencesUpdateResponse {
 

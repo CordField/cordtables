@@ -41,7 +41,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/locations/read")
+    @PostMapping("common-locations/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonLocationsReadRequest): CommonLocationsReadResponse {
 

@@ -34,7 +34,7 @@ class SearchEth(
 
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-  @PostMapping("sil/language-index/search-eth")
+  @PostMapping("sil-language-index/search-eth")
   @ResponseBody
   fun listHandler(@RequestBody req: SilLanguageIndexSearchEthRequest): SilLanguageIndexSearchEthResponse {
     if (req.lang == null) return SilLanguageIndexSearchEthResponse(ErrorType.InputMissingColumn)

@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("up/prayer-requests/update-read")
+    @PostMapping("up-prayer-requests/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: UpPrayerRequestsUpdateReadRequest): UpPrayerRequestsUpdateReadResponse {
 

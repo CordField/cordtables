@@ -25,6 +25,7 @@ class AdminGroupMembershipListResponse {
   groupMemberships: AdminGroupMembership[];
 }
 
+
 class AdminGroupMembershipUpdateRequest {
   token: string;
   column: string;
@@ -52,13 +53,14 @@ class DeleteGroupMembershipExResponse extends GenericResponse {
   shadow: true,
 })
 export class AdminGroupMemberships {
+
   @State() groupMembershipsResponse: AdminGroupMembershipListResponse;
 
   newGroup_id: number;
   newPerson: number;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminGroupMembershipUpdateRequest, AdminGroupMembershipUpdateResponse>('admin/group-memberships/update-read', {
+    const updateResponse = await fetchAs<AdminGroupMembershipUpdateRequest, AdminGroupMembershipUpdateResponse>('admin-group-memberships/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -68,10 +70,7 @@ export class AdminGroupMemberships {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.groupMembershipsResponse = {
-        error: ErrorType.NoError,
-        groupMemberships: this.groupMembershipsResponse.groupMemberships.map(groupMembership => (groupMembership.id === id ? updateResponse.groupMembership : groupMembership)),
-      };
+      this.groupMembershipsResponse = { error: ErrorType.NoError, groupMemberships: this.groupMembershipsResponse.groupMemberships.map(groupMembership => (groupMembership.id === id ? updateResponse.groupMembership : groupMembership)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -81,7 +80,7 @@ export class AdminGroupMemberships {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteGroupMembershipExRequest, DeleteGroupMembershipExResponse>('admin/group-memberships/delete', {
+    const deleteResponse = await fetchAs<DeleteGroupMembershipExRequest, DeleteGroupMembershipExResponse>('admin-group-memberships/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -96,10 +95,17 @@ export class AdminGroupMemberships {
   };
 
   async getList() {
-    this.groupMembershipsResponse = await fetchAs<AdminGroupMembershipListRequest, AdminGroupMembershipListResponse>('admin/group-memberships/list', {
+    this.groupMembershipsResponse = await fetchAs<AdminGroupMembershipListRequest, AdminGroupMembershipListResponse>('admin-group-memberships/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   group_idChange(event) {
     this.newGroup_id = event.target.value;
@@ -113,7 +119,7 @@ export class AdminGroupMemberships {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateGroupMembershipExRequest, CreateGroupMembershipExResponse>('admin/group-memberships/create-read', {
+    const createResponse = await fetchAs<CreateGroupMembershipExRequest, CreateGroupMembershipExResponse>('admin-group-memberships/create-read', {
       token: globals.globalStore.state.token,
       groupMembership: {
         group_id: this.newGroup_id,
@@ -129,6 +135,7 @@ export class AdminGroupMemberships {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
+
 
   columnData: ColumnDescription[] = [
     {
@@ -197,6 +204,7 @@ export class AdminGroupMemberships {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -209,6 +217,7 @@ export class AdminGroupMemberships {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="group_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="group_id">Group ID</label>
@@ -225,7 +234,8 @@ export class AdminGroupMemberships {
               <span class="form-thing">
                 <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
-            </div>
+            </div>        
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -235,4 +245,5 @@ export class AdminGroupMemberships {
       </Host>
     );
   }
+
 }

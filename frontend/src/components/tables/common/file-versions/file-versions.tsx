@@ -65,6 +65,7 @@ class DeleteFileVersionExResponse extends GenericResponse {
   shadow: true,
 })
 export class FileVersions {
+
   @State() fileVersionsResponse: CommonFileVersionListResponse;
   @State() filesResponse: CommonFileListResponse;
 
@@ -75,8 +76,9 @@ export class FileVersions {
   newFileUrl: string;
   newFileSize: number;
 
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonFileVersionUpdateRequest, CommonFileVersionUpdateResponse>('common/file-versions/update-read', {
+    const updateResponse = await fetchAs<CommonFileVersionUpdateRequest, CommonFileVersionUpdateResponse>('common-file-versions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -86,10 +88,7 @@ export class FileVersions {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.fileVersionsResponse = {
-        error: ErrorType.NoError,
-        fileVersions: this.fileVersionsResponse.fileVersions.map(fileVersion => (fileVersion.id === id ? updateResponse.fileVersion : fileVersion)),
-      };
+      this.fileVersionsResponse = { error: ErrorType.NoError, fileVersions: this.fileVersionsResponse.fileVersions.map(fileVersion => (fileVersion.id === id ? updateResponse.fileVersion : fileVersion)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -99,7 +98,7 @@ export class FileVersions {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFileVersionExRequest, DeleteFileVersionExResponse>('common/file-versions/delete', {
+    const deleteResponse = await fetchAs<DeleteFileVersionExRequest, DeleteFileVersionExResponse>('common-file-versions/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -114,13 +113,13 @@ export class FileVersions {
   };
 
   async getList() {
-    this.fileVersionsResponse = await fetchAs<CommonFileVersionListRequest, CommonFileVersionListResponse>('common/file-versions/list', {
+    this.fileVersionsResponse = await fetchAs<CommonFileVersionListRequest, CommonFileVersionListResponse>('common-file-versions/list', {
       token: globals.globalStore.state.token,
     });
   }
 
   async getFilesList() {
-    this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common/files/list', {
+    this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -141,7 +140,7 @@ export class FileVersions {
     this.newFileUrl = event.target.value;
   }
 
-  fileSizeChange(event) {
+  fileSizeChange(event){
     this.newFileSize = event.target.value;
   }
 
@@ -153,7 +152,7 @@ export class FileVersions {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateFileVersionExRequest, CreateFileVersionExResponse>('common/file-versions/create-read', {
+    const createResponse = await fetchAs<CreateFileVersionExRequest, CreateFileVersionExResponse>('common-file-versions/create-read', {
       token: globals.globalStore.state.token,
       fileVersion: {
         category: this.newCategory,
@@ -173,6 +172,7 @@ export class FileVersions {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
+
 
   columnData: ColumnDescription[] = [
     {
@@ -314,10 +314,10 @@ export class FileVersions {
               </span>
               <span class="form-thing">
                 <select name="file" onInput={event => this.fileChange(event)}>
-                  <option value="">Select A Directory</option>
-                  {this.filesResponse.files.map(option => (
-                    <option value={option.id}>{option.name}</option>
-                  ))}
+                <option value="">Select A Directory</option>
+                {this.filesResponse.files.map(option => (
+                  <option value={option.id}>{option.name}</option>
+                ))}
                 </select>
               </span>
             </div>
@@ -339,6 +339,8 @@ export class FileVersions {
                 <input type="number" id="file-size" name="file-size" onInput={event => this.fileSizeChange(event)} />
               </span>
             </div>
+            
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -348,4 +350,5 @@ export class FileVersions {
       </Host>
     );
   }
+
 }

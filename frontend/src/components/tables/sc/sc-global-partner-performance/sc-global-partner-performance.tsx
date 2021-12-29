@@ -27,6 +27,7 @@ class ScGlobalPartnerPerformanceListResponse {
   globalPartnerPerformances: ScGlobalPartnerPerformance[];
 }
 
+
 class ScGlobalPartnerPerformanceUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +55,16 @@ class DeleteGlobalPartnerPerformanceExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScGlobalPartnerPerformances {
+
   @State() globalPartnerPerformancesResponse: ScGlobalPartnerPerformanceListResponse;
 
   newOrganization: number;
   newReporting_performance: string;
   newFinancial_performance: string;
   newTranslation_performance: string;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScGlobalPartnerPerformanceUpdateRequest, ScGlobalPartnerPerformanceUpdateResponse>('sc/global-partner-performance/update-read', {
+    const updateResponse = await fetchAs<ScGlobalPartnerPerformanceUpdateRequest, ScGlobalPartnerPerformanceUpdateResponse>('sc-global-partner-performance/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,12 +74,7 @@ export class ScGlobalPartnerPerformances {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.globalPartnerPerformancesResponse = {
-        error: ErrorType.NoError,
-        globalPartnerPerformances: this.globalPartnerPerformancesResponse.globalPartnerPerformances.map(globalPartnerPerformance =>
-          globalPartnerPerformance.id === id ? updateResponse.globalPartnerPerformance : globalPartnerPerformance,
-        ),
-      };
+      this.globalPartnerPerformancesResponse = { error: ErrorType.NoError, globalPartnerPerformances: this.globalPartnerPerformancesResponse.globalPartnerPerformances.map(globalPartnerPerformance => (globalPartnerPerformance.id === id ? updateResponse.globalPartnerPerformance : globalPartnerPerformance)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -87,7 +84,7 @@ export class ScGlobalPartnerPerformances {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteGlobalPartnerPerformanceExRequest, DeleteGlobalPartnerPerformanceExResponse>('sc/global-partner-performance/delete', {
+    const deleteResponse = await fetchAs<DeleteGlobalPartnerPerformanceExRequest, DeleteGlobalPartnerPerformanceExResponse>('sc-global-partner-performance/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -102,10 +99,17 @@ export class ScGlobalPartnerPerformances {
   };
 
   async getList() {
-    this.globalPartnerPerformancesResponse = await fetchAs<ScGlobalPartnerPerformanceListRequest, ScGlobalPartnerPerformanceListResponse>('sc/global-partner-performance/list', {
+    this.globalPartnerPerformancesResponse = await fetchAs<ScGlobalPartnerPerformanceListRequest, ScGlobalPartnerPerformanceListResponse>('sc-global-partner-performance/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   organizationChange(event) {
     this.newOrganization = event.target.value;
@@ -127,7 +131,7 @@ export class ScGlobalPartnerPerformances {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateGlobalPartnerPerformanceExRequest, CreateGlobalPartnerPerformanceExResponse>('sc/global-partner-performance/create-read', {
+    const createResponse = await fetchAs<CreateGlobalPartnerPerformanceExRequest, CreateGlobalPartnerPerformanceExResponse>('sc-global-partner-performance/create-read', {
       token: globals.globalStore.state.token,
       globalPartnerPerformance: {
         organization: this.newOrganization,
@@ -167,10 +171,10 @@ export class ScGlobalPartnerPerformances {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: '1', value: '1' },
-        { display: '2', value: '2' },
-        { display: '3', value: '3' },
-        { display: '4', value: '4' },
+        {display: "1", value: "1"},
+        {display: "2", value: "2"},
+        {display: "3", value: "3"},
+        {display: "4", value: "4"},       
       ],
       updateFn: this.handleUpdate,
     },
@@ -180,10 +184,10 @@ export class ScGlobalPartnerPerformances {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: '1', value: '1' },
-        { display: '2', value: '2' },
-        { display: '3', value: '3' },
-        { display: '4', value: '4' },
+        {display: "1", value: "1"},
+        {display: "2", value: "2"},
+        {display: "3", value: "3"},
+        {display: "4", value: "4"},       
       ],
       updateFn: this.handleUpdate,
     },
@@ -193,10 +197,10 @@ export class ScGlobalPartnerPerformances {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: '1', value: '1' },
-        { display: '2', value: '2' },
-        { display: '3', value: '3' },
-        { display: '4', value: '4' },
+        {display: "1", value: "1"},
+        {display: "2", value: "2"},
+        {display: "3", value: "3"},
+        {display: "4", value: "4"},       
       ],
       updateFn: this.handleUpdate,
     },
@@ -245,6 +249,7 @@ export class ScGlobalPartnerPerformances {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -272,19 +277,11 @@ export class ScGlobalPartnerPerformances {
               </span>
               <span class="form-thing">
                 <select id="reporting_performance" name="reporting_performance" onInput={event => this.reporting_performanceChange(event)}>
-                  <option value="">Select Reporting Performance</option>
-                  <option value="1" selected={this.newReporting_performance === '1'}>
-                    1
-                  </option>
-                  <option value="2" selected={this.newReporting_performance === '2'}>
-                    2
-                  </option>
-                  <option value="3" selected={this.newReporting_performance === '3'}>
-                    3
-                  </option>
-                  <option value="4" selected={this.newReporting_performance === '4'}>
-                    4
-                  </option>
+                    <option value="">Select Reporting Performance</option>
+                    <option value="1" selected={this.newReporting_performance === "1"}>1</option>
+                    <option value="2" selected={this.newReporting_performance === "2"}>2</option>
+                    <option value="3" selected={this.newReporting_performance === "3"}>3</option>
+                    <option value="4" selected={this.newReporting_performance === "4"}>4</option>
                 </select>
               </span>
             </div>
@@ -295,22 +292,14 @@ export class ScGlobalPartnerPerformances {
               </span>
               <span class="form-thing">
                 <select id="financial_performance" name="financial_performance" onInput={event => this.financial_performanceChange(event)}>
-                  <option value="">Select Financial Performance</option>
-                  <option value="1" selected={this.newFinancial_performance === '1'}>
-                    1
-                  </option>
-                  <option value="2" selected={this.newFinancial_performance === '2'}>
-                    2
-                  </option>
-                  <option value="3" selected={this.newFinancial_performance === '3'}>
-                    3
-                  </option>
-                  <option value="4" selected={this.newFinancial_performance === '4'}>
-                    4
-                  </option>
+                    <option value="">Select Financial Performance</option>
+                    <option value="1" selected={this.newFinancial_performance === "1"}>1</option>
+                    <option value="2" selected={this.newFinancial_performance === "2"}>2</option>
+                    <option value="3" selected={this.newFinancial_performance === "3"}>3</option>
+                    <option value="4" selected={this.newFinancial_performance === "4"}>4</option>
                 </select>
               </span>
-            </div>
+            </div>        
 
             <div id="translation_performance-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -318,22 +307,15 @@ export class ScGlobalPartnerPerformances {
               </span>
               <span class="form-thing">
                 <select id="translation_performance" name="translation_performance" onInput={event => this.translation_performanceChange(event)}>
-                  <option value="">Select Translation Performance</option>
-                  <option value="1" selected={this.newTranslation_performance === '1'}>
-                    1
-                  </option>
-                  <option value="2" selected={this.newTranslation_performance === '2'}>
-                    2
-                  </option>
-                  <option value="3" selected={this.newTranslation_performance === '3'}>
-                    3
-                  </option>
-                  <option value="4" selected={this.newTranslation_performance === '4'}>
-                    4
-                  </option>
+                    <option value="">Select Translation Performance</option>
+                    <option value="1" selected={this.newTranslation_performance === "1"}>1</option>
+                    <option value="2" selected={this.newTranslation_performance === "2"}>2</option>
+                    <option value="3" selected={this.newTranslation_performance === "3"}>3</option>
+                    <option value="4" selected={this.newTranslation_performance === "4"}>4</option>
                 </select>
               </span>
             </div>
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -343,4 +325,5 @@ export class ScGlobalPartnerPerformances {
       </Host>
     );
   }
+
 }

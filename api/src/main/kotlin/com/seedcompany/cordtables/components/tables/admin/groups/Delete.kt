@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("admin/groups/delete")
+    @PostMapping("admin-groups/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: AdminGroupsDeleteRequest): AdminGroupsDeleteResponse {
 

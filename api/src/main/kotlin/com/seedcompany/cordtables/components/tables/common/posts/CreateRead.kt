@@ -35,7 +35,7 @@ class CreateRead(
         @Autowired
         val read: Read,
 ) {
-    @PostMapping("common/posts/create-read")
+    @PostMapping("common-posts/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonPostsCreateReadRequest): CommonPostsCreateReadResponse {
 

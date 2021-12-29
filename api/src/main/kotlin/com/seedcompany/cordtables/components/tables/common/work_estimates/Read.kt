@@ -41,7 +41,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/work-estimates/read")
+    @PostMapping("common-work-estimates/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonWorkEstimateReadRequest): CommonWorkEstimateReadResponse {
 

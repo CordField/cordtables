@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/stage-role-column-grants/update")
+    @PostMapping("common-stage-role-column-grants/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonStageRoleColumnGrantsUpdateRequest): CommonStageRoleColumnGrantsUpdateResponse {
 

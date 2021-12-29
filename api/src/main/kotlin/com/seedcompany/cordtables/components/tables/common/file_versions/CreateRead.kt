@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/file-versions/create-read")
+    @PostMapping("common-file-versions/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonFileVersionsCreateReadRequest): CommonFileVersionsCreateReadResponse {
 

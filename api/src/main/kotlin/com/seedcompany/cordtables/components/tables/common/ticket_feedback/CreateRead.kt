@@ -35,7 +35,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common/ticket-feedback/create-read")
+    @PostMapping("common-ticket-feedback/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonTicketFeedbackCreateReadRequest): CommonTicketFeedbackCreateReadResponse {
 

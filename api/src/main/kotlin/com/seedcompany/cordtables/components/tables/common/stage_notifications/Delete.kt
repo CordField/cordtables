@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/stage-notifications/delete")
+    @PostMapping("common-stage-notifications/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonStageNotificationsDeleteRequest): CommonStageNotificationsDeleteResponse {
 

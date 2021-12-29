@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc/person-unavailabilities/update-read")
+    @PostMapping("sc-person-unavailabilities/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScPersonUnavailabilitiesUpdateReadRequest): ScPersonUnavailabilitiesUpdateReadResponse {
 

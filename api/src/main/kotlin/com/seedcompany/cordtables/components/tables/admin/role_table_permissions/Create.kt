@@ -42,7 +42,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin/role-table-permissions/create")
+    @PostMapping("admin-role-table-permissions/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminRoleTablePermissionsCreateRequest): AdminRoleTablePermissionsCreateResponse {
 

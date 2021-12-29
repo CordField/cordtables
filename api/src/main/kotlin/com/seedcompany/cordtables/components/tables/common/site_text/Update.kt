@@ -29,7 +29,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/site-texts/update")
+    @PostMapping("common-site-texts/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonSiteTextUpdateRequest): CommonSiteTextUpdateResponse {
 

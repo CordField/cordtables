@@ -31,7 +31,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/work-estimates/update")
+    @PostMapping("common-work-estimates/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonWorkEstimateUpdateRequest): CommonWorkEstimateUpdateResponse {
 

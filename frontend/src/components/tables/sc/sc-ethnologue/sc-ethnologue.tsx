@@ -15,6 +15,7 @@ class CreateEthnologueExRequest {
     population: number;
     provisional_code: string;
     sensitivity: string;
+
   };
 }
 class CreateEthnologueExResponse extends GenericResponse {
@@ -29,6 +30,7 @@ class ScEthnologueListResponse {
   error: ErrorType;
   ethnologues: ScEthnologue[];
 }
+
 
 class ScEthnologueUpdateRequest {
   token: string;
@@ -57,6 +59,7 @@ class DeleteEthnologueExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScEthnologues {
+
   @State() ethnologuesResponse: ScEthnologueListResponse;
 
   newNeo4j_id: string;
@@ -66,9 +69,9 @@ export class ScEthnologues {
   newPopulation: number;
   newProvisional_code: string;
   newSensitivity: string;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScEthnologueUpdateRequest, ScEthnologueUpdateResponse>('sc/ethnologue/update-read', {
+    const updateResponse = await fetchAs<ScEthnologueUpdateRequest, ScEthnologueUpdateResponse>('sc-ethnologue/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -78,10 +81,7 @@ export class ScEthnologues {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.ethnologuesResponse = {
-        error: ErrorType.NoError,
-        ethnologues: this.ethnologuesResponse.ethnologues.map(ethnologue => (ethnologue.id === id ? updateResponse.ethnologue : ethnologue)),
-      };
+      this.ethnologuesResponse = { error: ErrorType.NoError, ethnologues: this.ethnologuesResponse.ethnologues.map(ethnologue => (ethnologue.id === id ? updateResponse.ethnologue : ethnologue)) };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -91,7 +91,7 @@ export class ScEthnologues {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteEthnologueExRequest, DeleteEthnologueExResponse>('sc/ethnologue/delete', {
+    const deleteResponse = await fetchAs<DeleteEthnologueExRequest, DeleteEthnologueExResponse>('sc-ethnologue/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -106,10 +106,17 @@ export class ScEthnologues {
   };
 
   async getList() {
-    this.ethnologuesResponse = await fetchAs<ScEthnologueListRequest, ScEthnologueListResponse>('sc/ethnologue/list', {
+    this.ethnologuesResponse = await fetchAs<ScEthnologueListRequest, ScEthnologueListResponse>('sc-ethnologue/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   neo4j_idChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -139,11 +146,12 @@ export class ScEthnologues {
     this.newSensitivity = event.target.value;
   }
 
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateEthnologueExRequest, CreateEthnologueExResponse>('sc/ethnologue/create-read', {
+    const createResponse = await fetchAs<CreateEthnologueExRequest, CreateEthnologueExResponse>('sc-ethnologue/create-read', {
       token: globals.globalStore.state.token,
       ethnologue: {
         neo4j_id: this.newNeo4j_id,
@@ -164,7 +172,7 @@ export class ScEthnologues {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
+  
   columnData: ColumnDescription[] = [
     {
       field: 'id',
@@ -181,12 +189,12 @@ export class ScEthnologues {
       updateFn: this.handleUpdate,
     },
     {
-      field: 'language_index',
-      displayName: 'Language Index',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
+        field: 'language_index',
+        displayName: 'Language Index',
+        width: 200,
+        editable: true,
+        updateFn: this.handleUpdate,
+      },
     {
       field: 'code',
       displayName: 'Code',
@@ -195,38 +203,38 @@ export class ScEthnologues {
       updateFn: this.handleUpdate,
     },
     {
-      field: 'language_name',
-      displayName: 'Language Name',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
-    {
-      field: 'population',
-      displayName: 'Population',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
-    {
-      field: 'provisional_code',
-      displayName: 'Provisional Code',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
-    {
-      field: 'sensitivity',
-      displayName: 'Sensitivity',
-      width: 200,
-      editable: true,
-      selectOptions: [
-        { display: 'Low', value: 'Low' },
-        { display: 'Medium', value: 'Medium' },
-        { display: 'High', value: 'High' },
-      ],
-      updateFn: this.handleUpdate,
-    },
+        field: 'language_name',
+        displayName: 'Language Name',
+        width: 200,
+        editable: true,
+        updateFn: this.handleUpdate,
+      },
+      {
+        field: 'population',
+        displayName: 'Population',
+        width: 200,
+        editable: true,
+        updateFn: this.handleUpdate,
+      },
+      {
+        field: 'provisional_code',
+        displayName: 'Provisional Code',
+        width: 200,
+        editable: true,
+        updateFn: this.handleUpdate,
+      },
+      {
+        field: 'sensitivity',
+        displayName: 'Sensitivity',
+        width: 200,
+        editable: true,
+        selectOptions: [
+            {display:  "Low", value: "Low"},
+            {display:  "Medium", value: "Medium"},
+            {display:  "High", value: "High"},
+        ],
+        updateFn: this.handleUpdate,
+      },
 
     {
       field: 'created_at',
@@ -273,6 +281,7 @@ export class ScEthnologues {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -285,6 +294,7 @@ export class ScEthnologues {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">Neo4j ID</label>
@@ -301,7 +311,11 @@ export class ScEthnologues {
               <span class="form-thing">
                 <input type="number" id="language_index" name="language_index" onInput={event => this.language_indexChange(event)} />
               </span>
-            </div>
+            </div>   
+
+
+
+
 
             <div id="code-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -345,19 +359,14 @@ export class ScEthnologues {
               </span>
               <span class="form-thing">
                 <select id="sensitivity" name="sensitivity" onInput={event => this.sensitivityChange(event)}>
-                  <option value="">Select Sensitivity</option>
-                  <option value="Low" selected={this.newSensitivity === 'Low'}>
-                    Low
-                  </option>
-                  <option value="Medium" selected={this.newSensitivity === 'Medium'}>
-                    Medium
-                  </option>
-                  <option value="High" selected={this.newSensitivity === 'High'}>
-                    High
-                  </option>
+                    <option value="">Select Sensitivity</option>
+                    <option value="Low" selected={this.newSensitivity === "Low"}>Low</option>
+                    <option value="Medium" selected={this.newSensitivity === "Medium"}>Medium</option>
+                    <option value="High" selected={this.newSensitivity === "High"}>High</option>
                 </select>
               </span>
             </div>
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -367,4 +376,5 @@ export class ScEthnologues {
       </Host>
     );
   }
+
 }

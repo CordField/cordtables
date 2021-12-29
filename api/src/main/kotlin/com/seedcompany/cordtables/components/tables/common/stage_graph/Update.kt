@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common/stage-graph/update")
+    @PostMapping("common-stage-graph/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonStageGraphUpdateRequest): CommonStageGraphUpdateResponse {
 

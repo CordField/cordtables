@@ -24,6 +24,7 @@ class CommonStageListResponse {
   stages: CommonStage[];
 }
 
+
 class CommonStageUpdateRequest {
   token: string;
   column: string;
@@ -51,12 +52,13 @@ class DeleteStageExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonStages {
+
   @State() stagesResponse: CommonStageListResponse;
 
   newTitle: string;
-
+  
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonStageUpdateRequest, CommonStageUpdateResponse>('common/stages/update-read', {
+    const updateResponse = await fetchAs<CommonStageUpdateRequest, CommonStageUpdateResponse>('common-stages/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -76,7 +78,7 @@ export class CommonStages {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteStageExRequest, DeleteStageExResponse>('common/stages/delete', {
+    const deleteResponse = await fetchAs<DeleteStageExRequest, DeleteStageExResponse>('common-stages/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -91,10 +93,17 @@ export class CommonStages {
   };
 
   async getList() {
-    this.stagesResponse = await fetchAs<CommonStageListRequest, CommonStageListResponse>('common/stages/list', {
+    this.stagesResponse = await fetchAs<CommonStageListRequest, CommonStageListResponse>('common-stages/list', {
       token: globals.globalStore.state.token,
     });
   }
+
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
 
   titleChange(event) {
     this.newTitle = event.target.value;
@@ -104,7 +113,7 @@ export class CommonStages {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateStageExRequest, CreateStageExResponse>('common/stages/create-read', {
+    const createResponse = await fetchAs<CreateStageExRequest, CreateStageExResponse>('common-stages/create-read', {
       token: globals.globalStore.state.token,
       stage: {
         title: this.newTitle,
@@ -119,6 +128,7 @@ export class CommonStages {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
+
 
   columnData: ColumnDescription[] = [
     {
@@ -180,6 +190,7 @@ export class CommonStages {
     // await this.getFilesList();
   }
 
+
   render() {
     return (
       <Host>
@@ -192,6 +203,7 @@ export class CommonStages {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+
             <div id="title-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="title">Title</label>
@@ -199,7 +211,8 @@ export class CommonStages {
               <span class="form-thing">
                 <input type="text" id="title" name="title" onInput={event => this.titleChange(event)} />
               </span>
-            </div>
+            </div>     
+            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -209,4 +222,5 @@ export class CommonStages {
       </Host>
     );
   }
+
 }

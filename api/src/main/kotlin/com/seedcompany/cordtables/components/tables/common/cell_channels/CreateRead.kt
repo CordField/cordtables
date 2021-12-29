@@ -37,7 +37,7 @@ class CreateRead(
         @Autowired
         val read: Read,
 ) {
-    @PostMapping("common/cell-channels/create-read")
+    @PostMapping("common-cell-channels/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonCellChannelsCreateReadRequest): CommonCellChannelsCreateReadResponse {
 

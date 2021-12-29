@@ -31,7 +31,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common/posts/update")
+    @PostMapping("common-posts/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonPostsUpdateRequest): CommonPostsUpdateResponse {
 

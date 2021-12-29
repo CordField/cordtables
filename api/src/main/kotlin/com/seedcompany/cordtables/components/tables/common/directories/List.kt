@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common/directories/list")
+    @PostMapping("common-directories/list")
     @ResponseBody
     fun listHandler(@RequestBody req: CommonDirectoriesListRequest): CommonDirectoriesListResponse {
         var data: MutableList<CommonDirectory> = mutableListOf()

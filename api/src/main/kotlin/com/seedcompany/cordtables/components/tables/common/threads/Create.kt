@@ -33,7 +33,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common/threads/create")
+    @PostMapping("common-threads/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonThreadsCreateRequest): CommonThreadsCreateResponse {
         if (req.token == null) return CommonThreadsCreateResponse(error = com.seedcompany.cordtables.common.ErrorType.InputMissingToken, null)
