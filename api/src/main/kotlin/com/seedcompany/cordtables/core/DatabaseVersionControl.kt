@@ -204,13 +204,6 @@ class DatabaseVersionControl(
       bootstrapStatement.close()
     }
 
-    // load roles
-    jdbcTemplate.execute("call roles_migration();")
-
-    if (appConfig.thisServerUrl == "http://localhost:8080") {
-      // runSqlFile("sql/data/dummy.data.sql")
-    }
-
     // update version control table
     jdbcTemplate.execute(
       """
