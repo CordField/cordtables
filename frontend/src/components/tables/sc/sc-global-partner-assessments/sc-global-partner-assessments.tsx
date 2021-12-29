@@ -226,7 +226,7 @@ export class ScGlobalPartnerAssessments {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -235,7 +235,7 @@ export class ScGlobalPartnerAssessments {
     {
       field: 'partner',
       displayName: 'Partner',
-      width: 150,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },

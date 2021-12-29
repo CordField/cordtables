@@ -10,7 +10,7 @@ class CreateNoteExRequest {
   note: {
     table_name: string;
     column_name: string;
-    row: number;
+    row: string;
     content: string;
   };
 }
@@ -60,7 +60,7 @@ export class CommonNotes {
 
   newTable_name: string;
     newColumn_name: string;
-    newRow: number;
+    newRow: string;
     newContent: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
@@ -154,14 +154,14 @@ export class CommonNotes {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'table_name',
       displayName: 'Table Name',
-      width: 200,
+      width: 250,
       editable: true,
       selectOptions: [
         {display:  "admin.database_version_control", value: "admin.database_version_control"},

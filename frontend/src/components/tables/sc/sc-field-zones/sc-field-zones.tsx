@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateFieldZoneExRequest {
   token: string;
   fieldZone: {
-    neo4j_id: string;
+    // neo4j_id: string;
     director: string;
     name: string;
   };
@@ -57,7 +57,7 @@ export class ScFieldZones {
 
   @State() fieldZonesResponse: ScFieldZoneListResponse;
 
-  newNeo4j_id: string;
+  // newNeo4j_id: string;
   newDirector: string;
   newName: string;
   
@@ -109,9 +109,9 @@ export class ScFieldZones {
   // }
 
 
-  neo4jChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
+  // neo4jChange(event) {
+  //   this.newNeo4j_id = event.target.value;
+  // }
 
   directorChange(event) {
     this.newDirector = event.target.value;
@@ -129,7 +129,7 @@ export class ScFieldZones {
     const createResponse = await fetchAs<CreateFieldZoneExRequest, CreateFieldZoneExResponse>('sc-field-zones/create-read', {
       token: globals.globalStore.state.token,
       fieldZone: {
-        neo4j_id: this.newNeo4j_id,
+        // neo4j_id: this.newNeo4j_id,
         director: this.newDirector,
         name: this.newName,
       },
@@ -149,23 +149,23 @@ export class ScFieldZones {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
-    {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
-    },
+    // {
+    //   field: 'neo4j_id',
+    //   displayName: 'neo4j_id',
+    //   width: 50,
+    //   editable: false,
+    //   deleteFn: this.handleDelete,
+    // },
     {
       field: 'director',
       displayName: 'Director',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'name',
@@ -231,14 +231,14 @@ export class ScFieldZones {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            {/* <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">neo4j_id</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4jChange(event)} />
               </span>
-            </div>
+            </div> */}
 
             <div id="director-holder" class="form-input-item form-thing">
               <span class="form-thing">

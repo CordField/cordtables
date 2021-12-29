@@ -140,6 +140,7 @@ class Update(
                         column = "ethnologue",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
 

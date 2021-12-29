@@ -114,21 +114,21 @@ columnData: ColumnDescription[] = [
   {
     field: 'id',
     displayName: 'ID',
-    width: 50,
+    width: 250,
     editable: false,
     deleteFn: this.handleDelete,
   },
   {
     field: 'ticket',
     displayName: 'Ticket',
-    width: 200,
+    width: 250,
     editable: true,
     updateFn: this.handleUpdate,
   },
   {
     field: 'person',
     displayName: 'Person',
-    width: 200,
+    width: 250,
     editable: true,
     updateFn: this.handleUpdate,
   },
@@ -152,12 +152,6 @@ columnData: ColumnDescription[] = [
     width: 200,
     editable: true,
     updateFn: this.handleUpdate,
-  },
-    {
-    field: 'total_time',
-    displayName: 'Total Time',
-    width: 200,
-    editable: false,
   },
   {
     field: 'comment',
@@ -263,7 +257,9 @@ handleInsert = async (event: MouseEvent) => {
       <Host>
         <slot></slot>
 
-        
+        {/* table abstraction */}
+        {this.CommonWorkEstimateResponse && this.onlyShowCreate === false && <cf-table rowData={this.CommonWorkEstimateResponse.work_estimate} columnData={this.columnData}></cf-table>}
+      
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
@@ -315,8 +311,6 @@ handleInsert = async (event: MouseEvent) => {
             </span>
           </form>
         )}
-          {/* table abstraction */}
-          {this.CommonWorkEstimateResponse && this.onlyShowCreate === false && <cf-table rowData={this.CommonWorkEstimateResponse.work_estimate} columnData={this.columnData}></cf-table>}
       </Host>
     );
   }

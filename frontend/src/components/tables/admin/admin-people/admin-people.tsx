@@ -19,9 +19,9 @@ class CreatePeopleExRequest {
     private_full_name: string;
     public_full_name: string;
     sensitivity_clearance: string;
-    time_zone: string;
+    timezone: string;
     title: string;
-    status: string;
+    // status: string;
   };
 }
 class CreatePeopleExResponse extends GenericResponse {
@@ -79,9 +79,9 @@ export class AdminPeoples {
   newPrivate_full_name: string;
   newPublic_full_name: string;
   newSensitivity_clearance: string;
-  newTime_zone: string;
+  newTimezone: string;
   newTitle: string;
-  newStatus: string;
+  // newStatus: string;
   
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminPeopleUpdateRequest, AdminPeopleUpdateResponse>('admin-people/update-read', {
@@ -175,17 +175,17 @@ export class AdminPeoples {
     this.newSensitivity_clearance = event.target.value;
   }
 
-  time_zoneChange(event) {
-    this.newTime_zone = event.target.value;
+  timezoneChange(event) {
+    this.newTimezone = event.target.value;
   }
 
   titleChange(event) {
     this.newTitle = event.target.value;
   }
 
-  statusChange(event) {
-    this.newStatus = event.target.value;
-  }
+  // statusChange(event) {
+  //   this.newStatus = event.target.value;
+  // }
 
 
   handleInsert = async (event: MouseEvent) => {
@@ -206,9 +206,9 @@ export class AdminPeoples {
         private_full_name: this.newPrivate_full_name,
         public_full_name: this.newPublic_full_name,
         sensitivity_clearance: this.newSensitivity_clearance,
-        time_zone: this.newTime_zone,
+        timezone: this.newTimezone,
         title: this.newTitle,
-        status: this.newStatus,
+        // status: this.newStatus,
       },
     });
 
@@ -226,7 +226,7 @@ export class AdminPeoples {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -313,7 +313,7 @@ export class AdminPeoples {
       updateFn: this.handleUpdate,
     },
     {
-      field: 'time_zone',
+      field: 'timezone',
       displayName: 'Time Zone',
       width: 200,
       editable: true,
@@ -326,13 +326,13 @@ export class AdminPeoples {
       editable: true,
       updateFn: this.handleUpdate,
     },
-    {
-      field: 'status',
-      displayName: 'Status',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
+    // {
+    //   field: 'status',
+    //   displayName: 'Status',
+    //   width: 200,
+    //   editable: true,
+    //   updateFn: this.handleUpdate,
+    // },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -495,12 +495,12 @@ export class AdminPeoples {
               </span>
             </div>
 
-            <div id="time_zone-holder" class="form-input-item form-thing">
+            <div id="timezone-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="time_zone">Time Zone</label>
+                <label htmlFor="timezone">Time Zone</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="time_zone" name="time_zone" onInput={event => this.time_zoneChange(event)} />
+                <input type="text" id="timezone" name="timezone" onInput={event => this.timezoneChange(event)} />
               </span>
             </div>
 
@@ -513,14 +513,14 @@ export class AdminPeoples {
               </span>
             </div>
 
-            <div id="status-holder" class="form-input-item form-thing">
+            {/* <div id="status-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="status">status</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="status" name="status" onInput={event => this.statusChange(event)} />
               </span>
-            </div>
+            </div> */}
 
       
             

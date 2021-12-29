@@ -59,7 +59,6 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
                     "name",
                     "change_to_plan",
                     "active",
@@ -94,9 +93,6 @@ class Read(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) name = null
@@ -173,7 +169,6 @@ class Read(
                 val project =
                     project(
                         id = id,
-                        neo4j_id = neo4j_id,
                         name = name,
                         change_to_plan = change_to_plan,
                         active = active,

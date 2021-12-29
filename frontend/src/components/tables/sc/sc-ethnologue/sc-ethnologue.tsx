@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateEthnologueExRequest {
   token: string;
   ethnologue: {
-    neo4j_id: string;
     language_index: string;
     code: string;
     language_name: string;
@@ -62,7 +61,6 @@ export class ScEthnologues {
 
   @State() ethnologuesResponse: ScEthnologueListResponse;
 
-  newNeo4j_id: string;
   newLanguage_index: string;
   newCode: string;
   newLanguage_name: string;
@@ -118,9 +116,9 @@ export class ScEthnologues {
   // }
 
 
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
+  // neo4j_idChange(event) {
+  //   this.newNeo4j_id = event.target.value;
+  // }
 
   language_indexChange(event) {
     this.newLanguage_index = event.target.value;
@@ -154,7 +152,7 @@ export class ScEthnologues {
     const createResponse = await fetchAs<CreateEthnologueExRequest, CreateEthnologueExResponse>('sc-ethnologue/create-read', {
       token: globals.globalStore.state.token,
       ethnologue: {
-        neo4j_id: this.newNeo4j_id,
+        // neo4j_id: this.newNeo4j_id,
         language_index: this.newLanguage_index,
         code: this.newCode,
         language_name: this.newLanguage_name,
@@ -177,21 +175,21 @@ export class ScEthnologues {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
-    {
-      field: 'neo4j_id',
-      displayName: 'Neo4j ID',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
+    // {
+    //   field: 'neo4j_id',
+    //   displayName: 'Neo4j ID',
+    //   width: 200,
+    //   editable: true,
+    //   updateFn: this.handleUpdate,
+    // },
     {
         field: 'language_index',
         displayName: 'Language Index',
-        width: 200,
+        width: 250,
         editable: true,
         updateFn: this.handleUpdate,
       },
@@ -295,14 +293,14 @@ export class ScEthnologues {
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
 
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            {/* <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">Neo4j ID</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
               </span>
-            </div>
+            </div> */}
 
             <div id="language_index-holder" class="form-input-item form-thing">
               <span class="form-thing">

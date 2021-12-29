@@ -59,6 +59,7 @@ class Read(
                 columns = arrayOf(
                     "id",
                     "person",
+                    "ticket",
                     "hours",
                     "minutes",
                     "total_time",
@@ -80,6 +81,12 @@ class Read(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
+                var personId: String? = jdbcResult.getString("person")
+                if (jdbcResult.wasNull()) personId = null
+
+                var ticket: String? = jdbcResult.getString("ticket")
+                if (jdbcResult.wasNull()) ticket = null
+
                 var hours: Int? = jdbcResult.getInt("hours")
                 if (jdbcResult.wasNull()) hours = null
 
@@ -91,9 +98,6 @@ class Read(
 
                 var comment: String? = jdbcResult.getString("comment")
                 if (jdbcResult.wasNull()) comment = null
-
-                var personId: String? = jdbcResult.getString("person")
-                if (jdbcResult.wasNull()) personId = null
 
                 var createdAt: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) createdAt = null
@@ -117,6 +121,7 @@ class Read(
                     CommonWorkEstimates(
                         id = id,
                         person = personId,
+                        ticket = ticket,
                         hours = hours,
                         minutes = minutes,
                         total_time = totalTime,

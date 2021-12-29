@@ -46,7 +46,8 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "project",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "ethnologue" -> {

@@ -48,20 +48,20 @@ class Update(
                     table = "common.ticket_feedback",
                     column = "ticket",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
-
-            "stake_holder" -> {
+            "stakeholder" -> {
                 util.updateField(
                     token = req.token,
                     table = "common.ticket_feedback",
-                    column = "stake_holder",
+                    column = "stakeholder",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
-
             "feedback" -> {
                 util.updateField(
                     token = req.token,
@@ -72,8 +72,6 @@ class Update(
                     cast = "::common.ticket_feedback_options"
                 )
             }
-
-
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
@@ -81,9 +79,9 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
-
             "owning_group" -> {
                 util.updateField(
                     token = req.token,
@@ -91,6 +89,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

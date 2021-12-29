@@ -178,23 +178,28 @@ export class FileVersions {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'category',
       displayName: 'category',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'mime_type',
       displayName: 'Mime Type',
       width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      editable: true,
+      selectOptions: [
+        {display: "A", value: "A"},
+        {display: "B", value: "B"},
+        {display: "C", value: "C"},
+      ],
+      updateFn: this.handleUpdate,
     },
     {
       field: 'name',
@@ -295,7 +300,12 @@ export class FileVersions {
                 <label htmlFor="mimetype">Mime Type</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="mimetype" name="mimetype" onInput={event => this.mimetypeChange(event)} />
+                <select id="mimetype" name="mimetype" onInput={event => this.mimetypeChange(event)}>
+                  <option value="">Select Mime Type</option>
+                  <option value="A" selected={this.newMimeType === "A"}>A</option>
+                  <option value="B" selected={this.newMimeType === "B"}>B</option>
+                  <option value="C" selected={this.newMimeType === "C"}>C</option>
+                </select>
               </span>
             </div>
 
@@ -314,7 +324,7 @@ export class FileVersions {
               </span>
               <span class="form-thing">
                 <select name="file" onInput={event => this.fileChange(event)}>
-                <option value="">Select A Directory</option>
+                <option value="">Select A File</option>
                 {this.filesResponse.files.map(option => (
                   <option value={option.id}>{option.name}</option>
                 ))}

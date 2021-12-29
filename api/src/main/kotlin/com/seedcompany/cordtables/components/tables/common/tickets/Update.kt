@@ -67,7 +67,8 @@ class Update(
                         table = "common.tickets",
                         column = "parent",
                         id = req.id,
-                        value = req.value
+                        value = req.value,
+                        cast = "::uuid"
                 )
             }
 
@@ -89,6 +90,7 @@ class Update(
                         column = "owning_person",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
 
@@ -99,6 +101,7 @@ class Update(
                         column = "owning_group",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
         }

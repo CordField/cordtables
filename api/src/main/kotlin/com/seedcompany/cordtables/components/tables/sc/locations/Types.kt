@@ -5,7 +5,6 @@ import com.seedcompany.cordtables.common.LocationType
 data class ScLocation(
     var id: String? = null,
 
-    val neo4j_id: String? = null,
     val default_region: String? = null,
     val funding_account: String? = null,
     val iso_alpha_3: String? = null,
@@ -23,7 +22,6 @@ data class ScLocation(
 data class ScLocationInput(
     var id: String? = null,
 
-    val neo4j_id: String? = null,
     val default_region: String? = null,
     val funding_account: String? = null,
     val iso_alpha_3: String? = null,

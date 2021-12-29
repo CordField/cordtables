@@ -106,21 +106,21 @@ columnData: ColumnDescription[] = [
   {
     field: 'id',
     displayName: 'ID',
-    width: 50,
+    width: 250,
     editable: false,
     deleteFn: this.handleDelete,
   },
   {
     field: 'from_ticket',
     displayName: 'From Ticket',
-    width: 200,
+    width: 250,
     editable: true,
     updateFn: this.handleUpdate,
   },
   {
     field: 'to_ticket',
     displayName: 'To Ticket',
-    width: 200,
+    width: 250,
     editable: true,
     updateFn: this.handleUpdate,
   },
@@ -205,7 +205,8 @@ handleInsert = async (event: MouseEvent) => {
     return (
       <Host>
         <slot></slot>
-        
+        {/* table abstraction */}
+        {this.commonTicketGraphResponse && this.onlyShowCreate ===  false && <cf-table rowData={this.commonTicketGraphResponse.ticket_graph} columnData={this.columnData}></cf-table>}
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
@@ -232,8 +233,7 @@ handleInsert = async (event: MouseEvent) => {
             </span>
           </form>
         )}
-        {/* table abstraction */}
-        {this.commonTicketGraphResponse && this.onlyShowCreate ===  false && <cf-table rowData={this.commonTicketGraphResponse.ticket_graph} columnData={this.columnData}></cf-table>}
+        
       </Host>
     );
   }

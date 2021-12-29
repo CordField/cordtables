@@ -154,14 +154,14 @@ export class CommonLocations {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'name',
       displayName: 'Name',
-      width: 200,
+      width: 230,
       editable: true,
       updateFn: this.handleUpdate,
     },

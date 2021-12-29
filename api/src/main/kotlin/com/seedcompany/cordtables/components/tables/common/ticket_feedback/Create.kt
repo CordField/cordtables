@@ -52,8 +52,8 @@ class Create(
             """
             insert into common.ticket_feedback(ticket, stakeholder, feedback, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
                     ?::common.ticket_feedback_options,
                     (
                       select person 
@@ -70,17 +70,18 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
             String::class.java,
             req.ticket_feedback.ticket,
-            req.ticket_feedback.stake_holder,
+            req.ticket_feedback.stakeholder,
             req.ticket_feedback.feedback,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
         return CommonTicketFeedbackCreateResponse(error = ErrorType.NoError, id = id)

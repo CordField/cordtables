@@ -154,7 +154,7 @@ export class CommonStageNotifications {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -166,27 +166,27 @@ export class CommonStageNotifications {
       updateFn: this.handleUpdate,
     },
     {
-        field: 'on_enter',
-        displayName: 'On Enter',
-        width: 200,
-        editable: true,
-        selectOptions: [
-            {display: 'True', value: 'true'},
-            {display: 'False', value: 'false'},
-        ],
-        updateFn: this.handleUpdate,
-      },
-      {
-        field: 'on_exit',
-        displayName: 'On Exit',
-        width: 200,
-        editable: true,
-        selectOptions: [
-            {display: 'True', value: 'true'},
-            {display: 'False', value: 'false'},
-        ],
-        updateFn: this.handleUpdate,
-      },
+      field: 'on_enter',
+      displayName: 'On Enter',
+      width: 200,
+      editable: true,
+      selectOptions: [
+          {display: 'True', value: 'true'},
+          {display: 'False', value: 'false'},
+      ],
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'on_exit',
+      displayName: 'On Exit',
+      width: 200,
+      editable: true,
+      selectOptions: [
+          {display: 'True', value: 'true'},
+          {display: 'False', value: 'false'},
+      ],
+      updateFn: this.handleUpdate,
+    },
     {
       field: 'person',
       displayName: 'person',

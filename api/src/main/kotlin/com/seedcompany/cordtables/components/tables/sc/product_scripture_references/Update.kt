@@ -46,7 +46,8 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "product",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "scripture_reference" -> {
@@ -55,7 +56,8 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "scripture_reference",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "change_to_plan" -> {
@@ -85,7 +87,8 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -94,7 +97,8 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

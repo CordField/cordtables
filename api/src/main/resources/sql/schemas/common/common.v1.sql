@@ -194,7 +194,7 @@ create table common.cell_channels (
 
   table_name admin.table_name not null,
   column_name varchar(64) not null,
-  row int not null,
+  row uuid not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -270,7 +270,7 @@ create table common.notes (
 
   table_name admin.table_name not null,
   column_name varchar(64) not null,
-  row int not null,
+  row uuid not null,
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -549,7 +549,7 @@ create table common.ticket_assignments (
 create table common.work_records(
 	id uuid primary key default public.uuid_generate_v4(),
 
-	person uuid unique not null references admin.people(id),
+	person uuid not null references admin.people(id),
 	ticket uuid not null references common.tickets(id),
 	hours int not null,
 	minutes int default 0,
@@ -569,7 +569,7 @@ create table common.work_records(
 create table common.work_estimates(
 	id uuid primary key default public.uuid_generate_v4(),
     ticket uuid references common.tickets(id),
-	person uuid unique not null references admin.people(id),
+	person uuid not null references admin.people(id),
 	hours int not null,
 	minutes int default 0,
 	total_time decimal generated always as (

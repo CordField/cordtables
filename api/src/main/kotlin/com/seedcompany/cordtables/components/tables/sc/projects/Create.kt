@@ -50,25 +50,24 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.projects(neo4j_id, name, change_to_plan, active, department, estimated_submission, field_region, initial_mou_end, marketing_location,
+            insert into sc.projects(name, change_to_plan, active, department, estimated_submission, field_region, initial_mou_end, marketing_location,
              mou_start, mou_end, owning_organization, periodic_reports_directory, posts_directory, primary_location, root_directory, status, status_changed_at, step, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
-                    ?,
-                    ?,
-                    ?,
-                    ?::timestamp,
+                    ?::uuid,
+                    ?::boolean,
                     ?,
                     ?::timestamp,
-                    ?,
+                    ?::uuid,
+                    ?::timestamp,
+                    ?::uuid,
                     ?::timestamp,
                     ?::timestamp,
-                    ?,
-                    ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
                     ?::sc.project_status,
                     ?::timestamp,
                     ?::sc.project_step,
@@ -87,12 +86,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
             String::class.java,
-            req.project.neo4j_id,
             req.project.name,
             req.project.change_to_plan,
             req.project.active,
@@ -114,6 +112,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

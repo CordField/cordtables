@@ -2,7 +2,6 @@
 class ScProject {
     id?: string | undefined;
 
-    neo4j_id?: string | undefined;
     name?: string | undefined;
     change_to_plan?: string | undefined;
     active?: boolean | undefined;

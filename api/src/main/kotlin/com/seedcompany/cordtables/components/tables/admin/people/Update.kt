@@ -110,6 +110,7 @@ class Update(
                     column = "primary_location",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "private_full_name" -> {
@@ -140,11 +141,11 @@ class Update(
                     cast = "::common.sensitivity"
                 )
             }
-            "time_zone" -> {
+            "timezone" -> {
                 util.updateField(
                     token = req.token,
                     table = "admin.people",
-                    column = "time_zone",
+                    column = "timezone",
                     id = req.id,
                     value = req.value,
                 )
@@ -158,15 +159,15 @@ class Update(
                     value = req.value,
                 )
             }
-            "status" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "admin.people",
-                    column = "status",
-                    id = req.id,
-                    value = req.value,
-                )
-            }
+//            "status" -> {
+//                util.updateField(
+//                    token = req.token,
+//                    table = "admin.people",
+//                    column = "status",
+//                    id = req.id,
+//                    value = req.value,
+//                )
+//            }
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
@@ -174,6 +175,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -183,6 +185,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

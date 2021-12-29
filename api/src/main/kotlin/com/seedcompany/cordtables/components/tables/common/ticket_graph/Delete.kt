@@ -43,12 +43,10 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                        "delete from common.ticket_graph where id = ? returning id"
+                        "delete from common.ticket_graph where id = ?::uuid returning id"
                 )
                 deleteStatement.setString(1, req.id)
-
-                deleteStatement.setString(1,req.id)
-
+                deleteStatement.setString(1, req.id)
 
                 val deleteStatementResult = deleteStatement.executeQuery()
 

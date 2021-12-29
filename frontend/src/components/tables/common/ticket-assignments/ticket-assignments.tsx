@@ -103,21 +103,21 @@ columnData: ColumnDescription[] = [
   {
     field: 'id',
     displayName: 'ID',
-    width: 50,
+    width: 250,
     editable: false,
     deleteFn: this.handleDelete,
   },
   {
     field: 'ticket',
     displayName: 'Ticket ID',
-    width: 200,
+    width: 250,
     editable: true,
     updateFn: this.handleUpdate,
   },
   {
     field: 'person',
     displayName: 'Person',
-    width: 200,
+    width: 250,
     editable: true,
     updateFn: this.handleUpdate,
   },
@@ -206,7 +206,11 @@ handleInsert = async (event: MouseEvent) => {
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
-{(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
+         {/* table abstraction */}
+        {this.commonTicketAssignmentResponse && this.onlyShowCreate ===  false && <cf-table rowData={this.commonTicketAssignmentResponse.ticket_assignment} columnData={this.columnData}></cf-table>}
+        
+
+        {(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
              <div id="ticket-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -229,8 +233,6 @@ handleInsert = async (event: MouseEvent) => {
             </span>
           </form>
         )}  
-        {/* table abstraction */}
-        {this.commonTicketAssignmentResponse && this.onlyShowCreate ===  false && <cf-table rowData={this.commonTicketAssignmentResponse.ticket_assignment} columnData={this.columnData}></cf-table>}
         
       </Host>
     );

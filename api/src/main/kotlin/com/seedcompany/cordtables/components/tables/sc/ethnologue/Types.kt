@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.sc.ethnologue
 
 data class ethnologue(
     var id: String? = null,
-    val neo4j_id: String? = null,
+//    val neo4j_id: String? = null,
     val language_index: String? = null,
     val code: String? = null,
     val language_name: String? = null,
@@ -20,7 +20,7 @@ data class ethnologue(
 
 data class ethnologueInput(
     var id: String? = null,
-    val neo4j_id: String? = null,
+//    val neo4j_id: String? = null,
     val language_index: String? = null,
     val code: String? = null,
     val language_name: String? = null,

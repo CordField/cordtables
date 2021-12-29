@@ -17,7 +17,7 @@ import javax.sql.DataSource
 
 data class CommonThreadsListRequest(
         val token: String?,
-        val channelId: Integer?=null
+        val channelId: String?=null
 )
 
 data class CommonThreadsListResponse(
@@ -49,7 +49,7 @@ class List(
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
         if(req.channelId!==null){
-          whereClause = "channel = :channelId"
+          whereClause = "channel = :channelId::uuid"
           paramSource.addValue("channelId", req.channelId)
         }
 
@@ -104,17 +104,17 @@ class List(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
-                        Thread(
-                                id = id,
-                                channel = channel,
-                                content = content,
-                                created_at = created_at,
-                                created_by = created_by,
-                                modified_at = modified_at,
-                                modified_by = modified_by,
-                                owning_person = owning_person,
-                                owning_group = owning_group
-                        )
+                    Thread(
+                        id = id,
+                        channel = channel,
+                        content = content,
+                        created_at = created_at,
+                        created_by = created_by,
+                        modified_at = modified_at,
+                        modified_by = modified_by,
+                        owning_person = owning_person,
+                        owning_group = owning_group
+                    )
                 )
             }
         } catch (e: SQLException) {

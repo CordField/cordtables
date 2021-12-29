@@ -53,7 +53,7 @@ class Create(
             """
             insert into sc.global_partner_engagements(organization, type, mou_start, mou_end, sc_roles, partner_roles, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::common.involvement_options,
                     ?::timestamp,
                     ?::timestamp,
@@ -74,7 +74,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
@@ -88,6 +88,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

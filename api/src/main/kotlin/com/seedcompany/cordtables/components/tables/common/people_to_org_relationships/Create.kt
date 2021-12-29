@@ -53,8 +53,8 @@ class Create(
             """
             insert into common.people_to_org_relationships(org, person, relationship_type, begin_at, end_at, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::INTEGER,
-                    ?::INTEGER,
+                    ?::uuid,
+                    ?::uuid,
                     ?::common.people_to_org_relationship_type,
                     ?::timestamp,
                     ?::timestamp,
@@ -73,7 +73,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
@@ -86,6 +86,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

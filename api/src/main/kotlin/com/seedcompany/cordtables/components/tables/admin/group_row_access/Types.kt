@@ -7,7 +7,7 @@ data class groupRowAccess(
 
     val group_id: String? = null,
     val table_name: String? = null,
-    val row: Int? = null,
+    val row: String? = null,
 
     val created_at: String? = null,
     val created_by: String? = null,
@@ -22,7 +22,7 @@ data class groupRowAccessInput(
 
     val group_id: String? = null,
     val table_name: String? = null,
-    val row: Int? = null,
+    val row: String? = null,
 
     val created_at: String? = null,
     val created_by: String? = null,

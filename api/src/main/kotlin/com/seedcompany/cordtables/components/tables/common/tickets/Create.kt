@@ -60,8 +60,8 @@ class Create(
             insert into common.tickets(ticket_status, parent, content, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?::common.ticket_status,
+                    ?::uuid,
                     ?,
-                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -77,7 +77,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
@@ -88,6 +88,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
     )
 
     return CommonTicketsCreateResponse(error = ErrorType.NoError, id = id)

@@ -44,7 +44,7 @@ class Delete(
                 //language=SQL
                 val deleteStatement = conn.prepareStatement(
                         """
-                    delete from common.scripture_references where id = ?;
+                    delete from common.scripture_references where id = ?::uuid;
                 """.trimIndent()
                 )
 

@@ -54,6 +54,7 @@ class Update(
                     column = "parent",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -74,6 +75,7 @@ class Update(
                     column = "created_at",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -84,6 +86,7 @@ class Update(
                     column = "created_by",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "modified_at" -> {
@@ -93,6 +96,7 @@ class Update(
                     column = "modified_at",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "modified_by" -> {
@@ -102,6 +106,7 @@ class Update(
                     column = "modified_by",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -113,6 +118,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -123,6 +129,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 

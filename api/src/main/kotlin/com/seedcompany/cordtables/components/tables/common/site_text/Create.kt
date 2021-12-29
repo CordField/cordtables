@@ -71,7 +71,7 @@ class Create(
                   from admin.tokens 
                   where token = ?
                 ),
-                1
+                ?::uuid
             )
             returning id;
             """.trimIndent(),
@@ -80,6 +80,7 @@ class Create(
                 req.token,
                 req.token,
                 req.token,
+                util.adminGroupId
             )
 
             return CommonSiteTextCreateResponse(error = ErrorType.NoError, id = id)

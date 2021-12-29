@@ -1,9 +1,11 @@
 package com.seedcompany.cordtables.common
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.core.queryForObject
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Component
 import java.util.regex.Pattern
@@ -17,8 +19,13 @@ class Utility(
     @Autowired
     val ds: DataSource,
 ) {
+
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
     val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
+    val adminGroupId: String? = this.adminGroupId()
+    val adminRole: String? = this.adminRole()
+    val publicGroupId: String? = this.publicGroupId()
+    val personId: String? = this.personId()
 
     //language=SQL
     val getUserIdFromSessionIdQuery = """
@@ -357,7 +364,7 @@ class Utility(
                               where token = ?
                             ),
                         modified_at = CURRENT_TIMESTAMP
-                    where id = ?;
+                    where id = ?::uuid;
                 """.trimIndent(),
                 value,
                 token,
@@ -399,6 +406,77 @@ class Utility(
             i += 2
         }
         return result.toString()
+    }
+
+    fun isSchemaExists(): Boolean {
+        var result: Int? = 0
+        try {
+            result = jdbcTemplate.queryForObject(
+                """
+                    SELECT count(schema_name) as size FROM information_schema.schemata WHERE schema_name = 'admin';
+                """.trimIndent(),
+                Int::class.java
+            )
+        }
+        catch (e: EmptyResultDataAccessException){
+            println("Schemas not created")
+        }
+        return result != null && result > 0
+    }
+
+    fun personId(): String? {
+        return if (this.isSchemaExists()){
+            jdbcTemplate.queryForObject(
+                """
+                    SELECT id FROM admin.people WHERE sensitivity_clearance = 'High';
+                """.trimIndent(),
+                String::class.java,
+            )
+        } else {
+            null
+        }
+    }
+
+    fun adminGroupId(): String? {
+        return if (this.isSchemaExists()) {
+            jdbcTemplate.queryForObject(
+                """
+                    SELECT id FROM admin.groups WHERE  name = 'Administrators';
+                """.trimIndent(),
+                String::class.java
+            )
+        }
+        else{
+            null
+        }
+    }
+
+    fun publicGroupId(): String?{
+        return if (this.isSchemaExists()){
+            jdbcTemplate.queryForObject(
+                """
+                    SELECT id FROM admin.groups WHERE name='Public'
+                """.trimIndent(),
+                String::class.java
+            )
+        }
+        else{
+            null
+        }
+    }
+
+    fun adminRole(): String? {
+        return if (this.isSchemaExists()) {
+            jdbcTemplate.queryForObject(
+                """
+                    SELECT id FROM admin.roles WHERE name='Administrator'
+                """.trimIndent(),
+                String::class.java
+            )
+        }
+        else{
+            null
+        }
     }
 }
 

@@ -45,7 +45,8 @@ class Update(
                     table = "admin.group_row_access",
                     column = "group_id",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "table_name" -> {
@@ -65,7 +66,7 @@ class Update(
                     column = "row",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_person" -> {
@@ -75,6 +76,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -84,6 +86,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

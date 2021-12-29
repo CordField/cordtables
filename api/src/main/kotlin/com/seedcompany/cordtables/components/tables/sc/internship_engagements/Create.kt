@@ -56,10 +56,10 @@ class Create(
              mentor, methodology, paratext_registry, periodic_reports_directory, position, start_date, start_date_override, status, 
              created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::boolean,
                     ?::timestamp,
                     ?::timestamp,
                     ?,

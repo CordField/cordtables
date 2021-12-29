@@ -58,6 +58,7 @@ class List(
                 columns = arrayOf(
                     "id",
                     "person",
+                    "ticket",
                     "hours",
                     "minutes",
                     "total_time",
@@ -81,6 +82,9 @@ class List(
 
                 var person: String? = jdbcResult.getString("person")
                 if (jdbcResult.wasNull()) person = null
+
+                var ticket: String? = jdbcResult.getString("ticket")
+                if (jdbcResult.wasNull()) ticket = null
 
                 var hours: Int? = jdbcResult.getInt("hours")
                 if (jdbcResult.wasNull()) hours = null
@@ -116,6 +120,7 @@ class List(
                     CommonWorkEstimates(
                         id = id,
                         person = person,
+                        ticket = ticket,
                         hours = hours,
                         minutes = minutes,
                         total_time = totalTime,

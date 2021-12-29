@@ -1241,7 +1241,7 @@ create table sc.global_partner_engagement_people (
   id uuid primary key default public.uuid_generate_v4(),
 
   engagement uuid not null references sc.global_partner_engagements(id),
-  person uuid unique not null references admin.people(id),
+  person uuid not null references admin.people(id),
   role common.people_to_org_relationship_type not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,

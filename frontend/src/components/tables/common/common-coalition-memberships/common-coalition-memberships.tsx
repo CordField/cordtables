@@ -141,14 +141,14 @@ export class CommonCoalitionMemberships {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'coalition',
       displayName: 'Coalition',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },

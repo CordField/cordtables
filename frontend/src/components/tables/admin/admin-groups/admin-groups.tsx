@@ -130,6 +130,8 @@ export class AdminGroups {
 
     if (createResponse.error === ErrorType.NoError) {
       globals.globalStore.state.editMode = false;
+      this.newParent_group = "";
+      this.newName = "";
       this.getList();
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item inserted successfully', id: uuidv4(), type: 'success' });
     } else {
@@ -142,14 +144,14 @@ export class AdminGroups {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'parent_group',
       displayName: 'Parent Group',
-      width: 50,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
