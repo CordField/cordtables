@@ -38,7 +38,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-directories/create")
+    @PostMapping("common/directories/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonDirectoriesCreateRequest): CommonDirectoriesCreateResponse {
 

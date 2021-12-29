@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-pinned-projects/read")
+    @PostMapping("sc/pinned-projects/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScPinnedProjectsReadRequest): ScPinnedProjectsReadResponse {
 

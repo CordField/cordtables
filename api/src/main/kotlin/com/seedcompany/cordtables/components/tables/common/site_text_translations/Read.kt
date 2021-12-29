@@ -39,7 +39,7 @@ class Read(
 ) {
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-  @PostMapping("common-site-text-translations/read")
+  @PostMapping("common/site-text-translations/read")
   @ResponseBody
   fun readHandler(@RequestBody req: SiteTextTranslationReadRequest): SiteTextTranslationReadResponse {
 

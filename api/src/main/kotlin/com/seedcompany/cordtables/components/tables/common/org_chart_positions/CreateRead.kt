@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-org-chart-positions/create-read")
+    @PostMapping("common/org-chart-positions/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonOrgChartPositionsCreateReadRequest): CommonOrgChartPositionsCreateReadResponse {
 

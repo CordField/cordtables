@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-workflows/read")
+    @PostMapping("common/workflows/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonWorkflowsReadRequest): CommonWorkflowsReadResponse {
 

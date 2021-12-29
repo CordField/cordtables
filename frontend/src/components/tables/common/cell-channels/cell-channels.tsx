@@ -71,7 +71,7 @@ export class CellChannelsTable {
   newColumnName: string;
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonCellChannelsUpdateRequest, CommonCellChannelsUpdateResponse>('common-cell-channels/update-read', {
+    const updateResponse = await fetchAs<CommonCellChannelsUpdateRequest, CommonCellChannelsUpdateResponse>('common/cell-channels/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -91,7 +91,7 @@ export class CellChannelsTable {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteCommonCellChannelsRequest, DeleteCommonCellChannelsResponse>('common-cell-channels/delete', {
+    const result = await fetchAs<DeleteCommonCellChannelsRequest, DeleteCommonCellChannelsResponse>('common/cell-channels/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -108,7 +108,7 @@ export class CellChannelsTable {
   }
 
   async getList() {
-    this.commonCellChannelsResponse = await fetchAs<CommonCellChannelsListRequest, CommonCellChannelsListResponse>('common-cell-channels/list', {
+    this.commonCellChannelsResponse = await fetchAs<CommonCellChannelsListRequest, CommonCellChannelsListResponse>('common/cell-channels/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -129,7 +129,7 @@ export class CellChannelsTable {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateCommonCellChannelsRequest, CreateCommonCellChannelResponse>('common-cell-channels/create-read', {
+    const result = await fetchAs<CreateCommonCellChannelsRequest, CreateCommonCellChannelResponse>('common/cell-channels/create-read', {
       token: globals.globalStore.state.token,
       cell_channel: {
         column_name: this.newColumnName,

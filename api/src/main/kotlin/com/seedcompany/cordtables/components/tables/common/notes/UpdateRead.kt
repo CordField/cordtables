@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-notes/update-read")
+    @PostMapping("common/notes/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonNotesUpdateReadRequest): CommonNotesUpdateReadResponse {
 

@@ -29,7 +29,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-discussion-channels/delete")
+    @PostMapping("common/discussion-channels/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonDiscussionChannelsDeleteRequest): CommonDiscussionChannelsDeleteResponse {
 

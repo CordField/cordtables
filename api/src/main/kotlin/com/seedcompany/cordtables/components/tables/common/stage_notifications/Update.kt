@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-stage-notifications/update")
+    @PostMapping("common/stage-notifications/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonStageNotificationsUpdateRequest): CommonStageNotificationsUpdateResponse {
 

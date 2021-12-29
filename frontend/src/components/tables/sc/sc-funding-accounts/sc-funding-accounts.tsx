@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateFundingAccountExRequest {
   token: string;
   fundingAccount: {
-    neo4j_id: string ;
+    neo4j_id: string;
     account_number: number;
     name: string;
   };
@@ -25,7 +25,6 @@ class ScFundingAccountListResponse {
   error: ErrorType;
   fundingAccounts: ScFundingAccount[];
 }
-
 
 class ScFundingAccountUpdateRequest {
   token: string;
@@ -54,15 +53,14 @@ class DeleteFundingAccountExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScFundingAccounts {
-
   @State() fundingAccountsResponse: ScFundingAccountListResponse;
 
-  newNeo4j_id: string ;
+  newNeo4j_id: string;
   newAccount_number: number;
   newName: string;
- 
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScFundingAccountUpdateRequest, ScFundingAccountUpdateResponse>('sc-funding-accounts/update-read', {
+    const updateResponse = await fetchAs<ScFundingAccountUpdateRequest, ScFundingAccountUpdateResponse>('sc/funding-accounts/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +70,10 @@ export class ScFundingAccounts {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.fundingAccountsResponse = { error: ErrorType.NoError, fundingAccounts: this.fundingAccountsResponse.fundingAccounts.map(fundingAccount => (fundingAccount.id === id ? updateResponse.fundingAccount : fundingAccount)) };
+      this.fundingAccountsResponse = {
+        error: ErrorType.NoError,
+        fundingAccounts: this.fundingAccountsResponse.fundingAccounts.map(fundingAccount => (fundingAccount.id === id ? updateResponse.fundingAccount : fundingAccount)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +83,7 @@ export class ScFundingAccounts {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFundingAccountExRequest, DeleteFundingAccountExResponse>('sc-funding-accounts/delete', {
+    const deleteResponse = await fetchAs<DeleteFundingAccountExRequest, DeleteFundingAccountExResponse>('sc/funding-accounts/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,17 +98,10 @@ export class ScFundingAccounts {
   };
 
   async getList() {
-    this.fundingAccountsResponse = await fetchAs<ScFundingAccountListRequest, ScFundingAccountListResponse>('sc-funding-accounts/list', {
+    this.fundingAccountsResponse = await fetchAs<ScFundingAccountListRequest, ScFundingAccountListResponse>('sc/funding-accounts/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   neo4j_idChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -125,7 +119,7 @@ export class ScFundingAccounts {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateFundingAccountExRequest, CreateFundingAccountExResponse>('sc-funding-accounts/create-read', {
+    const createResponse = await fetchAs<CreateFundingAccountExRequest, CreateFundingAccountExResponse>('sc/funding-accounts/create-read', {
       token: globals.globalStore.state.token,
       fundingAccount: {
         neo4j_id: this.newNeo4j_id,
@@ -142,8 +136,6 @@ export class ScFundingAccounts {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
-
 
   columnData: ColumnDescription[] = [
     {
@@ -219,7 +211,6 @@ export class ScFundingAccounts {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -248,7 +239,7 @@ export class ScFundingAccounts {
               <span class="form-thing">
                 <input type="number" id="account_number" name="account_number" onInput={event => this.account_numberChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="name-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -258,7 +249,6 @@ export class ScFundingAccounts {
                 <input type="text" id="name" name="name" onInput={event => this.nameChange(event)} />
               </span>
             </div>
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -268,5 +258,4 @@ export class ScFundingAccounts {
       </Host>
     );
   }
-
 }

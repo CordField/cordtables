@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("admin-role-memberships/read")
+    @PostMapping("admin/role-memberships/read")
     @ResponseBody
     fun readHandler(@RequestBody req: AdminRoleMembershipsReadRequest): AdminRoleMembershipsReadResponse {
 

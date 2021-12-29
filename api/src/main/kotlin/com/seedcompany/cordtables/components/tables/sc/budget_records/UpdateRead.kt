@@ -39,7 +39,7 @@ class UpdateRead(
     val read: Read,
 ) {
   
-    @PostMapping("sc-budget-records/update-read")
+    @PostMapping("sc/budget-records/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScBudgetRecordsUpdateReadRequest): ScBudgetRecordsUpdateReadResponse {
 

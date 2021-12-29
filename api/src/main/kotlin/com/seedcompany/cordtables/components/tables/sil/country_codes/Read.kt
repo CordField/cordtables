@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sil-country-codes/read")
+    @PostMapping("sil/country-codes/read")
     @ResponseBody
     fun readHandler(@RequestBody req: SilCountryCodesReadRequest): SilCountryCodesReadResponse {
 

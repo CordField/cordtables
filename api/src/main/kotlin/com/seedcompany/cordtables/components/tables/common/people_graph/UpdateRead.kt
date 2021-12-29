@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-people-graph/update-read")
+    @PostMapping("common/people-graph/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonPeopleGraphUpdateReadRequest): CommonPeopleGraphUpdateReadResponse {
 

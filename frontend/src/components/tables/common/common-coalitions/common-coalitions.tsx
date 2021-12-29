@@ -26,7 +26,6 @@ class CommonCoalitionListResponse {
   coalitions: CommonCoalition[];
 }
 
-
 class CommonCoalitionUpdateRequest {
   token: string;
   column: string;
@@ -54,15 +53,14 @@ class DeleteCoalitionExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonCoalitions {
-
   @State() coalitionsResponse: CommonCoalitionListResponse;
 
   newNeo4j_id: string;
   newDirector: number;
   newName: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonCoalitionUpdateRequest, CommonCoalitionUpdateResponse>('common-coalitions/update-read', {
+    const updateResponse = await fetchAs<CommonCoalitionUpdateRequest, CommonCoalitionUpdateResponse>('common/coalitions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +70,10 @@ export class CommonCoalitions {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.coalitionsResponse = { error: ErrorType.NoError, coalitions: this.coalitionsResponse.coalitions.map(coalition => (coalition.id === id ? updateResponse.coalition : coalition)) };
+      this.coalitionsResponse = {
+        error: ErrorType.NoError,
+        coalitions: this.coalitionsResponse.coalitions.map(coalition => (coalition.id === id ? updateResponse.coalition : coalition)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +83,7 @@ export class CommonCoalitions {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteCoalitionExRequest, DeleteCoalitionExResponse>('common-coalitions/delete', {
+    const deleteResponse = await fetchAs<DeleteCoalitionExRequest, DeleteCoalitionExResponse>('common/coalitions/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,28 +98,20 @@ export class CommonCoalitions {
   };
 
   async getList() {
-    this.coalitionsResponse = await fetchAs<CommonCoalitionListRequest, CommonCoalitionListResponse>('common-coalitions/list', {
+    this.coalitionsResponse = await fetchAs<CommonCoalitionListRequest, CommonCoalitionListResponse>('common/coalitions/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   coalitionNameChange(event) {
     this.newName = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateCoalitionExRequest, CreateCoalitionExResponse>('common-coalitions/create-read', {
+    const createResponse = await fetchAs<CreateCoalitionExRequest, CreateCoalitionExResponse>('common/coalitions/create-read', {
       token: globals.globalStore.state.token,
       coalition: {
         neo4j_id: this.newNeo4j_id,
@@ -135,7 +128,6 @@ export class CommonCoalitions {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
 
   columnData: ColumnDescription[] = [
     {
@@ -197,7 +189,6 @@ export class CommonCoalitions {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -210,8 +201,6 @@ export class CommonCoalitions {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            
-
             <div id="field-region-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="field-region">Name</label>
@@ -219,8 +208,7 @@ export class CommonCoalitions {
               <span class="form-thing">
                 <input type="text" id="field-region-name" name="field-region-name" onInput={event => this.coalitionNameChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -230,5 +218,4 @@ export class CommonCoalitions {
       </Host>
     );
   }
-
 }

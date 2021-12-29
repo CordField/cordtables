@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-internship-engagements/update")
+    @PostMapping("sc/internship-engagements/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScInternshipEngagementsUpdateRequest): ScInternshipEngagementsUpdateResponse {
 

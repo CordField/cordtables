@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-file-versions/list")
+    @PostMapping("common/file-versions/list")
     @ResponseBody
     fun listHandler(@RequestBody req:CommonFileVersionsListRequest): CommonFileVersionsListResponse {
         var data: MutableList<CommonFileVersion> = mutableListOf()

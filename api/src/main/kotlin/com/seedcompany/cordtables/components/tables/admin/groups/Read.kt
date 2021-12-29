@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("admin-groups/read")
+    @PostMapping("admin/groups/read")
     @ResponseBody
     fun readHandler(@RequestBody req: AdminGroupsReadRequest): AdminGroupsReadResponse {
 

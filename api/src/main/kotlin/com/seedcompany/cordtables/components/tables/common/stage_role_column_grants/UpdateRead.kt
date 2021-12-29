@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-stage-role-column-grants/update-read")
+    @PostMapping("common/stage-role-column-grants/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonStageRoleColumnGrantsUpdateReadRequest): CommonStageRoleColumnGrantsUpdateReadResponse {
 

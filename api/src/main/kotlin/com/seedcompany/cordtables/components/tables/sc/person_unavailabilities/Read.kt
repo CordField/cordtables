@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-person-unavailabilities/read")
+    @PostMapping("sc/person-unavailabilities/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScPersonUnavailabilitiesReadRequest): ScPersonUnavailabilitiesReadResponse {
 

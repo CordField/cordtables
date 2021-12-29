@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sil-iso-639-3-macrolanguages/read")
+    @PostMapping("sil/iso-639-3-macrolanguages/read")
     @ResponseBody
     fun readHandler(@RequestBody req: SilIso6393MacrolanguagesReadRequest): SilIso6393MacrolanguagesReadResponse {
 

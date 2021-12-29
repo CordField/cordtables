@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-ethnologue/update-read")
+    @PostMapping("sc/ethnologue/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScEthnologueUpdateReadRequest): ScEthnologueUpdateReadResponse {
 

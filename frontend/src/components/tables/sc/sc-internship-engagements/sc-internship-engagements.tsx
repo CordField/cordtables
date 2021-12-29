@@ -45,7 +45,6 @@ class ScInternshipEngagementListResponse {
   internshipEngagements: ScInternshipEngagement[];
 }
 
-
 class ScInternshipEngagementUpdateRequest {
   token: string;
   column: string;
@@ -73,7 +72,6 @@ class DeleteInternshipEngagementExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScInternshipEngagements {
-
   @State() internshipEngagementsResponse: ScInternshipEngagementListResponse;
 
   newProject: number;
@@ -98,9 +96,9 @@ export class ScInternshipEngagements {
   newStart_date: string;
   newStart_date_override: string;
   newStatus: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScInternshipEngagementUpdateRequest, ScInternshipEngagementUpdateResponse>('sc-internship-engagements/update-read', {
+    const updateResponse = await fetchAs<ScInternshipEngagementUpdateRequest, ScInternshipEngagementUpdateResponse>('sc/internship-engagements/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -110,7 +108,12 @@ export class ScInternshipEngagements {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.internshipEngagementsResponse = { error: ErrorType.NoError, internshipEngagements: this.internshipEngagementsResponse.internshipEngagements.map(internshipEngagement => (internshipEngagement.id === id ? updateResponse.internshipEngagement : internshipEngagement)) };
+      this.internshipEngagementsResponse = {
+        error: ErrorType.NoError,
+        internshipEngagements: this.internshipEngagementsResponse.internshipEngagements.map(internshipEngagement =>
+          internshipEngagement.id === id ? updateResponse.internshipEngagement : internshipEngagement,
+        ),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -120,7 +123,7 @@ export class ScInternshipEngagements {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteInternshipEngagementExRequest, DeleteInternshipEngagementExResponse>('sc-internship-engagements/delete', {
+    const deleteResponse = await fetchAs<DeleteInternshipEngagementExRequest, DeleteInternshipEngagementExResponse>('sc/internship-engagements/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -135,18 +138,11 @@ export class ScInternshipEngagements {
   };
 
   async getList() {
-    this.internshipEngagementsResponse = await fetchAs<ScInternshipEngagementListRequest, ScInternshipEngagementListResponse>('sc-internship-engagements/list', {
+    this.internshipEngagementsResponse = await fetchAs<ScInternshipEngagementListRequest, ScInternshipEngagementListResponse>('sc/internship-engagements/list', {
       token: globals.globalStore.state.token,
     });
   }
 
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
-  
   projectChange(event) {
     this.newProject = event.target.value;
   }
@@ -182,9 +178,6 @@ export class ScInternshipEngagements {
   end_dateChange(event) {
     this.newEnd_date = event.target.value;
   }
-
-  
-
 
   end_date_overrideChange(event) {
     this.newEnd_date_override = event.target.value;
@@ -242,7 +235,7 @@ export class ScInternshipEngagements {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateInternshipEngagementExRequest, CreateInternshipEngagementExResponse>('sc-internship-engagements/create-read', {
+    const createResponse = await fetchAs<CreateInternshipEngagementExRequest, CreateInternshipEngagementExResponse>('sc/internship-engagements/create-read', {
       token: globals.globalStore.state.token,
       internshipEngagement: {
         project: this.newProject,
@@ -315,8 +308,8 @@ export class ScInternshipEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -424,9 +417,9 @@ export class ScInternshipEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -450,9 +443,9 @@ export class ScInternshipEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -502,7 +495,6 @@ export class ScInternshipEngagements {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -531,7 +523,7 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <input type="number" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="change_to_plan-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -549,11 +541,15 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>True</option>
-                   <option value="false" selected={this.newActive === false}>False</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
 
             <div id="communications_complete-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -571,7 +567,7 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <input type="text" id="complete_date" name="complete_date" onInput={event => this.complete_dateChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="country_of_origin-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -589,7 +585,7 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <input type="text" id="disbursement_complete_date" name="disbursement_complete_date" onInput={event => this.disbursement_complete_dateChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="end_date-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -607,7 +603,7 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <input type="text" id="end_date_override" name="end_date_override" onInput={event => this.end_date_overrideChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="growth_plan-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -625,7 +621,7 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <input type="text" id="initial_end_date" name="initial_end_date" onInput={event => this.initial_end_dateChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="intern-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -643,7 +639,7 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <input type="text" id="last_reactivated_at" name="last_reactivated_at" onInput={event => this.last_reactivated_atChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="mentor-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -661,13 +657,18 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <select id="methodology" name="methodology" onInput={event => this.methodologyChange(event)}>
                   <option value="">Select Methodology</option>
-                  <option value="A" selected={this.newMethodology === "A"}>A</option>
-                  <option value="B" selected={this.newMethodology === "B"}>B</option>
-                  <option value="C" selected={this.newMethodology === "C"}>C</option>
+                  <option value="A" selected={this.newMethodology === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newMethodology === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newMethodology === 'C'}>
+                    C
+                  </option>
                 </select>
-
               </span>
-            </div> 
+            </div>
 
             <div id="paratext_registry-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -685,7 +686,7 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <input type="number" id="periodic_reports_directory" name="periodic_reports_directory" onInput={event => this.periodic_reports_directoryChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="position-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -694,9 +695,15 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <select id="position" name="position" onInput={event => this.positionChange(event)}>
                   <option value="">Select Position</option>
-                  <option value="A" selected={this.newPosition === "A"}>A</option>
-                  <option value="B" selected={this.newPosition === "B"}>B</option>
-                  <option value="C" selected={this.newPosition === "C"}>C</option>
+                  <option value="A" selected={this.newPosition === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newPosition === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newPosition === 'C'}>
+                    C
+                  </option>
                 </select>
               </span>
             </div>
@@ -708,7 +715,7 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <input type="text" id="start_date" name="start_date" onInput={event => this.start_dateChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="start_date_override-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -726,14 +733,18 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <select id="status" name="status" onInput={event => this.statusChange(event)}>
                   <option value="">Select Status</option>
-                  <option value="A" selected={this.newStatus === "A"}>A</option>
-                  <option value="B" selected={this.newStatus === "B"}>B</option>
-                  <option value="C" selected={this.newStatus === "C"}>C</option>
+                  <option value="A" selected={this.newStatus === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newStatus === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newStatus === 'C'}>
+                    C
+                  </option>
                 </select>
-
               </span>
-            </div> 
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -743,6 +754,4 @@ export class ScInternshipEngagements {
       </Host>
     );
   }
-
 }
-

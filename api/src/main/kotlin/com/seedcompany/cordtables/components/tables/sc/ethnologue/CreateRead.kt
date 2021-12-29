@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-ethnologue/create-read")
+    @PostMapping("sc/ethnologue/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: ScEthnologueCreateReadRequest): ScEthnologueCreateReadResponse {
 

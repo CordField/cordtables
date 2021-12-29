@@ -42,7 +42,6 @@ class ScProjectListResponse {
   projects: ScProject[];
 }
 
-
 class ScProjectUpdateRequest {
   token: string;
   column: string;
@@ -70,7 +69,6 @@ class DeleteProjectExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScProjects {
-
   @State() projectsResponse: ScProjectListResponse;
 
   newNeo4j_id: string;
@@ -92,9 +90,9 @@ export class ScProjects {
   newStatus: string;
   newStatus_changed_at: string;
   newStep: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScProjectUpdateRequest, ScProjectUpdateResponse>('sc-projects/update-read', {
+    const updateResponse = await fetchAs<ScProjectUpdateRequest, ScProjectUpdateResponse>('sc/projects/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -114,7 +112,7 @@ export class ScProjects {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteProjectExRequest, DeleteProjectExResponse>('sc-projects/delete', {
+    const deleteResponse = await fetchAs<DeleteProjectExRequest, DeleteProjectExResponse>('sc/projects/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -129,17 +127,10 @@ export class ScProjects {
   };
 
   async getList() {
-    this.projectsResponse = await fetchAs<ScProjectListRequest, ScProjectListResponse>('sc-projects/list', {
+    this.projectsResponse = await fetchAs<ScProjectListRequest, ScProjectListResponse>('sc/projects/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   neo4j_idChange(event) {
     this.newNeo4j_id = event.target.value;
@@ -221,7 +212,7 @@ export class ScProjects {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateProjectExRequest, CreateProjectExResponse>('sc-projects/create-read', {
+    const createResponse = await fetchAs<CreateProjectExRequest, CreateProjectExResponse>('sc/projects/create-read', {
       token: globals.globalStore.state.token,
       project: {
         neo4j_id: this.newNeo4j_id,
@@ -243,7 +234,6 @@ export class ScProjects {
         status: this.newStatus,
         status_changed_at: this.newStatus_changed_at,
         step: this.newStep,
-        
       },
     });
 
@@ -256,9 +246,6 @@ export class ScProjects {
     }
   };
 
-
- 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
@@ -267,7 +254,6 @@ export class ScProjects {
       editable: false,
       deleteFn: this.handleDelete,
     },
-
 
     {
       field: 'neo4j_id',
@@ -296,8 +282,8 @@ export class ScProjects {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -392,9 +378,9 @@ export class ScProjects {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -412,13 +398,12 @@ export class ScProjects {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
-
 
     {
       field: 'created_at',
@@ -465,7 +450,6 @@ export class ScProjects {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -478,9 +462,6 @@ export class ScProjects {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
-
-
             <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">neo4j_id</label>
@@ -497,8 +478,8 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="name" name="name" onInput={event => this.nameChange(event)} />
               </span>
-            </div>      
-            
+            </div>
+
             <div id="change_to_plan-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="change_to_plan">Change To Plan</label>
@@ -513,13 +494,17 @@ export class ScProjects {
                 <label htmlFor="active">Active</label>
               </span>
               <span class="form-thing">
-              <select id="active" name="active" onInput={event => this.activeChange(event)}>
+                <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>True</option>
-                   <option value="false" selected={this.newActive === false}>False</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div>    
+            </div>
 
             <div id="department-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -537,7 +522,7 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="estimated_submission" name="estimated_submission" onInput={event => this.estimated_submissionChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="field_region-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -555,7 +540,7 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="initial_mou_end" name="initial_mou_end" onInput={event => this.initial_mou_endChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="marketing_location-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -573,7 +558,7 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="persmou_starton" name="mou_start" onInput={event => this.mou_startChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="mou_end-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -591,7 +576,7 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="owning_organization" name="owning_organization" onInput={event => this.owning_organizationChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="periodic_reports_directory-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -609,7 +594,7 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="number" id="posts_directory" name="posts_directory" onInput={event => this.posts_directoryChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="primary_location-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -627,18 +612,24 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="root_directory" name="root_directory" onInput={event => this.root_directoryChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="status-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="status">Status</label>
               </span>
               <span class="form-thing">
-              <select id="status" name="status" multiple onInput={event => this.statusChange(event)}>
+                <select id="status" name="status" multiple onInput={event => this.statusChange(event)}>
                   <option value="">Select Status</option>
-                  <option value="A" selected={this.newStatus === "A"}>A</option>
-                  <option value="B" selected={this.newStatus === "B"}>B</option>
-                  <option value="C" selected={this.newStatus === "C"}>C</option>
+                  <option value="A" selected={this.newStatus === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newStatus === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newStatus === 'C'}>
+                    C
+                  </option>
                 </select>
               </span>
             </div>
@@ -650,26 +641,27 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="status_changed_at" name="status_changed_at" onInput={event => this.status_changed_atChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="step-holder" class="form-input-item form-thing">
               <span class="form-step">
                 <label htmlFor="step">Step</label>
               </span>
               <span class="form-thing">
-              <select id="step" name="step" multiple onInput={event => this.stepChange(event)}>
+                <select id="step" name="step" multiple onInput={event => this.stepChange(event)}>
                   <option value="">Select Step</option>
-                  <option value="A" selected={this.newStep === "A"}>A</option>
-                  <option value="B" selected={this.newStep === "B"}>B</option>
-                  <option value="C" selected={this.newStep === "C"}>C</option>
+                  <option value="A" selected={this.newStep === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newStep === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newStep === 'C'}>
+                    C
+                  </option>
                 </select>
               </span>
             </div>
-
-            
-
-
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -679,5 +671,4 @@ export class ScProjects {
       </Host>
     );
   }
-
 }

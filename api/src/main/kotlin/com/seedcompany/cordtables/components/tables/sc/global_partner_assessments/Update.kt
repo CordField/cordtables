@@ -37,7 +37,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-global-partner-assessments/update")
+    @PostMapping("sc/global-partner-assessments/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScGlobalPartnerAssessmentsUpdateRequest): ScGlobalPartnerAssessmentsUpdateResponse {
 

@@ -35,7 +35,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("admin-role-column-grants/update")
+    @PostMapping("admin/role-column-grants/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminRoleColumnGrantsUpdateRequest): AdminRoleColumnGrantsUpdateResponse {
 

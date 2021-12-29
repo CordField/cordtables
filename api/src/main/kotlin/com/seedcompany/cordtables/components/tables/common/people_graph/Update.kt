@@ -38,7 +38,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-people-graph/update")
+    @PostMapping("common/people-graph/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonPeopleGraphUpdateRequest): CommonPeopleGraphUpdateResponse {
 

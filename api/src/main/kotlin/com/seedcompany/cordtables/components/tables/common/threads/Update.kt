@@ -31,7 +31,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common-threads/update")
+    @PostMapping("common/threads/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonThreadsUpdateRequest): CommonThreadsUpdateResponse {
 

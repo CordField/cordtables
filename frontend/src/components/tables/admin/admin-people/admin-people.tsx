@@ -37,7 +37,6 @@ class AdminPeopleListResponse {
   peoples: AdminPeople[];
 }
 
-
 class AdminPeopleUpdateRequest {
   token: string;
   column: string;
@@ -65,7 +64,6 @@ class DeletePeopleExResponse extends GenericResponse {
   shadow: true,
 })
 export class AdminPeoples {
-
   @State() peoplesResponse: AdminPeopleListResponse;
 
   newAbout: string;
@@ -82,9 +80,9 @@ export class AdminPeoples {
   newTimezone: string;
   newTitle: string;
   newStatus: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminPeopleUpdateRequest, AdminPeopleUpdateResponse>('admin-people/update-read', {
+    const updateResponse = await fetchAs<AdminPeopleUpdateRequest, AdminPeopleUpdateResponse>('admin/people/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -104,7 +102,7 @@ export class AdminPeoples {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePeopleExRequest, DeletePeopleExResponse>('admin-people/delete', {
+    const deleteResponse = await fetchAs<DeletePeopleExRequest, DeletePeopleExResponse>('admin/people/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -119,17 +117,10 @@ export class AdminPeoples {
   };
 
   async getList() {
-    this.peoplesResponse = await fetchAs<AdminPeopleListRequest, AdminPeopleListResponse>('admin-people/list', {
+    this.peoplesResponse = await fetchAs<AdminPeopleListRequest, AdminPeopleListResponse>('admin/people/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   aboutChange(event) {
     this.newAbout = event.target.value;
@@ -187,12 +178,11 @@ export class AdminPeoples {
     this.newStatus = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('admin-people/create-read', {
+    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('admin/people/create-read', {
       token: globals.globalStore.state.token,
       people: {
         about: this.newAbout,
@@ -220,7 +210,6 @@ export class AdminPeoples {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
 
   columnData: ColumnDescription[] = [
     {
@@ -303,12 +292,12 @@ export class AdminPeoples {
     {
       field: 'sensitivity_clearance',
       displayName: 'Sensitivity Clearance',
-      width:200,
+      width: 200,
       editable: true,
       selectOptions: [
-        {display: "Low", value: "Low"},
-        {display: "Medium", value: "Medium"},
-        {display: "High", value: "High"},
+        { display: 'Low', value: 'Low' },
+        { display: 'Medium', value: 'Medium' },
+        { display: 'High', value: 'High' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -377,7 +366,6 @@ export class AdminPeoples {
     await this.getList();
     // await this.getFilesList();
   }
-
 
   render() {
     return (
@@ -487,10 +475,16 @@ export class AdminPeoples {
               </span>
               <span class="form-thing">
                 <select id="sensitivity_clearance" name="sensitivity_clearance" onInput={event => this.sensitivity_clearanceChange(event)}>
-                    <option value="">Select Sensitivity Clearance</option>
-                    <option value="Low" selected={this.newSensitivity_clearance === "Low"}>Low</option>
-                    <option value="Medium" selected={this.newSensitivity_clearance === "Medium"}>Medium</option>
-                    <option value="High" selected={this.newSensitivity_clearance === "High"}>High</option>
+                  <option value="">Select Sensitivity Clearance</option>
+                  <option value="Low" selected={this.newSensitivity_clearance === 'Low'}>
+                    Low
+                  </option>
+                  <option value="Medium" selected={this.newSensitivity_clearance === 'Medium'}>
+                    Medium
+                  </option>
+                  <option value="High" selected={this.newSensitivity_clearance === 'High'}>
+                    High
+                  </option>
                 </select>
               </span>
             </div>
@@ -522,9 +516,6 @@ export class AdminPeoples {
               </span>
             </div>
 
-      
-            
-
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>
@@ -533,5 +524,4 @@ export class AdminPeoples {
       </Host>
     );
   }
-
 }

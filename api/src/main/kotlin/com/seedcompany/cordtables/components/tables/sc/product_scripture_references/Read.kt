@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-product-scripture-references/read")
+    @PostMapping("sc/product-scripture-references/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScProductScriptureReferencesReadRequest): ScProductScriptureReferencesReadResponse {
 
