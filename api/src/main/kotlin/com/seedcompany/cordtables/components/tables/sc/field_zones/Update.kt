@@ -41,15 +41,15 @@ class Update(
 
 
         when (req.column) {
-            "neo4j_id" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.field_zones",
-                    column = "neo4j_id",
-                    id = req.id,
-                    value = req.value,
-                )
-            }
+//            "neo4j_id" -> {
+//                util.updateField(
+//                    token = req.token,
+//                    table = "sc.field_zones",
+//                    column = "neo4j_id",
+//                    id = req.id,
+//                    value = req.value,
+//                )
+//            }
             "director" -> {
                 util.updateField(
                     token = req.token,
@@ -57,6 +57,7 @@ class Update(
                     column = "director",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "name" -> {
@@ -75,6 +76,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -84,6 +86,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

@@ -49,6 +49,7 @@ class Update(
                     column = "budget",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -59,6 +60,7 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -100,6 +102,7 @@ class Update(
                     column = "partnership",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -110,6 +113,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -120,6 +124,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 

@@ -138,15 +138,15 @@ export class AdminUsers {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'person',
       displayName: 'Person',
-      width: 200,
-      editable: false,
+      width: 250,
+      editable: true,
       updateFn: this.handleUpdate,
     },
     {

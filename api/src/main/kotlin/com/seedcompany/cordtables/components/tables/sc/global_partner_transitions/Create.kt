@@ -53,7 +53,7 @@ class Create(
             """
             insert into sc.global_partner_transitions(organization, transition_type, effective_date, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::sc.global_partner_transition_options,
                     ?::timestamp,
                     (
@@ -71,7 +71,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
@@ -82,6 +82,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

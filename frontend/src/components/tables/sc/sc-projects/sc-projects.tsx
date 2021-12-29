@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateProjectExRequest {
   token: string;
   project: {
-    neo4j_id: string;
     name: string;
     change_to_plan: string;
     active: boolean;
@@ -71,7 +70,6 @@ class DeleteProjectExResponse extends GenericResponse {
 export class ScProjects {
   @State() projectsResponse: ScProjectListResponse;
 
-  newNeo4j_id: string;
   newName: string;
   newChange_to_plan: string;
   newActive: boolean;
@@ -132,9 +130,11 @@ export class ScProjects {
     });
   }
 
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
 
   nameChange(event) {
     this.newName = event.target.value;
@@ -215,7 +215,6 @@ export class ScProjects {
     const createResponse = await fetchAs<CreateProjectExRequest, CreateProjectExResponse>('sc/projects/create-read', {
       token: globals.globalStore.state.token,
       project: {
-        neo4j_id: this.newNeo4j_id,
         name: this.newName,
         change_to_plan: this.newChange_to_plan,
         active: this.newActive,
@@ -250,7 +249,7 @@ export class ScProjects {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -462,15 +461,6 @@ export class ScProjects {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="neo4j_id">neo4j_id</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
-              </span>
-            </div>
-
             <div id="name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="name">Name</label>

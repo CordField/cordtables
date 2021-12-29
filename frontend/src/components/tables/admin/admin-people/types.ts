@@ -15,7 +15,7 @@ class AdminPeople {
     sensitivity_clearance?: string | undefined;
     timezone?: string | undefined;
     title?: string | undefined;
-    status?: string | undefined;
+    // status?: string | undefined;
 
     created_at?: string | undefined;
     created_by?: string | undefined;

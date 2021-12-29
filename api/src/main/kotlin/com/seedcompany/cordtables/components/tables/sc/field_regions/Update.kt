@@ -40,13 +40,23 @@ class Update(
         if (req.id == null) return ScFieldRegionsUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-            "neo4j_id" -> {
+//            "neo4j_id" -> {
+//                util.updateField(
+//                    token = req.token,
+//                    table = "sc.field_regions",
+//                    column = "neo4j_id",
+//                    id = req.id,
+//                    value = req.value,
+//                )
+//            }
+            "field_zone" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.field_regions",
-                    column = "neo4j_id",
+                    column = "field_zone",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "director" -> {
@@ -56,6 +66,7 @@ class Update(
                     column = "director",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "name" -> {
@@ -74,6 +85,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -83,6 +95,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

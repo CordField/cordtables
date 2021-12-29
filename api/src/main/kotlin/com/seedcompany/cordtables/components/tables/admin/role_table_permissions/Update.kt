@@ -45,7 +45,8 @@ class Update(
                     table = "admin.role_table_permissions",
                     column = "role",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "table_name" -> {
@@ -74,7 +75,8 @@ class Update(
                     table = "admin.role_table_permissions",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -83,7 +85,8 @@ class Update(
                     table = "admin.role_table_permissions",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

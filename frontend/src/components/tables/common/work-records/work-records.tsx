@@ -111,9 +111,16 @@ export class WorkRecord {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
+    },
+    {
+      field: 'ticket',
+      displayName: 'Ticket',
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'person',
@@ -142,12 +149,6 @@ export class WorkRecord {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
-    },
-    {
-      field: 'total_time',
-      displayName: 'Total Time',
-      width: 200,
-      editable: false,
     },
     {
       field: 'comment',
@@ -199,6 +200,7 @@ export class WorkRecord {
   async componentWillLoad() {
     await this.getList();
   }
+
   ticketChange(event) {
     this.newTicket = event.target.value;
   }
@@ -250,6 +252,10 @@ export class WorkRecord {
     return (
       <Host>
         <slot></slot>
+
+        {/* table abstraction */}
+        {this.CommonWorkRecordResponse && this.onlyShowCreate === false && <cf-table rowData={this.CommonWorkRecordResponse.work_record} columnData={this.columnData}></cf-table>}
+
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
@@ -300,9 +306,6 @@ export class WorkRecord {
             </span>
           </form>
         )}
-
-        {/* table abstraction */}
-        {this.CommonWorkRecordResponse && this.onlyShowCreate === false && <cf-table rowData={this.CommonWorkRecordResponse.work_record} columnData={this.columnData}></cf-table>}
       </Host>
     );
   }

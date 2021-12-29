@@ -1,6 +1,6 @@
 class ScFieldZone {
     id?: string | undefined;
-    neo4j_id?: string | undefined;
+    // neo4j_id?: string | undefined;
     director?: string | undefined;
     name?: string | undefined;
     created_at?: string | undefined;

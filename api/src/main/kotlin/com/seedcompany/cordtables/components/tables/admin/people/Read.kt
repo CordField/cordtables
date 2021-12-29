@@ -72,7 +72,7 @@ class Read(
                     "sensitivity_clearance",
                     "timezone",
                     "title",
-                    "status",
+//                    "status",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -129,8 +129,8 @@ class Read(
                 var title: String? = jdbcResult.getString("title")
                 if (jdbcResult.wasNull()) title = null
 
-                var status: String? = jdbcResult.getString("status")
-                if (jdbcResult.wasNull()) status = null
+//                var status: String? = jdbcResult.getString("status")
+//                if (jdbcResult.wasNull()) status = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -166,7 +166,7 @@ class Read(
                         sensitivity_clearance = if (sensitivity_clearance == null) null else Sensitivities.valueOf(sensitivity_clearance),
                         timezone = timezone,
                         title = title,
-                        status = status,
+//                        status = status,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

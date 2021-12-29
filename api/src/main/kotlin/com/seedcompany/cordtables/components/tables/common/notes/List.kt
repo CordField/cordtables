@@ -84,7 +84,7 @@ class List(
                 var column_name: String? = jdbcResult.getString("column_name")
                 if (jdbcResult.wasNull()) column_name = null
 
-                var row: Int? = jdbcResult.getInt("row")
+                var row: String? = jdbcResult.getString("row")
                 if (jdbcResult.wasNull()) row = null
 
                 var content: String? = jdbcResult.getString("content")

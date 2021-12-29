@@ -56,6 +56,10 @@ const locationTypeSelectOptions = [
 })
 export class ScLocations {
   @State() locationsResponse: ScLocationsListResponse;
+  newId: string;
+  newDefault_region: string;
+  newFunding_account: string;
+  newIso_alpha_3: string;
   newLocationName: string;
   newLocationType: string = 'City';
 
@@ -95,7 +99,7 @@ export class ScLocations {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -109,14 +113,14 @@ export class ScLocations {
     {
       field: 'default_region',
       displayName: 'Default Region',
-      width: 100,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'funding_account',
       displayName: 'Funding Account',
-      width: 100,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -185,6 +189,24 @@ export class ScLocations {
     });
   }
 
+  idChange(event) {
+    this.newId = event.target.value;
+  }
+
+  default_regionChange(event){
+    this.newDefault_region = event.target.value;
+  }
+
+  
+
+  funding_accountChange(event){
+    this.newFunding_account = event.target.value;
+  }
+
+  iso_alpha_3Change(event){
+    this.newIso_alpha_3 = event.target.value;
+  }
+
   locationNameChange(event) {
     this.newLocationName = event.target.value;
   }
@@ -201,6 +223,10 @@ export class ScLocations {
     const result = await fetchAs<CreateLocationRequest, CreateLocationResponse>('sc/locations/create-read', {
       token: globals.globalStore.state.token,
       location: {
+        id: this.newId,
+        default_region: this.newDefault_region,
+        funding_account: this.newFunding_account,
+        iso_alpha_3: this.newIso_alpha_3,
         name: this.newLocationName,
         type: this.newLocationType,
       },
@@ -223,6 +249,42 @@ export class ScLocations {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
+            <div id="location-ID-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="location-ID">ID</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="location-ID" name="location-ID" onInput={event => this.idChange(event)} />
+              </span>
+            </div>
+
+            <div id="default_region-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="default_region">Default Region</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="default_region" name="default_region" onInput={event => this.default_regionChange(event)} />
+              </span>
+            </div>
+
+            <div id="funding_account-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="funding_account">Funding Account</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="funding_account" name="funding_account" onInput={event => this.funding_accountChange(event)} />
+              </span>
+            </div>
+
+            <div id="iso_alpha_3-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="iso_alpha_3">iso_alpha_3</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="iso_alpha_3" name="iso_alpha_3" onInput={event => this.iso_alpha_3Change(event)} />
+              </span>
+            </div>
+
             <div id="location-name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="location-name">New Location Name</label>

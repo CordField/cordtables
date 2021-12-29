@@ -40,22 +40,23 @@ class Update(
         if (req.id == null) return ScEthnologueUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-            "neo4j_id" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.ethnologue",
-                    column = "neo4j_id",
-                    id = req.id,
-                    value = req.value,
-                )
-            }
+//            "neo4j_id" -> {
+//                util.updateField(
+//                    token = req.token,
+//                    table = "sc.ethnologue",
+//                    column = "neo4j_id",
+//                    id = req.id,
+//                    value = req.value,
+//                )
+//            }
             "language_index" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.ethnologue",
                     column = "language_index",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "code" -> {
@@ -111,7 +112,8 @@ class Update(
                     table = "sc.ethnologue",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -120,7 +122,8 @@ class Update(
                     table = "sc.ethnologue",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

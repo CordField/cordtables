@@ -52,10 +52,10 @@ class Create(
             """
             insert into sc.project_locations(active, change_to_plan, location, project, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::boolean,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -71,7 +71,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
@@ -83,6 +83,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

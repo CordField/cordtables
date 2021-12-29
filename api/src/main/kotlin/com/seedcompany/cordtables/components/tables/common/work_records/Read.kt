@@ -59,6 +59,7 @@ class Read(
                 columns = arrayOf(
                     "id",
                     "person",
+                    "ticket",
                     "hours",
                     "minutes",
                     "total_time",
@@ -95,6 +96,9 @@ class Read(
                 var personId: String? = jdbcResult.getString("person")
                 if (jdbcResult.wasNull()) personId = null
 
+                var ticket: String? = jdbcResult.getString("ticket")
+                if (jdbcResult.wasNull()) ticket = null
+
                 var createdAt: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) createdAt = null
 
@@ -117,6 +121,7 @@ class Read(
                     CommonWorkRecords(
                         id = id,
                         person = personId,
+                        ticket = ticket,
                         hours = hours,
                         minutes = minutes,
                         total_time = totalTime,

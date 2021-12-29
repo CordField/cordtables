@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateFundingAccountExRequest {
   token: string;
   fundingAccount: {
-    neo4j_id: string;
     account_number: number;
     name: string;
   };
@@ -55,7 +54,6 @@ class DeleteFundingAccountExResponse extends GenericResponse {
 export class ScFundingAccounts {
   @State() fundingAccountsResponse: ScFundingAccountListResponse;
 
-  newNeo4j_id: string;
   newAccount_number: number;
   newName: string;
 
@@ -103,9 +101,15 @@ export class ScFundingAccounts {
     });
   }
 
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
+  // neo4j_idChange(event) {
+  //   this.newNeo4j_id = event.target.value;
+  // }
 
   account_numberChange(event) {
     this.newAccount_number = event.target.value;
@@ -122,7 +126,7 @@ export class ScFundingAccounts {
     const createResponse = await fetchAs<CreateFundingAccountExRequest, CreateFundingAccountExResponse>('sc/funding-accounts/create-read', {
       token: globals.globalStore.state.token,
       fundingAccount: {
-        neo4j_id: this.newNeo4j_id,
+        // neo4j_id: this.newNeo4j_id,
         account_number: this.newAccount_number,
         name: this.newName,
       },
@@ -141,17 +145,17 @@ export class ScFundingAccounts {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
-    {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
+    // {
+    //   field: 'neo4j_id',
+    //   displayName: 'neo4j_id',
+    //   width: 200,
+    //   editable: true,
+    //   updateFn: this.handleUpdate,
+    // },
     {
       field: 'account_number',
       displayName: 'Account Number',
@@ -223,14 +227,14 @@ export class ScFundingAccounts {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            {/* <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="neo4j_id-thing">
                 <label htmlFor="neo4j_id">No4j_id</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
               </span>
-            </div>
+            </div> */}
 
             <div id="account_number-holder" class="form-input-item form-thing">
               <span class="form-thing">

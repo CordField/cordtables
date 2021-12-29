@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.sc.field_zones
 
 data class fieldZone(
     var id: String? = null,
-    val neo4j_id: String? = null,
+//    val neo4j_id: String? = null,
     val director: String? = null,
     val name: String? = null,
     val created_at: String? = null,
@@ -15,7 +15,7 @@ data class fieldZone(
 
 data class fieldZoneInput(
     var id: String? = null,
-    val neo4j_id: String? = null,
+//    val neo4j_id: String? = null,
     val director: String? = null,
     val name: String? = null,
     val created_at: String? = null,

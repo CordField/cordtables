@@ -9,7 +9,7 @@ class CreateTicketFeedbackRequest {
   token: string;
   ticket_feedback: {
     ticket: string;
-    stake_holder: string;
+    stakeholder: string;
     feedback: string;
   };
 }
@@ -17,7 +17,7 @@ class CreateTicketFeedbackRequest {
 class CommonTicketFeedbackRow {
   id: string;
   ticket: string;
-  stake_holder: string;
+  stakeholder: string;
   feedback: string;
   created_at: string;
   created_by: string;
@@ -210,7 +210,7 @@ export class TicketFeedback {
       token: globals.globalStore.state.token,
       ticket_feedback: {
         ticket: this.newTicket,
-        stake_holder: this.newStakeHolder,
+        stakeholder: this.newStakeHolder,
         feedback: this.newFeedback,
       },
     });
@@ -225,6 +225,10 @@ export class TicketFeedback {
     return (
       <Host>
         <slot></slot>
+        {/* table abstraction */}
+        {this.CommonTicketFeedbackResponse && this.onlyShowCreate === false && (
+          <cf-table rowData={this.CommonTicketFeedbackResponse.ticket_feedback} columnData={this.columnData}></cf-table>
+        )}
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}

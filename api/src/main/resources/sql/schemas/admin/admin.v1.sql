@@ -206,9 +206,9 @@ alter table admin.people add constraint admin_people_owning_group_fk foreign key
 create table admin.group_row_access(
   id uuid primary key default public.uuid_generate_v4(),
 
-  group_id uuid unique not null references admin.groups(id),
+  group_id uuid not null references admin.groups(id),
   table_name admin.table_name not null,
-  row int not null,
+  row uuid not null,
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by uuid not null references admin.people(id),
@@ -223,8 +223,8 @@ create table admin.group_row_access(
 create table admin.group_memberships(
   id uuid primary key default public.uuid_generate_v4(),
 
-  group_id uuid unique not null references admin.groups(id),
-  person uuid unique not null references admin.people(id),
+  group_id uuid not null references admin.groups(id),
+  person uuid not null references admin.people(id),
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by uuid not null references admin.people(id),

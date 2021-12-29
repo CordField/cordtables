@@ -223,14 +223,14 @@ export class SiteText {
       {
         field: 'id',
         displayName: 'ID',
-        width: 50,
+        width: 250,
         editable: false,
         deleteFn: this.handleDelete,
       },
       {
         field: 'english',
         displayName: capitalize(t('english')),
-        width: 100,
+        width: 250,
         editable: true,
         deleteFn: this.handleDelete,
         updateFn: this.handleSiteTextStringUpdate,

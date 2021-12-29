@@ -86,7 +86,7 @@ class Read(
                 var table_name: String? = jdbcResult.getString("table_name")
                 if (jdbcResult.wasNull()) table_name = null
 
-                var row: Int? = jdbcResult.getInt("row")
+                var row: String? = jdbcResult.getString("row")
                 if (jdbcResult.wasNull()) row = null
 
                 var created_at: String? = jdbcResult.getString("created_at")

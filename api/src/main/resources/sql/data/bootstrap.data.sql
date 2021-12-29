@@ -297,8 +297,8 @@ BEGIN
        ('Write', 'prioritization', vPublicRoleId, 'sc.languages', vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
       -- giving row membership to only one row
-      insert into admin.group_row_access(group_id,table_name,row,created_by,modified_by,owning_person,owning_group)
-      values(vPublicGroupId,'sc.languages',1,vPersonId,vPersonId,vPersonId,vAdminGroupId);
+--      insert into admin.group_row_access(group_id,table_name,row,created_by,modified_by,owning_person,owning_group)
+--      values(vPublicGroupId,'sc.languages',1,vPersonId,vPersonId,vPersonId,vAdminGroupId);
   end if;
 
 END; $$;

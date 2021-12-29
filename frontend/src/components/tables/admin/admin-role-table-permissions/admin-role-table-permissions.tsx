@@ -143,14 +143,14 @@ export class AdminRoleTablePermissions {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'role',
       displayName: 'Role',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },

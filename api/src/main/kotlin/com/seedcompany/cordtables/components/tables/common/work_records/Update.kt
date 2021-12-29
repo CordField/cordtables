@@ -49,7 +49,18 @@ class Update(
                     table = "common.work_records",
                     column = "person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
+                )
+            }
+            "ticket" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.work_records",
+                    column = "ticket",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -63,7 +74,6 @@ class Update(
                     cast = "::integer"
                 )
             }
-
             "minutes" -> {
                 util.updateField(
                     token = req.token,
@@ -74,8 +84,6 @@ class Update(
                     cast = "::integer"
                 )
             }
-
-
             "comment" -> {
                 util.updateField(
                     token = req.token,
@@ -86,8 +94,6 @@ class Update(
                     cast = "::text"
                 )
             }
-
-
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
@@ -95,9 +101,9 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
-
             "owning_group" -> {
                 util.updateField(
                     token = req.token,
@@ -105,6 +111,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

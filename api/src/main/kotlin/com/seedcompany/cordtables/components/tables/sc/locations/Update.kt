@@ -66,13 +66,7 @@ class Update(
 //            return ScLocationsUpdateResponse(updateResponse.error)
 //        }
 
-        if (req.location.neo4j_id != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "neo4j_id",
-            id = req.location.id!!,
-            value = req.location.neo4j_id,
-        )
+
 
         if (req.location.name != null) util.updateField(
             token = req.token,
@@ -88,6 +82,7 @@ class Update(
             column = "funding_account",
             id = req.location.id!!,
             value = req.location.funding_account,
+            cast = "::uuid"
         )
 
         if (req.location.default_region != null) util.updateField(
@@ -96,6 +91,7 @@ class Update(
             column = "default_region",
             id = req.location.id!!,
             value = req.location.default_region,
+            cast = "::uuid"
         )
 
         if (req.location.iso_alpha_3 != null) util.updateField(
@@ -121,6 +117,7 @@ class Update(
             column = "owning_person",
             id = req.location.id!!,
             value = req.location.owning_person,
+            cast = "::uuid"
         )
 
         if (req.location.owning_group != null) util.updateField(
@@ -129,6 +126,7 @@ class Update(
             column = "owning_group",
             id = req.location.id!!,
             value = req.location.owning_group,
+            cast = "::uuid"
         )
 
         return ScLocationsUpdateResponse(ErrorType.NoError)

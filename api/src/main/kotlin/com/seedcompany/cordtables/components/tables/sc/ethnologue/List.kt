@@ -57,7 +57,6 @@ class List(
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
                     "language_index",
                     "code",
                     "language_name",
@@ -81,9 +80,6 @@ class List(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var language_index: String? = jdbcResult.getString("language_index")
                 if (jdbcResult.wasNull()) language_index = null
@@ -126,7 +122,6 @@ class List(
                 data.add(
                     ethnologue(
                         id = id,
-                        neo4j_id = neo4j_id,
                         language_index = language_index,
                         code = code,
                         language_name = language_name,

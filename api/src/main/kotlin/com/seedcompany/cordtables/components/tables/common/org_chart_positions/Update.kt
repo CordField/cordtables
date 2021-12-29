@@ -46,7 +46,8 @@ class Update(
                     table = "common.org_chart_positions",
                     column = "organization",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "name" -> {
@@ -64,7 +65,8 @@ class Update(
                     table = "common.org_chart_positions",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -73,7 +75,8 @@ class Update(
                     table = "common.org_chart_positions",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

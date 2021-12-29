@@ -90,7 +90,7 @@ export class TicketGraph {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common/ticket-graph/delete', {
+    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common-ticket-graph/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -106,21 +106,21 @@ export class TicketGraph {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'from_ticket',
       displayName: 'From Ticket',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'to_ticket',
       displayName: 'To Ticket',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -204,7 +204,10 @@ export class TicketGraph {
     return (
       <Host>
         <slot></slot>
-
+        {/* table abstraction */}
+        {this.commonTicketGraphResponse && this.onlyShowCreate === false && (
+          <cf-table rowData={this.commonTicketGraphResponse.ticket_graph} columnData={this.columnData}></cf-table>
+        )}
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
@@ -230,10 +233,6 @@ export class TicketGraph {
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>
           </form>
-        )}
-        {/* table abstraction */}
-        {this.commonTicketGraphResponse && this.onlyShowCreate === false && (
-          <cf-table rowData={this.commonTicketGraphResponse.ticket_graph} columnData={this.columnData}></cf-table>
         )}
       </Host>
     );

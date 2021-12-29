@@ -3,7 +3,9 @@ package com.seedcompany.cordtables.components.tables.sc.organizations
 data class organization(
     var id: String? = null,
 
-    val neo4j_id: String? = null,
+//    val neo4j_id: String? = null,
+    val sensitivity: String? = null,
+    val root_directory: String? = null,
     val address: String? = null,
 
     val created_at: String? = null,
@@ -16,7 +18,9 @@ data class organization(
 
 data class organizationInput(
     var id: String? = null,
-    val neo4j_id: String? = null,
+//    val neo4j_id: String? = null,
+    val sensitivity: String? = null,
+    val root_directory: String? = null,
     val address: String? = null,
     val created_at: String? = null,
     val created_by: String? = null,

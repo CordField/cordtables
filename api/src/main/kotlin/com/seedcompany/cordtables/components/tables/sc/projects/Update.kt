@@ -40,15 +40,6 @@ class Update(
         if (req.id == null) return ScProjectsUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-            "neo4j_id" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.projects",
-                    column = "neo4j_id",
-                    id = req.id,
-                    value = req.value,
-                )
-            }
             "name" -> {
                 util.updateField(
                     token = req.token,
@@ -64,7 +55,8 @@ class Update(
                     table = "sc.projects",
                     column = "change_to_plan",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "active" -> {
@@ -73,7 +65,8 @@ class Update(
                     table = "sc.projects",
                     column = "active",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::boolean"
                 )
             }
             "department" -> {
@@ -101,7 +94,8 @@ class Update(
                     table = "sc.projects",
                     column = "field_region",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "initial_mou_end" -> {
@@ -120,7 +114,8 @@ class Update(
                     table = "sc.projects",
                     column = "marketing_location",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "mou_start" -> {
@@ -149,7 +144,8 @@ class Update(
                     table = "sc.projects",
                     column = "owning_organization",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "periodic_reports_directory" -> {
@@ -158,7 +154,8 @@ class Update(
                     table = "sc.projects",
                     column = "periodic_reports_directory",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "posts_directory" -> {
@@ -167,7 +164,8 @@ class Update(
                     table = "sc.projects",
                     column = "posts_directory",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "primary_location" -> {
@@ -176,7 +174,8 @@ class Update(
                     table = "sc.projects",
                     column = "primary_location",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "root_directory" -> {
@@ -185,7 +184,8 @@ class Update(
                     table = "sc.projects",
                     column = "root_directory",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "status" -> {
@@ -226,7 +226,8 @@ class Update(
                     table = "sc.projects",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -235,7 +236,8 @@ class Update(
                     table = "sc.projects",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

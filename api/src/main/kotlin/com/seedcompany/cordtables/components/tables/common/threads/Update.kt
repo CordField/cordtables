@@ -57,7 +57,8 @@ class Update(
                         table = "common.threads",
                         column = "channel",
                         id = req.id,
-                        value = req.value
+                        value = req.value,
+                        cast = "::uuid"
                 )
             }
             "owning_person" -> {
@@ -66,7 +67,8 @@ class Update(
                         table = "common.threads",
                         column = "owning_person",
                         id = req.id,
-                        value = req.value
+                        value = req.value,
+                        cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -75,7 +77,8 @@ class Update(
                         table = "common.threads",
                         column = "owning_group",
                         id = req.id,
-                        value = req.value
+                        value = req.value,
+                        cast = "::uuid"
                 )
             }
         }

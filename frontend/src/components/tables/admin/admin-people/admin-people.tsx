@@ -21,7 +21,7 @@ class CreatePeopleExRequest {
     sensitivity_clearance: string;
     timezone: string;
     title: string;
-    status: string;
+    // status: string;
   };
 }
 class CreatePeopleExResponse extends GenericResponse {
@@ -79,7 +79,7 @@ export class AdminPeoples {
   newSensitivity_clearance: string;
   newTimezone: string;
   newTitle: string;
-  newStatus: string;
+  // newStatus: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminPeopleUpdateRequest, AdminPeopleUpdateResponse>('admin/people/update-read', {
@@ -174,9 +174,9 @@ export class AdminPeoples {
     this.newTitle = event.target.value;
   }
 
-  statusChange(event) {
-    this.newStatus = event.target.value;
-  }
+  // statusChange(event) {
+  //   this.newStatus = event.target.value;
+  // }
 
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
@@ -198,7 +198,7 @@ export class AdminPeoples {
         sensitivity_clearance: this.newSensitivity_clearance,
         timezone: this.newTimezone,
         title: this.newTitle,
-        status: this.newStatus,
+        // status: this.newStatus,
       },
     });
 
@@ -215,7 +215,7 @@ export class AdminPeoples {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -315,13 +315,13 @@ export class AdminPeoples {
       editable: true,
       updateFn: this.handleUpdate,
     },
-    {
-      field: 'status',
-      displayName: 'Status',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
+    // {
+    //   field: 'status',
+    //   displayName: 'Status',
+    //   width: 200,
+    //   editable: true,
+    //   updateFn: this.handleUpdate,
+    // },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -507,14 +507,14 @@ export class AdminPeoples {
               </span>
             </div>
 
-            <div id="status-holder" class="form-input-item form-thing">
+            {/* <div id="status-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="status">status</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="status" name="status" onInput={event => this.statusChange(event)} />
               </span>
-            </div>
+            </div> */}
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />

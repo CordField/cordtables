@@ -46,7 +46,8 @@ class Update(
                     table = "common.people_to_org_relationships",
                     column = "org",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "person" -> {
@@ -55,7 +56,8 @@ class Update(
                     table = "common.people_to_org_relationships",
                     column = "person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "relationship_type" -> {
@@ -95,7 +97,8 @@ class Update(
                     table = "common.people_to_org_relationships",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -104,7 +107,8 @@ class Update(
                     table = "common.people_to_org_relationships",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

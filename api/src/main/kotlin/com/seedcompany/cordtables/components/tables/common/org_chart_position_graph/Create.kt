@@ -53,8 +53,8 @@ class Create(
             """
             insert into common.org_chart_position_graph(from_position, to_position, relationship_type, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::INTEGER,
-                    ?::INTEGER,
+                    ?::uuid,
+                    ?::uuid,
                     ?::common.position_relationship_types,
                     (
                       select person 
@@ -71,7 +71,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
@@ -82,6 +82,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

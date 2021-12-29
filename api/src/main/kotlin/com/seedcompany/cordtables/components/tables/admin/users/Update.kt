@@ -46,7 +46,8 @@ class Update(
                     table = "admin.users",
                     column = "person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "email" -> {
@@ -77,7 +78,8 @@ class Update(
                     table = "admin.users",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -86,7 +88,8 @@ class Update(
                     table = "admin.users",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

@@ -21,7 +21,7 @@ data class RegisterReturn(
     val token: String? = null,
     val readableTables: List<String> = listOf(),
     val isAdmin: Boolean = false,
-    val userId: Int? = null
+    val userId: String? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -45,14 +45,16 @@ class Register (
 
 
         var errorType: ErrorType
-        var userId: Int?
+        var userId: String?
         val pash = util.encoder.encode(req.password)
         val token = util.createToken()
 
+      val adminGroupId = util.adminGroupId
+
         val resultList = registerDB(req.email, pash, token)
         errorType = resultList[0] as ErrorType
-        userId = resultList[1] as Int?
-        if(userId == -1) userId = null
+        userId = resultList[1] as String?
+        if(userId == "") userId = null
 
         return if (errorType === ErrorType.NoError){
             RegisterReturn(errorType, token, util.getReadableTables(token), util.isAdmin(token), userId)

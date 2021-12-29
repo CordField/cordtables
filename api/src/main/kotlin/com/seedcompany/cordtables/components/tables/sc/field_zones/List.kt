@@ -57,7 +57,7 @@ class List(
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
+//                    "neo4j_id",
                     "director",
                     "name",
                     "created_at",
@@ -77,8 +77,8 @@ class List(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
+//                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
+//                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var director: String? = jdbcResult.getString("director")
                 if (jdbcResult.wasNull()) director = null
@@ -107,7 +107,7 @@ class List(
                 data.add(
                     fieldZone(
                         id = id,
-                        neo4j_id = neo4j_id,
+//                        neo4j_id = neo4j_id,
                         director = director,
                         name = name,
                         created_at = created_at,

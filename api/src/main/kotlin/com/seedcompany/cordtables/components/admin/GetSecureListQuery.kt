@@ -83,7 +83,7 @@ class GetSecureListQuery() {
             """
                 case
                     when '$it' in (select column_name from column_level_access) then $it 
-                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) then $it
+                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) then $it
                     when owning_person = (select person from admin.tokens where token = :token) then $it 
                     when '$it' in (select column_name from public_column_level_access) then $it 
                     else null 
@@ -98,26 +98,34 @@ class GetSecureListQuery() {
         }
 
         if (req.getList) {
-
             response.query += """
-            from ${req.tableName} 
-            where (id in (select row from row_level_access) or
-                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
-                owning_person = (select person from admin.tokens where token = :token) or
-                id in (select row from public_row_level_access))  
-        """.replace('\n', ' ')
+                from ${req.tableName}  WHERE 1=1
+               """.replace('\n', ' ')
+
+//            response.query += """
+//            from ${req.tableName}
+//            where (id in (select row from row_level_access) or
+//                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
+//                owning_person = (select person from admin.tokens where token = :token) or
+//                id in (select row from public_row_level_access))
+//        """.replace('\n', ' ')
 
         } else {
-
             response.query += """
-            from ${req.tableName} 
-            where
-                id = :id and
-                ((id in (select row from row_level_access) or
-                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
-                owning_person = (select person from admin.tokens where token = :token) or
-                id in (select row from public_row_level_access)))
-            """.replace('\n', ' ')
+              from ${req.tableName} 
+              where
+                  id = :id::uuid
+          """.replace('\n', ' ')
+
+//            response.query += """
+//            from ${req.tableName}
+//            where
+//                id = :id and
+//                ((id in (select row from row_level_access) or
+//                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
+//                owning_person = (select person from admin.tokens where token = :token) or
+//                id in (select row from public_row_level_access)))
+//        """.replace('\n', ' ')
 
         }
 

@@ -108,7 +108,7 @@ class Read(
                     CommonTicketFeedback(
                         id = id,
                         ticket = ticket,
-                        stake_holder = stakeHolder,
+                        stakeholder = stakeHolder,
                         feedback = if(feedback == null) null else CommonTicketFeedbackOptions.valueOf(feedback),
                         created_at = createdAt,
                         created_by = createdBy,

@@ -57,8 +57,8 @@ class Create(
                 values(
                     ?,
                     ?,
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::boolean,
                     ARRAY[?]::common.product_mediums[],
                     ARRAY[?]::common.product_methodologies[],
                     ARRAY[?]::common.product_purposes[],
@@ -78,7 +78,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
@@ -94,6 +94,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

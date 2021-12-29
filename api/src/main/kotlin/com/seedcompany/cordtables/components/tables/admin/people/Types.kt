@@ -16,7 +16,7 @@ data class people(
     val sensitivity_clearance: Sensitivities? = null,
     val timezone: String? = null,
     val title: String? = null,
-    val status: String? = null,
+//    val status: String? = null,
 
     val created_at: String? = null,
     val created_by: String? = null,
@@ -44,7 +44,7 @@ data class peopleInput(
     val sensitivity_clearance: String? = null,
     val timezone: String? = null,
     val title: String? = null,
-    val status: String? = null,
+//    val status: String? = null,
     val created_at: String? = null,
     val created_by: String? = null,
     val modified_at: String? = null,

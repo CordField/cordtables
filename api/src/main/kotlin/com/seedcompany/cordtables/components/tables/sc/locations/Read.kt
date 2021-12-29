@@ -57,7 +57,6 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
                     "default_region",
                     "funding_account",
                     "iso_alpha_3",
@@ -80,8 +79,6 @@ class Read(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var defaultRegion: String? = jdbcResult.getString("default_region")
                 if (jdbcResult.wasNull()) defaultRegion = null
@@ -119,7 +116,6 @@ class Read(
                 val location =
                     ScLocation(
                         id = id,
-                        neo4j_id = neo4j_id,
                         default_region = defaultRegion,
                         name = name,
                         type = if (type == null) null else LocationType.valueOf(type),

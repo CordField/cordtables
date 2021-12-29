@@ -47,6 +47,8 @@ class List(
   @ResponseBody
   fun listHandler(@RequestBody req: CommonPostsListRequest): CommonPostsListResponse {
     var data: MutableList<Post> = mutableListOf()
+    var personIds: String = "("
+    var personIdsArray: ArrayList<String> = ArrayList()
     var whereClause = ""
     var peopleIds: MutableList<Int> = mutableListOf()
     if (req.token == null) return CommonPostsListResponse(ErrorType.TokenNotFound, mutableListOf(), mutableListOf())
@@ -121,7 +123,15 @@ class List(
             owning_group = owning_group
           )
         )
-
+        if (owning_person != null) {
+          personIdsArray.add("'$owning_person'")
+        }
+//        if(personIds=="(") {
+//          personIds+= "'$owning_person',"
+//        }
+//        else{
+//          personIds+="'$personIds', '$owning_person'"
+//        }
       }
     } catch (e: SQLException) {
       println("error while listing ${e.message}")
@@ -129,6 +139,11 @@ class List(
     }
     val peopleDetails = util.getPeopleDetailsFromIds(peopleIds)
 
-    return CommonPostsListResponse(ErrorType.NoError, data, peopleDetails)
+//    personIds+=")"
+    val peopleQuery = """select public_first_name, public_last_name from admin.people where id in (${personIdsArray.joinToString(",")})""".trimIndent()
+    println(peopleQuery)
+    val jdbcPeopleResult = jdbcTemplate.queryForRowSet(peopleQuery, paramSource)
+
+    return CommonPostsListResponse(ErrorType.NoError, data)
   }
 }

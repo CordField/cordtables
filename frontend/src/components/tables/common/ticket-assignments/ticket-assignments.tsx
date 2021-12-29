@@ -89,7 +89,7 @@ export class TicketAssignment {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common/ticket-assignments/delete', {
+    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common-ticket-assignments/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -105,21 +105,21 @@ export class TicketAssignment {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'ticket',
       displayName: 'Ticket ID',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'person',
       displayName: 'Person',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -167,6 +167,10 @@ export class TicketAssignment {
     await this.getList();
   }
 
+  async componentWillLoad() {
+    await this.getList();
+  }
+
   async getList() {
     this.commonTicketAssignmentResponse = await fetchAs<CommonTicketAssignmentListRequest, CommonTicketAssignmentResponse>('common/ticket-assignments/list', {
       token: globals.globalStore.state.token,
@@ -207,6 +211,11 @@ export class TicketAssignment {
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
+        {/* table abstraction */}
+        {this.commonTicketAssignmentResponse && this.onlyShowCreate === false && (
+          <cf-table rowData={this.commonTicketAssignmentResponse.ticket_assignment} columnData={this.columnData}></cf-table>
+        )}
+
         {(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
             <div id="ticket-holder" class="form-input-item form-thing">
@@ -229,10 +238,6 @@ export class TicketAssignment {
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>
           </form>
-        )}
-        {/* table abstraction */}
-        {this.commonTicketAssignmentResponse && this.onlyShowCreate === false && (
-          <cf-table rowData={this.commonTicketAssignmentResponse.ticket_assignment} columnData={this.columnData}></cf-table>
         )}
       </Host>
     );

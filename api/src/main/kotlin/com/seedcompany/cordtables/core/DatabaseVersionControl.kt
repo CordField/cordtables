@@ -34,6 +34,7 @@ class DatabaseVersionControl(
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
     fun updateDatabaseSchemaIdempotent() {
+        enableUUID()
         if (!isVersion1()) toVersion1()
         updateSchemaIdempotent()
         println("database schema update complete")
@@ -53,7 +54,10 @@ class DatabaseVersionControl(
                 }
             }
         }
+    }
 
+    private  fun enableUUID(){
+        runSqlFile("sql/helpers/uuid.sql")
     }
 
     private fun updateHistoryTables(){
@@ -128,7 +132,7 @@ class DatabaseVersionControl(
         runSqlFile("sql/modules/user/login.sql")
 
         // prep and bootstrap the db
-        val pash = util.encoder.encode(appConfig.cordAdminPassword)
+      val pash = util.encoder.encode(appConfig.cordAdminPassword)
 
         var errorType = ErrorType.UnknownError
 
@@ -174,7 +178,7 @@ class DatabaseVersionControl(
 
     }
 
-    public fun loadCountryCodes(adminPeopleId: Int) {
+    public fun loadCountryCodes(adminPeopleId: String) {
 
         var url = URL("https://raw.githubusercontent.com/CordField/datasets/main/CountryCodes.tab")
         var urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
@@ -199,7 +203,7 @@ class DatabaseVersionControl(
                 val areaEntry = splitArray[2]
                 count++
                 if (count == 1) continue
-                countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+                countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${util.adminGroupId}'::uuid), "
             }
 
             countryCodesQuery = countryCodesQuery.dropLast(2) + ";"
@@ -220,7 +224,7 @@ class DatabaseVersionControl(
         }
     }
 
-    public fun loadLanguageCodes(adminPeopleId: Int) {
+    public fun loadLanguageCodes(adminPeopleId: String) {
 
         val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/LanguageCodes.tab")
         val urlConnection = url.openConnection() as HttpURLConnection
@@ -245,7 +249,7 @@ class DatabaseVersionControl(
                 val name = splitArray[3]
                 count++
                 if (count == 1) continue
-                languageCodesQuery += "('${lang}', '${country}', '${langStatus}', '${name}', ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}, ${adminPeopleId}), "
+                languageCodesQuery += "('${lang}', '${country}', '${langStatus}', '${name}', '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${util.adminGroupId}'::uuid), "
             }
             languageCodesQuery = languageCodesQuery.dropLast(2) + ";"
 
@@ -266,7 +270,7 @@ class DatabaseVersionControl(
         }
     }
 
-    public fun loadLanguageIndexes(adminPeopleId: Int) {
+    public fun loadLanguageIndexes(adminPeopleId: String) {
 
         val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/LanguageIndex.tab")
         val urlConnection = url.openConnection() as HttpURLConnection
@@ -309,7 +313,7 @@ class DatabaseVersionControl(
         }
     }
 
-    public fun loadIso_639_3_Name_Index(adminPeopleId: Int) {
+    public fun loadIso_639_3_Name_Index(adminPeopleId: String) {
 
         val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3_Name_Index.tab")
         val urlConnection = url.openConnection() as HttpURLConnection
@@ -327,7 +331,7 @@ class DatabaseVersionControl(
             this.ds.connection.use { conn ->
                 try {
 
-                    val insertSQL = ("insert into sil.iso_639_3_names(_id, print_name, inverted_name, created_by, modified_by, owning_person, owning_group) values (?, ?, ?, ?, ?, ?, ?)")
+                    val insertSQL = ("insert into sil.iso_639_3_names(_id, print_name, inverted_name, created_by, modified_by, owning_person, owning_group) values (?, ?, ?, ?::uuid, ?::uuid, ?::uuid, ?::uuid)")
                     val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
                     for (line in text) {
@@ -340,10 +344,10 @@ class DatabaseVersionControl(
                         insertStmt.setString(1, id)
                         insertStmt.setString(2, printName)
                         insertStmt.setString(3, invertedName)
-                        insertStmt.setInt(4, adminPeopleId)
-                        insertStmt.setInt(5, adminPeopleId)
-                        insertStmt.setInt(6, adminPeopleId)
-                        insertStmt.setInt(7, adminPeopleId)
+                        insertStmt.setString(4, adminPeopleId)
+                        insertStmt.setString(5, adminPeopleId)
+                        insertStmt.setString(6, adminPeopleId)
+                        insertStmt.setString(7, util.adminGroupId)
 
                         insertStmt.addBatch()
                     }
@@ -363,7 +367,7 @@ class DatabaseVersionControl(
         }
     }
 
-    public fun loadIso_639_3(adminPeopleId: Int) {
+    public fun loadIso_639_3(adminPeopleId: String) {
 
         val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3.tab")
         val urlConnection = url.openConnection() as HttpURLConnection
@@ -383,7 +387,7 @@ class DatabaseVersionControl(
 
                     val insertSQL = """
                         insert into sil.iso_639_3(_id, part_2b, part_2t, part_1, scope, type, ref_name, comment, created_by, modified_by, owning_person, owning_group)
-                        values  (?, ?, ?, ?, ?::sil.iso_639_3_scope_options, ?::sil.iso_639_3_type_options, ?, ?, ?, ?, ?, ?)"""
+                        values  (?, ?, ?, ?, ?::sil.iso_639_3_scope_options, ?::sil.iso_639_3_type_options, ?, ?, ?::uuid, ?::uuid, ?::uuid, ?::uuid)"""
                     val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
                     for (line in text) {
@@ -407,10 +411,10 @@ class DatabaseVersionControl(
                         insertStmt.setString(6, type)
                         insertStmt.setString(7, refName)
                         insertStmt.setString(8, comment)
-                        insertStmt.setInt(9, adminPeopleId)
-                        insertStmt.setInt(10, adminPeopleId)
-                        insertStmt.setInt(11, adminPeopleId)
-                        insertStmt.setInt(12, adminPeopleId)
+                        insertStmt.setString(9, adminPeopleId)
+                        insertStmt.setString(10, adminPeopleId)
+                        insertStmt.setString(11, adminPeopleId)
+                        insertStmt.setString(12, util.adminGroupId)
 
                         insertStmt.addBatch()
                     }
@@ -430,7 +434,7 @@ class DatabaseVersionControl(
         }
     }
 
-    public fun loadIso_639_3_Retirements(adminPeopleId: Int) {
+    public fun loadIso_639_3_Retirements(adminPeopleId: String) {
 
         val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3_Retirements.tab")
         val urlConnection = url.openConnection() as HttpURLConnection
@@ -448,7 +452,7 @@ class DatabaseVersionControl(
             this.ds.connection.use { conn ->
                 try {
 
-                    val insertSQL = "insert into sil.iso_639_3_retirements(_id, ref_name, ret_reason, change_to, ret_remedy, effective, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_retirement_reason_options, ?, ?, ?, ?, ?, ?, ?)"
+                    val insertSQL = "insert into sil.iso_639_3_retirements(_id, ref_name, ret_reason, change_to, ret_remedy, effective, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_retirement_reason_options, ?, ?, ?, ?::uuid, ?::uuid, ?::uuid, ?::uuid)"
                     val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
                     for (line in text) {
@@ -474,10 +478,10 @@ class DatabaseVersionControl(
                         insertStmt.setString(4, changeTo)
                         insertStmt.setString(5, retRemedy)
                         insertStmt.setTimestamp(6, timestamp)
-                        insertStmt.setInt(7, adminPeopleId)
-                        insertStmt.setInt(8, adminPeopleId)
-                        insertStmt.setInt(9, adminPeopleId)
-                        insertStmt.setInt(10, adminPeopleId)
+                        insertStmt.setString(7, adminPeopleId)
+                        insertStmt.setString(8, adminPeopleId)
+                        insertStmt.setString(9, adminPeopleId)
+                        insertStmt.setString(10, util.adminGroupId)
 
                         insertStmt.addBatch()
 
@@ -499,7 +503,7 @@ class DatabaseVersionControl(
         }
     }
 
-    public fun loadIso_639_3_Macrolanguages(adminPeopleId: Int) {
+    public fun loadIso_639_3_Macrolanguages(adminPeopleId: String) {
 
         val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3-macrolanguages.tab")
         val urlConnection = url.openConnection() as HttpURLConnection
@@ -513,11 +517,10 @@ class DatabaseVersionControl(
 
             var count = 0
             var text:List<String>  = readBuffer.readLines()
-
             this.ds.connection.use { conn ->
                 try {
 
-                    val insertSQL = "insert into sil.iso_639_3_macrolanguages(m_id, i_id, i_status, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_status_options, ?, ?, ?, ?)"
+                    val insertSQL = "insert into sil.iso_639_3_macrolanguages(m_id, i_id, i_status, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_status_options, ?::uuid, ?::uuid, ?::uuid, ?::uuid)"
                     val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
                     for (line in text) {
@@ -532,10 +535,10 @@ class DatabaseVersionControl(
                         insertStmt.setString(1, m_id)
                         insertStmt.setString(2, i_id)
                         insertStmt.setString(3, i_status)
-                        insertStmt.setInt(4, adminPeopleId)
-                        insertStmt.setInt(5, adminPeopleId)
-                        insertStmt.setInt(6, adminPeopleId)
-                        insertStmt.setInt(7, adminPeopleId)
+                        insertStmt.setString(4, adminPeopleId)
+                        insertStmt.setString(5, adminPeopleId)
+                        insertStmt.setString(6, adminPeopleId)
+                        insertStmt.setString(7, util.adminGroupId)
 
                         insertStmt.addBatch()
 
@@ -545,7 +548,6 @@ class DatabaseVersionControl(
                     println("iso-639-3-macrolanguages.tab load success")
                 } catch (ex: Exception) {
                     println(ex)
-
                     println("iso-639-3-macrolanguages.tab load filed")
                 }
             }
@@ -559,7 +561,7 @@ class DatabaseVersionControl(
     }
 
     public fun loadSilData(){
-        var adminPeopleId = 0
+        var adminPeopleId = ""
         println("loadSil Data")
 
         this.ds.connection.use { conn ->
@@ -570,13 +572,15 @@ class DatabaseVersionControl(
 
                 val result = getAdminIdStatement.executeQuery()
                 if (result.next()) {
-                    adminPeopleId = result.getInt("id")
+                    adminPeopleId = result.getString("id")
                 }
                 getAdminIdStatement.close()
             } catch (ex: IllegalArgumentException) {
                 println("admin people not found!")
             }
         }
+
+        // println(adminPeopleId)
 
         loadCountryCodes(adminPeopleId)
 

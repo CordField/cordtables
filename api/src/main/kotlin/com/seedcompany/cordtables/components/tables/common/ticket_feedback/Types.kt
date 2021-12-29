@@ -5,7 +5,7 @@ import com.seedcompany.cordtables.common.CommonTicketFeedbackOptions
 data class CommonTicketFeedback(
     val id: String? = null,
     val ticket: String? = null,
-    val stake_holder: String? = null,
+    val stakeholder: String? = null,
     val feedback: CommonTicketFeedbackOptions? = null,
     val created_at: String? = null,
     val created_by: String? = null,
@@ -17,6 +17,6 @@ data class CommonTicketFeedback(
 
 data class CommonTicketFeedbackInput(
     val ticket: String? = null,
-    val stake_holder: String? = null,
+    val stakeholder: String? = null,
     val feedback: String? = null,
 )

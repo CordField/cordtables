@@ -4,7 +4,7 @@ class CommonNote {
 
     table_name?: string | undefined;
     column_name?: string | undefined;
-    row?: number | undefined;
+    row?: string | undefined;
     content?: string | undefined;
 
     created_at?: string | undefined;

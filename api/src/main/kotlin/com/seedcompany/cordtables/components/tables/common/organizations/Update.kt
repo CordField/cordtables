@@ -76,6 +76,7 @@ class Update(
                         column = "primary_location",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
 
@@ -86,6 +87,7 @@ class Update(
                         column = "owning_person",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
 
@@ -96,6 +98,7 @@ class Update(
                         column = "owning_group",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
         }

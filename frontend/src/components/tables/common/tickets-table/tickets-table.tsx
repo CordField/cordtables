@@ -105,7 +105,7 @@ export class TicketsTable {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -125,7 +125,7 @@ export class TicketsTable {
     {
       field: 'parent',
       displayName: 'Parent',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -222,6 +222,9 @@ export class TicketsTable {
       <Host>
         <slot></slot>
 
+        {/* table abstraction */}
+        {this.commonTicketsResponse && this.onlyShowCreate === false && <cf-table rowData={this.commonTicketsResponse.tickets} columnData={this.columnData}></cf-table>}
+
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
@@ -266,8 +269,6 @@ export class TicketsTable {
             </span>
           </form>
         )}
-        {/* table abstraction */}
-        {this.commonTicketsResponse && this.onlyShowCreate === false && <cf-table rowData={this.commonTicketsResponse.tickets} columnData={this.columnData}></cf-table>}
       </Host>
     );
   }
