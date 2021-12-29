@@ -116,7 +116,7 @@ export class ScPeoples {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('sc-people/create-read', {
+    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('sc/people/create-read', {
       token: globals.globalStore.state.token,
       people: {
         neo4j_id: this.newNeo4j_id,
