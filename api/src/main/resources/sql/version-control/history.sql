@@ -24,7 +24,7 @@ begin
 
 		-- HISTORY TABLE CREATION
 		execute format('create table if not exists %I.%I ( _history_id serial primary key,
-		_history_created_at timestamp not null default CURRENT_TIMESTAMP)', rec1.table_schema,history_table_name);
+		_history_created_at timestamp not null default CURRENT_TIMESTAMP, __event admin.history_event_type)', rec1.table_schema,history_table_name);
 
 		-- UPDATE BOTH SECURITY AND HISTORY TABLE (IDEMPOTENT MANNER)
 		for rec2 in (select column_name,case
@@ -64,7 +64,7 @@ begin
 	base_table_name := TG_TABLE_SCHEMA || '.' || TG_TABLE_NAME; 
 	
 	history_table_name := base_table_name || '_history';
-	execute format('insert into '|| history_table_name || '(_history_id) values (default) returning _history_id') into history_row_id; 
+	execute format('insert into '|| history_table_name || '(_history_id, __event) values (default,' || quote_literal(TG_OP)  ||') returning _history_id') into history_row_id; 
 	for rec1 in (select column_name from information_schema.columns where table_schema = TG_TABLE_SCHEMA and  table_name = TG_TABLE_NAME) loop
 		if TG_OP != 'DELETE' then 
 			execute format('update '|| history_table_name || ' set ' || quote_ident(rec1.column_name) || ' = $1.' || quote_ident(rec1.column_name) ||' where _history_id = '|| history_row_id) using new ;

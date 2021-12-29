@@ -7,6 +7,13 @@ CREATE EXTENSION if not exists hstore;
 create extension if not exists postgis;
 
 
+create type admin.history_event_type as enum (
+  'INSERT',
+  'UPDATE',
+  'DELETE'
+);
+
+
 create type common.sensitivity as enum (
   'Low',
   'Medium',
