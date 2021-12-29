@@ -19,7 +19,7 @@ BEGIN
   -- create roles and groups to replicate the cord field permissions
   -- use bootstrap.sql for examples
 
-  -- get admin person id
+  -- get admin person id, this will be needed when using UUIDs
   select admin.people.id 				from admin.people
   inner join admin.role_memberships 	on admin.role_memberships.person = admin.people.id
   inner join admin.roles 				on admin.role_memberships.role = admin.roles.id
