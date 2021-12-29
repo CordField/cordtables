@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-stage-role-column-grants/create")
+    @PostMapping("common/stage-role-column-grants/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonStageRoleColumnGrantsCreateRequest): CommonStageRoleColumnGrantsCreateResponse {
 

@@ -4,21 +4,21 @@ import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
-class CreateWorkRecordRequest{
+class CreateWorkRecordRequest {
   token: string;
-  work_record:{
+  work_record: {
     person: number;
     hours: number;
     minutes: number;
-    total_time ?: number;
-    comment ?: string;
-  }
+    total_time?: number;
+    comment?: string;
+  };
 }
 
-class CommonWorkRecordRow{
-  id : number;
+class CommonWorkRecordRow {
+  id: number;
   ticket: number;
-  person : number;
+  person: number;
   created_at: string;
   created_by: number;
   modified_at: string;
@@ -27,11 +27,10 @@ class CommonWorkRecordRow{
   owning_group: number;
 }
 
-
 class CreateWorkRecordResponse extends GenericResponse {
   work_record: CommonWorkRecordRow;
 }
-class CommonWorkRecordListRequest{
+class CommonWorkRecordListRequest {
   token: string;
 }
 
@@ -65,9 +64,7 @@ class DeleteWorkRecordResponse extends GenericResponse {
   styleUrl: 'work-records.css',
   shadow: true,
 })
-export class WorkRecord{
-
-  
+export class WorkRecord {
   @Prop() onlyShowCreate: boolean = false;
   @State() CommonWorkRecordResponse: CommonWorkRecordResponse;
   newPerson: number;
@@ -75,11 +72,8 @@ export class WorkRecord{
   newMinutes: number;
   newComment: string;
 
-
-
-
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> =>{
-    const updateResponse = await fetchAs<CommonWorkRecordUpdateRequest, CommonWorkRecordUpdateResponse>('common-work-records/update-read', {
+  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonWorkRecordUpdateRequest, CommonWorkRecordUpdateResponse>('common/work-records/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -87,163 +81,164 @@ export class WorkRecord{
     });
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.CommonWorkRecordResponse = { error: ErrorType.NoError, work_record: this.CommonWorkRecordResponse.work_record.map(work_record => (work_record.id === id ? updateResponse.work_record : work_record)) };
+      this.CommonWorkRecordResponse = {
+        error: ErrorType.NoError,
+        work_record: this.CommonWorkRecordResponse.work_record.map(work_record => (work_record.id === id ? updateResponse.work_record : work_record)),
+      };
       return true;
     } else {
       alert(updateResponse.error);
       return false;
-  }
-}
+    }
+  };
 
-handleDelete = async id => {
-  const result = await fetchAs<DeleteWorkRecordRequest, DeleteWorkRecordResponse>('common-work-records/delete', {
-    id,
-    token: globals.globalStore.state.token,
-  });
-  if (result.error === ErrorType.NoError) {
-    this.getList();
-    return true;
-  } else {
-    return false;
-  }
-};
+  handleDelete = async id => {
+    const result = await fetchAs<DeleteWorkRecordRequest, DeleteWorkRecordResponse>('common/work-records/delete', {
+      id,
+      token: globals.globalStore.state.token,
+    });
+    if (result.error === ErrorType.NoError) {
+      this.getList();
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-columnData: ColumnDescription[] = [
-  {
-    field: 'id',
-    displayName: 'ID',
-    width: 50,
-    editable: false,
-    deleteFn: this.handleDelete,
-  },
-  {
-    field: 'person',
-    displayName: 'Person',
-    width: 200,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-  {
-    field: 'hours',
-    displayName: 'Hours',
-    width: 200,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-  {
-    field: 'minutes',
-    displayName: 'Minutes',
-    width: 200,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-  {
-    field: 'total_time',
-    displayName: 'Total Time',
-    width: 200,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
+  columnData: ColumnDescription[] = [
     {
-    field: 'total_time',
-    displayName: 'Total Time',
-    width: 200,
-    editable: false,
-  },
-  {
-    field: 'comment',
-    displayName: 'Comment',
-    width: 200,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-  {
-    field: 'created_at',
-    displayName: 'Created At',
-    width: 250,
-    editable: false,
-  },
-  {
-    field: 'created_by',
-    displayName: 'Created By',
-    width: 100,
-    editable: false,
-  },
-  {
-    field: 'modified_at',
-    displayName: 'Last Modified',
-    width: 250,
-    editable: false,
-  },
-  {
-    field: 'modified_by',
-    displayName: 'Last Modified By',
-    width: 100,
-    editable: false,
-  },
-  {
-    field: 'owning_person',
-    displayName: 'Owning Person ID',
-    width: 100,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-  {
-    field: 'owning_group',
-    displayName: 'Owning Group ID',
-    width: 100,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-];
-
-async componentWillLoad() {
-  await this.getList();
-}
-
-async getList() {
-  this.CommonWorkRecordResponse = await fetchAs<CommonWorkRecordListRequest, CommonWorkRecordResponse>('common-work-records/list', {
-    token: globals.globalStore.state.token,
-  });
-}
-
-
-personChange(event) {
-  this.newPerson = event.target.value;
-}
-
-hoursChange(event) {
-  this.newHours = event.target.value;
-}
-
-minutesChange(event) {
-  this.newMinutes = event.target.value;
-}
-
-
-commentChange(event) {
-  this.newComment = event.target.value;
-}
-
-handleInsert = async (event: MouseEvent) => {
-  event.preventDefault();
-  event.stopPropagation();  
-
-  const result = await fetchAs<CreateWorkRecordRequest, CreateWorkRecordResponse>('common-work-records/create-read', {
-    token: globals.globalStore.state.token,
-    work_record: {
-      person: this.newPerson,
-      hours: this.newHours,
-      minutes: this.newMinutes,
-      comment: this.newComment
+      field: 'id',
+      displayName: 'ID',
+      width: 50,
+      editable: false,
+      deleteFn: this.handleDelete,
     },
-  });
+    {
+      field: 'person',
+      displayName: 'Person',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'hours',
+      displayName: 'Hours',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'minutes',
+      displayName: 'Minutes',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'total_time',
+      displayName: 'Total Time',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'total_time',
+      displayName: 'Total Time',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'comment',
+      displayName: 'Comment',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'created_at',
+      displayName: 'Created At',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'created_by',
+      displayName: 'Created By',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'modified_at',
+      displayName: 'Last Modified',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'modified_by',
+      displayName: 'Last Modified By',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'owning_person',
+      displayName: 'Owning Person ID',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'owning_group',
+      displayName: 'Owning Group ID',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+  ];
 
-  if (result.error === ErrorType.NoError) {
-    globals.globalStore.state.editMode = false;
-    this.getList();
+  async componentWillLoad() {
+    await this.getList();
   }
-};
+
+  async getList() {
+    this.CommonWorkRecordResponse = await fetchAs<CommonWorkRecordListRequest, CommonWorkRecordResponse>('common/work-records/list', {
+      token: globals.globalStore.state.token,
+    });
+  }
+
+  personChange(event) {
+    this.newPerson = event.target.value;
+  }
+
+  hoursChange(event) {
+    this.newHours = event.target.value;
+  }
+
+  minutesChange(event) {
+    this.newMinutes = event.target.value;
+  }
+
+  commentChange(event) {
+    this.newComment = event.target.value;
+  }
+
+  handleInsert = async (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const result = await fetchAs<CreateWorkRecordRequest, CreateWorkRecordResponse>('common/work-records/create-read', {
+      token: globals.globalStore.state.token,
+      work_record: {
+        person: this.newPerson,
+        hours: this.newHours,
+        minutes: this.newMinutes,
+        comment: this.newComment,
+      },
+    });
+
+    if (result.error === ErrorType.NoError) {
+      globals.globalStore.state.editMode = false;
+      this.getList();
+    }
+  };
 
   render() {
     return (
@@ -252,9 +247,9 @@ handleInsert = async (event: MouseEvent) => {
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
-{(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
+        {(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
-             <div id="person-holder" class="form-input-item form-thing">
+            <div id="person-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="person">Person:</label>
               </span>
@@ -294,10 +289,7 @@ handleInsert = async (event: MouseEvent) => {
 
         {/* table abstraction */}
         {this.CommonWorkRecordResponse && this.onlyShowCreate === false && <cf-table rowData={this.CommonWorkRecordResponse.work_record} columnData={this.columnData}></cf-table>}
-        
       </Host>
     );
   }
-
 }
-

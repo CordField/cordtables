@@ -35,73 +35,76 @@ export class TableRoot {
         {this.match.params.table === 'admin-roles' && <admin-roles></admin-roles>}
         {this.match.params.table === 'admin-people' && <admin-people></admin-people>}
 
-        <stencil-route url={'/table/sc/funding-accounts'} exact={true} component="sc-funding-accounts" />
-        <stencil-route url={'/table/sc/internship-engagements'} exact={true} component="sc-internship-engagements" />
-        <stencil-route url={'/table/sc/known-languages-by-person'} exact={true} component="sc-known-languages-by-person" />
-        <stencil-route url={'/table/sc/language-engagements'} exact={true} component="sc-language-engagements" />
-        <stencil-route url={'/table/sc/organization-locations'} exact={true} component="sc-organization-locations" />
-        <stencil-route url={'/table/sc/organizations'} exact={true} component="sc-organizations" />
-        <stencil-route url={'/table/sc/partners'} exact={true} component="sc-partners" />
-        <stencil-route url={'/table/sc/partnerships'} exact={true} component="sc-partnerships" />
-        <stencil-route url={'/table/sc/person-unavailabilities'} exact={true} component="sc-person-unavailabilities" />
-        <stencil-route url={'/table/sc/pinned-projects'} exact={true} component="sc-pinned-projects" />
-        <stencil-route url={'/table/sc/posts'} exact={true} component="sc-posts" />
+        <stencil-route url={'/table/sc/funding-accounts'} component="sc-funding-accounts" />
+        <stencil-route url={'/table/sc/internship-engagements'} component="sc-internship-engagements" />
+        <stencil-route url={'/table/sc/known-languages-by-person'} component="sc-known-languages-by-person" />
+        <stencil-route url={'/table/sc/language-engagements'} component="sc-language-engagements" />
+        <stencil-route url={'/table/sc/organization-locations'} component="sc-organization-locations" />
+        <stencil-route url={'/table/sc/organizations'} component="sc-organizations" />
+        <stencil-route url={'/table/sc/partners'} component="sc-partners" />
+        <stencil-route url={'/table/sc/partnerships'} component="sc-partnerships" />
+        <stencil-route url={'/table/sc/person-unavailabilities'} component="sc-person-unavailabilities" />
+        <stencil-route url={'/table/sc/pinned-projects'} component="sc-pinned-projects" />
+        <stencil-route url={'/table/sc/posts'} component="sc-posts" />
 
-        <stencil-route url={'/table/sc/product-scripture-references'} exact={true} component="sc-product-scripture-references" />
-        <stencil-route url={'/table/sc/products'} exact={true} component="sc-products" />
-        <stencil-route url={'/table/sc/project-locations'} exact={true} component="sc-project-locations" />
-        <stencil-route url={'/table/sc/projects'} exact={true} component="sc-projects" />
+        <stencil-route url={'/table/sc/product-scripture-references'} component="sc-product-scripture-references" />
+        <stencil-route url={'/table/sc/products'} component="sc-products" />
+        <stencil-route url={'/table/sc/project-locations'} component="sc-project-locations" />
+        <stencil-route url={'/table/sc/projects'} component="sc-projects" />
 
-        {this.match.params.table === 'common-directories' && <directories-table></directories-table>}
-        {this.match.params.table === 'common-files' && <files-table></files-table>}
-        {this.match.params.table === 'common-file-versions' && <file-versions></file-versions>}
-        <stencil-route url={'/table/sc/field-regions'} exact={true} component="sc-field-regions-table" />
-        <stencil-route url={'/table/sc/field-zones'} exact={true} component="sc-field-zones" />
+        <stencil-route url={'/table/common/directories'} component="directories-table" />
+        <stencil-route url={'/table/common/files'} component="files-table" />
+        <stencil-route url={'/table/common/file-versions'} component="file-versions" />
+        <stencil-route url={'/table/sc/field-regions'} component="sc-field-regions-table" />
+        <stencil-route url={'/table/sc/field-zones'} component="sc-field-zones" />
 
-        <stencil-route url={'/table/sc/global-partner-assessments'} exact={true} component="sc-global-partner-assessments" />
-        <stencil-route url={'/table/sc/global-partner-engagements'} exact={true} component="sc-global-partner-engagements" />
-        <stencil-route url={'/table/sc/global-partner-engagement-people'} exact={true} component="sc-global-partner-engagement-people" />
-        <stencil-route url={'/table/sc/global-partner-performance'} exact={true} component="sc-global-partner-performance" />
-        {this.match.params.table === 'common-coalitions' && <common-coalitions></common-coalitions>}
-        {this.match.params.table === 'common-coalition-memberships' && <common-coalition-memberships></common-coalition-memberships>}
+        <stencil-route url={'/table/sc/global-partner-assessments'} component="sc-global-partner-assessments" />
+        <stencil-route url={'/table/sc/global-partner-engagements'} component="sc-global-partner-engagements" />
+        <stencil-route url={'/table/sc/global-partner-engagement-people'} component="sc-global-partner-engagement-people" />
+        <stencil-route url={'/table/sc/global-partner-performance'} component="sc-global-partner-performance" />
+        <stencil-route url={'/table/common/coalitions'} component="common-coalitions" />
+        <stencil-route url={'/table/common/coalition-memberships'} component="common-coalition-memberships" />
 
         {this.match.params.table === 'up-prayer-requests' && <up-prayer-requests></up-prayer-requests>}
         {this.match.params.table === 'up-prayer-notifications' && <up-prayer-notifications></up-prayer-notifications>}
 
         {this.match.params.table === 'sc-languages-ex' && <languages-ex></languages-ex>}
-        {this.match.params.table === 'common-organizations' && <common-organizations></common-organizations>}
-        {this.match.params.table === 'common-tickets' && <tickets-table></tickets-table>}
-        {this.match.params.table === 'common-ticket-graph' && <ticket-graph></ticket-graph>}
-        <stencil-route url={'/table/sc/budget-records'} exact={true} component="sc-budget-records" />
-        {this.match.params.table === 'common-ticket-assignments' && <ticket-assignments></ticket-assignments>}
-        {this.match.params.table === 'common-work-records' && <work-records></work-records>}
-        {this.match.params.table === 'common-work-estimates' && <work-estimates></work-estimates>}
-        {this.match.params.table === 'common-ticket-feedback' && <ticket-feedback></ticket-feedback>}
-        {this.match.params.table === 'common-scripture-references' && <scripture-references></scripture-references>}
-        <stencil-route url={'/table/sc/locations'} exact={true} component="sc-locations" />
-        {this.match.params.table === 'common-cell-channels' && <common-cell-channels></common-cell-channels>}
-        {this.match.params.table === 'common-threads' && <common-threads></common-threads>}
-        {this.match.params.table === 'common-posts' && <common-posts></common-posts>}
-        <stencil-route url={'/table/sc/languages'} exact={true} component="sc-languages" />
 
-        {this.match.params.table === 'common-locations' && <common-locations></common-locations>}
-        {this.match.params.table === 'common-notes' && <common-notes></common-notes>}
-        {this.match.params.table === 'common-org-chart-positions' && <common-org-chart-positions></common-org-chart-positions>}
-        {this.match.params.table === 'common-org-chart-position-graph' && <common-org-chart-position-graph></common-org-chart-position-graph>}
-        {this.match.params.table === 'common-people-graph' && <common-people-graph></common-people-graph>}
-        {this.match.params.table === 'common-people-to-org-relationships' && <common-people-to-org-relationships></common-people-to-org-relationships>}
-        {this.match.params.table === 'common-stage-graph' && <common-stage-graph></common-stage-graph>}
-        {this.match.params.table === 'common-stage-notifications' && <common-stage-notifications></common-stage-notifications>}
-        {this.match.params.table === 'common-stage-role-column-grants' && <common-stage-role-column-grants></common-stage-role-column-grants>}
-        {this.match.params.table === 'common-stages' && <common-stages></common-stages>}
-        {this.match.params.table === 'common-workflows' && <common-workflows></common-workflows>}
-        <stencil-route url={'/table/sc/ethnologue'} exact={true} component="sc-ethnologue" />
-        <stencil-route url={'/table/sc/global-partner-transitions'} exact={true} component="sc-global-partner-transitions" />
-        <stencil-route url={'/table/sc/people'} exact={true} component="sc-people" />
+        <stencil-route url={'/table/common/organizations'} component="common-organizations" />
+        <stencil-route url={'/table/common/tickets'} component="tickets-table" />
+        <stencil-route url={'/table/common/ticket-graph'} component="ticket-graph" />
+        <stencil-route url={'/table/sc/budget-records'} component="sc-budget-records" />
+        <stencil-route url={'/table/common/ticket-assignments'} component="ticket-assignments" />
+        <stencil-route url={'/table/common/work-records'} component="work-records" />
+        <stencil-route url={'/table/common/work-estimates'} component="work-estimates" />
+        <stencil-route url={'/table/common/ticket-feedback'} component="ticket-feedback" />
+        <stencil-route url={'/table/common/scripture-reference'} component="scripture-references" />
 
-        {['common-site-text', 'common-site-text-languages', 'common-site-text-strings', 'common-site-text-translations'].includes(this.match.params.table) && (
-          <site-text></site-text>
-        )}
+        <stencil-route url={'/table/sc/locations'} component="sc-locations" />
+        <stencil-route url={'/table/common/cell-channels'} component="common-cell-channels" />
+        <stencil-route url={'/table/common/discussion-channels'} component="discussion-channels" />
+        <stencil-route url={'/table/common/threads'} component="common-threads" />
+        <stencil-route url={'/table/common/posts'} component="common-posts" />
+        <stencil-route url={'/table/sc/languages'} component="sc-languages" />
+
+        <stencil-route url={'/table/common/locations'} component="common-locations" />
+        <stencil-route url={'/table/common/notes'} component="common-notes" />
+        <stencil-route url={'/table/common/org-chart-positions'} component="common-org-chart-positions" />
+        <stencil-route url={'/table/common/org-chart-position-graph'} component="common-org-chart-position-graph" />
+        <stencil-route url={'/table/common/people-graph'} component="common-people-graph" />
+        <stencil-route url={'/table/common/people-to-org-relationships'} component="common-people-to-org-relationships" />
+        <stencil-route url={'/table/common/stage-graph'} component="common-stage-graph" />
+        <stencil-route url={'/table/common/stage-notifications'} component="common-stage-notifications" />
+        <stencil-route url={'/table/common/stage-role-column-grants'} component="common-stage-role-column-grants" />
+        <stencil-route url={'/table/common/stages'} component="common-stages" />
+        <stencil-route url={'/table/common/workflows'} component="common-workflows" />
+        <stencil-route url={'/table/sc/ethnologue'} component="sc-ethnologue" />
+        <stencil-route url={'/table/sc/global-partner-transitions'} component="sc-global-partner-transitions" />
+        <stencil-route url={'/table/sc/people'} component="sc-people" />
+        <stencil-route
+          url={['/table/common/site-text', '/table/common/site-text-languages', '/table/common/site-text-translations', '/table/common/site-text-strings']}
+          component="site-text"
+        />
 
         {this.match.params.table === 'sil-country-codes' && <sil-country-codes></sil-country-codes>}
         {this.match.params.table === 'sil-language-codes' && <sil-language-codes></sil-language-codes>}

@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-coalitions/create")
+    @PostMapping("common/coalitions/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonCoalitionsCreateRequest): CommonCoalitionsCreateResponse {
 

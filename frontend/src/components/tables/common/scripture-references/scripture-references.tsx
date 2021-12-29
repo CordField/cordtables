@@ -86,7 +86,7 @@ export class ScriptureReferences {
   }
 
   async getList() {
-    const result = await fetchAs<ScriptureReferenceListRequest, ScriptureReferenceListResponse>('table/common-scripture-references/list', {
+    const result = await fetchAs<ScriptureReferenceListRequest, ScriptureReferenceListResponse>('common/scripture-references/list', {
       token: globals.globalStore.state.token,
     });
     if (result.error === ErrorType.NoError) {
@@ -101,7 +101,7 @@ export class ScriptureReferences {
   };
 
   handleInsert = async () => {
-    const result = await fetchAs<ScriptureReferenceCreateRequest, ScriptureReferenceCreateResponse>('table/common-scripture-references/create', {
+    const result = await fetchAs<ScriptureReferenceCreateRequest, ScriptureReferenceCreateResponse>('common/scripture-references/create', {
       token: globals.globalStore.state.token,
       ...this.insertedFields,
     });
@@ -119,7 +119,7 @@ export class ScriptureReferences {
 
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
     this.updatedFields[columnName] = value;
-    const result = await fetchAs<ScriptureReferenceUpdateRequest, ScriptureReferenceUpdateResponse>('table/common-scripture-references/update', {
+    const result = await fetchAs<ScriptureReferenceUpdateRequest, ScriptureReferenceUpdateResponse>('common/scripture-references/update', {
       token: globals.globalStore.state.token,
       updatedFields: this.updatedFields,
       id,
@@ -141,7 +141,7 @@ export class ScriptureReferences {
   };
 
   handleDelete = async (id: number): Promise<boolean> => {
-    const result = await fetchAs<ScriptureReferenceDeleteRequest, ScriptureReferenceDeleteResponse>('table/common-scripture-references/delete', {
+    const result = await fetchAs<ScriptureReferenceDeleteRequest, ScriptureReferenceDeleteResponse>('common/scripture-references/delete', {
       id,
       token: globals.globalStore.state.token,
     });

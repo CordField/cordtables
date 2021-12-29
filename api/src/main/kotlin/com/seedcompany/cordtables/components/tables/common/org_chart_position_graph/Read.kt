@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-org-chart-position-graph/read")
+    @PostMapping("common/org-chart-position-graph/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonOrgChartPositionGraphReadRequest): CommonOrgChartPositionGraphReadResponse {
 

@@ -37,7 +37,7 @@ class UpdateRead(
         @Autowired
         val read: Read,
 ) {
-    @PostMapping("common-ticket-assignments/update-read")
+    @PostMapping("common/ticket-assignments/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonTicketAssignmentUpdateReadRequest): CommonTicketAssignmentUpdateReadResponse {
 

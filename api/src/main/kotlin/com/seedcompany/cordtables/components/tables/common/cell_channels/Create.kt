@@ -38,7 +38,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-cell-channels/create")
+    @PostMapping("common/cell-channels/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonCellChannelsCreateRequest): CommonCellChannelsCreateResponse {
 

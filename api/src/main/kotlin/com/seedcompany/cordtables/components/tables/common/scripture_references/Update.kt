@@ -42,7 +42,7 @@ class Update(
     val ds: DataSource,
 ) {
 
-    @PostMapping("table/common-scripture-references/update")
+    @PostMapping("common/scripture-references/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScriptureReferenceUpdateRequest): ScriptureReferenceUpdateResponse {
 

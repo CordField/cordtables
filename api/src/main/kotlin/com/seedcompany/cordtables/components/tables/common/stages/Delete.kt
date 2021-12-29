@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-stages/delete")
+    @PostMapping("common/stages/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonStagesDeleteRequest): CommonStagesDeleteResponse {
 

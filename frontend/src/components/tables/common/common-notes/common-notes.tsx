@@ -27,7 +27,6 @@ class CommonNoteListResponse {
   notes: CommonNote[];
 }
 
-
 class CommonNoteUpdateRequest {
   token: string;
   column: string;
@@ -55,16 +54,15 @@ class DeleteNoteExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonNotes {
-
   @State() notesResponse: CommonNoteListResponse;
 
   newTable_name: string;
-    newColumn_name: string;
-    newRow: number;
-    newContent: string;
-  
+  newColumn_name: string;
+  newRow: number;
+  newContent: string;
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonNoteUpdateRequest, CommonNoteUpdateResponse>('common-notes/update-read', {
+    const updateResponse = await fetchAs<CommonNoteUpdateRequest, CommonNoteUpdateResponse>('common/notes/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -84,7 +82,7 @@ export class CommonNotes {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteNoteExRequest, DeleteNoteExResponse>('common-notes/delete', {
+    const deleteResponse = await fetchAs<DeleteNoteExRequest, DeleteNoteExResponse>('common/notes/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -99,17 +97,10 @@ export class CommonNotes {
   };
 
   async getList() {
-    this.notesResponse = await fetchAs<CommonNoteListRequest, CommonNoteListResponse>('common-notes/list', {
+    this.notesResponse = await fetchAs<CommonNoteListRequest, CommonNoteListResponse>('common/notes/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   table_nameChange(event) {
     this.newTable_name = event.target.value;
@@ -131,7 +122,7 @@ export class CommonNotes {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateNoteExRequest, CreateNoteExResponse>('common-notes/create-read', {
+    const createResponse = await fetchAs<CreateNoteExRequest, CreateNoteExResponse>('common/notes/create-read', {
       token: globals.globalStore.state.token,
       note: {
         table_name: this.newTable_name,
@@ -149,7 +140,7 @@ export class CommonNotes {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
- 
+
   columnData: ColumnDescription[] = [
     {
       field: 'id',
@@ -164,86 +155,86 @@ export class CommonNotes {
       width: 200,
       editable: true,
       selectOptions: [
-        {display:  "admin.database_version_control", value: "admin.database_version_control"},
-        {display:  "admin.email_tokens", value: "admin.email_tokens"},
-        {display:  "admin.group_memberships", value: "admin.group_memberships"},
-        {display:  "admin.group_row_access", value: "admin.group_row_access"},
-        {display:  "admin.groups", value: "admin.groups"},
-        {display:  "admin.peers", value: "admin.peers"},
-        {display:  "admin.people", value: "admin.people"},
-        {display:  "admin.role_column_grants", value: "admin.role_column_grants"},
-        {display:  "admin.role_memberships", value: "admin.role_memberships"},
-        {display:  "admin.role_table_permissions", value: "admin.role_table_permissions"},
-        {display:  "admin.roles", value: "admin.roles"},
-        {display:  "admin.tokens", value: "admin.tokens"},
-        {display:  "admin.users", value: "admin.users"},
-        {display:  "common.blogs", value: "common.blogs"},
-        {display:  "common.blog_posts", value: "common.blog_posts"},
-        {display:  "common.cell_channels", value: "common.cell_channels"},
-        {display:  "common.coalition_memberships", value: "common.coalition_memberships"},
-        {display:  "common.coalitions", value: "common.coalitions"},
-        {display:  "common.directories", value: "common.directories"},
-        {display:  "common.discussion_channels", value: "common.discussion_channels"},
-        {display:  "common.education_by_person", value: "common.education_by_person"},
-        {display:  "common.education_entries", value: "common.education_entries"},
-        {display:  "common.file_versions", value: "common.file_versions"},
-        {display:  "common.files", value: "common.files"},
-        {display:  "common.locations", value: "common.locations"},
-        {display:  "common.notes", value: "common.notes"},
-        {display:  "common.organizations", value: "common.organizations"},
-        {display:  "common.people_graph", value: "common.people_graph"},
-        {display:  "common.people_to_org_relationships", value: "common.people_to_org_relationships"},
-        {display:  "common.posts", value: "common.posts"},
-        {display:  "common.scripture_references", value: "common.scripture_references"},
-        {display:  "common.site_text", value: "common.site_text"},
-        {display:  "common.stage_graph", value: "common.stage_graph"},
-        {display:  "common.stage_notifications", value: "common.stage_notifications"},
-        {display:  "common.stage_role_column_grants", value: "common.stage_role_column_grants"},
-        {display:  "common.stages", value: "common.stages"},
-        {display:  "common.threads", value: "common.threads"},
-        {display:  "common.ticket_assignments", value: "common.ticket_assignments"},
-        {display:  "common.ticket_feedback", value: "common.ticket_feedback"},
-        {display:  "common.ticket_graph", value: "common.ticket_graph"},
-        {display:  "common.tickets", value: "common.tickets"},
-        {display:  "common.work_estimates", value: "common.work_estimates"},
-        {display:  "common.work_records", value: "common.work_records"},
-        {display:  "common.workflows", value: "common.workflows"},
-        {display:  "sil.country_codes", value: "sil.country_codes"},
-        {display:  "sil.language_codes", value: "sil.language_codes"},
-        {display:  "sil.language_index", value: "sil.language_index"},
-        {display:  "sc.ethnologue", value: "sc.ethnologue"},
-        {display:  "sc.budget_records", value: "sc.budget_records"},
-        {display:  "sc.budgets", value: "sc.budgets"},
-        {display:  "sc.ceremonies", value: "sc.ceremonies"},
-        {display:  "sc.change_to_plans", value: "sc.change_to_plans"},
-        {display:  "sc.field_regions", value: "sc.field_regions"},
-        {display:  "sc.field_zones", value: "sc.field_zones"},
-        {display:  "sc.funding_accounts", value: "sc.funding_accounts"},
-        {display:  "sc.global_partner_assessments", value: "sc.global_partner_assessments"},
-        {display:  "sc.global_partner_engagements", value: "sc.global_partner_engagements"},
-        {display:  "sc.global_partner_engagement_people", value: "sc.global_partner_engagement_people"},
-        {display:  "sc.global_partner_performance", value: "sc.global_partner_performance"},
-        {display:  "sc.internship_engagements", value: "sc.internship_engagements"},
-        {display:  "sc.known_languages_by_person", value: "sc.known_languages_by_person"},
-        {display:  "sc.language_engagements", value: "sc.language_engagements"},
-        {display:  "sc.languages", value: "sc.languages"},
-        {display:  "sc.locations", value: "sc.locations"},
-        {display:  "sc.organization_locations", value: "sc.organization_locations"},
-        {display:  "sc.organizations", value: "sc.organizations"},
-        {display:  "sc.partners", value: "sc.partners"},
-        {display:  "sc.partnerships", value: "sc.partnerships"},
-        {display:  "sc.people", value: "sc.people"},
-        {display:  "sc.periodic_reports", value: "sc.periodic_reports"},
-        {display:  "sc.person_unavailabilities", value: "sc.person_unavailabilities"},
-        {display:  "sc.pinned_projects", value: "sc.pinned_projects"},
-        {display:  "sc.posts", value: "sc.posts"},
-        {display:  "sc.product_scripture_references", value: "sc.product_scripture_references"},
-        {display:  "sc.products", value: "sc.products"},
-        {display:  "sc.project_locations", value: "sc.project_locations"},
-        {display:  "sc.project_members", value: "sc.project_members"},
-        {display:  "sc.projects", value: "sc.projects"},
-        {display:  "common.prayer_requests", value: "common.prayer_requests"},
-        {display:  "common.prayer_notifications", value: "common.prayer_notifications"},
+        { display: 'admin.database_version_control', value: 'admin.database_version_control' },
+        { display: 'admin.email_tokens', value: 'admin.email_tokens' },
+        { display: 'admin.group_memberships', value: 'admin.group_memberships' },
+        { display: 'admin.group_row_access', value: 'admin.group_row_access' },
+        { display: 'admin.groups', value: 'admin.groups' },
+        { display: 'admin.peers', value: 'admin.peers' },
+        { display: 'admin.people', value: 'admin.people' },
+        { display: 'admin.role_column_grants', value: 'admin.role_column_grants' },
+        { display: 'admin.role_memberships', value: 'admin.role_memberships' },
+        { display: 'admin.role_table_permissions', value: 'admin.role_table_permissions' },
+        { display: 'admin.roles', value: 'admin.roles' },
+        { display: 'admin.tokens', value: 'admin.tokens' },
+        { display: 'admin.users', value: 'admin.users' },
+        { display: 'common.blogs', value: 'common.blogs' },
+        { display: 'common.blog_posts', value: 'common.blog_posts' },
+        { display: 'common.cell_channels', value: 'common.cell_channels' },
+        { display: 'common.coalition_memberships', value: 'common.coalition_memberships' },
+        { display: 'common.coalitions', value: 'common.coalitions' },
+        { display: 'common.directories', value: 'common.directories' },
+        { display: 'common.discussion_channels', value: 'common.discussion_channels' },
+        { display: 'common.education_by_person', value: 'common.education_by_person' },
+        { display: 'common.education_entries', value: 'common.education_entries' },
+        { display: 'common.file_versions', value: 'common.file_versions' },
+        { display: 'common.files', value: 'common.files' },
+        { display: 'common.locations', value: 'common.locations' },
+        { display: 'common.notes', value: 'common.notes' },
+        { display: 'common.organizations', value: 'common.organizations' },
+        { display: 'common.people_graph', value: 'common.people_graph' },
+        { display: 'common.people_to_org_relationships', value: 'common.people_to_org_relationships' },
+        { display: 'common.posts', value: 'common.posts' },
+        { display: 'common.scripture_references', value: 'common.scripture_references' },
+        { display: 'common.site_text', value: 'common.site_text' },
+        { display: 'common.stage_graph', value: 'common.stage_graph' },
+        { display: 'common.stage_notifications', value: 'common.stage_notifications' },
+        { display: 'common.stage_role_column_grants', value: 'common.stage_role_column_grants' },
+        { display: 'common.stages', value: 'common.stages' },
+        { display: 'common.threads', value: 'common.threads' },
+        { display: 'common.ticket_assignments', value: 'common.ticket_assignments' },
+        { display: 'common.ticket_feedback', value: 'common.ticket_feedback' },
+        { display: 'common.ticket_graph', value: 'common.ticket_graph' },
+        { display: 'common.tickets', value: 'common.tickets' },
+        { display: 'common.work_estimates', value: 'common.work_estimates' },
+        { display: 'common.work_records', value: 'common.work_records' },
+        { display: 'common.workflows', value: 'common.workflows' },
+        { display: 'sil.country_codes', value: 'sil.country_codes' },
+        { display: 'sil.language_codes', value: 'sil.language_codes' },
+        { display: 'sil.language_index', value: 'sil.language_index' },
+        { display: 'sc.ethnologue', value: 'sc.ethnologue' },
+        { display: 'sc.budget_records', value: 'sc.budget_records' },
+        { display: 'sc.budgets', value: 'sc.budgets' },
+        { display: 'sc.ceremonies', value: 'sc.ceremonies' },
+        { display: 'sc.change_to_plans', value: 'sc.change_to_plans' },
+        { display: 'sc.field_regions', value: 'sc.field_regions' },
+        { display: 'sc.field_zones', value: 'sc.field_zones' },
+        { display: 'sc.funding_accounts', value: 'sc.funding_accounts' },
+        { display: 'sc.global_partner_assessments', value: 'sc.global_partner_assessments' },
+        { display: 'sc.global_partner_engagements', value: 'sc.global_partner_engagements' },
+        { display: 'sc.global_partner_engagement_people', value: 'sc.global_partner_engagement_people' },
+        { display: 'sc.global_partner_performance', value: 'sc.global_partner_performance' },
+        { display: 'sc.internship_engagements', value: 'sc.internship_engagements' },
+        { display: 'sc.known_languages_by_person', value: 'sc.known_languages_by_person' },
+        { display: 'sc.language_engagements', value: 'sc.language_engagements' },
+        { display: 'sc.languages', value: 'sc.languages' },
+        { display: 'sc.locations', value: 'sc.locations' },
+        { display: 'sc.organization_locations', value: 'sc.organization_locations' },
+        { display: 'sc.organizations', value: 'sc.organizations' },
+        { display: 'sc.partners', value: 'sc.partners' },
+        { display: 'sc.partnerships', value: 'sc.partnerships' },
+        { display: 'sc.people', value: 'sc.people' },
+        { display: 'sc.periodic_reports', value: 'sc.periodic_reports' },
+        { display: 'sc.person_unavailabilities', value: 'sc.person_unavailabilities' },
+        { display: 'sc.pinned_projects', value: 'sc.pinned_projects' },
+        { display: 'sc.posts', value: 'sc.posts' },
+        { display: 'sc.product_scripture_references', value: 'sc.product_scripture_references' },
+        { display: 'sc.products', value: 'sc.products' },
+        { display: 'sc.project_locations', value: 'sc.project_locations' },
+        { display: 'sc.project_members', value: 'sc.project_members' },
+        { display: 'sc.projects', value: 'sc.projects' },
+        { display: 'common.prayer_requests', value: 'common.prayer_requests' },
+        { display: 'common.prayer_notifications', value: 'common.prayer_notifications' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -255,19 +246,19 @@ export class CommonNotes {
       updateFn: this.handleUpdate,
     },
     {
-        field: 'row',
-        displayName: 'Row',
-        width: 200,
-        editable: true,
-        updateFn: this.handleUpdate,
-      },
-      {
-        field: 'content',
-        displayName: 'Content',
-        width: 200,
-        editable: true,
-        updateFn: this.handleUpdate,
-      },
+      field: 'row',
+      displayName: 'Row',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'content',
+      displayName: 'Content',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -313,7 +304,6 @@ export class CommonNotes {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -326,13 +316,12 @@ export class CommonNotes {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="table_name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="table_name">Table Name</label>
               </span>
               <span class="form-thing">
-              <select id="table_name" name="table_name" onInput={event => this.table_nameChange(event)}>
+                <select id="table_name" name="table_name" onInput={event => this.table_nameChange(event)}>
                   <option value="">Select Table</option>
                   <option value="admin.database_version_control" selected={this.newTable_name === 'admin.database_version_control'}>
                     admin.database_version_control
@@ -582,8 +571,8 @@ export class CommonNotes {
               <span class="form-thing">
                 <input type="text" id="column_name" name="column_name" onInput={event => this.column_nameChange(event)} />
               </span>
-            </div>        
-            
+            </div>
+
             <div id="row-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="row">Row</label>
@@ -591,7 +580,7 @@ export class CommonNotes {
               <span class="form-thing">
                 <input type="text" id="row" name="row" onInput={event => this.rowChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="content-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -600,7 +589,7 @@ export class CommonNotes {
               <span class="form-thing">
                 <textarea id="content" name="content" onInput={event => this.contentChange(event)}></textarea>
               </span>
-            </div>    
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -610,5 +599,4 @@ export class CommonNotes {
       </Host>
     );
   }
-
 }

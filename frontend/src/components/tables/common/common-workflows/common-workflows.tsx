@@ -24,7 +24,6 @@ class CommonWorkflowListResponse {
   workflows: CommonWorkflow[];
 }
 
-
 class CommonWorkflowUpdateRequest {
   token: string;
   column: string;
@@ -52,13 +51,12 @@ class DeleteWorkflowExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonWorkflows {
-
   @State() workflowsResponse: CommonWorkflowListResponse;
 
   newTitle: string;
-  
+
   handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonWorkflowUpdateRequest, CommonWorkflowUpdateResponse>('common-workflows/update-read', {
+    const updateResponse = await fetchAs<CommonWorkflowUpdateRequest, CommonWorkflowUpdateResponse>('common/workflows/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -78,7 +76,7 @@ export class CommonWorkflows {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteWorkflowExRequest, DeleteWorkflowExResponse>('common-workflows/delete', {
+    const deleteResponse = await fetchAs<DeleteWorkflowExRequest, DeleteWorkflowExResponse>('common/workflows/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -93,28 +91,20 @@ export class CommonWorkflows {
   };
 
   async getList() {
-    this.workflowsResponse = await fetchAs<CommonWorkflowListRequest, CommonWorkflowListResponse>('common-workflows/list', {
+    this.workflowsResponse = await fetchAs<CommonWorkflowListRequest, CommonWorkflowListResponse>('common/workflows/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   titleChange(event) {
     this.newTitle = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateWorkflowExRequest, CreateWorkflowExResponse>('common-workflows/create-read', {
+    const createResponse = await fetchAs<CreateWorkflowExRequest, CreateWorkflowExResponse>('common/workflows/create-read', {
       token: globals.globalStore.state.token,
       workflow: {
         title: this.newTitle,
@@ -129,7 +119,6 @@ export class CommonWorkflows {
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
     }
   };
-
 
   columnData: ColumnDescription[] = [
     {
@@ -191,7 +180,6 @@ export class CommonWorkflows {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -204,7 +192,6 @@ export class CommonWorkflows {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="title-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="title">Title</label>
@@ -212,8 +199,7 @@ export class CommonWorkflows {
               <span class="form-thing">
                 <input type="text" id="title" name="title" onInput={event => this.titleChange(event)} />
               </span>
-            </div>   
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -223,5 +209,4 @@ export class CommonWorkflows {
       </Host>
     );
   }
-
 }

@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-org-chart-position-graph/create")
+    @PostMapping("common/org-chart-position-graph/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonOrgChartPositionGraphCreateRequest): CommonOrgChartPositionGraphCreateResponse {
 
