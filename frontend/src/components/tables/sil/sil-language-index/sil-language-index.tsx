@@ -4,7 +4,6 @@ import { ErrorType } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
-
 class SilLanguageIndexListRequest {
   token: string;
   page: number;
@@ -17,17 +16,15 @@ class SilLanguageIndexListResponse {
   languageIndexes: SilLanguageIndex[];
 }
 
-
 @Component({
   tag: 'sil-language-index',
   styleUrl: 'sil-language-index.css',
   shadow: true,
 })
 export class SilLanguageIndexs {
-
   @State() languageIndexesResponse: SilLanguageIndexListResponse;
   @State() currentPage: number = 1;
-  
+
   @Listen('pageChanged', { target: 'body' })
   async getChangedValue(event: CustomEvent) {
     console.log(event.detail);
@@ -37,7 +34,7 @@ export class SilLanguageIndexs {
   }
 
   async getList(page) {
-    this.languageIndexesResponse = await fetchAs<SilLanguageIndexListRequest, SilLanguageIndexListResponse>('sil-language-index/list', {
+    this.languageIndexesResponse = await fetchAs<SilLanguageIndexListRequest, SilLanguageIndexListResponse>('sil/language-index/list', {
       token: globals.globalStore.state.token,
       page: page,
       resultsPerPage: 50,
@@ -120,9 +117,9 @@ export class SilLanguageIndexs {
   ];
 
   async componentWillLoad() {
-    var url = new URL(window.location.href)
-    if(url.searchParams.has("page")){
-      this.currentPage = parseInt(url.searchParams.get("page"))>0?parseInt(url.searchParams.get("page")):1;
+    var url = new URL(window.location.href);
+    if (url.searchParams.has('page')) {
+      this.currentPage = parseInt(url.searchParams.get('page')) > 0 ? parseInt(url.searchParams.get('page')) : 1;
     }
     await this.getList(this.currentPage);
   }
@@ -133,12 +130,10 @@ export class SilLanguageIndexs {
         <slot></slot>
         {/* table abstraction */}
         {this.languageIndexesResponse && <cf-table rowData={this.languageIndexesResponse.languageIndexes} columnData={this.columnData}></cf-table>}
-        <cf-pagination current-page={this.currentPage} total-rows={this.languageIndexesResponse.size} results-per-page="50" page-url="sil-language-index"></cf-pagination>
+        <cf-pagination current-page={this.currentPage} total-rows={this.languageIndexesResponse.size} results-per-page="50" page-url="language-index"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
-
       </Host>
     );
   }
-
 }
