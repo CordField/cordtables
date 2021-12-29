@@ -14,8 +14,7 @@ export class TableRoot {
     return (
       <Host>
         <slot></slot>
-        {console.log('params', this.match)}
-        {this.match.params.table === 'admin-users' && <admin-users></admin-users>}
+        <stencil-route url={'/table/admin/users'} component="admin-users" />
 
         {/* {this.match.params.table === 'admin-roles' && <roles-table></roles-table>}
         {this.match.params.table === 'admin-role-column-grants' && <role-column-grants></role-column-grants>}
@@ -25,15 +24,15 @@ export class TableRoot {
         {this.match.params.table === 'admin-group-membership' && <group-memberships></group-memberships>}
         {this.match.params.table === 'admin-group-row-access' && <groups-row-access></groups-row-access>} */}
 
-        {this.match.params.table === 'admin-group-memberships' && <admin-group-memberships></admin-group-memberships>}
-        {this.match.params.table === 'admin-group-row-access' && <admin-group-row-access></admin-group-row-access>}
-        {this.match.params.table === 'admin-groups' && <admin-groups></admin-groups>}
-        {this.match.params.table === 'admin-role-column-grants' && <admin-role-column-grants></admin-role-column-grants>}
+        <stencil-route url={'/table/admin/group-memberships'} component="admin-group-memberships" />
+        <stencil-route url={'/table/admin/group-row-access'} component="admin-group-row-access" />
+        <stencil-route url={'/table/admin/groups'} component="admin-groups" />
+        <stencil-route url={'/table/admin/role-column-grants'} component="admin-role-column-grants" />
 
-        {this.match.params.table === 'admin-role-memberships' && <admin-role-memberships></admin-role-memberships>}
-        {this.match.params.table === 'admin-role-table-permissions' && <admin-role-table-permissions></admin-role-table-permissions>}
-        {this.match.params.table === 'admin-roles' && <admin-roles></admin-roles>}
-        {this.match.params.table === 'admin-people' && <admin-people></admin-people>}
+        <stencil-route url={'/table/admin/role-memberships'} component="admin-role-memberships" />
+        <stencil-route url={'/table/admin/role-table-permissions'} component="admin-role-table-permissions" />
+        <stencil-route url={'/table/admin/roles'} component="admin-roles" />
+        <stencil-route url={'/table/admin/people'} component="admin-people" />
 
         <stencil-route url={'/table/sc/funding-accounts'} component="sc-funding-accounts" />
         <stencil-route url={'/table/sc/internship-engagements'} component="sc-internship-engagements" />
