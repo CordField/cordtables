@@ -7,6 +7,8 @@ import '@ionic/core'
 
 class CommonTicketsPageListRequest{
   token: string;
+  limit: number;
+  offset: number;
 }
 
 class CommonPagesNumberRequest{
@@ -57,6 +59,22 @@ class CreateTicketRequest{
     }
   }
 
+class UpdateTicketRequest {
+  token: string;
+  id: number;
+  ticket:{
+    title: string;
+    ticket_status: string;
+    parent: number;
+    content : string;
+  }
+}
+
+class ReadTicketRequest {
+  token: string;
+  id: number;
+}
+
   interface User {
     id: number;
     first_name: string;
@@ -66,6 +84,21 @@ class CreateTicketRequest{
 class CreateTicketResponse extends GenericResponse {
   error: ErrorType;
   ticket: CommonTicketsRow;
+}
+
+class UpdateTicketResponse extends GenericResponse {
+  error: ErrorType;
+  ticket: CommonTicketsRow;
+}
+
+
+class ReadTicketResponse extends GenericResponse {
+  error: ErrorType;
+  ticket: CommonTicketsRow;
+}
+class ListTicketResponse extends GenericResponse {
+  error: ErrorType;
+  tickets: CommonTicketsRow[];
 }
 
 class TicketsIdAndTitlesResponse extends GenericResponse {
@@ -108,6 +141,7 @@ class PeopleIdNameRow {
 
 class CommonTicketsRow{
     id : number;
+    title: string;
     ticket_status : string;
     parent : number;
     content : string;
@@ -135,7 +169,8 @@ export class NewTicketsPage {
   @State() isBlockATicketVisible: boolean = false;
   @State() isAddAWorkRecordVisible: boolean = false;
   @State() isAddFeedBacktoTicketVisible: boolean = false;
-  @State() commonTicketsPageResponse: CreateTicketResponse;
+  @State() commonTicketsPageResponse: ListTicketResponse;
+  @State() CommonTicketsReadResponse : ReadTicketResponse;
   @State() ticketsIdAndTitleResponse:  TicketsIdAndTitlesResponse;
   @State() ticketsPeopleNameResponse: PeopleIdNamesResponse;
   @State() users: User[] = [];
@@ -146,17 +181,23 @@ export class NewTicketsPage {
   @State() limit: number = 5;
   @State() offset: number = 0;
   @State() peoplePaginationPages : number;
+  @State() mainTicketsPaginationPages: number;
   @State() peoplePage: number = 1;
+  @State() mainTicketsPage: number = 1;
   @State() peopleLimit: number = 5;
   @State() peopleOffset: number = 0;
+  @State() mainTicketsOffset: number = 0;
   newTicketStatusName: string;
   newParent: number;
   newAssignee: number;
   newContent: string;
-  newTicketTitle: string;
+  @State() newTicketTitle: string;
   newTicketContent: string; 
   wordToSearch: string;
   wordToSearchPeople : string;
+  modalType: string;
+  modalTitle: string;
+  ticketId: number;
 
   
   async componentWillLoad() {
@@ -167,13 +208,31 @@ export class NewTicketsPage {
     await this.getTotalPeople();
     this._fetchTickets(1);
     this._fetchPeople(1);
+    this._fetchMainTickets(1);
     
   }
   
   async getList() {
-    this.commonTicketsPageResponse = await fetchAs<CommonTicketsPageListRequest, CreateTicketResponse>('common-workflows/list', {
+    this.commonTicketsPageResponse = await fetchAs<CommonTicketsPageListRequest, ListTicketResponse>('common-tickets/list', {
       token: globals.globalStore.state.token,
+      limit: this.limit,
+      offset: this.mainTicketsOffset
     });
+  }
+
+  async readTicket(ticket_id) {
+    this.CommonTicketsReadResponse = await fetchAs<ReadTicketRequest, ReadTicketResponse>('common-tickets/read', {
+      token: globals.globalStore.state.token,
+      id: ticket_id
+    });
+    if(this.CommonTicketsReadResponse){
+      this.newTicketTitle = this.CommonTicketsReadResponse.ticket.title;
+      this.newTicketStatusName = this.CommonTicketsReadResponse.ticket.ticket_status;
+      this.newTicketContent = this.CommonTicketsReadResponse.ticket.content;
+      this.isOpen = !this.isOpen;
+      if (this.CommonTicketsReadResponse.ticket.parent)this.parentChange(this.CommonTicketsReadResponse.ticket.parent)
+
+    }
   }
 
   async getListIdTitles(){
@@ -200,6 +259,7 @@ export class NewTicketsPage {
       wordToSearch: this.wordToSearch
     });
     this.paginationPages = Math.ceil(totalTickets.total_tickets[0].total/5);
+    this.mainTicketsPaginationPages = Math.ceil(totalTickets.total_tickets[0].total/5);
 }
 
 
@@ -221,7 +281,10 @@ async getTotalPeople(){
     this.getNamesPeople();
   }
 
-
+  _fetchMainTickets (page) {
+    this.mainTicketsOffset = ((page*5) - 5); 
+    this.getList();
+  }
 
 
   createNewTicket = async (event: MouseEvent) => {
@@ -243,6 +306,8 @@ async getTotalPeople(){
     if (result.ticket.id && this.newAssignee){
         await this.assignTicketToPerson(result.ticket.id, this.newAssignee);
     }
+
+    await this.getList();
   
     /*
     if (result.error === ErrorType.NoError) {
@@ -251,6 +316,33 @@ async getTotalPeople(){
     }
     */
   };
+
+  updateTicket = async (event: MouseEvent) => {
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    
+    const result = await fetchAs<UpdateTicketRequest, UpdateTicketResponse>('common-tickets/update-read', {
+      token: globals.globalStore.state.token,
+      id: this.ticketId,
+      ticket: {
+        title: this.newTicketTitle,
+        ticket_status: this.newTicketStatusName,
+        parent: this.newParent,
+        content: this.newTicketContent,
+
+      },
+    });
+
+    if (result.ticket.id && this.newAssignee){
+        await this.assignTicketToPerson(result.ticket.id, this.newAssignee);
+    }
+    
+    console.log("UPDATE: ", result);
+    await this.getList();
+  
+  };
+
 
   assignTicketToPerson = async (ticketId, personId) =>{
     const result = await fetchAs<AssignTicketRequest, AssignTicketResponse>('common-ticket-assignments/create-read', {
@@ -261,13 +353,12 @@ async getTotalPeople(){
   
         },
       });
-
-      console.log('Id: ', result.id);
   }
 
   addEstimateToTicket = () => {
     if (globals.globalStore.state.editMode === false) this.isAddEstimateToTicketVisible = !this.isAddEstimateToTicketVisible;
   }
+
 
   assignATicket = () =>{
     if (globals.globalStore.state.editMode === false) this.isAssignATicketVisible = !this.isAssignATicketVisible;
@@ -286,7 +377,16 @@ async getTotalPeople(){
   }
 
   onInsertNew() {
+    this.modalType = 'Create';
+    this.modalTitle = 'Create New Ticket'
     this.isOpen = !this.isOpen;
+  }
+
+  async onUpdateTicket(ticket_id) {
+    this.modalType = 'Update';
+    this.modalTitle = 'Update Ticket'
+    this.ticketId = ticket_id;
+    await this.readTicket(ticket_id);
   }
 
   ticketTitleChange(event) {
@@ -298,11 +398,19 @@ async getTotalPeople(){
   }
   
   parentChange(event) {
-    this.newParent = event.target.value;
+    if(event.target && event.target.value){
+      this.newParent = event.target.value;
+    } else {
+      this.newParent = event;
+    }
   }
   
   assigneeChange(event) {
     this.newAssignee = event.target.value;
+  }
+
+  ticketStatusChange(event) {
+    this.newTicketStatusName = event.target.value;
   }
   
   ticketContentChange(event) {
@@ -334,8 +442,6 @@ async getTotalPeople(){
 }
 
 
-  
-
   pagination () {
     let totalPages = this.paginationPages;
     let pages = [];
@@ -353,10 +459,23 @@ async getTotalPeople(){
     let totalPages = this.peoplePaginationPages;
     let pages = [];
     for(let i = 1; i <= totalPages; i ++) {
-      if(i === this.page) {
+      if(i === this.peoplePage) {
         pages.push(<li class="active">{i}</li>)
       } else {
-        pages.push(<li onClick={() => this.changePage(i)}>{i}</li>)
+        pages.push(<li onClick={() => this.changePeoplePage(i)}>{i}</li>)
+      }
+    }
+    return pages;
+  }
+
+  paginationMainTickets () {
+    let totalPages = this.mainTicketsPaginationPages;
+    let pages = [];
+    for(let i = 1; i <= totalPages; i ++) {
+      if(i === this.mainTicketsPage) {
+        pages.push(<li class="active">{i}</li>)
+      } else {
+        pages.push(<li onClick={() => this.changePageMainTickets(i)}>{i}</li>)
       }
     }
     return pages;
@@ -374,12 +493,21 @@ async getTotalPeople(){
     this.peoplePage = page;
   }
 
+  changePageMainTickets (page) {
+    this._fetchMainTickets(page);
+    this.mainTicketsPage = page;
+  }
 
 
   @Listen('modalOkay')
   async handleModalOkay(event){
     if(event && event.detail){
-        await this.createNewTicket(event);
+        if(this.modalType === 'Create'){
+          await this.createNewTicket(event);
+        } else {
+          await this.updateTicket(event);
+        }
+        
         this.page = 1;
         this.peoplePage = 1;
         this.limit = 5;
@@ -391,7 +519,7 @@ async getTotalPeople(){
         this.newTicketContent = "";
         this.wordToSearch = '';
         this.wordToSearchPeople = '';
-        this._fetchTickets(1);
+        await this.getList();
     }
   }
 
@@ -409,38 +537,47 @@ async getTotalPeople(){
       this.isOpen = !this.isOpen;
       this.wordToSearch = '';  
       this.wordToSearchPeople = ''; 
-      this._fetchTickets(1);
     }
   }
 
   render() {
     return (
       <Host>
-         <ticket-modal isOpen={this.isOpen}>
+        <div class="mainPage">
+         <ticket-modal 
+          isOpen={this.isOpen} 
+          type={this.modalType}
+          modalTitle={this.modalTitle}>
              <div class="container">
             <div class="mainContainer">
+                <label> Status </label>
+                <select name="ticket-status" id="ticket-status" onChange={event => this.ticketStatusChange(event)}>
+                  <option value="Open" selected={this.newTicketStatusName === "Open"}> Open </option>
+                  <option value="Blocked" selected={this.newTicketStatusName === "Blocked"}> Blocked </option>
+                  <option value="Closed" selected={this.newTicketStatusName === "Closed"}> Closed </option>
+                </select>
                 <label> Title: </label>
               <ion-item>
-                  <ion-input clearInput value="" onInput={event => this.ticketTitleChange(event)}></ion-input>
+                  <ion-input clearInput value={this.newTicketTitle} onInput={event => this.ticketTitleChange(event)}></ion-input>
               </ion-item><br/>
                 <label> Content </label>
               <ion-item>
-                  <ion-textarea onInput={event => this.ticketContentChange(event)}></ion-textarea>
+                  <ion-textarea value={this.newTicketContent} onInput={event => this.ticketContentChange(event)}></ion-textarea>
               </ion-item><br/>
               <div class="parentContainer">
                 <label>Ticket Parent</label>
                 <div class="topnav">
                     <div class="search-container">
-                        <input type="text" placeholder="Search.." name="search" onInput={event => this.wordToSearchChange(event)}/>
+                        <input type="text" placeholder="Search by title..." name="search" onInput={event => this.wordToSearchChange(event)}/>
                         <button type="submit" onClick={event => this.onPressSearchButton(event)}><i class="fa fa-search"></i><ion-icon name="search-outline"></ion-icon></button>
                     </div>
                 </div>
                 <ion-list>
-                    <ion-radio-group>
+                    <ion-radio-group value={this.newParent}>
                         {this.ticketsIdAndTitleResponse.tickets.map(ticket => (
                             <ion-item>
                                 <ion-label>{ticket.title}</ion-label>
-                                <ion-radio slot="start"  onClick={event => this.parentChange(event)} value={ticket.id}></ion-radio>
+                                <ion-radio slot="start" onClick={event => this.parentChange(event)} value={ticket.id}></ion-radio>
                             </ion-item>
 
                         ))}
@@ -456,12 +593,12 @@ async getTotalPeople(){
             <label> Assign to: </label>
                 <div class="topnav">
                     <div class="search-container">
-                        <input type="text" placeholder="Search.." name="search" onInput={event => this.wordToSearchChangePeople(event)}/>
+                        <input type="text" placeholder="Search by name..." name="search" onInput={event => this.wordToSearchChangePeople(event)}/>
                         <button type="submit" onClick={event => this.onPressSearchButtonPeople(event)}><i class="fa fa-search"></i><ion-icon name="search-outline"></ion-icon></button>
                     </div>
                 </div>
                 <ion-list>
-                    <ion-radio-group>
+                    <ion-radio-group value={this.newAssignee}>
                         {this.ticketsPeopleNameResponse.people.map(people => (
                             <ion-item>
                                 <ion-label>{people.name}</ion-label>
@@ -482,61 +619,33 @@ async getTotalPeople(){
          </ticket-modal>
          <div>
          <button onClick={() => this.onInsertNew()} class="create-new-button"> Create New Ticket </button>
-         <ion-grid>
+         <div id="generalTickets">
+           {this.commonTicketsPageResponse.tickets.map(ticket =>(
+             <div class="mainTicketContainer">
+               <ion-grid>
         <ion-row>
           <ion-col>
-              Backlog<br/>
-            <ion-card button={true}>
+            <ion-card button={true} onClick={() => this.onUpdateTicket(ticket.id)}>
                 <ion-card-header>
-                    <ion-card-subtitle>Ticket Status</ion-card-subtitle>
-                    <ion-card-title>Ticket Title</ion-card-title>
+                    <ion-card-subtitle>{ticket.ticket_status}</ion-card-subtitle>
+                    <ion-card-title>{ticket.title}</ion-card-title>
                 </ion-card-header>
                  <ion-card-content>
-                    Keep close to Nature's heart... and break clear away, once in awhile, and climb a mountain or spend a week in
-                    the woods. Wash your spirit clean.
-                </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col>Approved for Work<br/>
-            <ion-card button={true}>
-                <ion-card-header>
-                    <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-                    <ion-card-title>Card Title</ion-card-title>
-                </ion-card-header>
-                 <ion-card-content>
-                    Keep close to Nature's heart... and break clear away, once in awhile, and climb a mountain or spend a week in
-                    the woods. Wash your spirit clean.
-                </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col>Doing<br/>
-            <ion-card button={true}>
-                <ion-card-header>
-                    <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-                    <ion-card-title>Card Title</ion-card-title>
-                </ion-card-header>
-                 <ion-card-content>
-                    Keep close to Nature's heart... and break clear away, once in awhile, and climb a mountain or spend a week in
-                    the woods. Wash your spirit clean.
-                </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col>Done<br/>
-            <ion-card button={true}>
-                <ion-card-header>
-                    <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-                    <ion-card-title>Card Title</ion-card-title>
-                </ion-card-header>
-                 <ion-card-content>
-                    Keep close to Nature's heart... and break clear away, once in awhile, and climb a mountain or spend a week in
-                    the woods. Wash your spirit clean.
+                    {ticket.content}
                 </ion-card-content>
             </ion-card>
           </ion-col>
         </ion-row>
-
-      
       </ion-grid>
+             </div>
+           ))}
+         <ul class="fetch-pagination">
+          {this.paginationMainTickets()}
+        </ul>
+         </div>
+         
+      </div>
+      
       </div>
       </Host>
     );

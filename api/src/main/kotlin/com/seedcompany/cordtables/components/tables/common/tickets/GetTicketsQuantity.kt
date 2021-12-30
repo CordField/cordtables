@@ -53,9 +53,9 @@ class CountTickets(
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
 
-    val filter  = if(req.wordToSearch.isNullOrBlank()) "" else "where public_full_name LIKE '%' || '${req.wordToSearch}' || '%' "
+    val filter  = if(req.wordToSearch.isNullOrBlank()) "" else "where title LIKE '%' || '${req.wordToSearch}' || '%' "
 
-    val query = "select count(id) from admin.people $filter"
+    val query = "select count(id) from common.tickets $filter"
 
     try {
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)

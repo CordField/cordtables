@@ -10,6 +10,7 @@ import { Component, h, Prop, Event, EventEmitter } from '@stencil/core';
 export class TicketModal{
 @Prop() modalTitle: String;
 @Prop() isOpen: boolean = false;
+@Prop() type: String = 'Create';
 
 @Event({
     eventName: 'modalClosed',
@@ -49,7 +50,7 @@ private handleDelete = () => {
             <div class="modal-overlay" />
             <div class="modal">
                 <div class="header">
-                    <h4>Create New Ticket</h4>
+                    <h4>{this.modalTitle}</h4>
                     <div class="close">
                         <span class="closeButton" onClick={this.handleClose}> X </span>
                     </div>
@@ -58,7 +59,7 @@ private handleDelete = () => {
                     <slot />
                 </div>
                 <div class="footer">
-                  <button class="ok" onClick={this.handleOkay}>Create</button>
+                  <button class="ok" onClick={this.handleOkay}>{(this.type === 'Create')? 'Create' : 'Update'}</button>
                 </div>
             </div>
         </div>

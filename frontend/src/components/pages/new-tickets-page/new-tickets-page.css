@@ -12,10 +12,16 @@
       float: right;
   }
 
-  .container{
+.container{
 	margin: 0 auto;
 	display: flex;
   padding: 10px;
+  margin-top: 5%;
+}
+
+.mainPage {
+  margin-top: 1%;
+  margin-bottom: 5%;
 }
 
 .row{
@@ -30,6 +36,17 @@
     flex-direction: column;
     width: 70%;
     margin-left: 1%;
+}
+
+.generalTickets{
+  display: flex;
+  flex-direction: column;
+
+}
+
+.mainTicketContainer {
+  margin-left: -0.5%;
+  width: 50%;
 }
 
 .container{
@@ -62,6 +79,20 @@ ion-radio::part(mark){
     opacity: 1;
 }
 
+#ticket-status {
+  width: 100%;
+  min-width: 15ch;
+  max-width: 30ch;
+  border: 1px solid var(--select-border);
+  border-radius: 0.25em;
+  padding: 0.25em 0.5em;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1.1;
+  background-color: #fff;
+  background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+}
+
 #fetch {
     text-align: center;
     margin: 20px;
@@ -73,7 +104,7 @@ ion-radio::part(mark){
     padding: 10px;
     margin-bottom: 5px;
   }
-  
+
   .fetch-pagination li {
     list-style-type: none;
     float: left;

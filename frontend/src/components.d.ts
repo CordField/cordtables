@@ -331,6 +331,7 @@ export namespace Components {
     interface TicketModal {
         "isOpen": boolean;
         "modalTitle": String;
+        "type": String;
     }
     interface TicketsPage {
     }
@@ -1667,6 +1668,7 @@ declare namespace LocalJSX {
         "onModalClosed"?: (event: CustomEvent<boolean>) => void;
         "onModalDelete"?: (event: CustomEvent<boolean>) => void;
         "onModalOkay"?: (event: CustomEvent<boolean>) => void;
+        "type"?: String;
     }
     interface TicketsPage {
     }

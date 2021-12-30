@@ -34,7 +34,7 @@ data class CommonCountPeopleQuantity(
   val total: Int? = null
 )
 
-data class CommonTicketsInput(
+data class  CommonTicketsInput(
         val title: String? = null,
         val ticket_status: String,
         val parent: Int? = null,
