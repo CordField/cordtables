@@ -503,11 +503,11 @@ create type common.ticket_status as enum (
 
 create table common.tickets (
 	id uuid primary key default public.uuid_generate_v4(),
-
+  
+  title text not null,
 	ticket_status common.ticket_status not null default 'Open',
 	parent uuid,
 	content text not null,
-  
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

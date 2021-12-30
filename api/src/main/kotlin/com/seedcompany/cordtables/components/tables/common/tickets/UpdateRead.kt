@@ -15,6 +15,7 @@ data class CommonTicketsUpdateReadRequest(
         val id: String? = null,
         val column: String? = null,
         val value: Any? = null,
+        val ticket: CommonTicketsInput
 )
 
 data class CommonTicketsUpdateReadResponse(
@@ -44,9 +45,8 @@ class UpdateRead(
         val updateResponse = update.updateHandler(
                 CommonTicketsUpdateRequest(
                         token = req.token,
-                        column = req.column,
                         id = req.id,
-                        value = req.value,
+                        ticket = req.ticket
                 )
         )
 

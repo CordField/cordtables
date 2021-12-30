@@ -17,6 +17,7 @@ data class CommonTicketsUpdateRequest(
         val id: String? = null,
         val column: String? = null,
         val value: Any? = null,
+        val ticket: CommonTicketsInput
 )
 
 data class CommonOrganizationsUpdateResponse(
@@ -38,73 +39,103 @@ class Update(
     fun updateHandler(@RequestBody req: CommonTicketsUpdateRequest): CommonOrganizationsUpdateResponse {
 
         if (req.token == null) return CommonOrganizationsUpdateResponse(ErrorType.TokenNotFound)
-        if (req.column == null) return CommonOrganizationsUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return CommonOrganizationsUpdateResponse(ErrorType.MissingId)
 
-        if (req.column.equals("ticket_status") && req.value != null && !enumContains<CommonTicketStatus>(req.value as String)) {
-            return CommonOrganizationsUpdateResponse(
-                    error = ErrorType.ValueDoesNotMap
+            util.updateField(
+              token = req.token,
+              table = "common.tickets",
+              column = "title",
+              id = req.id,
+              value = req.ticket.title
             )
-        }
-        println(req)
 
-        when (req.column) {
+// <<<<<<< HEAD
+//         when (req.column) {
 
-            "ticket_status" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "common.tickets",
-                        column = "ticket_status",
-                        id = req.id,
-                        value = req.value,
-                        cast = "::common.ticket_status"
-                )
-            }
+//             "ticket_status" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "ticket_status",
+//                         id = req.id,
+//                         value = req.value,
+//                         cast = "::common.ticket_status"
+//                 )
+//             }
 
-            "parent" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "common.tickets",
-                        column = "parent",
-                        id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
-                )
-            }
+//             "parent" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "parent",
+//                         id = req.id,
+//                         value = req.value,
+//                         cast = "::uuid"
+//                 )
+//             }
 
-            "content" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "common.tickets",
-                        column = "content",
-                        id = req.id,
-                        value = req.value,
-                )
-            }
+//             "content" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "content",
+//                         id = req.id,
+//                         value = req.value,
+//                 )
+//             }
+// =======
+//             util.updateField(
+//               token = req.token,
+//               table = "common.tickets",
+//               column = "ticket_status",
+//               id = req.id,
+//               value = req.ticket.ticket_status,
+//               cast = "::common.ticket_status"
+//             )
+// >>>>>>> a18aa452d9d4f0d8cdce0ff1253d613e4b4f05cc
 
+//             util.updateField(
+//               token = req.token,
+//               table = "common.tickets",
+//               column = "parent",
+//               id = req.id,
+//               value = req.ticket.parent,
+//               cast = "::integer"
+//             )
 
-            "owning_person" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "common.tickets",
-                        column = "owning_person",
-                        id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
-                )
-            }
+// <<<<<<< HEAD
+//             "owning_person" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "owning_person",
+//                         id = req.id,
+//                         value = req.value,
+//                         cast = "::uuid"
+//                 )
+//             }
 
-            "owning_group" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "common.tickets",
-                        column = "owning_group",
-                        id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
-                )
-            }
-        }
+//             "owning_group" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "owning_group",
+//                         id = req.id,
+//                         value = req.value,
+//                         cast = "::uuid"
+//                 )
+//             }
+//         }
+// =======
+//             util.updateField(
+//               token = req.token,
+//               table = "common.tickets",
+//               column = "content",
+//               id = req.id,
+//               value = req.ticket.content,
+//             )
+
+// >>>>>>> a18aa452d9d4f0d8cdce0ff1253d613e4b4f05cc
 
         return CommonOrganizationsUpdateResponse(ErrorType.NoError)
     }

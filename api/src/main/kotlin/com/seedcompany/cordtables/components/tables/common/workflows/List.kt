@@ -55,6 +55,7 @@ class List(
             GetSecureListQueryRequest(
                 tableName = "common.workflows",
                 filter = "order by id",
+
                 columns = arrayOf(
                     "id",
                     "title",

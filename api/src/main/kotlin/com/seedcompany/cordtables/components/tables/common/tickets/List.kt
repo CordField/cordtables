@@ -20,7 +20,9 @@ import javax.sql.DataSource
 
 
 data class CommonTicketsListRequest(
-        val token: String?
+        val token: String?,
+        val limit: Number,
+        val offset: Number
 )
 
 data class CommonTicketsListResponse(
@@ -30,7 +32,7 @@ data class CommonTicketsListResponse(
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("CommonTicketsList")
-class List(
+class   List(
         @Autowired
         val util: Utility,
 
@@ -55,9 +57,10 @@ class List(
         val query = secureList.getSecureListQueryHandler(
                 GetSecureListQueryRequest(
                         tableName = "common.tickets",
-                        filter = "order by id",
+                        filter = "order by id limit ${req.limit} offset ${req.offset}",
                         columns = arrayOf(
                                 "id",
+                                "title",
                                 "ticket_status",
                                 "parent",
                                 "content",
@@ -77,6 +80,9 @@ class List(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
+
+                var title: String? = jdbcResult.getString("title")
+                if (jdbcResult.wasNull()) title = null
 
                 var ticket_status: String? = jdbcResult.getString("ticket_status")
                 if (jdbcResult.wasNull()) ticket_status = null
@@ -108,6 +114,7 @@ class List(
                 data.add(
                         CommonTickets(
                                 id = id,
+                                title = title,
                                 ticket_status = if(ticket_status == null) null else CommonTicketStatus.valueOf(ticket_status),
                                 parent = parent,
                                 content = content,

@@ -57,6 +57,7 @@ class Read(
                         getList = false,
                         columns = arrayOf(
                                 "id",
+                                "title",
                                 "ticket_status",
                                 "parent",
                                 "content",
@@ -76,6 +77,9 @@ class Read(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
+
+                var title: String? = jdbcResult.getString("title")
+                if (jdbcResult.wasNull()) title = null
 
                 var ticketStatus: String? = jdbcResult.getString("ticket_status")
                 if (jdbcResult.wasNull()) ticketStatus = null
@@ -107,6 +111,7 @@ class Read(
                 val ticket =
                         CommonTickets(
                                 id = id,
+                                title = title,
                                 ticket_status = if(ticketStatus == null) null else CommonTicketStatus.valueOf(ticketStatus),
                                 parent = parent,
                                 content = content,
