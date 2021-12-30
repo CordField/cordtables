@@ -47,7 +47,7 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from up.prayer_notifications where id = ? returning id"
+                    "delete from up.prayer_notifications where id = ?::uuid returning id"
                 )
                 deleteStatement.setString(1, req.id)
                 val deleteStatementResult = deleteStatement.executeQuery()

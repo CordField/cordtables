@@ -2,12 +2,11 @@
 class ScProduct {
     id?: string | undefined;
 
-    neo4j_id?: string | undefined;
     name?: string | undefined;
     change_to_plan?: string | undefined;
     active?: boolean | undefined;
     mediums?: string[] | undefined;
-    methodologies?: string | undefined;
+    methodology?: string | undefined;
     purposes?: string | undefined;
     type?: string | undefined;
 

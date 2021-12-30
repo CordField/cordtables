@@ -60,9 +60,9 @@ class Read(
                 columns = arrayOf(
                     "id",
                     "project",
-                    "ethnologue",
                     "change_to_plan",
                     "active",
+                    "ceremony",
                     "communications_complete_date",
                     "complete_date",
                     "country_of_origin",
@@ -74,13 +74,16 @@ class Read(
                     "intern",
                     "last_reactivated_at",
                     "mentor",
-                    "methodology",
+                    "methodologies",
                     "paratext_registry",
                     "periodic_reports_directory",
                     "position",
+                    "sensitivity",
                     "start_date",
                     "start_date_override",
                     "status",
+                    "status_modified_at",
+                    "last_suspended_at",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -101,14 +104,14 @@ class Read(
                 var project: String? = jdbcResult.getString("project")
                 if (jdbcResult.wasNull()) project = null
 
-                var ethnologue: String? = jdbcResult.getString("ethnologue")
-                if (jdbcResult.wasNull()) ethnologue = null
-
                 var change_to_plan: String? = jdbcResult.getString("change_to_plan")
                 if (jdbcResult.wasNull()) change_to_plan = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
+
+                var ceremony: String? = jdbcResult.getString("ceremony")
+                if (jdbcResult.wasNull()) ceremony = null
 
                 var communications_complete_date: String? = jdbcResult.getString("communications_complete_date")
                 if (jdbcResult.wasNull()) communications_complete_date = null
@@ -143,8 +146,8 @@ class Read(
                 var mentor: String? = jdbcResult.getString("mentor")
                 if (jdbcResult.wasNull()) mentor = null
 
-                var methodology: String? = jdbcResult.getString("methodology")
-                if (jdbcResult.wasNull()) methodology = null
+                var methodologies: String? = jdbcResult.getString("methodologies")
+                if (jdbcResult.wasNull()) methodologies = null
 
                 var paratext_registry: String? = jdbcResult.getString("paratext_registry")
                 if (jdbcResult.wasNull()) paratext_registry = null
@@ -155,6 +158,9 @@ class Read(
                 var position: String? = jdbcResult.getString("position")
                 if (jdbcResult.wasNull()) position = null
 
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
+
                 var start_date: String? = jdbcResult.getString("start_date")
                 if (jdbcResult.wasNull()) start_date = null
 
@@ -163,6 +169,12 @@ class Read(
 
                 var status: String? = jdbcResult.getString("status")
                 if (jdbcResult.wasNull()) status = null
+
+                var status_modified_at: String? = jdbcResult.getString("status_modified_at")
+                if (jdbcResult.wasNull()) status_modified_at = null
+
+                var last_suspended_at: String? = jdbcResult.getString("last_suspended_at")
+                if (jdbcResult.wasNull()) last_suspended_at = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -186,28 +198,31 @@ class Read(
                     internshipEngagement(
                         id = id,
 
-                        project = project,
-                        ethnologue = ethnologue,
-                        change_to_plan = change_to_plan,
-                        active = active,
-                        communications_complete_date = communications_complete_date,
-                        complete_date = complete_date,
-                        country_of_origin = country_of_origin,
-                        disbursement_complete_date = disbursement_complete_date,
-                        end_date = end_date,
-                        end_date_override = end_date_override,
-                        growth_plan = growth_plan,
-                        initial_end_date = initial_end_date,
-                        intern = intern,
-                        last_reactivated_at = last_reactivated_at,
-                        mentor = mentor,
-                        methodology = methodology,
-                        paratext_registry = paratext_registry,
-                        periodic_reports_directory = periodic_reports_directory,
-                        position = position,
-                        start_date = start_date,
-                        start_date_override = start_date_override,
-                        status = status,
+                      project = project,
+                      change_to_plan = change_to_plan,
+                      active = active,
+                      ceremony = ceremony,
+                      communications_complete_date = communications_complete_date,
+                      complete_date = complete_date,
+                      country_of_origin = country_of_origin,
+                      disbursement_complete_date = disbursement_complete_date,
+                      end_date = end_date,
+                      end_date_override = end_date_override,
+                      growth_plan = growth_plan,
+                      initial_end_date = initial_end_date,
+                      intern = intern,
+                      last_reactivated_at = last_reactivated_at,
+                      mentor = mentor,
+                      methodologies = methodologies,
+                      paratext_registry = paratext_registry,
+                      periodic_reports_directory = periodic_reports_directory,
+                      position = position,
+                      sensitivity = sensitivity,
+                      start_date = start_date,
+                      start_date_override = start_date_override,
+                      status = status,
+                      status_modified_at = status_modified_at,
+                      last_suspended_at = last_suspended_at,
 
                         created_at = created_at,
                         created_by = created_by,

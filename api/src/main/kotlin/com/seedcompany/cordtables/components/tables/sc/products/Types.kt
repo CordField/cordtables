@@ -5,12 +5,11 @@ import kotlin.collections.List
 data class product(
     var id: String? = null,
 
-    val neo4j_id: String? = null,
     val name: String? = null,
     val change_to_plan: String? = null,
     val active: Boolean? = null,
     val mediums: String? = null,
-    val methodologies: String? = null,
+    val methodology: String? = null,
     val purposes: String? = null,
     val type: String? = null,
 
@@ -24,12 +23,12 @@ data class product(
 
 data class productInput(
     var id: String? = null,
-    val neo4j_id: String? = null,
+
     val name: String? = null,
     val change_to_plan: String? = null,
     val active: Boolean? = null,
-    val mediums: List<String> = listOf(),
-    val methodologies: String? = null,
+    val mediums: String? = null,
+    val methodology: String? = null,
     val purposes: String? = null,
     val type: String? = null,
     val created_at: String? = null,

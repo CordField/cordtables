@@ -4,14 +4,14 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequestInput
 
 data class PrayerRequestData(
-    val id: Int,
+    val id: String,
 
-    val request_language_id:Int? = null,
-    val target_language_id:Int? = null,
+    val request_language_id:String? = null,
+    val target_language_id:String? = null,
     val sensitivity: String? = null,
     val organization_name: String? = null,
-    val parent: Int? = null,
-    val translator: Int? = null,
+    val parent: String? = null,
+    val translator: String? = null,
     val location: String? = null,
     val title: String? = null,
     val content: String? = null,
@@ -19,40 +19,40 @@ data class PrayerRequestData(
     val prayer_type: String? = null,
 
     val requestedBy: String?,
-    val notify: Int?,
+    val notify: String?,
     val myRequest: Boolean
 )
 
 data class PrayerRequestGetData(
-    val id: Int,
-    val request_language_id:Int? = null,
-    val target_language_id:Int? = null,
+    val id: String,
+    val request_language_id:String? = null,
+    val target_language_id:String? = null,
     val sensitivity: String? = null,
     val organization_name: String? = null,
-    val parent: Int? = null,
-    val translator: Int? = null,
+    val parent: String? = null,
+    val translator: String? = null,
     val location: String? = null,
     val title: String? = null,
     val content: String? = null,
     val reviewed: Boolean? = null,
     val prayer_type: String? = null,
-    val created_by: Int,
+    val created_by: String,
 )
 
 data class PrayerRequestUpdateData(
-    val id: Int,
-    val request_language_id:Int? = null,
-    val target_language_id:Int? = null,
+    val id: String,
+    val request_language_id:String? = null,
+    val target_language_id:String? = null,
     val sensitivity: String? = null,
     val organization_name: String? = null,
-    val parent: Int? = null,
-    val translator: Int? = null,
+    val parent: String? = null,
+    val translator: String? = null,
     val location: String? = null,
     val title: String? = null,
     val content: String? = null,
     val reviewed: Boolean? = null,
     val prayer_type: String? = null,
-    val created_by: Int,
+    val created_by: String? = null,
 )
 
 data class CommonPrayerRequestsListRequest(
@@ -76,7 +76,7 @@ data class CommonPrayerRequestsUpdateRequest(
 
 data class CommonPrayerRequestsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 data class  PrayerRequestNotifyRequest(
@@ -87,7 +87,7 @@ data class  PrayerRequestNotifyRequest(
 
 data class PrayerRequestGetRequest(
     val token: String? = null,
-    val id: Int? = null
+    val id: String? = null
 )
 
 data class PrayerRequestsGetResponse(

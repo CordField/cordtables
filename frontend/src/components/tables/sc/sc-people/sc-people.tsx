@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePeopleExRequest {
   token: string;
   people: {
-    neo4j_id: string;
+    id: string;
     skills: string;
     status: string;
   };
@@ -54,8 +54,7 @@ class DeletePeopleExResponse extends GenericResponse {
 })
 export class ScPeoples {
   @State() peoplesResponse: ScPeopleListResponse;
-
-  newNeo4j_id: string;
+  newId: string;
   newSkills: string;
   newStatus: string;
 
@@ -100,8 +99,14 @@ export class ScPeoples {
     });
   }
 
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
+  idChange(event) {
+    this.newId = event.target.value;
   }
 
   skillsChange(event) {
@@ -119,7 +124,7 @@ export class ScPeoples {
     const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('sc-people/create-read', {
       token: globals.globalStore.state.token,
       people: {
-        neo4j_id: this.newNeo4j_id,
+        id: this.newId,
         skills: this.newSkills,
         status: this.newStatus,
       },
@@ -138,16 +143,9 @@ export class ScPeoples {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
-    },
-    {
-      field: 'neo4j_id',
-      displayName: 'Neo4j_ ID',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
     },
     {
       field: 'skills',
@@ -220,12 +218,12 @@ export class ScPeoples {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            <div id="id-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="neo4j_id">Neo4j ID</label>
+                <label htmlFor="id">ID</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
+                <input type="text" id="id" name="id" onInput={event => this.idChange(event)} />
               </span>
             </div>
 

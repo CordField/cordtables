@@ -59,12 +59,11 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
                     "name",
                     "change_to_plan",
                     "active",
                     "mediums",
-                    "methodologies",
+                    "methodology",
                     "purposes",
                     "type",
                     "created_at",
@@ -84,8 +83,6 @@ class Read(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) name = null
@@ -99,8 +96,8 @@ class Read(
                 var mediums: String? = jdbcResult.getString("mediums")
                 if (jdbcResult.wasNull()) mediums = null
 
-                var methodologies: String? = jdbcResult.getString("methodologies")
-                if (jdbcResult.wasNull()) methodologies = null
+                var methodology: String? = jdbcResult.getString("methodology")
+                if (jdbcResult.wasNull()) methodology = null
 
                 var purposes: String? = jdbcResult.getString("purposes")
                 if (jdbcResult.wasNull()) purposes = null
@@ -129,12 +126,11 @@ class Read(
                 val product =
                     product(
                         id = id,
-                        neo4j_id = neo4j_id,
                         name = name,
                         change_to_plan = change_to_plan,
                         active = active,
                         mediums = (if (mediums == null) null else mediums.toString()),
-                        methodologies = methodologies,
+                        methodology = methodology,
                         purposes = purposes,
                         type = type,
                         created_at = created_at,

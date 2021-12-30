@@ -105,15 +105,7 @@ class Update(
         }
 
         when (req.column) {
-            "neo4j_id" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.products",
-                    column = "neo4j_id",
-                    id = req.id,
-                    value = req.value,
-                )
-            }
+
             "name" -> {
                 util.updateField(
                     token = req.token,

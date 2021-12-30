@@ -162,14 +162,14 @@ export class ScPartners {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -191,9 +191,8 @@ export class ScPartners {
       editable: true,
       isMulti: true,
       selectOptions: [
-        { display: 'A', value: 'A' },
-        { display: 'B', value: 'B' },
-        { display: 'C', value: 'C' },
+        { display: 'Funded', value: 'Funded' },
+        { display: 'FieldEngaged', value: 'FieldEngaged' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -229,13 +228,14 @@ export class ScPartners {
       editable: true,
       isMulti: true,
       selectOptions: [
-        { display: 'A', value: 'A' },
-        { display: 'B', value: 'B' },
-        { display: 'C', value: 'C' },
+        { display: 'Managing', value: 'Managing' },
+        { display: 'Funding', value: 'Funding' },
+        { display: 'Impact', value: 'Impact' },
+        { display: 'Technical', value: 'Technical' },
+        { display: 'Resource', value: 'Resource' },
       ],
       updateFn: this.handleUpdate,
     },
-
     {
       field: 'created_at',
       displayName: 'Created At',
