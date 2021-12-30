@@ -56,7 +56,7 @@ class Create(
                     ?::uuid,
                     ?::uuid,
                     ?,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 

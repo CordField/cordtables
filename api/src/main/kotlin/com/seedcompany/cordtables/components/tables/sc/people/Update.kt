@@ -40,15 +40,6 @@ class Update(
         if (req.id == null) return ScPeopleUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-            "neo4j_id" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.people",
-                    column = "neo4j_id",
-                    id = req.id,
-                    value = req.value
-                )
-            }
             "skills" -> {
                 util.updateField(
                     token = req.token,

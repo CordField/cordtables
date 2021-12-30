@@ -171,14 +171,14 @@ export class ScPartners {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -200,9 +200,8 @@ export class ScPartners {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        {display: "Funded", value: "Funded"},
+        {display: "FieldEngaged", value: "FieldEngaged"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -238,16 +237,14 @@ export class ScPartners {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        {display: "Managing", value: "Managing"},
+        {display: "Funding", value: "Funding"},
+        {display: "Impact", value: "Impact"},
+        {display: "Technical", value: "Technical"},
+        {display: "Resource", value: "Resource"},
       ],
       updateFn: this.handleUpdate,
     },
-    
-
-
-
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -336,9 +333,8 @@ export class ScPartners {
               <span class="form-thing">
               <select id="financial_reporting_types" name="financial_reporting_types" multiple onInput={event => this.financial_reporting_typesChange(event)}>
                   <option value="">Select Financial Reporting Types</option>
-                  <option value="A" selected={this.newFinancial_reporting_types === 'A'}>A</option>
-                   <option value="B" selected={this.newFinancial_reporting_types === 'B'}>B</option>
-                   <option value="C" selected={this.newFinancial_reporting_types === 'C'}>C</option>
+                  <option value="Funded" selected={this.newFinancial_reporting_types === 'Funded'}>Funded</option>
+                  <option value="FieldEngaged" selected={this.newFinancial_reporting_types === 'FieldEngaged'}>FieldEngaged</option>
                 </select>
               </span>
             </div>
@@ -381,15 +377,14 @@ export class ScPartners {
               <span class="form-thing">
                 <select id="types" name="types" multiple onInput={event => this.typesChange(event)}>
                   <option value="">Select Types</option>
-                  <option value="A" selected={this.newTypes === 'A'}>A</option>
-                   <option value="B" selected={this.newTypes === 'B'}>B</option>
-                   <option value="C" selected={this.newTypes === 'C'}>C</option>
+                  <option value="Managing" selected={this.newTypes === 'Managing'}>Managing</option>
+                   <option value="Funding" selected={this.newTypes === 'Funding'}>Funding</option>
+                   <option value="Impact" selected={this.newTypes === 'Impact'}>Impact</option>
+                   <option value="Technical" selected={this.newTypes === 'Technical'}>Technical</option>
+                   <option value="Resource" selected={this.newTypes === 'Resource'}>Resource</option>
                 </select>
               </span>
             </div>
-
-            
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />

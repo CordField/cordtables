@@ -76,7 +76,8 @@ class Update(
                     table = "sc.partnerships",
                     column = "active",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::boolean"
                 )
             }
             "agreement" -> {
@@ -85,7 +86,8 @@ class Update(
                     table = "sc.partnerships",
                     column = "agreement",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
 

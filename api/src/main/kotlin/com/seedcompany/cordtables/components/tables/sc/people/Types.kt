@@ -2,7 +2,6 @@ package com.seedcompany.cordtables.components.tables.sc.people
 
 data class people(
     var id: String? = null,
-    val neo4j_id: String? = null,
     val skills: String? = null,
     val status: String? = null,
     val created_at: String? = null,
@@ -15,7 +14,6 @@ data class people(
 
 data class peopleInput(
     var id: String? = null,
-    val neo4j_id: String? = null,
     val skills: String? = null,
     val status: String? = null,
     val created_at: String? = null,

@@ -46,7 +46,8 @@ class Update(
                     table = "up.prayer_requests",
                     column = "request_language_id",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "target_language_id" -> {
@@ -55,7 +56,8 @@ class Update(
                     table = "up.prayer_requests",
                     column = "target_language_id",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "sensitivity" -> {
@@ -74,7 +76,8 @@ class Update(
                 table = "up.prayer_requests",
                 column = "parent",
                 id = req.id,
-                value = req.value
+                value = req.value,
+                cast = "::uuid"
               )
             }
             "translator" -> {
@@ -83,7 +86,8 @@ class Update(
                 table = "up.prayer_requests",
                 column = "translator",
                 id = req.id,
-                value = req.value
+                value = req.value,
+                cast = "::uuid"
               )
             }
             "location" -> {
@@ -92,7 +96,8 @@ class Update(
                 table = "up.prayer_requests",
                 column = "location",
                 id = req.id,
-                value = req.value
+                value = req.value,
+                cast = "::uuid"
               )
             }
             "title" -> {
@@ -139,7 +144,8 @@ class Update(
                     table = "up.prayer_requests",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -148,7 +154,8 @@ class Update(
                     table = "up.prayer_requests",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

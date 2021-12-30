@@ -8,12 +8,11 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateProductExRequest {
   token: string;
   product: {
-    neo4j_id: string;
     name: string;
     change_to_plan: string;
     active: boolean;
-    mediums: string[];
-    methodologies: string;
+    mediums: string;
+    methodology: string;
     purposes: string;
     type: string;
   };
@@ -62,12 +61,11 @@ export class ScProducts {
 
   @State() productsResponse: ScProductListResponse;
 
-  newNeo4j_id: string;
   newName: string;
   newChange_to_plan: string;
   newActive: boolean;
-  newMediums: string[] = [];
-  newMethodologies: string;
+  newMediums: string;
+  newMethodology: string;
   newPurposes: string;
   newType: string;
   
@@ -119,10 +117,6 @@ export class ScProducts {
   // }
 
 
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
-
   nameChange(event) {
     this.newName = event.target.value;
   }
@@ -137,19 +131,19 @@ export class ScProducts {
 
   mediumsChange(event) {
     
-    var options = event.target.options;
-    var value = [];
-    for (var i = 0, l = options.length; i < l; i++) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-        //console.log(options[i].value);
-      }
-    }
-   this.newMediums = value;
+    // var options = event.target.options;
+    // var value = [];
+    // for (var i = 0, l = options.length; i < l; i++) {
+    //   if (options[i].selected) {
+    //     value.push(options[i].value);
+    //     //console.log(options[i].value);
+    //   }
+    // }
+   this.newMediums = event.target.value;
   }
 
-  methodologiesChange(event) {
-    this.newMethodologies = event.target.value;
+  methodologyChange(event) {
+    this.newMethodology = event.target.value;
   }
 
   purposesChange(event) {
@@ -168,12 +162,11 @@ export class ScProducts {
     const createResponse = await fetchAs<CreateProductExRequest, CreateProductExResponse>('sc-products/create-read', {
       token: globals.globalStore.state.token,
       product: {
-        neo4j_id: this.newNeo4j_id,
         name: this.newName,
         change_to_plan: this.newChange_to_plan,
         active: this.newActive,
         mediums: this.newMediums,
-        methodologies: this.newMethodologies,
+        methodology: this.newMethodology,
         purposes: this.newPurposes,
         type: this.newType,
       },
@@ -192,16 +185,9 @@ export class ScProducts {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
-    },
-    {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
     },
     {
       field: 'name',
@@ -235,22 +221,38 @@ export class ScProducts {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        {display: "Print", value: "Print"},
+        {display: "Web", value: "Web"},
+        {display: "EBook", value: "EBook"},
+        {display: "App", value: "App"},
+        {display: "TrainedStoryTellers", value: "TrainedStoryTellers"},
+        {display: "Audio", value: "Audio"},
+        {display: "Video", value: "Video"},
+        {display: "Other", value: "Other"},
       ],
       updateFn: this.handleUpdate,
     },
     {
-      field: 'methodologies',
-      displayName: 'Methodologies',
+      field: 'methodology',
+      displayName: 'Methodology',
       width: 250,
       editable: true,
-      isMulti: true,
+      isMulti: false,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        {display: "Paratext", value: "Paratext"},
+        {display: "OtherWritten", value: "OtherWritten"},
+        {display: "Render", value: "Render"},
+        {display: "Audacity", value: "Audacity"},
+        {display: "AdobeAudition", value: "AdobeAudition"},
+        {display: "OtherOralTranslation", value: "OtherOralTranslation"},
+        {display: "StoryTogether", value: "StoryTogether"},
+        {display: "SeedCompanyMethod", value: "SeedCompanyMethod"},
+        {display: "OneStory", value: "OneStory"},
+        {display: "Craft2Tell", value: "Craft2Tell"},
+        {display: "OtherOralStories", value: "OtherOralStories"},
+        {display: "Film", value: "Film"},
+        {display: "SignLanguage", value: "SignLanguage"},
+        {display: "OtherVisual", value: "OtherVisual"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -261,9 +263,11 @@ export class ScProducts {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        {display: "EvangelismChurchPlanting", value: "EvangelismChurchPlanting"},
+        {display: "ChurchLife", value: "ChurchLife"},
+        {display: "ChurchMaturity", value: "ChurchMaturity"},
+        {display: "SocialIssues", value: "SocialIssues"},
+        {display: "Discipleship", value: "Discipleship"},
       ],
       updateFn: this.handleUpdate,
     },
@@ -273,16 +277,21 @@ export class ScProducts {
       width: 250,
       editable: true,
       selectOptions: [
-        {display: "Film", value: "Film"},
-        {display: "Literacy Material", value: "Literacy Material"},
-        {display: "Scripture", value: "Scripture"},
-        {display: "Song", value: "Song"},
-        {display: "Story", value: "Story"},
+        {display: "BibleStories", value: "BibleStories"},
+        {display: "JesusFilm", value: "JesusFilm"},
+        {display: "Songs", value: "Songs"},
+        {display: "LiteracyMaterials", value: "LiteracyMaterials"},
+        {display: "EthnoArts", value: "EthnoArts"},
+        {display: "OldTestamentPortions", value: "OldTestamentPortions"},
+        {display: "OldTestamentFull", value: "OldTestamentFull"},
+        {display: "Gospel", value: "Gospel"},
+        {display: "NewTestamentFull", value: "NewTestamentFull"},
+        {display: "FullBible", value: "FullBible"},
+        {display: "IndividualBooks", value: "IndividualBooks"},
+        {display: "Genesis", value: "Genesis"},
       ],
       updateFn: this.handleUpdate,
     },
-
-
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -342,15 +351,7 @@ export class ScProducts {
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
 
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="neo4j_id">neo4j_id</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
-              </span>
-            </div>
-
+ 
             <div id="name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="name">Name</label>
@@ -389,23 +390,39 @@ export class ScProducts {
               <span class="form-thing">
               <select id="mediums" name="mediums" multiple onInput={event => this.mediumsChange(event)}>
                   <option value="">Select Mediums</option>
-                  <option value="A" selected={this.newMediums.includes("A")}>A</option>
-                  <option value="B" selected={this.newMediums.includes("B")}>B</option>
-                  <option value="C" selected={this.newMediums.includes("B")}>C</option>
+                  <option value="Print" selected={this.newMediums == "Print"}>Print</option>
+                  <option value="Web" selected={this.newMediums == "Web"}>Web</option>
+                  <option value="EBook" selected={this.newMediums == "EBook"}>EBook</option>
+                  <option value="App" selected={this.newMediums == "App"}>App</option>
+                  <option value="TrainedStoryTellers" selected={this.newMediums == "TrainedStoryTellers"}>TrainedStoryTellers</option>
+                  <option value="Audio" selected={this.newMediums == "Audio"}>Audio</option>
+                  <option value="Video" selected={this.newMediums == "Video"}>Video</option>
+                  <option value="Other" selected={this.newMediums == "Other"}>Other</option>
                 </select>
               </span>
             </div>
 
-            <div id="methodologies-holder" class="form-input-item form-thing">
+            <div id="methodology-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="methodologies">Methodologies</label>
+                <label htmlFor="methodology">Methodology</label>
               </span>
               <span class="form-thing">
-                <select id="methodologies" name="methodologies" multiple onInput={event => this.methodologiesChange(event)}>
+                <select id="methodology" name="methodology" onInput={event => this.methodologyChange(event)}>
                   <option value="">Select Methodologies</option>
-                  <option value="A" selected={this.newMethodologies === "A"}>A</option>
-                  <option value="B" selected={this.newMethodologies === "B"}>B</option>
-                  <option value="C" selected={this.newMethodologies === "C"}>C</option>
+                  <option value="Paratext" selected={this.newMethodology === "Paratext"}>Paratext</option>
+                  <option value="OtherWritten" selected={this.newMethodology === "OtherWritten"}>OtherWritten</option>
+                  <option value="Render" selected={this.newMethodology === "Render"}>Render</option>
+                  <option value="Audacity" selected={this.newMethodology === "Audacity"}>Audacity</option>
+                  <option value="AdobeAudition" selected={this.newMethodology === "AdobeAudition"}>AdobeAudition</option>
+                  <option value="OtherOralTranslation" selected={this.newMethodology === "OtherOralTranslation"}>OtherOralTranslation</option>
+                  <option value="StoryTogether" selected={this.newMethodology === "StoryTogether"}>StoryTogether</option>
+                  <option value="SeedCompanyMethod" selected={this.newMethodology === "SeedCompanyMethod"}>SeedCompanyMethod</option>
+                  <option value="OneStory" selected={this.newMethodology === "OneStory"}>OneStory</option>
+                  <option value="Craft2Tell" selected={this.newMethodology === "Craft2Tell"}>Craft2Tell</option>
+                  <option value="OtherOralStories" selected={this.newMethodology === "OtherOralStories"}>OtherOralStories</option>
+                  <option value="Film" selected={this.newMethodology === "Film"}>Film</option>
+                  <option value="SignLanguage" selected={this.newMethodology === "SignLanguage"}>SignLanguage</option>
+                  <option value="OtherVisual" selected={this.newMethodology === "OtherVisual"}>OtherVisual</option>
                 </select>
               </span>
             </div>  
@@ -417,9 +434,11 @@ export class ScProducts {
               <span class="form-thing">
               <select id="purposes" name="purposes" multiple onInput={event => this.purposesChange(event)}>
                   <option value="">Select Purposes</option>
-                  <option value="A" selected={this.newPurposes === "A"}>A</option>
-                  <option value="B" selected={this.newPurposes === "B"}>B</option>
-                  <option value="C" selected={this.newPurposes === "C"}>C</option>
+                  <option value="EvangelismChurchPlanting" selected={this.newPurposes === "EvangelismChurchPlanting"}>EvangelismChurchPlanting</option>
+                  <option value="ChurchLife" selected={this.newPurposes === "ChurchLife"}>ChurchLife</option>
+                  <option value="ChurchMaturity" selected={this.newPurposes === "ChurchMaturity"}>ChurchMaturity</option>
+                  <option value="SocialIssues" selected={this.newPurposes === "SocialIssues"}>SocialIssues</option>
+                  <option value="Discipleship" selected={this.newPurposes === "Discipleship"}>Discipleship</option>
                 </select>
               </span>
             </div>
@@ -431,11 +450,18 @@ export class ScProducts {
               <span class="form-thing">
               <select id="type" name="type" onInput={event => this.typeChange(event)}>
                   <option value="">Select Type</option>
-                  <option value="Film" selected={this.newType === "Film"}>Film</option>
-                  <option value="Literacy Material" selected={this.newType === "Literacy Material"}>Literacy Material</option>
-                  <option value="Scripture" selected={this.newType === "Scripture"}>Scripture</option>
-                  <option value="Song" selected={this.newType === "Song"}>Song</option>
-                  <option value="Story" selected={this.newType === "Story"}>Story</option>
+                  <option value="BibleStories" selected={this.newType === "BibleStories"}>BibleStories</option>
+                  <option value="JesusFilm" selected={this.newType === "JesusFilm"}>JesusFilm</option>
+                  <option value="Songs" selected={this.newType === "Songs"}>Songs</option>
+                  <option value="LiteracyMaterials" selected={this.newType === "LiteracyMaterials"}>LiteracyMaterials</option>
+                  <option value="EthnoArts" selected={this.newType === "EthnoArts"}>EthnoArts</option>
+                  <option value="OldTestamentPortions" selected={this.newType === "OldTestamentPortions"}>OldTestamentPortions</option>
+                  <option value="OldTestamentFull" selected={this.newType === "OldTestamentFull"}>OldTestamentFull</option>
+                  <option value="Gospel" selected={this.newType === "Gospel"}>Gospel</option>
+                  <option value="NewTestamentFull" selected={this.newType === "NewTestamentFull"}>NewTestamentFull</option>
+                  <option value="FullBible" selected={this.newType === "FullBible"}>FullBible</option>
+                  <option value="IndividualBooks" selected={this.newType === "IndividualBooks"}>IndividualBooks</option>
+                  <option value="Genesis" selected={this.newType === "Genesis"}>Genesis</option>
                 </select>
               </span>
             </div>  

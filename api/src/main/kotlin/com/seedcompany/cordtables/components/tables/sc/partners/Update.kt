@@ -95,7 +95,8 @@ class Update(
                     table = "sc.partners",
                     column = "point_of_contact",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "types" -> {

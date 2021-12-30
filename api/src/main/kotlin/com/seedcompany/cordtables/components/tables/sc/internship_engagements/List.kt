@@ -59,9 +59,9 @@ class List(
                     "id",
 
                     "project",
-                    "ethnologue",
                     "change_to_plan",
                     "active",
+                    "ceremony",
                     "communications_complete_date",
                     "complete_date",
                     "country_of_origin",
@@ -73,13 +73,16 @@ class List(
                     "intern",
                     "last_reactivated_at",
                     "mentor",
-                    "methodology",
+                    "methodologies",
                     "paratext_registry",
                     "periodic_reports_directory",
                     "position",
+                    "sensitivity",
                     "start_date",
                     "start_date_override",
                     "status",
+                    "status_modified_at",
+                    "last_suspended_at",
 
                     "created_at",
                     "created_by",
@@ -104,14 +107,14 @@ class List(
                 var project: String? = jdbcResult.getString("project")
                 if (jdbcResult.wasNull()) project = null
 
-                var ethnologue: String? = jdbcResult.getString("ethnologue")
-                if (jdbcResult.wasNull()) ethnologue = null
-
                 var change_to_plan: String? = jdbcResult.getString("change_to_plan")
                 if (jdbcResult.wasNull()) change_to_plan = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
+
+                var ceremony: String? = jdbcResult.getString("ceremony")
+                if (jdbcResult.wasNull()) ceremony = null
 
                 var communications_complete_date: String? = jdbcResult.getString("communications_complete_date")
                 if (jdbcResult.wasNull()) communications_complete_date = null
@@ -146,8 +149,8 @@ class List(
                 var mentor: String? = jdbcResult.getString("mentor")
                 if (jdbcResult.wasNull()) mentor = null
 
-                var methodology: String? = jdbcResult.getString("methodology")
-                if (jdbcResult.wasNull()) methodology = null
+                var methodologies: String? = jdbcResult.getString("methodologies")
+                if (jdbcResult.wasNull()) methodologies = null
 
                 var paratext_registry: String? = jdbcResult.getString("paratext_registry")
                 if (jdbcResult.wasNull()) paratext_registry = null
@@ -158,6 +161,9 @@ class List(
                 var position: String? = jdbcResult.getString("position")
                 if (jdbcResult.wasNull()) position = null
 
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
+
                 var start_date: String? = jdbcResult.getString("start_date")
                 if (jdbcResult.wasNull()) start_date = null
 
@@ -167,8 +173,11 @@ class List(
                 var status: String? = jdbcResult.getString("status")
                 if (jdbcResult.wasNull()) status = null
 
+                var status_modified_at: String? = jdbcResult.getString("status_modified_at")
+                if (jdbcResult.wasNull()) status_modified_at = null
 
-
+                var last_suspended_at: String? = jdbcResult.getString("last_suspended_at")
+                if (jdbcResult.wasNull()) last_suspended_at = null
 
                 var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
@@ -193,9 +202,9 @@ class List(
                         id = id,
 
                         project = project,
-                        ethnologue = ethnologue,
                         change_to_plan = change_to_plan,
                         active = active,
+                        ceremony = ceremony,
                         communications_complete_date = communications_complete_date,
                         complete_date = complete_date,
                         country_of_origin = country_of_origin,
@@ -207,14 +216,16 @@ class List(
                         intern = intern,
                         last_reactivated_at = last_reactivated_at,
                         mentor = mentor,
-                        methodology = methodology,
+                        methodologies = methodologies,
                         paratext_registry = paratext_registry,
                         periodic_reports_directory = periodic_reports_directory,
                         position = position,
+                        sensitivity = sensitivity,
                         start_date = start_date,
                         start_date_override = start_date_override,
                         status = status,
-
+                        status_modified_at = status_modified_at,
+                        last_suspended_at = last_suspended_at,
 
                         created_at = created_at,
                         created_by = created_by,

@@ -57,7 +57,6 @@ class Read(
                         getList = false,
                         columns = arrayOf(
                                 "id",
-                                "neo4j_id",
 
                                 "ethnologue",
                                 "name",
@@ -143,7 +142,7 @@ class Read(
                                                     select person
                                                             from   admin.tokens
                                                             where  token = :token)
-                                                    and    role = 1)) then common.ST_AsLatLonText(coordinates::text)
+                                                    and    role = '${util.adminRole}'::uuid)) then common.ST_AsLatLonText(coordinates::text)
                         when owning_person =
                         (
                                 select person
@@ -171,7 +170,7 @@ class Read(
                                             select person
                                                     from   admin.tokens
                                                     where  token = :token)
-                                            and    role = 1)) then common.ST_AsGeoJSON(coordinates)
+                                            and    role = '${util.adminRole}'::uuid)) then common.ST_AsGeoJSON(coordinates)
                 when owning_person =
                 (
                         select person
@@ -193,8 +192,6 @@ class Read(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var ethnologue: String? = jdbcResult.getString("ethnologue")
                 if (jdbcResult.wasNull()) ethnologue = null
@@ -423,7 +420,6 @@ class Read(
                 val language =
                         Language(
                                 id = id,
-                                neo4j_id = neo4j_id,
 
                                 ethnologue = ethnologue,
                                 name = name,

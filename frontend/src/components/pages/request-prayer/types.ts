@@ -1,16 +1,16 @@
 
 class PrayerRequest {
-    id?: number | undefined;
+    id?: string | undefined;
 
-    request_language_id?: number | undefined;
-    target_language_id?: number | undefined;
+    request_language_id?: string | undefined;
+    target_language_id?: string | undefined;
     sensitivity?: string | undefined;
     organization_name?: string | undefined;
-    parent?: number | undefined;
-    translator?: number | undefined;
+    parent?: string | undefined;
+    translator?: string | undefined;
     location?: string | undefined;
     title?: string | undefined;
-    parentRequest?: number | undefined;
+    parentRequest?: string | undefined;
     content?: string | undefined;
     reviewed?: boolean | undefined;
 
@@ -20,19 +20,19 @@ class PrayerRequest {
 }
 
 class GetPrayerRequest {
-    id?: number | undefined;
+    id?: string | undefined;
 
-    request_language_id?: number | undefined;
-    target_language_id?: number | undefined;
+    request_language_id?: string | undefined;
+    target_language_id?: string | undefined;
     sensitivity?: string | undefined;
     organization_name?: string | undefined;
-    parent?: number | undefined;
-    translator?: number | undefined;
+    parent?: string | undefined;
+    translator?: string | undefined;
     location?: string | undefined;
     title?: string | undefined;
-    parentRequest?: number | undefined;
+    parentRequest?: string | undefined;
     content?: string | undefined;
     reviewed?: boolean | undefined;
 
-    created_by?: number | undefined;
+    created_by?: string | undefined;
 }

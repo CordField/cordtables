@@ -59,11 +59,12 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
                     "project",
                     "ethnologue",
                     "change_to_plan",
                     "active",
+                    "ceremony",
+                    "is_open_to_investor_visit",
                     "communications_complete_date",
                     "complete_date",
                     "disbursement_complete_date",
@@ -73,6 +74,7 @@ class Read(
                     "is_first_scripture",
                     "is_luke_partnership",
                     "is_sent_printing",
+                    "last_suspended_at",
                     "last_reactivated_at",
                     "paratext_registry",
                     "periodic_reports_directory",
@@ -82,6 +84,8 @@ class Read(
                     "start_date",
                     "start_date_override",
                     "status",
+                    "status_modified_at",
+                    "historic_goal",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -99,8 +103,6 @@ class Read(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var project: String? = jdbcResult.getString("project")
                 if (jdbcResult.wasNull()) project = null
@@ -113,6 +115,12 @@ class Read(
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
+
+                var ceremony: String? = jdbcResult.getString("ceremony")
+                if (jdbcResult.wasNull()) ceremony = null
+
+                var is_open_to_investor_visit: Boolean? = jdbcResult.getBoolean("is_open_to_investor_visit")
+                if (jdbcResult.wasNull()) is_open_to_investor_visit = null
 
                 var communications_complete_date: String? = jdbcResult.getString("communications_complete_date")
                 if (jdbcResult.wasNull()) communications_complete_date = null
@@ -141,6 +149,9 @@ class Read(
                 var is_sent_printing: Boolean? = jdbcResult.getBoolean("is_sent_printing")
                 if (jdbcResult.wasNull()) is_sent_printing = null
 
+                var last_suspended_at: String? = jdbcResult.getString("last_suspended_at")
+                if (jdbcResult.wasNull()) last_suspended_at = null
+
                 var last_reactivated_at: String? = jdbcResult.getString("last_reactivated_at")
                 if (jdbcResult.wasNull()) last_reactivated_at = null
 
@@ -168,6 +179,12 @@ class Read(
                 var status: String? = jdbcResult.getString("status")
                 if (jdbcResult.wasNull()) status = null
 
+                var status_modified_at: String? = jdbcResult.getString("status_modified_at")
+                if (jdbcResult.wasNull()) status_modified_at = null
+
+                var historic_goal: String? = jdbcResult.getString("historic_goal")
+                if (jdbcResult.wasNull()) historic_goal = null
+
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
@@ -189,11 +206,12 @@ class Read(
                 val languageEngagement =
                     languageEngagement(
                         id = id,
-                        neo4j_id = neo4j_id,
                         project = project,
                         ethnologue = ethnologue,
                         change_to_plan = change_to_plan,
                         active = active,
+                        ceremony = ceremony,
+                        is_open_to_investor_visit = is_open_to_investor_visit,
                         communications_complete_date = communications_complete_date,
                         complete_date = complete_date,
                         disbursement_complete_date = disbursement_complete_date,
@@ -203,6 +221,7 @@ class Read(
                         is_first_scripture = is_first_scripture,
                         is_luke_partnership = is_luke_partnership,
                         is_sent_printing = is_sent_printing,
+                        last_suspended_at = last_suspended_at,
                         last_reactivated_at = last_reactivated_at,
                         paratext_registry = paratext_registry,
                         periodic_reports_directory = periodic_reports_directory,
@@ -212,6 +231,8 @@ class Read(
                         start_date = start_date,
                         start_date_override = start_date_override,
                         status = status,
+                        status_modified_at = status_modified_at,
+                        historic_goal = historic_goal,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

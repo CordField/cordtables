@@ -38,20 +38,20 @@ class Controller (
         var data: MutableList<PrayerRequestData> = mutableListOf()
         var rowMapper: RowMapper<PrayerRequestData> = RowMapper<PrayerRequestData> { resultSet: ResultSet, rowIndex: Int ->
             PrayerRequestData(
-                resultSet.getInt("id"),
-                resultSet.getInt("request_language_id"),
-                resultSet.getInt("target_language_id"),
+                resultSet.getString("id"),
+                resultSet.getString("request_language_id"),
+                resultSet.getString("target_language_id"),
                 resultSet.getString("sensitivity"),
                 resultSet.getString("organization_name"),
-                resultSet.getInt("parent"),
-                resultSet.getInt("translator"),
+                resultSet.getString("parent"),
+                resultSet.getString("translator"),
                 resultSet.getString("location"),
                 resultSet.getString("title"),
                 resultSet.getString("content"),
                 resultSet.getBoolean("reviewed"),
                 resultSet.getString("prayer_type"),
                 resultSet.getString("requestedBy"),
-                resultSet.getInt("notify"),
+                resultSet.getString("notify"),
                 resultSet.getBoolean("myRequest")
             )
         }
@@ -97,17 +97,17 @@ class Controller (
     @PostMapping("prayer-requests/create")
     @ResponseBody
     fun create(@RequestBody req: CommonPrayerRequestsCreateRequest): CommonPrayerRequestsCreateResponse{
-        val id = jdbcTemplate.queryForObject(
+        val id: String = jdbcTemplate.queryForObject(
             """
             insert into up.prayer_requests(request_language_id, target_language_id, sensitivity, organization_name, parent, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
                     ?::common.sensitivity,
                     ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
                     ?,
                     ?,
                     ?::boolean,
@@ -127,11 +127,11 @@ class Controller (
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.prayerRequest.request_language_id,
             req.prayerRequest.target_language_id,
             req.prayerRequest.sensitivity,
@@ -146,6 +146,7 @@ class Controller (
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
         return CommonPrayerRequestsCreateResponse(error = ErrorType.NoError, id = id)
     }
@@ -154,15 +155,16 @@ class Controller (
     @PostMapping("prayer-requests/update")
     @ResponseBody
     fun update(@RequestBody req: CommonPrayerRequestsUpdateRequest): CommonPrayerRequestsCreateResponse{
-        val id = jdbcTemplate.queryForObject(
+        val id: String = jdbcTemplate.queryForObject(
             """
-                UPDATE up.prayer_requests SET request_language_id=?, target_language_id=?, sensitivity=?::common.sensitivity, organization_name=?, parent=?, translator=?, location=?,  title=?, content=?, reviewed=?::boolean, prayer_type=?::up.prayer_type WHERE id=? AND created_by=(
+                UPDATE up.prayer_requests SET request_language_id=?::uuid, target_language_id=?::uuid, sensitivity=?::common.sensitivity, organization_name=?, parent=?::uuid, translator=?::uuid, location=?::uuid,
+                  title=?, content=?, reviewed=?::boolean, prayer_type=?::up.prayer_type WHERE id=?::uuid AND created_by=(
                     select person 
                     from admin.tokens 
                     where token = ?
                ) returning id;
             """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.prayerRequest.request_language_id,
             req.prayerRequest.target_language_id,
             req.prayerRequest.sensitivity,
@@ -187,23 +189,23 @@ class Controller (
         var data: PrayerRequestGetData? = null
         var rowMapper: RowMapper<PrayerRequestGetData> = RowMapper<PrayerRequestGetData> { resultSet: ResultSet, rowIndex: Int ->
             PrayerRequestGetData(
-                resultSet.getInt("id"),
-                resultSet.getInt("request_language_id"),
-                resultSet.getInt("target_language_id"),
+                resultSet.getString("id"),
+                resultSet.getString("request_language_id"),
+                resultSet.getString("target_language_id"),
                 resultSet.getString("sensitivity"),
                 resultSet.getString("organization_name"),
-                resultSet.getInt("parent"),
-                resultSet.getInt("translator"),
+                resultSet.getString("parent"),
+                resultSet.getString("translator"),
                 resultSet.getString("location"),
                 resultSet.getString("title"),
                 resultSet.getString("content"),
                 resultSet.getBoolean("reviewed"),
                 resultSet.getString("prayer_type"),
-                resultSet.getInt("created_by"),
+                resultSet.getString("created_by"),
             )
         }
         var sql = """
-            SELECT * FROM up.prayer_requests WHERE id=${req.id} and created_by=(
+            SELECT * FROM up.prayer_requests WHERE id='${req.id}'::uuid and created_by=(
                 SELECT person FROM admin.tokens WHERE token='${req.token}'
             )
         """.trimIndent()
@@ -237,22 +239,22 @@ class Controller (
     @ResponseBody
     fun notify(@RequestBody req: PrayerRequestNotifyRequest): CommonPrayerRequestsCreateResponse{
         var existingNotifications: ArrayList<Int> = ArrayList()
-        var id:Int = 0;
-        var sql: String = "SELECT count(id) as cnt FROM up.prayer_notifications WHERE request=${req.selectedRequest} AND person=(select person from admin.tokens where token = '${req.token}')"
+        var id:String = "";
+        var sql: String = "SELECT count(id) as cnt FROM up.prayer_notifications WHERE request='${req.selectedRequest}'::uuid AND person=(select person from admin.tokens where token = '${req.token}')"
         var count = jdbcTemplate.queryForObject(sql, Long::class.java, )
         println(count)
         if (count != null && count > 0) {
             if(req.action == "remove"){
                 id = jdbcTemplate.queryForObject(
                     """
-                        DELETE FROM up.prayer_notifications WHERE request = ?::INTEGER AND  person = (
+                        DELETE FROM up.prayer_notifications WHERE request = ?::uuid AND  person = (
                             select person 
                             from admin.tokens 
                             where token = ?
                         )
                         returning id;
                     """.trimIndent(),
-                    Int::class.java,
+                    String::class.java,
                     req.selectedRequest,
                     req.token,
                 )
@@ -264,7 +266,7 @@ class Controller (
                     """
                         INSERT INTO up.prayer_notifications (request, person,  created_by, modified_by, owning_person, owning_group) 
                             VALUES (
-                                ?::INTEGER,
+                                ?::uuid,
                                 (
                                     select person 
                                     from admin.tokens 
@@ -285,16 +287,17 @@ class Controller (
                                     from admin.tokens 
                                     where token = ?
                                 ),
-                                1
+                                ?::uuid
                             )
                         returning id;
                     """.trimIndent(),
-                    Int::class.java,
+                    String::class.java,
                     req.selectedRequest,
                     req.token,
                     req.token,
                     req.token,
-                    req.token
+                    req.token,
+                    util.adminGroupId
                 )
             }
         }
@@ -306,7 +309,7 @@ class Controller (
     @PostMapping("prayer-requests/notifications")
     @ResponseBody
     fun notifications(@RequestBody req: PrayerRequestNotifyRequest): CommonPrayerRequestsCreateResponse{
-        var id = 0
+        var id: String = ""
 //        var rowMapper: RowMapper<prayerNotification> = RowMapper<prayerNotification> { resultSet: ResultSet, rowIndex: Int ->
 //            prayerNotification(
 //                resultSet.getInt("id"),

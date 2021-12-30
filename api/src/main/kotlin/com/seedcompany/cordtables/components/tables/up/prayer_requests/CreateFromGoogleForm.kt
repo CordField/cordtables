@@ -108,10 +108,10 @@ class CreateFromGoogleForm(
       """
             insert into up.prayer_requests(request_language_id, sensitivity, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::common.sensitivity,
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
                     ?,
                     ?,
                     false,
@@ -119,7 +119,7 @@ class CreateFromGoogleForm(
                     ?,
                     ?,
                     ?,
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
@@ -134,6 +134,7 @@ class CreateFromGoogleForm(
       creatorUserId,
       creatorUserId,
       creatorUserId,
+      util.adminGroupId
     )
     return UpPrayerRequestsCreateFromFormResponse(error = ErrorType.NoError, id = id)
   }

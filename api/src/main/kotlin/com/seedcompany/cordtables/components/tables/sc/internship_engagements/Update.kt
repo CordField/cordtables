@@ -50,22 +50,14 @@ class Update(
                     cast = "::uuid"
                 )
             }
-            "ethnologue" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.internship_engagements",
-                    column = "ethnologue",
-                    id = req.id,
-                    value = req.value
-                )
-            }
             "change_to_plan" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.internship_engagements",
                     column = "change_to_plan",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "active" -> {
@@ -76,6 +68,16 @@ class Update(
                     id = req.id,
                     value = req.value,
                     cast = "::BOOLEAN"
+                )
+            }
+            "ceremony" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.internship_engagements",
+                    column = "ceremony",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "communications_complete_date" -> {
@@ -104,7 +106,8 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "country_of_origin",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "disbursement_complete_date" -> {
@@ -143,7 +146,8 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "growth_plan",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "initial_end_date" -> {
@@ -162,7 +166,8 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "intern",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "last_reactivated_at" -> {
@@ -181,17 +186,18 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "mentor",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
-            "methodology" -> {
+            "methodologies" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.internship_engagements",
-                    column = "methodology",
+                    column = "methodologies",
                     id = req.id,
                     value = req.value,
-                    cast = "::common.internship_methodology"
+                    cast = "::common.product_methodologies"
                 )
             }
             "paratext_registry" -> {
@@ -209,7 +215,8 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "periodic_reports_directory",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "position" -> {
@@ -220,6 +227,16 @@ class Update(
                     id = req.id,
                     value = req.value,
                     cast = "::common.internship_position"
+                )
+            }
+            "sensitivity" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.internship_engagements",
+                    column = "sensitivity",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::common.sensitivity"
                 )
             }
             "start_date" -> {
@@ -252,13 +269,34 @@ class Update(
                     cast = "::common.engagement_status"
                 )
             }
+            "status_modified_at" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.internship_engagements",
+                    column = "status_modified_at",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::timestamp"
+                )
+            }
+            "status_modified_at" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.internship_engagements",
+                    column = "status_modified_at",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::timestamp"
+                )
+            }
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.internship_engagements",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -267,7 +305,8 @@ class Update(
                     table = "sc.internship_engagements",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

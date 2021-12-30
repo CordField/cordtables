@@ -2,11 +2,13 @@ package com.seedcompany.cordtables.components.tables.sc.language_engagements
 
 data class languageEngagement(
     var id: String? = null,
-    val neo4j_id: String? = null,
+
     val project: String? = null,
     val ethnologue: String? = null,
     val change_to_plan: String? = null,
     val active: Boolean? = null,
+    val ceremony: String? = null,
+    val is_open_to_investor_visit: Boolean? = null,
     val communications_complete_date: String? = null,
     val complete_date: String? = null,
     val disbursement_complete_date: String? = null,
@@ -16,6 +18,7 @@ data class languageEngagement(
     val is_first_scripture: Boolean? = null,
     val is_luke_partnership: Boolean? = null,
     val is_sent_printing: Boolean? = null,
+    val last_suspended_at: String? = null,
     val last_reactivated_at: String? = null,
     val paratext_registry: String? = null,
     val periodic_reports_directory: String? = null,
@@ -25,6 +28,8 @@ data class languageEngagement(
     val start_date: String? = null,
     val start_date_override: String? = null,
     val status: String? = null,
+    val status_modified_at: String? = null,
+    val historic_goal: String? = null,
     val created_at: String? = null,
     val created_by: String? = null,
     val modified_at: String? = null,
@@ -35,11 +40,13 @@ data class languageEngagement(
 
 data class languageEngagementInput(
     var id: String? = null,
-    val neo4j_id: String? = null,
+
     val project: String? = null,
     val ethnologue: String? = null,
     val change_to_plan: String? = null,
     val active: Boolean? = null,
+    val ceremony: String? = null,
+    val is_open_to_investor_visit: Boolean? = null,
     val communications_complete_date: String? = null,
     val complete_date: String? = null,
     val disbursement_complete_date: String? = null,
@@ -49,6 +56,7 @@ data class languageEngagementInput(
     val is_first_scripture: Boolean? = null,
     val is_luke_partnership: Boolean? = null,
     val is_sent_printing: Boolean? = null,
+    val last_suspended_at: String? = null,
     val last_reactivated_at: String? = null,
     val paratext_registry: String? = null,
     val periodic_reports_directory: String? = null,
@@ -58,6 +66,8 @@ data class languageEngagementInput(
     val start_date: String? = null,
     val start_date_override: String? = null,
     val status: String? = null,
+    val status_modified_at: String? = null,
+    val historic_goal: String? = null,
     val created_at: String? = null,
     val created_by: String? = null,
     val modified_at: String? = null,

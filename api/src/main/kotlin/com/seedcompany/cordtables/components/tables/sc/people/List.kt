@@ -57,7 +57,6 @@ class List(
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
                     "skills",
                     "status",
                     "created_at",
@@ -76,9 +75,6 @@ class List(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var skills: String? = jdbcResult.getString("skills")
                 if (jdbcResult.wasNull()) skills = null
@@ -107,7 +103,6 @@ class List(
                 data.add(
                     people(
                         id = id,
-                        neo4j_id = neo4j_id,
                         skills = skills,
                         status = status,
                         created_at = created_at,

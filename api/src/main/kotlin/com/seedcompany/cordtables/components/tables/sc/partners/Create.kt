@@ -50,11 +50,11 @@ class Create(
              types, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?::uuid,
-                    ?,
+                    ?::boolean,
                     ARRAY[?]::sc.financial_reporting_types[],
                     ?,
                     ?,
-                    ?,
+                    ?::uuid,
                     ARRAY[?]::sc.partner_types[],
                     (
                       select person 
