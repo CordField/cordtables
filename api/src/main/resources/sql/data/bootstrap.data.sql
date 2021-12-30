@@ -7,8 +7,8 @@ LANGUAGE PLPGSQL
 AS $$
 DECLARE
   vPeopleCount int; -- if this is a fresh db or not
-  vPersonId uuid; -- the new root person id, some tables set defaults to 1
-  vOrgId uuid; -- the default org for tables that set defaults to 1
+  vPersonId uuid;
+  vOrgId uuid;
   vAdminRoleId uuid;
   vAdminGroupId uuid;
   vNonAdminPersonId uuid;
@@ -93,7 +93,7 @@ BEGIN
 
     -- group memberships ----------------------------------------------------------------------------------------------------
     insert into admin.group_memberships(group_id, person, created_by, modified_by, owning_person, owning_group)
-    values (1, vPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
+    values (vAdminGroupId, vPersonId, vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
   end if;
 
