@@ -156,7 +156,6 @@ create type common.book_name as enum (
 
 create table common.scripture_references (
   id uuid primary key default public.uuid_generate_v4(),
-  neo4j_id varchar(32) unique,
 
   book_start common.book_name,
   book_end common.book_name,
@@ -170,9 +169,7 @@ create table common.scripture_references (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
-
-  unique (book_start, book_end, chapter_start, chapter_end, verse_start, verse_end)
+  owning_group uuid not null references admin.groups(id)
 );
 
 -- CHAT ------------------------------------------------------------
@@ -316,7 +313,6 @@ ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk fore
 create table common.education_entries (
   id uuid primary key default public.uuid_generate_v4(),
 
-  neo4j_id varchar(32) unique,
   degree varchar(64),
   institution varchar(64),
   major varchar(64),
@@ -447,7 +443,10 @@ create table common.directories (
   id uuid primary key default public.uuid_generate_v4(),
 
   parent uuid references common.directories(id),
-  name varchar(255),
+  name varchar(255), -- not null
+  
+	-- todo
+	-- add derived data from sub-directories/files
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -470,9 +469,7 @@ create table common.files (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
-
-  unique (directory, name)
+  owning_group uuid not null references admin.groups(id)
 );
 
 create table common.file_versions (

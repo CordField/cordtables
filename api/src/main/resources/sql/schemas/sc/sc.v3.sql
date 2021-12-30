@@ -108,7 +108,7 @@ create table sc.locations (
 
 -- extension table from commmon
 create table sc.organizations (
-	id uuid unique not null references common.organizations(id),
+	id uuid primary key references common.organizations(id),
   
 	address varchar(255),
 	sensitivity common.sensitivity,
@@ -138,7 +138,6 @@ create table sc.organization_locations(
 	unique (organization, location)
 );
 
-
 create type sc.periodic_report_type as enum (
   'Financial',
   'Narrative',
@@ -154,7 +153,6 @@ DO $$ BEGIN
 	WHEN duplicate_object THEN null;
 END; $$;
 
-
 DO $$ BEGIN
     create type sc.partner_types as enum (
 		'Managing',
@@ -168,9 +166,8 @@ DO $$ BEGIN
 END; $$;
 
 create table sc.partners (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key references common.organizations(id),
 
-	organization uuid references sc.organizations(id), -- not null
 	active bool,
 	financial_reporting_types sc.financial_reporting_types[],
 	is_innovations_client bool,
@@ -455,7 +452,7 @@ create table sc.known_languages_by_person (
 
 -- extension table from commmon
 create table sc.people (
-  id uuid unique references admin.people(id),
+  id uuid primary key references admin.people(id),
 
 	skills varchar(32)[],
 	status varchar(32),
@@ -471,7 +468,7 @@ create table sc.people (
 create table sc.person_unavailabilities (
   id uuid primary key default public.uuid_generate_v4(),
 
-  person uuid unique references admin.people(id),
+  person uuid references admin.people(id),
 	period_start timestamp not null default CURRENT_TIMESTAMP,
 	period_end timestamp not null default CURRENT_TIMESTAMP,
 	description text,
@@ -626,8 +623,8 @@ create table sc.project_members (
   id uuid primary key default public.uuid_generate_v4(),
 
 	project uuid references sc.projects(id), --not null
-	person uuid unique references sc.people(id), --not null
-	group_id uuid unique  references admin.groups(id), --not null
+	person uuid references sc.people(id), --not null
+	group_id uuid unique references admin.groups(id), --not null
 	role uuid references admin.roles(id), --not null
 	sensitivity common.sensitivity,
 
@@ -775,31 +772,6 @@ create table sc.project_locations (
 	unique (project, location, change_to_plan)
 );
 
--- CEREMONIES
-
-create type common.ceremony_type as enum (
-  'Dedication',
-  'Certification'
-);
-
-create table sc.ceremonies (
-  id uuid primary key default public.uuid_generate_v4(),
-
-  project uuid references sc.projects(id),
-  ethnologue uuid references sil.table_of_languages(id),
-  actual_date timestamp,
-  estimated_date timestamp,
-  is_planned bool,
-  type common.ceremony_type,
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
-);
-
 -- LANGUAGE ENGAGEMENTS
 
 create type common.engagement_status as enum (
@@ -833,10 +805,10 @@ create table sc.language_engagements (
   id uuid primary key default public.uuid_generate_v4(),
 
 	project uuid references sc.projects(id), -- not null
-	ethnologue uuid references sc.ethnologue(id), -- not null
+	language uuid references sc.languages(id), -- not null
+--	ethnologue uuid references sc.ethnologue(id), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
-  ceremony uuid references sc.ceremonies(id),
   is_open_to_investor_visit bool,
   communications_complete_date timestamp,
   complete_date timestamp,
@@ -867,7 +839,7 @@ create table sc.language_engagements (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id),
 
-	unique (project, ethnologue, change_to_plan)
+	unique (project, language, change_to_plan)
 );
 
 -- PRODUCTS
@@ -885,20 +857,20 @@ create type common.product_mediums as enum (
 
 
 create type common.product_methodologies as enum (
-  'Paratext',
-  'OtherWritten',
-  'Render',
-  'Audacity',
   'AdobeAudition',
-  'OtherOralTranslation',
-  'StoryTogether',
-  'SeedCompanyMethod',
-  'OneStory',
+  'Audacity',
   'Craft2Tell',
-  'OtherOralStories',
   'Film',
+  'OneStory',
+  'OtherOralStories',
+  'OtherOralTranslation',
+  'OtherWritten',
+  'OtherVisual',
+  'Paratext',
+  'Render',
+  'SeedCompanyMethod',
   'SignLanguage',
-  'OtherVisual'
+  'StoryTogether'
  );
 
 create type common.product_approach as enum (
@@ -918,19 +890,21 @@ create type common.product_purposes as enum (
 );
 
 
-create type common.product_type as enum (
+create type sc.product_type as enum (
   'BibleStories',
-  'JesusFilm',
-  'Songs',
-  'LiteracyMaterials',
   'EthnoArts',
+  'Film',
+  'FullBible',
+  'Genesis',
+  'Gospel',
+  'IndividualBooks',
+  'JesusFilm',
+  'LiteracyMaterials',
+  'NewTestamentFull',
   'OldTestamentPortions',
   'OldTestamentFull',
-  'Gospel',
-  'NewTestamentFull',
-  'FullBible',
-  'IndividualBooks',
-  'Genesis'
+  'Songs',
+  'Story'
 );
 create type common.progress_measurement as enum (
   'Percent',
@@ -954,42 +928,6 @@ create type common.product_methodology_step as enum (
     'Completed'
 );
 
-create type sc.producible_type as enum (
-  'Film',
-  'Story',
-  'EthnoArt'
-);
-
-create table sc.producible (
-  id uuid primary key default public.uuid_generate_v4(),
-
-  name varchar(64),
-  type sc.producible_type,
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
-);
-
-create table sc.producible_scripture_references (
-  id uuid primary key default public.uuid_generate_v4(),
-  producible uuid references sc.producible(id), -- not null
-  scripture_reference uuid references common.scripture_references(id), -- not null
-  change_to_plan uuid references sc.change_to_plans(id), -- not null
-  active bool,
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
-
-  unique (id)
-);
 
 create table sc.products (
   id uuid primary key default public.uuid_generate_v4(),
@@ -1002,14 +940,13 @@ create table sc.products (
   approach common.product_approach,
   purposes common.product_purposes[],
   steps common.product_methodology_step[],
-  type common.product_type,
   progress_step_measurement common.progress_measurement,
   progress_target decimal,
   engagement uuid references sc.language_engagements(id),
   sensitivity common.sensitivity,
   describe_completion text,
   description text,
-  produces uuid references sc.producible,
+  type sc.product_type,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -1102,7 +1039,6 @@ create table sc.internship_engagements (
 	project uuid references sc.projects(id), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
-  ceremony uuid references sc.ceremonies(id),
   communications_complete_date timestamp,
   complete_date timestamp,
   country_of_origin uuid references common.locations(id),
@@ -1124,6 +1060,32 @@ create table sc.internship_engagements (
   status common.engagement_status,
   status_modified_at timestamp,
   last_suspended_at timestamp,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
+);
+
+-- CEREMONIES
+
+create type common.ceremony_type as enum (
+  'Dedication',
+  'Certification'
+);
+
+create table sc.ceremonies (
+  id uuid primary key default public.uuid_generate_v4(),
+
+  internship_engagement uuid references sc.internship_engagements(id),
+  language_engagement uuid references sc.language_engagements(id),
+  ethnologue uuid references sil.table_of_languages(id),
+  actual_date timestamp,
+  estimated_date timestamp,
+  is_planned bool,
+  type common.ceremony_type,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
