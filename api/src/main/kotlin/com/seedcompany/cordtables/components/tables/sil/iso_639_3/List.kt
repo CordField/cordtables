@@ -86,8 +86,8 @@ class List(
         val size = jdbcResult.size
         if (jdbcResult.errorType == ErrorType.NoError){
             while (resultSet!!.next()) {
-                var id: String? = jdbcResult.getString("id")
-                if (jdbcResult.wasNull()) id = null
+                var id: String? = resultSet.getString("id")
+                if (resultSet.wasNull()) id = null
 
                 var _id: String? = resultSet!!.getString("_id")
                 if (resultSet!!.wasNull()) _id = null
@@ -116,20 +116,20 @@ class List(
                 var created_at: String? = resultSet!!.getString("created_at")
                 if (resultSet!!.wasNull()) created_at = null
 
-                var created_by: String? = jdbcResult.getString("created_by")
-                if (jdbcResult.wasNull()) created_by = null
+                var created_by: String? = resultSet.getString("created_by")
+                if (resultSet.wasNull()) created_by = null
 
                 var modified_at: String? = resultSet!!.getString("modified_at")
                 if (resultSet!!.wasNull()) modified_at = null
                 
-                var modified_by: String? = jdbcResult.getString("modified_by")
-                if (jdbcResult.wasNull()) modified_by = null
+                var modified_by: String? = resultSet.getString("modified_by")
+                if (resultSet.wasNull()) modified_by = null
 
-                var owning_person: String? = jdbcResult.getString("owning_person")
-                if (jdbcResult.wasNull()) owning_person = null
+                var owning_person: String? = resultSet.getString("owning_person")
+                if (resultSet.wasNull()) owning_person = null
 
-                var owning_group: String? = jdbcResult.getString("owning_group")
-                if (jdbcResult.wasNull()) owning_group = null
+                var owning_group: String? = resultSet.getString("owning_group")
+                if (resultSet.wasNull()) owning_group = null
 
                 data.add(
                     iso6393(

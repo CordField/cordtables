@@ -11,77 +11,76 @@ import org.springframework.stereotype.Component
 import java.util.regex.Pattern
 import javax.sql.DataSource
 
-
 @Component
 class Utility(
 //    @Autowired
 //    val appConfig: AppConfig,
-    @Autowired
-    val ds: DataSource,
+  @Autowired
+  val ds: DataSource,
 ) {
 
-    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
-    val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
-    val adminGroupId: String? = this.adminGroupId()
-    val adminRole: String? = this.adminRole()
-    val publicGroupId: String? = this.publicGroupId()
-    val personId: String? = this.personId()
+  val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+  val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
+  val adminGroupId: String? = this.adminGroupId()
+  val adminRole: String? = this.adminRole()
+  val publicGroupId: String? = this.publicGroupId()
+  val personId: String? = this.personId()
 
-    //language=SQL
-    val getUserIdFromSessionIdQuery = """
+  //language=SQL
+  val getUserIdFromSessionIdQuery = """
         select user_id from sessions where session_id = ?;
     """.trimIndent()
 
-    fun getBearer(): String {
-        return "todo"
-    }
+  fun getBearer(): String {
+    return "todo"
+  }
 
-    fun createToken(): String {
-        val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+  fun createToken(): String {
+    val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
-        val token = (1..64)
-            .map { i -> kotlin.random.Random.nextInt(0, charPool.size) }
-            .map(charPool::get)
-            .joinToString("")
+    val token = (1..64)
+      .map { i -> kotlin.random.Random.nextInt(0, charPool.size) }
+      .map(charPool::get)
+      .joinToString("")
 
-        return token
-    }
+    return token
+  }
 
-    fun getUserIdFromSessionId(sessionId: String): String? {
-        //language=SQL
-        val userId: String? = jdbcTemplate.queryForObject(
-            """
+  fun getUserIdFromSessionId(sessionId: String): String? {
+    //language=SQL
+    val userId: String? = jdbcTemplate.queryForObject(
+      """
           select user_id from sessions where session_id = ?;
       """.trimIndent(),
-            String::class.java,
-            sessionId,
-        )
+      String::class.java,
+      sessionId,
+    )
 
-        return userId
-    }
+    return userId
+  }
 
-    fun isEmailValid(email: String?): Boolean {
+  fun isEmailValid(email: String?): Boolean {
 
-        if (email == null) return false
+    if (email == null) return false
 
-        return Pattern.compile(
-            "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]|[\\w-]{2,}))@"
-                    + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                    + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
-                    + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                    + "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|"
-                    + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
-        ).matcher(email).matches()
-    }
+    return Pattern.compile(
+      "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]|[\\w-]{2,}))@"
+        + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+        + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+        + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+        + "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|"
+        + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
+    ).matcher(email).matches()
+  }
 
-    fun isAdmin(token: String): Boolean {
+  fun isAdmin(token: String): Boolean {
 
-        var isAdmin = false
+    var isAdmin = false
 
-        this.ds.connection.use { conn ->
-            //language=SQL
-            val statement = conn.prepareCall(
-                """
+    this.ds.connection.use { conn ->
+      //language=SQL
+      val statement = conn.prepareCall(
+        """
                 select exists(
                 	select id 
                 	from admin.roles 
@@ -97,28 +96,28 @@ class Utility(
                 	and name = 'Administrator'
                 );
             """.trimIndent()
-            )
+      )
 
-            statement.setString(1, token);
-            val result = statement.executeQuery()
+      statement.setString(1, token);
+      val result = statement.executeQuery()
 
-            if (result.next()) {
-                isAdmin = result.getBoolean(1)
-            }
-        }
-
-        return isAdmin;
+      if (result.next()) {
+        isAdmin = result.getBoolean(1)
+      }
     }
 
-    fun userHasCreatePermission(token: String, tableName: String): Boolean {
-        if (isAdmin(token)) {
-            return true;
-        }
-        var userHasCreatePermission: Boolean = false;
-        this.ds.connection.use { conn ->
-            //language=SQL
-            val statement = conn.prepareCall(
-                """
+    return isAdmin;
+  }
+
+  fun userHasCreatePermission(token: String, tableName: String): Boolean {
+    if (isAdmin(token)) {
+      return true;
+    }
+    var userHasCreatePermission: Boolean = false;
+    this.ds.connection.use { conn ->
+      //language=SQL
+      val statement = conn.prepareCall(
+        """
                 select exists(
                 	select a.id 
                 	from admin.roles as a 
@@ -137,28 +136,28 @@ class Utility(
                    and b.table_permission = 'Create'
                 );
             """.trimIndent()
-            )
+      )
 
-            statement.setString(1, token);
-            statement.setString(2, tableName);
-            val result = statement.executeQuery()
+      statement.setString(1, token);
+      statement.setString(2, tableName);
+      val result = statement.executeQuery()
 
-            if (result.next()) {
-                userHasCreatePermission = result.getBoolean(1)
-            }
-        }
-        return userHasCreatePermission;
+      if (result.next()) {
+        userHasCreatePermission = result.getBoolean(1)
+      }
     }
+    return userHasCreatePermission;
+  }
 
-    fun userHasDeletePermission(token: String, tableName: String): Boolean {
-        if (isAdmin(token)) {
-            return true;
-        }
-        var userHasDeletePermission: Boolean = false;
-        this.ds.connection.use { conn ->
-            //language=SQL
-            val statement = conn.prepareCall(
-                """
+  fun userHasDeletePermission(token: String, tableName: String): Boolean {
+    if (isAdmin(token)) {
+      return true;
+    }
+    var userHasDeletePermission: Boolean = false;
+    this.ds.connection.use { conn ->
+      //language=SQL
+      val statement = conn.prepareCall(
+        """
                 select exists(
                 	select a.id 
                 	from admin.roles as a 
@@ -177,34 +176,34 @@ class Utility(
                    and b.table_permission = 'Delete'
                 );
             """.trimIndent()
-            )
+      )
 
-            statement.setString(1, token);
-            statement.setString(2, tableName);
-            val result = statement.executeQuery()
+      statement.setString(1, token);
+      statement.setString(2, tableName);
+      val result = statement.executeQuery()
 
-            if (result.next()) {
-                userHasDeletePermission = result.getBoolean(1)
-            }
-        }
-        return userHasDeletePermission;
+      if (result.next()) {
+        userHasDeletePermission = result.getBoolean(1)
+      }
     }
+    return userHasDeletePermission;
+  }
 
-    fun userHasUpdatePermission(token: String, tableName: String, columnName: String, rowId: String): Boolean {
-        if (isAdmin(token)) {
-            return true;
-        }
-        var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
-        var userHasUpdatePermission = false;
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", token)
-        paramSource.addValue("table", tableName)
-        paramSource.addValue("column", columnName)
-        paramSource.addValue("rowId", rowId)
+  fun userHasUpdatePermission(token: String, tableName: String, columnName: String, rowId: String): Boolean {
+    if (isAdmin(token)) {
+      return true;
+    }
+    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
+    var userHasUpdatePermission = false;
+    val paramSource = MapSqlParameterSource()
+    paramSource.addValue("token", token)
+    paramSource.addValue("table", tableName)
+    paramSource.addValue("column", columnName)
+    paramSource.addValue("rowId", rowId)
 
-        this.ds.connection.use { conn ->
-            //language=SQL
-            val statement = """
+    this.ds.connection.use { conn ->
+      //language=SQL
+      val statement = """
                 with row_level_access as 
                     (
                         select 1 as dummy_column
@@ -237,88 +236,88 @@ class Utility(
                     )
                
             """.trimIndent()
-            val result = jdbcTemplate.queryForRowSet(statement, paramSource)
-            println("result $result")
-            if (result.next()) {
-                userHasUpdatePermission = result.getBoolean(1)
-            }
-        }
-        return userHasUpdatePermission
+      val result = jdbcTemplate.queryForRowSet(statement, paramSource)
+      println("result $result")
+      if (result.next()) {
+        userHasUpdatePermission = result.getBoolean(1)
+      }
+    }
+    return userHasUpdatePermission
+  }
+
+  fun userHasUpdatePermissionMultipleColumns(
+    token: String,
+    tableName: String,
+    columnNames: MutableList<String>
+  ): Boolean {
+    if (isAdmin(token)) {
+      return true;
     }
 
-    fun userHasUpdatePermissionMultipleColumns(
-        token: String,
-        tableName: String,
-        columnNames: MutableList<String>
-    ): Boolean {
-        if (isAdmin(token)) {
-            return true;
-        }
-
-        var userHasUpdatePermission = false;
-        this.ds.connection.use { conn ->
-            var updateSql = "select count(*) from \n" +
-                    "(select column_name from admin.role_column_grants as a \n" +
-                    "inner join admin.roles as b  \n" +
-                    "on a.role = b.id \n" +
-                    "where b.id in (\n" +
-                    "\tselect role \n" +
-                    "    from admin.role_memberships\n" +
-                    "\twhere person = (\n" +
-                    "\t\t\t\t\tselect person\n" +
-                    "\t\t\t\t\tfrom admin.tokens \n" +
-                    "\t\t\t\t\twhere token = ?\n" +
-                    "                    )\n" +
-                    ")\n" +
-                    " and a.table_name::text = ? \n" +
-                    " and a.access_level = 'Write' \n" +
-                    " and a.column_name in ( ''\n"
+    var userHasUpdatePermission = false;
+    this.ds.connection.use { conn ->
+      var updateSql = "select count(*) from \n" +
+        "(select column_name from admin.role_column_grants as a \n" +
+        "inner join admin.roles as b  \n" +
+        "on a.role = b.id \n" +
+        "where b.id in (\n" +
+        "\tselect role \n" +
+        "    from admin.role_memberships\n" +
+        "\twhere person = (\n" +
+        "\t\t\t\t\tselect person\n" +
+        "\t\t\t\t\tfrom admin.tokens \n" +
+        "\t\t\t\t\twhere token = ?\n" +
+        "                    )\n" +
+        ")\n" +
+        " and a.table_name::text = ? \n" +
+        " and a.access_level = 'Write' \n" +
+        " and a.column_name in ( ''\n"
 //            need to add a empty column above so that when no update is sent, the query doesn't give an error for an empty subquery in check
-            columnNames.forEach { columnName ->
-                updateSql = "$updateSql '$columnName',"
-            }
-            updateSql = updateSql.dropLast(1)
-            updateSql = "$updateSql ))sq"
-            //language=SQL
-            val statement = conn.prepareCall("$updateSql ;")
-            statement.setString(1, token);
-            statement.setString(2, tableName);
-            val result = statement.executeQuery()
+      columnNames.forEach { columnName ->
+        updateSql = "$updateSql '$columnName',"
+      }
+      updateSql = updateSql.dropLast(1)
+      updateSql = "$updateSql ))sq"
+      //language=SQL
+      val statement = conn.prepareCall("$updateSql ;")
+      statement.setString(1, token);
+      statement.setString(2, tableName);
+      val result = statement.executeQuery()
 
-            if (result.next()) {
-                val countOfColumnsWithWriteAccess = result.getInt(1)
-                if (countOfColumnsWithWriteAccess == columnNames.size) {
-                    userHasUpdatePermission = true
-                }
-            }
+      if (result.next()) {
+        val countOfColumnsWithWriteAccess = result.getInt(1)
+        if (countOfColumnsWithWriteAccess == columnNames.size) {
+          userHasUpdatePermission = true
         }
-        return userHasUpdatePermission;
-
+      }
     }
+    return userHasUpdatePermission;
 
-    fun getReadableTables(token: String): List<String> {
-        val tableNames = mutableListOf<String>()
+  }
 
-        if (isAdmin(token)) {
-            this.ds.connection.use { conn ->
-                val statement = conn.prepareCall(
-                    """
+  fun getReadableTables(token: String): List<String> {
+    val tableNames = mutableListOf<String>()
+
+    if (isAdmin(token)) {
+      this.ds.connection.use { conn ->
+        val statement = conn.prepareCall(
+          """
                         select table_schema || '.' || table_name as table_name 
                         from information_schema.tables 
                         where table_schema in ('admin', 'common', 'sc', 'sil', 'up')
                         order by table_name asc;
                     """.trimIndent()
-                )
+        )
 
-                val result = statement.executeQuery()
-                while (result.next()) {
-                    tableNames.add(result.getString("table_name"))
-                }
-            }
-        } else {
-            this.ds.connection.use { conn ->
-                val statement = conn.prepareCall(
-                    """
+        val result = statement.executeQuery()
+        while (result.next()) {
+          tableNames.add(result.getString("table_name"))
+        }
+      }
+    } else {
+      this.ds.connection.use { conn ->
+        val statement = conn.prepareCall(
+          """
                         select distinct table_name
                         from admin.role_column_grants as a
                         inner join admin.role_memberships as b
@@ -327,33 +326,33 @@ class Utility(
                         on b.person = c.person
                         where c.token = ? order by table_name asc;
                     """.trimIndent()
-                )
-                statement.setString(1, token)
-                val result = statement.executeQuery()
-                while (result.next()) {
-                    tableNames.add(result.getString("table_name"))
-                }
-            }
-
+        )
+        statement.setString(1, token)
+        val result = statement.executeQuery()
+        while (result.next()) {
+          tableNames.add(result.getString("table_name"))
         }
+      }
 
-        return tableNames
-            .filter { !it.contains("_history") }
-            .filter { !it.contains("_peer") }
-            .map { it.replace('_', '-') };
     }
 
-    fun updateField(token: String, table: String, column: String, id: String?, value: Any?, cast: String? = "") {
+    return tableNames
+      .filter { !it.contains("_history") }
+      .filter { !it.contains("_peer") }
+      .map { it.replace('_', '-') };
+  }
 
-        if (userHasUpdatePermission(
-                token = token,
-                tableName = table,
-                columnName = column,
-                rowId = id!!
-            )
-        ) {
-            jdbcTemplate.update(
-                """
+  fun updateField(token: String, table: String, column: String, id: String?, value: Any?, cast: String? = "") {
+
+    if (userHasUpdatePermission(
+        token = token,
+        tableName = table,
+        columnName = column,
+        rowId = id!!
+      )
+    ) {
+      jdbcTemplate.update(
+        """
                     update $table 
                     set 
                         $column = ?$cast,
@@ -366,60 +365,59 @@ class Utility(
                         modified_at = CURRENT_TIMESTAMP
                     where id = ?::uuid;
                 """.trimIndent(),
-                value,
-                token,
-                id,
-            )
-        }
+        value,
+        token,
+        id,
+      )
     }
+  }
 
-    // Char -> Decimal -> Hex
-    fun convertStringToHex(str: String): String? {
-        val hex = StringBuffer()
+  // Char -> Decimal -> Hex
+  fun convertStringToHex(str: String): String? {
+    val hex = StringBuffer()
 
-        // loop chars one by one
-        for (temp in str.toCharArray()) {
+    // loop chars one by one
+    for (temp in str.toCharArray()) {
 
-            // convert char to int, for char `a` decimal 97
-            val decimal = temp.code
+      // convert char to int, for char `a` decimal 97
+      val decimal = temp.code
 
-            // convert int to hex, for decimal 97 hex 61
-            hex.append(Integer.toHexString(decimal))
-        }
-        return hex.toString()
+      // convert int to hex, for decimal 97 hex 61
+      hex.append(Integer.toHexString(decimal))
     }
+    return hex.toString()
+  }
 
-    // Hex -> Decimal -> Char
-    fun convertHexToString(hex: String): String? {
-        val result = StringBuilder()
+  // Hex -> Decimal -> Char
+  fun convertHexToString(hex: String): String? {
+    val result = StringBuilder()
 
-        // split into two chars per loop, hex, 0A, 0B, 0C...
-        var i = 0
-        while (i < hex.length - 1) {
-            val tempInHex = hex.substring(i, i + 2)
+    // split into two chars per loop, hex, 0A, 0B, 0C...
+    var i = 0
+    while (i < hex.length - 1) {
+      val tempInHex = hex.substring(i, i + 2)
 
-            //convert hex to decimal
-            val decimal = tempInHex.toInt(16)
+      //convert hex to decimal
+      val decimal = tempInHex.toInt(16)
 
-            // convert the decimal to char
-            result.append(decimal.toChar())
-            i += 2
-        }
-        return result.toString()
+      // convert the decimal to char
+      result.append(decimal.toChar())
+      i += 2
     }
-  data class PeopleDetails(
-    val id: Int,
-    val public_first_name: String?,
-    val public_last_name: String?
-  )
-  fun getPeopleDetailsFromIds(idArray: MutableList<Int>): MutableList<PeopleDetails>{
+    return result.toString()
+  }
+
+
+
+  fun getPeopleDetailsFromIds(idArray: MutableList<String>): MutableList<PeopleDetails> {
     var peopleDetails: MutableList<PeopleDetails> = mutableListOf()
 //    var stringPeopleIds = "("
 //    if(idArray.isNotEmpty()) {idArray.forEach { it -> stringPeopleIds+="$it," }}
 //    else {stringPeopleIds += "0,"}
 //    stringPeopleIds = stringPeopleIds.dropLast(1)
 //    stringPeopleIds+=")"
-    if(idArray.isEmpty()) idArray.add(0)
+
+//    if (idArray.isEmpty()) idArray.add(0)
 
     this.ds.connection.use { conn ->
       //language=SQL
@@ -433,86 +431,88 @@ class Utility(
       println(statement)
       val result = statement.executeQuery()
       while (result.next()) {
-        peopleDetails.add(PeopleDetails(id = result.getInt(1),public_first_name = result.getString(2), public_last_name= result.getString(3)))
+        peopleDetails.add(
+          PeopleDetails(
+            id = result.getInt(1),
+            public_first_name = result.getString(2),
+            public_last_name = result.getString(3)
+          )
+        )
       }
     }
     return peopleDetails;
   }
 
-    fun isSchemaExists(): Boolean {
-        var result: Int? = 0
-        try {
-            result = jdbcTemplate.queryForObject(
-                """
+  fun isSchemaExists(): Boolean {
+    var result: Int? = 0
+    try {
+      result = jdbcTemplate.queryForObject(
+        """
                     SELECT count(schema_name) as size FROM information_schema.schemata WHERE schema_name = 'admin';
                 """.trimIndent(),
-                Int::class.java
-            )
-        }
-        catch (e: EmptyResultDataAccessException){
-            println("Schemas not created")
-        }
-        return result != null && result > 0
+        Int::class.java
+      )
+    } catch (e: EmptyResultDataAccessException) {
+      println("Schemas not created")
     }
+    return result != null && result > 0
+  }
 
-    fun personId(): String? {
-        return if (this.isSchemaExists()){
-            jdbcTemplate.queryForObject(
-                """
+  fun personId(): String? {
+    return if (this.isSchemaExists()) {
+      jdbcTemplate.queryForObject(
+        """
                     SELECT id FROM admin.people WHERE sensitivity_clearance = 'High';
                 """.trimIndent(),
-                String::class.java,
-            )
-        } else {
-            null
-        }
+        String::class.java,
+      )
+    } else {
+      null
     }
+  }
 
-    fun adminGroupId(): String? {
-        return if (this.isSchemaExists()) {
-            jdbcTemplate.queryForObject(
-                """
+  fun adminGroupId(): String? {
+    return if (this.isSchemaExists()) {
+      jdbcTemplate.queryForObject(
+        """
                     SELECT id FROM admin.groups WHERE  name = 'Administrators';
                 """.trimIndent(),
-                String::class.java
-            )
-        }
-        else{
-            null
-        }
+        String::class.java
+      )
+    } else {
+      null
     }
+  }
 
-    fun publicGroupId(): String?{
-        return if (this.isSchemaExists()){
-            jdbcTemplate.queryForObject(
-                """
+  fun publicGroupId(): String? {
+    return if (this.isSchemaExists()) {
+      jdbcTemplate.queryForObject(
+        """
                     SELECT id FROM admin.groups WHERE name='Public'
                 """.trimIndent(),
-                String::class.java
-            )
-        }
-        else{
-            null
-        }
+        String::class.java
+      )
+    } else {
+      null
     }
+  }
 
-    fun adminRole(): String? {
-        return if (this.isSchemaExists()) {
-            jdbcTemplate.queryForObject(
-                """
+  fun adminRole(): String? {
+    return if (this.isSchemaExists()) {
+      jdbcTemplate.queryForObject(
+        """
                     SELECT id FROM admin.roles WHERE name='Administrator'
                 """.trimIndent(),
-                String::class.java
-            )
-        }
-        else{
-            null
-        }
+        String::class.java
+      )
+    } else {
+      null
     }
+  }
 }
 
 inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
-    return enumValues<T>().any { it.name == name }
+  return enumValues<T>().any { it.name == name }
 }
 
 

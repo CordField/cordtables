@@ -82,14 +82,14 @@ class List(
         if (jdbcResult.errorType == ErrorType.NoError){
             while (resultSet?.next() == true){
               
-                var id: String? = jdbcResult.getString("id")
-                if (jdbcResult.wasNull()) id = null
+                var id: String? = resultSet.getString("id")
+                if (resultSet.wasNull()) id = null
 
-                var request_language_id: String? = jdbcResult.getString("request_language_id")
-                if (jdbcResult.wasNull()) request_language_id = null
+                var request_language_id: String? = resultSet.getString("request_language_id")
+                if (resultSet.wasNull()) request_language_id = null
 
-                var target_language_id: String? = jdbcResult.getString("target_language_id")
-                if (jdbcResult.wasNull()) target_language_id = null
+                var target_language_id: String? = resultSet.getString("target_language_id")
+                if (resultSet.wasNull()) target_language_id = null
 
                 var sensitivity: String? = resultSet!!.getString("sensitivity")
                 if (resultSet!!.wasNull()) sensitivity = null
@@ -97,11 +97,11 @@ class List(
                 var organization_name: String? = resultSet!!.getString("organization_name")
                 if (resultSet!!.wasNull()) organization_name = null
 
-                var parent: String? = jdbcResult.getString("parent")
-                if (jdbcResult.wasNull()) parent = null
+                var parent: String? = resultSet.getString("parent")
+                if (resultSet.wasNull()) parent = null
 
-                var translator: String? = jdbcResult.getString("translator")
-                if (jdbcResult.wasNull()) translator = null
+                var translator: String? = resultSet.getString("translator")
+                if (resultSet.wasNull()) translator = null
 
                 var location: String? = resultSet!!.getString("location")
                 if (resultSet!!.wasNull()) location = null
@@ -121,20 +121,20 @@ class List(
                 var created_at: String? = resultSet!!.getString("created_at")
                 if (resultSet!!.wasNull()) created_at = null
 
-                var created_by: String? = jdbcResult.getString("created_by")
-                if (jdbcResult.wasNull()) created_by = null
+                var created_by: String? = resultSet.getString("created_by")
+                if (resultSet.wasNull()) created_by = null
 
                 var modified_at: String? = resultSet!!.getString("modified_at")
                 if (resultSet!!.wasNull()) modified_at = null
                 
-                var modified_by: String? = jdbcResult.getString("modified_by")
-                if (jdbcResult.wasNull()) modified_by = null
+                var modified_by: String? = resultSet.getString("modified_by")
+                if (resultSet.wasNull()) modified_by = null
 
-                var owning_person: String? = jdbcResult.getString("owning_person")
-                if (jdbcResult.wasNull()) owning_person = null
+                var owning_person: String? = resultSet.getString("owning_person")
+                if (resultSet.wasNull()) owning_person = null
 
-                var owning_group: String? = jdbcResult.getString("owning_group")
-                if (jdbcResult.wasNull()) owning_group = null
+                var owning_group: String? = resultSet.getString("owning_group")
+                if (resultSet.wasNull()) owning_group = null
 
                 data.add(
                     prayerRequest(

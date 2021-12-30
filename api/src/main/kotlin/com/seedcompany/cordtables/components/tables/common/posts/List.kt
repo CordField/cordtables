@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.common.posts
 
 
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.PeopleDetails
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
@@ -26,7 +27,7 @@ data class CommonPostsListRequest(
 data class CommonPostsListResponse(
   val error: ErrorType,
   val posts: MutableList<Post>,
-  val peopleDetails: MutableList<Utility.PeopleDetails>
+  val peopleDetails: MutableList<PeopleDetails>
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -50,7 +51,7 @@ class List(
     var personIds: String = "("
     var personIdsArray: ArrayList<String> = ArrayList()
     var whereClause = ""
-    var peopleIds: MutableList<Int> = mutableListOf()
+    var peopleIds: MutableList<String> = mutableListOf()
     if (req.token == null) return CommonPostsListResponse(ErrorType.TokenNotFound, mutableListOf(), mutableListOf())
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
@@ -105,7 +106,8 @@ class List(
 
         var owning_person: String? = jdbcResult.getString("owning_person")
         if (jdbcResult.wasNull()) owning_person = null
-        peopleIds.add(owning_person?:0)
+
+        if (owning_person != null) peopleIds.add(owning_person)
 
         var owning_group: String? = jdbcResult.getString("owning_group")
         if (jdbcResult.wasNull()) owning_group = null
@@ -144,6 +146,6 @@ class List(
     println(peopleQuery)
     val jdbcPeopleResult = jdbcTemplate.queryForRowSet(peopleQuery, paramSource)
 
-    return CommonPostsListResponse(ErrorType.NoError, data)
+    return CommonPostsListResponse(ErrorType.NoError, data, peopleDetails = peopleDetails)
   }
 }
