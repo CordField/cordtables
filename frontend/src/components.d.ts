@@ -9,9 +9,6 @@ import { MatchResults, RouterHistory } from "@stencil/router";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
-import { CommonDiscussionChannel } from "./components/tables/common/discussion-channels/types";
-import { CommonThread } from "./components/tables/common/threads/types";
-import { CommonPost } from "./components/tables/common/posts/types";
 export namespace Components {
     interface AdminGroupMemberships {
     }
@@ -278,33 +275,6 @@ export namespace Components {
     interface SilTableOfLanguages {
     }
     interface SilTableOfLanguagesInCountry {
-    }
-    interface SiteText {
-    }
-    interface SlackContent {
-        "selectedDiscussionChannel": CommonDiscussionChannel;
-    }
-    interface SlackDiscussionChannel {
-        "discussionChannel": CommonDiscussionChannel;
-        "discussionChannelClassName": string;
-        "selectedDiscussionChannel": CommonDiscussionChannel;
-    }
-    interface SlackForm {
-        "selectedChannelId": string;
-        "selectedThreadId": string;
-        "type": 'thread' | 'post';
-    }
-    interface SlackPage {
-    }
-    interface SlackPost {
-        "post": CommonPost;
-    }
-    interface SlackSidebar {
-        "discussionChannels": CommonDiscussionChannel[];
-        "loading": boolean;
-    }
-    interface SlackThread {
-        "thread": CommonThread;
     }
     interface StageGraph {
     }
@@ -1025,54 +995,6 @@ declare global {
         prototype: HTMLSilTableOfLanguagesInCountryElement;
         new (): HTMLSilTableOfLanguagesInCountryElement;
     };
-    interface HTMLSiteTextElement extends Components.SiteText, HTMLStencilElement {
-    }
-    var HTMLSiteTextElement: {
-        prototype: HTMLSiteTextElement;
-        new (): HTMLSiteTextElement;
-    };
-    interface HTMLSlackContentElement extends Components.SlackContent, HTMLStencilElement {
-    }
-    var HTMLSlackContentElement: {
-        prototype: HTMLSlackContentElement;
-        new (): HTMLSlackContentElement;
-    };
-    interface HTMLSlackDiscussionChannelElement extends Components.SlackDiscussionChannel, HTMLStencilElement {
-    }
-    var HTMLSlackDiscussionChannelElement: {
-        prototype: HTMLSlackDiscussionChannelElement;
-        new (): HTMLSlackDiscussionChannelElement;
-    };
-    interface HTMLSlackFormElement extends Components.SlackForm, HTMLStencilElement {
-    }
-    var HTMLSlackFormElement: {
-        prototype: HTMLSlackFormElement;
-        new (): HTMLSlackFormElement;
-    };
-    interface HTMLSlackPageElement extends Components.SlackPage, HTMLStencilElement {
-    }
-    var HTMLSlackPageElement: {
-        prototype: HTMLSlackPageElement;
-        new (): HTMLSlackPageElement;
-    };
-    interface HTMLSlackPostElement extends Components.SlackPost, HTMLStencilElement {
-    }
-    var HTMLSlackPostElement: {
-        prototype: HTMLSlackPostElement;
-        new (): HTMLSlackPostElement;
-    };
-    interface HTMLSlackSidebarElement extends Components.SlackSidebar, HTMLStencilElement {
-    }
-    var HTMLSlackSidebarElement: {
-        prototype: HTMLSlackSidebarElement;
-        new (): HTMLSlackSidebarElement;
-    };
-    interface HTMLSlackThreadElement extends Components.SlackThread, HTMLStencilElement {
-    }
-    var HTMLSlackThreadElement: {
-        prototype: HTMLSlackThreadElement;
-        new (): HTMLSlackThreadElement;
-    };
     interface HTMLStageGraphElement extends Components.StageGraph, HTMLStencilElement {
     }
     var HTMLStageGraphElement: {
@@ -1283,14 +1205,6 @@ declare global {
         "sil-table-of-countries": HTMLSilTableOfCountriesElement;
         "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
         "sil-table-of-languages-in-country": HTMLSilTableOfLanguagesInCountryElement;
-        "site-text": HTMLSiteTextElement;
-        "slack-content": HTMLSlackContentElement;
-        "slack-discussion-channel": HTMLSlackDiscussionChannelElement;
-        "slack-form": HTMLSlackFormElement;
-        "slack-page": HTMLSlackPageElement;
-        "slack-post": HTMLSlackPostElement;
-        "slack-sidebar": HTMLSlackSidebarElement;
-        "slack-thread": HTMLSlackThreadElement;
         "stage-graph": HTMLStageGraphElement;
         "stage-notifications": HTMLStageNotificationsElement;
         "stage-role-column-grants": HTMLStageRoleColumnGrantsElement;
@@ -1584,41 +1498,6 @@ declare namespace LocalJSX {
     }
     interface SilTableOfLanguagesInCountry {
     }
-    interface SiteText {
-    }
-    interface SlackContent {
-        "selectedDiscussionChannel"?: CommonDiscussionChannel;
-    }
-    interface SlackDiscussionChannel {
-        "discussionChannel"?: CommonDiscussionChannel;
-        "discussionChannelClassName"?: string;
-        "onChannelClicked"?: (event: CustomEvent<number>) => void;
-        "onChannelDeleted"?: (event: CustomEvent<number>) => void;
-        "selectedDiscussionChannel"?: CommonDiscussionChannel;
-    }
-    interface SlackForm {
-        "onContentSubmitted"?: (event: CustomEvent<string>) => void;
-        "onPostAdded"?: (event: CustomEvent<CommonPost>) => void;
-        "onThreadAdded"?: (event: CustomEvent<CommonThread>) => void;
-        "selectedChannelId"?: string;
-        "selectedThreadId"?: string;
-        "type"?: 'thread' | 'post';
-    }
-    interface SlackPage {
-    }
-    interface SlackPost {
-        "onPostDeleted"?: (event: CustomEvent<string>) => void;
-        "post"?: CommonPost;
-    }
-    interface SlackSidebar {
-        "discussionChannels"?: CommonDiscussionChannel[];
-        "loading"?: boolean;
-        "onChannelSelected"?: (event: CustomEvent<CommonDiscussionChannel>) => void;
-    }
-    interface SlackThread {
-        "onThreadDeleted"?: (event: CustomEvent<string>) => void;
-        "thread"?: CommonThread;
-    }
     interface StageGraph {
     }
     interface StageNotifications {
@@ -1772,14 +1651,6 @@ declare namespace LocalJSX {
         "sil-table-of-countries": SilTableOfCountries;
         "sil-table-of-languages": SilTableOfLanguages;
         "sil-table-of-languages-in-country": SilTableOfLanguagesInCountry;
-        "site-text": SiteText;
-        "slack-content": SlackContent;
-        "slack-discussion-channel": SlackDiscussionChannel;
-        "slack-form": SlackForm;
-        "slack-page": SlackPage;
-        "slack-post": SlackPost;
-        "slack-sidebar": SlackSidebar;
-        "slack-thread": SlackThread;
         "stage-graph": StageGraph;
         "stage-notifications": StageNotifications;
         "stage-role-column-grants": StageRoleColumnGrants;
@@ -1915,14 +1786,6 @@ declare module "@stencil/core" {
             "sil-table-of-countries": LocalJSX.SilTableOfCountries & JSXBase.HTMLAttributes<HTMLSilTableOfCountriesElement>;
             "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
             "sil-table-of-languages-in-country": LocalJSX.SilTableOfLanguagesInCountry & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesInCountryElement>;
-            "site-text": LocalJSX.SiteText & JSXBase.HTMLAttributes<HTMLSiteTextElement>;
-            "slack-content": LocalJSX.SlackContent & JSXBase.HTMLAttributes<HTMLSlackContentElement>;
-            "slack-discussion-channel": LocalJSX.SlackDiscussionChannel & JSXBase.HTMLAttributes<HTMLSlackDiscussionChannelElement>;
-            "slack-form": LocalJSX.SlackForm & JSXBase.HTMLAttributes<HTMLSlackFormElement>;
-            "slack-page": LocalJSX.SlackPage & JSXBase.HTMLAttributes<HTMLSlackPageElement>;
-            "slack-post": LocalJSX.SlackPost & JSXBase.HTMLAttributes<HTMLSlackPostElement>;
-            "slack-sidebar": LocalJSX.SlackSidebar & JSXBase.HTMLAttributes<HTMLSlackSidebarElement>;
-            "slack-thread": LocalJSX.SlackThread & JSXBase.HTMLAttributes<HTMLSlackThreadElement>;
             "stage-graph": LocalJSX.StageGraph & JSXBase.HTMLAttributes<HTMLStageGraphElement>;
             "stage-notifications": LocalJSX.StageNotifications & JSXBase.HTMLAttributes<HTMLStageNotificationsElement>;
             "stage-role-column-grants": LocalJSX.StageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLStageRoleColumnGrantsElement>;

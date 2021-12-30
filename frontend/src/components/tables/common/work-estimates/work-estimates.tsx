@@ -201,16 +201,6 @@ export class WorkRecord {
   async componentWillLoad() {
     await this.getList();
   }
-
-  async getList() {
-    this.CommonWorkEstimateResponse = await fetchAs<CommonWorkEstimateListRequest, CommonWorkEstimateResponse>('common-work-estimates/list', {
-      token: globals.globalStore.state.token,
-    });
-  }
-
-  async componentWillLoad() {
-    await this.getList();
-  }
   ticketChange(event) {
     this.newTicket = event.target.value;
   }

@@ -18,10 +18,10 @@ export class SlackDiscussionChannel {
   @State() showEditAndDeleteButtons: boolean = false;
   @State() channelName: string;
   @State() mode: 'none' | 'update' | 'delete' = 'none';
-  @Event({ eventName: 'channelDeleted' }) channelDeleted: EventEmitter<number>;
+  @Event({ eventName: 'channelDeleted' }) channelDeleted: EventEmitter<string>;
   @Prop() discussionChannelClassName: string;
 
-  @Event({ eventName: 'channelClicked' }) channelClicked: EventEmitter<number>;
+  @Event({ eventName: 'channelClicked' }) channelClicked: EventEmitter<string>;
 
   componentWillLoad() {
     console.log(this.discussionChannel);

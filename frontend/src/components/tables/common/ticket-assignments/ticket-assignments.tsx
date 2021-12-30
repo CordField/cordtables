@@ -167,10 +167,6 @@ export class TicketAssignment {
     await this.getList();
   }
 
-  async componentWillLoad() {
-    await this.getList();
-  }
-
   async getList() {
     this.commonTicketAssignmentResponse = await fetchAs<CommonTicketAssignmentListRequest, CommonTicketAssignmentResponse>('common/ticket-assignments/list', {
       token: globals.globalStore.state.token,
