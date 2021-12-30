@@ -14,176 +14,227 @@ import java.net.URL
 import java.sql.PreparedStatement
 import java.sql.Timestamp
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.sql.DataSource
 
 
 @Component
 class DatabaseVersionControl(
-    @Autowired
-    val appConfig: AppConfig,
+  @Autowired
+  val appConfig: AppConfig,
 
-    @Autowired
-    val ds: DataSource,
+  @Autowired
+  val ds: DataSource,
 
-    @Autowired
-    val util: Utility,
+  @Autowired
+  val util: Utility,
 ) {
-    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+  //   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    fun updateDatabaseSchemaIdempotent() {
-        enableUUID()
-        if (!isVersion1()) toVersion1()
-        updateSchemaIdempotent()
-        println("database schema update complete")
-        updateHistoryTables()
-        updatePeerTables()
-    }
+  //   fun updateDatabaseSchemaIdempotent() {
+  //       enableUUID()
+  //       if (!isVersion1()) toVersion1()
+  //       updateSchemaIdempotent()
+  //       println("database schema update complete")
+  //       updateHistoryTables()
+  //       updatePeerTables()
+  // val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    private fun updateSchemaIdempotent() {
-        while (true) {
-            when (getSchemaVersion()) {
-                1 -> {
-                    println("upgrading schema to version 2")
-                    toVersion2()
-                }
-                else -> {
-                    break
-                }
-            }
+  // fun initDatabase() {
+  //   if (!isDbInit()) {
+  //     toVersion1()
+  //     if (appConfig.loadDbVersion > 1){
+  //       updateSchemaIdempotent(appConfig.loadDbVersion)
+  //     }
+  //     updateHistoryTables()
+  //     updatePeerTables()
+  //     println("database schema init complete")
+  //   }
+  // }
+
+  // fun updateSchemaIdempotent(version: Int) {
+  //   while (getSchemaVersion() < version) {
+  //     when (getSchemaVersion()) {
+  //       1 -> {
+  //         println("upgrading schema to version 2")
+  //         toVersion2()
+  //       }
+  //   }
+
+  //   private  fun enableUUID(){
+  //       runSqlFile("sql/helpers/uuid.sql")
+  //       2 -> {
+  //         println("upgrading schema to version 3")
+  //         toVersion3()
+  //       }
+  //       3 -> {
+  //         println("upgrading schema to version 4")
+  //         toVersion4()
+  //       }
+  //       else -> {
+  //         break
+  //       }
+  //     }
+  //   }
+
+  // }
+
+  fun loadRoles(){
+    runSqlFile("sql/data/roles.data.sql")
+  }
+
+  fun loadSilData() {
+    var adminPeopleId = 0
+    println("loadSil Data")
+
+    this.ds.connection.use { conn ->
+      try {
+
+        val getAdminIdStatement =
+          conn.prepareCall("select id from admin.people where sensitivity_clearance = 'High'")
+
+        val result = getAdminIdStatement.executeQuery()
+        if (result.next()) {
+          adminPeopleId = result.getInt("id")
         }
+        getAdminIdStatement.close()
+      } catch (ex: IllegalArgumentException) {
+        println("admin people not found!")
+      }
     }
 
-    private  fun enableUUID(){
-        runSqlFile("sql/helpers/uuid.sql")
-    }
+    loadCountryCodes(adminPeopleId)
+    loadLanguageCodes(adminPeopleId)
+    loadLanguageIndexes(adminPeopleId)
+    loadIso_639_3_Name_Index(adminPeopleId)
+    loadIso_639_3(adminPeopleId)
+    loadIso_639_3_Retirements(adminPeopleId)
+    loadIso_639_3_Macrolanguages(adminPeopleId)
+  }
 
-    private fun updateHistoryTables(){
-        runSqlFile("sql/version-control/history.sql")
-    }
+  private fun updateHistoryTables() {
+    runSqlFile("sql/version-control/history.sql")
+  }
 
-    private fun updatePeerTables(){
-        runSqlFile("sql/version-control/peer.sql")
-    }
+  private fun updatePeerTables() {
+    runSqlFile("sql/version-control/peer.sql")
+  }
 
-    private fun toVersion2() {
-        // admin
-        runSqlFile("sql/schemas/admin/admin.v2.sql")
 
-        // common
-        runSqlFile("sql/schemas/common/common.v2.sql")
-
-        // sc
-        runSqlFile("sql/schemas/sc/sc.v2.sql")
-        setVersionNumber(2)
-    }
-
-    private fun getSchemaVersion(): Int? {
-        return jdbcTemplate.queryForObject(
-            """
+  private fun getSchemaVersion(): Int {
+    return jdbcTemplate.queryForObject(
+      """
                 select version 
                 from admin.database_version_control 
                 order by version 
                 desc limit 1;
-            """.trimIndent()
-        )
-    }
+            """.trimIndent(),
+      Int::class.java
+    ) ?: return 0
+  }
 
-    private fun isVersion1(): Boolean {
-        return jdbcTemplate.queryForObject(
-            """
+  private fun isDbInit(): Boolean {
+    return jdbcTemplate.queryForObject(
+      """
                SELECT EXISTS (
                SELECT FROM information_schema.tables 
                WHERE  table_schema = 'admin'
                AND    table_name   = 'database_version_control'
                );
             """.trimIndent()
-        )
+    )
+  }
+
+  private fun toVersion4(){
+    // sc
+    runSqlFile("sql/schemas/sc/sc.v4.sql")
+    setVersionNumber(4)
+  }
+
+  private fun toVersion3(){
+    // sc
+    runSqlFile("sql/schemas/sc/sc.v3.sql")
+    setVersionNumber(3)
+  }
+
+  private fun toVersion2() {
+    // admin
+    runSqlFile("sql/schemas/admin/admin.v2.sql")
+
+    // common
+    runSqlFile("sql/schemas/common/common.v2.sql")
+
+    setVersionNumber(2)
+  }
+
+  private fun toVersion1() {
+    println("version 1 not found. creating schema.")
+
+    // admin
+    runSqlFile("sql/schemas/admin/admin.v1.sql")
+
+    // common
+    runSqlFile("sql/schemas/common/common.v1.sql")
+
+    // prep and bootstrap the db
+    val pash = util.encoder.encode(appConfig.cordAdminPassword)
+  
+    // sil
+    runSqlFile("sql/schemas/sil/sil.v1.sql")
+
+    // up (unceasing prayer)
+    runSqlFile("sql/schemas/up/up.v1.sql")
+
+    // load data functions
+    runSqlFile("sql/data/bootstrap.data.sql")
+
+    // user
+    runSqlFile("sql/modules/user/register.sql")
+    runSqlFile("sql/modules/user/login.sql")
+
+    // prep and bootstrap the db
+    val pash = util.encoder.encode(appConfig.cordAdminPassword)
+
+    var errorType = ErrorType.UnknownError
+
+    this.ds.connection.use { conn ->
+      val bootstrapStatement = conn.prepareCall("call bootstrap(?, ?, ?);")
+      bootstrapStatement.setString(1, "devops@tsco.org")
+      bootstrapStatement.setString(2, pash)
+      bootstrapStatement.setString(3, errorType.name)
+      bootstrapStatement.registerOutParameter(3, java.sql.Types.VARCHAR)
+
+      bootstrapStatement.execute()
+
+      try {
+        errorType = ErrorType.valueOf(bootstrapStatement.getString(3))
+      } catch (ex: IllegalArgumentException) {
+        errorType = ErrorType.UnknownError
+      }
+
+      if (errorType != ErrorType.NoError) {
+        println("bootstrap query failed")
+      }
+
+      bootstrapStatement.close()
     }
 
-    private fun toVersion1() {
-        println("version 1 not found. creating schema.")
-
-        // admin
-        runSqlFile("sql/schemas/admin/admin.v1.sql")
-
-        // common
-        runSqlFile("sql/schemas/common/common.v1.sql")
-
-        // sil
-        runSqlFile("sql/schemas/sil/sil.v1.sql")
-        runSqlFile("sql/migration/language_index.migration.sql")
-
-        // sc
-        runSqlFile("sql/schemas/sc/sc.v1.sql")
-        runSqlFile("sql/migration/ethnologue.migration.sql")
-
-        // up (unceasing prayer)
-        runSqlFile("sql/schemas/up/up.v1.sql")
-
-        // load data functions
-        runSqlFile("sql/data/bootstrap.data.sql")
-        runSqlFile("sql/data/roles.data.sql")
-
-        // user
-        runSqlFile("sql/modules/user/register.sql")
-        runSqlFile("sql/modules/user/login.sql")
-
-        // prep and bootstrap the db
-      val pash = util.encoder.encode(appConfig.cordAdminPassword)
-
-        var errorType = ErrorType.UnknownError
-
-        this.ds.connection.use { conn ->
-            val bootstrapStatement = conn.prepareCall("call bootstrap(?, ?, ?);")
-            bootstrapStatement.setString(1, "devops@tsco.org")
-            bootstrapStatement.setString(2, pash)
-            bootstrapStatement.setString(3, errorType.name)
-            bootstrapStatement.registerOutParameter(3, java.sql.Types.VARCHAR)
-
-            bootstrapStatement.execute()
-
-            try {
-                errorType = ErrorType.valueOf(bootstrapStatement.getString(3))
-            } catch (ex: IllegalArgumentException) {
-                errorType = ErrorType.UnknownError
-            }
-
-            if (errorType != ErrorType.NoError) {
-                println("bootstrap query failed")
-            }
-
-            bootstrapStatement.close()
-        }
-
-        // load roles
-        jdbcTemplate.execute("call roles_migration();")
-
-        // load sil data if requested
-        if (appConfig.loadLanguageData) loadSilData()
-
-        if (appConfig.thisServerUrl == "http://localhost:8080"){
-           // runSqlFile("sql/data/dummy.data.sql")
-        }
-
-        // update version control table
-        jdbcTemplate.execute(
-            """
+    // update version control table
+    jdbcTemplate.execute(
+      """
             insert into admin.database_version_control(version, status, started, completed)
                 values(1, 'Completed', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
             """.trimIndent()
-        )
+    )
 
-    }
+  }
 
     public fun loadCountryCodes(adminPeopleId: String) {
 
-        var url = URL("https://raw.githubusercontent.com/CordField/datasets/main/CountryCodes.tab")
-        var urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
+    var url = URL("https://raw.githubusercontent.com/CordField/datasets/main/CountryCodes.tab")
+    var urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
 
-        try {
+    try {
 
             val readBuffer = BufferedReader(
                     InputStreamReader(
@@ -223,13 +274,14 @@ class DatabaseVersionControl(
             urlConnection.disconnect()
         }
     }
+  }
 
     public fun loadLanguageCodes(adminPeopleId: String) {
 
-        val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/LanguageCodes.tab")
-        val urlConnection = url.openConnection() as HttpURLConnection
+    val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/LanguageCodes.tab")
+    val urlConnection = url.openConnection() as HttpURLConnection
 
-        try {
+    try {
 
             val readBuffer = BufferedReader(
                     InputStreamReader(
@@ -269,55 +321,68 @@ class DatabaseVersionControl(
             urlConnection.disconnect()
         }
     }
+  }
 
     public fun loadLanguageIndexes(adminPeopleId: String) {
 
-        val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/LanguageIndex.tab")
-        val urlConnection = url.openConnection() as HttpURLConnection
+    val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/LanguageIndex.tab")
+    val urlConnection = url.openConnection() as HttpURLConnection
 
-        try {
-            val readBuffer = BufferedReader(
-                    InputStreamReader(
-                            urlConnection.inputStream)
-            );
-            var count = 0
-            var text = readBuffer.readLines()
-            var languageIndexQuery = ""
-            for (line in text) {
-                val splitArray = line.split("\t")
-                val lang = splitArray[0]
-                val country = splitArray[1]
-                val nameType = splitArray[2]
-                val name = splitArray[3]
+    try {
+      val readBuffer = BufferedReader(
+        InputStreamReader(
+          urlConnection.inputStream
+        )
+      );
+      var count = 0
+      var text = readBuffer.readLines()
+      var languageIndexQuery = ""
+      for (line in text) {
+        val splitArray = line.split("\t")
+        val lang = splitArray[0]
+        val country = splitArray[1]
+        val nameType = splitArray[2]
+        val name = splitArray[3]
 
-                count++
-                if (count == 1) continue
-                languageIndexQuery += """
+        count++
+        if (count == 1) continue
+        languageIndexQuery += """
                     call sil.sil_migrate_language_index('${lang}', '${country}', '${nameType}', '$name');
                 """.trimIndent()
-            }
+      }
 
-            try {
-                runSqlString(languageIndexQuery)
-                println("LanguageIndex.tab load success")
-            } catch (ex: Exception) {
-                println(ex)
-                println("LanguageIndex.tab load filed")
-            }
+      try {
+        runSqlString(languageIndexQuery)
+        println("LanguageIndex.tab load success")
+      } catch (ex: Exception) {
+        println(ex)
+        println("LanguageIndex.tab load filed")
+      }
 
-        } catch(ex: Exception) {
-            println("exception ${ex}")
-        }
-        finally {
-            urlConnection.disconnect()
-        }
+    } catch (ex: Exception) {
+      println("exception ${ex}")
+    } finally {
+      urlConnection.disconnect()
     }
+  }
 
     public fun loadIso_639_3_Name_Index(adminPeopleId: String) {
 
-        val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3_Name_Index.tab")
-        val urlConnection = url.openConnection() as HttpURLConnection
+    val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3_Name_Index.tab")
+    val urlConnection = url.openConnection() as HttpURLConnection
 
+    try {
+
+      val readBuffer = BufferedReader(
+        InputStreamReader(
+          urlConnection.inputStream
+        )
+      );
+
+      var count = 0
+      var text: List<String> = readBuffer.readLines()
+
+      this.ds.connection.use { conn ->
         try {
 
             val readBuffer = BufferedReader(
@@ -365,27 +430,34 @@ class DatabaseVersionControl(
         finally {
             urlConnection.disconnect()
         }
+      }
+    } catch (ex: Exception) {
+      println("exception ${ex}")
+    } finally {
+      urlConnection.disconnect()
     }
+  }
 
     public fun loadIso_639_3(adminPeopleId: String) {
 
-        val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3.tab")
-        val urlConnection = url.openConnection() as HttpURLConnection
+    val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3.tab")
+    val urlConnection = url.openConnection() as HttpURLConnection
 
+    try {
+
+      val readBuffer = BufferedReader(
+        InputStreamReader(
+          urlConnection.inputStream
+        )
+      );
+
+      var count = 0
+      var text: List<String> = readBuffer.readLines()
+
+      this.ds.connection.use { conn ->
         try {
 
-            val readBuffer = BufferedReader(
-                    InputStreamReader(
-                            urlConnection.inputStream)
-            );
-
-            var count = 0
-            var text:List<String>  = readBuffer.readLines()
-
-            this.ds.connection.use { conn ->
-                try {
-
-                    val insertSQL = """
+          val insertSQL = """
                         insert into sil.iso_639_3(_id, part_2b, part_2t, part_1, scope, type, ref_name, comment, created_by, modified_by, owning_person, owning_group)
                         values  (?, ?, ?, ?, ?::sil.iso_639_3_scope_options, ?::sil.iso_639_3_type_options, ?, ?, ?::uuid, ?::uuid, ?::uuid, ?::uuid)"""
                     val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
@@ -432,12 +504,18 @@ class DatabaseVersionControl(
         finally {
             urlConnection.disconnect()
         }
+      }
+    } catch (ex: Exception) {
+      println("exception ${ex}")
+    } finally {
+      urlConnection.disconnect()
     }
+  }
 
     public fun loadIso_639_3_Retirements(adminPeopleId: String) {
 
-        val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3_Retirements.tab")
-        val urlConnection = url.openConnection() as HttpURLConnection
+    val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3_Retirements.tab")
+    val urlConnection = url.openConnection() as HttpURLConnection
 
         try {
 
@@ -505,9 +583,10 @@ class DatabaseVersionControl(
 
     public fun loadIso_639_3_Macrolanguages(adminPeopleId: String) {
 
-        val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3-macrolanguages.tab")
-        val urlConnection = url.openConnection() as HttpURLConnection
+      var count = 0
+      var text: List<String> = readBuffer.readLines()
 
+      this.ds.connection.use { conn ->
         try {
 
             val readBuffer = BufferedReader(
@@ -558,7 +637,13 @@ class DatabaseVersionControl(
         finally {
             urlConnection.disconnect()
         }
+      }
+    } catch (ex: Exception) {
+      println("exception ${ex}")
+    } finally {
+      urlConnection.disconnect()
     }
+  }
 
     public fun loadSilData(){
         var adminPeopleId = ""
@@ -567,8 +652,8 @@ class DatabaseVersionControl(
         this.ds.connection.use { conn ->
             try {
 
-                val getAdminIdStatement =
-                    conn.prepareCall("select id from admin.people where sensitivity_clearance = 'High'")
+    val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/iso-639-3-macrolanguages.tab")
+    val urlConnection = url.openConnection() as HttpURLConnection
 
                 val result = getAdminIdStatement.executeQuery()
                 if (result.next()) {
@@ -586,50 +671,92 @@ class DatabaseVersionControl(
 
         loadLanguageCodes(adminPeopleId)
 
-        loadLanguageIndexes(adminPeopleId)
+      val readBuffer = BufferedReader(
+        InputStreamReader(
+          urlConnection.inputStream
+        )
+      )
 
-        loadIso_639_3_Name_Index(adminPeopleId)
+      var count = 0
+      var text: List<String> = readBuffer.readLines()
 
-        loadIso_639_3(adminPeopleId)
+      this.ds.connection.use { conn ->
+        try {
 
-        loadIso_639_3_Retirements(adminPeopleId)
+          val insertSQL =
+            "insert into sil.iso_639_3_macrolanguages(m_id, i_id, i_status, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_status_options, ?, ?, ?, ?)"
+          val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
-        loadIso_639_3_Macrolanguages(adminPeopleId)
+          for (line in text) {
+            val splitArray = line.split("\t")
+            val m_id = splitArray[0]
+            val i_id = splitArray[1]
+            var i_status: String? = splitArray[2]
+            if (i_status!!.isEmpty()) i_status = null
 
+            count++
+            if (count == 1) continue
+            insertStmt.setString(1, m_id)
+            insertStmt.setString(2, i_id)
+            insertStmt.setString(3, i_status)
+            insertStmt.setInt(4, adminPeopleId)
+            insertStmt.setInt(5, adminPeopleId)
+            insertStmt.setInt(6, adminPeopleId)
+            insertStmt.setInt(7, adminPeopleId)
+
+            insertStmt.addBatch()
+
+          }
+          insertStmt.executeBatch()
+
+          println("iso-639-3-macrolanguages.tab load success")
+        } catch (ex: Exception) {
+          println(ex)
+
+          println("iso-639-3-macrolanguages.tab load filed")
+        }
+      }
+
+    } catch (ex: Exception) {
+      println("exception ${ex}")
+    } finally {
+      urlConnection.disconnect()
     }
+  }
 
-    private fun setVersionNumber(newVersion: Int) {
-        jdbcTemplate.update(
-            """
+
+  private fun setVersionNumber(newVersion: Int) {
+    jdbcTemplate.update(
+      """
                 insert into admin.database_version_control(version, status, started, completed)
                     values(?, 'Completed', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
             """.trimIndent(),
-            newVersion
+      newVersion
+    )
+  }
+
+  private fun asString(resource: ClassPathResource): String? {
+    try {
+      InputStreamReader(resource.inputStream, Charsets.UTF_8).use { reader ->
+        return FileCopyUtils.copyToString(
+          reader
         )
+      }
+    } catch (e: IOException) {
+      throw UncheckedIOException(e)
     }
+  }
 
-    private fun asString(resource: ClassPathResource): String? {
-        try {
-            InputStreamReader(resource.inputStream, Charsets.UTF_8).use { reader ->
-                return FileCopyUtils.copyToString(
-                    reader
-                )
-            }
-        } catch (e: IOException) {
-            throw UncheckedIOException(e)
-        }
+  private fun runSqlFile(fileName: String) {
+
+    val sql = asString(ClassPathResource(fileName))
+    if (sql !== null) {
+      jdbcTemplate.execute(sql)
+      println("$fileName successfully run")
     }
+  }
 
-    private fun runSqlFile(fileName: String) {
-
-        val sql = asString(ClassPathResource(fileName))
-        if (sql !== null) {
-            jdbcTemplate.execute(sql)
-            println("$fileName successfully run")
-        }
-    }
-
-    private fun runSqlString(sql: String) {
-        jdbcTemplate.execute(sql)
-    }
+  private fun runSqlString(sql: String) {
+    jdbcTemplate.execute(sql)
+  }
 }

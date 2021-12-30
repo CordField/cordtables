@@ -35,7 +35,7 @@ class BootstrapDB(
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
     init {
-        vc.updateDatabaseSchemaIdempotent()
+        vc.initDatabase()
     }
 }
 

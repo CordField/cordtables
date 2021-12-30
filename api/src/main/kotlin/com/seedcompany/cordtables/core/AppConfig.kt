@@ -68,8 +68,8 @@ class AppConfig(
     @Value("\${server.url}")
     val thisServerUrl: String,
 
-    @Value("\${cord.init.load-language-data}")
-    val loadLanguageData: Boolean = false,
+    @Value("\${cord.init.load-db-version}")
+    val loadDbVersion: Int = 1,
 
 ) {
     @get:Bean
