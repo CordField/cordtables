@@ -107,11 +107,11 @@ class Login (
             statement.setString(3, errorType.name)
             statement.setObject(4,null)
             statement.registerOutParameter(3, java.sql.Types.VARCHAR)
-            statement.registerOutParameter(4, java.sql.Types.VARCHAR)
+            statement.registerOutParameter(4, java.sql.Types.OTHER)
             statement.execute()
             try {
                 errorType = ErrorType.valueOf(statement.getString(3))
-                userId = statement.getString(4)
+                userId = statement.getObject(4).toString()
             } catch (ex: IllegalArgumentException) {
               println("error")
                 throw ex

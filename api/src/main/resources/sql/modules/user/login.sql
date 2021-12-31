@@ -9,7 +9,7 @@ AS $$
 DECLARE
     vToken varchar(512);
 BEGIN
-    SELECT person
+    SELECT id
     FROM admin.users
     INTO user_id
     WHERE email = p_email;

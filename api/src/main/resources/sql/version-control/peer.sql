@@ -31,6 +31,8 @@ begin
             for rec2 in (select column_name,case
                         when (data_type = 'USER-DEFINED') then udt_schema || '.' || udt_name
                         when (data_type = 'ARRAY') then  udt_schema || '.' || substr(udt_name, 2, length(udt_name)-1) || '[]'
+                        when (data_type = 'character') then udt_schema || '.' || udt_name || '(' || character_maximum_length || ')'
+                        when (data_type = 'character varying') then udt_schema || '.' || udt_name || '(' || character_maximum_length || ')'
                         else data_type
                         end as data_type from information_schema.columns
                         where table_schema = rec0.table_schema and table_name = rec1.table_name) loop

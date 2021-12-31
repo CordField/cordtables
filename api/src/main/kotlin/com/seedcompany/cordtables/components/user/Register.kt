@@ -69,20 +69,20 @@ class Register (
         var errorType = ErrorType.UnknownError
         var userId:String = ""
         this.ds.connection.use{conn ->
-            val statement = conn.prepareCall("call admin.register(?, ?, ?, ?,?);")
+            val statement = conn.prepareCall("call admin.register(?, ?, ?, ?, ?::uuid);")
             statement.setString(1, email)
             statement.setString(2, pash)
             statement.setString(3, token)
             statement.setString(4, errorType.name)
             statement.setString(5, null)
             statement.registerOutParameter(4, java.sql.Types.VARCHAR)
-            statement.registerOutParameter(5, java.sql.Types.VARCHAR)
+            statement.registerOutParameter(5, java.sql.Types.OTHER)
 
             statement.execute()
 
             try {
                 errorType = ErrorType.valueOf(statement.getString(4))
-                userId = statement.getString(5)
+                userId = statement.getObject(5).toString()
             } catch (ex: IllegalArgumentException) {
                 errorType = ErrorType.UnknownError
             }

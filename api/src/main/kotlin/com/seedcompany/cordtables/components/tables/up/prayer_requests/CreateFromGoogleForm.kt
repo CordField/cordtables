@@ -83,22 +83,22 @@ class CreateFromGoogleForm(
   @PostMapping("up/prayer-requests/create-from-form")
   @ResponseBody
   fun createHandler(@RequestBody req: UpPrayerRequestsCreateFromFormRequest): UpPrayerRequestsCreateFromFormResponse {
-    var creatorUserId: Int?
-    var translatorUserId: Int?
+    var creatorUserId: String?
+    var translatorUserId: String?
 
     creatorUserId = checkUserExists(req.prayerForm.creatorEmail)
     translatorUserId = req.prayerForm.translatorEmail?.let { checkUserExists(it) }
 
     var langExists = req.prayerForm.ethCode?.let { getSilLanguageData(it) }
 
-    if(creatorUserId == 0){
+    if(creatorUserId == null){
       val pass = util.encoder.encode("somepassword")
       val tkn = util.createToken()
       reg.registerDB(req.prayerForm.creatorEmail, pass, tkn)
       creatorUserId = checkUserExists(req.prayerForm.creatorEmail)
     }
 
-    if(translatorUserId == 0){
+    if(translatorUserId == null){
       val pass = util.encoder.encode("somepassword")
       val tkn = util.createToken()
       req.prayerForm.translatorEmail?.let { reg.registerDB(it, pass, tkn) }
@@ -112,14 +112,14 @@ class CreateFromGoogleForm(
                     ?::uuid,
                     ?::common.sensitivity,
                     ?::uuid,
-                    ?::uuid,
+                    ?,
                     ?,
                     ?,
                     false,
                     ?::up.prayer_type,
-                    ?,
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
                     ?::uuid
                 )
             returning id;
@@ -158,31 +158,31 @@ class CreateFromGoogleForm(
     return data.first()
   }
 
-  fun checkDataExists(table: String, field: String, fieldValue: String): Int {
-    var id: Int?
+  fun checkDataExists(table: String, field: String, fieldValue: String): String? {
+    var id: String?
     id = jdbcTemplate.queryForObject(
       """
           SELECT id FROM $table WHERE $field = ?;
       """.trimIndent(),
-      Int::class.java,
+      String::class.java,
       fieldValue,
     )
     return  id;
   }
 
 
-  fun checkUserExists(email: String):Int{
+  fun checkUserExists(email: String): String?{
     return try {
       jdbcTemplate.queryForObject(
         """
             SELECT id FROM admin.users WHERE email = ?;
           """.trimIndent(),
-        Int::class.java,
+        String::class.java,
         email
         )
     }
     catch (e: EmptyResultDataAccessException){
-      0
+      null
     }
   }
 

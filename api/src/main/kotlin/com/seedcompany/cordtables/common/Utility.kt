@@ -407,8 +407,6 @@ class Utility(
     return result.toString()
   }
 
-
-
   fun getPeopleDetailsFromIds(idArray: MutableList<String>): MutableList<PeopleDetails> {
     var peopleDetails: MutableList<PeopleDetails> = mutableListOf()
 //    var stringPeopleIds = "("

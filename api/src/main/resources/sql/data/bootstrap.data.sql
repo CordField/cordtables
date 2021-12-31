@@ -66,7 +66,7 @@ BEGIN
     -- users ----------------------------------------------------------------------------------------------------
 
     -- Root user
-    insert into admin.users(person, email, password, created_by, modified_by, owning_person, owning_group)
+    insert into admin.users(id, email, password, created_by, modified_by, owning_person, owning_group)
     values (vPersonId, p_email, p_password, vPersonId, vPersonId, vPersonId, vAdminGroupId);
 
     -- global roles ----------------------------------------------------------------------------------------------------
