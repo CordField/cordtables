@@ -20,7 +20,7 @@ BEGIN
     returning id
     into vCommonId;
 
-    insert into sil.language_index(common_id, lang, country, name_type, name, created_by, modified_by, owning_person, owning_group)
+    insert into sil.language_index(id, lang, country, name_type, name, created_by, modified_by, owning_person, owning_group)
     values (vCommonId::uuid, pLang, pCountry, pNameType::sil.language_name_type, pName, vPersonId::uuid, vPersonId::uuid, vPersonId::uuid, vGroupId::uuid);
 
   end if;

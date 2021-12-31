@@ -62,7 +62,7 @@ type SiteTextStringCreateResponse = {
 };
 
 type LanguageIndex = {
-  common_id: number;
+  id: number;
   lang: string;
   country: string;
   name_type: string;
@@ -334,11 +334,11 @@ export class SiteText {
     return async (): Promise<boolean> => {
       const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common/site-text-languages/create', {
         token: globals.globalStore.state.token,
-        language: language.common_id,
+        language: language.id,
       });
 
       if (response.error == ErrorType.NoError) {
-        const newSiteTextLanguages = [...globals.globalStore.state.siteTextLanguages, { language: language.common_id, language_name: language.name }];
+        const newSiteTextLanguages = [...globals.globalStore.state.siteTextLanguages, { language: language.id, language_name: language.name }];
         globals.globalStore.set('siteTextLanguages', newSiteTextLanguages);
         this.columnData = this.makeColumns();
         this.rowData = this.makeRows();
@@ -408,12 +408,12 @@ export class SiteText {
                             <ion-col size="3">{language.name_type}</ion-col>
                             <ion-col size="3">{language.name}</ion-col>
                             <ion-col size="2">
-                              {globals.globalStore.state.siteTextLanguages.find((s: SiteTextLanguage) => s.language === language.common_id) === undefined ? (
+                              {globals.globalStore.state.siteTextLanguages.find((s: SiteTextLanguage) => s.language === language.id) === undefined ? (
                                 <ion-button expand="block" onClick={this.addSiteTextLanguage(language)}>
                                   ADD
                                 </ion-button>
                               ) : (
-                                <ion-button expand="block" onClick={this.removeSiteTextLanguage(language.common_id)}>
+                                <ion-button expand="block" onClick={this.removeSiteTextLanguage(language.id)}>
                                   REMOVE
                                 </ion-button>
                               )}

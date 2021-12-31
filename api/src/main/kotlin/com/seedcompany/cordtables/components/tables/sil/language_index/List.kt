@@ -62,7 +62,6 @@ class List(
                 resultsPerPage = req.resultsPerPage!!,
                 columns = arrayOf(
                     "id",
-                    "common_id",
                     "lang",
                     "country",
                     "name_type",
@@ -84,9 +83,6 @@ class List(
               
                 var id: String? = resultSet.getString("id")
                 if (resultSet.wasNull()) id = null
-
-                var common_id: String? = resultSet.getString("common_id")
-                if (resultSet.wasNull()) common_id = null
 
                 var lang: String? = resultSet.getString("lang")
                 if (resultSet.wasNull()) lang = null
@@ -121,7 +117,6 @@ class List(
                 data.add(
                     languageIndex(
                         id = id,
-                        common_id = common_id,
                         lang = lang,
                         country = country,
                         name_type = name_type,

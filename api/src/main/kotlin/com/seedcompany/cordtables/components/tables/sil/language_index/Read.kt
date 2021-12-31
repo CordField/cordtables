@@ -59,7 +59,6 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "common_id",
                     "lang",
                     "country",
                     "name_type",
@@ -80,9 +79,6 @@ class Read(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var common_id: String? = jdbcResult.getString("common_id")
-                if (jdbcResult.wasNull()) common_id = null
 
                 var lang: String? = jdbcResult.getString("lang")
                 if (jdbcResult.wasNull()) lang = null
@@ -117,7 +113,6 @@ class Read(
                 val languageIndex =
                     languageIndex(
                         id = id,
-                        common_id = common_id,
                         lang = lang,
                         country = country,
                         name_type = name_type,

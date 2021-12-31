@@ -49,12 +49,6 @@ export class SilLanguageIndexs {
       editable: false,
     },
     {
-      field: 'common_id',
-      displayName: 'Common ID',
-      width: 200,
-      editable: false,
-    },
-    {
       field: 'lang',
       displayName: 'Lang',
       width: 200,

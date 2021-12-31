@@ -50,9 +50,8 @@ create type sil.language_name_type as enum (
 );
 
 CREATE TABLE sil.language_index (
-  id uuid primary key default common.uuid_generate_v4(),
+  id uuid primary key not null references common.languages(id),
 
-  common_id uuid not null references common.languages(id),
   lang char(3) not null,      -- Three-letter code for language
   country char(2) not null,   -- Country where this name is used
   name_type sil.language_name_type not null,

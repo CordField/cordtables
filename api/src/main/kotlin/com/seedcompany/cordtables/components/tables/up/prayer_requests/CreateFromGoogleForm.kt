@@ -125,7 +125,7 @@ class CreateFromGoogleForm(
             returning id;
         """.trimIndent(),
       String::class.java,
-      langExists!!.common_id,
+      langExists!!.id,
       req.prayerForm.sensitivity,
       translatorUserId,
       req.prayerForm.location,
@@ -148,7 +148,6 @@ class CreateFromGoogleForm(
     ){ rs, rowNum ->
       languageIndex(
         rs.getString("id"),
-        rs.getString("common_id"),
         rs.getString("lang"),
         rs.getString("country"),
         rs.getString("name_type"),

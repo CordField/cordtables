@@ -75,7 +75,7 @@ class SiteTextService(
     val query = """
             select stl.language, li.name
             from common.site_text_languages stl
-            inner join sil.language_index li on li.common_id = stl.language
+            inner join sil.language_index li on li.id = stl.language
         """.replace('\n', ' ')
 
     try {
@@ -381,7 +381,7 @@ class SiteTextService(
 
         val query = """
             select
-                li.common_id as language
+                li.id as language
             from sil.language_index li
             where lang = :lang and country = :country and name_type = :name_type::sil.language_name_type and name = :name
         """.trimIndent()
