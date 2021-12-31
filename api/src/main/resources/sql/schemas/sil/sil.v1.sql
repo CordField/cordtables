@@ -10,7 +10,7 @@ create type sil.lang_status_type as enum (
 );
 
 CREATE TABLE sil.language_codes (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   lang char(3) not null,  -- Three-letter code
   country char(2) not null,  -- Main country where used
@@ -26,7 +26,7 @@ CREATE TABLE sil.language_codes (
 );
 
 CREATE TABLE sil.country_codes (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   country char(2) not null,  -- Two-letter code from ISO3166
   name varchar(75) not null,  -- Country name
@@ -50,7 +50,7 @@ create type sil.language_name_type as enum (
 );
 
 CREATE TABLE sil.language_index (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   common_id uuid not null references common.languages(id),
   lang char(3) not null,      -- Three-letter code for language
@@ -82,7 +82,7 @@ create type sil.iso_639_3_type_options as enum (
 );
 
 CREATE TABLE sil.iso_639_3 (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   _id char(3) not null, -- three letter 639-3 identifier
   part_2b char(3), -- equivalent 639-2 identifier of the bibliographic applications code set, if there is one
@@ -102,7 +102,7 @@ CREATE TABLE sil.iso_639_3 (
 );
 
 CREATE TABLE sil.iso_639_3_names (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   _id char(3) not null, -- three letter 639-3 identifier
   print_name varchar(75) not null, -- one of the names associated with this identifier
@@ -122,7 +122,7 @@ create type sil.iso_639_3_status_options as enum (
 );
 
 CREATE TABLE sil.iso_639_3_macrolanguages (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   m_id char(3) not null, -- the identifier for a macrolanguage
   i_id char(3) not null, -- the identifier for an individual language that is a member of the macrolanguage
@@ -145,7 +145,7 @@ create type sil.iso_639_3_retirement_reason_options as enum (
 );
 
 CREATE TABLE sil.iso_639_3_retirements (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   _id char(3) not null, -- three letter 639-3 identifier
   ref_name varchar(150) not null, -- reference name of the language
@@ -163,7 +163,7 @@ CREATE TABLE sil.iso_639_3_retirements (
 );
 
 CREATE TABLE sil.table_of_countries (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   country_code char(2),
   country_name varchar(40),
@@ -189,7 +189,7 @@ CREATE TABLE sil.table_of_countries (
 );
 
 CREATE TABLE sil.table_of_languages (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   iso_639 char(3),
   language_name varchar(50),
@@ -225,7 +225,7 @@ CREATE TABLE sil.table_of_languages (
 );
 
 CREATE TABLE sil.table_of_languages_in_country (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   iso_639 char(3),
   language_name varchar(50),

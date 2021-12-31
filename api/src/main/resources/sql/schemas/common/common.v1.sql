@@ -29,7 +29,7 @@ create type common.egids_scale as enum (
 
 -- meant to be extended by all orgs, so everyone has a globally unique id to reference within their language lists
 create table common.languages(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -39,7 +39,7 @@ create table common.languages(
 );
 
 create table common.site_text_strings(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   english varchar(64) not null, -- US English, all translations including other English locales will be in the translation table
   comment text,
@@ -53,7 +53,7 @@ create table common.site_text_strings(
 );
 
 create table common.site_text_translations(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   language uuid not null references common.languages(id),
   site_text uuid not null references common.site_text_strings(id) on delete cascade,
@@ -70,7 +70,7 @@ create table common.site_text_translations(
 );
 
 create table common.site_text_languages(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   language uuid not null references common.languages(id),
 
@@ -155,7 +155,7 @@ create type common.book_name as enum (
 );
 
 create table common.scripture_references (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   book_start common.book_name,
   book_end common.book_name,
@@ -175,7 +175,7 @@ create table common.scripture_references (
 -- CHAT ------------------------------------------------------------
 
 create table common.discussion_channels (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 	name varchar(32) not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -187,7 +187,7 @@ create table common.discussion_channels (
 );
 
 create table common.cell_channels (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
   table_name admin.table_name not null,
   column_name varchar(64) not null,
@@ -204,7 +204,7 @@ create table common.cell_channels (
 );
 
 create table common.threads (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	channel uuid not null references common.discussion_channels(id) on delete cascade,
 	content text not null,
@@ -218,7 +218,7 @@ create table common.threads (
 );
 
 create table common.posts (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 	thread uuid not null references common.threads(id) on delete cascade,
 	content text not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -232,7 +232,7 @@ create table common.posts (
 -- BLOGS ---------------
 
 create table common.blogs (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	title varchar(64) not null,
 
@@ -247,7 +247,7 @@ create table common.blogs (
 );
 
 create table common.blog_posts (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
   blog uuid not null references common.blogs(id),
 	content text not null,
@@ -263,7 +263,7 @@ create table common.blog_posts (
 -- NOTES ----------------------------------------------------
 
 create table common.notes (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
   table_name admin.table_name not null,
   column_name varchar(64) not null,
@@ -289,7 +289,7 @@ create type common.location_type as enum (
 );
 
 create table common.locations (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	name varchar(255) unique, -- not null,
 	sensitivity common.sensitivity not null default 'High',
@@ -311,7 +311,7 @@ ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk fore
 -- Education
 
 create table common.education_entries (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   degree varchar(64),
   institution varchar(64),
@@ -328,7 +328,7 @@ create table common.education_entries (
 );
 
 create table common.education_by_person (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   person uuid unique not null references admin.people(id),
   education uuid not null references common.education_entries(id),
@@ -347,7 +347,7 @@ create table common.education_by_person (
 -- ORGANIZATIONS ------------------------------------------------------------
 
 create table common.organizations (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	name varchar(255) unique, -- not null
 	sensitivity common.sensitivity default 'High',
@@ -362,7 +362,7 @@ create table common.organizations (
 );
 
 create table common.org_chart_positions(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   organization uuid not null references common.organizations(id),
   name varchar(64) not null,
@@ -383,7 +383,7 @@ create type common.position_relationship_types as enum (
 );
 
 create table common.org_chart_position_graph(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   from_position uuid not null references common.org_chart_positions(id),
   to_position uuid not null references common.org_chart_positions(id),
@@ -407,7 +407,7 @@ create type common.involvement_options as enum (
 );
 
 create table common.coalitions(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   name varchar(64) unique not null,
 
@@ -422,7 +422,7 @@ create table common.coalitions(
 -- coalition memberships
 
 create table common.coalition_memberships(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   coalition uuid not null references common.coalitions(id),
   organization uuid not null references common.organizations(id),
@@ -440,7 +440,7 @@ create table common.coalition_memberships(
 -- FILES & DIRECTORIES ----------------------------------------------------------
 
 create table common.directories (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   parent uuid references common.directories(id),
   name varchar(255), -- not null
@@ -457,7 +457,7 @@ create table common.directories (
 );
 
 create table common.files (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   directory uuid references common.directories(id), --not null
 	name varchar(255), -- not null
@@ -473,7 +473,7 @@ create table common.files (
 );
 
 create table common.file_versions (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   category varchar(255),
   mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
@@ -499,7 +499,7 @@ create type common.ticket_status as enum (
 );
 
 create table common.tickets (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
   
   title text not null,
 	ticket_status common.ticket_status not null default 'Open',
@@ -516,7 +516,7 @@ create table common.tickets (
 ALTER TABLE common.tickets ADD CONSTRAINT common_tickets_parent_fk foreign key (parent) references common.tickets(id);
 
 create table common.ticket_graph (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	from_ticket uuid not null references common.tickets(id),
 	to_ticket uuid not null references common.tickets(id),
@@ -530,7 +530,7 @@ create table common.ticket_graph (
 );
 
 create table common.ticket_assignments (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	ticket uuid not null references common.tickets(id),
 	person uuid unique not null references admin.people(id),
@@ -544,7 +544,7 @@ create table common.ticket_assignments (
 );
 
 create table common.work_records(
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	person uuid not null references admin.people(id),
 	ticket uuid not null references common.tickets(id),
@@ -564,7 +564,7 @@ create table common.work_records(
 );
 
 create table common.work_estimates(
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
     ticket uuid references common.tickets(id),
 	person uuid not null references admin.people(id),
 	hours int not null,
@@ -588,7 +588,7 @@ create type common.ticket_feedback_options as enum (
 );
 
 create table common.ticket_feedback(
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	ticket uuid references common.tickets(id),
 	stakeholder uuid not null references admin.people(id),
@@ -605,7 +605,7 @@ create table common.ticket_feedback(
 -- WORKFLOW -----------------------------------------------------------------
 
 create table common.workflows(
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	title varchar(128) not null unique,
   
@@ -618,7 +618,7 @@ create table common.workflows(
 );
 
 create table common.stages(
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	title varchar(128) not null unique,
   
@@ -631,7 +631,7 @@ create table common.stages(
 );
 
 create table common.stage_graph(
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	from_stage uuid not null references common.stages(id),
 	to_stage uuid not null references common.stages(id),
@@ -647,7 +647,7 @@ create table common.stage_graph(
 );
 
 create table common.stage_role_column_grants(
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
   stage uuid not null references common.stages(id),
 	role uuid not null references admin.roles(id),
@@ -666,7 +666,7 @@ create table common.stage_role_column_grants(
 );
 
 create table common.stage_notifications(
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	stage uuid not null references common.stages(id),
 	on_enter bool default false,
@@ -698,7 +698,7 @@ create type common.people_to_org_relationship_type as enum (
 );
 
 create table common.people_to_org_relationships (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
 	org uuid not null references common.organizations(id),
 	person uuid unique not null references admin.people(id),
@@ -721,7 +721,7 @@ create type common.people_to_people_relationship_types as enum (
 );
 
 create table common.people_graph (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   from_person uuid unique not null references admin.people(id),
   to_person uuid unique not null references admin.people(id),

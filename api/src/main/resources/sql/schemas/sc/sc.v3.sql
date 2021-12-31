@@ -5,7 +5,7 @@ create schema sc;
 -- POSTS ----------------------------------------------------------
 
 create table sc.posts_directory ( -- does not need to be secure
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
   created_at timestamp not null default CURRENT_TIMESTAMP
 );
 
@@ -24,7 +24,7 @@ create type sc.post_type as enum (
 );
 
 create table sc.posts (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   directory uuid references sc.posts_directory(id), -- not null
   type sc.post_type, --not null,
@@ -42,7 +42,7 @@ create table sc.posts (
 -- ACCOUNTING TABLES --------------------------------------------------------
 
 create table sc.funding_accounts (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
 	account_number int unique, -- not null,
 	name varchar(255),
@@ -58,7 +58,7 @@ create table sc.funding_accounts (
 -- LOCATION TABLES ----------------------------------------------------------
 
 create table sc.field_zones (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	director uuid references admin.people(id),
 	name varchar(32) unique, -- not null
@@ -72,7 +72,7 @@ create table sc.field_zones (
 );
 
 create table sc.field_regions (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 	field_zone uuid references sc.field_zones(id),
 
 	director uuid references admin.people(id),
@@ -123,7 +123,7 @@ create table sc.organizations (
 );
 
 create table sc.organization_locations(
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
 	organization uuid not null references sc.organizations(id),
 	location uuid not null references sc.locations(id),
@@ -188,7 +188,7 @@ create table sc.partners (
 -- LANGUAGE TABLES ----------------------------------------------------------
 
 create table sc.ethnologue (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   language_index uuid not null references sil.language_index(id),
   code varchar(32),
@@ -281,7 +281,7 @@ create type sc.begin_work_rel_pol_obstacles_scale as enum (
 );
 
 create table sc.languages(
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
   ethnologue uuid references sc.ethnologue(id), -- not null
   name varchar(255) unique, -- not null
@@ -385,7 +385,7 @@ create table sc.languages(
 );
 
 create table sc.language_goal_definitions (
-	id uuid primary key default public.uuid_generate_v4(),
+	id uuid primary key default common.uuid_generate_v4(),
 
 	-- todo
 
@@ -398,7 +398,7 @@ create table sc.language_goal_definitions (
 );
 
 create table sc.language_locations (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
 	language uuid not null references sc.languages(id),
 	location uuid not null references sc.locations(id),
@@ -415,7 +415,7 @@ create table sc.language_locations (
 );
 
 create table sc.language_goals (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   language uuid not null references sc.languages(id),
 	goal uuid not null references sc.language_goal_definitions(id),
@@ -435,7 +435,7 @@ create table sc.language_goals (
 -- USER TABLES --------------------------------------------------------------
 
 create table sc.known_languages_by_person (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   person uuid unique not null references admin.people(id),
   known_language uuid not null references sc.languages(id),
@@ -466,7 +466,7 @@ create table sc.people (
 );
 
 create table sc.person_unavailabilities (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   person uuid references admin.people(id),
 	period_start timestamp not null default CURRENT_TIMESTAMP,
@@ -543,7 +543,7 @@ create type sc.change_to_plan_status as enum (
 );
 
 create table sc.change_to_plans (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   status sc.change_to_plan_status,
   summary text,
@@ -558,12 +558,12 @@ create table sc.change_to_plans (
 );
 
 create table sc.periodic_reports_directory ( -- security not needed
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
   created_at timestamp not null default CURRENT_TIMESTAMP
 );
 
 create table sc.periodic_reports (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   directory uuid references sc.periodic_reports_directory(id),
   end_at timestamp,
@@ -582,7 +582,7 @@ create table sc.periodic_reports (
 
 -- extension table to common
 create table sc.projects (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
 	name varchar(32), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
@@ -620,7 +620,7 @@ create table sc.projects (
 );
 
 create table sc.project_members (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
 	project uuid references sc.projects(id), --not null
 	person uuid references sc.people(id), --not null
@@ -639,7 +639,7 @@ create table sc.project_members (
 );
 
 create table sc.pinned_projects (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 	person uuid unique references sc.people(id), -- not null
 	project uuid references sc.projects(id), -- not null
 
@@ -658,7 +658,7 @@ create type sc.partnership_agreement_status as enum (
 );
 
 create table sc.partnerships (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   project uuid references sc.projects(id), -- not null
   partner uuid references sc.organizations(id), -- not null
@@ -697,7 +697,7 @@ create type common.budget_status as enum (
 );
 
 create table sc.budgets (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   change_to_plan uuid, -- not null
   project uuid references sc.projects(id), -- not null
@@ -718,7 +718,7 @@ create table sc.budgets (
 );
 
 create table sc.budget_records (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   budget uuid references sc.budgets(id), -- not null
   change_to_plan uuid references sc.change_to_plans(id), -- not null
@@ -739,7 +739,7 @@ create table sc.budget_records (
 );
 
 create table sc.budget_records_partnerships (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
   budget_record uuid not null references sc.budget_records(id),
   partnership uuid not null references sc.partnerships(id),
 
@@ -755,7 +755,7 @@ create table sc.budget_records_partnerships (
 -- PROJECT LOCATION
 
 create table sc.project_locations (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   active bool,
   change_to_plan uuid references sc.change_to_plans(id), -- not null
@@ -802,7 +802,7 @@ create type common.project_engagement_tag as enum (
 );
 
 create table sc.language_engagements (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
 	project uuid references sc.projects(id), -- not null
 	language uuid references sc.languages(id), -- not null
@@ -930,7 +930,7 @@ create type common.product_methodology_step as enum (
 
 
 create table sc.products (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   name varchar(64), -- not null
   change_to_plan uuid references sc.change_to_plans(id), -- not null
@@ -959,7 +959,7 @@ create table sc.products (
 );
 
 create table sc.product_scripture_references (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
   product uuid references sc.products(id), -- not null
   scripture_reference uuid references common.scripture_references(id), -- not null
   change_to_plan uuid references sc.change_to_plans(id), -- not null
@@ -976,7 +976,7 @@ create table sc.product_scripture_references (
 );
 
 create table sc.product_progress (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   product uuid references sc.products(id),
   report uuid references sc.periodic_reports,
@@ -990,7 +990,7 @@ create table sc.product_progress (
 );
 
 create table sc.step_progress (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   step common.product_methodology_step,
   completed decimal,
@@ -1034,7 +1034,7 @@ create type common.internship_position as enum (
 );
 
 create table sc.internship_engagements (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
 	project uuid references sc.projects(id), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
@@ -1077,7 +1077,7 @@ create type common.ceremony_type as enum (
 );
 
 create table sc.ceremonies (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   internship_engagement uuid references sc.internship_engagements(id),
   language_engagement uuid references sc.language_engagements(id),
@@ -1105,7 +1105,7 @@ create type sc.partner_maturity_scale as enum (
 );
 
 create table sc.global_partner_assessments (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   partner uuid not null references sc.organizations(id),
 
@@ -1138,7 +1138,7 @@ create type sc.partner_performance_options as enum(
 );
 
 create table sc.global_partner_performance (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   organization uuid unique not null references sc.organizations(id),
 
@@ -1160,7 +1160,7 @@ create type sc.global_partner_transition_options as enum(
 );
 
  create table sc.global_partner_transitions (
-   id uuid primary key default public.uuid_generate_v4(),
+   id uuid primary key default common.uuid_generate_v4(),
 
    organization uuid unique not null references sc.organizations(id),
    transition_type sc.global_partner_transition_options not null,
@@ -1180,7 +1180,7 @@ create type sc.global_partner_roles as enum (
 );
 
 create table sc.global_partner_engagements (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   organization uuid not null references common.organizations(id),
   type common.involvement_options not null,
@@ -1200,7 +1200,7 @@ create table sc.global_partner_engagements (
 );
 
 create table sc.global_partner_engagement_people (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   engagement uuid not null references sc.global_partner_engagements(id),
   person uuid not null references admin.people(id),
