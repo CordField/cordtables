@@ -4,12 +4,17 @@
 
 create schema sil;
 
+create type sil.lang_status_type as enum (
+  'L', -- L(iving)
+  'X' -- (e)X(tinct)
+);
+
 CREATE TABLE sil.language_codes (
   id uuid primary key default public.uuid_generate_v4(),
 
   lang char(3) not null,  -- Three-letter code
   country char(2) not null,  -- Main country where used
-  lang_status char(1) not null,  -- L(iving), (e)X(tinct)
+  lang_status sil.lang_status_type not null,
   name varchar(75) not null,   -- Primary name in that country
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
