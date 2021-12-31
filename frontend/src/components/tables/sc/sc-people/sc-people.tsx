@@ -121,7 +121,7 @@ export class ScPeoples {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('sc-people/create-read', {
+    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('sc/people/create-read', {
       token: globals.globalStore.state.token,
       people: {
         id: this.newId,
