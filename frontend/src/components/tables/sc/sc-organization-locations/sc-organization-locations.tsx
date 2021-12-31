@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateOrganizationLocationExRequest {
   token: string;
   organizationLocation: {
-    organization: number;
-    location: number;
+    organization: string;
+    location: string;
   };
 }
 class CreateOrganizationLocationExResponse extends GenericResponse {
@@ -29,7 +29,7 @@ class ScOrganizationLocationUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScOrganizationLocationUpdateResponse {
@@ -38,12 +38,12 @@ class ScOrganizationLocationUpdateResponse {
 }
 
 class DeleteOrganizationLocationExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteOrganizationLocationExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,10 +54,10 @@ class DeleteOrganizationLocationExResponse extends GenericResponse {
 export class ScOrganizationLocations {
   @State() organizationLocationsResponse: ScOrganizationLocationListResponse;
 
-  newOrganization: number;
-  newLocation: number;
+  newOrganization: string;
+  newLocation: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScOrganizationLocationUpdateRequest, ScOrganizationLocationUpdateResponse>('sc/organization-locations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -136,21 +136,21 @@ export class ScOrganizationLocations {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'location',
       displayName: 'Location',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -216,7 +216,7 @@ export class ScOrganizationLocations {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 
@@ -225,7 +225,7 @@ export class ScOrganizationLocations {
                 <label htmlFor="location">Location</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="location" name="location" onInput={event => this.locationChange(event)} />
+                <input type="text" id="location" name="location" onInput={event => this.locationChange(event)} />
               </span>
             </div>
 

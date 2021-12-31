@@ -28,7 +28,7 @@ class AdminRoleUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminRoleUpdateResponse {
@@ -37,12 +37,12 @@ class AdminRoleUpdateResponse {
 }
 
 class DeleteRoleExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteRoleExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,7 +55,7 @@ export class AdminRoles {
 
   newName: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminRoleUpdateRequest, AdminRoleUpdateResponse>('admin/roles/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -124,7 +124,7 @@ export class AdminRoles {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },

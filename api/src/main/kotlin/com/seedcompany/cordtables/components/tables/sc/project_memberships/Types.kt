@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.project_memberships
 
 data class projectMembership(
-    var id: Int? = null,
+    var id: String? = null,
     val group_id: Int? = null,
     val person: Int? = null,
     val created_at: String? = null,
@@ -13,7 +13,7 @@ data class projectMembership(
 )
 
 data class projectMembershipInput(
-    var id: Int? = null,
+    var id: String? = null,
     val group_id: Int? = null,
     val person: Int? = null,
     val created_at: String? = null,

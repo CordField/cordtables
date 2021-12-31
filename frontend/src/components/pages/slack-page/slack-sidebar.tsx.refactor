@@ -29,8 +29,8 @@ export class SlackSidebar {
     this.channelSelected.emit(this.selectedDiscussionChannel);
   }
   @Listen('channelDeleted')
-  async handlePostDeletedChange(event: CustomEvent<number>) {
-    const deleteResponse = await fetchAs<DeleteCommonDiscussionChannelRequest, DeleteCommonDiscussionChannelResponse>('common-discussion-channels/delete', {
+  async handlePostDeletedChange(event: CustomEvent<string>) {
+    const deleteResponse = await fetchAs<DeleteCommonDiscussionChannelRequest, DeleteCommonDiscussionChannelResponse>('common/discussion-channels/delete', {
       token: globals.globalStore.state.token,
       id: event.detail,
     });
@@ -60,7 +60,7 @@ export class SlackSidebar {
       return;
     }
 
-    const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common-discussion-channels/create-read', {
+    const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common/discussion-channels/create-read', {
       token: globals.globalStore.state.token,
       discussion_channel: {
         name: this.name,

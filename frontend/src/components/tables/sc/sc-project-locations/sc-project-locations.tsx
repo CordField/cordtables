@@ -9,9 +9,9 @@ class CreateProjectLocationExRequest {
   token: string;
   projectLocation: {
     active: boolean;
-    change_to_plan: number;
-    location: number;
-    project: number;
+    change_to_plan: string;
+    location: string;
+    project: string;
   };
 }
 class CreateProjectLocationExResponse extends GenericResponse {
@@ -31,7 +31,7 @@ class ScProjectLocationUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScProjectLocationUpdateResponse {
@@ -40,12 +40,12 @@ class ScProjectLocationUpdateResponse {
 }
 
 class DeleteProjectLocationExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteProjectLocationExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -57,11 +57,11 @@ export class ScProjectLocations {
   @State() projectLocationsResponse: ScProjectLocationListResponse;
 
   newActive: boolean;
-  newChange_to_plan: number;
-  newLocation: number;
-  newProject: number;
+  newChange_to_plan: string;
+  newLocation: string;
+  newProject: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScProjectLocationUpdateRequest, ScProjectLocationUpdateResponse>('sc/project-locations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -148,7 +148,7 @@ export class ScProjectLocations {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -263,7 +263,7 @@ export class ScProjectLocations {
                 <label htmlFor="change_to_plan">Change To Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+                <input type="text" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
             </div>
 
@@ -272,7 +272,7 @@ export class ScProjectLocations {
                 <label htmlFor="location">Location</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="location" name="location" onInput={event => this.locationChange(event)} />
+                <input type="text" id="location" name="location" onInput={event => this.locationChange(event)} />
               </span>
             </div>
 
@@ -281,7 +281,7 @@ export class ScProjectLocations {
                 <label htmlFor="project">Project</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="project" name="project" onInput={event => this.projectChange(event)} />
+                <input type="text" id="project" name="project" onInput={event => this.projectChange(event)} />
               </span>
             </div>
 

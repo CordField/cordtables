@@ -59,9 +59,9 @@ class List(
                     "id",
 
                     "project",
-                    "ethnologue",
                     "change_to_plan",
                     "active",
+                    "ceremony",
                     "communications_complete_date",
                     "complete_date",
                     "country_of_origin",
@@ -73,13 +73,16 @@ class List(
                     "intern",
                     "last_reactivated_at",
                     "mentor",
-                    "methodology",
+                    "methodologies",
                     "paratext_registry",
                     "periodic_reports_directory",
                     "position",
+                    "sensitivity",
                     "start_date",
                     "start_date_override",
                     "status",
+                    "status_modified_at",
+                    "last_suspended_at",
 
                     "created_at",
                     "created_by",
@@ -95,23 +98,23 @@ class List(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
 
 
 
-                var project: Int? = jdbcResult.getInt("project")
+                var project: String? = jdbcResult.getString("project")
                 if (jdbcResult.wasNull()) project = null
 
-                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
-                if (jdbcResult.wasNull()) ethnologue = null
-
-                var change_to_plan: Int? = jdbcResult.getInt("change_to_plan")
+                var change_to_plan: String? = jdbcResult.getString("change_to_plan")
                 if (jdbcResult.wasNull()) change_to_plan = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
+
+                var ceremony: String? = jdbcResult.getString("ceremony")
+                if (jdbcResult.wasNull()) ceremony = null
 
                 var communications_complete_date: String? = jdbcResult.getString("communications_complete_date")
                 if (jdbcResult.wasNull()) communications_complete_date = null
@@ -119,7 +122,7 @@ class List(
                 var complete_date: String? = jdbcResult.getString("complete_date")
                 if (jdbcResult.wasNull()) complete_date = null
 
-                var country_of_origin: Int? = jdbcResult.getInt("country_of_origin")
+                var country_of_origin: String? = jdbcResult.getString("country_of_origin")
                 if (jdbcResult.wasNull()) country_of_origin = null
 
                 var disbursement_complete_date: String? = jdbcResult.getString("disbursement_complete_date")
@@ -131,32 +134,35 @@ class List(
                 var end_date_override: String? = jdbcResult.getString("end_date_override")
                 if (jdbcResult.wasNull()) end_date_override = null
 
-                var growth_plan: Int? = jdbcResult.getInt("growth_plan")
+                var growth_plan: String? = jdbcResult.getString("growth_plan")
                 if (jdbcResult.wasNull()) growth_plan = null
 
                 var initial_end_date: String? = jdbcResult.getString("initial_end_date")
                 if (jdbcResult.wasNull()) initial_end_date = null
 
-                var intern: Int? = jdbcResult.getInt("intern")
+                var intern: String? = jdbcResult.getString("intern")
                 if (jdbcResult.wasNull()) intern = null
 
                 var last_reactivated_at: String? = jdbcResult.getString("last_reactivated_at")
                 if (jdbcResult.wasNull()) last_reactivated_at = null
 
-                var mentor: Int? = jdbcResult.getInt("mentor")
+                var mentor: String? = jdbcResult.getString("mentor")
                 if (jdbcResult.wasNull()) mentor = null
 
-                var methodology: String? = jdbcResult.getString("methodology")
-                if (jdbcResult.wasNull()) methodology = null
+                var methodologies: String? = jdbcResult.getString("methodologies")
+                if (jdbcResult.wasNull()) methodologies = null
 
                 var paratext_registry: String? = jdbcResult.getString("paratext_registry")
                 if (jdbcResult.wasNull()) paratext_registry = null
 
-                var periodic_reports_directory: Int? = jdbcResult.getInt("periodic_reports_directory")
+                var periodic_reports_directory: String? = jdbcResult.getString("periodic_reports_directory")
                 if (jdbcResult.wasNull()) periodic_reports_directory = null
 
                 var position: String? = jdbcResult.getString("position")
                 if (jdbcResult.wasNull()) position = null
+
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
 
                 var start_date: String? = jdbcResult.getString("start_date")
                 if (jdbcResult.wasNull()) start_date = null
@@ -167,10 +173,13 @@ class List(
                 var status: String? = jdbcResult.getString("status")
                 if (jdbcResult.wasNull()) status = null
 
+                var status_modified_at: String? = jdbcResult.getString("status_modified_at")
+                if (jdbcResult.wasNull()) status_modified_at = null
 
+                var last_suspended_at: String? = jdbcResult.getString("last_suspended_at")
+                if (jdbcResult.wasNull()) last_suspended_at = null
 
-
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
@@ -179,13 +188,13 @@ class List(
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
@@ -193,9 +202,9 @@ class List(
                         id = id,
 
                         project = project,
-                        ethnologue = ethnologue,
                         change_to_plan = change_to_plan,
                         active = active,
+                        ceremony = ceremony,
                         communications_complete_date = communications_complete_date,
                         complete_date = complete_date,
                         country_of_origin = country_of_origin,
@@ -207,14 +216,16 @@ class List(
                         intern = intern,
                         last_reactivated_at = last_reactivated_at,
                         mentor = mentor,
-                        methodology = methodology,
+                        methodologies = methodologies,
                         paratext_registry = paratext_registry,
                         periodic_reports_directory = periodic_reports_directory,
                         position = position,
+                        sensitivity = sensitivity,
                         start_date = start_date,
                         start_date_override = start_date_override,
                         status = status,
-
+                        status_modified_at = status_modified_at,
+                        last_suspended_at = last_suspended_at,
 
                         created_at = created_at,
                         created_by = created_by,

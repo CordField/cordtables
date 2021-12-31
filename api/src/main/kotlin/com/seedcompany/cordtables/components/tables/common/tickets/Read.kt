@@ -18,7 +18,7 @@ import javax.sql.DataSource
 
 data class CommonTicketsReadRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 data class CommonTicketsReadResponse(
@@ -75,7 +75,7 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
                 var title: String? = jdbcResult.getString("title")
@@ -84,7 +84,7 @@ class Read(
                 var ticketStatus: String? = jdbcResult.getString("ticket_status")
                 if (jdbcResult.wasNull()) ticketStatus = null
 
-                var parent: Int? = jdbcResult.getInt("parent")
+                var parent: String? = jdbcResult.getString("parent")
                 if (jdbcResult.wasNull()) parent = null
 
                 var content: String? = jdbcResult.getString("content")
@@ -93,19 +93,19 @@ class Read(
                 var createdAt: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) createdAt = null
 
-                var createdBy: Int? = jdbcResult.getInt("created_by")
+                var createdBy: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) createdBy = null
 
                 var modifiedAt: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modifiedAt = null
 
-                var modifiedBy: Int? = jdbcResult.getInt("modified_by")
+                var modifiedBy: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modifiedBy = null
 
-                var owningPerson: Int? = jdbcResult.getInt("owning_person")
+                var owningPerson: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owningPerson = null
 
-                var owningGroup: Int? = jdbcResult.getInt("owning_group")
+                var owningGroup: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owningGroup = null
 
                 val ticket =

@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.file_versions
 
-import com.seedcompany.cordtables.components.tables.common.file_versions.CommonFileVersionsUpdateRequest
-import com.seedcompany.cordtables.components.tables.common.file_versions.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.common.file_versions.CommonFileVersionInput
-import com.seedcompany.cordtables.components.tables.sc.languages.ScLanguagesUpdateResponse
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonFileVersionsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -82,6 +75,7 @@ class Update(
                     column = "file",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "file_url" -> {
@@ -109,6 +103,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -118,6 +113,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

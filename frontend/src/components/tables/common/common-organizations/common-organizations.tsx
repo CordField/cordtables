@@ -9,7 +9,7 @@ class CreateOrganizationRequest {
   organization: {
     name: string;
     sensitivity: string;
-    primary_location: number;
+    primary_location: string;
   };
 }
 class CreateOrganizationResponse extends GenericResponse {
@@ -21,16 +21,16 @@ class CommonOrganizationsListRequest {
 }
 
 class CommonOrganizationsRow {
-  id: number;
+  id: string;
   name: string;
   sensitivity: string;
-  primary_location: number;
+  primary_location: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CommonOrganizationsListResponse {
@@ -46,7 +46,7 @@ class CommonOrganizationsUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonOrganizationsUpdateResponse {
@@ -55,12 +55,12 @@ class CommonOrganizationsUpdateResponse {
 }
 
 class DeleteLanguageExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteLanguageExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 @Component({
   tag: 'common-organizations',
@@ -71,9 +71,9 @@ export class ScLanguages {
   @State() commonOrganizationsResponse: CommonOrganizationsListResponse;
   newOrganizationName: string;
   newSensitivity: string;
-  newPrimaryLocation: number;
+  newPrimaryLocation: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonOrganizationsUpdateRequest, CommonOrganizationsUpdateResponse>('common/organizations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -110,7 +110,7 @@ export class ScLanguages {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },

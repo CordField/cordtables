@@ -20,7 +20,7 @@ data class CommonTicketGraphCreateRequest(
 
 data class CommonTicketGraphCreateResponse(
         val error: ErrorType,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -52,8 +52,8 @@ class Create(
                 """
             insert into common.ticket_graph(from_ticket, to_ticket, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -69,16 +69,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-                Int::class.java,
+                String::class.java,
                 req.ticket_graph.from_ticket,
                 req.ticket_graph.to_ticket,
                 req.token,
                 req.token,
                 req.token,
+                util.adminGroupId
         )
 
         return CommonTicketGraphCreateResponse(error = ErrorType.NoError, id = id)

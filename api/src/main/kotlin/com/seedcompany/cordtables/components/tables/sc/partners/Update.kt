@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.partners
 
-import com.seedcompany.cordtables.components.tables.sc.partners.ScPartnersUpdateRequest
-import com.seedcompany.cordtables.components.tables.sc.partners.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.sc.partners.ScPartnersUpdateResponse
-import com.seedcompany.cordtables.components.tables.sc.partners.partnerInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class ScPartnersUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -54,7 +47,7 @@ class Update(
                     column = "organization",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "active" -> {
@@ -103,7 +96,7 @@ class Update(
                     column = "point_of_contact",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "types" -> {
@@ -124,7 +117,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -134,7 +127,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

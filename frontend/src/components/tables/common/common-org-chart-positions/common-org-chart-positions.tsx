@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateOrgChartPositionExRequest {
   token: string;
   orgChartPosition: {
-    organization: number;
+    organization: string;
     name: string;
   };
 }
@@ -29,7 +29,7 @@ class CommonOrgChartPositionUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonOrgChartPositionUpdateResponse {
@@ -38,12 +38,12 @@ class CommonOrgChartPositionUpdateResponse {
 }
 
 class DeleteOrgChartPositionExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteOrgChartPositionExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,10 +54,10 @@ class DeleteOrgChartPositionExResponse extends GenericResponse {
 export class CommonOrgChartPositions {
   @State() orgChartPositionsResponse: CommonOrgChartPositionListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newName: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonOrgChartPositionUpdateRequest, CommonOrgChartPositionUpdateResponse>('common/org-chart-positions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -136,7 +136,7 @@ export class CommonOrgChartPositions {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -216,7 +216,7 @@ export class CommonOrgChartPositions {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 

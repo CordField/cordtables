@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.product_scripture_references
 
-import com.seedcompany.cordtables.components.tables.sc.product_scripture_references.ScProductScriptureReferencesUpdateRequest
-import com.seedcompany.cordtables.components.tables.sc.product_scripture_references.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.sc.product_scripture_references.ScProductScriptureReferencesUpdateResponse
-import com.seedcompany.cordtables.components.tables.sc.product_scripture_references.productScriptureReferenceInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class ScProductScriptureReferencesUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -54,7 +47,7 @@ class Update(
                     column = "product",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "scripture_reference" -> {
@@ -64,7 +57,7 @@ class Update(
                     column = "scripture_reference",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "change_to_plan" -> {
@@ -73,8 +66,7 @@ class Update(
                     table = "sc.product_scripture_references",
                     column = "change_to_plan",
                     id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    value = req.value
                 )
             }
             "active" -> {
@@ -96,7 +88,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -106,7 +98,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

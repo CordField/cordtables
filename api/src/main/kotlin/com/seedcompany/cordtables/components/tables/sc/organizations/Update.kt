@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.organizations
 
-import com.seedcompany.cordtables.components.tables.sc.organizations.ScOrganizationsUpdateRequest
-import com.seedcompany.cordtables.components.tables.sc.organizations.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.sc.organizations.ScOrganizationsUpdateResponse
-import com.seedcompany.cordtables.components.tables.sc.organizations.organizationInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class ScOrganizationsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -48,13 +41,33 @@ class Update(
 
 
         when (req.column) {
-            "neo4j_id" -> {
+//            "neo4j_id" -> {
+//                util.updateField(
+//                    token = req.token,
+//                    table = "sc.organizations",
+//                    column = "neo4j_id",
+//                    id = req.id,
+//                    value = req.value,
+//                )
+//            }
+            "sensitivity" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.organizations",
-                    column = "neo4j_id",
+                    column = "sensitivity",
                     id = req.id,
                     value = req.value,
+                    cast = "::common.sensitivity"
+                )
+            }
+            "root_directory" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.organizations",
+                    column = "root_directory",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "address" -> {
@@ -73,7 +86,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -83,7 +96,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

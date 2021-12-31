@@ -21,7 +21,7 @@ data class ScGlobalPartnerEngagementsCreateRequest(
 
 data class ScGlobalPartnerEngagementsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -53,7 +53,7 @@ class Create(
             """
             insert into sc.global_partner_engagements(organization, type, mou_start, mou_end, sc_roles, partner_roles, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::common.involvement_options,
                     ?::timestamp,
                     ?::timestamp,
@@ -74,11 +74,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.globalPartnerEngagement.organization,
             req.globalPartnerEngagement.type,
             req.globalPartnerEngagement.mou_start,
@@ -88,6 +88,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

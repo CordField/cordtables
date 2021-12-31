@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerTransitionExRequest {
   token: string;
   globalPartnerTransition: {
-    organization: number;
+    organization: string;
     transition_type: string;
     effective_date: string;
   };
@@ -30,7 +30,7 @@ class ScGlobalPartnerTransitionUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScGlobalPartnerTransitionUpdateResponse {
@@ -39,12 +39,12 @@ class ScGlobalPartnerTransitionUpdateResponse {
 }
 
 class DeleteGlobalPartnerTransitionExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGlobalPartnerTransitionExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,11 +55,11 @@ class DeleteGlobalPartnerTransitionExResponse extends GenericResponse {
 export class ScGlobalPartnerTransitions {
   @State() globalPartnerTransitionsResponse: ScGlobalPartnerTransitionListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newTransition_type: string;
   newEffective_date: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScGlobalPartnerTransitionUpdateRequest, ScGlobalPartnerTransitionUpdateResponse>('sc/global-partner-transitions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -143,14 +143,14 @@ export class ScGlobalPartnerTransitions {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -234,7 +234,7 @@ export class ScGlobalPartnerTransitions {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 

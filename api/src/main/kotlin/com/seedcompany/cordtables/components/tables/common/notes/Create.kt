@@ -21,7 +21,7 @@ data class CommonNotesCreateRequest(
 
 data class CommonNotesCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -55,7 +55,7 @@ class Create(
                 values(
                     ?::admin.table_name,
                     ?,
-                    ?::INTEGER,
+                    ?::uuid,
                     ?,
                     (
                       select person 
@@ -72,11 +72,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.note.table_name,
             req.note.column_name,
             req.note.row,
@@ -84,6 +84,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

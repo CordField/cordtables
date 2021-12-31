@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerPerformanceExRequest {
   token: string;
   globalPartnerPerformance: {
-    organization: number;
+    organization: string;
     reporting_performance: string;
     financial_performance: string;
     translation_performance: string;
@@ -31,7 +31,7 @@ class ScGlobalPartnerPerformanceUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScGlobalPartnerPerformanceUpdateResponse {
@@ -40,12 +40,12 @@ class ScGlobalPartnerPerformanceUpdateResponse {
 }
 
 class DeleteGlobalPartnerPerformanceExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGlobalPartnerPerformanceExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -56,12 +56,12 @@ class DeleteGlobalPartnerPerformanceExResponse extends GenericResponse {
 export class ScGlobalPartnerPerformances {
   @State() globalPartnerPerformancesResponse: ScGlobalPartnerPerformanceListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newReporting_performance: string;
   newFinancial_performance: string;
   newTranslation_performance: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScGlobalPartnerPerformanceUpdateRequest, ScGlobalPartnerPerformanceUpdateResponse>('sc/global-partner-performance/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -150,14 +150,14 @@ export class ScGlobalPartnerPerformances {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 150,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },

@@ -71,7 +71,7 @@ class List(
                     "sensitivity_clearance",
                     "timezone",
                     "title",
-                    "status",
+//                    "status",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -86,7 +86,7 @@ class List(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
                 var about: String? = jdbcResult.getString("about")
@@ -110,7 +110,7 @@ class List(
                 var public_last_name: String? = jdbcResult.getString("public_last_name")
                 if (jdbcResult.wasNull()) public_last_name = null
 
-                var primary_location: Int? = jdbcResult.getInt("primary_location")
+                var primary_location: String? = jdbcResult.getString("primary_location")
                 if (jdbcResult.wasNull()) primary_location = null
 
                 var private_full_name: String? = jdbcResult.getString("private_full_name")
@@ -128,10 +128,10 @@ class List(
                 var title: String? = jdbcResult.getString("title")
                 if (jdbcResult.wasNull()) title = null
 
-                var status: String? = jdbcResult.getString("status")
-                if (jdbcResult.wasNull()) status = null
+//                var status: String? = jdbcResult.getString("status")
+//                if (jdbcResult.wasNull()) status = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
@@ -140,13 +140,13 @@ class List(
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
@@ -165,7 +165,7 @@ class List(
                         sensitivity_clearance = if (sensitivity_clearance == null) null else Sensitivities.valueOf(sensitivity_clearance),
                         timezone = timezone,
                         title = title,
-                        status = status,
+//                        status = status,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

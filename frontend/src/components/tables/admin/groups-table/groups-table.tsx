@@ -7,14 +7,14 @@ class GroupsListRequest {
 }
 
 class GroupsRow {
-  id: number;
+  id: string;
   name: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
-  owningPerson: number;
-  owningGroup: number;
+  modifiedBy: string;
+  owningPerson: string;
+  owningGroup: string;
 }
 
 class GroupsListResponse {
@@ -34,7 +34,7 @@ class GroupCreateResponse {
 class GroupUpdateRequest {
   token: string;
   name: string;
-  id: number;
+  id: string;
 }
 
 class GroupUpdateResponse {
@@ -43,7 +43,7 @@ class GroupUpdateResponse {
 
 class GroupDeleteRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class GroupDeleteResponse {
@@ -93,7 +93,7 @@ export class CfGroups {
     }
   };
 
-  updateName = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  updateName = async (id: string, columnName: string, value: string): Promise<boolean> => {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('admin/groups/update', { token: globals.globalStore.state.token, name: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
@@ -103,7 +103,7 @@ export class CfGroups {
     }
   };
 
-  clickRemoveRowIcon = async (value: number): Promise<boolean> => {
+  clickRemoveRowIcon = async (value: string): Promise<boolean> => {
     this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('admin/groups/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {

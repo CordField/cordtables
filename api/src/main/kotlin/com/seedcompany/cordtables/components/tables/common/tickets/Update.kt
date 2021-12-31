@@ -14,7 +14,9 @@ import javax.sql.DataSource
 
 data class CommonTicketsUpdateRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
+        val column: String? = null,
+        val value: Any? = null,
         val ticket: CommonTicketsInput
 )
 
@@ -47,32 +49,93 @@ class Update(
               value = req.ticket.title
             )
 
-            util.updateField(
-              token = req.token,
-              table = "common.tickets",
-              column = "ticket_status",
-              id = req.id,
-              value = req.ticket.ticket_status,
-              cast = "::common.ticket_status"
-            )
+// <<<<<<< HEAD
+//         when (req.column) {
 
-            util.updateField(
-              token = req.token,
-              table = "common.tickets",
-              column = "parent",
-              id = req.id,
-              value = req.ticket.parent,
-              cast = "::integer"
-            )
+//             "ticket_status" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "ticket_status",
+//                         id = req.id,
+//                         value = req.value,
+//                         cast = "::common.ticket_status"
+//                 )
+//             }
 
-            util.updateField(
-              token = req.token,
-              table = "common.tickets",
-              column = "content",
-              id = req.id,
-              value = req.ticket.content,
-            )
+//             "parent" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "parent",
+//                         id = req.id,
+//                         value = req.value,
+//                         cast = "::uuid"
+//                 )
+//             }
 
+//             "content" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "content",
+//                         id = req.id,
+//                         value = req.value,
+//                 )
+//             }
+// =======
+//             util.updateField(
+//               token = req.token,
+//               table = "common.tickets",
+//               column = "ticket_status",
+//               id = req.id,
+//               value = req.ticket.ticket_status,
+//               cast = "::common.ticket_status"
+//             )
+// >>>>>>> a18aa452d9d4f0d8cdce0ff1253d613e4b4f05cc
+
+//             util.updateField(
+//               token = req.token,
+//               table = "common.tickets",
+//               column = "parent",
+//               id = req.id,
+//               value = req.ticket.parent,
+//               cast = "::integer"
+//             )
+
+// <<<<<<< HEAD
+//             "owning_person" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "owning_person",
+//                         id = req.id,
+//                         value = req.value,
+//                         cast = "::uuid"
+//                 )
+//             }
+
+//             "owning_group" -> {
+//                 util.updateField(
+//                         token = req.token,
+//                         table = "common.tickets",
+//                         column = "owning_group",
+//                         id = req.id,
+//                         value = req.value,
+//                         cast = "::uuid"
+//                 )
+//             }
+//         }
+// =======
+//             util.updateField(
+//               token = req.token,
+//               table = "common.tickets",
+//               column = "content",
+//               id = req.id,
+//               value = req.ticket.content,
+//             )
+
+// >>>>>>> a18aa452d9d4f0d8cdce0ff1253d613e4b4f05cc
 
         return CommonOrganizationsUpdateResponse(ErrorType.NoError)
     }

@@ -8,28 +8,31 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateInternshipEngagementExRequest {
   token: string;
   internshipEngagement: {
-    project: number;
-    ethnologue: number;
-    change_to_plan: number;
+    project: string;
+    change_to_plan: string;
     active: boolean;
-    communications_complete: string;
+    ceremony: string;
+    communications_complete_date: string;
     complete_date: string;
-    country_of_origin: number;
+    country_of_origin: string;
     disbursement_complete_date: string;
     end_date: string;
     end_date_override: string;
-    growth_plan: number;
+    growth_plan: string;
     initial_end_date: string;
-    intern: number;
+    intern: string;
     last_reactivated_at: string;
-    mentor: number;
-    methodology: string;
+    mentor: string;
+    methodologies: string;
     paratext_registry: string;
-    periodic_reports_directory: number;
+    periodic_reports_directory: string;
     position: string;
+    sensitivity: string;
     start_date: string;
     start_date_override: string;
     status: string;
+    status_modified_at: string;
+    last_suspended_at: string;
   };
 }
 class CreateInternshipEngagementExResponse extends GenericResponse {
@@ -49,7 +52,7 @@ class ScInternshipEngagementUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScInternshipEngagementUpdateResponse {
@@ -58,12 +61,12 @@ class ScInternshipEngagementUpdateResponse {
 }
 
 class DeleteInternshipEngagementExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteInternshipEngagementExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -74,30 +77,33 @@ class DeleteInternshipEngagementExResponse extends GenericResponse {
 export class ScInternshipEngagements {
   @State() internshipEngagementsResponse: ScInternshipEngagementListResponse;
 
-  newProject: number;
-  newEthnologue: number;
-  newChange_to_plan: number;
+  newProject: string;
+  newChange_to_plan: string;
   newActive: boolean;
-  newCommunications_complete: string;
+  newCeremony: string;
+  newCommunications_complete_date: string;
   newComplete_date: string;
-  newCountry_of_origin: number;
+  newCountry_of_origin: string;
   newDisbursement_complete_date: string;
   newEnd_date: string;
   newEnd_date_override: string;
-  newGrowth_plan: number;
+  newGrowth_plan: string;
   newInitial_end_date: string;
-  newIntern: number;
+  newIntern: string;
   newLast_reactivated_at: string;
-  newMentor: number;
-  newMethodology: string;
+  newMentor: string;
+  newMethodologies: string;
   newParatext_registry: string;
-  newPeriodic_reports_directory: number;
+  newPeriodic_reports_directory: string;
   newPosition: string;
+  newSensitivity: string;
   newStart_date: string;
   newStart_date_override: string;
   newStatus: string;
+  newStatus_modified_at: string;
+  newLast_suspended_at: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScInternshipEngagementUpdateRequest, ScInternshipEngagementUpdateResponse>('sc/internship-engagements/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -143,12 +149,14 @@ export class ScInternshipEngagements {
     });
   }
 
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
   projectChange(event) {
     this.newProject = event.target.value;
-  }
-
-  ethnologueChange(event) {
-    this.newEthnologue = event.target.value;
   }
 
   change_to_planChange(event) {
@@ -159,8 +167,12 @@ export class ScInternshipEngagements {
     this.newActive = event.target.value;
   }
 
-  communications_completeChange(event) {
-    this.newCommunications_complete = event.target.value;
+  ceremonyChange(event) {
+    this.newCeremony = event.target.value;
+  }
+
+  communications_complete_dateChange(event) {
+    this.newCommunications_complete_date = event.target.value;
   }
 
   complete_dateChange(event) {
@@ -203,8 +215,8 @@ export class ScInternshipEngagements {
     this.newMentor = event.target.value;
   }
 
-  methodologyChange(event) {
-    this.newMethodology = event.target.value;
+  methodologiesChange(event) {
+    this.newMethodologies = event.target.value;
   }
 
   paratext_registryChange(event) {
@@ -219,6 +231,10 @@ export class ScInternshipEngagements {
     this.newPosition = event.target.value;
   }
 
+  sensitivityChange(event) {
+    this.newSensitivity = event.target.value;
+  }
+
   start_dateChange(event) {
     this.newStart_date = event.target.value;
   }
@@ -231,6 +247,14 @@ export class ScInternshipEngagements {
     this.newStatus = event.target.value;
   }
 
+  status_modified_atChange(event) {
+    this.newStatus_modified_at = event.target.value;
+  }
+
+  last_suspended_atChange(event) {
+    this.newLast_suspended_at = event.target.value;
+  }
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -239,10 +263,10 @@ export class ScInternshipEngagements {
       token: globals.globalStore.state.token,
       internshipEngagement: {
         project: this.newProject,
-        ethnologue: this.newEthnologue,
         change_to_plan: this.newChange_to_plan,
         active: this.newActive,
-        communications_complete: this.newCommunications_complete,
+        ceremony: this.newCeremony,
+        communications_complete_date: this.newCommunications_complete_date,
         complete_date: this.newComplete_date,
         country_of_origin: this.newCountry_of_origin,
         disbursement_complete_date: this.newDisbursement_complete_date,
@@ -253,13 +277,16 @@ export class ScInternshipEngagements {
         intern: this.newIntern,
         last_reactivated_at: this.newLast_reactivated_at,
         mentor: this.newMentor,
-        methodology: this.newMethodology,
+        methodologies: this.newMethodologies,
         paratext_registry: this.newParatext_registry,
         periodic_reports_directory: this.newPeriodic_reports_directory,
         position: this.newPosition,
+        sensitivity: this.newSensitivity,
         start_date: this.newStart_date,
         start_date_override: this.newStart_date_override,
         status: this.newStatus,
+        status_modified_at: this.newStatus_modified_at,
+        last_suspended_at: this.newLast_suspended_at,
       },
     });
 
@@ -276,29 +303,21 @@ export class ScInternshipEngagements {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
-
     {
       field: 'project',
       displayName: 'Project',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
-    {
-      field: 'ethnologue',
-      displayName: 'Ethnologue',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'change_to_plan',
       displayName: 'Change To Plan',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -314,8 +333,15 @@ export class ScInternshipEngagements {
       updateFn: this.handleUpdate,
     },
     {
-      field: 'communications_complete',
-      displayName: 'Communications Complete',
+      field: 'ceremony',
+      displayName: 'Ceremony',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'communications_complete_date',
+      displayName: 'Communications Complete Date',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
@@ -391,10 +417,26 @@ export class ScInternshipEngagements {
       updateFn: this.handleUpdate,
     },
     {
-      field: 'methodology',
-      displayName: 'Methodology',
+      field: 'methodologies',
+      displayName: 'Methodologies',
       width: 200,
       editable: true,
+      selectOptions: [
+        { display: 'Paratext', value: 'Paratext' },
+        { display: 'OtherWritten', value: 'OtherWritten' },
+        { display: 'Render', value: 'Render' },
+        { display: 'Audacity', value: 'Audacity' },
+        { display: 'AdobeAudition', value: 'AdobeAudition' },
+        { display: 'OtherOralTranslation', value: 'OtherOralTranslation' },
+        { display: 'StoryTogether', value: 'StoryTogether' },
+        { display: 'SeedCompanyMethod', value: 'SeedCompanyMethod' },
+        { display: 'OneStory', value: 'OneStory' },
+        { display: 'Craft2Tell', value: 'Craft2Tell' },
+        { display: 'OtherOralStories', value: 'OtherOralStories' },
+        { display: 'Film', value: 'Film' },
+        { display: 'SignLanguage', value: 'SignLanguage' },
+        { display: 'OtherVisual', value: 'OtherVisual' },
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -417,9 +459,35 @@ export class ScInternshipEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'A', value: 'A' },
-        { display: 'B', value: 'B' },
-        { display: 'C', value: 'C' },
+        { display: 'ConsultantInTraining', value: 'ConsultantInTraining' },
+        { display: 'ExegeticalFacilitator', value: 'ExegeticalFacilitator' },
+        { display: 'LeadershipDevelopment', value: 'LeadershipDevelopment' },
+        { display: 'Mobilization', value: 'Mobilization' },
+        { display: 'Personnel', value: 'Personnel' },
+        { display: 'Communication', value: 'Communication' },
+        { display: 'Administration', value: 'Administration' },
+        { display: 'Technology', value: 'Technology' },
+        { display: 'Finance', value: 'Finance' },
+        { display: 'LanguageProgramManager', value: 'LanguageProgramManager' },
+        { display: 'Literacy', value: 'Literacy' },
+        { display: 'TranslationFacilitator', value: 'TranslationFacilitator' },
+        { display: 'OralityFacilitator', value: 'OralityFacilitator' },
+        { display: 'ScriptureEngagement', value: 'ScriptureEngagement' },
+        { display: 'OtherAttached', value: 'OtherAttached' },
+        { display: 'OtherTranslationCapacity', value: 'OtherTranslationCapacity' },
+        { display: 'OtherPartnershipCapacity', value: 'OtherPartnershipCapacity' },
+      ],
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'sensitivity',
+      displayName: 'Sensitivity',
+      width: 200,
+      editable: true,
+      selectOptions: [
+        { display: 'Low', value: 'Low' },
+        { display: 'Medium', value: 'Medium' },
+        { display: 'High', value: 'High' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -443,13 +511,40 @@ export class ScInternshipEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        { display: 'A', value: 'A' },
-        { display: 'B', value: 'B' },
-        { display: 'C', value: 'C' },
+        { display: 'InDevelopment', value: 'InDevelopment' },
+        { display: 'DidNotDevelop', value: 'DidNotDevelop' },
+        { display: 'Active', value: 'Active' },
+        { display: 'DiscussingTermination', value: 'DiscussingTermination' },
+        { display: 'DiscussingReactivation', value: 'DiscussingReactivation' },
+        { display: 'DiscussingChangeToPlan', value: 'DiscussingChangeToPlan' },
+        { display: 'DiscussingSuspension', value: 'DiscussingSuspension' },
+        { display: 'FinalizingCompletion', value: 'FinalizingCompletion' },
+        { display: 'ActiveChangedPlan', value: 'ActiveChangedPlan' },
+        { display: 'Suspended', value: 'Suspended' },
+        { display: 'Terminated', value: 'Terminated' },
+        { display: 'Completed', value: 'Completed' },
+        { display: 'Converted', value: 'Converted' },
+        { display: 'Unapproved', value: 'Unapproved' },
+        { display: 'Transferred', value: 'Transferred' },
+        { display: 'NotRenewed', value: 'NotRenewed' },
+        { display: 'Rejected', value: 'Rejected' },
       ],
       updateFn: this.handleUpdate,
     },
-
+    {
+      field: 'status_modified_at',
+      displayName: 'Status Modified At',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'last_suspended_at',
+      displayName: 'Last Suspended At',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -512,16 +607,7 @@ export class ScInternshipEngagements {
                 <label htmlFor="project">Project</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="project" name="project" onInput={event => this.projectChange(event)} />
-              </span>
-            </div>
-
-            <div id="ethnologue-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="ethnologue">Ethnologue</label>
-              </span>
-              <span class="form-thing">
-                <input type="number" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
+                <input type="text" id="project" name="project" onInput={event => this.projectChange(event)} />
               </span>
             </div>
 
@@ -530,7 +616,7 @@ export class ScInternshipEngagements {
                 <label htmlFor="change_to_plan">Change To Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+                <input type="text" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
             </div>
 
@@ -551,12 +637,21 @@ export class ScInternshipEngagements {
               </span>
             </div>
 
-            <div id="communications_complete-holder" class="form-input-item form-thing">
+            <div id="ceremony-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="communications_complete">Communications Complete Date</label>
+                <label htmlFor="ceremony">Ceremony</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="communications_complete" name="communications_complete" onInput={event => this.communications_completeChange(event)} />
+                <input type="text" id="ceremony" name="ceremony" onInput={event => this.ceremonyChange(event)} />
+              </span>
+            </div>
+
+            <div id="communications_complete_date-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="communications_complete_date">Communications Complete Date</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="communications_complete_date" name="communications_complete_date" onInput={event => this.communications_complete_dateChange(event)} />
               </span>
             </div>
 
@@ -574,7 +669,7 @@ export class ScInternshipEngagements {
                 <label htmlFor="country_of_origin">Country Of Origin</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="country_of_origin" name="country_of_origin" onInput={event => this.country_of_originChange(event)} />
+                <input type="text" id="country_of_origin" name="country_of_origin" onInput={event => this.country_of_originChange(event)} />
               </span>
             </div>
 
@@ -610,7 +705,7 @@ export class ScInternshipEngagements {
                 <label htmlFor="growth_plan">Growth Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="growth_plan" name="growth_plan" onInput={event => this.growth_planChange(event)} />
+                <input type="text" id="growth_plan" name="growth_plan" onInput={event => this.growth_planChange(event)} />
               </span>
             </div>
 
@@ -628,7 +723,7 @@ export class ScInternshipEngagements {
                 <label htmlFor="role">Intern</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="intern" name="intern" onInput={event => this.internChange(event)} />
+                <input type="text" id="intern" name="intern" onInput={event => this.internChange(event)} />
               </span>
             </div>
 
@@ -646,25 +741,58 @@ export class ScInternshipEngagements {
                 <label htmlFor="mentor">Mentor</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="mentor" name="mentor" onInput={event => this.mentorChange(event)} />
+                <input type="text" id="mentor" name="mentor" onInput={event => this.mentorChange(event)} />
               </span>
             </div>
 
-            <div id="methodology-holder" class="form-input-item form-thing">
+            <div id="methodologies-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="methodology">Methodology</label>
+                <label htmlFor="methodologies">Methodologies</label>
               </span>
               <span class="form-thing">
-                <select id="methodology" name="methodology" onInput={event => this.methodologyChange(event)}>
+                <select id="methodologies" name="methodologies" onInput={event => this.methodologiesChange(event)}>
                   <option value="">Select Methodology</option>
-                  <option value="A" selected={this.newMethodology === 'A'}>
-                    A
+                  <option value="Paratext" selected={this.newMethodologies === 'Paratext'}>
+                    Paratext
                   </option>
-                  <option value="B" selected={this.newMethodology === 'B'}>
-                    B
+                  <option value="OtherWritten" selected={this.newMethodologies === 'OtherWritten'}>
+                    OtherWritten
                   </option>
-                  <option value="C" selected={this.newMethodology === 'C'}>
-                    C
+                  <option value="Render" selected={this.newMethodologies === 'Render'}>
+                    Render
+                  </option>
+                  <option value="Audacity" selected={this.newMethodologies === 'Audacity'}>
+                    Audacity
+                  </option>
+                  <option value="AdobeAudition" selected={this.newMethodologies === 'AdobeAudition'}>
+                    AdobeAudition
+                  </option>
+                  <option value="OtherOralTranslation" selected={this.newMethodologies === 'OtherOralTranslation'}>
+                    OtherOralTranslation
+                  </option>
+                  <option value="StoryTogether" selected={this.newMethodologies === 'StoryTogether'}>
+                    StoryTogether
+                  </option>
+                  <option value="SeedCompanyMethod" selected={this.newMethodologies === 'SeedCompanyMethod'}>
+                    SeedCompanyMethod
+                  </option>
+                  <option value="OneStory" selected={this.newMethodologies === 'OneStory'}>
+                    OneStory
+                  </option>
+                  <option value="Craft2Tell" selected={this.newMethodologies === 'Craft2Tell'}>
+                    Craft2Tell
+                  </option>
+                  <option value="OtherOralStories" selected={this.newMethodologies === 'OtherOralStories'}>
+                    OtherOralStories
+                  </option>
+                  <option value="Film" selected={this.newMethodologies === 'Film'}>
+                    Film
+                  </option>
+                  <option value="SignLanguage" selected={this.newMethodologies === 'SignLanguage'}>
+                    SignLanguage
+                  </option>
+                  <option value="OtherVisual" selected={this.newMethodologies === 'OtherVisual'}>
+                    OtherVisual
                   </option>
                 </select>
               </span>
@@ -684,7 +812,7 @@ export class ScInternshipEngagements {
                 <label htmlFor="periodic_reports_directory">Periodic Reports Directory</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="periodic_reports_directory" name="periodic_reports_directory" onInput={event => this.periodic_reports_directoryChange(event)} />
+                <input type="text" id="periodic_reports_directory" name="periodic_reports_directory" onInput={event => this.periodic_reports_directoryChange(event)} />
               </span>
             </div>
 
@@ -695,14 +823,76 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <select id="position" name="position" onInput={event => this.positionChange(event)}>
                   <option value="">Select Position</option>
-                  <option value="A" selected={this.newPosition === 'A'}>
-                    A
+                  <option value="ConsultantInTraining" selected={this.newPosition === 'ConsultantInTraining'}>
+                    ConsultantInTraining
                   </option>
-                  <option value="B" selected={this.newPosition === 'B'}>
-                    B
+                  <option value="ExegeticalFacilitator" selected={this.newPosition === 'ExegeticalFacilitator'}>
+                    ExegeticalFacilitator
                   </option>
-                  <option value="C" selected={this.newPosition === 'C'}>
-                    C
+                  <option value="LeadershipDevelopment" selected={this.newPosition === 'LeadershipDevelopment'}>
+                    LeadershipDevelopment
+                  </option>
+                  <option value="Mobilization" selected={this.newPosition === 'Mobilization'}>
+                    Mobilization
+                  </option>
+                  <option value="Personnel" selected={this.newPosition === 'Personnel'}>
+                    Personnel
+                  </option>
+                  <option value="Communication" selected={this.newPosition === 'Communication'}>
+                    Communication
+                  </option>
+                  <option value="Administration" selected={this.newPosition === 'Administration'}>
+                    Administration
+                  </option>
+                  <option value="Technology" selected={this.newPosition === 'Technology'}>
+                    Technology
+                  </option>
+                  <option value="Finance" selected={this.newPosition === 'Finance'}>
+                    Finance
+                  </option>
+                  <option value="LanguageProgramManager" selected={this.newPosition === 'LanguageProgramManager'}>
+                    LanguageProgramManager
+                  </option>
+                  <option value="Literacy" selected={this.newPosition === 'Literacy'}>
+                    Literacy
+                  </option>
+                  <option value="TranslationFacilitator" selected={this.newPosition === 'TranslationFacilitator'}>
+                    TranslationFacilitator
+                  </option>
+                  <option value="OralityFacilitator" selected={this.newPosition === 'OralityFacilitator'}>
+                    OralityFacilitator
+                  </option>
+                  <option value="ScriptureEngagement" selected={this.newPosition === 'ScriptureEngagement'}>
+                    ScriptureEngagement
+                  </option>
+                  <option value="OtherAttached" selected={this.newPosition === 'OtherAttached'}>
+                    OtherAttached
+                  </option>
+                  <option value="OtherTranslationCapacity" selected={this.newPosition === 'OtherTranslationCapacity'}>
+                    OtherTranslationCapacity
+                  </option>
+                  <option value="OtherPartnershipCapacity" selected={this.newPosition === 'OtherPartnershipCapacity'}>
+                    OtherPartnershipCapacity
+                  </option>
+                </select>
+              </span>
+            </div>
+
+            <div id="sensitivity-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="sensitivity">Sensitivity</label>
+              </span>
+              <span class="form-thing">
+                <select id="sensitivity" name="sensitivity" onInput={event => this.sensitivityChange(event)}>
+                  <option value="">Select Sensitivity</option>
+                  <option value="Low" selected={this.newSensitivity === 'Low'}>
+                    Low
+                  </option>
+                  <option value="Medium" selected={this.newSensitivity === 'Medium'}>
+                    Medium
+                  </option>
+                  <option value="High" selected={this.newSensitivity === 'High'}>
+                    High
                   </option>
                 </select>
               </span>
@@ -733,16 +923,76 @@ export class ScInternshipEngagements {
               <span class="form-thing">
                 <select id="status" name="status" onInput={event => this.statusChange(event)}>
                   <option value="">Select Status</option>
-                  <option value="A" selected={this.newStatus === 'A'}>
-                    A
+                  <option value="InDevelopment" selected={this.newStatus === 'InDevelopment'}>
+                    InDevelopment
                   </option>
-                  <option value="B" selected={this.newStatus === 'B'}>
-                    B
+                  <option value="DidNotDevelop" selected={this.newStatus === 'DidNotDevelop'}>
+                    DidNotDevelop
                   </option>
-                  <option value="C" selected={this.newStatus === 'C'}>
-                    C
+                  <option value="Active" selected={this.newStatus === 'Active'}>
+                    Active
+                  </option>
+                  <option value="DiscussingTermination" selected={this.newStatus === 'DiscussingTermination'}>
+                    DiscussingTermination
+                  </option>
+                  <option value="DiscussingReactivation" selected={this.newStatus === 'DiscussingReactivation'}>
+                    DiscussingReactivation
+                  </option>
+                  <option value="DiscussingChangeToPlan" selected={this.newStatus === 'DiscussingChangeToPlan'}>
+                    DiscussingChangeToPlan
+                  </option>
+                  <option value="DiscussingSuspension" selected={this.newStatus === 'DiscussingSuspension'}>
+                    DiscussingSuspension
+                  </option>
+                  <option value="FinalizingCompletion" selected={this.newStatus === 'FinalizingCompletion'}>
+                    FinalizingCompletion
+                  </option>
+                  <option value="ActiveChangedPlan" selected={this.newStatus === 'ActiveChangedPlan'}>
+                    ActiveChangedPlan
+                  </option>
+                  <option value="Suspended" selected={this.newStatus === 'Suspended'}>
+                    Suspended
+                  </option>
+                  <option value="Terminated" selected={this.newStatus === 'Terminated'}>
+                    Terminated
+                  </option>
+                  <option value="Completed" selected={this.newStatus === 'Completed'}>
+                    Completed
+                  </option>
+                  <option value="Converted" selected={this.newStatus === 'Converted'}>
+                    Converted
+                  </option>
+                  <option value="Unapproved" selected={this.newStatus === 'Unapproved'}>
+                    Unapproved
+                  </option>
+                  <option value="Transferred" selected={this.newStatus === 'Transferred'}>
+                    Transferred
+                  </option>
+                  <option value="NotRenewed" selected={this.newStatus === 'NotRenewed'}>
+                    NotRenewed
+                  </option>
+                  <option value="Rejected" selected={this.newStatus === 'Rejected'}>
+                    Rejected
                   </option>
                 </select>
+              </span>
+            </div>
+
+            <div id="status_modified_at-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="status_modified_at">Status Modified At</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="status_modified_at" name="status_modified_at" onInput={event => this.status_modified_atChange(event)} />
+              </span>
+            </div>
+
+            <div id="last_suspended_at-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="last_suspended_at">Last Suspended At</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="last_suspended_at" name="last_suspended_at" onInput={event => this.last_suspended_atChange(event)} />
               </span>
             </div>
 

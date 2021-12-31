@@ -8,9 +8,11 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateOrganizationExRequest {
   token: string;
   organization: {
-    id: number;
-    neo4j_id: string;
+    id: string;
+    // neo4j_id: string;
     address: string;
+    sensitivity: string;
+    root_directory: string;
   };
 }
 class CreateOrganizationExResponse extends GenericResponse {
@@ -30,7 +32,7 @@ class ScOrganizationUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScOrganizationUpdateResponse {
@@ -39,12 +41,12 @@ class ScOrganizationUpdateResponse {
 }
 
 class DeleteOrganizationExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteOrganizationExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,11 +57,13 @@ class DeleteOrganizationExResponse extends GenericResponse {
 export class ScOrganizations {
   @State() organizationsResponse: ScOrganizationListResponse;
 
-  newNeo4j_id: string;
+  // newNeo4j_id: string;
   newAddress: string;
-  newId: number;
+  newId: string;
+  newSensitivity: string;
+  newRoot_directory: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScOrganizationUpdateRequest, ScOrganizationUpdateResponse>('sc/organizations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -103,8 +107,22 @@ export class ScOrganizations {
     });
   }
 
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
+  // neo4j_idChange(event) {
+  //   this.newNeo4j_id = event.target.value;
+  // }
+
+  sensitivityChange(event) {
+    this.newSensitivity = event.target.value;
+  }
+
+  root_directoryChange(event) {
+    this.newRoot_directory = event.target.value;
   }
 
   idChange(event) {
@@ -123,7 +141,9 @@ export class ScOrganizations {
       token: globals.globalStore.state.token,
       organization: {
         id: this.newId,
-        neo4j_id: this.newNeo4j_id,
+        // neo4j_id: this.newNeo4j_id,
+        sensitivity: this.newSensitivity,
+        root_directory: this.newRoot_directory,
         address: this.newAddress,
       },
     });
@@ -141,14 +161,33 @@ export class ScOrganizations {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
+    // {
+    //   field: 'neo4j_id',
+    //   displayName: 'neo4j_id',
+    //   width: 200,
+    //   editable: true,
+    //   updateFn: this.handleUpdate,
+    // },
     {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
+      field: 'sensitivity',
+      displayName: 'Sensitivity',
       width: 200,
+      editable: true,
+      selectOptions: [
+        { display: 'Low', value: 'Low' },
+        { display: 'Medium', value: 'Medium' },
+        { display: 'High', value: 'High' },
+      ],
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'root_directory',
+      displayName: 'Root Directory',
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -221,16 +260,45 @@ export class ScOrganizations {
                 <label htmlFor="id">Common Organization ID</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="id" name="id" onInput={event => this.idChange(event)} />
+                <input type="text" id="id" name="id" onInput={event => this.idChange(event)} />
               </span>
             </div>
 
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            {/* <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">neo4j_id</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
+              </span>
+            </div> */}
+
+            <div id="sensitivity-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="sensitivity">Sensitivity</label>
+              </span>
+              <span class="form-thing">
+                <select id="sensitivity" name="sensitivity" onInput={event => this.sensitivityChange(event)}>
+                  <option value="">Select Sensitivity</option>
+                  <option value="Low" selected={this.newSensitivity === 'Low'}>
+                    Low
+                  </option>
+                  <option value="Medium" selected={this.newSensitivity === 'Medium'}>
+                    Medium
+                  </option>
+                  <option value="High" selected={this.newSensitivity === 'High'}>
+                    High
+                  </option>
+                </select>
+              </span>
+            </div>
+
+            <div id="root_directory-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="root_directory">Root Directory</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="root_directory" name="root_directory" onInput={event => this.root_directoryChange(event)} />
               </span>
             </div>
 

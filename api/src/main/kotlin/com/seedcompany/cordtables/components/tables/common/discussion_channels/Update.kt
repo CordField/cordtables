@@ -12,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonDiscussionChannelsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -49,7 +49,6 @@ class Update(
                     value = req.value,
                 )
             }
-
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
@@ -57,9 +56,9 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
-
             "owning_group" -> {
                 util.updateField(
                     token = req.token,
@@ -67,9 +66,9 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
-
         }
 
         return CommonDiscussionChannelsUpdateResponse(ErrorType.NoError)

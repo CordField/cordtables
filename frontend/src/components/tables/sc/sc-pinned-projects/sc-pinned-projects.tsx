@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePinnedProjectExRequest {
   token: string;
   pinnedProject: {
-    person: number;
-    project: number;
+    person: string;
+    project: string;
   };
 }
 class CreatePinnedProjectExResponse extends GenericResponse {
@@ -29,7 +29,7 @@ class ScPinnedProjectUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPinnedProjectUpdateResponse {
@@ -38,12 +38,12 @@ class ScPinnedProjectUpdateResponse {
 }
 
 class DeletePinnedProjectExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePinnedProjectExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,10 +54,10 @@ class DeletePinnedProjectExResponse extends GenericResponse {
 export class ScPinnedProjects {
   @State() pinnedProjectsResponse: ScPinnedProjectListResponse;
 
-  newPerson: number;
-  newProject: number;
+  newPerson: string;
+  newProject: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScPinnedProjectUpdateRequest, ScPinnedProjectUpdateResponse>('sc/pinned-projects/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -134,21 +134,21 @@ export class ScPinnedProjects {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'person',
       displayName: 'Person',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'project',
       displayName: 'Project',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },

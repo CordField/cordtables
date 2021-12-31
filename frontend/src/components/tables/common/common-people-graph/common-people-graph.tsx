@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePeopleGraphExRequest {
   token: string;
   peopleGraph: {
-    from_person: number;
-    to_person: number;
+    from_person: string;
+    to_person: string;
     rel_type: string;
   };
 }
@@ -30,7 +30,7 @@ class CommonPeopleGraphUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonPeopleGraphUpdateResponse {
@@ -39,12 +39,12 @@ class CommonPeopleGraphUpdateResponse {
 }
 
 class DeletePeopleGraphExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePeopleGraphExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,11 +55,11 @@ class DeletePeopleGraphExResponse extends GenericResponse {
 export class CommonPeopleGraphs {
   @State() peopleGraphsResponse: CommonPeopleGraphListResponse;
 
-  newFrom_person: number;
-  newTo_person: number;
+  newFrom_person: string;
+  newTo_person: string;
   newRel_type: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonPeopleGraphUpdateRequest, CommonPeopleGraphUpdateResponse>('common/people-graph/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -141,7 +141,7 @@ export class CommonPeopleGraphs {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -233,7 +233,7 @@ export class CommonPeopleGraphs {
                 <label htmlFor="from_person">From Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="from_person" name="from_person" onInput={event => this.from_personChange(event)} />
+                <input type="text" id="from_person" name="from_person" onInput={event => this.from_personChange(event)} />
               </span>
             </div>
 
@@ -242,7 +242,7 @@ export class CommonPeopleGraphs {
                 <label htmlFor="to_person">To Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="to_person" name="to_person" onInput={event => this.to_personChange(event)} />
+                <input type="text" id="to_person" name="to_person" onInput={event => this.to_personChange(event)} />
               </span>
             </div>
 

@@ -8,12 +8,12 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePrayerRequestExRequest {
   token: string;
   prayerRequest: {
-    request_language_id: number;
-    target_language_id: number;
+    request_language_id: string;
+    target_language_id: string;
     sensitivity: string;
     organization_name: string;
-    parent: number;
-    translator: number;
+    parent: string;
+    translator: string;
     location: string;
     title: string;
     content: string;
@@ -38,7 +38,7 @@ class UpPrayerRequestUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class UpPrayerRequestUpdateResponse {
@@ -47,12 +47,12 @@ class UpPrayerRequestUpdateResponse {
 }
 
 class DeletePrayerRequestExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePrayerRequestExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -63,19 +63,19 @@ class DeletePrayerRequestExResponse extends GenericResponse {
 export class UpPrayerRequests {
   @State() prayerRequestsResponse: UpPrayerRequestListResponse;
 
-  newRequest_language_id: number;
-  newTarget_language_id: number;
+  newRequest_language_id: string;
+  newTarget_language_id: string;
   newSensitivity: string;
   newOrganization_name: string;
-  newParent: number;
-  newTranslator: number;
+  newParent: string;
+  newTranslator: string;
   newLocation: string;
   newTitle: string;
   newContent: string;
   newReviewed: boolean;
   newPrayer_type;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<UpPrayerRequestUpdateRequest, UpPrayerRequestUpdateResponse>('up/prayer-requests/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -197,21 +197,21 @@ export class UpPrayerRequests {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'request_language_id',
       displayName: 'Request Language ID',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'target_language_id',
       displayName: 'Target Language ID',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -237,21 +237,21 @@ export class UpPrayerRequests {
     {
       field: 'parent',
       displayName: 'Parent',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'translator',
       displayName: 'Translator',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'location',
       displayName: 'Location',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -359,7 +359,7 @@ export class UpPrayerRequests {
                 <label htmlFor="request_language_id">Request Language ID</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="request_language_id" name="request_language_id" onInput={event => this.request_language_idChange(event)} />
+                <input type="text" id="request_language_id" name="request_language_id" onInput={event => this.request_language_idChange(event)} />
               </span>
             </div>
 
@@ -368,7 +368,7 @@ export class UpPrayerRequests {
                 <label htmlFor="target_language_id">Target Language ID</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="target_language_id" name="target_language_id" onInput={event => this.target_language_idChange(event)} />
+                <input type="text" id="target_language_id" name="target_language_id" onInput={event => this.target_language_idChange(event)} />
               </span>
             </div>
 
@@ -406,7 +406,7 @@ export class UpPrayerRequests {
                 <label htmlFor="parent">Parent</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="parent" name="parent" onInput={event => this.parentChange(event)} />
+                <input type="text" id="parent" name="parent" onInput={event => this.parentChange(event)} />
               </span>
             </div>
 
@@ -415,7 +415,7 @@ export class UpPrayerRequests {
                 <label htmlFor="translator">Translator</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="translator" name="translator" onInput={event => this.translatorChange(event)} />
+                <input type="text" id="translator" name="translator" onInput={event => this.translatorChange(event)} />
               </span>
             </div>
 

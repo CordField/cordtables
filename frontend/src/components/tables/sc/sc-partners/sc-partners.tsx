@@ -8,12 +8,12 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePartnerExRequest {
   token: string;
   partner: {
-    organization: number;
+    organization: string;
     active: boolean;
     financial_reporting_types: string;
     is_innovations_client: boolean;
     pmc_entity_code: string;
-    point_of_contact: number;
+    point_of_contact: string;
     types: string;
   };
 }
@@ -34,7 +34,7 @@ class ScPartnerUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPartnerUpdateResponse {
@@ -43,12 +43,12 @@ class ScPartnerUpdateResponse {
 }
 
 class DeletePartnerExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePartnerExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -59,15 +59,15 @@ class DeletePartnerExResponse extends GenericResponse {
 export class ScPartners {
   @State() partnersResponse: ScPartnerListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newActive: boolean;
   newFinancial_reporting_types: string;
   newIs_innovations_client: boolean;
   newPmc_entity_code: string;
-  newPoint_of_contact: number;
+  newPoint_of_contact: string;
   newTypes: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScPartnerUpdateRequest, ScPartnerUpdateResponse>('sc/partners/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -162,14 +162,14 @@ export class ScPartners {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -191,9 +191,8 @@ export class ScPartners {
       editable: true,
       isMulti: true,
       selectOptions: [
-        { display: 'A', value: 'A' },
-        { display: 'B', value: 'B' },
-        { display: 'C', value: 'C' },
+        { display: 'Funded', value: 'Funded' },
+        { display: 'FieldEngaged', value: 'FieldEngaged' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -229,13 +228,14 @@ export class ScPartners {
       editable: true,
       isMulti: true,
       selectOptions: [
-        { display: 'A', value: 'A' },
-        { display: 'B', value: 'B' },
-        { display: 'C', value: 'C' },
+        { display: 'Managing', value: 'Managing' },
+        { display: 'Funding', value: 'Funding' },
+        { display: 'Impact', value: 'Impact' },
+        { display: 'Technical', value: 'Technical' },
+        { display: 'Resource', value: 'Resource' },
       ],
       updateFn: this.handleUpdate,
     },
-
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -298,7 +298,7 @@ export class ScPartners {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 
@@ -367,7 +367,7 @@ export class ScPartners {
                 <label htmlFor="point_of_contact">Point Of Contact</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="point_of_contact" name="point_of_contact" onInput={event => this.point_of_contactChange(event)} />
+                <input type="text" id="point_of_contact" name="point_of_contact" onInput={event => this.point_of_contactChange(event)} />
               </span>
             </div>
 

@@ -20,7 +20,7 @@ import javax.sql.DataSource
 
 data class CommonOrganizationsReadRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 data class CommonOrganizationsReadResponse(
@@ -76,7 +76,7 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
                 var name: String? = jdbcResult.getString("name")
@@ -85,25 +85,25 @@ class Read(
                 var sensitivity: String? = jdbcResult.getString("sensitivity")
                 if (jdbcResult.wasNull()) sensitivity = null
 
-                var primary_location: Int? = jdbcResult.getInt("primary_location")
+                var primary_location: String? = jdbcResult.getString("primary_location")
                 if (jdbcResult.wasNull()) primary_location = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val organization =

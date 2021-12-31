@@ -21,7 +21,7 @@ data class ScPartnershipsCreateRequest(
 
 data class ScPartnershipsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -52,11 +52,11 @@ class Create(
             """
             insert into sc.partnerships(project, partner, change_to_plan, active, agreement, created_by, modified_by, owning_person, owning_group)
                 values(
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
                     ?,
-                    ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -72,11 +72,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.partnership.project,
             req.partnership.partner,
             req.partnership.change_to_plan,
@@ -85,6 +85,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

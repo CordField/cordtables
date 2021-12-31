@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerEngagementExRequest {
   token: string;
   globalPartnerEngagement: {
-    organization: number;
+    organization: string;
     type: string;
     mou_start: string;
     mou_end: string;
@@ -33,7 +33,7 @@ class ScGlobalPartnerEngagementUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScGlobalPartnerEngagementUpdateResponse {
@@ -42,12 +42,12 @@ class ScGlobalPartnerEngagementUpdateResponse {
 }
 
 class DeleteGlobalPartnerEngagementExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGlobalPartnerEngagementExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -58,14 +58,14 @@ class DeleteGlobalPartnerEngagementExResponse extends GenericResponse {
 export class ScGlobalPartnerEngagements {
   @State() globalPartnerEngagementsResponse: ScGlobalPartnerEngagementListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newType: string;
   newMou_start: string;
   newMou_end: string;
   newSc_roles: string;
   newPartner_roles: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScGlobalPartnerEngagementUpdateRequest, ScGlobalPartnerEngagementUpdateResponse>('sc/global-partner-engagements/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -164,14 +164,14 @@ export class ScGlobalPartnerEngagements {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },

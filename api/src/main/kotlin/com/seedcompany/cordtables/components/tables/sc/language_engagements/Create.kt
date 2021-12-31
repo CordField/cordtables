@@ -21,7 +21,7 @@ data class ScLanguageEngagementsCreateRequest(
 
 data class ScLanguageEngagementsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -51,33 +51,37 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.language_engagements(neo4j_id, project, ethnologue, change_to_plan, active, communications_complete_date, complete_date, disbursement_complete_date, end_date, 
-            end_date_override, initial_end_date, is_first_scripture, is_luke_partnership, is_sent_printing, last_reactivated_at, paratext_registry, periodic_reports_directory, pnp, pnp_file, 
-            product_engagement_tag, start_date, start_date_override, status, created_by, modified_by, owning_person, owning_group)
+            insert into sc.language_engagements(project, ethnologue, change_to_plan, active, ceremony, is_open_to_investor_visit, communications_complete_date, complete_date, disbursement_complete_date, end_date, 
+            end_date_override, initial_end_date, is_first_scripture, is_luke_partnership, is_sent_printing, last_suspended_at, last_reactivated_at, paratext_registry, periodic_reports_directory, pnp, pnp_file, 
+            product_engagement_tag, start_date, start_date_override, status, status_modified_at, historic_goal, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::boolean,
+                    ?::uuid,
+                    ?::boolean,
                     ?::timestamp,
                     ?::timestamp,
                     ?::timestamp,
                     ?::timestamp,
                     ?::timestamp,
                     ?::timestamp,
-                    ?,
-                    ?,
-                    ?,
+                    ?::boolean,
+                    ?::boolean,
+                    ?::boolean,
+                    ?::timestamp,
                     ?::timestamp,
                     ?,
+                    ?::uuid,
                     ?,
-                    ?,
-                    ?,
+                    ?::uuid,
                     ?::common.project_engagement_tag,
                     ?::timestamp,
                     ?::timestamp,
                     ?::common.engagement_status,
+                    ?::timestamp,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -93,16 +97,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
-            req.languageEngagement.neo4j_id,
+            String::class.java,
             req.languageEngagement.project,
             req.languageEngagement.ethnologue,
             req.languageEngagement.change_to_plan,
             req.languageEngagement.active,
+            req.languageEngagement.ceremony,
+            req.languageEngagement.is_open_to_investor_visit,
             req.languageEngagement.communications_complete_date,
             req.languageEngagement.complete_date,
             req.languageEngagement.disbursement_complete_date,
@@ -112,6 +117,7 @@ class Create(
             req.languageEngagement.is_first_scripture,
             req.languageEngagement.is_luke_partnership,
             req.languageEngagement.is_sent_printing,
+            req.languageEngagement.last_suspended_at,
             req.languageEngagement.last_reactivated_at,
             req.languageEngagement.paratext_registry,
             req.languageEngagement.periodic_reports_directory,
@@ -121,10 +127,12 @@ class Create(
             req.languageEngagement.start_date,
             req.languageEngagement.start_date_override,
             req.languageEngagement.status,
-
+            req.languageEngagement.status_modified_at,
+            req.languageEngagement.historic_goal,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

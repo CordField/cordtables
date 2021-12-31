@@ -22,7 +22,7 @@ data class AdminRoleTablePermissionsCreateRequest(
 
 data class AdminRoleTablePermissionsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -54,7 +54,7 @@ class Create(
             """
             insert into admin.role_table_permissions(role, table_name, table_permission,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::admin.table_name,
                     ?::admin.table_permission_grant_type,
                     (
@@ -72,17 +72,18 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.roleTablePermission.role,
             req.roleTablePermission.table_name,
             req.roleTablePermission.table_permission,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

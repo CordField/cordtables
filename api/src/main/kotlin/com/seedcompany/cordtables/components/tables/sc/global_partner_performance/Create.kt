@@ -21,7 +21,7 @@ data class ScGlobalPartnerPerformanceCreateRequest(
 
 data class ScGlobalPartnerPerformanceCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -53,7 +53,7 @@ class Create(
             """
             insert into sc.global_partner_performance(organization, reporting_performance, financial_performance, translation_performance, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::sc.partner_performance_options,
                     ?::sc.partner_performance_options,
                     ?::sc.partner_performance_options,
@@ -72,11 +72,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.globalPartnerPerformance.organization,
             req.globalPartnerPerformance.reporting_performance,
             req.globalPartnerPerformance.financial_performance,
@@ -84,6 +84,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

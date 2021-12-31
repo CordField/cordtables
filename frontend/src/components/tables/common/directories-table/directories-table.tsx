@@ -9,7 +9,7 @@ class CreateDirectoryExRequest {
   token: string;
   directory: {
     name: string;
-    parent: number;
+    parent: string;
   };
 }
 class CreateDirectoryExResponse extends GenericResponse {
@@ -29,7 +29,7 @@ class CommonDirectoryUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonDirectoryUpdateResponse {
@@ -38,12 +38,12 @@ class CommonDirectoryUpdateResponse {
 }
 
 class DeleteDirectoryExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteDirectoryExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,9 +54,9 @@ class DeleteDirectoryExResponse extends GenericResponse {
 export class DirectoriesTable {
   @State() directoriesResponse: CommonDirectoryListResponse;
   newDirectoryName: string;
-  directoryParent: number;
+  directoryParent: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonDirectoryUpdateRequest, CommonDirectoryUpdateResponse>('common/directories/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -133,16 +133,16 @@ export class DirectoriesTable {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'parent',
       displayName: 'Parent',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'name',

@@ -36,6 +36,11 @@ class GetPaginatedResultSet (
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
   fun getPaginatedResultSetHandler(req: GetPaginatedResultSetRequest) :GetPaginatedResultSetResponse {
+
+    val getAdminRoleIdSubQueryText = """
+      select id from admin.roles where name = 'Administrator'
+    """.trimIndent()
+
       var query = """
           with row_level_access as 
           (
@@ -88,7 +93,7 @@ class GetPaginatedResultSet (
           """
               case
                   when '$it' in (select column_name from column_level_access) then $it 
-                  when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) then $it
+                  when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = ($getAdminRoleIdSubQueryText))) then $it
                   when owning_person = (select person from admin.tokens where token = :token) then $it 
                   when '$it' in (select column_name from public_column_level_access) then $it 
                   else null 
@@ -105,7 +110,7 @@ class GetPaginatedResultSet (
           query += """
               from ${req.tableName} 
               where (id in (select row from row_level_access) or
-                  (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
+                  (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = ($getAdminRoleIdSubQueryText))) or
                   owning_person = (select person from admin.tokens where token = :token) or
                   id in (select row from public_row_level_access))  
           """.replace('\n', ' ')
@@ -115,7 +120,7 @@ class GetPaginatedResultSet (
               where
                   id = :id and
                   ((id in (select row from row_level_access) or
-                  (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) or
+                  (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = ($getAdminRoleIdSubQueryText))) or
                   owning_person = (select person from admin.tokens where token = :token) or
                   id in (select row from public_row_level_access)))
               """.replace('\n', ' ')

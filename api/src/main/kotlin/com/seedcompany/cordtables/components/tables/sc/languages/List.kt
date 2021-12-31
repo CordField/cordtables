@@ -112,7 +112,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then id
+                                                and    role = '${util.adminRole}'::uuid)) then id
                   when owning_person =
                            (
                                   select person
@@ -124,34 +124,6 @@ select
                                   from   public_column_level_access) then id
                   else null
          end as id ,
-         case
-                  when 'neo4j_id' in
-                           (
-                                  select column_name
-                                  from   column_level_access) then neo4j_id
-                  when
-                           (
-                                  select exists
-                                         (
-                                                select id
-                                                from   admin.role_memberships
-                                                where  person =
-                                                       (
-                                                              select person
-                                                              from   admin.tokens
-                                                              where  token = :token)
-                                                and    role = 1)) then neo4j_id
-                  when owning_person =
-                           (
-                                  select person
-                                  from   admin.tokens
-                                  where  token = :token) then neo4j_id
-                  when 'neo4j_id' in
-                           (
-                                  select column_name
-                                  from   public_column_level_access) then neo4j_id
-                  else null
-         end as neo4j_id ,
          case
                   when 'ethnologue' in
                            (
@@ -168,7 +140,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then ethnologue
+                                                and    role = '${util.adminRole}'::uuid)) then ethnologue
                   when owning_person =
                            (
                                   select person
@@ -196,7 +168,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then name
+                                                and    role = '${util.adminRole}'::uuid)) then name
                   when owning_person =
                            (
                                   select person
@@ -224,7 +196,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then display_name
+                                                and    role = '${util.adminRole}'::uuid)) then display_name
                   when owning_person =
                            (
                                   select person
@@ -252,7 +224,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then display_name_pronunciation
+                                                and    role = '${util.adminRole}'::uuid)) then display_name_pronunciation
                   when owning_person =
                            (
                                   select person
@@ -280,7 +252,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then tags
+                                                and    role = '${util.adminRole}'::uuid)) then tags
                   when owning_person =
                            (
                                   select person
@@ -308,7 +280,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then preset_inventory
+                                                and    role = '${util.adminRole}'::uuid)) then preset_inventory
                   when owning_person =
                            (
                                   select person
@@ -336,7 +308,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then is_dialect
+                                                and    role = '${util.adminRole}'::uuid)) then is_dialect
                   when owning_person =
                            (
                                   select person
@@ -364,7 +336,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then is_sign_language
+                                                and    role = '${util.adminRole}'::uuid)) then is_sign_language
                   when owning_person =
                            (
                                   select person
@@ -392,7 +364,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then is_least_of_these
+                                                and    role = '${util.adminRole}'::uuid)) then is_least_of_these
                   when owning_person =
                            (
                                   select person
@@ -420,7 +392,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then least_of_these_reason
+                                                and    role = '${util.adminRole}'::uuid)) then least_of_these_reason
                   when owning_person =
                            (
                                   select person
@@ -448,7 +420,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then population_override
+                                                and    role = '${util.adminRole}'::uuid)) then population_override
                   when owning_person =
                            (
                                   select person
@@ -476,7 +448,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then registry_of_dialects_code
+                                                and    role = '${util.adminRole}'::uuid)) then registry_of_dialects_code
                   when owning_person =
                            (
                                   select person
@@ -504,7 +476,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then sensitivity
+                                                and    role = '${util.adminRole}'::uuid)) then sensitivity
                   when owning_person =
                            (
                                   select person
@@ -532,7 +504,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then sign_language_code
+                                                and    role = '${util.adminRole}'::uuid)) then sign_language_code
                   when owning_person =
                            (
                                   select person
@@ -560,7 +532,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then sponsor_estimated_end_date
+                                                and    role = '${util.adminRole}'::uuid)) then sponsor_estimated_end_date
                   when owning_person =
                            (
                                   select person
@@ -588,7 +560,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then prioritization
+                                                and    role = '${util.adminRole}'::uuid)) then prioritization
                   when owning_person =
                            (
                                   select person
@@ -616,7 +588,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then progress_bible
+                                                and    role = '${util.adminRole}'::uuid)) then progress_bible
                   when owning_person =
                            (
                                   select person
@@ -644,7 +616,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then location_long
+                                                and    role = '${util.adminRole}'::uuid)) then location_long
                   when owning_person =
                            (
                                   select person
@@ -672,7 +644,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then island
+                                                and    role = '${util.adminRole}'::uuid)) then island
                   when owning_person =
                            (
                                   select person
@@ -700,7 +672,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then province
+                                                and    role = '${util.adminRole}'::uuid)) then province
                   when owning_person =
                            (
                                   select person
@@ -728,7 +700,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then first_language_population
+                                                and    role = '${util.adminRole}'::uuid)) then first_language_population
                   when owning_person =
                            (
                                   select person
@@ -756,7 +728,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then population_value
+                                                and    role = '${util.adminRole}'::uuid)) then population_value
                   when owning_person =
                            (
                                   select person
@@ -784,7 +756,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then egids_level
+                                                and    role = '${util.adminRole}'::uuid)) then egids_level
                   when owning_person =
                            (
                                   select person
@@ -812,7 +784,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then egids_value
+                                                and    role ='${util.adminRole}'::uuid)) then egids_value
                   when owning_person =
                            (
                                   select person
@@ -840,7 +812,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then least_reached_progress_jps_level
+                                                and    role ='${util.adminRole}'::uuid)) then least_reached_progress_jps_level
                   when owning_person =
                            (
                                   select person
@@ -868,7 +840,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then least_reached_value
+                                                and    role = '${util.adminRole}'::uuid)) then least_reached_value
                   when owning_person =
                            (
                                   select person
@@ -896,7 +868,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then partner_interest_level
+                                                and    role = '${util.adminRole}'::uuid)) then partner_interest_level
                   when owning_person =
                            (
                                   select person
@@ -924,7 +896,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then partner_interest_value
+                                                and    role = '${util.adminRole}'::uuid)) then partner_interest_value
                   when owning_person =
                            (
                                   select person
@@ -952,7 +924,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then partner_interest_description
+                                                and    role = '${util.adminRole}'::uuid)) then partner_interest_description
                   when owning_person =
                            (
                                   select person
@@ -980,7 +952,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then partner_interest_source
+                                                and    role = '${util.adminRole}'::uuid)) then partner_interest_source
                   when owning_person =
                            (
                                   select person
@@ -1008,7 +980,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then multiple_languages_leverage_linguistic_level
+                                                and    role = '${util.adminRole}'::uuid)) then multiple_languages_leverage_linguistic_level
                   when owning_person =
                            (
                                   select person
@@ -1036,7 +1008,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then multiple_languages_leverage_linguistic_value
+                                                and    role = '${util.adminRole}'::uuid)) then multiple_languages_leverage_linguistic_value
                   when owning_person =
                            (
                                   select person
@@ -1064,7 +1036,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then multiple_languages_leverage_linguistic_description
+                                                and    role = '${util.adminRole}'::uuid)) then multiple_languages_leverage_linguistic_description
                   when owning_person =
                            (
                                   select person
@@ -1092,7 +1064,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then multiple_languages_leverage_linguistic_source
+                                                and    role = '${util.adminRole}'::uuid)) then multiple_languages_leverage_linguistic_source
                   when owning_person =
                            (
                                   select person
@@ -1120,7 +1092,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then multiple_languages_leverage_joint_training_level
+                                                and    role = '${util.adminRole}'::uuid)) then multiple_languages_leverage_joint_training_level
                   when owning_person =
                            (
                                   select person
@@ -1148,7 +1120,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then multiple_languages_leverage_joint_training_value
+                                                and    role = '${util.adminRole}'::uuid)) then multiple_languages_leverage_joint_training_value
                   when owning_person =
                            (
                                   select person
@@ -1176,7 +1148,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then multiple_languages_leverage_joint_training_description
+                                                and    role = '${util.adminRole}'::uuid)) then multiple_languages_leverage_joint_training_description
                   when owning_person =
                            (
                                   select person
@@ -1204,7 +1176,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then multiple_languages_leverage_joint_training_source
+                                                and    role = '${util.adminRole}'::uuid)) then multiple_languages_leverage_joint_training_source
                   when owning_person =
                            (
                                   select person
@@ -1232,7 +1204,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then lang_comm_int_in_language_development_level
+                                                and    role = '${util.adminRole}'::uuid)) then lang_comm_int_in_language_development_level
                   when owning_person =
                            (
                                   select person
@@ -1260,7 +1232,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then lang_comm_int_in_language_development_value
+                                                and    role = '${util.adminRole}'::uuid)) then lang_comm_int_in_language_development_value
                   when owning_person =
                            (
                                   select person
@@ -1288,7 +1260,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then lang_comm_int_in_language_development_description
+                                                and    role = '${util.adminRole}'::uuid)) then lang_comm_int_in_language_development_description
                   when owning_person =
                            (
                                   select person
@@ -1316,7 +1288,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then lang_comm_int_in_language_development_source
+                                                and    role = '${util.adminRole}'::uuid)) then lang_comm_int_in_language_development_source
                   when owning_person =
                            (
                                   select person
@@ -1344,7 +1316,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then lang_comm_int_in_scripture_translation_level
+                                                and    role = '${util.adminRole}'::uuid)) then lang_comm_int_in_scripture_translation_level
                   when owning_person =
                            (
                                   select person
@@ -1372,7 +1344,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then lang_comm_int_in_scripture_translation_value
+                                                and    role = '${util.adminRole}'::uuid)) then lang_comm_int_in_scripture_translation_value
                   when owning_person =
                            (
                                   select person
@@ -1400,7 +1372,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then lang_comm_int_in_scripture_translation_description
+                                                and    role = '${util.adminRole}'::uuid)) then lang_comm_int_in_scripture_translation_description
                   when owning_person =
                            (
                                   select person
@@ -1428,7 +1400,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then lang_comm_int_in_scripture_translation_source
+                                                and    role = '${util.adminRole}'::uuid)) then lang_comm_int_in_scripture_translation_source
                   when owning_person =
                            (
                                   select person
@@ -1456,7 +1428,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then access_to_scripture_in_lwc_level
+                                                and    role = '${util.adminRole}'::uuid)) then access_to_scripture_in_lwc_level
                   when owning_person =
                            (
                                   select person
@@ -1484,7 +1456,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then access_to_scripture_in_lwc_value
+                                                and    role = '${util.adminRole}'::uuid)) then access_to_scripture_in_lwc_value
                   when owning_person =
                            (
                                   select person
@@ -1512,7 +1484,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then access_to_scripture_in_lwc_description
+                                                and    role = '${util.adminRole}'::uuid)) then access_to_scripture_in_lwc_description
                   when owning_person =
                            (
                                   select person
@@ -1540,7 +1512,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then access_to_scripture_in_lwc_source
+                                                and    role = '${util.adminRole}'::uuid)) then access_to_scripture_in_lwc_source
                   when owning_person =
                            (
                                   select person
@@ -1568,7 +1540,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then begin_work_geo_challenges_level
+                                                and    role = '${util.adminRole}'::uuid)) then begin_work_geo_challenges_level
                   when owning_person =
                            (
                                   select person
@@ -1596,7 +1568,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then begin_work_geo_challenges_value
+                                                and    role = '${util.adminRole}'::uuid)) then begin_work_geo_challenges_value
                   when owning_person =
                            (
                                   select person
@@ -1624,7 +1596,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then begin_work_geo_challenges_description
+                                                and    role = '${util.adminRole}'::uuid)) then begin_work_geo_challenges_description
                   when owning_person =
                            (
                                   select person
@@ -1652,7 +1624,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then begin_work_geo_challenges_source
+                                                and    role = '${util.adminRole}'::uuid)) then begin_work_geo_challenges_source
                   when owning_person =
                            (
                                   select person
@@ -1680,7 +1652,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then begin_work_rel_pol_obstacles_level
+                                                and    role = '${util.adminRole}'::uuid)) then begin_work_rel_pol_obstacles_level
                   when owning_person =
                            (
                                   select person
@@ -1708,7 +1680,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then begin_work_rel_pol_obstacles_value
+                                                and    role = '${util.adminRole}'::uuid)) then begin_work_rel_pol_obstacles_value
                   when owning_person =
                            (
                                   select person
@@ -1736,7 +1708,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then begin_work_rel_pol_obstacles_description
+                                                and    role = '${util.adminRole}'::uuid)) then begin_work_rel_pol_obstacles_description
                   when owning_person =
                            (
                                   select person
@@ -1764,7 +1736,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then begin_work_rel_pol_obstacles_source
+                                                and    role = '${util.adminRole}'::uuid)) then begin_work_rel_pol_obstacles_source
                   when owning_person =
                            (
                                   select person
@@ -1792,7 +1764,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then suggested_strategies
+                                                and    role = '${util.adminRole}'::uuid)) then suggested_strategies
                   when owning_person =
                            (
                                   select person
@@ -1820,7 +1792,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then comments
+                                                and    role = '${util.adminRole}'::uuid)) then comments
                   when owning_person =
                            (
                                   select person
@@ -1848,7 +1820,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then created_at
+                                                and    role = '${util.adminRole}'::uuid)) then created_at
                   when owning_person =
                            (
                                   select person
@@ -1876,7 +1848,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then created_by
+                                                and    role = '${util.adminRole}'::uuid)) then created_by
                   when owning_person =
                            (
                                   select person
@@ -1904,7 +1876,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then modified_at
+                                                and    role = '${util.adminRole}'::uuid)) then modified_at
                   when owning_person =
                            (
                                   select person
@@ -1932,7 +1904,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then modified_by
+                                                and    role = '${util.adminRole}'::uuid)) then modified_by
                   when owning_person =
                            (
                                   select person
@@ -1960,7 +1932,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then owning_person
+                                                and    role = '${util.adminRole}'::uuid)) then owning_person
                   when owning_person =
                            (
                                   select person
@@ -1988,7 +1960,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then owning_group
+                                                and    role = '${util.adminRole}'::uuid)) then owning_group
                   when owning_person =
                            (
                                   select person
@@ -2016,7 +1988,7 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = 1)) then common.ST_AsLatLonText(coordinates::text)
+                                                and    role = '${util.adminRole}'::uuid)) then common.ST_AsLatLonText(coordinates::text)
                   when owning_person =
                            (
                                   select person
@@ -2044,7 +2016,7 @@ or
                                             select person
                                             from   admin.tokens
                                             where  token = :token)
-                              and    role = 1))
+                              and    role = '${util.adminRole}'::uuid))
 or       owning_person =
          (
                 select person
@@ -2072,13 +2044,10 @@ order by id
                         val jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)
                         while (jdbcResult.next()) {
 
-                                var id: Int? = jdbcResult.getInt("id")
+                                var id: String? = jdbcResult.getString("id")
                                 if (jdbcResult.wasNull()) id = null
 
-                                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                                if (jdbcResult.wasNull()) neo4j_id = null
-
-                                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
+                                var ethnologue: String? = jdbcResult.getString("ethnologue")
                                 if (jdbcResult.wasNull()) ethnologue = null
 
                                 var name: String? = jdbcResult.getString("name")
@@ -2281,19 +2250,19 @@ order by id
                                 var created_at: String? = jdbcResult.getString("created_at")
                                 if (jdbcResult.wasNull()) created_at = null
 
-                                var created_by: Int? = jdbcResult.getInt("created_by")
+                                var created_by: String? = jdbcResult.getString("created_by")
                                 if (jdbcResult.wasNull()) created_by = null
 
                                 var modified_at: String? = jdbcResult.getString("modified_at")
                                 if (jdbcResult.wasNull()) modified_at = null
 
-                                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                                var modified_by: String? = jdbcResult.getString("modified_by")
                                 if (jdbcResult.wasNull()) modified_by = null
 
-                                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                                var owning_person: String? = jdbcResult.getString("owning_person")
                                 if (jdbcResult.wasNull()) owning_person = null
 
-                                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                                var owning_group: String? = jdbcResult.getString("owning_group")
                                 if (jdbcResult.wasNull()) owning_group = null
 
                                 var coordinates: String? = jdbcResult.getString("coordinates")
@@ -2302,7 +2271,6 @@ order by id
                                 data.add(
                                         Language(
                                                 id = id,
-                                                neo4j_id = neo4j_id,
                                                 coordinates = coordinates,
                                                 ethnologue = ethnologue,
                                                 name = name,

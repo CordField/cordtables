@@ -15,16 +15,16 @@ import kotlin.collections.List
 
 
 data class CommonOrganizations(
-        val id: Int?,
+        val id: String?,
         val name: String? = null,
         val sensitivity: String?,
-        val primary_location: Int? = null,
+        val primary_location: String? = null,
         val created_at: String?,
-        val created_by: Int?,
+        val created_by: String?,
         val modified_at: String?,
-        val modified_by: Int?,
-        val owning_person: Int?,
-        val owning_group: Int?,
+        val modified_by: String?,
+        val owning_person: String?,
+        val owning_group: String?,
 )
 
 data class CommonOrganizationsRequest(
@@ -88,83 +88,83 @@ class List(
                 when 'id' in 
                     (select column_name from column_level_access) 
                 then id 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then id 
                 else null 
             end as id,
             case 
                 when 'name' in (select column_name from column_level_access) 
                 then  name
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then  name
                 else null 
             end as name,
             case 
                 when 'sensitivity' in (select column_name from column_level_access) 
                 then sensitivity 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then sensitivity
                 else null 
             end as sensitivity,
             case 
                 when 'primary_location' in (select column_name from column_level_access) 
                 then primary_location 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then primary_location
                 else null 
             end as primary_location,
             case
             when 'created_at' in (select column_name from column_level_access) 
                 then created_at 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then created_at
                 else null 
             end as created_at,
             case 
                 when 'created_by' in (select column_name from column_level_access) 
                 then created_by 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then created_by
                 else null 
             end as created_by,
             case 
                 when 'modified_at' in (select column_name from column_level_access) 
                 then modified_at 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then modified_at
                 else null 
             end as modified_at,
             case 
                 when 'modified_by' in (select column_name from column_level_access) 
                 then modified_by 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then modified_by
                 else null 
             end as modified_by,
             case 
                 when 'owning_person' in (select column_name from column_level_access) 
                 then owning_person 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then owning_person
                 else null 
             end as owning_person,
             case 
                 when 'owning_group' in (select column_name from column_level_access) 
                 then owning_group 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                 then owning_group
                 else null 
             end as owning_group
             from common.organizations
             where id in (select row from row_level_access) or 
-                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1));
+                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid));
         """.trimIndent()
 
         val jdbcResult = jdbcTemplate.queryForRowSet(listSQL, paramSource)
 
         while (jdbcResult.next()) {
 
-            var id: Int? = jdbcResult.getInt("id")
+            var id: String? = jdbcResult.getString("id")
             if (jdbcResult.wasNull()) id = null
 
             var name: String? = jdbcResult.getString("name")
@@ -173,25 +173,25 @@ class List(
             var sensitivity: String? = jdbcResult.getString("sensitivity")
             if(jdbcResult.wasNull()) sensitivity = null
 
-            var primaryLocation: Int? = jdbcResult.getInt("primary_location")
+            var primaryLocation: String? = jdbcResult.getString("primary_location")
             if(jdbcResult.wasNull()) primaryLocation = null
 
             var createdAt: String? = jdbcResult.getString("created_at")
             if (jdbcResult.wasNull()) createdAt = null
 
-            var createdBy: Int? = jdbcResult.getInt("created_by")
+            var createdBy: String? = jdbcResult.getString("created_by")
             if (jdbcResult.wasNull()) createdBy = null
 
             var modifiedAt: String? = jdbcResult.getString("modified_at")
             if (jdbcResult.wasNull()) modifiedAt = null
 
-            var modifiedBy: Int? = jdbcResult.getInt("modified_by")
+            var modifiedBy: String? = jdbcResult.getString("modified_by")
             if (jdbcResult.wasNull()) modifiedBy = null
 
-            var owningPerson: Int? = jdbcResult.getInt("owning_person")
+            var owningPerson: String? = jdbcResult.getString("owning_person")
             if (jdbcResult.wasNull()) owningPerson = null
 
-            var owningGroup: Int? = jdbcResult.getInt("owning_group")
+            var owningGroup: String? = jdbcResult.getString("owning_group")
             if (jdbcResult.wasNull()) owningGroup = null
 
             items.add(

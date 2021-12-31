@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePersonUnavailabilityExRequest {
   token: string;
   personUnavailability: {
-    person: number;
+    person: string;
     period_start: string;
     period_end: string;
     description: string;
@@ -31,7 +31,7 @@ class ScPersonUnavailabilityUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPersonUnavailabilityUpdateResponse {
@@ -40,12 +40,12 @@ class ScPersonUnavailabilityUpdateResponse {
 }
 
 class DeletePersonUnavailabilityExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePersonUnavailabilityExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -56,12 +56,12 @@ class DeletePersonUnavailabilityExResponse extends GenericResponse {
 export class ScPersonUnavailabilities {
   @State() SpersonUnavailabilitiesResponse: ScPersonUnavailabilityListResponse;
 
-  newPerson: number;
+  newPerson: string;
   newPeriod_start: string;
   newPeriod_end: string;
   newDescription: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScPersonUnavailabilityUpdateRequest, ScPersonUnavailabilityUpdateResponse>('sc/person-unavailabilities/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -150,21 +150,21 @@ export class ScPersonUnavailabilities {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'person',
       displayName: 'Person',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'period_start',
       displayName: 'Period Start',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },

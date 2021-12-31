@@ -8,23 +8,23 @@ import { globals } from '../../../../core/global.store';
 class CreateTicketFeedbackRequest {
   token: string;
   ticket_feedback: {
-    ticket: number;
-    stake_holder: number;
+    ticket: string;
+    stakeholder: string;
     feedback: string;
   };
 }
 
 class CommonTicketFeedbackRow {
-  id: number;
-  ticket: number;
-  stake_holder: number;
+  id: string;
+  ticket: string;
+  stakeholder: string;
   feedback: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateTicketFeedbackResponse extends GenericResponse {
@@ -44,7 +44,7 @@ class CommonTicketFeedbackUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonTicketFeedbackUpdateResponse {
@@ -53,12 +53,12 @@ class CommonTicketFeedbackUpdateResponse {
 }
 
 class DeleteTicketFeedbackRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteTicketFeedbackResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -69,11 +69,11 @@ class DeleteTicketFeedbackResponse extends GenericResponse {
 export class TicketFeedback {
   @Prop() onlyShowCreate: boolean = false;
   @State() CommonTicketFeedbackResponse: CommonTicketFeedbackResponse;
-  newTicket: number;
-  newStakeHolder: number;
+  newTicket: string;
+  newStakeHolder: string;
   newFeedback: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonTicketFeedbackUpdateRequest, CommonTicketFeedbackUpdateResponse>('common/ticket-feedback/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -210,7 +210,7 @@ export class TicketFeedback {
       token: globals.globalStore.state.token,
       ticket_feedback: {
         ticket: this.newTicket,
-        stake_holder: this.newStakeHolder,
+        stakeholder: this.newStakeHolder,
         feedback: this.newFeedback,
       },
     });
@@ -225,6 +225,10 @@ export class TicketFeedback {
     return (
       <Host>
         <slot></slot>
+        {/* table abstraction */}
+        {this.CommonTicketFeedbackResponse && this.onlyShowCreate === false && (
+          <cf-table rowData={this.CommonTicketFeedbackResponse.ticket_feedback} columnData={this.columnData}></cf-table>
+        )}
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}

@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.internship_engagements
 
-import com.seedcompany.cordtables.components.tables.sc.internship_engagements.ScInternshipEngagementsUpdateRequest
-import com.seedcompany.cordtables.components.tables.sc.internship_engagements.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.sc.internship_engagements.ScInternshipEngagementsUpdateResponse
-import com.seedcompany.cordtables.components.tables.sc.internship_engagements.internshipEngagementInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class ScInternshipEngagementsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -54,17 +47,7 @@ class Update(
                     column = "project",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
-                )
-            }
-            "ethnologue" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.internship_engagements",
-                    column = "ethnologue",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "change_to_plan" -> {
@@ -74,7 +57,7 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "active" -> {
@@ -85,6 +68,16 @@ class Update(
                     id = req.id,
                     value = req.value,
                     cast = "::BOOLEAN"
+                )
+            }
+            "ceremony" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.internship_engagements",
+                    column = "ceremony",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::uuid"
                 )
             }
             "communications_complete_date" -> {
@@ -114,7 +107,7 @@ class Update(
                     column = "country_of_origin",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "disbursement_complete_date" -> {
@@ -154,7 +147,7 @@ class Update(
                     column = "growth_plan",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "initial_end_date" -> {
@@ -174,7 +167,7 @@ class Update(
                     column = "intern",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "last_reactivated_at" -> {
@@ -194,17 +187,17 @@ class Update(
                     column = "mentor",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
-            "methodology" -> {
+            "methodologies" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.internship_engagements",
-                    column = "methodology",
+                    column = "methodologies",
                     id = req.id,
                     value = req.value,
-                    cast = "::common.internship_methodology"
+                    cast = "::common.product_methodologies"
                 )
             }
             "paratext_registry" -> {
@@ -223,7 +216,7 @@ class Update(
                     column = "periodic_reports_directory",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "position" -> {
@@ -234,6 +227,16 @@ class Update(
                     id = req.id,
                     value = req.value,
                     cast = "::common.internship_position"
+                )
+            }
+            "sensitivity" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.internship_engagements",
+                    column = "sensitivity",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::common.sensitivity"
                 )
             }
             "start_date" -> {
@@ -266,6 +269,26 @@ class Update(
                     cast = "::common.engagement_status"
                 )
             }
+            "status_modified_at" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.internship_engagements",
+                    column = "status_modified_at",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::timestamp"
+                )
+            }
+            "status_modified_at" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.internship_engagements",
+                    column = "status_modified_at",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::timestamp"
+                )
+            }
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
@@ -273,7 +296,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -283,7 +306,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

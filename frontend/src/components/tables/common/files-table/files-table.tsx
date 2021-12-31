@@ -9,7 +9,7 @@ class CreateFileExRequest {
   token: string;
   file: {
     name: string;
-    directory: number;
+    directory: string;
     // display_name: string;
   };
 }
@@ -39,7 +39,7 @@ class CommonFileUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonFileUpdateResponse {
@@ -48,12 +48,12 @@ class CommonFileUpdateResponse {
 }
 
 class DeleteFileExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFileExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -65,9 +65,9 @@ export class FilesTable {
   @State() filesResponse: CommonFileListResponse;
   @State() directoriesResponse: CommonDirectoryListResponse;
   newFileName: string;
-  newFileDirectory: number;
+  newFileDirectory: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonFileUpdateRequest, CommonFileUpdateResponse>('common/files/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -147,14 +147,14 @@ export class FilesTable {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'directory',
       displayName: 'Directory',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },

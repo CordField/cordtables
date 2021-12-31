@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePeopleToOrgRelationshipExRequest {
   token: string;
   peopleToOrgRelationship: {
-    org: number;
-    person: number;
+    org: string;
+    person: string;
     relationship_type: string;
     begin_at: string;
     end_at: string;
@@ -32,7 +32,7 @@ class CommonPeopleToOrgRelationshipUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonPeopleToOrgRelationshipUpdateResponse {
@@ -41,12 +41,12 @@ class CommonPeopleToOrgRelationshipUpdateResponse {
 }
 
 class DeletePeopleToOrgRelationshipExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePeopleToOrgRelationshipExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -57,13 +57,13 @@ class DeletePeopleToOrgRelationshipExResponse extends GenericResponse {
 export class CommonPeopleToOrgRelationships {
   @State() peopleToOrgRelationshipsResponse: CommonPeopleToOrgRelationshipListResponse;
 
-  newOrg: number;
-  newPerson: number;
+  newOrg: string;
+  newPerson: string;
   newRelationship_type: string;
   newBegin_at: string;
   newEnd_at: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonPeopleToOrgRelationshipUpdateRequest, CommonPeopleToOrgRelationshipUpdateResponse>(
       'common/people-to-org-relationships/update-read',
       {
@@ -163,7 +163,7 @@ export class CommonPeopleToOrgRelationships {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -278,7 +278,7 @@ export class CommonPeopleToOrgRelationships {
                 <label htmlFor="org">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="org" name="org" onInput={event => this.orgChange(event)} />
+                <input type="text" id="org" name="org" onInput={event => this.orgChange(event)} />
               </span>
             </div>
 
@@ -287,7 +287,7 @@ export class CommonPeopleToOrgRelationships {
                 <label htmlFor="person">Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="person" name="person" onInput={event => this.personChange(event)} />
+                <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
             </div>
 

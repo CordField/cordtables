@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGlobalPartnerEngagementPeopleExRequest {
   token: string;
   globalPartnerEngagementPeople: {
-    engagement: number;
-    person: number;
+    engagement: string;
+    person: string;
     role: string;
   };
 }
@@ -30,7 +30,7 @@ class ScGlobalPartnerEngagementPeopleUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScGlobalPartnerEngagementPeopleUpdateResponse {
@@ -39,12 +39,12 @@ class ScGlobalPartnerEngagementPeopleUpdateResponse {
 }
 
 class DeleteGlobalPartnerEngagementPeopleExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGlobalPartnerEngagementPeopleExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,11 +55,11 @@ class DeleteGlobalPartnerEngagementPeopleExResponse extends GenericResponse {
 export class ScGlobalPartnerEngagementPeoples {
   @State() globalPartnerEngagementPeoplesResponse: ScGlobalPartnerEngagementPeopleListResponse;
 
-  newEngagement: number;
-  newPerson: number;
+  newEngagement: string;
+  newPerson: string;
   newRole: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScGlobalPartnerEngagementPeopleUpdateRequest, ScGlobalPartnerEngagementPeopleUpdateResponse>(
       'sc/global-partner-engagement-people/update-read',
       {
@@ -155,21 +155,21 @@ export class ScGlobalPartnerEngagementPeoples {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'engagement',
       displayName: 'Engagement',
-      width: 50,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'person',
       displayName: 'Person',
-      width: 50,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -266,7 +266,7 @@ export class ScGlobalPartnerEngagementPeoples {
                 <label htmlFor="person">Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="person" name="person" onInput={event => this.personChange(event)} />
+                <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
             </div>
 

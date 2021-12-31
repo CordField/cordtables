@@ -1,9 +1,9 @@
 
 class ScGlobalPartnerEngagementPeople {
-    id?: number | undefined;
+    id?: string | undefined;
 
-    engagement?: number | undefined;
-    person?: number | undefined;
+    engagement?: string | undefined;
+    person?: string | undefined;
     role?: string | undefined;
 
     created_at?: string | undefined;

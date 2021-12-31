@@ -23,7 +23,7 @@ data class ScLocationsCreateRequest(
 
 data class ScLocationsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -63,27 +63,30 @@ class Create(
 
         // create row with required fields, use id to update cells afterwards one by one
 
-        var createResponse = commonCreate.createHandler(
-            CommonLocationsCreateRequest(
-                token = req.token,
-                location = locationInput(
-                    name = req.location.name,
-                    type = req.location.type,
-                    owning_person = req.location.owning_person,
-                    owning_group = req.location.owning_group,
-                ),
-            )
-        )
-
-        if (createResponse.error != ErrorType.NoError) {
-          return ScLocationsCreateResponse(createResponse.error)
-        }
+//        var createResponse = commonCreate.createHandler(
+//            CommonLocationsCreateRequest(
+//                token = req.token,
+//                location = locationInput(
+//                    name = req.location.name,
+//                    type = req.location.type,
+//                    owning_person = req.location.owning_person,
+//                    owning_group = req.location.owning_group,
+//                ),
+//            )
+//        )
+//
+//        if (createResponse.error != ErrorType.NoError) {
+//          return ScLocationsCreateResponse(createResponse.error)
+//        }
 
 
         val id = jdbcTemplate.queryForObject(
             """
             insert into sc.locations(
                 id,
+                default_region,
+                funding_account,
+                iso_alpha_3,
                 name,
                 type,
                 created_by, 
@@ -91,6 +94,9 @@ class Create(
                 owning_person, 
                 owning_group)
             values(
+                ?::uuid,
+                ?::uuid,
+                ?::uuid,
                 ?,
                 ?,
                 ?::common.location_type,
@@ -109,17 +115,21 @@ class Create(
                   from admin.tokens 
                   where token = ?
                 ),
-                1
+                ?::uuid
             )
             returning id;
         """.trimIndent(),
-            Int::class.java,
-            createResponse.id,
+            String::class.java,
+            req.location.id,
+            req.location.default_region,
+            req.location.funding_account,
+            req.location.iso_alpha_3,
             req.location.name,
             req.location.type,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
         req.location.id = id

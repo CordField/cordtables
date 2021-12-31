@@ -18,7 +18,7 @@ data class CommonWorkRecordCreateRequest(
 
 data class CommonWorkEstimateCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -48,9 +48,10 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into common.work_estimates(person, hours, minutes, comment, created_by, modified_by, owning_person, owning_group)
+            insert into common.work_estimates(person, ticket, hours, minutes, comment, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
                     ?,
                     ?,
                     ?,
@@ -69,18 +70,20 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.work_estimate.person,
+            req.work_estimate.ticket,
             req.work_estimate.hours,
             req.work_estimate.minutes,
             req.work_estimate.comment,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
         return CommonWorkEstimateCreateResponse(error = ErrorType.NoError, id = id)

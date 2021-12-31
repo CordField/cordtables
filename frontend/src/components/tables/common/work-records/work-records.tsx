@@ -7,7 +7,8 @@ import { globals } from '../../../../core/global.store';
 class CreateWorkRecordRequest {
   token: string;
   work_record: {
-    person: number;
+    ticket: string;
+    person: string;
     hours: number;
     minutes: number;
     total_time?: number;
@@ -16,15 +17,15 @@ class CreateWorkRecordRequest {
 }
 
 class CommonWorkRecordRow {
-  id: number;
-  ticket: number;
-  person: number;
+  id: string;
+  ticket: string;
+  person: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateWorkRecordResponse extends GenericResponse {
@@ -43,7 +44,7 @@ class CommonWorkRecordUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 class CommonWorkRecordUpdateResponse {
   error: ErrorType;
@@ -51,12 +52,12 @@ class CommonWorkRecordUpdateResponse {
 }
 
 class DeleteWorkRecordRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteWorkRecordResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -67,12 +68,13 @@ class DeleteWorkRecordResponse extends GenericResponse {
 export class WorkRecord {
   @Prop() onlyShowCreate: boolean = false;
   @State() CommonWorkRecordResponse: CommonWorkRecordResponse;
-  newPerson: number;
+  newTicket: string;
+  newPerson: string;
   newHours: number;
   newMinutes: number;
   newComment: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonWorkRecordUpdateRequest, CommonWorkRecordUpdateResponse>('common/work-records/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -109,9 +111,16 @@ export class WorkRecord {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
+    },
+    {
+      field: 'ticket',
+      displayName: 'Ticket',
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'person',
@@ -140,12 +149,6 @@ export class WorkRecord {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
-    },
-    {
-      field: 'total_time',
-      displayName: 'Total Time',
-      width: 200,
-      editable: false,
     },
     {
       field: 'comment',
@@ -198,6 +201,10 @@ export class WorkRecord {
     await this.getList();
   }
 
+  ticketChange(event) {
+    this.newTicket = event.target.value;
+  }
+
   async getList() {
     this.CommonWorkRecordResponse = await fetchAs<CommonWorkRecordListRequest, CommonWorkRecordResponse>('common/work-records/list', {
       token: globals.globalStore.state.token,
@@ -227,6 +234,7 @@ export class WorkRecord {
     const result = await fetchAs<CreateWorkRecordRequest, CreateWorkRecordResponse>('common/work-records/create-read', {
       token: globals.globalStore.state.token,
       work_record: {
+        ticket: this.newTicket,
         person: this.newPerson,
         hours: this.newHours,
         minutes: this.newMinutes,
@@ -244,11 +252,23 @@ export class WorkRecord {
     return (
       <Host>
         <slot></slot>
+
+        {/* table abstraction */}
+        {this.CommonWorkRecordResponse && this.onlyShowCreate === false && <cf-table rowData={this.CommonWorkRecordResponse.work_record} columnData={this.columnData}></cf-table>}
+
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
         {(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
+            <div id="ticket-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="ticket">Ticket:</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="ticket" name="ticket" onInput={event => this.ticketChange(event)} />
+              </span>
+            </div>
             <div id="person-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="person">Person:</label>
@@ -286,9 +306,6 @@ export class WorkRecord {
             </span>
           </form>
         )}
-
-        {/* table abstraction */}
-        {this.CommonWorkRecordResponse && this.onlyShowCreate === false && <cf-table rowData={this.CommonWorkRecordResponse.work_record} columnData={this.columnData}></cf-table>}
       </Host>
     );
   }

@@ -24,7 +24,7 @@ export class DiscussionChannels {
   @State() discussionchannelsResponse: CommonDiscussionChannelListResponse;
   newDiscussionChannelName: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common/discussion-channels/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,

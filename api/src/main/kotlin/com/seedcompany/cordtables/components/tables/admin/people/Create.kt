@@ -21,7 +21,7 @@ data class AdminPeopleCreateRequest(
 
 data class AdminPeopleCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -52,7 +52,7 @@ class Create(
         val id = jdbcTemplate.queryForObject(
             """
             insert into admin.people(about, phone, picture, private_first_name, private_last_name, public_first_name, public_last_name, primary_location,
-             private_full_name, public_full_name, sensitivity_clearance, timezone, title, status,  created_by, modified_by, owning_person, owning_group)
+             private_full_name, public_full_name, sensitivity_clearance, timezone, title, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
                     ?,
@@ -61,13 +61,12 @@ class Create(
                     ?,
                     ?,
                     ?,
-                    ?,
+                    ?::uuid,
                     ?,
                     ?,
                     ?::common.sensitivity,
                     ?,
                     ?,
-                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -83,11 +82,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.people.about,
             req.people.phone,
             req.people.picture,
@@ -101,10 +100,11 @@ class Create(
             req.people.sensitivity_clearance,
             req.people.timezone,
             req.people.title,
-            req.people.status,
+//            req.people.status,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

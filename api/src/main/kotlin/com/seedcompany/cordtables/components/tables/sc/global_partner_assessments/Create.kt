@@ -23,7 +23,7 @@ data class ScGlobalPartnerAssessmentsCreateRequest(
 
 data class ScGlobalPartnerAssessmentsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -56,7 +56,7 @@ class Create(
             insert into sc.global_partner_assessments(partner, governance_trans, director_trans, identity_trans, growth_trans, comm_support_trans, systems_trans, fin_management_trans, 
             hr_trans, it_trans, program_design_trans, tech_translation_trans, director_opp, financial_management_opp, program_design_opp,tech_translation_opp, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::sc.partner_maturity_scale,
                     ?::sc.partner_maturity_scale,
                     ?::sc.partner_maturity_scale,
@@ -87,11 +87,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.globalPartnerAssessment.partner,
             req.globalPartnerAssessment.governance_trans,
             req.globalPartnerAssessment.director_trans,
@@ -111,6 +111,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

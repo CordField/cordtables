@@ -20,6 +20,7 @@ enum class ErrorType {
     SQLReadError,
     SQLUpdateError,
     SQLDeleteError,
+    InputMissingVersion,
     InputMissingName,
     InputMissingGroup,
     InputMissingPerson,
@@ -200,3 +201,9 @@ enum class AccessLevels{
     Read,
     Write,
 }
+
+data class PeopleDetails(
+  val id: Int,
+  val public_first_name: String?,
+  val public_last_name: String?
+)

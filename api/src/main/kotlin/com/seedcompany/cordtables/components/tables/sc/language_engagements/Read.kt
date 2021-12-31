@@ -20,7 +20,7 @@ import javax.sql.DataSource
 
 data class ScLanguageEngagementsReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 data class ScLanguageEngagementsReadResponse(
@@ -59,11 +59,12 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
                     "project",
                     "ethnologue",
                     "change_to_plan",
                     "active",
+                    "ceremony",
+                    "is_open_to_investor_visit",
                     "communications_complete_date",
                     "complete_date",
                     "disbursement_complete_date",
@@ -73,6 +74,7 @@ class Read(
                     "is_first_scripture",
                     "is_luke_partnership",
                     "is_sent_printing",
+                    "last_suspended_at",
                     "last_reactivated_at",
                     "paratext_registry",
                     "periodic_reports_directory",
@@ -82,6 +84,8 @@ class Read(
                     "start_date",
                     "start_date_override",
                     "status",
+                    "status_modified_at",
+                    "historic_goal",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -96,23 +100,27 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
-                var project: Int? = jdbcResult.getInt("project")
+                var project: String? = jdbcResult.getString("project")
                 if (jdbcResult.wasNull()) project = null
 
-                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
+                var ethnologue: String? = jdbcResult.getString("ethnologue")
                 if (jdbcResult.wasNull()) ethnologue = null
 
-                var change_to_plan: Int? = jdbcResult.getInt("change_to_plan")
+                var change_to_plan: String? = jdbcResult.getString("change_to_plan")
                 if (jdbcResult.wasNull()) change_to_plan = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
+
+                var ceremony: String? = jdbcResult.getString("ceremony")
+                if (jdbcResult.wasNull()) ceremony = null
+
+                var is_open_to_investor_visit: Boolean? = jdbcResult.getBoolean("is_open_to_investor_visit")
+                if (jdbcResult.wasNull()) is_open_to_investor_visit = null
 
                 var communications_complete_date: String? = jdbcResult.getString("communications_complete_date")
                 if (jdbcResult.wasNull()) communications_complete_date = null
@@ -141,19 +149,22 @@ class Read(
                 var is_sent_printing: Boolean? = jdbcResult.getBoolean("is_sent_printing")
                 if (jdbcResult.wasNull()) is_sent_printing = null
 
+                var last_suspended_at: String? = jdbcResult.getString("last_suspended_at")
+                if (jdbcResult.wasNull()) last_suspended_at = null
+
                 var last_reactivated_at: String? = jdbcResult.getString("last_reactivated_at")
                 if (jdbcResult.wasNull()) last_reactivated_at = null
 
                 var paratext_registry: String? = jdbcResult.getString("paratext_registry")
                 if (jdbcResult.wasNull()) paratext_registry = null
 
-                var periodic_reports_directory: Int? = jdbcResult.getInt("periodic_reports_directory")
+                var periodic_reports_directory: String? = jdbcResult.getString("periodic_reports_directory")
                 if (jdbcResult.wasNull()) periodic_reports_directory = null
 
                 var pnp: String? = jdbcResult.getString("pnp")
                 if (jdbcResult.wasNull()) pnp = null
 
-                var pnp_file: Int? = jdbcResult.getInt("pnp_file")
+                var pnp_file: String? = jdbcResult.getString("pnp_file")
                 if (jdbcResult.wasNull()) pnp_file = null
 
                 var product_engagement_tag: String? = jdbcResult.getString("product_engagement_tag")
@@ -168,32 +179,39 @@ class Read(
                 var status: String? = jdbcResult.getString("status")
                 if (jdbcResult.wasNull()) status = null
 
+                var status_modified_at: String? = jdbcResult.getString("status_modified_at")
+                if (jdbcResult.wasNull()) status_modified_at = null
+
+                var historic_goal: String? = jdbcResult.getString("historic_goal")
+                if (jdbcResult.wasNull()) historic_goal = null
+
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val languageEngagement =
                     languageEngagement(
                         id = id,
-                        neo4j_id = neo4j_id,
                         project = project,
                         ethnologue = ethnologue,
                         change_to_plan = change_to_plan,
                         active = active,
+                        ceremony = ceremony,
+                        is_open_to_investor_visit = is_open_to_investor_visit,
                         communications_complete_date = communications_complete_date,
                         complete_date = complete_date,
                         disbursement_complete_date = disbursement_complete_date,
@@ -203,6 +221,7 @@ class Read(
                         is_first_scripture = is_first_scripture,
                         is_luke_partnership = is_luke_partnership,
                         is_sent_printing = is_sent_printing,
+                        last_suspended_at = last_suspended_at,
                         last_reactivated_at = last_reactivated_at,
                         paratext_registry = paratext_registry,
                         periodic_reports_directory = periodic_reports_directory,
@@ -212,6 +231,8 @@ class Read(
                         start_date = start_date,
                         start_date_override = start_date_override,
                         status = status,
+                        status_modified_at = status_modified_at,
+                        historic_goal = historic_goal,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

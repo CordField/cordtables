@@ -7,21 +7,21 @@ import { globals } from '../../../../core/global.store';
 class CreateTicketGraphRequest {
   token: string;
   ticket_graph: {
-    from_ticket: number;
-    to_ticket: number;
+    from_ticket: string;
+    to_ticket: string;
   };
 }
 
 class CommonTicketGraphRow {
-  id: number;
-  from_ticket: number;
-  to_ticket: number;
+  id: string;
+  from_ticket: string;
+  to_ticket: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateTicketGraphResponse extends GenericResponse {
@@ -41,7 +41,7 @@ class CommonTicketGraphUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonTicketGraphUpdateResponse {
@@ -50,12 +50,12 @@ class CommonTicketGraphUpdateResponse {
 }
 
 class DeleteTicketRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteTicketResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -66,10 +66,10 @@ class DeleteTicketResponse extends GenericResponse {
 export class TicketGraph {
   @Prop() onlyShowCreate: boolean = false;
   @State() commonTicketGraphResponse: CommonTicketGraphResponse;
-  newFromTicket: number;
-  newToTicket: number;
+  newFromTicket: string;
+  newToTicket: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonTicketGraphUpdateRequest, CommonTicketGraphUpdateResponse>('common/ticket-graph/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -90,7 +90,7 @@ export class TicketGraph {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common/ticket-graph/delete', {
+    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common-ticket-graph/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -106,21 +106,21 @@ export class TicketGraph {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'from_ticket',
       displayName: 'From Ticket',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'to_ticket',
       displayName: 'To Ticket',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -204,7 +204,10 @@ export class TicketGraph {
     return (
       <Host>
         <slot></slot>
-
+        {/* table abstraction */}
+        {this.commonTicketGraphResponse && this.onlyShowCreate === false && (
+          <cf-table rowData={this.commonTicketGraphResponse.ticket_graph} columnData={this.columnData}></cf-table>
+        )}
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
@@ -230,10 +233,6 @@ export class TicketGraph {
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>
           </form>
-        )}
-        {/* table abstraction */}
-        {this.commonTicketGraphResponse && this.onlyShowCreate === false && (
-          <cf-table rowData={this.commonTicketGraphResponse.ticket_graph} columnData={this.columnData}></cf-table>
         )}
       </Host>
     );

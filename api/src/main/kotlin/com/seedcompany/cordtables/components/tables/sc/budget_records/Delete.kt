@@ -12,13 +12,13 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class ScBudgetRecordsDeleteRequest(
-    val id: Int,
+    val id: String,
     val token: String?,
 )
 
 data class ScBudgetRecordsDeleteResponse(
     val error: ErrorType,
-    val id: Int?
+    val id: String?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -38,23 +38,23 @@ class Delete(
         if(!util.userHasDeletePermission(req.token, "sc.budget-records"))
             return ScBudgetRecordsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-        var deletedBudgetRecordExId: Int? = null
+        var deletedBudgetRecordExId: String? = null
 
         this.ds.connection.use { conn ->
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from sc.budget_records where id = ? returning id"
+                    "delete from sc.budget_records where id = ?::uuid returning id"
                 )
-                deleteStatement.setInt(1, req.id)
+                deleteStatement.setString(1, req.id)
 
-                deleteStatement.setInt(1,req.id)
+                deleteStatement.setString(1,req.id)
 
 
                 val deleteStatementResult = deleteStatement.executeQuery()
 
                 if (deleteStatementResult.next()) {
-                    deletedBudgetRecordExId  = deleteStatementResult.getInt("id")
+                    deletedBudgetRecordExId  = deleteStatementResult.getString("id")
                 }
             }
             catch (e:SQLException ){

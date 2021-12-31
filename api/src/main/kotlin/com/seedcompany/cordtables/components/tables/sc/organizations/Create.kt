@@ -21,7 +21,7 @@ data class ScOrganizationsCreateRequest(
 
 data class ScOrganizationsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -51,10 +51,11 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.organizations(id, neo4j_id, address,  created_by, modified_by, owning_person, owning_group)
+            insert into sc.organizations(id, sensitivity, root_directory, address,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::common.sensitivity,
+                    ?::uuid,
                     ?,
                     (
                       select person 
@@ -71,17 +72,19 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.organization.id,
-            req.organization.neo4j_id,
+            req.organization.sensitivity,
+            req.organization.root_directory,
             req.organization.address,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

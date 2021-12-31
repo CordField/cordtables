@@ -19,19 +19,19 @@ export enum AppState {
 //export type EgidsScale = `0` | `1` | `2` | `3` | `4` | `5` | `6a` | `6b` | `7` | `8a` | `8b` | `9` | `10`;
 
 export interface GlobalRole {
-  id: number;
+  id: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
+  modified_by: string;
   name: string;
-  owning_group: number;
-  owning_person: number;
+  owning_group: string;
+  owning_person: string;
   chat: number;
 }
 
 export interface LanguageEx {
-  id?: number;
+  id?: string;
   language_name?: string;
   iso?: string;
   prioritization?: number;
@@ -79,19 +79,19 @@ export interface LanguageEx {
   suggested_strategies?: string;
   comments?: string;
   created_at?: string;
-  created_by?: number;
+  created_by?: string;
   modified_at?: string;
-  modified_by?: number;
-  owning_person?: number;
-  owning_group?: number;
+  modified_by?: string;
+  owning_person?: string;
+  owning_group?: string;
 }
 export interface globalRoleTablePermissions {
-  id: number;
+  id: string;
   createdAt: string;
-  createdBy: number;
-  globalRole: number;
+  createdBy: string;
+  globalRole: string;
   modifiedAt: string;
-  modifiedBy: number;
+  modifiedBy: string;
   tableName: string;
   tablePermission: string;
 }
@@ -105,7 +105,7 @@ export enum ActionType {
 }
 
 export interface ScriptureReference {
-  id: number;
+  id: string;
   book_start: string;
   book_end: string;
   chapter_start: number;
@@ -115,36 +115,36 @@ export interface ScriptureReference {
 }
 
 export interface AdminUser {
-  id?: number;
-  person?: number;
+  id?: string;
+  person?: string;
   email?: string;
   chat?: number;
   created_at?: string;
-  created_by?: number;
+  created_by?: string;
   modified_at?: string;
-  modified_by?: number;
-  owning_person?: number;
-  owning_group?: number;
+  modified_by?: string;
+  owning_person?: string;
+  owning_group?: string;
 }
 
 export type SiteTextLanguage = {
-  language: number;
+  language: string;
   language_name: string;
 }
 
 export type SiteTextString = {
-  id: number,
+  id: string,
   english: string,
   comment: string
 }
 
 export type SiteTextTranslation = {
-  id: number,
-  site_text: number,
+  id: string,
+  site_text: string,
   translation: string
 }
 
 export type SiteTextTranslationList = {
-  language: number,
+  language: string,
   translations: Array<SiteTextTranslation>
 }

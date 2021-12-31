@@ -9,13 +9,13 @@ import '@ionic/core'
 class UpdatePrayerRequestRequest {
     token: string;
     prayerRequest: {
-        id: number;
-        request_language_id: number;
-        target_language_id: number;
+        id: string;
+        request_language_id: string;
+        target_language_id: string;
         sensitivity: string;
         organization_name: string;
-        parent: number;
-        translator: number;
+        parent: string;
+        translator: string;
         location: string;
         title: string;
         content: string;
@@ -30,7 +30,7 @@ class SubmitPrayerRequestResponse extends GenericResponse {
 
 class GetPrayerRequestRequest {
     token: string;
-    id: number;
+    id: string;
 }
 
 class GetPrayerRequestResponse extends GenericResponse {
@@ -67,12 +67,12 @@ export class PrayerRequestEditPage {
     @State() peoplesResponse: AdminPeopleListResponse;
     @State() getResponse: any;
 
-    newRequest_language_id: number;
-    newTarget_language_id: number;
+    newRequest_language_id: string;
+    newTarget_language_id: string;
     newSensitivity: string;
     newOrganization_name: string;
-    newParent: number;
-    newTranslator: number;
+    newParent: string;
+    newTranslator: string;
     newLocation: string;
     newTitle: string;
     newContent: string;

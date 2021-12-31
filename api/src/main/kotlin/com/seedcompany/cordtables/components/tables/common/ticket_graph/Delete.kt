@@ -12,13 +12,13 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class CommonTicketGraphDeleteRequest(
-        val id: Int,
+        val id: String,
         val token: String?,
 )
 
 data class CommonTicketGraphDeleteResponse(
         val error: ErrorType,
-        val id: Int?
+        val id: String?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -37,23 +37,21 @@ class Delete(
         if(!util.userHasDeletePermission(req.token, "common.ticket_graph"))
             return CommonTicketGraphDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-        var deletedTicketId: Int? = null
+        var deletedTicketId: String? = null
 
         this.ds.connection.use { conn ->
             try {
 
                 val deleteStatement = conn.prepareCall(
-                        "delete from common.ticket_graph where id = ? returning id"
+                        "delete from common.ticket_graph where id = ?::uuid returning id"
                 )
-                deleteStatement.setInt(1, req.id)
-
-                deleteStatement.setInt(1,req.id)
-
+                deleteStatement.setString(1, req.id)
+                deleteStatement.setString(1, req.id)
 
                 val deleteStatementResult = deleteStatement.executeQuery()
 
                 if (deleteStatementResult.next()) {
-                    deletedTicketId = deleteStatementResult.getInt("id")
+                    deletedTicketId = deleteStatementResult.getString("id")
                 }
             }
             catch (e:SQLException ){

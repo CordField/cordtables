@@ -8,8 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateEthnologueExRequest {
   token: string;
   ethnologue: {
-    neo4j_id: string;
-    language_index: number;
+    language_index: string;
     code: string;
     language_name: string;
     population: number;
@@ -34,7 +33,7 @@ class ScEthnologueUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScEthnologueUpdateResponse {
@@ -43,12 +42,12 @@ class ScEthnologueUpdateResponse {
 }
 
 class DeleteEthnologueExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteEthnologueExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -59,15 +58,14 @@ class DeleteEthnologueExResponse extends GenericResponse {
 export class ScEthnologues {
   @State() ethnologuesResponse: ScEthnologueListResponse;
 
-  newNeo4j_id: string;
-  newLanguage_index: number;
+  newLanguage_index: string;
   newCode: string;
   newLanguage_name: string;
   newPopulation: number;
   newProvisional_code: string;
   newSensitivity: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScEthnologueUpdateRequest, ScEthnologueUpdateResponse>('sc/ethnologue/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -111,9 +109,15 @@ export class ScEthnologues {
     });
   }
 
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
+  // neo4j_idChange(event) {
+  //   this.newNeo4j_id = event.target.value;
+  // }
 
   language_indexChange(event) {
     this.newLanguage_index = event.target.value;
@@ -146,7 +150,7 @@ export class ScEthnologues {
     const createResponse = await fetchAs<CreateEthnologueExRequest, CreateEthnologueExResponse>('sc/ethnologue/create-read', {
       token: globals.globalStore.state.token,
       ethnologue: {
-        neo4j_id: this.newNeo4j_id,
+        // neo4j_id: this.newNeo4j_id,
         language_index: this.newLanguage_index,
         code: this.newCode,
         language_name: this.newLanguage_name,
@@ -169,21 +173,14 @@ export class ScEthnologues {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
-      field: 'neo4j_id',
-      displayName: 'Neo4j ID',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
-    {
       field: 'language_index',
       displayName: 'Language Index',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -285,21 +282,21 @@ export class ScEthnologues {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            {/* <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">Neo4j ID</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
               </span>
-            </div>
+            </div> */}
 
             <div id="language_index-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="language_index">Language Index</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="language_index" name="language_index" onInput={event => this.language_indexChange(event)} />
+                <input type="text" id="language_index" name="language_index" onInput={event => this.language_indexChange(event)} />
               </span>
             </div>
 

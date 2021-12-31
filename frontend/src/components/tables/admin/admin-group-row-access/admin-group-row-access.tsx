@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGroupRowAccessExRequest {
   token: string;
   groupRowAccess: {
-    group_id: number;
+    group_id: string;
     table_name: string;
     row: number;
   };
@@ -30,7 +30,7 @@ class AdminGroupRowAccessUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminGroupRowAccessUpdateResponse {
@@ -39,12 +39,12 @@ class AdminGroupRowAccessUpdateResponse {
 }
 
 class DeleteGroupRowAccessExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGroupRowAccessExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,11 +55,11 @@ class DeleteGroupRowAccessExResponse extends GenericResponse {
 export class AdminGroupRowAccesss {
   @State() groupRowAccessesResponse: AdminGroupRowAccessListResponse;
 
-  newGroup_id: number;
+  newGroup_id: string;
   newTable_name: string;
   newRow: number;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminGroupRowAccessUpdateRequest, AdminGroupRowAccessUpdateResponse>('admin/group-row-access/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -141,14 +141,14 @@ export class AdminGroupRowAccesss {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'group_id',
       displayName: 'Group ID',
-      width: 50,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },

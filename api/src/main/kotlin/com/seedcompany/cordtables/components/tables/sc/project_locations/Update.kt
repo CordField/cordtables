@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.project_locations
 
-import com.seedcompany.cordtables.components.tables.sc.project_locations.ScProjectLocationsUpdateRequest
-import com.seedcompany.cordtables.components.tables.sc.project_locations.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.sc.project_locations.ScProjectLocationsUpdateResponse
-import com.seedcompany.cordtables.components.tables.sc.project_locations.projectLocationInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class ScProjectLocationsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -64,7 +57,7 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "location" -> {
@@ -74,7 +67,7 @@ class Update(
                     column = "location",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "project" -> {
@@ -84,7 +77,7 @@ class Update(
                     column = "project",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_person" -> {
@@ -94,7 +87,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -104,7 +97,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

@@ -19,7 +19,7 @@ data class SiteTextStringCreateRequest(
 
 data class SiteTextStringCreateResponse(
   val error: ErrorType,
-  val id: Int? = null,
+  val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -68,16 +68,17 @@ class Create(
                   from admin.tokens 
                   where token = ?
                 ),
-                1
+                ?::uuid
             )
             returning id;
             """.trimIndent(),
-        Int::class.java,
+        String::class.java,
         req.site_text_string.english,
         req.site_text_string.comment,
         req.token,
         req.token,
         req.token,
+        util.adminGroupId
       )
 
       return SiteTextStringCreateResponse(error = ErrorType.NoError, id = id)

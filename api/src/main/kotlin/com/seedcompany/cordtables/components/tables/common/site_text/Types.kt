@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.site_text
 
 data class CommonSiteText(
-        var id: Int? = null,
+        var id: String? = null,
 
         val ethnologue: Int? = null,
         val text_id: String? = null,
@@ -17,6 +17,6 @@ data class CommonSiteText(
 )
 
 data class CommonSiteTextInput(
-        var id: Int? = null,
+        var id: String? = null,
         val ethnologue: Int,
 )

@@ -7,21 +7,21 @@ import { globals } from '../../../../core/global.store';
 class CreateTicketAssignmentRequest {
   token: string;
   ticket_assignment: {
-    ticket: number;
-    person: number;
+    ticket: string;
+    person: string;
   };
 }
 
 class CommonTicketAssignmentRow {
-  id: number;
-  ticket: number;
-  person: number;
+  id: string;
+  ticket: string;
+  person: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateTicketAssignmentResponse extends GenericResponse {
@@ -39,7 +39,7 @@ class CommonTicketAssignmentUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 class CommonTicketAssignmentUpdateResponse {
   error: ErrorType;
@@ -47,12 +47,12 @@ class CommonTicketAssignmentUpdateResponse {
 }
 
 class DeleteTicketRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteTicketResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -63,10 +63,10 @@ class DeleteTicketResponse extends GenericResponse {
 export class TicketAssignment {
   @Prop() onlyShowCreate: boolean = false;
   @State() commonTicketAssignmentResponse: CommonTicketAssignmentResponse;
-  newTicketAssignment: number;
-  newPerson: number;
+  newTicketAssignment: string;
+  newPerson: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonTicketAssignmentUpdateRequest, CommonTicketAssignmentUpdateResponse>('common/ticket-assignments/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -89,7 +89,7 @@ export class TicketAssignment {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common/ticket-assignments/delete', {
+    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common-ticket-assignments/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -105,21 +105,21 @@ export class TicketAssignment {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'ticket',
       displayName: 'Ticket ID',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'person',
       displayName: 'Person',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -207,6 +207,11 @@ export class TicketAssignment {
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
+        {/* table abstraction */}
+        {this.commonTicketAssignmentResponse && this.onlyShowCreate === false && (
+          <cf-table rowData={this.commonTicketAssignmentResponse.ticket_assignment} columnData={this.columnData}></cf-table>
+        )}
+
         {(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
             <div id="ticket-holder" class="form-input-item form-thing">
@@ -229,10 +234,6 @@ export class TicketAssignment {
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>
           </form>
-        )}
-        {/* table abstraction */}
-        {this.commonTicketAssignmentResponse && this.onlyShowCreate === false && (
-          <cf-table rowData={this.commonTicketAssignmentResponse.ticket_assignment} columnData={this.columnData}></cf-table>
         )}
       </Host>
     );

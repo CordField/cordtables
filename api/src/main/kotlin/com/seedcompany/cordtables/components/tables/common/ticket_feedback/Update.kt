@@ -1,8 +1,6 @@
 package com.seedcompany.cordtables.components.tables.common.ticket_feedback
-import com.seedcompany.cordtables.common.CommonTicketStatus
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -13,7 +11,7 @@ import javax.sql.DataSource
 
 data class CommonTicketFeedbackUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -51,21 +49,19 @@ class Update(
                     column = "ticket",
                     id = req.id,
                     value = req.value,
-                    cast = "::integer"
+                    cast = "::uuid"
                 )
             }
-
-            "stake_holder" -> {
+            "stakeholder" -> {
                 util.updateField(
                     token = req.token,
                     table = "common.ticket_feedback",
-                    column = "stake_holder",
+                    column = "stakeholder",
                     id = req.id,
                     value = req.value,
-                    cast = "::integer"
+                    cast = "::uuid"
                 )
             }
-
             "feedback" -> {
                 util.updateField(
                     token = req.token,
@@ -76,8 +72,6 @@ class Update(
                     cast = "::common.ticket_feedback_options"
                 )
             }
-
-
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
@@ -85,9 +79,9 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
-
             "owning_group" -> {
                 util.updateField(
                     token = req.token,
@@ -95,6 +89,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

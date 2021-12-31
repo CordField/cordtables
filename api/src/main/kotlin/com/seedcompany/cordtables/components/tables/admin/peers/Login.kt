@@ -45,13 +45,13 @@ class Login(
 
         var errorType: ErrorType? = null
 
-        var person: Int? = null
+        var person: String? = null
         try {
             person = jdbcTemplate.queryForObject(
                 """
                     select person from admin.peers where url = ? and target_token = ? and peer_approved = true;
                 """.trimIndent(),
-                Int::class.java,
+                String::class.java,
                 req.url,
                 req.targetToken,
             )

@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateCoalitionMembershipExRequest {
   token: string;
   coalitionMembership: {
-    coalition: number;
-    organization: number;
+    coalition: string;
+    organization: string;
   };
 }
 class CreateCoalitionMembershipExResponse extends GenericResponse {
@@ -29,7 +29,7 @@ class CommonCoalitionMembershipUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonCoalitionMembershipUpdateResponse {
@@ -38,12 +38,12 @@ class CommonCoalitionMembershipUpdateResponse {
 }
 
 class DeleteCoalitionMembershipExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteCoalitionMembershipExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,10 +54,10 @@ class DeleteCoalitionMembershipExResponse extends GenericResponse {
 export class CommonCoalitionMemberships {
   @State() coalitionMembershipsResponse: CommonCoalitionMembershipListResponse;
 
-  newCoalition: number;
-  newOrganization: number;
+  newCoalition: string;
+  newOrganization: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonCoalitionMembershipUpdateRequest, CommonCoalitionMembershipUpdateResponse>('common/coalition-memberships/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -136,14 +136,14 @@ export class CommonCoalitionMemberships {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'coalition',
       displayName: 'Coalition',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -225,7 +225,7 @@ export class CommonCoalitionMemberships {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 

@@ -20,7 +20,7 @@ data class CommonTicketAssignmentCreateRequest(
 
 data class CommonTicketAssignmentCreateResponse(
         val error: ErrorType,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -52,8 +52,8 @@ class Create(
                 """
             insert into common.ticket_assignments(ticket, person, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -69,16 +69,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-                Int::class.java,
+                String::class.java,
                 req.ticket_assignment.ticket,
                 req.ticket_assignment.person,
                 req.token,
                 req.token,
                 req.token,
+                util.adminGroupId
         )
 
         return CommonTicketAssignmentCreateResponse(error = ErrorType.NoError, id = id)

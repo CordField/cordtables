@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateStageGraphExRequest {
   token: string;
   stageGraph: {
-    from_stage: number;
-    to_stage: number;
+    from_stage: string;
+    to_stage: string;
   };
 }
 class CreateStageGraphExResponse extends GenericResponse {
@@ -29,7 +29,7 @@ class CommonStageGraphUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonStageGraphUpdateResponse {
@@ -38,12 +38,12 @@ class CommonStageGraphUpdateResponse {
 }
 
 class DeleteStageGraphExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteStageGraphExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,10 +54,10 @@ class DeleteStageGraphExResponse extends GenericResponse {
 export class CommonStageGraphs {
   @State() stageGraphsResponse: CommonStageGraphListResponse;
 
-  newFrom_stage: number;
-  newTo_stage: number;
+  newFrom_stage: string;
+  newTo_stage: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonStageGraphUpdateRequest, CommonStageGraphUpdateResponse>('common/stage-graph/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -134,21 +134,21 @@ export class CommonStageGraphs {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'from_stage',
       displayName: 'From Stage',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'to_stage',
       displayName: 'To Stage',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -214,7 +214,7 @@ export class CommonStageGraphs {
                 <label htmlFor="from_stage">From Stage</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="from_stage" name="from_stage" onInput={event => this.from_stageChange(event)} />
+                <input type="text" id="from_stage" name="from_stage" onInput={event => this.from_stageChange(event)} />
               </span>
             </div>
 

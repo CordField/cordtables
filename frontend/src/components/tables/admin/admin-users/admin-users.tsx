@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateUserExRequest {
   token: string;
   user: {
-    person?: number;
+    person?: string;
     email?: string;
     password?: string;
   };
@@ -30,7 +30,7 @@ class AdminUserUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminUserUpdateResponse {
@@ -39,12 +39,12 @@ class AdminUserUpdateResponse {
 }
 
 class DeleteUserExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteUserExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,11 +55,11 @@ class DeleteUserExResponse extends GenericResponse {
 export class AdminUsers {
   @State() usersResponse: AdminUserListResponse;
 
-  newPerson: number;
+  newPerson: string;
   newEmail?: string;
   newPassword?: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminUserUpdateRequest, AdminUserUpdateResponse>('admin/users/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -138,15 +138,15 @@ export class AdminUsers {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'person',
       displayName: 'Person',
-      width: 200,
-      editable: false,
+      width: 250,
+      editable: true,
       updateFn: this.handleUpdate,
     },
     {
@@ -218,7 +218,7 @@ export class AdminUsers {
                 <label htmlFor="person">Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="person" name="person" onInput={event => this.personChange(event)} />
+                <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
             </div>
 

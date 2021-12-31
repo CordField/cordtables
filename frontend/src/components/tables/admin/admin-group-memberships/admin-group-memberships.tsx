@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGroupMembershipExRequest {
   token: string;
   groupMembership: {
-    group_id: number;
-    person: number;
+    group_id: string;
+    person: string;
   };
 }
 class CreateGroupMembershipExResponse extends GenericResponse {
@@ -29,7 +29,7 @@ class AdminGroupMembershipUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminGroupMembershipUpdateResponse {
@@ -38,12 +38,12 @@ class AdminGroupMembershipUpdateResponse {
 }
 
 class DeleteGroupMembershipExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGroupMembershipExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,10 +54,10 @@ class DeleteGroupMembershipExResponse extends GenericResponse {
 export class AdminGroupMemberships {
   @State() groupMembershipsResponse: AdminGroupMembershipListResponse;
 
-  newGroup_id: number;
-  newPerson: number;
+  newGroup_id: string;
+  newPerson: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminGroupMembershipUpdateRequest, AdminGroupMembershipUpdateResponse>('admin/group-memberships/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -134,21 +134,21 @@ export class AdminGroupMemberships {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'group_id',
       displayName: 'Group ID',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'person',
       displayName: 'person',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -214,7 +214,7 @@ export class AdminGroupMemberships {
                 <label htmlFor="group_id">Group ID</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="director" name="director" onInput={event => this.group_idChange(event)} />
+                <input type="text" id="director" name="director" onInput={event => this.group_idChange(event)} />
               </span>
             </div>
 

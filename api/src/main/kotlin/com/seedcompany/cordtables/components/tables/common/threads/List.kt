@@ -17,7 +17,7 @@ import javax.sql.DataSource
 
 data class CommonThreadsListRequest(
         val token: String?,
-        val channelId: Integer?=null
+        val channelId: String?=null
 )
 
 data class CommonThreadsListResponse(
@@ -49,7 +49,7 @@ class List(
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
         if(req.channelId!==null){
-          whereClause = "channel = :channelId"
+          whereClause = "channel = :channelId::uuid"
           paramSource.addValue("channelId", req.channelId)
         }
 
@@ -76,45 +76,45 @@ class List(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
                 var content: String? = jdbcResult.getString("content")
                 if (jdbcResult.wasNull()) content = null
 
-                var channel: Int? = jdbcResult.getInt("channel")
+                var channel: String? = jdbcResult.getString("channel")
                 if (jdbcResult.wasNull()) channel = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(
-                        Thread(
-                                id = id,
-                                channel = channel,
-                                content = content,
-                                created_at = created_at,
-                                created_by = created_by,
-                                modified_at = modified_at,
-                                modified_by = modified_by,
-                                owning_person = owning_person,
-                                owning_group = owning_group
-                        )
+                    Thread(
+                        id = id,
+                        channel = channel,
+                        content = content,
+                        created_at = created_at,
+                        created_by = created_by,
+                        modified_at = modified_at,
+                        modified_by = modified_by,
+                        owning_person = owning_person,
+                        owning_group = owning_group
+                    )
                 )
             }
         } catch (e: SQLException) {

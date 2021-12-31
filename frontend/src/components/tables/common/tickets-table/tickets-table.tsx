@@ -7,22 +7,22 @@ class CreateTicketRequest {
   token: string;
   ticket: {
     ticket_status: string;
-    parent: number;
+    parent: string;
     content: string;
   };
 }
 
 class CommonTicketsRow {
-  id: number;
+  id: string;
   ticket_status: string;
-  parent: number;
+  parent: string;
   content: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateTicketResponse extends GenericResponse {
@@ -42,7 +42,7 @@ class CommonTicketsUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonTicketsUpdateResponse {
@@ -51,12 +51,12 @@ class CommonTicketsUpdateResponse {
 }
 
 class DeleteTicketRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteTicketResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -68,10 +68,10 @@ export class TicketsTable {
   @Prop() onlyShowCreate: boolean = false;
   @State() commonTicketsResponse: CommonTicketsListResponse;
   newTicketStatusName: string;
-  newParent: number;
+  newParent: string;
   newContent: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonTicketsUpdateRequest, CommonTicketsUpdateResponse>('common/tickets/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -105,7 +105,7 @@ export class TicketsTable {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -125,7 +125,7 @@ export class TicketsTable {
     {
       field: 'parent',
       displayName: 'Parent',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -222,6 +222,9 @@ export class TicketsTable {
       <Host>
         <slot></slot>
 
+        {/* table abstraction */}
+        {this.commonTicketsResponse && this.onlyShowCreate === false && <cf-table rowData={this.commonTicketsResponse.tickets} columnData={this.columnData}></cf-table>}
+
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
@@ -266,8 +269,6 @@ export class TicketsTable {
             </span>
           </form>
         )}
-        {/* table abstraction */}
-        {this.commonTicketsResponse && this.onlyShowCreate === false && <cf-table rowData={this.commonTicketsResponse.tickets} columnData={this.columnData}></cf-table>}
       </Host>
     );
   }

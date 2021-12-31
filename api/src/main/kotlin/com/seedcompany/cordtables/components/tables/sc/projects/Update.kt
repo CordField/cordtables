@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.projects
 
-import com.seedcompany.cordtables.components.tables.sc.projects.ScProjectsUpdateRequest
-import com.seedcompany.cordtables.components.tables.sc.projects.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.sc.projects.ScProjectsUpdateResponse
-import com.seedcompany.cordtables.components.tables.sc.projects.projectInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class ScProjectsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -47,15 +40,6 @@ class Update(
         if (req.id == null) return ScProjectsUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-            "neo4j_id" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "sc.projects",
-                    column = "neo4j_id",
-                    id = req.id,
-                    value = req.value,
-                )
-            }
             "name" -> {
                 util.updateField(
                     token = req.token,
@@ -72,7 +56,7 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "active" -> {
@@ -82,7 +66,7 @@ class Update(
                     column = "active",
                     id = req.id,
                     value = req.value,
-                    cast = "::BOOLEAN"
+                    cast = "::boolean"
                 )
             }
             "department" -> {
@@ -111,7 +95,7 @@ class Update(
                     column = "field_region",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "initial_mou_end" -> {
@@ -131,7 +115,7 @@ class Update(
                     column = "marketing_location",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "mou_start" -> {
@@ -161,7 +145,7 @@ class Update(
                     column = "owning_organization",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "periodic_reports_directory" -> {
@@ -171,7 +155,7 @@ class Update(
                     column = "periodic_reports_directory",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "posts_directory" -> {
@@ -181,7 +165,7 @@ class Update(
                     column = "posts_directory",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "primary_location" -> {
@@ -191,7 +175,7 @@ class Update(
                     column = "primary_location",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "root_directory" -> {
@@ -201,7 +185,7 @@ class Update(
                     column = "root_directory",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "status" -> {
@@ -243,7 +227,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -253,7 +237,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

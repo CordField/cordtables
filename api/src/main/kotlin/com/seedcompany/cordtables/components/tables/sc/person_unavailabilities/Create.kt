@@ -21,7 +21,7 @@ data class ScPersonUnavailabilitiesCreateRequest(
 
 data class ScPersonUnavailabilitiesCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -52,7 +52,7 @@ class Create(
             """
             insert into sc.person_unavailabilities(person, period_start, period_end, description, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::timestamp,
                     ?::timestamp,
                     ?,
@@ -71,11 +71,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.personUnavailability.person,
             req.personUnavailability.period_start,
             req.personUnavailability.period_end,
@@ -83,6 +83,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

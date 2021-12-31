@@ -8,8 +8,9 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateFieldRegionExRequest {
   token: string;
   fieldRegion: {
-    neo4j_id: string;
-    director: number;
+    // neo4j_id: string;
+    field_zone: string;
+    director: string;
     name: string;
   };
 }
@@ -30,7 +31,7 @@ class ScFieldRegionUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScFieldRegionUpdateResponse {
@@ -39,12 +40,12 @@ class ScFieldRegionUpdateResponse {
 }
 
 class DeleteFieldRegionExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFieldRegionExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,11 +56,12 @@ class DeleteFieldRegionExResponse extends GenericResponse {
 export class ScFieldRegions {
   @State() fieldRegionsResponse: ScFieldRegionListResponse;
 
-  newNeo4j_id: string;
-  newDirector: number;
+  // newNeo4j_id: string;
+  newField_zone: string;
+  newDirector: string;
   newName: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScFieldRegionUpdateRequest, ScFieldRegionUpdateResponse>('sc/field-regions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -103,8 +105,18 @@ export class ScFieldRegions {
     });
   }
 
-  neo4jChange(event) {
-    this.newNeo4j_id = event.target.value;
+  // async getFilesList() {
+  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+  //     token: globals.globalStore.state.token,
+  //   });
+  // }
+
+  // neo4jChange(event) {
+  //   this.newNeo4j_id = event.target.value;
+  // }
+
+  field_zoneChange(event) {
+    this.newField_zone = event.target.value;
   }
 
   directorChange(event) {
@@ -122,7 +134,8 @@ export class ScFieldRegions {
     const createResponse = await fetchAs<CreateFieldRegionExRequest, CreateFieldRegionExResponse>('sc/field-regions/create-read', {
       token: globals.globalStore.state.token,
       fieldRegion: {
-        neo4j_id: this.newNeo4j_id,
+        // neo4j_id: this.newNeo4j_id,
+        field_zone: this.newField_zone,
         director: this.newDirector,
         name: this.newName,
       },
@@ -141,23 +154,31 @@ export class ScFieldRegions {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
+    // {
+    //   field: 'neo4j_id',
+    //   displayName: 'neo4j_id',
+    //   width: 50,
+    //   editable: false,
+    //   deleteFn: this.handleDelete,
+    // },
+
     {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      field: 'field_zone',
+      displayName: 'Field Zone',
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'director',
       displayName: 'Director',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'name',
@@ -223,12 +244,21 @@ export class ScFieldRegions {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            {/* <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">neo4j_id</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4jChange(event)} />
+              </span>
+            </div> */}
+
+            <div id="field_zone-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="field_zone">Field Zone</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="field_zone" name="field_zone" onInput={event => this.field_zoneChange(event)} />
               </span>
             </div>
 
@@ -237,7 +267,7 @@ export class ScFieldRegions {
                 <label htmlFor="director">Director</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="director" name="director" onInput={event => this.directorChange(event)} />
+                <input type="text" id="director" name="director" onInput={event => this.directorChange(event)} />
               </span>
             </div>
 

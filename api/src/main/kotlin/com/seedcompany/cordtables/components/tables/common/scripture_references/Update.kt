@@ -23,7 +23,7 @@ data class UpdatableScriptureReferenceFields(
 
 data class ScriptureReferenceUpdateRequest(
     val token: String? = null,
-    val id: Int? = null,
+    val id: String? = null,
     val updatedFields: UpdatableScriptureReferenceFields
 )
 
@@ -71,7 +71,7 @@ class Update(
                         counter++
                     }
                 }
-                updateSql = "$updateSql where id = ? returning *"
+                updateSql = "$updateSql where id = ?::uuid returning *"
                 println(updateSql)
                 val updateStatement = conn.prepareCall(
                     updateSql
@@ -86,11 +86,11 @@ class Update(
                 }
                 println("counter+++++++++++++++=")
                 println(counter)
-                updateStatement.setInt(counter, req.id)
+                updateStatement.setString(counter, req.id)
                 val updateStatementResult = updateStatement.executeQuery()
 
                 if (updateStatementResult.next()) {
-                    val id = updateStatementResult.getInt("id")
+                    val id = updateStatementResult.getString("id")
                     val bookStart = updateStatementResult.getString("book_start")
                     val bookEnd = updateStatementResult.getString("book_end")
                     val chapterStart = updateStatementResult.getInt("chapter_start")

@@ -1,14 +1,14 @@
 
 class AdminGroup {
-    id?: number | undefined;
+    id?: string | undefined;
 
     name?: string | undefined;
-    parent_group?: number | undefined;
+    parent_group?: string | undefined;
 
     created_at?: string | undefined;
-    created_by?: number | undefined;
+    created_by?: string | undefined;
     modified_at?: string | undefined;
-    modified_by?: number | undefined;
-    owning_person?: number | undefined;
-    owning_group?: number | undefined;
+    modified_by?: string | undefined;
+    owning_person?: string | undefined;
+    owning_group?: string | undefined;
 }

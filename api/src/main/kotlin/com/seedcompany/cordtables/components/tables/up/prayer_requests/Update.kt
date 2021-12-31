@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.up.prayer_requests
 
-import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsUpdateRequest
-import com.seedcompany.cordtables.components.tables.up.prayer_requests.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsUpdateResponse
-import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequestInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class UpPrayerRequestsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -54,7 +47,7 @@ class Update(
                     column = "request_language_id",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "target_language_id" -> {
@@ -64,7 +57,7 @@ class Update(
                     column = "target_language_id",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "sensitivity" -> {
@@ -93,7 +86,7 @@ class Update(
                 column = "parent",
                 id = req.id,
                 value = req.value,
-                cast = "::INTEGER"
+                cast = "::uuid"
               )
             }
             "translator" -> {
@@ -103,7 +96,7 @@ class Update(
                 column = "translator",
                 id = req.id,
                 value = req.value,
-                cast = "::INTEGER"
+                cast = "::uuid"
               )
             }
             "location" -> {
@@ -112,7 +105,8 @@ class Update(
                 table = "up.prayer_requests",
                 column = "location",
                 id = req.id,
-                value = req.value
+                value = req.value,
+                cast = "::uuid"
               )
             }
             "title" -> {
@@ -160,7 +154,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -170,7 +164,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

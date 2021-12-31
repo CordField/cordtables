@@ -5,16 +5,16 @@ import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
 class CommonCellChannel {
-  id?: number | undefined;
+  id?: string | undefined;
   table_name?: string | undefined;
   column_name?: string | undefined;
   row?: number | undefined;
   created_at?: string | undefined;
-  created_by?: number | undefined;
+  created_by?: string | undefined;
   modified_at?: string | undefined;
-  modified_by?: number | undefined;
+  modified_by?: string | undefined;
   owning_person?: number | undefined;
-  owning_group?: number | undefined;
+  owning_group?: string | undefined;
 }
 class CreateCommonCellChannelsRequest {
   token: string;
@@ -42,7 +42,7 @@ class CommonCellChannelsUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonCellChannelsUpdateResponse {
@@ -51,12 +51,12 @@ class CommonCellChannelsUpdateResponse {
 }
 
 class DeleteCommonCellChannelsRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteCommonCellChannelsResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -70,7 +70,7 @@ export class CellChannelsTable {
   newRow: number;
   newColumnName: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonCellChannelsUpdateRequest, CommonCellChannelsUpdateResponse>('common/cell-channels/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -147,7 +147,7 @@ export class CellChannelsTable {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -168,7 +168,7 @@ export class CellChannelsTable {
     {
       field: 'table_name',
       displayName: 'Table Name',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },

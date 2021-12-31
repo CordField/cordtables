@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateOrgChartPositionGraphExRequest {
   token: string;
   orgChartPositionGraph: {
-    from_position: number;
-    to_position: number;
+    from_position: string;
+    to_position: string;
     relationship_type: string;
   };
 }
@@ -30,7 +30,7 @@ class CommonOrgChartPositionGraphUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonOrgChartPositionGraphUpdateResponse {
@@ -39,12 +39,12 @@ class CommonOrgChartPositionGraphUpdateResponse {
 }
 
 class DeleteOrgChartPositionGraphExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteOrgChartPositionGraphExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,11 +55,11 @@ class DeleteOrgChartPositionGraphExResponse extends GenericResponse {
 export class CommonOrgChartPositionGraphs {
   @State() orgChartPositionGraphsResponse: CommonOrgChartPositionGraphListResponse;
 
-  newFrom_position: number;
-  newTo_position: number;
+  newFrom_position: string;
+  newTo_position: string;
   newRelationship_type: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonOrgChartPositionGraphUpdateRequest, CommonOrgChartPositionGraphUpdateResponse>('common/org-chart-position-graph/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
@@ -143,7 +143,7 @@ export class CommonOrgChartPositionGraphs {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -234,7 +234,7 @@ export class CommonOrgChartPositionGraphs {
                 <label htmlFor="from_position">From Position</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="from_position" name="from_position" onInput={event => this.from_positionChange(event)} />
+                <input type="text" id="from_position" name="from_position" onInput={event => this.from_positionChange(event)} />
               </span>
             </div>
 

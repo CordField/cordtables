@@ -12,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonWorkEstimateUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -50,10 +50,19 @@ class Update(
                     column = "person",
                     id = req.id,
                     value = req.value,
-                    cast = "::integer"
+                    cast = "::uuid"
                 )
             }
-
+            "ticket" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "common.work_estimates",
+                    column = "ticket",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::uuid"
+                )
+            }
             "hours" -> {
                 util.updateField(
                     token = req.token,
@@ -64,7 +73,6 @@ class Update(
                     cast = "::integer"
                 )
             }
-
             "minutes" -> {
                 util.updateField(
                     token = req.token,
@@ -75,8 +83,6 @@ class Update(
                     cast = "::integer"
                 )
             }
-
-
             "comment" -> {
                 util.updateField(
                     token = req.token,
@@ -84,11 +90,9 @@ class Update(
                     column = "comment",
                     id = req.id,
                     value = req.value,
-                    cast = "::text"
+                    cast = "::text",
                 )
             }
-
-
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
@@ -96,9 +100,9 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
-
             "owning_group" -> {
                 util.updateField(
                     token = req.token,
@@ -106,6 +110,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
         }

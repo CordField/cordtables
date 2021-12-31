@@ -1,22 +1,24 @@
 package com.seedcompany.cordtables.components.tables.common.work_records
 
 data class CommonWorkRecords(
-    val id: Int? = null,
-    val person: Int? = null,
+    val id: String? = null,
+    val person: String? = null,
+    val ticket: String? = null,
     val hours : Int? = null,
     val minutes: Int? = null,
     val total_time: Number? = null,
     val comment: String? = null,
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 
 data class CommonWorkRecordInput(
-    val person: Int? = null,
+    val person: String? = null,
+    val ticket: String? = null,
     val hours: Int? = null,
     val minutes: Int? = null,
     val comment:  String? = null,

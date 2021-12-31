@@ -18,7 +18,7 @@ data class ScBudgetRecordsCreateRequest(
 
 data class ScBudgetRecordsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -50,8 +50,8 @@ class Create(
             """
             insert into sc.budget_records(budget, change_to_plan, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -67,16 +67,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.budget_record.budget,
             req.budget_record.change_to_plan,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.budget_record.id = id

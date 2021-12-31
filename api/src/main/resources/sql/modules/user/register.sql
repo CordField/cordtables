@@ -3,12 +3,14 @@ CREATE OR REPLACE PROCEDURE admin.register(
   IN p_password VARCHAR(50),
   in p_token varchar(64),
   INOUT error_type VARCHAR(32), 
-  INOUT user_id integer
+  INOUT user_id uuid
 )
 LANGUAGE PLPGSQL
 AS $$
 DECLARE
-  vPersonId int;
+  vAdminPersonId uuid;
+  vAdminGroupId uuid;
+  vPersonId uuid;
   vEmail VARCHAR(255);
   vToken varchar(512);
 BEGIN
@@ -20,6 +22,19 @@ BEGIN
 
   if vEmail is null then
 
+    select admin.people.id as id 				from admin.people
+    inner join admin.role_memberships 	on admin.role_memberships.person = admin.people.id
+    inner join admin.roles 				on admin.role_memberships.role = admin.roles.id
+    where admin.roles.name = 'Administrator'
+    order by admin.people.created_at asc
+    limit 1
+    into vAdminPersonId;
+
+    select id
+    from admin.groups
+    where name = 'Administrators'
+    into vAdminGroupId;
+
     insert into admin.people("sensitivity_clearance")
     values ('Low')
     returning id
@@ -28,8 +43,8 @@ BEGIN
     insert into admin.tokens ("token", "person")
     values (p_token, vPersonId);
 
-    insert into admin.users(person, email, password, created_by, modified_by, owning_person, owning_group)
-    values (vPersonId, p_email, p_password, 1, 1, 1, 1)
+    insert into admin.users(id, email, password, created_by, modified_by, owning_person, owning_group)
+    values (vPersonId, p_email, p_password, vAdminPersonId, vAdminPersonId, vAdminPersonId, vAdminGroupId)
     returning id 
     into user_id;
 

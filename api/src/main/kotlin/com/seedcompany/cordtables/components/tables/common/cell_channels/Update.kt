@@ -1,9 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.cell_channels
 
-import com.seedcompany.cordtables.common.CommonTicketStatus
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -14,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonCellChannelsUpdateRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
         val column: String? = null,
         val value: Any? = null,
 )
@@ -70,7 +68,7 @@ class Update(
                         column = "row",
                         id = req.id,
                         value = req.value,
-                        cast="::integer"
+                        cast ="::uuid"
                 )
             }
             "owning_person" -> {
@@ -79,7 +77,8 @@ class Update(
                         table = "common.cell_channels",
                         column = "owning_person",
                         id = req.id,
-                        value = req.value
+                        value = req.value,
+                        cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -88,7 +87,8 @@ class Update(
                         table = "common.cell_channels",
                         column = "owning_group",
                         id = req.id,
-                        value = req.value
+                        value = req.value,
+                        cast = "::uuid"
                 )
             }
         }
