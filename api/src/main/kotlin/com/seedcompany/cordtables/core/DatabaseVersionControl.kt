@@ -40,6 +40,8 @@ class DatabaseVersionControl(
       updateHistoryTables()
       updatePeerTables()
       println("database schema init complete")
+    } else {
+      println("db is ready")
     }
   }
 
