@@ -42,6 +42,9 @@ class CreateRead(
     @ResponseBody
     fun createReadHandler(@RequestBody req: AdminRoleColumnGrantsCreateReadRequest): AdminRoleColumnGrantsCreateReadResponse {
 
+      if (req.token == null) return AdminRoleColumnGrantsCreateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleColumnGrantsCreateReadResponse(ErrorType.AdminOnly)
+
         val createResponse = create.createHandler(
             AdminRoleColumnGrantsCreateRequest(
                 token = req.token,

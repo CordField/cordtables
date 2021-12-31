@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.users
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.roles.AdminRolesUpdateReadResponse
 import com.seedcompany.cordtables.components.tables.admin.users.userInput
 import com.seedcompany.cordtables.components.tables.admin.users.Read
 import com.seedcompany.cordtables.components.tables.admin.users.Update
@@ -45,6 +46,9 @@ class Create(
     @PostMapping("admin/users/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminUsersCreateRequest): AdminUsersCreateResponse {
+
+      if (req.token == null) return AdminUsersCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminUsersCreateResponse(ErrorType.AdminOnly)
 
         // if (req.user.name == null) return usersCreateResponse(error = ErrorType.InputMissingToken, null)
         if (req.user.email == null || !util.isEmailValid(req.user.email)) return AdminUsersCreateResponse(ErrorType.InvalidEmail)

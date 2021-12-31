@@ -34,7 +34,9 @@ class Update(
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminRoleTablePermissionsUpdateRequest): AdminRoleTablePermissionsUpdateResponse {
 
-        if (req.token == null) return AdminRoleTablePermissionsUpdateResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminRoleTablePermissionsUpdateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleTablePermissionsUpdateResponse(ErrorType.AdminOnly)
+
         if (req.column == null) return AdminRoleTablePermissionsUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return AdminRoleTablePermissionsUpdateResponse(ErrorType.MissingId)
 

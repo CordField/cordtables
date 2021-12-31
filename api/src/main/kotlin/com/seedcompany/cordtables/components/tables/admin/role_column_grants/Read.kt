@@ -44,7 +44,9 @@ class Read(
     @ResponseBody
     fun readHandler(@RequestBody req: AdminRoleColumnGrantsReadRequest): AdminRoleColumnGrantsReadResponse {
 
-        if (req.token == null) return AdminRoleColumnGrantsReadResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminRoleColumnGrantsReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleColumnGrantsReadResponse(ErrorType.AdminOnly)
+
         if (req.id == null) return AdminRoleColumnGrantsReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()

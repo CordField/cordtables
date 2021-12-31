@@ -23,7 +23,7 @@ data class AdminGroupRowAccessListRequest(
 
 data class AdminGroupRowAccessListResponse(
     val error: ErrorType,
-    val groupRowAccesses: MutableList<groupRowAccess>?
+    val groupRowAccesses: MutableList<groupRowAccess>? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -44,8 +44,11 @@ class List(
     @PostMapping("admin/group-row-access/list")
     @ResponseBody
     fun listHandler(@RequestBody req:AdminGroupRowAccessListRequest): AdminGroupRowAccessListResponse {
+
+      if (req.token == null) return AdminGroupRowAccessListResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupRowAccessListResponse(ErrorType.AdminOnly)
+
         var data: MutableList<groupRowAccess> = mutableListOf()
-        if (req.token == null) return AdminGroupRowAccessListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)

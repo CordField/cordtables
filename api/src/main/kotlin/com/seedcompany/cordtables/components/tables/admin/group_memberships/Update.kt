@@ -35,7 +35,8 @@ class Update(
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminGroupMembershipsUpdateRequest): AdminGroupMembershipsUpdateResponse {
 
-        if (req.token == null) return AdminGroupMembershipsUpdateResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminGroupMembershipsUpdateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupMembershipsUpdateResponse(ErrorType.AdminOnly)
         if (req.column == null) return AdminGroupMembershipsUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return AdminGroupMembershipsUpdateResponse(ErrorType.MissingId)
 

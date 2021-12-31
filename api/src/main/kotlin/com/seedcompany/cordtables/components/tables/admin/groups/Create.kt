@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.groups
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.group_memberships.AdminGroupMembershipsUpdateResponse
 import com.seedcompany.cordtables.components.tables.admin.groups.groupInput
 import com.seedcompany.cordtables.components.tables.admin.groups.Read
 import com.seedcompany.cordtables.components.tables.admin.groups.Update
@@ -44,6 +45,9 @@ class Create(
     @PostMapping("admin/groups/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminGroupsCreateRequest): AdminGroupsCreateResponse {
+
+      if (req.token == null) return AdminGroupsCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupsCreateResponse(ErrorType.AdminOnly)
 
         if (req.group.name == null) return AdminGroupsCreateResponse(error = ErrorType.InputMissingToken, null)
 

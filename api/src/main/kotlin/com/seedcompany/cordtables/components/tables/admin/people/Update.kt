@@ -35,7 +35,9 @@ class Update(
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminPeopleUpdateRequest): AdminPeopleUpdateResponse {
 
-        if (req.token == null) return AdminPeopleUpdateResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminPeopleUpdateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminPeopleUpdateResponse(ErrorType.AdminOnly)
+
         if (req.column == null) return AdminPeopleUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return AdminPeopleUpdateResponse(ErrorType.MissingId)
 

@@ -20,7 +20,7 @@ data class AdminGroupRowAccessDeleteRequest(
 
 data class AdminGroupRowAccessDeleteResponse(
     val error: ErrorType,
-    val id: String?
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -36,7 +36,9 @@ class Delete(
     @ResponseBody
     fun deleteHandler(@RequestBody req: AdminGroupRowAccessDeleteRequest): AdminGroupRowAccessDeleteResponse {
 
-        if (req.token == null) return AdminGroupRowAccessDeleteResponse(ErrorType.TokenNotFound, null)
+      if (req.token == null) return AdminGroupRowAccessDeleteResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupRowAccessDeleteResponse(ErrorType.AdminOnly)
+
         if(!util.userHasDeletePermission(req.token, "admin.group_row_access"))
             return AdminGroupRowAccessDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 

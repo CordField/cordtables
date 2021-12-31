@@ -46,6 +46,9 @@ class UpdateRead(
     @ResponseBody
     fun updateReadHandler(@RequestBody req: AdminGroupRowAccessUpdateReadRequest): AdminGroupRowAccessUpdateReadResponse {
 
+      if (req.token == null) return AdminGroupRowAccessUpdateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupRowAccessUpdateReadResponse(ErrorType.AdminOnly)
+
         val updateResponse = update.updateHandler(
             AdminGroupRowAccessUpdateRequest(
                 token = req.token,

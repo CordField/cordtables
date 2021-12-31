@@ -4,6 +4,7 @@ import com.seedcompany.cordtables.common.AccessLevels
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.TableNames
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.people.AdminPeopleUpdateReadResponse
 import com.seedcompany.cordtables.components.tables.admin.role_column_grants.roleColumnGrantInput
 import com.seedcompany.cordtables.components.tables.admin.role_column_grants.Read
 import com.seedcompany.cordtables.components.tables.admin.role_column_grants.Update
@@ -46,6 +47,9 @@ class Create(
     @PostMapping("admin/role-column-grants/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminRoleColumnGrantsCreateRequest): AdminRoleColumnGrantsCreateResponse {
+
+      if (req.token == null) return AdminRoleColumnGrantsCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleColumnGrantsCreateResponse(ErrorType.AdminOnly)
 
         // if (req.roleColumnGrant.name == null) return AdminRoleColumnGrantsCreateResponse(error = ErrorType.InputMissingToken, null)
 

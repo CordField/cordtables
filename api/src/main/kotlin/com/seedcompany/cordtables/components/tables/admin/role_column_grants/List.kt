@@ -24,7 +24,7 @@ data class AdminRoleColumnGrantsListRequest(
 
 data class AdminRoleColumnGrantsListResponse(
     val error: ErrorType,
-    val roleColumnGrants: MutableList<roleColumnGrant>?
+    val roleColumnGrants: MutableList<roleColumnGrant>? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -45,6 +45,10 @@ class List(
     @PostMapping("admin/role-column-grants/list")
     @ResponseBody
     fun listHandler(@RequestBody req:AdminRoleColumnGrantsListRequest): AdminRoleColumnGrantsListResponse {
+
+      if (req.token == null) return AdminRoleColumnGrantsListResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleColumnGrantsListResponse(ErrorType.AdminOnly)
+
         var data: MutableList<roleColumnGrant> = mutableListOf()
         if (req.token == null) return AdminRoleColumnGrantsListResponse(ErrorType.TokenNotFound, mutableListOf())
 

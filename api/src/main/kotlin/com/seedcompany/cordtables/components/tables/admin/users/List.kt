@@ -24,7 +24,7 @@ data class AdminUsersListRequest(
 
 data class AdminUsersListResponse(
     val error: ErrorType,
-    val users: MutableList<user>?
+    val users: MutableList<user>? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -45,6 +45,10 @@ class List(
     @PostMapping("admin/users/list")
     @ResponseBody
     fun listHandler(@RequestBody req:AdminUsersListRequest): AdminUsersListResponse {
+
+      if (req.token == null) return AdminUsersListResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminUsersListResponse(ErrorType.AdminOnly)
+
         var data: MutableList<user> = mutableListOf()
         if (req.token == null) return AdminUsersListResponse(ErrorType.TokenNotFound, mutableListOf())
 

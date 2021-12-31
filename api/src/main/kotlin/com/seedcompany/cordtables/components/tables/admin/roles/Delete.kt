@@ -20,7 +20,7 @@ data class AdminRolesDeleteRequest(
 
 data class AdminRolesDeleteResponse(
     val error: ErrorType,
-    val id: String?
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -35,6 +35,9 @@ class Delete(
     @PostMapping("admin/roles/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: AdminRolesDeleteRequest): AdminRolesDeleteResponse {
+
+      if (req.token == null) return AdminRolesDeleteResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRolesDeleteResponse(ErrorType.AdminOnly)
 
         if (req.token == null) return AdminRolesDeleteResponse(ErrorType.TokenNotFound, null)
         if(!util.userHasDeletePermission(req.token, "admin.roles"))

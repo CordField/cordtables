@@ -34,7 +34,9 @@ class Update(
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminRoleColumnGrantsUpdateRequest): AdminRoleColumnGrantsUpdateResponse {
 
-        if (req.token == null) return AdminRoleColumnGrantsUpdateResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminRoleColumnGrantsUpdateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleColumnGrantsUpdateResponse(ErrorType.AdminOnly)
+
         if (req.column == null) return AdminRoleColumnGrantsUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return AdminRoleColumnGrantsUpdateResponse(ErrorType.MissingId)
 

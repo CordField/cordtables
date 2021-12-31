@@ -46,6 +46,9 @@ class UpdateRead(
     @ResponseBody
     fun updateReadHandler(@RequestBody req: AdminPeopleUpdateReadRequest): AdminPeopleUpdateReadResponse {
 
+      if (req.token == null) return AdminPeopleUpdateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminPeopleUpdateReadResponse(ErrorType.AdminOnly)
+
         val updateResponse = update.updateHandler(
             AdminPeopleUpdateRequest(
                 token = req.token,
