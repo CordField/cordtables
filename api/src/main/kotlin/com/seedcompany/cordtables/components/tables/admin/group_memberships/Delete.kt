@@ -14,59 +14,60 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class AdminGroupMembershipsDeleteRequest(
-    val id: String,
-    val token: String?,
+  val id: String,
+  val token: String?,
 )
 
 data class AdminGroupMembershipsDeleteResponse(
-    val error: ErrorType,
-    val id: String?
+  val error: ErrorType,
+  val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("AdminGroupMembershipsDelete")
 class Delete(
-    @Autowired
-    val util: Utility,
+  @Autowired
+  val util: Utility,
 
-    @Autowired
-    val ds: DataSource,
+  @Autowired
+  val ds: DataSource,
 ) {
-    @PostMapping("admin/group-memberships/delete")
-    @ResponseBody
-    fun deleteHandler(@RequestBody req: AdminGroupMembershipsDeleteRequest): AdminGroupMembershipsDeleteResponse {
+  @PostMapping("admin/group-memberships/delete")
+  @ResponseBody
+  fun deleteHandler(@RequestBody req: AdminGroupMembershipsDeleteRequest): AdminGroupMembershipsDeleteResponse {
 
-        if (req.token == null) return AdminGroupMembershipsDeleteResponse(ErrorType.TokenNotFound, null)
-        if(!util.userHasDeletePermission(req.token, "admin.group_memberships"))
-            return AdminGroupMembershipsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
+    if (req.token == null) return AdminGroupMembershipsDeleteResponse(ErrorType.InputMissingToken)
+    if (!util.isAdmin(req.token)) return AdminGroupMembershipsDeleteResponse(ErrorType.AdminOnly)
 
-        println("req: $req")
-        var deletedLocationExId: String? = null
+    if (!util.userHasDeletePermission(req.token, "admin.group_memberships"))
+      return AdminGroupMembershipsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-        this.ds.connection.use { conn ->
-            try {
+    println("req: $req")
+    var deletedLocationExId: String? = null
 
-                val deleteStatement = conn.prepareCall(
-                    "delete from admin.group_memberships where id = ?::uuid returning id"
-                )
-                deleteStatement.setString(1, req.id)
+    this.ds.connection.use { conn ->
+      try {
 
-                deleteStatement.setString(1,req.id)
+        val deleteStatement = conn.prepareCall(
+          "delete from admin.group_memberships where id = ?::uuid returning id"
+        )
+        deleteStatement.setString(1, req.id)
+
+        deleteStatement.setString(1, req.id)
 
 
-                val deleteStatementResult = deleteStatement.executeQuery()
+        val deleteStatementResult = deleteStatement.executeQuery()
 
-                if (deleteStatementResult.next()) {
-                    deletedLocationExId  = deleteStatementResult.getString("id")
-                }
-            }
-            catch (e:SQLException ){
-                println(e.message)
-
-                return AdminGroupMembershipsDeleteResponse(ErrorType.SQLDeleteError, null)
-            }
+        if (deleteStatementResult.next()) {
+          deletedLocationExId = deleteStatementResult.getString("id")
         }
+      } catch (e: SQLException) {
+        println(e.message)
 
-        return AdminGroupMembershipsDeleteResponse(ErrorType.NoError,deletedLocationExId)
+        return AdminGroupMembershipsDeleteResponse(ErrorType.SQLDeleteError, null)
+      }
     }
+
+    return AdminGroupMembershipsDeleteResponse(ErrorType.NoError, deletedLocationExId)
+  }
 }

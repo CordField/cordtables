@@ -42,6 +42,9 @@ class CreateRead(
     @ResponseBody
     fun createReadHandler(@RequestBody req: AdminGroupMembershipsCreateReadRequest): AdminGroupMembershipsCreateReadResponse {
 
+      if (req.token == null) return AdminGroupMembershipsCreateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupMembershipsCreateReadResponse(ErrorType.AdminOnly)
+
         val createResponse = create.createHandler(
             AdminGroupMembershipsCreateRequest(
                 token = req.token,

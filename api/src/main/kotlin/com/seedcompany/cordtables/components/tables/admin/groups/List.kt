@@ -24,7 +24,7 @@ data class AdminGroupsListRequest(
 
 data class AdminGroupsListResponse(
     val error: ErrorType,
-    val groups: MutableList<group>?
+    val groups: MutableList<group>? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -45,6 +45,10 @@ class List(
     @PostMapping("admin/groups/list")
     @ResponseBody
     fun listHandler(@RequestBody req:AdminGroupsListRequest): AdminGroupsListResponse {
+
+      if (req.token == null) return AdminGroupsListResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupsListResponse(ErrorType.AdminOnly)
+
         var data: MutableList<group> = mutableListOf()
         if (req.token == null) return AdminGroupsListResponse(ErrorType.TokenNotFound, mutableListOf())
 

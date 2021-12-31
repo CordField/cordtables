@@ -34,7 +34,9 @@ class Update(
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminGroupRowAccessUpdateRequest): AdminGroupRowAccessUpdateResponse {
 
-        if (req.token == null) return AdminGroupRowAccessUpdateResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminGroupRowAccessUpdateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupRowAccessUpdateResponse(ErrorType.AdminOnly)
+
         if (req.column == null) return AdminGroupRowAccessUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return AdminGroupRowAccessUpdateResponse(ErrorType.MissingId)
 

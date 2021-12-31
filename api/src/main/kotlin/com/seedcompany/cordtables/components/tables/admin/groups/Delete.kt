@@ -20,7 +20,7 @@ data class AdminGroupsDeleteRequest(
 
 data class AdminGroupsDeleteResponse(
     val error: ErrorType,
-    val id: String?
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -35,6 +35,9 @@ class Delete(
     @PostMapping("admin/groups/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: AdminGroupsDeleteRequest): AdminGroupsDeleteResponse {
+
+      if (req.token == null) return AdminGroupsDeleteResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupsDeleteResponse(ErrorType.AdminOnly)
 
         if (req.token == null) return AdminGroupsDeleteResponse(ErrorType.TokenNotFound, null)
         if(!util.userHasDeletePermission(req.token, "admin.groups"))

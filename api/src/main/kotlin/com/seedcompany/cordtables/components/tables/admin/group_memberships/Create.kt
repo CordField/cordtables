@@ -5,6 +5,7 @@ import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.tables.admin.group_memberships.groupMembershipInput
 import com.seedcompany.cordtables.components.tables.admin.group_memberships.Read
 import com.seedcompany.cordtables.components.tables.admin.group_memberships.Update
+import com.seedcompany.cordtables.components.tables.admin.group_row_access.AdminGroupRowAccessCreateResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -45,6 +46,8 @@ class Create(
     @ResponseBody
     fun createHandler(@RequestBody req: AdminGroupMembershipsCreateRequest): AdminGroupMembershipsCreateResponse {
 
+      if (req.token == null) return AdminGroupMembershipsCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupMembershipsCreateResponse(ErrorType.AdminOnly)
         // if (req.groupMembership.name == null) return AdminGroupMembershipsCreateResponse(error = ErrorType.InputMissingToken, null)
 
 
