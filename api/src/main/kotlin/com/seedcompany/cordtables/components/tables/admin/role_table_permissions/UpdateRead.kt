@@ -46,6 +46,9 @@ class UpdateRead(
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonFileVersionsUpdateReadRequest): CommonFileVersionsUpdateReadResponse {
 
+      if (req.token == null) return CommonFileVersionsUpdateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return CommonFileVersionsUpdateReadResponse(ErrorType.AdminOnly)
+
         val updateResponse = update.updateHandler(
             AdminRoleTablePermissionsUpdateRequest(
                 token = req.token,

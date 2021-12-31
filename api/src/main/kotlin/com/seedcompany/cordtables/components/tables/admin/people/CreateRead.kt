@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.people
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.groups.AdminGroupsCreateResponse
 import com.seedcompany.cordtables.components.tables.admin.people.*
 import com.seedcompany.cordtables.components.tables.admin.people.AdminPeopleCreateRequest
 import com.seedcompany.cordtables.components.tables.admin.people.Create
@@ -41,6 +42,9 @@ class CreateRead(
     @PostMapping("admin/people/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: AdminPeopleCreateReadRequest): AdminPeopleCreateReadResponse {
+
+      if (req.token == null) return AdminPeopleCreateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminPeopleCreateReadResponse(ErrorType.AdminOnly)
 
         val createResponse = create.createHandler(
             AdminPeopleCreateRequest(

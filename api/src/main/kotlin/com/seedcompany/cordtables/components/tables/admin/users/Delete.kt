@@ -20,7 +20,7 @@ data class AdminUsersDeleteRequest(
 
 data class AdminUsersDeleteResponse(
     val error: ErrorType,
-    val id: String?
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -36,7 +36,9 @@ class Delete(
     @ResponseBody
     fun deleteHandler(@RequestBody req: AdminUsersDeleteRequest): AdminUsersDeleteResponse {
 
-        if (req.token == null) return AdminUsersDeleteResponse(ErrorType.TokenNotFound, null)
+      if (req.token == null) return AdminUsersDeleteResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminUsersDeleteResponse(ErrorType.AdminOnly)
+
         if(!util.userHasDeletePermission(req.token, "admin.users"))
             return AdminUsersDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 

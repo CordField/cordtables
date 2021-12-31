@@ -46,7 +46,9 @@ class Read(
     @ResponseBody
     fun readHandler(@RequestBody req: AdminRolesReadRequest): AdminRolesReadResponse {
 
-        if (req.token == null) return AdminRolesReadResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminRolesReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRolesReadResponse(ErrorType.AdminOnly)
+
         if (req.id == null) return AdminRolesReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()

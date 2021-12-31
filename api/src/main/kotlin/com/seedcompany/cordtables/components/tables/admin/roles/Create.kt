@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.roles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.CommonFileVersionsUpdateReadResponse
 import com.seedcompany.cordtables.components.tables.admin.roles.roleInput
 import com.seedcompany.cordtables.components.tables.admin.roles.Read
 import com.seedcompany.cordtables.components.tables.admin.roles.Update
@@ -44,6 +45,9 @@ class Create(
     @PostMapping("admin/roles/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminRolesCreateRequest): AdminRolesCreateResponse {
+
+      if (req.token == null) return AdminRolesCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRolesCreateResponse(ErrorType.AdminOnly)
 
         if (req.role.name == null) return AdminRolesCreateResponse(error = ErrorType.InputMissingToken, null)
 

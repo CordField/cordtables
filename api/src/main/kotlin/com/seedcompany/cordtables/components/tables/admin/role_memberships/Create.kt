@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.role_memberships
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.role_column_grants.AdminRoleColumnGrantsUpdateReadResponse
 import com.seedcompany.cordtables.components.tables.admin.role_memberships.roleMembershipInput
 import com.seedcompany.cordtables.components.tables.admin.role_memberships.Read
 import com.seedcompany.cordtables.components.tables.admin.role_memberships.Update
@@ -44,6 +45,9 @@ class Create(
     @PostMapping("admin/role-memberships/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminRoleMembershipsCreateRequest): AdminRoleMembershipsCreateResponse {
+
+      if (req.token == null) return AdminRoleMembershipsCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleMembershipsCreateResponse(ErrorType.AdminOnly)
 
         // if (req.roleMembership.name == null) return AdminRoleMembershipsCreateResponse(error = ErrorType.InputMissingToken, null)
 

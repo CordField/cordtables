@@ -42,6 +42,9 @@ class CreateRead(
     @ResponseBody
     fun createReadHandler(@RequestBody req: AdminRoleTablePermissionsCreateReadRequest): AdminRoleTablePermissionsCreateReadResponse {
 
+      if (req.token == null) return AdminRoleTablePermissionsCreateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleTablePermissionsCreateReadResponse(ErrorType.AdminOnly)
+
         val createResponse = create.createHandler(
             AdminRoleTablePermissionsCreateRequest(
                 token = req.token,

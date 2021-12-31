@@ -3,6 +3,7 @@ package com.seedcompany.cordtables.components.tables.admin.role_table_permission
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.TableNames
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.role_memberships.AdminRoleMembershipsUpdateReadResponse
 import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.roleTablePermissionInput
 import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.Read
 import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.Update
@@ -45,6 +46,9 @@ class Create(
     @PostMapping("admin/role-table-permissions/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminRoleTablePermissionsCreateRequest): AdminRoleTablePermissionsCreateResponse {
+
+      if (req.token == null) return AdminRoleTablePermissionsCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleTablePermissionsCreateResponse(ErrorType.AdminOnly)
 
         // if (req.roleTablePermission.name == null) return AdminRoleTablePermissionsCreateResponse(error = ErrorType.InputMissingToken, null)
 
