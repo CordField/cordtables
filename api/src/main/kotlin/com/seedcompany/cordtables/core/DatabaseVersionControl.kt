@@ -165,7 +165,7 @@ class DatabaseVersionControl(
   }
 
   private fun toVersion1() {
-    runSqlFile("sql/helpers/uuid.sql")
+//    runSqlFile("sql/helpers/uuid.sql")
 
     println("version 1 not found. creating schema.")
 
