@@ -10,10 +10,10 @@ cord:
     password: ${CORD_ADMIN_PASSWORD}
   init:
     load-language-data: false
-  awsAccessKeyId: "AKIASBJ5CYUYBNWLM2XC" # ${AWS_ACCESS_KEY_ID}
-  awsSecretAccessKey: "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" #${AWS_SECRET_ACCESS_KEY}
+  awsAccessKeyId: ${AWS_ACCESS_KEY_ID}
+  awsSecretAccessKey: ${AWS_SECRET_ACCESS_KEY}
   email:
-    server: "http://localhost:3333" #${EMAIL_SERVER}
+    server: ${EMAIL_SERVER}
 cord-api:
   url: ${CORD_API_GRAPHQL_URL}
   email: ${CORD_API_EMAIL}
