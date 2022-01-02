@@ -57,6 +57,10 @@ export class CfLogin {
     }
   };
 
+  clickedResetPassword = () => {
+    this.history.push(`/forgot-password`);
+  }
+
   render() {
     return (
       <Host>
@@ -79,6 +83,7 @@ export class CfLogin {
           </div>
           <input id="Login-button" type="submit" value="Login" onClick={this.clickSubmit} />
         </form>
+        <a href="javascript:void(0)" onClick={this.clickedResetPassword}>Reset Password</a>
       </Host>
     );
   }
