@@ -11,6 +11,10 @@ cord:
     password: ${CORD_ADMIN_PASSWORD}
   init:
     load-db-version: 2
+  awsAccessKeyId: ${AWS_ACCESS_KEY_ID}
+  awsSecretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  email:
+    server: ${EMAIL_SERVER}
 cord-api:
   url: ${CORD_API_GRAPHQL_URL}
   email: ${CORD_API_EMAIL}
