@@ -45,6 +45,9 @@ export namespace Components {
         "rowId": number;
         "value": any;
     }
+    interface CfForgotPassword {
+        "history": RouterHistory;
+    }
     interface CfHeader {
         "history": RouterHistory;
     }
@@ -65,6 +68,10 @@ export namespace Components {
     }
     interface CfRegister {
         "history": RouterHistory;
+    }
+    interface CfResetPassword {
+        "history": RouterHistory;
+        "match": MatchResults;
     }
     interface CfRow {
         "columnData": ColumnDescription[];
@@ -405,6 +412,12 @@ declare global {
         prototype: HTMLCfCell2Element;
         new (): HTMLCfCell2Element;
     };
+    interface HTMLCfForgotPasswordElement extends Components.CfForgotPassword, HTMLStencilElement {
+    }
+    var HTMLCfForgotPasswordElement: {
+        prototype: HTMLCfForgotPasswordElement;
+        new (): HTMLCfForgotPasswordElement;
+    };
     interface HTMLCfHeaderElement extends Components.CfHeader, HTMLStencilElement {
     }
     var HTMLCfHeaderElement: {
@@ -440,6 +453,12 @@ declare global {
     var HTMLCfRegisterElement: {
         prototype: HTMLCfRegisterElement;
         new (): HTMLCfRegisterElement;
+    };
+    interface HTMLCfResetPasswordElement extends Components.CfResetPassword, HTMLStencilElement {
+    }
+    var HTMLCfResetPasswordElement: {
+        prototype: HTMLCfResetPasswordElement;
+        new (): HTMLCfResetPasswordElement;
     };
     interface HTMLCfRowElement extends Components.CfRow, HTMLStencilElement {
     }
@@ -1133,12 +1152,14 @@ declare global {
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "cf-cell2": HTMLCfCell2Element;
+        "cf-forgot-password": HTMLCfForgotPasswordElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
         "cf-login": HTMLCfLoginElement;
         "cf-notif": HTMLCfNotifElement;
         "cf-pagination": HTMLCfPaginationElement;
         "cf-register": HTMLCfRegisterElement;
+        "cf-reset-password": HTMLCfResetPasswordElement;
         "cf-row": HTMLCfRowElement;
         "cf-table": HTMLCfTableElement;
         "cf-table-body": HTMLCfTableBodyElement;
@@ -1287,6 +1308,9 @@ declare namespace LocalJSX {
         "rowId"?: number;
         "value"?: any;
     }
+    interface CfForgotPassword {
+        "history"?: RouterHistory;
+    }
     interface CfHeader {
         "history"?: RouterHistory;
     }
@@ -1309,6 +1333,10 @@ declare namespace LocalJSX {
     }
     interface CfRegister {
         "history"?: RouterHistory;
+    }
+    interface CfResetPassword {
+        "history"?: RouterHistory;
+        "match"?: MatchResults;
     }
     interface CfRow {
         "columnData"?: ColumnDescription[];
@@ -1592,12 +1620,14 @@ declare namespace LocalJSX {
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "cf-cell2": CfCell2;
+        "cf-forgot-password": CfForgotPassword;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
         "cf-login": CfLogin;
         "cf-notif": CfNotif;
         "cf-pagination": CfPagination;
         "cf-register": CfRegister;
+        "cf-reset-password": CfResetPassword;
         "cf-row": CfRow;
         "cf-table": CfTable;
         "cf-table-body": CfTableBody;
@@ -1730,12 +1760,14 @@ declare module "@stencil/core" {
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "cf-cell2": LocalJSX.CfCell2 & JSXBase.HTMLAttributes<HTMLCfCell2Element>;
+            "cf-forgot-password": LocalJSX.CfForgotPassword & JSXBase.HTMLAttributes<HTMLCfForgotPasswordElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
             "cf-login": LocalJSX.CfLogin & JSXBase.HTMLAttributes<HTMLCfLoginElement>;
             "cf-notif": LocalJSX.CfNotif & JSXBase.HTMLAttributes<HTMLCfNotifElement>;
             "cf-pagination": LocalJSX.CfPagination & JSXBase.HTMLAttributes<HTMLCfPaginationElement>;
             "cf-register": LocalJSX.CfRegister & JSXBase.HTMLAttributes<HTMLCfRegisterElement>;
+            "cf-reset-password": LocalJSX.CfResetPassword & JSXBase.HTMLAttributes<HTMLCfResetPasswordElement>;
             "cf-row": LocalJSX.CfRow & JSXBase.HTMLAttributes<HTMLCfRowElement>;
             "cf-table": LocalJSX.CfTable & JSXBase.HTMLAttributes<HTMLCfTableElement>;
             "cf-table-body": LocalJSX.CfTableBody & JSXBase.HTMLAttributes<HTMLCfTableBodyElement>;

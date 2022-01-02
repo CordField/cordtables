@@ -58,7 +58,7 @@ export class CfLogin {
   };
 
   clickedResetPassword = () => {
-    this.history.push(`/reset-password`);
+    this.history.push(`/forgot-password`);
   }
 
   render() {

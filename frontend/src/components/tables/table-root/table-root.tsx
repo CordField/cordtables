@@ -82,8 +82,6 @@ export class TableRoot {
         {this.match.params.table === 'common-threads' && <common-threads></common-threads>}
         {this.match.params.table === 'common-posts' && <common-posts></common-posts>}
         {this.match.params.table === 'sc-languages' && <sc-languages></sc-languages>}
-        
-
 
         {/* {this.match.params.table === 'admin-users' && <admin-users></admin-users>} */}
         {this.match.params.table === 'common-locations' && <common-locations></common-locations>}

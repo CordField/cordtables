@@ -105,7 +105,8 @@ export class AppRoot {
                 <stencil-route url="/profile" component="app-profile" />
                 <stencil-route url="/register" component="cf-register" />
                 <stencil-route url="/login" component="cf-login" />
-                <stencil-route url="/reset-password" component="cf-password-reset" />
+                <stencil-route url="/forgot-password" component="cf-forgot-password" />
+                <stencil-route url="/reset-password/:token" component="cf-reset-password" />
                 <stencil-route url="/table/:table" component="table-root" />
                 <stencil-route url="/page/:page/:requestId?" component="page-root" />
               </stencil-route-switch>
