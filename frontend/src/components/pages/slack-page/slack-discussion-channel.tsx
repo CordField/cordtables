@@ -43,7 +43,7 @@ export class SlackDiscussionChannel {
               onClick={async e => {
                 e.stopPropagation();
                 if (this.mode === 'update') {
-                  const updateResponse = await fetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common-discussion-channels/update-read', {
+                  const updateResponse = await fetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common/discussion-channels/update-read', {
                     token: globals.globalStore.state.token,
                     column: 'name',
                     id: this.discussionChannel.id,

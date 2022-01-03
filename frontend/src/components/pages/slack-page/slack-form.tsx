@@ -40,7 +40,7 @@ export class SlackForm {
   async handleCreate(e) {
     e.preventDefault();
     if (this.type === 'thread') {
-      const createResponse = await fetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common-threads/create-read', {
+      const createResponse = await fetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common/threads/create-read', {
         token: globals.globalStore.state.token,
         thread: {
           channel: this.selectedChannelId,
@@ -54,7 +54,7 @@ export class SlackForm {
         globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: uuidv4(), type: 'error' });
       }
     } else {
-      const createResponse = await fetchAs<CreateCommonPostsRequest, CreateCommonPostsResponse>('common-posts/create-read', {
+      const createResponse = await fetchAs<CreateCommonPostsRequest, CreateCommonPostsResponse>('common/posts/create-read', {
         token: globals.globalStore.state.token,
         post: {
           content: this.content,

@@ -41,13 +41,13 @@ export class SlackSidebar {
     }
   }
   @Listen('channelClicked')
-  handleChannelClicked(e: CustomEvent<number>) {
+  handleChannelClicked(e: CustomEvent<string>) {
     console.log(e, this.discussionChannels);
     this.selectedDiscussionChannel = this.discussionChannels.find(discussion_channel => discussion_channel?.id === e.detail);
     this.channelSelected.emit(this.selectedDiscussionChannel);
     console.log(this.selectedDiscussionChannel);
   }
-  handleNameChange(e) {
+  handleNameChange(e) { 
     this.name = e.target.value;
   }
   setNameToNull() {

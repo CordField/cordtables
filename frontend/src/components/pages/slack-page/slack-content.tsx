@@ -23,7 +23,7 @@ export class SlackContent {
   }
   @Listen('threadDeleted')
   async handleThreadDeletedChange(event: CustomEvent<string>) {
-    const deleteResponse = await fetchAs<DeleteCommonThreadsRequest, DeleteCommonThreadsResponse>('common-threads/delete', {
+    const deleteResponse = await fetchAs<DeleteCommonThreadsRequest, DeleteCommonThreadsResponse>('common/threads/delete', {
       token: globals.globalStore.state.token,
       id: event.detail,
     });
@@ -50,7 +50,7 @@ export class SlackContent {
     if (this.channelThreads?.length > 0) (this.contentThreads.lastChild as HTMLDivElement).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
   }
   async getThreads(discussionChannelId: string) {
-    this.threadListResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common-threads/list', {
+    this.threadListResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common/threads/list', {
       token: globals.globalStore.state.token,
       channelId: discussionChannelId,
     });

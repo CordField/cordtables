@@ -45,7 +45,7 @@ export class SlackThread {
               onClick={async e => {
                 e.stopPropagation();
                 if (this.mode === 'update') {
-                  const updateResponse = await fetchAs<CommonPostsUpdateRequest, CommonPostsUpdateResponse>('common-posts/update-read', {
+                  const updateResponse = await fetchAs<CommonPostsUpdateRequest, CommonPostsUpdateResponse>('common/posts/update-read', {
                     token: globals.globalStore.state.token,
                     column: 'content',
                     id: this.post.id,

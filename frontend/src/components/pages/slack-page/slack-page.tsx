@@ -24,7 +24,7 @@ export class SlackPage {
     this.selectedDiscussionChannel = this.discussionChannels[0];
   }
   async getDiscussionChannels() {
-    const discussionChannelsResponse = await fetchAs<CommonDiscussionChannelListRequest, CommonDiscussionChannelListResponse>('common-discussion-channels/list', {
+    const discussionChannelsResponse = await fetchAs<CommonDiscussionChannelListRequest, CommonDiscussionChannelListResponse>('common/discussion-channels/list', {
       token: globals.globalStore.state.token,
     });
     if (discussionChannelsResponse.error === ErrorType.NoError) {

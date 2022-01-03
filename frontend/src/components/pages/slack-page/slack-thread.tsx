@@ -34,7 +34,7 @@ export class SlackThread {
   }
   @Listen('postDeleted')
   async handleThreadDeletedChange(event: CustomEvent<string>) {
-    const deleteResponse = await fetchAs<DeleteCommonPostsRequest, DeleteCommonPostsResponse>('common-posts/delete', {
+    const deleteResponse = await fetchAs<DeleteCommonPostsRequest, DeleteCommonPostsResponse>('common/posts/delete', {
       token: globals.globalStore.state.token,
       id: event.detail,
     });
@@ -59,7 +59,7 @@ export class SlackThread {
   }
 
   async getPosts() {
-    this.threadPostsResponse = await fetchAs<CommonPostsListRequest, CommonPostsListResponse>('common-posts/list', {
+    this.threadPostsResponse = await fetchAs<CommonPostsListRequest, CommonPostsListResponse>('common/posts/list', {
       token: globals.globalStore.state.token,
       threadId: this.thread.id,
     });
@@ -79,7 +79,7 @@ export class SlackThread {
               onClick={async e => {
                 e.stopPropagation();
                 if (this.mode === 'update') {
-                  const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common-threads/update-read', {
+                  const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common/threads/update-read', {
                     token: globals.globalStore.state.token,
                     column: 'content',
                     id: this.thread.id,
