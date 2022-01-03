@@ -1,8 +1,20 @@
+# dev
+#org:
+#  neo4j:
+#    driver:
+#      uri: ${NEO4J_URL}
+#      authentication:
+#        username: ${NEO4J_USERNAME}
+#        password: ${NEO4J_PASSWORD}
 cord:
   admin:
     password: ${CORD_ADMIN_PASSWORD}
   init:
     load-db-version: 4
+  awsAccessKeyId: ${AWS_ACCESS_KEY_ID}
+  awsSecretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  email:
+    server: ${EMAIL_SERVER}
 cord-api:
   url: ${CORD_API_GRAPHQL_URL}
   email: ${CORD_API_EMAIL}
@@ -11,12 +23,15 @@ server:
   port: ${SERVER_PORT}
   url: ${SERVER_URL}
 spring:
+  mvc:
+    async:
+      request-timeout: -1
   datasource:
     jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:${DB_PORT}/${DB_DATABASE}
     driverClassName: software.aws.rds.jdbc.postgresql.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    ssl: false
+    ssl: true
   hikari:
     connection-timeout: 20000 #maximum number of milliseconds that a client will wait for a connection
     minimum-idle: 10 #minimum number of idle connections maintained by HikariCP in a connection pool
@@ -26,7 +41,7 @@ spring:
     auto-commit: true #default auto-commit behavior.
 springdoc:
   swagger-ui:
-    servers:
+      servers:
       - url: ${SWAGGER_URL}
     path: /swagger-ui/index.html
     schemes: [https]
