@@ -10,7 +10,7 @@ cord:
   admin:
     password: ${CORD_ADMIN_PASSWORD}
   init:
-    load-db-version: 2
+    load-db-version: 4
   awsAccessKeyId: ${AWS_ACCESS_KEY_ID}
   awsSecretAccessKey: ${AWS_SECRET_ACCESS_KEY}
   email:
