@@ -45,10 +45,10 @@ class Create(
     @ResponseBody
     fun createHandler(@RequestBody req: ScEthnologueCreateRequest): ScEthnologueCreateResponse {
 
-        // if (req.ethnologue.name == null) return ScEthnologueCreateResponse(error = ErrorType.InputMissingToken, null)
+      if (req.token == null) return ScEthnologueCreateResponse(error = ErrorType.InputMissingToken, null)
 
 
-        // create row with required fields, use id to update cells afterwards one by one
+      println(util.adminGroupId)
         val id = jdbcTemplate.queryForObject(
             """
             insert into sc.ethnologue(language_index, code, language_name, population, provisional_code, sensitivity, created_by, modified_by, owning_person, owning_group)
@@ -79,7 +79,6 @@ class Create(
             returning id;
         """.trimIndent(),
             String::class.java,
-//            req.ethnologue.neo4j_id,
             req.ethnologue.language_index,
             req.ethnologue.code,
             req.ethnologue.language_name,
