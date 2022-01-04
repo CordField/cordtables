@@ -46,9 +46,10 @@ public class AutomationTestConfig {
 		Properties configs = ConfigurationUtils.loadProperties("application.properties");
 		this.appConfigs = new AppConfig();
 		appConfigs.setUrl(configs.getProperty("site.url"));
-		appConfigs.setUsername("site.user.name");
-		appConfigs.setPassword("site.user.password");
-
+		appConfigs.setUsername(configs.getProperty("site.user.name"));
+		appConfigs.setPassword(configs.getProperty("site.user.password"));
+		appConfigs.setNewUser(configs.getProperty("site.user.registration.name"));
+		appConfigs.setNewUserPassword(configs.getProperty("site.user.registration.password"));
 		this.browserConfigs = new BrowserDriverConfig();
 		this.browserConfigs.setType(configs.getProperty("browser.config.driver.type", BrowserType.CHROME));
 		this.browserConfigs.setDriverPath(configs.getProperty("browser.config.driver.path"));
