@@ -17,12 +17,12 @@ data class CommonTickets(
 )
 
 data class CommmonTicketsIdTitles(
-  val id: Int? = null,
+  val id: String? = null,
   val title: String? = null
 )
 
 data class CommonPeopleNames(
-  val id: Int? = null,
+  val id: String? = null,
   val name: String? = null
 )
 

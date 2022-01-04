@@ -13,8 +13,9 @@ import javax.sql.DataSource
 data class CommonWorkRecordUpdateReadRequest(
     val token: String?,
     val id: String? = null,
-    val column: String? = null,
-    val value: Any? = null,
+    val ticket: String? = null,
+    val hours: Int? = null,
+    val minutes: Int? = null
 )
 
 data class CommonWorkRecordUpdateReadResponse(
@@ -43,10 +44,10 @@ class UpdateRead(
 
         val updateResponse = update.updateHandler(
             CommonWorkRecordUpdateRequest(
-                token = req.token,
-                column = req.column,
-                id = req.id,
-                value = req.value,
+              token = req.token,
+              id = req.id,
+              hours = req.hours,
+              minutes = req.minutes
             )
         )
 

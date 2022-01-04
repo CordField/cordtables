@@ -43,7 +43,7 @@ class ListAllPeople(
 
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-  @PostMapping("common-tickets/list-people-names")
+  @PostMapping("common/tickets/list-people-names")
   @ResponseBody
   fun listHandler(@RequestBody req: CommonTicketsIdNameListRequest): CommonPeopleIdNameListResponse{
     var data: MutableList<CommonPeopleNames> = mutableListOf()
@@ -71,7 +71,7 @@ class ListAllPeople(
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
       while (jdbcResult.next()) {
 
-        var id: Int? = jdbcResult.getInt("id")
+        var id: String? = jdbcResult.getString("id")
         if (jdbcResult.wasNull()) id = null
 
         var name: String? = jdbcResult.getString("public_full_name")

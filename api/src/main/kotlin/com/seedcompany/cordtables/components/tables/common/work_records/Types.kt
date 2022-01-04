@@ -3,6 +3,7 @@ package com.seedcompany.cordtables.components.tables.common.work_records
 data class CommonWorkRecords(
     val id: String? = null,
     val person: String? = null,
+    val public_full_name: String? = null,
     val ticket: String? = null,
     val hours : Int? = null,
     val minutes: Int? = null,

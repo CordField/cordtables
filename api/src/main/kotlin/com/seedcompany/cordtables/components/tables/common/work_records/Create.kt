@@ -52,7 +52,11 @@ class Create(
             """
             insert into common.work_records(person, ticket, hours, minutes, comment, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
                     ?::uuid,
                     ?,
                     ?,
@@ -77,7 +81,7 @@ class Create(
             returning id;
         """.trimIndent(),
             String::class.java,
-            req.work_record.person,
+            req.token,
             req.work_record.ticket,
             req.work_record.hours,
             req.work_record.minutes,

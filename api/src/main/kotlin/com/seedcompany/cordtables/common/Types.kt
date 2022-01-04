@@ -33,6 +33,7 @@ enum class ErrorType {
     NameTooLong,
     NameAlreadyExists,
     MissingId,
+    MissingTicketId,
     UserTokenNotFound,
     emptyReadResult,
     CannotUpdateAdminGroup,

@@ -11,6 +11,7 @@ data class GetSecureListQueryRequest(
     val columns: Array<String>,
     val custom_columns: String? = null,
     val filter: String = "",
+    val join: String = "",
     val searchField: String = "",
     val searchKeyword: String = "",
     val getList: Boolean = true, // get read if false
@@ -98,8 +99,9 @@ class GetSecureListQuery() {
         }
 
         if (req.getList) {
+
             response.query += """
-                from ${req.tableName}  WHERE 1=1
+                from ${req.tableName} ${req.join} WHERE 1=1
                """.replace('\n', ' ')
 
 //            response.query += """

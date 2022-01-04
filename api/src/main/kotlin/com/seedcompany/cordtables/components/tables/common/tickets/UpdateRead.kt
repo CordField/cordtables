@@ -46,7 +46,7 @@ class UpdateRead(
                 CommonTicketsUpdateRequest(
                         token = req.token,
                         id = req.id,
-                        ticket = req.ticket
+                        ticket = req.ticket,
                 )
         )
 
