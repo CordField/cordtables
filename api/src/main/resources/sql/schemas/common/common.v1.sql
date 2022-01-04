@@ -634,7 +634,6 @@ create table common.files (
 create table common.file_versions (
   id uuid primary key default common.uuid_generate_v4(),
 
-  category varchar(255),
   mime_type varchar(255), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
   name varchar(255), -- not null,
   file uuid references common.files(id), -- not null

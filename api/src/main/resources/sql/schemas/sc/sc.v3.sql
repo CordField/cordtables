@@ -46,7 +46,7 @@ create table sc.funding_accounts (
 
 	account_number int unique, -- not null,
 	name varchar(255),
-	
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -111,7 +111,7 @@ create table sc.organizations (
 	id uuid primary key references common.organizations(id),
 
 	address varchar(255),
-	sensitivity common.sensitivity,
+	sensitivity common.sensitivity not null default 'High',
 	root_directory uuid references common.directories(id),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -176,7 +176,7 @@ create table sc.partners (
 	point_of_contact uuid references admin.people(id),
 	types sc.partner_types[],
 	address varchar(255),
-	sensitivity common.sensitivity,
+	sensitivity common.sensitivity not null default 'High',
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -626,7 +626,7 @@ create table sc.project_members (
 	person uuid references sc.people(id), --not null
 	group_id uuid unique references admin.groups(id), --not null
 	role uuid references admin.roles(id), --not null
-	sensitivity common.sensitivity,
+	sensitivity common.sensitivity not null default 'High',
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -674,7 +674,7 @@ create table sc.partnerships (
   mou_end_override timestamp,
   financial_reporting_type sc.financial_reporting_types,
   is_primary bool,
-  sensitivity common.sensitivity,
+  sensitivity common.sensitivity not null default 'High',
 
   types sc.partner_types[],  -- added because exists in neo4j
   
@@ -704,7 +704,7 @@ create table sc.budgets (
   status common.budget_status,
   universal_template uuid references common.files(id),
   universal_template_file_url varchar(255),
-  sensitivity common.sensitivity,
+  sensitivity common.sensitivity not null default 'High',
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -725,7 +725,7 @@ create table sc.budget_records (
   amount decimal,
   fiscal_year int,
   organization uuid references sc.organizations(id),
-  sensitivity common.sensitivity,
+  sensitivity common.sensitivity not null default 'High',
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -933,7 +933,7 @@ create table sc.products (
   progress_step_measurement common.progress_measurement,
   progress_target decimal,
   engagement uuid references sc.language_engagements(id),
-  sensitivity common.sensitivity,
+  sensitivity common.sensitivity not null default 'High',
   describe_completion text,
   description text,
   type sc.product_type,
