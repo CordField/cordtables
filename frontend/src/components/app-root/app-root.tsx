@@ -131,6 +131,7 @@ export class AppRoot {
                   <stencil-route url="/forgot-password" component="cf-forgot-password" />
                   <stencil-route url="/reset-password/:token" component="cf-reset-password" />
                   <stencil-route url="/table/:table" component="table-root" />
+                  <stencil-route url="/partner-crm" component="partner-crm" />
 
                   <stencil-route url="/page/:page/:requestId?" component="page-root" />
                 </stencil-route-switch>

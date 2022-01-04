@@ -147,6 +147,8 @@ export namespace Components {
     }
     interface FilesTable {
     }
+    interface FilterMenu {
+    }
     interface GenericTable {
         "columns": Array<any>;
         "name": String;
@@ -178,6 +180,14 @@ export namespace Components {
     }
     interface PageRoot {
         "match": MatchResults;
+    }
+    interface PaginationBar {
+    }
+    interface PartnerCrm {
+    }
+    interface PartnerListItem {
+        "columnData": any[];
+        "rowData": ScPartner;
     }
     interface PeersTable {
     }
@@ -264,6 +274,8 @@ export namespace Components {
     interface ScProjects {
     }
     interface ScriptureReferences {
+    }
+    interface SearchInput {
     }
     interface SilCountryCodes {
     }
@@ -643,6 +655,12 @@ declare global {
         prototype: HTMLFilesTableElement;
         new (): HTMLFilesTableElement;
     };
+    interface HTMLFilterMenuElement extends Components.FilterMenu, HTMLStencilElement {
+    }
+    var HTMLFilterMenuElement: {
+        prototype: HTMLFilterMenuElement;
+        new (): HTMLFilterMenuElement;
+    };
     interface HTMLGenericTableElement extends Components.GenericTable, HTMLStencilElement {
     }
     var HTMLGenericTableElement: {
@@ -720,6 +738,24 @@ declare global {
     var HTMLPageRootElement: {
         prototype: HTMLPageRootElement;
         new (): HTMLPageRootElement;
+    };
+    interface HTMLPaginationBarElement extends Components.PaginationBar, HTMLStencilElement {
+    }
+    var HTMLPaginationBarElement: {
+        prototype: HTMLPaginationBarElement;
+        new (): HTMLPaginationBarElement;
+    };
+    interface HTMLPartnerCrmElement extends Components.PartnerCrm, HTMLStencilElement {
+    }
+    var HTMLPartnerCrmElement: {
+        prototype: HTMLPartnerCrmElement;
+        new (): HTMLPartnerCrmElement;
+    };
+    interface HTMLPartnerListItemElement extends Components.PartnerListItem, HTMLStencilElement {
+    }
+    var HTMLPartnerListItemElement: {
+        prototype: HTMLPartnerListItemElement;
+        new (): HTMLPartnerListItemElement;
     };
     interface HTMLPeersTableElement extends Components.PeersTable, HTMLStencilElement {
     }
@@ -967,6 +1003,12 @@ declare global {
         prototype: HTMLScriptureReferencesElement;
         new (): HTMLScriptureReferencesElement;
     };
+    interface HTMLSearchInputElement extends Components.SearchInput, HTMLStencilElement {
+    }
+    var HTMLSearchInputElement: {
+        prototype: HTMLSearchInputElement;
+        new (): HTMLSearchInputElement;
+    };
     interface HTMLSilCountryCodesElement extends Components.SilCountryCodes, HTMLStencilElement {
     }
     var HTMLSilCountryCodesElement: {
@@ -1182,6 +1224,7 @@ declare global {
         "education-entries": HTMLEducationEntriesElement;
         "file-versions": HTMLFileVersionsElement;
         "files-table": HTMLFilesTableElement;
+        "filter-menu": HTMLFilterMenuElement;
         "generic-table": HTMLGenericTableElement;
         "group-memberships": HTMLGroupMembershipsElement;
         "groups-page": HTMLGroupsPageElement;
@@ -1195,6 +1238,9 @@ declare global {
         "page-not-found": HTMLPageNotFoundElement;
         "page-prayer-requests": HTMLPagePrayerRequestsElement;
         "page-root": HTMLPageRootElement;
+        "pagination-bar": HTMLPaginationBarElement;
+        "partner-crm": HTMLPartnerCrmElement;
+        "partner-list-item": HTMLPartnerListItemElement;
         "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
         "people-to-org-relationships": HTMLPeopleToOrgRelationshipsElement;
@@ -1236,6 +1282,7 @@ declare global {
         "sc-project-locations": HTMLScProjectLocationsElement;
         "sc-projects": HTMLScProjectsElement;
         "scripture-references": HTMLScriptureReferencesElement;
+        "search-input": HTMLSearchInputElement;
         "sil-country-codes": HTMLSilCountryCodesElement;
         "sil-iso-639-3": HTMLSilIso6393Element;
         "sil-iso-639-3-macrolanguages": HTMLSilIso6393MacrolanguagesElement;
@@ -1410,6 +1457,8 @@ declare namespace LocalJSX {
     }
     interface FilesTable {
     }
+    interface FilterMenu {
+    }
     interface GenericTable {
         "columns"?: Array<any>;
         "name"?: String;
@@ -1442,6 +1491,14 @@ declare namespace LocalJSX {
     }
     interface PageRoot {
         "match"?: MatchResults;
+    }
+    interface PaginationBar {
+    }
+    interface PartnerCrm {
+    }
+    interface PartnerListItem {
+        "columnData"?: any[];
+        "rowData"?: ScPartner;
     }
     interface PeersTable {
     }
@@ -1528,6 +1585,8 @@ declare namespace LocalJSX {
     interface ScProjects {
     }
     interface ScriptureReferences {
+    }
+    interface SearchInput {
     }
     interface SilCountryCodes {
     }
@@ -1649,6 +1708,7 @@ declare namespace LocalJSX {
         "education-entries": EducationEntries;
         "file-versions": FileVersions;
         "files-table": FilesTable;
+        "filter-menu": FilterMenu;
         "generic-table": GenericTable;
         "group-memberships": GroupMemberships;
         "groups-page": GroupsPage;
@@ -1662,6 +1722,9 @@ declare namespace LocalJSX {
         "page-not-found": PageNotFound;
         "page-prayer-requests": PagePrayerRequests;
         "page-root": PageRoot;
+        "pagination-bar": PaginationBar;
+        "partner-crm": PartnerCrm;
+        "partner-list-item": PartnerListItem;
         "peers-table": PeersTable;
         "people-table": PeopleTable;
         "people-to-org-relationships": PeopleToOrgRelationships;
@@ -1703,6 +1766,7 @@ declare namespace LocalJSX {
         "sc-project-locations": ScProjectLocations;
         "sc-projects": ScProjects;
         "scripture-references": ScriptureReferences;
+        "search-input": SearchInput;
         "sil-country-codes": SilCountryCodes;
         "sil-iso-639-3": SilIso6393;
         "sil-iso-639-3-macrolanguages": SilIso6393Macrolanguages;
@@ -1788,6 +1852,7 @@ declare module "@stencil/core" {
             "education-entries": LocalJSX.EducationEntries & JSXBase.HTMLAttributes<HTMLEducationEntriesElement>;
             "file-versions": LocalJSX.FileVersions & JSXBase.HTMLAttributes<HTMLFileVersionsElement>;
             "files-table": LocalJSX.FilesTable & JSXBase.HTMLAttributes<HTMLFilesTableElement>;
+            "filter-menu": LocalJSX.FilterMenu & JSXBase.HTMLAttributes<HTMLFilterMenuElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
             "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
@@ -1801,6 +1866,9 @@ declare module "@stencil/core" {
             "page-not-found": LocalJSX.PageNotFound & JSXBase.HTMLAttributes<HTMLPageNotFoundElement>;
             "page-prayer-requests": LocalJSX.PagePrayerRequests & JSXBase.HTMLAttributes<HTMLPagePrayerRequestsElement>;
             "page-root": LocalJSX.PageRoot & JSXBase.HTMLAttributes<HTMLPageRootElement>;
+            "pagination-bar": LocalJSX.PaginationBar & JSXBase.HTMLAttributes<HTMLPaginationBarElement>;
+            "partner-crm": LocalJSX.PartnerCrm & JSXBase.HTMLAttributes<HTMLPartnerCrmElement>;
+            "partner-list-item": LocalJSX.PartnerListItem & JSXBase.HTMLAttributes<HTMLPartnerListItemElement>;
             "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "people-to-org-relationships": LocalJSX.PeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLPeopleToOrgRelationshipsElement>;
@@ -1842,6 +1910,7 @@ declare module "@stencil/core" {
             "sc-project-locations": LocalJSX.ScProjectLocations & JSXBase.HTMLAttributes<HTMLScProjectLocationsElement>;
             "sc-projects": LocalJSX.ScProjects & JSXBase.HTMLAttributes<HTMLScProjectsElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
+            "search-input": LocalJSX.SearchInput & JSXBase.HTMLAttributes<HTMLSearchInputElement>;
             "sil-country-codes": LocalJSX.SilCountryCodes & JSXBase.HTMLAttributes<HTMLSilCountryCodesElement>;
             "sil-iso-639-3": LocalJSX.SilIso6393 & JSXBase.HTMLAttributes<HTMLSilIso6393Element>;
             "sil-iso-639-3-macrolanguages": LocalJSX.SilIso6393Macrolanguages & JSXBase.HTMLAttributes<HTMLSilIso6393MacrolanguagesElement>;

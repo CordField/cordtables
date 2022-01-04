@@ -59,7 +59,7 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "organization",
+//                    "organization",
                     "active",
                     "financial_reporting_types",
                     "is_innovations_client",
@@ -83,8 +83,8 @@ class Read(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var organization: String? = jdbcResult.getString("organization")
-                if (jdbcResult.wasNull()) organization = null
+//                var organization: String? = jdbcResult.getString("organization")
+//                if (jdbcResult.wasNull()) organization = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
@@ -125,7 +125,7 @@ class Read(
                 val partner =
                     partner(
                         id = id,
-                        organization = organization,
+//                        organization = organization,
                         active = active,
                         financial_reporting_types = financial_reporting_types,
                         is_innovations_client = is_innovations_client,

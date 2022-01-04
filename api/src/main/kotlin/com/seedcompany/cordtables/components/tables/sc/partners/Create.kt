@@ -46,7 +46,7 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.partners(organization, active, financial_reporting_types,  is_innovations_client, pmc_entity_code, point_of_contact,
+            insert into sc.partners(id, active, financial_reporting_types,  is_innovations_client, pmc_entity_code, point_of_contact,
              types, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?::uuid,
