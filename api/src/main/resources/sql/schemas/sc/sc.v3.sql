@@ -840,6 +840,11 @@ create table sc.language_engagements (
 	unique (project, language, change_to_plan)
 );
 
+-- TODO: need to find a way to track which engagement for a language has 'first_scripture' set to true
+-- doing this for now, until can be discussed.
+ALTER TABLE sc.languages
+ADD COLUMN first_scripture_engagement uuid references sc.language_engagements(id);
+
 -- PRODUCTS
 
 create type common.product_mediums as enum (
