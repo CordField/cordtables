@@ -5,11 +5,14 @@ import java.util.logging.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.PageLoadStrategy;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.seedcompany.cordtables.model.BrowserDriverConfig;
 
@@ -133,6 +136,38 @@ public class SeleniumUtils {
 		WebElement shadow_root = (WebElement) ((JavascriptExecutor) driver)
 				.executeScript("return arguments[0].shadowRoot", element);
 		return shadow_root;
+	}
+
+	/**
+	 * @param d
+	 * @param elementValue
+	 * @return
+	 */
+	public static WebElement IsElementFound(WebDriver d, By elementValue) {
+		try {
+			WebElement myDynamicElement = new WebDriverWait(d, 3)
+					.until(ExpectedConditions.presenceOfElementLocated(elementValue));
+			return myDynamicElement;
+		} catch (final TimeoutException e) {
+			// logger.error("TimeoutException : ()", e);
+		}
+		return null;
+	}
+
+	/**
+	 * @param d
+	 * @param elementValue
+	 * @param parent
+	 * @return
+	 */
+	public static WebElement IsElementFound(WebDriver d, By elementValue, WebElement parent) {
+		try {
+			WebElement myDynamicElement = parent.findElement(elementValue);
+			return myDynamicElement;
+		} catch (final Exception e) {
+			// logger.error("TimeoutException : ()", e);
+		}
+		return null;
 	}
 
 }

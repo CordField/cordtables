@@ -10,7 +10,7 @@ cord:
   admin:
     password: ${CORD_ADMIN_PASSWORD}
   init:
-    load-db-version: 2
+    load-db-version: 4
   awsAccessKeyId: ${AWS_ACCESS_KEY_ID}
   awsSecretAccessKey: ${AWS_SECRET_ACCESS_KEY}
   email:
@@ -41,4 +41,8 @@ spring:
     auto-commit: true #default auto-commit behavior.
 springdoc:
   swagger-ui:
+    servers:
+      - url: ${SWAGGER_URL}
+    path: /swagger-ui/index.html
+    schemes: [ http ]
     disable-swagger-default-url: true
