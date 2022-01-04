@@ -7,6 +7,7 @@ import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.support.rowset.SqlRowSet
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,12 +15,26 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
+import javax.sql.rowset.serial.SerialArray
+import kotlin.reflect.full.memberProperties
+
+data class LanguageFilter (
+      val sensitivity: MutableList<CommonSensitivity>?,
+      val leastOfThese: Boolean?,
+      val isDialect: Boolean?,
+      val isSignLanguage: Boolean?,
+      val presetInventory: Boolean?,
+      val pinned: Boolean?    //todo I don't think this is implemented anywhere in cordtables yet, so skipping for now
+  )
 
 
 data class ScLanguagesListRequest(
         val token: String?,
         val page: Int,
-        val resultsPerPage: Int
+        val resultsPerPage: Int,
+        val sort: String?,
+        var order: String?,
+        var filter: LanguageFilter?
 )
 
 data class ScLanguagesListResponse(
@@ -51,14 +66,51 @@ class List(
                 if (req.token == null) return ScLanguagesListResponse(ErrorType.TokenNotFound, size=0, mutableListOf())
 
                 var offset = (req.page-1)*req.resultsPerPage
-
+                // cord api sorts by name by default
+                var sort  = if(req.sort == null) { "name" } else { req.sort }
+                var order = if(req.order == null) { "ASC" } else { req.order }
+                var whereClauses = mutableListOf<String>();
 
                 val paramSource = MapSqlParameterSource()
+
                 paramSource.addValue("token", req.token)
                 paramSource.addValue("limit", req.resultsPerPage)
                 paramSource.addValue("offset", offset)
+                paramSource.addValue("sort", sort)
+
+          val filterToDbFilter: Map<String, String> = mapOf(
+              "sensitivity" to "sensitivity",
+              "leastOfThese" to "is_least_of_these",
+              "isDialect" to "is_dialect",
+              "isSignLanguage" to "is_sign_language",
+              "presetInventory" to "preset_inventory",
+              "pinned" to "pinned"
+          )
+          if (req.filter != null) {
+            for (filter in LanguageFilter::class.memberProperties) {
+              if (filter.get(req.filter!!) != null) {
+                if(filter.name.equals("sensitivity")) {
+                  whereClauses.add(" sensitivity in ${req.filter!!.sensitivity?.joinToString(postfix = ")", prefix = "(", separator = ", ", transform = {s -> "'${s}'"})} ")
+                } else {
+                  whereClauses.add(" ${filterToDbFilter[filter.name]} = '${filter.get(req.filter!!)}'")
+                }
+              }
+            }
+          }
+
+          val finishedWhereClause = if(whereClauses.isEmpty())
+                                        { "" }
+                                    else
+                                        {
+                                          whereClauses.joinToString(separator = " AND ", prefix = " AND ")
+                                        }
+
+//          println(whereClauses)
+//          println(finishedWhereClause)
+
+
                 //language=SQL
-                val query = """with row_level_access as
+                var query = """with row_level_access as
 (
            select     row
            from       admin.group_row_access  as a
@@ -2002,7 +2054,7 @@ select
                   else null
          end as coordinates
 from     sc.languages
-where    id in
+where   ( id in
          (
                 select row
                 from   row_level_access)
@@ -2026,8 +2078,9 @@ or       owning_person =
 or       id in
          (
                 select row
-                from   public_row_level_access)
-order by id
+                from   public_row_level_access))
+$finishedWhereClause
+order by $sort $order
 """.trimIndent()
 
                 var limitQuery = "$query LIMIT :limit OFFSET :offset ";
@@ -2041,8 +2094,12 @@ order by id
                         totalRows = resultRows.getRow();
 
                         //println(totalRows)
+                        var jdbcResult: SqlRowSet;
+                        // if resultsPerPage isn't specified in the req, it's by default 0, so adding this here
+                        // for cases where no pagination is specified.
+                        if (req.resultsPerPage != 0) { jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)} else { resultRows.first(); jdbcResult = resultRows}
 
-                        val jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)
+
                         while (jdbcResult.next()) {
 
                                 var id: String? = jdbcResult.getString("id")
@@ -2060,8 +2117,9 @@ order by id
                                 var display_name_pronunciation: String? = jdbcResult.getString("display_name_pronunciation")
                                 if (jdbcResult.wasNull()) display_name_pronunciation = null
 
-                                var tags: String? = jdbcResult.getString("tags")
-                                if (jdbcResult.wasNull()) tags = null
+
+                                var tags: MutableList<Any> = if(jdbcResult.getObject("tags") == null) { mutableListOf<Any>()} else { ((jdbcResult.getObject("tags") as SerialArray).array as Array<Any>).toMutableList() }
+                                if (jdbcResult.wasNull()) tags = mutableListOf<Any>()
 
                                 var preset_inventory: Boolean? = jdbcResult.getBoolean("preset_inventory")
                                 if (jdbcResult.wasNull()) preset_inventory = null
@@ -2277,7 +2335,7 @@ order by id
                                                 name = name,
                                                 display_name = display_name,
                                                 display_name_pronunciation = display_name_pronunciation,
-                                                tags = tags,
+                                                tags = tags.filterIsInstance<String>().toMutableList(),
                                                 preset_inventory = preset_inventory,
                                                 is_dialect = is_dialect,
                                                 is_sign_language = is_sign_language,
