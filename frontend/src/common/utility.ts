@@ -1,13 +1,20 @@
+import { ErrorType } from './types';
+
 type fetchAs = <REQ, RES>(path: string, data: REQ) => Promise<RES>;
 
-export function throttle(fn: fetchAs, delay) {
+export function throttle(fn:fetchAs, delay) {
   let last = 0;
+  let lastData = null;
+  let lastPath = null;
   return (path, data) => {
     const now = new Date().getTime();
-    if (now - last < delay) {
-      return;
+    console.log({ data, lastData, path, lastPath });
+    if (now - last < delay && JSON.stringify(data) === JSON.stringify(lastData) && path === lastPath) {
+      return { error: ErrorType.RequestMadeTooSoon };
     }
     last = now; //so that for next execution
+    lastData = data;
+    lastPath = path;
     return fn(path, data);
   };
 }
@@ -27,7 +34,7 @@ export async function fetchAs<REQ, RES>(path: string, data: REQ) {
   return json as unknown as RES;
 }
 
-export const throttledFetchAs = throttle(fetchAs, 500000) as fetchAs;
+export const throttledFetchAs = throttle(fetchAs, 10000) as fetchAs;
 
 export const capitalize = (str: string) => {
   return str.replace(/^\w/, c => c.toUpperCase());

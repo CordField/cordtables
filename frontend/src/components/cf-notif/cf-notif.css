@@ -3,7 +3,7 @@
   padding-left: 10px;
   max-height: 100px;
   overflow-y: auto;
-  font-size: 0.75rem;
+  font-size: 1.25rem;
 }
 div.error {
   color: #b91c1c;
@@ -19,4 +19,10 @@ div.info {
 
 .close-button {
   color: var(--color-gray-darkest);
+}
+
+@media only screen and (max-width: 30em) {
+  :host {
+    font-size: 0.75rem;
+  }
 }

@@ -8,10 +8,11 @@ export enum ErrorType {
   PasswordTooShort = 'PasswordTooShort',
   PasswordTooLong = 'PasswordTooLong',
   DuplicateEmail = 'DuplicateEmail',
+  RequestMadeTooSoon = 'RequestMadeTooSoon',
 }
 
 export enum AppState {
-  Init = 'Init', 
+  Init = 'Init',
   Loaded = 'Loaded',
   TranslationLoaded = 'TranslationLoaded',
 }
@@ -130,21 +131,21 @@ export interface AdminUser {
 export type SiteTextLanguage = {
   language: string;
   language_name: string;
-}
+};
 
 export type SiteTextString = {
-  id: string,
-  english: string,
-  comment: string
-}
+  id: string;
+  english: string;
+  comment: string;
+};
 
 export type SiteTextTranslation = {
-  id: string,
-  site_text: string,
-  translation: string
-}
+  id: string;
+  site_text: string;
+  translation: string;
+};
 
 export type SiteTextTranslationList = {
-  language: string,
-  translations: Array<SiteTextTranslation>
-}
+  language: string;
+  translations: Array<SiteTextTranslation>;
+};
