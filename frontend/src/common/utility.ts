@@ -1,14 +1,14 @@
 type fetchAs = <REQ, RES>(path: string, data: REQ) => Promise<RES>;
 
-export function throttle<REQ, RES>(fn: fetchAs, delay) {
+export function throttle(fn: fetchAs, delay) {
   let last = 0;
-  return (...args) => {
+  return (path, data) => {
     const now = new Date().getTime();
     if (now - last < delay) {
       return;
     }
     last = now; //so that for next execution
-    return fn(args[0], args[1]);
+    return fn(path, data);
   };
 }
 
