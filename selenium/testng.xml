@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Corttables QA Automation">
+
+	<test name="basic">
+		<classes>
+			<class name="com.seedcompany.cordtables.qaautomation.RegistrationTest" />
+			<class name="com.seedcompany.cordtables.qaautomation.LoginPageTest" />
+		</classes>
+	</test>
+
+
+</suite>
