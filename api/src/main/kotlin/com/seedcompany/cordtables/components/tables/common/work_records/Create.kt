@@ -50,9 +50,14 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into common.work_records(person, hours, minutes, comment, created_by, modified_by, owning_person, owning_group)
+            insert into common.work_records(ticket, person, hours, minutes, comment, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
+                     (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
                     ?,
                     ?,
                     ?,
@@ -76,7 +81,8 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
-            req.work_record.person,
+            req.work_record.ticket,
+            req.token,
             req.work_record.hours,
             req.work_record.minutes,
             req.work_record.comment,

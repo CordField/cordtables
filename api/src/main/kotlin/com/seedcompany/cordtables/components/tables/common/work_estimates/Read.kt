@@ -20,6 +20,7 @@ import javax.sql.DataSource
 data class CommonWorkEstimateReadRequest(
     val token: String?,
     val id: Int? = null,
+    val ticket: Int? = null,
 )
 
 data class CommonWorkEstimateReadResponse(
@@ -46,11 +47,11 @@ class Read(
     fun readHandler(@RequestBody req: CommonWorkEstimateReadRequest): CommonWorkEstimateReadResponse {
 
         if (req.token == null) return CommonWorkEstimateReadResponse(ErrorType.TokenNotFound)
-        if (req.id == null) return CommonWorkEstimateReadResponse(ErrorType.MissingId)
+        if (req.ticket == null) return CommonWorkEstimateReadResponse(ErrorType.MissingTicketId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
-        paramSource.addValue("id", req.id)
+        paramSource.addValue("ticket", req.ticket)
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(

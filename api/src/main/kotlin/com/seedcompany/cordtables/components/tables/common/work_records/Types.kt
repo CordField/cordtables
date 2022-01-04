@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.common.work_records
 
 data class CommonWorkRecords(
     val id: Int? = null,
+    val ticket: Int? = null,
     val person: Int? = null,
     val hours : Int? = null,
     val minutes: Int? = null,
@@ -16,6 +17,7 @@ data class CommonWorkRecords(
 )
 
 data class CommonWorkRecordInput(
+    val ticket: Int? = null,
     val person: Int? = null,
     val hours: Int? = null,
     val minutes: Int? = null,

@@ -19,7 +19,8 @@ import javax.sql.DataSource
 
 
 data class CommonWorkEstimateListRequest(
-    val token: String?
+    val token: String?,
+    val ticket: Int? = null
 )
 
 data class CommonWorkEstimateListResponse(
@@ -47,14 +48,18 @@ class List(
     fun listHandler(@RequestBody req: CommonWorkEstimateListRequest): CommonWorkEstimateListResponse{
         var data: MutableList<CommonWorkEstimates> = mutableListOf()
         if (req.token == null) return CommonWorkEstimateListResponse(ErrorType.TokenNotFound, mutableListOf())
+        if (req.ticket == null) return CommonWorkEstimateListResponse(ErrorType.MissingTicketId, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+        paramSource.addValue("ticket", req.ticket)
+
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "common.work_estimates",
                 filter = "order by id",
+                whereClause = "ticket = ${req.ticket}",
                 columns = arrayOf(
                     "id",
                     "person",

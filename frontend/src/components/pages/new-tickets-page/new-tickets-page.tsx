@@ -2,7 +2,8 @@ import { Component, Host, h, State, Listen, Watch } from '@stencil/core';
 import { globals } from '../../../core/global.store';
 import { ErrorType, GenericResponse } from '../../../common/types';
 import { fetchAs } from '../../../common/utility';
-import '@ionic/core'
+import '@ionic/core';
+import { format, parseISO } from 'date-fns';
 
 
 class CommonTicketsPageListRequest{
@@ -70,9 +71,111 @@ class UpdateTicketRequest {
   }
 }
 
+class updateWorkEstimateRequest {
+  token: string;
+  id: number;
+  hours?: number;
+  minutes?: number;
+}
+
+class updateWorkRecordRequest {
+  token: string;
+  id: number;
+  hours?: number;
+  minutes?: number;
+}
+
+class updateWorkRecordResponse {
+  erro: ErrorType;
+}
+
+class createWorkEstimateRequest {
+  token: string;
+  work_estimate: {
+    ticket: number;
+    hours: number;
+    minutes: number;
+    comment?: string;
+  };
+}
+
+class createWorkRecordRequest {
+  token: string;
+  work_record: {
+    person?: number;
+    ticket: number;
+    hours: number;
+    minutes: number;
+    comment?: string;
+  };
+}
+
+class createWorkRecordResponse {
+  error: ErrorType;
+  work_record: {
+    id?: number;
+    ticket?: number;
+    person: number;
+    hours: number;
+    minutes: number;
+    total_time: number;
+    created_at: string;
+    created_by: number;
+  };
+}
+
+class createWorkEstimateResponse {
+  error: ErrorType;
+  work_estimate: {
+    id?: number;
+    ticket?: number;
+    person: number;
+    hours: number;
+    minutes: number;
+    total_time: number;
+    created_at: string;
+    created_by: number;
+  };
+}
+
+class deleteWorkEstimateRequest {
+  token: string;
+  id: number;
+}
+
+class deleteWorkEstimateResponse {
+  error: ErrorType;
+  id: number;
+}
+
+class deleteWorkRecordRequest {
+  token: string;
+  id: number;
+}
+
+class deleteWorkRecordResponse {
+  error: ErrorType;
+  id: number;
+}
+
 class ReadTicketRequest {
   token: string;
   id: number;
+}
+
+class ReadWorkEstimatesRequest {
+  token: string;
+  id: number;
+}
+
+class ListWorkEstimatesRequest {
+  token: string;
+  ticket: number;
+}
+
+class ListWorkRecordsRequest {
+  token: string;
+  ticket: number;
 }
 
   interface User {
@@ -96,6 +199,22 @@ class ReadTicketResponse extends GenericResponse {
   error: ErrorType;
   ticket: CommonTicketsRow;
 }
+
+class ReadWorkEstimatesResponse extends GenericResponse {
+  error: ErrorType;
+  work_estimate: CommonWorkEstimatesRow;
+}
+
+class ListWorkEstimatesResponse extends GenericResponse {
+  error: ErrorType;
+  work_estimate?: CommonWorkEstimatesRow[];
+}
+
+class ListWorkRecordsResponse extends GenericResponse {
+  error: ErrorType;
+  work_record?: CommonWorkRecordsRow[];
+}
+
 class ListTicketResponse extends GenericResponse {
   error: ErrorType;
   tickets: CommonTicketsRow[];
@@ -139,7 +258,7 @@ class PeopleIdNameRow {
     name: string;
 }
 
-class CommonTicketsRow{
+class CommonTicketsRow {
     id : number;
     title: string;
     ticket_status : string;
@@ -151,7 +270,29 @@ class CommonTicketsRow{
     modified_by: number;
     owning_person: number;
     owning_group: number;
-  }
+}
+
+class CommonWorkEstimatesRow{
+  id?: number;
+  ticket?: number = null;
+  person: number;
+  hours: number;
+  minutes: number;
+  total_time: number;
+  created_at: string;
+  created_by: number;
+}
+
+class CommonWorkRecordsRow {
+  id?: number;
+  ticket?: number;
+  person: number;
+  hours: number;
+  minutes: number;
+  total_time: number;
+  created_at: string;
+  created_by: number;
+}
 
 
 
@@ -162,6 +303,9 @@ class CommonTicketsRow{
 })
 export class NewTicketsPage {
 
+
+
+
   @State() isOpen: boolean;
   @State() isCreateNewTicketVisible: boolean = false;
   @State() isAddEstimateToTicketVisible: boolean = false;
@@ -171,6 +315,8 @@ export class NewTicketsPage {
   @State() isAddFeedBacktoTicketVisible: boolean = false;
   @State() commonTicketsPageResponse: ListTicketResponse;
   @State() CommonTicketsReadResponse : ReadTicketResponse;
+  @State() CommonWorkEstimatesListResponse: ListWorkEstimatesResponse;
+  @State() CommonWorkRecordsListResponse: ListWorkRecordsResponse;
   @State() ticketsIdAndTitleResponse:  TicketsIdAndTitlesResponse;
   @State() ticketsPeopleNameResponse: PeopleIdNamesResponse;
   @State() users: User[] = [];
@@ -180,6 +326,12 @@ export class NewTicketsPage {
   @State() page: number = 1;
   @State() limit: number = 5;
   @State() offset: number = 0;
+  @State() workEstimateId?: number = null;
+  @State() newHoursWorkEstimates?: number = null;
+  @State() newMinutesWorkEstimates?: number = null;
+  @State() workRecordId?: number = null;
+  @State() newHoursWorkRecords?: number = null;
+  @State() newMinutesWorkRecords?: number = null;
   @State() peoplePaginationPages : number;
   @State() mainTicketsPaginationPages: number;
   @State() peoplePage: number = 1;
@@ -187,8 +339,9 @@ export class NewTicketsPage {
   @State() peopleLimit: number = 5;
   @State() peopleOffset: number = 0;
   @State() mainTicketsOffset: number = 0;
+  @State() showUpdateWorkEstimates : boolean = false;
   newTicketStatusName: string;
-  newParent: number;
+  newParent?: number = null;
   newAssignee: number;
   newContent: string;
   @State() newTicketTitle: string;
@@ -198,7 +351,7 @@ export class NewTicketsPage {
   modalType: string;
   modalTitle: string;
   ticketId: number;
-
+  
   
   async componentWillLoad() {
     await this.getList();
@@ -233,6 +386,20 @@ export class NewTicketsPage {
       if (this.CommonTicketsReadResponse.ticket.parent)this.parentChange(this.CommonTicketsReadResponse.ticket.parent)
 
     }
+  }
+
+  async listWorkEstimates(ticket_id) {
+    this.CommonWorkEstimatesListResponse = await fetchAs<ListWorkEstimatesRequest, ListWorkEstimatesResponse>('common-work-estimates/list', {
+      token: globals.globalStore.state.token,
+      ticket: ticket_id ? ticket_id : this.ticketId
+    });
+  }
+
+  async listWorkRecords(ticket_id) {
+    this.CommonWorkRecordsListResponse = await fetchAs<ListWorkRecordsRequest, ListWorkEstimatesResponse>('common-work-records/list', {
+      token: globals.globalStore.state.token,
+      ticket: ticket_id ? ticket_id : this.ticketId
+    });
   }
 
   async getListIdTitles(){
@@ -317,6 +484,47 @@ async getTotalPeople(){
     */
   };
 
+  createNewWorkEstimate = async (event: MouseEvent) => {
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    
+    const result = await fetchAs<createWorkEstimateRequest, createWorkEstimateResponse>('common-work-estimates/create-read', {
+      token: globals.globalStore.state.token,
+      work_estimate: {
+        ticket: this.ticketId,
+        hours: this.newHoursWorkEstimates,
+        minutes: this.newMinutesWorkEstimates
+
+      }
+    });
+
+    await this.listWorkEstimates(this.ticketId);
+  
+  };
+qq
+
+  createNewWorkRecord = async (event: MouseEvent) => {
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    
+    const result = await fetchAs<createWorkRecordRequest, createWorkRecordResponse>('common-work-records/create-read', {
+      token: globals.globalStore.state.token,
+      work_record: {
+        ticket: this.ticketId,
+        hours: this.newHoursWorkRecords,
+        minutes: this.newMinutesWorkRecords
+
+      }
+    });
+
+    await this.listWorkRecords(this.ticketId);
+  
+  };
+
+  
+
   updateTicket = async (event: MouseEvent) => {
     event.preventDefault(); 
     event.stopPropagation();
@@ -337,8 +545,7 @@ async getTotalPeople(){
     if (result.ticket.id && this.newAssignee){
         await this.assignTicketToPerson(result.ticket.id, this.newAssignee);
     }
-    
-    console.log("UPDATE: ", result);
+
     await this.getList();
   
   };
@@ -380,6 +587,21 @@ async getTotalPeople(){
     this.modalType = 'Create';
     this.modalTitle = 'Create New Ticket'
     this.isOpen = !this.isOpen;
+    this.workEstimateId = null;
+    this.workRecordId = null;
+    this.newHoursWorkEstimates = null;
+    this.newMinutesWorkEstimates = null;
+    this.newHoursWorkRecords = null;
+    this.newMinutesWorkRecords = null;
+    this.CommonWorkEstimatesListResponse = {
+      error: ErrorType.NoError,
+      work_estimate: []
+    }
+    this.CommonWorkRecordsListResponse = {
+      error: ErrorType.NoError,
+      work_record: []
+    }
+    this.newParent = null;
   }
 
   async onUpdateTicket(ticket_id) {
@@ -387,7 +609,103 @@ async getTotalPeople(){
     this.modalTitle = 'Update Ticket'
     this.ticketId = ticket_id;
     await this.readTicket(ticket_id);
+    this.workEstimateId = null;
+    this.workRecordId = null;
+    this.newHoursWorkEstimates = null;
+    this.newMinutesWorkEstimates = null;
+    this.newHoursWorkRecords = null;
+    this.newMinutesWorkRecords = null;
+
+    await this.listWorkEstimates(ticket_id);
+    await this.listWorkRecords(ticket_id);
   }
+
+
+  async onClickUpdateWorkEstimates(id, hours, minutes) {
+    this.workEstimateId = id;
+    this.newHoursWorkEstimates = hours;
+    this.newMinutesWorkEstimates = minutes;
+  }
+
+  async onClickUpdateWorkRecords(id, hours, minutes) {
+    this.workRecordId = id;
+    this.newHoursWorkRecords = hours;
+    this.newMinutesWorkRecords = minutes;
+  }
+
+  @Watch('workEstimateId')
+  watchStateHandler(newValue: number, oldValue: number) {
+    this.workEstimateId = newValue;
+  }
+
+  @Watch('workRecordId')
+  watchStateRecordHandler(newValue: number, oldValue: number) {
+    this.workRecordId = newValue;
+  }
+
+
+  onClickSubmitUpdateWorkEstimates = async (event: MouseEvent) => {
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    const result = await fetchAs<updateWorkEstimateRequest, ReadWorkEstimatesResponse>('common-work-estimates/update-read', {
+      token: globals.globalStore.state.token,
+      id: this.workEstimateId,
+      hours: this.newHoursWorkEstimates,
+      minutes: this.newMinutesWorkEstimates
+
+    });
+
+    await this.listWorkEstimates(this.ticketId);
+  
+  };
+
+  onClickSubmitDeleteWorkEstimates = async (estimate_id, event: MouseEvent) => {
+
+    this.workEstimateId = estimate_id;
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    const result = await fetchAs<deleteWorkEstimateRequest, deleteWorkEstimateResponse>('common-work-estimates/delete', {
+      token: globals.globalStore.state.token,
+      id: this.workEstimateId,
+    });
+
+    await this.listWorkEstimates(this.ticketId);
+  
+  };
+
+
+  onClickSubmitDeleteWorkRecords = async (record_id, event: MouseEvent) => {
+
+    this.workRecordId = record_id;
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    const result = await fetchAs<deleteWorkRecordRequest, deleteWorkRecordResponse>('common-work-records/delete', {
+      token: globals.globalStore.state.token,
+      id: this.workRecordId,
+    });
+
+    await this.listWorkRecords(this.ticketId);
+  
+  };
+
+
+  onClickSubmitUpdateWorkRecords = async (event: MouseEvent) => {
+    event.preventDefault(); 
+    event.stopPropagation();
+    
+    const result = await fetchAs<updateWorkRecordRequest, updateWorkRecordResponse>('common-work-records/update-read', {
+      token: globals.globalStore.state.token,
+      id: this.workRecordId,
+      hours: this.newHoursWorkRecords,
+      minutes: this.newMinutesWorkRecords
+
+    });
+    await this.listWorkRecords(this.ticketId);
+  
+  };
 
   ticketTitleChange(event) {
       this.newTicketTitle = event.target.value;
@@ -487,6 +805,21 @@ async getTotalPeople(){
     this.page = page;
   }
 
+  workEstimateHourChange (event) {
+    this.newHoursWorkEstimates = event.target.value;
+  }
+
+  workEstimateMinuteChange (event) {
+    this.newMinutesWorkEstimates = event.target.value;
+  }
+
+  workRecordHourChange (event) {
+    this.newHoursWorkRecords = event.target.value;
+  }
+
+  workRecordMinuteChange (event) {
+    this.newMinutesWorkRecords = event.target.value;
+  }
 
   changePeoplePage (page) {
     this._fetchPeople(page);
@@ -548,107 +881,221 @@ async getTotalPeople(){
           isOpen={this.isOpen} 
           type={this.modalType}
           modalTitle={this.modalTitle}>
-             <div class="container">
-            <div class="mainContainer">
-                <label> Status </label>
-                <select name="ticket-status" id="ticket-status" onChange={event => this.ticketStatusChange(event)}>
-                  <option value="Open" selected={this.newTicketStatusName === "Open"}> Open </option>
-                  <option value="Blocked" selected={this.newTicketStatusName === "Blocked"}> Blocked </option>
-                  <option value="Closed" selected={this.newTicketStatusName === "Closed"}> Closed </option>
-                </select>
-                <label> Title: </label>
-              <ion-item>
-                  <ion-input clearInput value={this.newTicketTitle} onInput={event => this.ticketTitleChange(event)}></ion-input>
-              </ion-item><br/>
-                <label> Content </label>
-              <ion-item>
-                  <ion-textarea value={this.newTicketContent} onInput={event => this.ticketContentChange(event)}></ion-textarea>
-              </ion-item><br/>
-              <div class="parentContainer">
-                <label>Ticket Parent</label>
-                <div class="topnav">
-                    <div class="search-container">
-                        <input type="text" placeholder="Search by title..." name="search" onInput={event => this.wordToSearchChange(event)}/>
-                        <button type="submit" onClick={event => this.onPressSearchButton(event)}><i class="fa fa-search"></i><ion-icon name="search-outline"></ion-icon></button>
-                    </div>
+            <div class="general-container">
+              <div class="container">
+                <div class="mainContainer">
+                  <label> Status </label>
+                  <select name="ticket-status" id="ticket-status" onChange={event => this.ticketStatusChange(event)}>
+                    <option value="Open" selected={this.newTicketStatusName === "Open"}> Open </option>
+                    <option value="Blocked" selected={this.newTicketStatusName === "Blocked"}> Blocked </option>
+                    <option value="Closed" selected={this.newTicketStatusName === "Closed"}> Closed </option>
+                  </select>
+                  <label> Title: </label>
+                  <div class="main-input">
+                    <ion-item>
+                      <ion-input clearInput value={this.newTicketTitle} onInput={event => this.ticketTitleChange(event)}></ion-input>
+                    </ion-item><br/>
+                  </div>
+                  <label> Content </label>
+                <div class="main-input">
+                  <ion-item>
+                    <ion-textarea value={this.newTicketContent} onInput={event => this.ticketContentChange(event)}></ion-textarea>
+                  </ion-item><br/>
                 </div>
-                <ion-list>
+                <div class="parentContainer">
+                  <label>Ticket Parent</label>
+                  <div class="topnav">
+                    <div class="search-container">
+                      <input type="text" placeholder="Search by title..." name="search" onInput={event => this.wordToSearchChange(event)}/>
+                      <button type="submit" onClick={event => this.onPressSearchButton(event)}><i class="fa fa-search"></i><ion-icon name="search-outline"></ion-icon></button>
+                    </div>
+                  </div>
+                  <ion-list>
                     <ion-radio-group value={this.newParent}>
-                        {this.ticketsIdAndTitleResponse.tickets.map(ticket => (
-                            <ion-item>
-                                <ion-label>{ticket.title}</ion-label>
-                                <ion-radio slot="start" onClick={event => this.parentChange(event)} value={ticket.id}></ion-radio>
-                            </ion-item>
-
-                        ))}
+                      {this.ticketsIdAndTitleResponse.tickets.map(ticket => (
+                        <ion-item>
+                          <ion-label>{ticket.title}</ion-label>
+                          <ion-radio slot="start" onClick={event => this.parentChange(event)} value={ticket.id}></ion-radio>
+                        </ion-item>
+                      ))}
                     </ion-radio-group>
-                </ion-list>
-                
-        <ul class="fetch-pagination">
-          {this.pagination()}
-        </ul>
-              </div>
+                  </ion-list>
+                  <ul class="fetch-pagination">
+                    {this.pagination()}
+                  </ul>
+                </div>
+              <br/>
             </div>
             <div class="sideContainer">
             <label> Assign to: </label>
-                <div class="topnav">
-                    <div class="search-container">
-                        <input type="text" placeholder="Search by name..." name="search" onInput={event => this.wordToSearchChangePeople(event)}/>
-                        <button type="submit" onClick={event => this.onPressSearchButtonPeople(event)}><i class="fa fa-search"></i><ion-icon name="search-outline"></ion-icon></button>
-                    </div>
+              <div class="topnav">
+                <div class="search-container">
+                  <input type="text" placeholder="Search by name..." name="search" onInput={event => this.wordToSearchChangePeople(event)}/>
+                  <button type="submit" onClick={event => this.onPressSearchButtonPeople(event)}><i class="fa fa-search"></i><ion-icon name="search-outline"></ion-icon></button>
                 </div>
-                <ion-list>
-                    <ion-radio-group value={this.newAssignee}>
-                        {this.ticketsPeopleNameResponse.people.map(people => (
-                            <ion-item>
-                                <ion-label>{people.name}</ion-label>
-                                <ion-radio slot="start"  onClick={event => this.assigneeChange(event)} value={people.id}></ion-radio>
-                            </ion-item>
-
-                        ))}
-                    </ion-radio-group>
-                </ion-list>
-                
-        <ul class="fetch-pagination">
-          {this.paginationPeople()}
-        </ul>
+              </div>
+              <ion-list>
+                <ion-radio-group value={this.newAssignee}>
+                  {this.ticketsPeopleNameResponse.people.map(people => (
+                    <ion-item>
+                      <ion-label>{people.name}</ion-label>
+                      <ion-radio slot="start"  onClick={event => this.assigneeChange(event)} value={people.id}></ion-radio>
+                    </ion-item>
+                  ))}
+                </ion-radio-group>
+              </ion-list>    
+              <ul class="fetch-pagination">
+                {this.paginationPeople()}
+              </ul>
+              </div>
             </div>
-            
+            <div class="ticket-estimates-work-container">
+              <div class="ticket-estimates-container">
+                <div class="generalTickets">
+                  <div class="work-estimate-update-container">
+                    <div>
+                      <h2> Work Estimates </h2>
+                      <span>
+                        <label>Hours:</label>
+                          <input type="number" id="work-estimates-hour-input" name="work-estimates-hour-input"
+                          min="0" max="100" value={this.newHoursWorkEstimates} onInput={event => this.workEstimateHourChange(event)}/>
+                      </span>
+                      <span>
+                        <label>Minutes:</label>
+                        <input type="number" id="work-estimates-hour-input" name="work-estimates-hour-input"
+                        min="0" max="59" value={this.newMinutesWorkEstimates} onInput={event => this.workEstimateMinuteChange(event)}/>
+                      </span>
+                      <button onClick={event => this.onClickSubmitUpdateWorkEstimates(event)}> Submit </button>
+                      <button onClick={event => this.createNewWorkEstimate(event)}> Add </button>
+                    </div>
+                  </div>
+                {this.CommonWorkEstimatesListResponse ? this.CommonWorkEstimatesListResponse.work_estimate.map(estimate =>(
+                  <div class="main-estimates-container">  
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col>
+                          <ion-card button={true} >
+                            <ion-card-header>
+                              <div class="fallbackTimePicker">
+                                <div>
+                                  <span>
+                                    <label>Hours:</label>
+                                    <input type="number" id="work-estimates-hour-input" name="work-estimates-hour-input"
+                                    min="0" max="100"value={estimate.hours} disabled/>
+                                  </span>
+                                  <span>
+                                    <label>Minutes:</label>
+                                    <input type="number" id="work-estimates-hour-input" name="work-estimates-hour-input"
+                                    min="0" max="59" value={estimate.minutes} disabled/>
+                                  </span>
+                                </div>
+                              </div>
+                            </ion-card-header>
+                            <ion-card-content>
+                              <span> Creator: </span>
+                                {estimate.person}<br/>
+                              <button onClick={() => this.onClickUpdateWorkEstimates(estimate.id, estimate.hours, estimate.minutes)}> Update </button>
+                              <button onClick={event => this.onClickSubmitDeleteWorkEstimates(estimate.id, event)}> Delete </button>
+                            </ion-card-content>
+                        </ion-card>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+              )) : '' }
             </div>
-            
-         </ticket-modal>
-         <div>
-         <button onClick={() => this.onInsertNew()} class="create-new-button"> Create New Ticket </button>
-         <div id="generalTickets">
-           {this.commonTicketsPageResponse.tickets.map(ticket =>(
-             <div class="mainTicketContainer">
-               <ion-grid>
-        <ion-row>
-          <ion-col>
-            <ion-card button={true} onClick={() => this.onUpdateTicket(ticket.id)}>
-                <ion-card-header>
-                    <ion-card-subtitle>{ticket.ticket_status}</ion-card-subtitle>
-                    <ion-card-title>{ticket.title}</ion-card-title>
-                </ion-card-header>
-                 <ion-card-content>
-                    {ticket.content}
-                </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-             </div>
-           ))}
-         <ul class="fetch-pagination">
-          {this.paginationMainTickets()}
-        </ul>
+          </div>
+          <div class="ticket-work-hours-container">
+            <div class="generalTickets">
+              <div class="work-estimate-update-container">
+              <div>
+              <h2> Work Hours </h2>
+              <span>
+                <label>Hours:</label>
+                <input type="number" id="work-records-hour-input" name="work-records-hour-input"
+                min="0" max="100" value={this.newHoursWorkRecords} onInput={event => this.workRecordHourChange(event)}/>
+              </span>
+              <span>
+                <label>Minutes:</label>
+                <input type="number" id="work-records-hour-input" name="work-records-hour-input"
+                min="0" max="59" value={this.newMinutesWorkRecords} onInput={event => this.workRecordMinuteChange(event)}/>
+              </span>
+              <button onClick={event => this.onClickSubmitUpdateWorkRecords(event)}> Submit </button>
+              <button onClick={event => this.createNewWorkRecord(event)}> Add </button>
+            </div>
+          </div>
+          {this.CommonWorkRecordsListResponse ? this.CommonWorkRecordsListResponse.work_record.map(record =>(
+            <div class="main-estimates-container">
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-card button={true} >
+                      <ion-card-header>
+                        <div class="fallbackTimePicker">
+                        <div>
+                        <span>
+                          <label>Hours:</label>
+                          <input type="number" id="work-records-hour-input" name="work-records-hour-input"
+                          min="0" max="100"value={record.hours} disabled/>
+                        </span>
+                        <span>
+                          <label>Minutes:</label>
+                          <input type="number" id="work-records-hour-input" name="work-records-hour-input"
+                          min="0" max="59" value={record.minutes} disabled/>
+                        </span>
+            </div>
+          </div>
+                      </ion-card-header>
+                      <ion-card-content>
+                        <span> Creator: </span>
+                        {record.person}<br/>
+                        <button onClick={() => this.onClickUpdateWorkRecords(record.id, record.hours, record.minutes)}> Update </button>
+                        <button onClick={event => this.onClickSubmitDeleteWorkRecords(record.id, event)}> Delete </button>
+                      </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        )) : '' }
+ 
          </div>
-         
-      </div>
-      
+              </div>
+
+          </div>
+             </div>
+             
+           
+      </ticket-modal>
+        <div>
+          <button onClick={() => this.onInsertNew()} class="create-new-button"> Create New Ticket </button>
+          <div class="generalTickets">
+            {this.commonTicketsPageResponse.tickets.map(ticket =>(
+              <div class="mainTicketContainer">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-card button={true} onClick={() => this.onUpdateTicket(ticket.id)}>
+                        <ion-card-header>
+                          <ion-card-subtitle>{ticket.ticket_status}</ion-card-subtitle>
+                          <ion-card-title>{ticket.title}</ion-card-title>
+                        </ion-card-header>
+                        <ion-card-content>
+                          {ticket.content}
+                        </ion-card-content>
+                      </ion-card>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
+            ))}
+          <ul class="fetch-pagination">
+            {this.paginationMainTickets()}
+          </ul>
+          </div> 
+        </div>
       </div>
       </Host>
     );
   }
-
 }

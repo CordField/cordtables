@@ -16,6 +16,7 @@ data class CommonWorkEstimates(
 )
 
 data class CommonWorkEstimateInput(
+    val ticket: Int? = null,
     val person: Int? = null,
     val hours: Int? = null,
     val minutes: Int? = null,

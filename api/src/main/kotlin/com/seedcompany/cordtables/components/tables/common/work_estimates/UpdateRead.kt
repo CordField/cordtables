@@ -13,8 +13,9 @@ import javax.sql.DataSource
 data class CommonWorkEstimateUpdateReadRequest(
     val token: String?,
     val id: Int? = null,
-    val column: String? = null,
-    val value: Any? = null,
+    val ticket: Int? = null,
+    val hours: Int? = null,
+    val minutes: Int? = null
 )
 
 data class CommonWorkEstimateUpdateReadResponse(
@@ -44,9 +45,9 @@ class UpdateRead(
         val updateResponse = update.updateHandler(
             CommonWorkEstimateUpdateRequest(
                 token = req.token,
-                column = req.column,
                 id = req.id,
-                value = req.value,
+                hours = req.hours,
+                minutes = req.minutes
             )
         )
 

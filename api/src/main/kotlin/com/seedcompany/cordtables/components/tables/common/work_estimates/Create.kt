@@ -44,12 +44,16 @@ class Create(
     fun createHandler(@RequestBody req: CommonWorkRecordCreateRequest): CommonWorkEstimateCreateResponse {
 
         if (req.token == null) return CommonWorkEstimateCreateResponse(error = ErrorType.InputMissingToken, null)
-
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into common.work_estimates(person, hours, minutes, comment, created_by, modified_by, owning_person, owning_group)
+            insert into common.work_estimates(person, hours, minutes, comment, ticket, created_by, modified_by, owning_person, owning_group)
                 values(
+                     (
+                      select person 
+                      from admin.tokens 
+                      where token = ?
+                    ),
                     ?,
                     ?,
                     ?,
@@ -74,10 +78,11 @@ class Create(
             returning id;
         """.trimIndent(),
             Int::class.java,
-            req.work_estimate.person,
+            req.token,
             req.work_estimate.hours,
             req.work_estimate.minutes,
             req.work_estimate.comment,
+            req.work_estimate.ticket,
             req.token,
             req.token,
             req.token,

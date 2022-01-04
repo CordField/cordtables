@@ -19,7 +19,8 @@ import javax.sql.DataSource
 
 
 data class CommonWorkRecordListRequest(
-    val token: String?
+    val token: String?,
+    val ticket: Int? = null,
 )
 
 data class CommonWorkRecordListResponse(
@@ -50,11 +51,13 @@ class List(
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
+        paramSource.addValue("ticket", req.ticket)
 
         val query = secureList.getSecureListQueryHandler(
             GetSecureListQueryRequest(
                 tableName = "common.work_records",
                 filter = "order by id",
+                whereClause = "ticket = ${req.ticket}",
                 columns = arrayOf(
                     "id",
                     "person",
