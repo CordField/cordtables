@@ -1,7 +1,7 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
-import { fetchAs } from '../../../../common/utility';
+import { fetchAs, throttledFetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import {
   CommonThreadsListRequest,
@@ -79,7 +79,7 @@ export class Threads {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common/threads/create-read', {
+    const result = await throttledFetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common/threads/create-read', {
       token: globals.globalStore.state.token,
       thread: {
         content: this.newContent,
