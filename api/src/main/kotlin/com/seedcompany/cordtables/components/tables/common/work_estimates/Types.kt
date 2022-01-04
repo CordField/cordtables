@@ -4,6 +4,7 @@ data class CommonWorkEstimates(
     val id: String? = null,
     val ticket: String? = null,
     val person: String? = null,
+    val public_full_name: String? = null,
     val hours : Int? = null,
     val minutes: Int? = null,
     val total_time: Number? = null,

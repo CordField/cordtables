@@ -39,14 +39,14 @@ class CommonTicketsIdTitleRequest{
 class AssignTicketRequest{
     token: string;
     ticket_assignment: {
-        ticket: number;
-        person: number;
+        ticket: string;
+        person: string;
     }
 }
 
 class AssignTicketResponse{
     error: ErrorType;
-    id: number;
+    id: string;
 }
 
 class CreateTicketRequest{
@@ -54,33 +54,33 @@ class CreateTicketRequest{
     ticket:{
       title: string;
       ticket_status: string;
-      assigned_to?: number;
-      parent: number;
+      assigned_to?: string;
+      parent: string;
       content : string;
     }
   }
 
 class UpdateTicketRequest {
   token: string;
-  id: number;
+  id: string;
   ticket:{
     title: string;
     ticket_status: string;
-    parent: number;
+    parent: string;
     content : string;
   }
 }
 
 class updateWorkEstimateRequest {
   token: string;
-  id: number;
+  id: string;
   hours?: number;
   minutes?: number;
 }
 
 class updateWorkRecordRequest {
   token: string;
-  id: number;
+  id: string;
   hours?: number;
   minutes?: number;
 }
@@ -92,7 +92,7 @@ class updateWorkRecordResponse {
 class createWorkEstimateRequest {
   token: string;
   work_estimate: {
-    ticket: number;
+    ticket: string;
     hours: number;
     minutes: number;
     comment?: string;
@@ -102,8 +102,8 @@ class createWorkEstimateRequest {
 class createWorkRecordRequest {
   token: string;
   work_record: {
-    person?: number;
-    ticket: number;
+    person?: string;
+    ticket: string;
     hours: number;
     minutes: number;
     comment?: string;
@@ -114,8 +114,8 @@ class createWorkRecordResponse {
   error: ErrorType;
   work_record: {
     id?: number;
-    ticket?: number;
-    person: number;
+    ticket?: string;
+    person: string;
     hours: number;
     minutes: number;
     total_time: number;
@@ -127,9 +127,9 @@ class createWorkRecordResponse {
 class createWorkEstimateResponse {
   error: ErrorType;
   work_estimate: {
-    id?: number;
-    ticket?: number;
-    person: number;
+    id?: string;
+    ticket?: string;
+    person: string;
     hours: number;
     minutes: number;
     total_time: number;
@@ -140,46 +140,46 @@ class createWorkEstimateResponse {
 
 class deleteWorkEstimateRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class deleteWorkEstimateResponse {
   error: ErrorType;
-  id: number;
+  id: string;
 }
 
 class deleteWorkRecordRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class deleteWorkRecordResponse {
   error: ErrorType;
-  id: number;
+  id: string;
 }
 
 class ReadTicketRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class ReadWorkEstimatesRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class ListWorkEstimatesRequest {
   token: string;
-  ticket: number;
+  ticket: string;
 }
 
 class ListWorkRecordsRequest {
   token: string;
-  ticket: number;
+  ticket: string;
 }
 
   interface User {
-    id: number;
+    id: string;
     first_name: string;
     last_name: string;
   }
@@ -249,20 +249,20 @@ class PeopleTotal {
 }
 
 class CommonTicketIdTitleRow {
-    id: number;
+    id: string;
     title: string;
 }
 
 class PeopleIdNameRow {
-    id: number;
+    id: string;
     name: string;
 }
 
 class CommonTicketsRow {
-    id : number;
+    id : string;
     title: string;
     ticket_status : string;
-    parent : number;
+    parent : string;
     content : string;
     created_at: string;
     created_by: number;
@@ -273,9 +273,10 @@ class CommonTicketsRow {
 }
 
 class CommonWorkEstimatesRow{
-  id?: number;
-  ticket?: number = null;
-  person: number;
+  id?: string;
+  ticket?: string = null;
+  person: string;
+  public_full_name?: string = null;
   hours: number;
   minutes: number;
   total_time: number;
@@ -284,9 +285,10 @@ class CommonWorkEstimatesRow{
 }
 
 class CommonWorkRecordsRow {
-  id?: number;
-  ticket?: number;
-  person: number;
+  id?: string;
+  ticket?: string;
+  person: string;
+  public_full_name?: string = null;
   hours: number;
   minutes: number;
   total_time: number;
@@ -326,10 +328,10 @@ export class NewTicketsPage {
   @State() page: number = 1;
   @State() limit: number = 5;
   @State() offset: number = 0;
-  @State() workEstimateId?: number = null;
+  @State() workEstimateId?: string = null;
   @State() newHoursWorkEstimates?: number = null;
   @State() newMinutesWorkEstimates?: number = null;
-  @State() workRecordId?: number = null;
+  @State() workRecordId?: string = null;
   @State() newHoursWorkRecords?: number = null;
   @State() newMinutesWorkRecords?: number = null;
   @State() peoplePaginationPages : number;
@@ -341,8 +343,8 @@ export class NewTicketsPage {
   @State() mainTicketsOffset: number = 0;
   @State() showUpdateWorkEstimates : boolean = false;
   newTicketStatusName: string;
-  newParent?: number = null;
-  newAssignee: number;
+  newParent?: string = null;
+  newAssignee: string;
   newContent: string;
   @State() newTicketTitle: string;
   newTicketContent: string; 
@@ -350,7 +352,7 @@ export class NewTicketsPage {
   wordToSearchPeople : string;
   modalType: string;
   modalTitle: string;
-  ticketId: number;
+  ticketId: string;
   
   
   async componentWillLoad() {
@@ -366,7 +368,7 @@ export class NewTicketsPage {
   }
   
   async getList() {
-    this.commonTicketsPageResponse = await fetchAs<CommonTicketsPageListRequest, ListTicketResponse>('common-tickets/list', {
+    this.commonTicketsPageResponse = await fetchAs<CommonTicketsPageListRequest, ListTicketResponse>('common/tickets/list', {
       token: globals.globalStore.state.token,
       limit: this.limit,
       offset: this.mainTicketsOffset
@@ -374,7 +376,7 @@ export class NewTicketsPage {
   }
 
   async readTicket(ticket_id) {
-    this.CommonTicketsReadResponse = await fetchAs<ReadTicketRequest, ReadTicketResponse>('common-tickets/read', {
+    this.CommonTicketsReadResponse = await fetchAs<ReadTicketRequest, ReadTicketResponse>('common/tickets/read', {
       token: globals.globalStore.state.token,
       id: ticket_id
     });
@@ -389,21 +391,21 @@ export class NewTicketsPage {
   }
 
   async listWorkEstimates(ticket_id) {
-    this.CommonWorkEstimatesListResponse = await fetchAs<ListWorkEstimatesRequest, ListWorkEstimatesResponse>('common-work-estimates/list', {
+    this.CommonWorkEstimatesListResponse = await fetchAs<ListWorkEstimatesRequest, ListWorkEstimatesResponse>('common/work-estimates/list', {
       token: globals.globalStore.state.token,
       ticket: ticket_id ? ticket_id : this.ticketId
     });
   }
 
   async listWorkRecords(ticket_id) {
-    this.CommonWorkRecordsListResponse = await fetchAs<ListWorkRecordsRequest, ListWorkEstimatesResponse>('common-work-records/list', {
+    this.CommonWorkRecordsListResponse = await fetchAs<ListWorkRecordsRequest, ListWorkEstimatesResponse>('common/work-records/list', {
       token: globals.globalStore.state.token,
       ticket: ticket_id ? ticket_id : this.ticketId
     });
   }
 
   async getListIdTitles(){
-      this.ticketsIdAndTitleResponse = await fetchAs<CommonTicketsIdTitleRequest, TicketsIdAndTitlesResponse> ('common-tickets/list-id-and-title', {
+      this.ticketsIdAndTitleResponse = await fetchAs<CommonTicketsIdTitleRequest, TicketsIdAndTitlesResponse> ('common/tickets/list-id-and-title', {
         token: globals.globalStore.state.token,
         wordToSearch: this.wordToSearch,
         limit: this.limit,
@@ -412,7 +414,7 @@ export class NewTicketsPage {
   }
 
   async getNamesPeople(){
-    this.ticketsPeopleNameResponse = await fetchAs<TicketsPeopleRequest, PeopleIdNamesResponse> ('common-tickets/list-people-names', {
+    this.ticketsPeopleNameResponse = await fetchAs<TicketsPeopleRequest, PeopleIdNamesResponse> ('common/tickets/list-people-names', {
       token: globals.globalStore.state.token,
       wordToSearch: this.wordToSearchPeople,
       limit: this.peopleLimit,
@@ -421,7 +423,7 @@ export class NewTicketsPage {
 }
 
   async getTotalTickets(){
-    let totalTickets = await fetchAs<CommonPagesNumberRequest, TotalTicketsResponse> ('common-tickets/count-tickets', {
+    let totalTickets = await fetchAs<CommonPagesNumberRequest, TotalTicketsResponse> ('common/tickets/count-tickets', {
       token: globals.globalStore.state.token,
       wordToSearch: this.wordToSearch
     });
@@ -431,7 +433,7 @@ export class NewTicketsPage {
 
 
 async getTotalPeople(){
-    let totalPeople = await fetchAs<PagesNumberRequestPeople, TotalPeopleResponse> ('common-tickets/count-people-tickets', {
+    let totalPeople = await fetchAs<PagesNumberRequestPeople, TotalPeopleResponse> ('common/tickets/count-people-tickets', {
       token: globals.globalStore.state.token,
       wordToSearch: this.wordToSearchPeople
     });
@@ -459,7 +461,7 @@ async getTotalPeople(){
     event.stopPropagation();
     
     
-    const result = await fetchAs<CreateTicketRequest, CreateTicketResponse>('common-tickets/create-read', {
+    const result = await fetchAs<CreateTicketRequest, CreateTicketResponse>('common/tickets/create-read', {
       token: globals.globalStore.state.token,
       ticket: {
         title: this.newTicketTitle,
@@ -489,7 +491,7 @@ async getTotalPeople(){
     event.stopPropagation();
     
     
-    const result = await fetchAs<createWorkEstimateRequest, createWorkEstimateResponse>('common-work-estimates/create-read', {
+    const result = await fetchAs<createWorkEstimateRequest, createWorkEstimateResponse>('common/work-estimates/create-read', {
       token: globals.globalStore.state.token,
       work_estimate: {
         ticket: this.ticketId,
@@ -509,7 +511,7 @@ qq
     event.stopPropagation();
     
     
-    const result = await fetchAs<createWorkRecordRequest, createWorkRecordResponse>('common-work-records/create-read', {
+    const result = await fetchAs<createWorkRecordRequest, createWorkRecordResponse>('common/work-records/create-read', {
       token: globals.globalStore.state.token,
       work_record: {
         ticket: this.ticketId,
@@ -530,7 +532,7 @@ qq
     event.stopPropagation();
     
     
-    const result = await fetchAs<UpdateTicketRequest, UpdateTicketResponse>('common-tickets/update-read', {
+    const result = await fetchAs<UpdateTicketRequest, UpdateTicketResponse>('common/tickets/update-read', {
       token: globals.globalStore.state.token,
       id: this.ticketId,
       ticket: {
@@ -552,7 +554,7 @@ qq
 
 
   assignTicketToPerson = async (ticketId, personId) =>{
-    const result = await fetchAs<AssignTicketRequest, AssignTicketResponse>('common-ticket-assignments/create-read', {
+    const result = await fetchAs<AssignTicketRequest, AssignTicketResponse>('common/ticket/assignments/create-read', {
         token: globals.globalStore.state.token,
         ticket_assignment: {
           ticket: ticketId,
@@ -634,12 +636,12 @@ qq
   }
 
   @Watch('workEstimateId')
-  watchStateHandler(newValue: number, oldValue: number) {
+  watchStateHandler(newValue: string, oldValue: string) {
     this.workEstimateId = newValue;
   }
 
   @Watch('workRecordId')
-  watchStateRecordHandler(newValue: number, oldValue: number) {
+  watchStateRecordHandler(newValue: string, oldValue: string) {
     this.workRecordId = newValue;
   }
 
@@ -648,7 +650,7 @@ qq
     event.preventDefault(); 
     event.stopPropagation();
     
-    const result = await fetchAs<updateWorkEstimateRequest, ReadWorkEstimatesResponse>('common-work-estimates/update-read', {
+    const result = await fetchAs<updateWorkEstimateRequest, ReadWorkEstimatesResponse>('common/work-estimates/update-read', {
       token: globals.globalStore.state.token,
       id: this.workEstimateId,
       hours: this.newHoursWorkEstimates,
@@ -666,7 +668,7 @@ qq
     event.preventDefault(); 
     event.stopPropagation();
     
-    const result = await fetchAs<deleteWorkEstimateRequest, deleteWorkEstimateResponse>('common-work-estimates/delete', {
+    const result = await fetchAs<deleteWorkEstimateRequest, deleteWorkEstimateResponse>('common/work-estimates/delete', {
       token: globals.globalStore.state.token,
       id: this.workEstimateId,
     });
@@ -682,7 +684,7 @@ qq
     event.preventDefault(); 
     event.stopPropagation();
     
-    const result = await fetchAs<deleteWorkRecordRequest, deleteWorkRecordResponse>('common-work-records/delete', {
+    const result = await fetchAs<deleteWorkRecordRequest, deleteWorkRecordResponse>('common/work-records/delete', {
       token: globals.globalStore.state.token,
       id: this.workRecordId,
     });
@@ -696,7 +698,7 @@ qq
     event.preventDefault(); 
     event.stopPropagation();
     
-    const result = await fetchAs<updateWorkRecordRequest, updateWorkRecordResponse>('common-work-records/update-read', {
+    const result = await fetchAs<updateWorkRecordRequest, updateWorkRecordResponse>('common/work-records/update-read', {
       token: globals.globalStore.state.token,
       id: this.workRecordId,
       hours: this.newHoursWorkRecords,
@@ -993,7 +995,7 @@ qq
                             </ion-card-header>
                             <ion-card-content>
                               <span> Creator: </span>
-                                {estimate.person}<br/>
+                                {estimate.public_full_name}<br/><br/>
                               <button onClick={() => this.onClickUpdateWorkEstimates(estimate.id, estimate.hours, estimate.minutes)}> Update </button>
                               <button onClick={event => this.onClickSubmitDeleteWorkEstimates(estimate.id, event)}> Delete </button>
                             </ion-card-content>
@@ -1048,7 +1050,7 @@ qq
                       </ion-card-header>
                       <ion-card-content>
                         <span> Creator: </span>
-                        {record.person}<br/>
+                        {record.public_full_name}<br/><br/>
                         <button onClick={() => this.onClickUpdateWorkRecords(record.id, record.hours, record.minutes)}> Update </button>
                         <button onClick={event => this.onClickSubmitDeleteWorkRecords(record.id, event)}> Delete </button>
                       </ion-card-content>

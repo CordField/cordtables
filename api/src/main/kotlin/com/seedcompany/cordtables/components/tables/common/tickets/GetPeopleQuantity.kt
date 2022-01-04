@@ -40,7 +40,7 @@ class CountPeopleTickets(
 
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-  @PostMapping("common-tickets/count-people-tickets")
+  @PostMapping("common/tickets/count-people-tickets")
   @ResponseBody
   fun listHandler(@RequestBody req: CommonCountPeopleTicketsRequest): CommonCountPeopleTicketsResponse{
     var data: MutableList<CommonCountPeopleQuantity> = mutableListOf()

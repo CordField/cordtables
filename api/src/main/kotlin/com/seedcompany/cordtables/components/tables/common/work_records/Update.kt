@@ -57,8 +57,7 @@ class Update(
                     value = req.hours,
                     cast = "::integer"
                 )
-            }
-            "minutes" -> {
+
                 util.updateField(
                     token = req.token,
                     table = "common.work_records",

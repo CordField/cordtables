@@ -41,8 +41,6 @@ class Update(
 
         println(req)
 
-        when (req.column) {
-
              util.updateField(
                     token = req.token,
                     table = "common.work_estimates",
@@ -52,7 +50,6 @@ class Update(
                     cast = "::uuid"
                 )
 
-            "hours" -> {
                 util.updateField(
                     token = req.token,
                     table = "common.work_estimates",
