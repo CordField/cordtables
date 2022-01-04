@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
+import java.sql.Date
 import java.sql.PreparedStatement
+import java.sql.Timestamp
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
@@ -40,6 +42,7 @@ data class PropertyCreate(
   val property: String,
   val table: String,
   val column: String,
+  val enum: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -108,9 +111,165 @@ class Neo4j2(
 
     queue.offer(
       PropertyCreate(
+        baseNode = "Budget",
+        property = "universalTemplateFile",
+        table = "sc.budgets",
+        column = "universal_template_file_url"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Budget",
+        property = "status",
+        table = "sc.budgets",
+        column = "status",
+        enum = "common.budget_status"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "BudgetRecord",
+        property = "fiscalYear",
+        table = "sc.budget_records",
+        column = "fiscal_year"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "BudgetRecord",
+        property = "amount",
+        table = "sc.budget_records",
+        column = "amount"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Ceremony",
+        property = "type",
+        table = "sc.ceremonies",
+        column = "type",
+        enum = "common.ceremony_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Ceremony",
+        property = "actualDate",
+        table = "sc.ceremonies",
+        column = "actual_date"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Ceremony",
+        property = "estimatedDate",
+        table = "sc.ceremonies",
+        column = "estimated_date"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Ceremony",
+        property = "planned",
+        table = "sc.ceremonies",
+        column = "is_planned"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Directory",
+        property = "name",
+        table = "common.directories",
+        column = "name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Education",
+        property = "major",
+        table = "common.education_entries",
+        column = "major"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Education",
+        property = "institution",
+        table = "common.education_entries",
+        column = "institution"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Education",
+        property = "degree",
+        table = "common.education_entries",
+        column = "degree",
+        enum = "common.education_degree"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "EthnologueLanguage",
+        property = "name",
+        table = "sc.ethnologue",
+        column = "language_name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "EthnologueLanguage",
+        property = "code",
+        table = "sc.ethnologue",
+        column = "code"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "EthnologueLanguage",
+        property = "provisionalCode",
+        table = "sc.ethnologue",
+        column = "provisional_code"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "EthnologueLanguage",
+        property = "population",
+        table = "sc.ethnologue",
+        column = "population"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
         baseNode = "FieldRegion",
         property = "name",
         table = "sc.field_regions",
+        column = "name",
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "FieldZone",
+        property = "name",
+        table = "sc.field_zones",
         column = "name",
       )
     )
@@ -121,6 +280,1002 @@ class Neo4j2(
         property = "name",
         table = "common.files",
         column = "name",
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "FileVersion",
+        property = "name",
+        table = "common.file_versions",
+        column = "name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "FileVersion",
+        property = "size",
+        table = "common.file_versions",
+        column = "file_size"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "FileVersion",
+        property = "mimeType",
+        table = "common.file_versions",
+        column = "mime_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "FundingAccount",
+        property = "accountNumber",
+        table = "sc.funding_accounts",
+        column = "account_number"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "FundingAccount",
+        property = "name",
+        table = "sc.funding_accounts",
+        column = "name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "completeDate",
+        table = "sc.internship_engagements",
+        column = "complete_date"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "disbursementCompleteDate",
+        table = "sc.internship_engagements",
+        column = "disbursement_complete_date"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "endDateOverride",
+        table = "sc.internship_engagements",
+        column = "end_date_override"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "initialEndDate",
+        table = "sc.internship_engagements",
+        column = "initial_end_date"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "lastReactivatedAt",
+        table = "sc.internship_engagements",
+        column = "last_reactivated_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "lastSuspendedAt",
+        table = "sc.internship_engagements",
+        column = "last_suspended_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "methodologies",
+        table = "sc.internship_engagements",
+        column = "methodologies",
+        enum = "common.product_methodologies[]"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "position",
+        table = "sc.internship_engagements",
+        column = "position",
+        enum = "common.internship_position"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "startDateOverride",
+        table = "sc.internship_engagements",
+        column = "start_date_override"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "status",
+        table = "sc.internship_engagements",
+        column = "status",
+        enum = "common.engagement_status"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "InternshipEngagement",
+        property = "statusModifiedAt",
+        table = "sc.internship_engagements",
+        column = "status_modified_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "name",
+        table = "sc.languages",
+        column = "name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "displayName",
+        table = "sc.languages",
+        column = "display_name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "displayNamePronunciation",
+        table = "sc.languages",
+        column = "display_name_pronunciation"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "tags",
+        table = "sc.languages",
+        column = "tags"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "isDialect",
+        table = "sc.languages",
+        column = "is_dialect"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "isSignLanguage",
+        table = "sc.languages",
+        column = "is_sign_language"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "leastOfThese",
+        table = "sc.languages",
+        column = "is_least_of_these"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "leastOfTheseReason",
+        table = "sc.languages",
+        column = "least_of_these_reason"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "populationOverride",
+        table = "sc.languages",
+        column = "population_override"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "registryOfDialectsCode",
+        table = "sc.languages",
+        column = "registry_of_dialects_code"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "signLanguageCode",
+        table = "sc.languages",
+        column = "sign_language_code"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "hasExternalFirstScripture",
+        table = "sc.languages",
+        column = "has_external_first_scripture"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "sensitivity",
+        table = "sc.languages",
+        column = "sensitivity",
+        enum = "common.sensitivity"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Language",
+        property = "sponsorEstimatedEndDate",
+        table = "sc.languages",
+        column = "sponsor_estimated_end_date"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "openToInvestorVisit",
+        table = "sc.language_engagements",
+        column = "is_open_to_investor_visit"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "completeDate",
+        table = "sc.language_engagements",
+        column = "complete_date"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "disbursementCompleteDate",
+        table = "sc.language_engagements",
+        column = "disbursement_complete_date"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "endDateOverride",
+        table = "sc.language_engagements",
+        column = "end_date_override"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "initialEndDate",
+        table = "sc.language_engagements",
+        column = "initial_end_date"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "firstScripture",
+        table = "sc.language_engagements",
+        column = "is_first_scripture"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "lukePartnership",
+        table = "sc.language_engagements",
+        column = "is_luke_partnership"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "lastSuspendedAt",
+        table = "sc.language_engagements",
+        column = "last_suspended_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "lastReactivatedAt",
+        table = "sc.language_engagements",
+        column = "last_reactivated_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "paratextRegistryId",
+        table = "sc.language_engagements",
+        column = "paratext_registry"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "pnp",
+        table = "sc.language_engagements",
+        column = "pnp"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "startDateOverride",
+        table = "sc.language_engagements",
+        column = "start_date_override"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "status",
+        table = "sc.language_engagements",
+        column = "status",
+        enum = "common.engagement_status"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "statusModifiedAt",
+        table = "sc.language_engagements",
+        column = "status_modified_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "LanguageEngagement",
+        property = "historicGoal",
+        table = "sc.language_engagements",
+        column = "historic_goal"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Location",
+        property = "name",
+        table = "common.locations",
+        column = "name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Location",
+        property = "isoAlpha3",
+        table = "common.locations",
+        column = "iso_alpha3"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Location",
+        property = "type",
+        table = "common.locations",
+        column = "type",
+        enum = "common.location_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Location",
+        property = "name",
+        table = "sc.locations",
+        column = "name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Location",
+        property = "isoAlpha3",
+        table = "sc.locations",
+        column = "iso_alpha_3"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Location",
+        property = "type",
+        table = "sc.locations",
+        column = "type",
+        enum = "common.location_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Organization",
+        property = "name",
+        table = "common.organizations",
+        column = "name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Organization",
+        property = "address",
+        table = "sc.organizations",
+        column = "address"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partner",
+        property = "pmcEntityCode",
+        table = "sc.partners",
+        column = "pmc_entity_code"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partner",
+        property = "address",
+        table = "sc.partners",
+        column = "address"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partner",
+        property = "globalInnovationsClient",
+        table = "sc.partners",
+        column = "is_innovations_client"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partner",
+        property = "active",
+        table = "sc.partners",
+        column = "active"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partner",
+        property = "types",
+        table = "sc.partners",
+        column = "types",
+        enum = "sc.partner_types[]"
+      )
+    )
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partner",
+        property = "financialReportingTypes",
+        table = "sc.partners",
+        column = "financial_reporting_types",
+        enum = "sc.financial_reporting_types[]"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partnership",
+        property = "agreementStatus",
+        table = "sc.partnerships",
+        column = "agreement_status",
+        enum = "sc.partnership_agreement_status"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partnership",
+        property = "mouStatus",
+        table = "sc.partnerships",
+        column = "mou_status",
+        enum = "sc.partnership_agreement_status"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partnership",
+        property = "mouStartOverride",
+        table = "sc.partnerships",
+        column = "mou_start_override"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partnership",
+        property = "mouEndOverride",
+        table = "sc.partnerships",
+        column = "mou_end_override"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partnership",
+        property = "financialReportingType",
+        table = "sc.partnerships",
+        column = "financial_reporting_type",
+        enum = "sc.financial_reporting_types"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partnership",
+        property = "primary",
+        table = "sc.partnerships",
+        column = "is_primary"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Partnership",
+        property = "types",
+        table = "sc.partnerships",
+        column = "types",
+        enum = "sc.partner_types[]"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "PeriodicReport",
+        property = "end",
+        table = "sc.periodic_reports",
+        column = "end_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "PeriodicReport",
+        property = "start",
+        table = "sc.periodic_reports",
+        column = "start_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "PeriodicReport",
+        property = "type",
+        table = "sc.periodic_reports",
+        column = "type",
+        enum = "sc.periodic_report_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "PeriodicReport",
+        property = "skippedReason",
+        table = "sc.periodic_reports",
+        column = "skipped_reason"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Post",
+        property = "type",
+        table = "sc.posts",
+        column = "type",
+        enum = "sc.post_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Post",
+        property = "shareability",
+        table = "sc.posts",
+        column = "shareability",
+        enum = "sc.post_shareability"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Post",
+        property = "body",
+        table = "sc.posts",
+        column = "body"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Product",
+        property = "methodology",
+        table = "sc.products",
+        column = "methodology",
+        enum = "common.product_methodologies"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Product",
+        property = "steps",
+        table = "sc.products",
+        column = "steps",
+        enum = "common.product_methodology_step[]"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Product",
+        property = "progressStepMeasurement",
+        table = "sc.products",
+        column = "progress_step_measurement",
+        enum = "common.progress_measurement"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Product",
+        property = "progressTarget",
+        table = "sc.products",
+        column = "progress_target"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Product",
+        property = "mediums",
+        table = "sc.products",
+        column = "mediums",
+        enum = "common.product_mediums[]"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Product",
+        property = "purposes",
+        table = "sc.products",
+        column = "purposes",
+        enum = "common.product_purposes[]"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Product",
+        property = "describeCompletion",
+        table = "sc.products",
+        column = "describe_completion"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Product",
+        property = "description",
+        table = "sc.products",
+        column = "description"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "name",
+        table = "sc.projects",
+        column = "name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "tags",
+        table = "sc.projects",
+        column = "tags"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "presetInventory",
+        table = "sc.projects",
+        column = "preset_inventory"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "estimatedSubmission",
+        table = "sc.projects",
+        column = "estimated_submission"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "initialMouEnd",
+        table = "sc.projects",
+        column = "initial_mou_end"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "mouStart",
+        table = "sc.projects",
+        column = "mou_start"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "mouEnd",
+        table = "sc.projects",
+        column = "mou_end"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "step",
+        table = "sc.projects",
+        column = "step",
+        enum = "sc.project_step"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "stepChangedAt",
+        table = "sc.projects",
+        column = "step_changed_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "status",
+        table = "sc.projects",
+        column = "status",
+        enum = "sc.project_status"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "sensitivity",
+        table = "sc.projects",
+        "sensitivity",
+        enum = "common.sensitivity"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "type",
+        table = "sc.projects",
+        column = "type",
+        enum = "sc.project_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "financialReportReceivedAt",
+        table = "sc.projects",
+        column = "report_received_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "about",
+        table = "admin.people",
+        column = "about"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "phone",
+        table = "admin.people",
+        column = "phone"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "realFirstName",
+        table = "admin.people",
+        column = "private_first_name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "realLastName",
+        table = "admin.people",
+        column = "private_last_name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "displayFirstName",
+        table = "admin.people",
+        column = "public_first_name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "displayLastName",
+        table = "admin.people",
+        column = "public_last_name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "timezone",
+        table = "admin.people",
+        column = "timezone"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "title",
+        table = "admin.people",
+        column = "title"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "email",
+        table = "admin.users",
+        column = "email"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "password",
+        table = "admin.users",
+        column = "password"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "User",
+        property = "status",
+        table = "sc.people",
+        column = "status"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Unavailability",
+        property = "description",
+        table = "sc.person_unavailabilities",
+        column = "description"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Unavailability",
+        property = "start",
+        table = "sc.person_unavailabilities",
+        column = "period_start"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Unavailability",
+        property = "end",
+        table = "sc.person_unavailabilities",
+        column = "period_end"
       )
     )
 
@@ -143,6 +1298,7 @@ class Neo4j2(
               property = createRequest.property,
               tableName = createRequest.table,
               column = createRequest.column,
+              enum = createRequest.enum,
             )
             delay(1)
           }
@@ -162,17 +1318,27 @@ class Neo4j2(
     property: String,
     tableName: String,
     column: String,
+    enum: String? = null
   ) {
 
     val batchSize = 2000
+    val props = arrayOf("planned", "lukePartnership", "firstScripture", "openToInvestorVisit")
 
     ds.connection.use { conn ->
 
-      val updateStatement: PreparedStatement = conn.prepareStatement(
-        """
-        update $tableName set $column = ? where id = common.uuid_generate_v5(common.uuid_ns_url(), ?);
-      """.trimIndent()
-      )
+      val updateStatement: PreparedStatement = if (enum != null) {
+        conn.prepareStatement(
+          """
+              update $tableName set $column = cast(? as $enum) where id = public.uuid_generate_v5(public.uuid_ns_url(), ?)
+              """.trimIndent()
+        )
+      } else {
+        conn.prepareStatement(
+          """
+              update $tableName set $column = ? where id = public.uuid_generate_v5(public.uuid_ns_url(), ?);
+              """.trimIndent()
+        )
+      }
 
       neo4j.session().use { session ->
 
@@ -181,10 +1347,37 @@ class Neo4j2(
             .get("count").asInt()
 
         for (i in 0..ceil((propertyCount / batchSize).toDouble()).toInt()) {
-          session.run("MATCH (n:$baseNode)-[r:$property]-(p) RETURN n.id, p.value skip ${i * batchSize} limit $batchSize")
+          val query = if (baseNode == "Project" && property == "type") {
+            "MATCH (n:$baseNode) RETURN n.type, n.id skip ${i * batchSize} limit $batchSize"
+          } else {
+            "MATCH (n:$baseNode)-[r:$property { active: true }]-(p) RETURN n.id, p.value, apoc.meta.type(p.value) as type skip ${i * batchSize} limit $batchSize"
+          }
+          session.run(query)
             .list()
             .forEach {
-              updateStatement.setString(1, it.get("p.value").asString())
+              when {
+                property == "email" && it.get("p.value").asString() == "devops@tsco.org" -> return@forEach
+                property == "password" && it.get("p.value").asString() == "\$argon2i\$v=19\$m=4096,t=3,p=1\$6oarrIhzHj8JPpEw1rIzdQ\$1/Br0R7/Fh42D5mhlzD6sLx/y3lk4qvjlug8ZSefd/M" -> return@forEach
+                it.get("type").asString() == "FLOAT" ->
+                  updateStatement.setDouble(1, it.get("p.value").asDouble())
+                it.get("type").asString() == "STRING" ->
+                  updateStatement.setString(1, it.get("p.value").asString())
+                it.get("type").asString() == "BOOLEAN" ->
+                  updateStatement.setBoolean(1, it.get("p.value").asBoolean())
+                it.get("type").asString() == "LocalDate" ->
+                  updateStatement.setDate(1, Date.valueOf(it.get("p.value").asLocalDate()))
+                it.get("type").asString() == "ZonedDateTime" ->
+                  updateStatement.setTimestamp(1, Timestamp.valueOf(it.get("p.value").asZonedDateTime().toLocalDateTime()))
+                it.get("type").asString() == "String[]" ->
+                  updateStatement.setArray(1, conn.createArrayOf("text", it.get("p.value").asList().toTypedArray()))
+                baseNode == "Project" && property == "type" ->
+                  updateStatement.setString(1, it.get("n.type").asString())
+                else ->
+                  if (property in props) {
+                    updateStatement.setBoolean(1, false)
+                  } else
+                  return@forEach
+              }
               updateStatement.setString(2, it.get("n.id").asString())
               updateStatement.addBatch()
             }
@@ -210,6 +1403,17 @@ class Neo4j2(
         table = "common.files",
         column = "directory",
         baseNodeToPlaceInColumn = "Directory",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Directory",
+        type = "parent",
+        toBaseNode = "Directory",
+        table = "common.directories",
+        column = "parent",
+        baseNodeToPlaceInColumn = "Directory"
       )
     )
 
@@ -282,6 +1486,17 @@ class Neo4j2(
     queue.offer(
       RelationshipCreate(
         fromBaseNode = "Project",
+        type = "owningOrganization",
+        toBaseNode = "Organization",
+        table = "sc.projects",
+        column = "owning_organization",
+        baseNodeToPlaceInColumn = "Organization"
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Project",
         type = "budget",
         toBaseNode = "Budget",
         table = "sc.budgets",
@@ -331,6 +1546,17 @@ class Neo4j2(
         table = "sc.projects",
         column = "field_region",
         baseNodeToPlaceInColumn = "FieldRegion",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "FieldRegion",
+        type = "zone",
+        toBaseNode = "FieldZone",
+        table = "sc.field_regions",
+        column = "field_zone",
+        baseNodeToPlaceInColumn = "FieldZone"
       )
     )
 
@@ -391,12 +1617,34 @@ class Neo4j2(
 
     queue.offer(
       RelationshipCreate(
+        fromBaseNode = "LanguageEngagement",
+        type = "product",
+        toBaseNode = "Product",
+        table = "sc.products",
+        column = "engagement",
+        baseNodeToPlaceInColumn = "LanguageEngagement"
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
         fromBaseNode = "Partner",
         type = "partner",
         toBaseNode = "Partnership",
         table = "sc.partnerships",
         column = "partner",
         baseNodeToPlaceInColumn = "Partner",
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Partner",
+        type = "organization",
+        toBaseNode = "Organization",
+        table = "sc.partners",
+        column = "organization",
+        baseNodeToPlaceInColumn = "Organization"
       )
     )
 
@@ -604,7 +1852,7 @@ class Neo4j2(
 
       val updateStatement: PreparedStatement = conn.prepareStatement(
         """
-        update $tableName set $column = common.uuid_generate_v5(common.uuid_ns_url(), ?) where id = common.uuid_generate_v5(common.uuid_ns_url(), ?);
+        update $tableName set $column = public.uuid_generate_v5(public.uuid_ns_url(), ?) where id = public.uuid_generate_v5(public.uuid_ns_url(), ?);
       """.trimIndent()
       )
 
@@ -650,7 +1898,7 @@ class Neo4j2(
 
     queue.offer(BaseNodeCreate("Organization", "common.organizations"))
     queue.offer(BaseNodeCreate("Organization", "sc.organizations"))
-    queue.offer(BaseNodeCreate("Organization", "sc.partners"))
+    queue.offer(BaseNodeCreate("Partner", "sc.partners"))
 
     queue.offer(BaseNodeCreate("EthnologueLanguage", "sc.ethnologue"))
     queue.offer(BaseNodeCreate("Language", "sc.languages"))
@@ -667,7 +1915,7 @@ class Neo4j2(
     queue.offer(BaseNodeCreate("LanguageEngagement", "sc.language_engagements"))
     queue.offer(BaseNodeCreate("InternshipEngagement", "sc.internship_engagements"))
     queue.offer(BaseNodeCreate("Budget", "sc.budgets"))
-    queue.offer(BaseNodeCreate("Partner", "sc.partnerships"))
+    queue.offer(BaseNodeCreate("Partnership", "sc.partnerships"))
     queue.offer(BaseNodeCreate("ProjectMember", "sc.project_members"))
     queue.offer(BaseNodeCreate("Product", "sc.products"))
     queue.offer(BaseNodeCreate("Education", "common.education_entries"))
@@ -680,9 +1928,9 @@ class Neo4j2(
     queue.offer(BaseNodeCreate("FieldZone", "sc.field_zones"))
     queue.offer(BaseNodeCreate("FieldRegion", "sc.field_regions"))
     queue.offer(BaseNodeCreate("ScriptureRange", "common.scripture_references"))
-    queue.offer(BaseNodeCreate("Film", "sc.products"))
-    queue.offer(BaseNodeCreate("Story", "sc.products"))
-    queue.offer(BaseNodeCreate("EthnoArt", "sc.products"))
+//    queue.offer(BaseNodeCreate("Film", "sc.products"))
+//    queue.offer(BaseNodeCreate("Story", "sc.products"))
+//    queue.offer(BaseNodeCreate("EthnoArt", "sc.products"))
 
     val migrationStart = DateTime.now().millis
 
@@ -727,7 +1975,7 @@ class Neo4j2(
       val insertStmt: PreparedStatement = conn.prepareStatement(
         """
         insert into $tableName(id, created_by, modified_by, owning_person, owning_group) 
-        values(common.uuid_generate_v5(common.uuid_ns_url(), ?), '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
+        values(public.uuid_generate_v5(public.uuid_ns_url(), ?), '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
       """.trimIndent()
       )
 
