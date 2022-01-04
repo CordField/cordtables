@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-partnerships/list")
+    @PostMapping("sc/partnerships/list")
     @ResponseBody
     fun listHandler(@RequestBody req:ScPartnershipsListRequest): ScPartnershipsListResponse {
         var data: MutableList<partnership> = mutableListOf()
@@ -78,23 +78,23 @@ class List(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
 
-                var project: Int? = jdbcResult.getInt("project")
+                var project: String? = jdbcResult.getString("project")
                 if (jdbcResult.wasNull()) project = null
 
-                var partner: Int? = jdbcResult.getInt("partner")
+                var partner: String? = jdbcResult.getString("partner")
                 if (jdbcResult.wasNull()) partner = null
 
-                var change_to_plan: Int? = jdbcResult.getInt("change_to_plan")
+                var change_to_plan: String? = jdbcResult.getString("change_to_plan")
                 if (jdbcResult.wasNull()) change_to_plan = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
 
-                var agreement: Int? = jdbcResult.getInt("agreement")
+                var agreement: String? = jdbcResult.getString("agreement")
                 if (jdbcResult.wasNull()) agreement = null
 
 
@@ -102,7 +102,7 @@ class List(
 
 
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
@@ -111,13 +111,13 @@ class List(
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(

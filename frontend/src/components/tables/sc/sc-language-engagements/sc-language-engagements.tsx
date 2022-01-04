@@ -5,16 +5,15 @@ import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
 
-
-
 class CreateLanguageEngagementExRequest {
   token: string;
   languageEngagement: {
-    neo4j_id: string;
-    project: number;
-    ethnologue: number;
-    change_to_plan: number;
+    project: string;
+    ethnologue: string;
+    change_to_plan: string;
     active: boolean;
+    ceremony: string;
+    is_open_to_investor_visit: boolean;
     communications_complete_date: string;
     complete_date: string;
     disbursement_complete_date: string;
@@ -24,15 +23,18 @@ class CreateLanguageEngagementExRequest {
     is_first_scripture: boolean;
     is_luke_partnership: boolean;
     is_sent_printing: boolean;
-    last_reactivated_at: string; 
-    paratext_registry: string; 
-    periodic_reports_directory: number; 
+    last_suspended_at: string;
+    last_reactivated_at: string;
+    paratext_registry: string;
+    periodic_reports_directory: string;
     pnp: string;
-    pnp_file: number;
+    pnp_file: string;
     product_engagement_tag: string;
     start_date: string;
     start_date_override: string;
     status: string;
+    status_modified_at: string;
+    historic_goal: string;
   };
 }
 class CreateLanguageEngagementExResponse extends GenericResponse {
@@ -48,12 +50,11 @@ class ScLanguageEngagementListResponse {
   languageEngagements: ScLanguageEngagement[];
 }
 
-
 class ScLanguageEngagementUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScLanguageEngagementUpdateResponse {
@@ -62,12 +63,12 @@ class ScLanguageEngagementUpdateResponse {
 }
 
 class DeleteLanguageEngagementExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteLanguageEngagementExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -76,14 +77,14 @@ class DeleteLanguageEngagementExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScLanguageEngagements {
-
   @State() languageEngagementsResponse: ScLanguageEngagementListResponse;
 
-  newNeo4j_id: string;
-  newProject: number;
-  newEthnologue: number;
-  newChange_to_plan: number;
+  newProject: string;
+  newEthnologue: string;
+  newChange_to_plan: string;
   newActive: boolean;
+  newCeremony: string;
+  newIs_open_to_investor_visit: boolean;
   newCommunications_complete_date: string;
   newComplete_date: string;
   newDisbursement_complete_date: string;
@@ -93,18 +94,21 @@ export class ScLanguageEngagements {
   newIs_first_scripture: boolean;
   newIs_luke_partnership: boolean;
   newIs_sent_printing: boolean;
-  newLast_reactivated_at: string; 
-  newParatext_registry: string; 
-  newPeriodic_reports_directory: number; 
+  newLast_suspended_at: string;
+  newLast_reactivated_at: string;
+  newParatext_registry: string;
+  newPeriodic_reports_directory: string;
   newPnp: string;
-  newPnp_file: number;
+  newPnp_file: string;
   newProduct_engagement_tag: string;
   newStart_date: string;
   newStart_date_override: string;
   newStatus: string;
- 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScLanguageEngagementUpdateRequest, ScLanguageEngagementUpdateResponse>('sc-language-engagements/update-read', {
+  newStatus_modified_at: string;
+  newHistoric_goal: string;
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScLanguageEngagementUpdateRequest, ScLanguageEngagementUpdateResponse>('sc/language-engagements/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -114,7 +118,12 @@ export class ScLanguageEngagements {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.languageEngagementsResponse = { error: ErrorType.NoError, languageEngagements: this.languageEngagementsResponse.languageEngagements.map(languageEngagement => (languageEngagement.id === id ? updateResponse.languageEngagement : languageEngagement)) };
+      this.languageEngagementsResponse = {
+        error: ErrorType.NoError,
+        languageEngagements: this.languageEngagementsResponse.languageEngagements.map(languageEngagement =>
+          languageEngagement.id === id ? updateResponse.languageEngagement : languageEngagement,
+        ),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -124,7 +133,7 @@ export class ScLanguageEngagements {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteLanguageEngagementExRequest, DeleteLanguageEngagementExResponse>('sc-language-engagements/delete', {
+    const deleteResponse = await fetchAs<DeleteLanguageEngagementExRequest, DeleteLanguageEngagementExResponse>('sc/language-engagements/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -139,7 +148,7 @@ export class ScLanguageEngagements {
   };
 
   async getList() {
-    this.languageEngagementsResponse = await fetchAs<ScLanguageEngagementListRequest, ScLanguageEngagementListResponse>('sc-language-engagements/list', {
+    this.languageEngagementsResponse = await fetchAs<ScLanguageEngagementListRequest, ScLanguageEngagementListResponse>('sc/language-engagements/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -149,12 +158,6 @@ export class ScLanguageEngagements {
   //     token: globals.globalStore.state.token,
   //   });
   // }
-
-
-
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
 
   projectChange(event) {
     this.newProject = event.target.value;
@@ -170,6 +173,14 @@ export class ScLanguageEngagements {
 
   activeChange(event) {
     this.newActive = event.target.value;
+  }
+
+  ceremonyChange(event) {
+    this.newCeremony = event.target.value;
+  }
+
+  is_open_to_investor_visitChange(event) {
+    this.newIs_open_to_investor_visit = event.target.value;
   }
 
   communications_complete_dateChange(event) {
@@ -208,6 +219,10 @@ export class ScLanguageEngagements {
     this.newIs_sent_printing = event.target.value;
   }
 
+  last_suspended_atChange(event) {
+    this.newLast_suspended_at = event.target.value;
+  }
+
   last_reactivated_atChange(event) {
     this.newLast_reactivated_at = event.target.value;
   }
@@ -244,18 +259,27 @@ export class ScLanguageEngagements {
     this.newStatus = event.target.value;
   }
 
+  status_modified_atChange(event) {
+    this.newStatus_modified_at = event.target.value;
+  }
+
+  historic_goalChange(event) {
+    this.newHistoric_goal = event.target.value;
+  }
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateLanguageEngagementExRequest, CreateLanguageEngagementExResponse>('sc-language-engagements/create-read', {
+    const createResponse = await fetchAs<CreateLanguageEngagementExRequest, CreateLanguageEngagementExResponse>('sc/language-engagements/create-read', {
       token: globals.globalStore.state.token,
       languageEngagement: {
-        neo4j_id: this.newNeo4j_id,
         project: this.newProject,
         ethnologue: this.newEthnologue,
         change_to_plan: this.newChange_to_plan,
         active: this.newActive,
+        ceremony: this.newCeremony,
+        is_open_to_investor_visit: this.newIs_open_to_investor_visit,
         communications_complete_date: this.newCommunications_complete_date,
         complete_date: this.newComplete_date,
         disbursement_complete_date: this.newDisbursement_complete_date,
@@ -265,6 +289,7 @@ export class ScLanguageEngagements {
         is_first_scripture: this.newIs_first_scripture,
         is_luke_partnership: this.newIs_luke_partnership,
         is_sent_printing: this.newIs_sent_printing,
+        last_suspended_at: this.newLast_reactivated_at,
         last_reactivated_at: this.newLast_reactivated_at,
         paratext_registry: this.newParatext_registry,
         periodic_reports_directory: this.newPeriodic_reports_directory,
@@ -274,6 +299,8 @@ export class ScLanguageEngagements {
         start_date: this.newStart_date,
         start_date_override: this.newStart_date_override,
         status: this.newStatus,
+        status_modified_at: this.newStatus_modified_at,
+        historic_goal: this.newHistoric_goal,
       },
     });
 
@@ -290,37 +317,29 @@ export class ScLanguageEngagements {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
 
-
-    {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
     {
       field: 'project',
       displayName: 'Project',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'ethnologue',
       displayName: 'Ethnologue',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'change_to_plan',
       displayName: 'Change To Plan',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -330,8 +349,26 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
+      ],
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'ceremony',
+      displayName: 'Ceremony',
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'is_open_to_investor_visit',
+      displayName: 'Is Open to Investor Visit',
+      width: 200,
+      editable: true,
+      selectOptions: [
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -383,8 +420,8 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -394,8 +431,8 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -405,9 +442,16 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'last_suspended_at',
+      displayName: 'last_suspended_at',
+      width: 200,
+      editable: true,
       updateFn: this.handleUpdate,
     },
     {
@@ -420,28 +464,28 @@ export class ScLanguageEngagements {
     {
       field: 'paratext_registry',
       displayName: 'Paratext Registry',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'periodic_reports_directory',
       displayName: 'Periodic Reports Directory',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'pnp',
       displayName: 'PNP',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'pnp_file',
       displayName: 'PNP File',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -451,9 +495,9 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -477,10 +521,38 @@ export class ScLanguageEngagements {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'InDevelopment', value: 'InDevelopment' },
+        { display: 'DidNotDevelop', value: 'DidNotDevelop' },
+        { display: 'Active', value: 'Active' },
+        { display: 'DiscussingTermination', value: 'DiscussingTermination' },
+        { display: 'DiscussingReactivation', value: 'DiscussingReactivation' },
+        { display: 'DiscussingChangeToPlan', value: 'DiscussingChangeToPlan' },
+        { display: 'DiscussingSuspension', value: 'DiscussingSuspension' },
+        { display: 'FinalizingCompletion', value: 'FinalizingCompletion' },
+        { display: 'ActiveChangedPlan', value: 'ActiveChangedPlan' },
+        { display: 'Suspended', value: 'Suspended' },
+        { display: 'Terminated', value: 'Terminated' },
+        { display: 'Completed', value: 'Completed' },
+        { display: 'Converted', value: 'Converted' },
+        { display: 'Unapproved', value: 'Unapproved' },
+        { display: 'Transferred', value: 'Transferred' },
+        { display: 'NotRenewed', value: 'NotRenewed' },
+        { display: 'Rejected', value: 'Rejected' },
       ],
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'status_modified_at',
+      displayName: 'Status Modified At',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'historic_goal',
+      displayName: 'Historic Goal',
+      width: 200,
+      editable: true,
       updateFn: this.handleUpdate,
     },
     {
@@ -528,7 +600,6 @@ export class ScLanguageEngagements {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -541,33 +612,21 @@ export class ScLanguageEngagements {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
-
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="neo4j_id">neo4j_id
-                </label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
-              </span>
-            </div>
-
             <div id="project-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="project">Project</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="project" name="project" onInput={event => this.projectChange(event)} />
+                <input type="text" id="project" name="project" onInput={event => this.projectChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="ethnologue-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="ethnologue">Ethnologue</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
+                <input type="text" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
               </span>
             </div>
 
@@ -576,9 +635,9 @@ export class ScLanguageEngagements {
                 <label htmlFor="change_to_plan">Change To Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+                <input type="text" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="active-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -587,8 +646,38 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>True</option>
-                   <option value="false" selected={this.newActive === false}>False</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
+                </select>
+              </span>
+            </div>
+
+            <div id="ceremony-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="ceremony">Ceremony</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="ceremony" name="ceremony" onInput={event => this.ceremonyChange(event)} />
+              </span>
+            </div>
+
+            <div id="is_open_to_investor_visit-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="is_open_to_investor_visit">Is open to investor visit</label>
+              </span>
+              <span class="form-thing">
+                <select id="is_open_to_investor_visit" name="is_open_to_investor_visit" onInput={event => this.is_open_to_investor_visitChange(event)}>
+                  <option value="">Select Active</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
                 </select>
               </span>
             </div>
@@ -600,7 +689,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="communications_complete_date" name="communications_complete_date" onInput={event => this.communications_complete_dateChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="complete_date-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -618,7 +707,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="disbursement_complete_date" name="disbursement_complete_date" onInput={event => this.disbursement_complete_dateChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="end_date-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -636,7 +725,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="end_date_override" name="end_date_override" onInput={event => this.end_date_overrideChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="initial_end_date-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -654,11 +743,15 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="is_first_scripture" name="is_first_scripture" onInput={event => this.is_first_scriptureChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newIs_first_scripture === true}>True</option>
-                   <option value="false" selected={this.newIs_first_scripture === false}>False</option>
+                  <option value="true" selected={this.newIs_first_scripture === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newIs_first_scripture === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
 
             <div id="is_luke_partnership-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -667,8 +760,12 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="is_luke_partnership" name="is_luke_partnership" onInput={event => this.is_luke_partnershipChange(event)}>
                   <option value="">Select Is Luke Partnership</option>
-                  <option value="true" selected={this.newIs_luke_partnership === true}>True</option>
-                   <option value="false" selected={this.newIs_luke_partnership === false}>False</option>
+                  <option value="true" selected={this.newIs_luke_partnership === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newIs_luke_partnership === false}>
+                    False
+                  </option>
                 </select>
               </span>
             </div>
@@ -680,11 +777,24 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="is_sent_printing" name="is_sent_printing" onInput={event => this.is_sent_printingChange(event)}>
                   <option value="">Select Is Sent Printing</option>
-                  <option value="true" selected={this.newIs_sent_printing === true}>True</option>
-                   <option value="false" selected={this.newIs_sent_printing === false}>False</option>
+                  <option value="true" selected={this.newIs_sent_printing === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newIs_sent_printing === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
+
+            <div id="last_suspended_at-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="last_suspended_at">Last Suspended At</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="last_suspended_at" name="last_suspended_at" onInput={event => this.last_suspended_atChange(event)} />
+              </span>
+            </div>
 
             <div id="last_reactivated_at-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -702,7 +812,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="paratext_registry" name="paratext_registry" onInput={event => this.paratext_registryChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="periodic_reports_directory-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -720,7 +830,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="pnp" name="pnp" onInput={event => this.pnpChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="pnp_file-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -738,12 +848,18 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="product_engagement_tag" name="product_engagement_tag" onInput={event => this.product_engagement_tagChange(event)}>
                   <option value="">Select Product Engagement Tag</option>
-                  <option value="A" selected={this.newProduct_engagement_tag === 'A'}>A</option>
-                   <option value="B" selected={this.newProduct_engagement_tag === 'B'}>B</option>
-                   <option value="C" selected={this.newProduct_engagement_tag === 'C'}>C</option>
+                  <option value="A" selected={this.newProduct_engagement_tag === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newProduct_engagement_tag === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newProduct_engagement_tag === 'C'}>
+                    C
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
 
             <div id="start_date-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -761,7 +877,7 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <input type="text" id="start_date_override" name="start_date_override" onInput={event => this.start_date_overrideChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="status-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -770,14 +886,78 @@ export class ScLanguageEngagements {
               <span class="form-thing">
                 <select id="status" name="status" onInput={event => this.statusChange(event)}>
                   <option value="">Select Status</option>
-                  <option value="A" selected={this.newStatus === 'A'}>A</option>
-                   <option value="B" selected={this.newStatus === 'B'}>B</option>
-                   <option value="C" selected={this.newStatus === 'C'}>C</option>
+                  <option value="InDevelopment" selected={this.newStatus === 'InDevelopment'}>
+                    InDevelopment
+                  </option>
+                  <option value="DidNotDevelop" selected={this.newStatus === 'DidNotDevelop'}>
+                    DidNotDevelop
+                  </option>
+                  <option value="Active" selected={this.newStatus === 'Active'}>
+                    Active
+                  </option>
+                  <option value="DiscussingTermination" selected={this.newStatus === 'DiscussingTermination'}>
+                    DiscussingTermination
+                  </option>
+                  <option value="DiscussingReactivation" selected={this.newStatus === 'DiscussingReactivation'}>
+                    DiscussingReactivation
+                  </option>
+                  <option value="DiscussingChangeToPlan" selected={this.newStatus === 'DiscussingChangeToPlan'}>
+                    DiscussingChangeToPlan
+                  </option>
+                  <option value="DiscussingSuspension" selected={this.newStatus === 'DiscussingSuspension'}>
+                    DiscussingSuspension
+                  </option>
+                  <option value="FinalizingCompletion" selected={this.newStatus === 'FinalizingCompletion'}>
+                    FinalizingCompletion
+                  </option>
+                  <option value="ActiveChangedPlan" selected={this.newStatus === 'ActiveChangedPlan'}>
+                    ActiveChangedPlan
+                  </option>
+                  <option value="Suspended" selected={this.newStatus === 'Suspended'}>
+                    Suspended
+                  </option>
+                  <option value="Terminated" selected={this.newStatus === 'Terminated'}>
+                    Terminated
+                  </option>
+                  <option value="Completed" selected={this.newStatus === 'Completed'}>
+                    Completed
+                  </option>
+                  <option value="Converted" selected={this.newStatus === 'Converted'}>
+                    Converted
+                  </option>
+                  <option value="Unapproved" selected={this.newStatus === 'Unapproved'}>
+                    Unapproved
+                  </option>
+                  <option value="Transferred" selected={this.newStatus === 'Transferred'}>
+                    Transferred
+                  </option>
+                  <option value="NotRenewed" selected={this.newStatus === 'NotRenewed'}>
+                    NotRenewed
+                  </option>
+                  <option value="Rejected" selected={this.newStatus === 'Rejected'}>
+                    Rejected
+                  </option>
                 </select>
               </span>
-            </div> 
-            
-            
+            </div>
+
+            <div id="status_modified_at-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="status_modified_at">Status Modified At</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="status_modified_at" name="status_modified_at" onInput={event => this.status_modified_atChange(event)} />
+              </span>
+            </div>
+
+            <div id="historic_goal-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="historic_goal">Historic Goal</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="historic_goal" name="historic_goal" onInput={event => this.historic_goalChange(event)} />
+              </span>
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -787,5 +967,4 @@ export class ScLanguageEngagements {
       </Host>
     );
   }
-
 }

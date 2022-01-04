@@ -8,10 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateStageNotificationExRequest {
   token: string;
   stageNotification: {
-    stage: number;
+    stage: string;
     on_enter: boolean;
     on_exit: boolean;
-    person: number;
+    person: string;
   };
 }
 class CreateStageNotificationExResponse extends GenericResponse {
@@ -27,12 +27,11 @@ class CommonStageNotificationListResponse {
   stageNotifications: CommonStageNotification[];
 }
 
-
 class CommonStageNotificationUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonStageNotificationUpdateResponse {
@@ -41,12 +40,12 @@ class CommonStageNotificationUpdateResponse {
 }
 
 class DeleteStageNotificationExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteStageNotificationExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,16 +54,15 @@ class DeleteStageNotificationExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonStageNotifications {
-
   @State() stageNotificationsResponse: CommonStageNotificationListResponse;
 
-  newStage: number;
-    newOn_enter: boolean;
-    newOn_exit: boolean;
-    newPerson: number;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonStageNotificationUpdateRequest, CommonStageNotificationUpdateResponse>('common-stage-notifications/update-read', {
+  newStage: string;
+  newOn_enter: boolean;
+  newOn_exit: boolean;
+  newPerson: string;
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonStageNotificationUpdateRequest, CommonStageNotificationUpdateResponse>('common/stage-notifications/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -74,7 +72,12 @@ export class CommonStageNotifications {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.stageNotificationsResponse = { error: ErrorType.NoError, stageNotifications: this.stageNotificationsResponse.stageNotifications.map(stageNotification => (stageNotification.id === id ? updateResponse.stageNotification : stageNotification)) };
+      this.stageNotificationsResponse = {
+        error: ErrorType.NoError,
+        stageNotifications: this.stageNotificationsResponse.stageNotifications.map(stageNotification =>
+          stageNotification.id === id ? updateResponse.stageNotification : stageNotification,
+        ),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -84,7 +87,7 @@ export class CommonStageNotifications {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteStageNotificationExRequest, DeleteStageNotificationExResponse>('common-stage-notifications/delete', {
+    const deleteResponse = await fetchAs<DeleteStageNotificationExRequest, DeleteStageNotificationExResponse>('common/stage-notifications/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -99,17 +102,10 @@ export class CommonStageNotifications {
   };
 
   async getList() {
-    this.stageNotificationsResponse = await fetchAs<CommonStageNotificationListRequest, CommonStageNotificationListResponse>('common-stage-notifications/list', {
+    this.stageNotificationsResponse = await fetchAs<CommonStageNotificationListRequest, CommonStageNotificationListResponse>('common/stage-notifications/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   stageChange(event) {
     this.newStage = event.target.value;
@@ -131,7 +127,7 @@ export class CommonStageNotifications {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateStageNotificationExRequest, CreateStageNotificationExResponse>('common-stage-notifications/create-read', {
+    const createResponse = await fetchAs<CreateStageNotificationExRequest, CreateStageNotificationExResponse>('common/stage-notifications/create-read', {
       token: globals.globalStore.state.token,
       stageNotification: {
         stage: this.newStage,
@@ -154,7 +150,7 @@ export class CommonStageNotifications {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -166,27 +162,27 @@ export class CommonStageNotifications {
       updateFn: this.handleUpdate,
     },
     {
-        field: 'on_enter',
-        displayName: 'On Enter',
-        width: 200,
-        editable: true,
-        selectOptions: [
-            {display: 'True', value: 'true'},
-            {display: 'False', value: 'false'},
-        ],
-        updateFn: this.handleUpdate,
-      },
-      {
-        field: 'on_exit',
-        displayName: 'On Exit',
-        width: 200,
-        editable: true,
-        selectOptions: [
-            {display: 'True', value: 'true'},
-            {display: 'False', value: 'false'},
-        ],
-        updateFn: this.handleUpdate,
-      },
+      field: 'on_enter',
+      displayName: 'On Enter',
+      width: 200,
+      editable: true,
+      selectOptions: [
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
+      ],
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'on_exit',
+      displayName: 'On Exit',
+      width: 200,
+      editable: true,
+      selectOptions: [
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
+      ],
+      updateFn: this.handleUpdate,
+    },
     {
       field: 'person',
       displayName: 'person',
@@ -239,7 +235,6 @@ export class CommonStageNotifications {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -252,13 +247,12 @@ export class CommonStageNotifications {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="stage-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="stage">Stage</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="stage" name="stage" onInput={event => this.stageChange(event)} />
+                <input type="text" id="stage" name="stage" onInput={event => this.stageChange(event)} />
               </span>
             </div>
 
@@ -268,12 +262,16 @@ export class CommonStageNotifications {
               </span>
               <span class="form-thing">
                 <select id="on_enter" name="on_enter" onInput={event => this.on_enterChange(event)}>
-                    <option value="">Select On Enter</option>
-                    <option value="true" selected={this.newOn_enter === true}>True</option>
-                    <option value="false" selected={this.newOn_enter === false}>False</option>
+                  <option value="">Select On Enter</option>
+                  <option value="true" selected={this.newOn_enter === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newOn_enter === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div>   
+            </div>
 
             <div id="on_exit-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -281,12 +279,16 @@ export class CommonStageNotifications {
               </span>
               <span class="form-thing">
                 <select id="on_exit" name="on_exit" onInput={event => this.on_exitChange(event)}>
-                    <option value="">Select On Exit</option>
-                    <option value="true" selected={this.newOn_exit === true}>True</option>
-                    <option value="false" selected={this.newOn_exit === false}>False</option>
+                  <option value="">Select On Exit</option>
+                  <option value="true" selected={this.newOn_exit === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newOn_exit === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div>  
+            </div>
 
             <div id="person-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -295,8 +297,7 @@ export class CommonStageNotifications {
               <span class="form-thing">
                 <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -306,5 +307,4 @@ export class CommonStageNotifications {
       </Host>
     );
   }
-
 }

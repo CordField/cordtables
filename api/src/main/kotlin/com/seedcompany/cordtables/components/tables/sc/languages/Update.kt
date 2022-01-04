@@ -14,7 +14,7 @@ import javax.sql.DataSource
 
 data class ScLanguagesUpdateRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
         val column: String? = null,
         val value: Any? = null,
 )
@@ -33,7 +33,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-languages/update")
+    @PostMapping("sc/languages/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScLanguagesUpdateRequest): ScLanguagesUpdateResponse {
 
@@ -140,6 +140,7 @@ class Update(
                         column = "ethnologue",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
 

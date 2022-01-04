@@ -16,47 +16,48 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
 data class AdminGroupRowAccessCreateRequest(
-    val token: String? = null,
-    val groupRowAccess: groupRowAccessInput,
+  val token: String? = null,
+  val groupRowAccess: groupRowAccessInput,
 )
 
 data class AdminGroupRowAccessCreateResponse(
-    val error: ErrorType,
-    val id: Int? = null,
+  val error: ErrorType,
+  val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("AdminGroupRowAccessCreate")
 class Create(
-    @Autowired
-    val util: Utility,
+  @Autowired
+  val util: Utility,
 
-    @Autowired
-    val ds: DataSource,
+  @Autowired
+  val ds: DataSource,
 
-    @Autowired
-    val update: Update,
+  @Autowired
+  val update: Update,
 
-    @Autowired
-    val read: Read,
+  @Autowired
+  val read: Read,
 ) {
-    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+  val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin-group-row-access/create")
-    @ResponseBody
-    fun createHandler(@RequestBody req: AdminGroupRowAccessCreateRequest): AdminGroupRowAccessCreateResponse {
+  @PostMapping("admin/group-row-access/create")
+  @ResponseBody
+  fun createHandler(@RequestBody req: AdminGroupRowAccessCreateRequest): AdminGroupRowAccessCreateResponse {
 
-        // if (req.groupRowAccess.name == null) return AdminGroupRowAccessCreateResponse(error = ErrorType.InputMissingToken, null)
+    if (req.token == null) return AdminGroupRowAccessCreateResponse(ErrorType.InputMissingToken)
+    if (!util.isAdmin(req.token)) return AdminGroupRowAccessCreateResponse(ErrorType.AdminOnly)
+    // if (req.groupRowAccess.name == null) return AdminGroupRowAccessCreateResponse(error = ErrorType.InputMissingToken, null)
 
-
-        // create row with required fields, use id to update cells afterwards one by one
-        val id = jdbcTemplate.queryForObject(
-            """
+    // create row with required fields, use id to update cells afterwards one by one
+    val id = jdbcTemplate.queryForObject(
+      """
             insert into admin.group_row_access(group_id, table_name, row,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::admin.table_name,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -72,22 +73,23 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
-            req.groupRowAccess.group_id,
-            req.groupRowAccess.table_name,
-            req.groupRowAccess.row,
-            req.token,
-            req.token,
-            req.token,
-        )
+      String::class.java,
+      req.groupRowAccess.group_id,
+      req.groupRowAccess.table_name,
+      req.groupRowAccess.row,
+      req.token,
+      req.token,
+      req.token,
+      util.adminGroupId
+    )
 
 //        req.language.id = id
 
-        return AdminGroupRowAccessCreateResponse(error = ErrorType.NoError, id = id)
-    }
+    return AdminGroupRowAccessCreateResponse(error = ErrorType.NoError, id = id)
+  }
 
 }

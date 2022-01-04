@@ -7,15 +7,15 @@ class GroupsGlobalRoleMembershipsRequest {
 }
 
 class GroupsGlobalRoleMembershipsRow {
-  id: number;
-  globalRole: number;
-  person: number;
+  id: string;
+  globalRole: string;
+  person: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
-  owningPerson: number;
-  owningGroup: number;
+  modifiedBy: string;
+  owningPerson: string;
+  owningGroup: string;
 }
 
 class GlobalRoleMembershipsListResponse {
@@ -25,9 +25,9 @@ class GlobalRoleMembershipsListResponse {
 
 class GlobalRoleMembershipCreateRequest {
   token: string;
-  role: number;
-  person: number;
-  owning_group: number;
+  role: string;
+  person: string;
+  owning_group: string;
 }
 
 class GroupCreateResponse {
@@ -36,10 +36,10 @@ class GroupCreateResponse {
 
 class GroupUpdateRequest {
   token: string;
-  role?: number;
-  person?: number;
-  owning_group?: number;
-  id: number;
+  role?: string;
+  person?: string;
+  owning_group?: string;
+  id: string;
 }
 
 class GroupUpdateResponse {
@@ -48,7 +48,7 @@ class GroupUpdateResponse {
 
 class GroupDeleteRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class GroupDeleteResponse {
@@ -67,9 +67,9 @@ export class GlobalRoleMemberships {
   createResponse: GroupCreateResponse;
   deleteResponse: GroupDeleteResponse;
 
-  newGlobalRole: number;
-  newPerson: number;
-  newOwningGroup: number;
+  newGlobalRole: string;
+  newPerson: string;
+  newOwningGroup: string;
 
   editableKeys = ['name'];
 
@@ -115,7 +115,7 @@ export class GlobalRoleMemberships {
     }
   };
 
-  updateGlobalRole = async (id: number, columnName: string, value: number): Promise<boolean> => {
+  updateGlobalRole = async (id: string, columnName: string, value: string): Promise<boolean> => {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groups/update', { token: globals.globalStore.state.token, role: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
@@ -127,7 +127,7 @@ export class GlobalRoleMemberships {
     }
   };
 
-  clickRemoveRowIcon = async (value: number): Promise<boolean> => {
+  clickRemoveRowIcon = async (value: string): Promise<boolean> => {
     this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groups/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {

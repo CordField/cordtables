@@ -38,9 +38,12 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("admin-role-column-grants/create-read")
+    @PostMapping("admin/role-column-grants/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: AdminRoleColumnGrantsCreateReadRequest): AdminRoleColumnGrantsCreateReadResponse {
+
+      if (req.token == null) return AdminRoleColumnGrantsCreateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleColumnGrantsCreateReadResponse(ErrorType.AdminOnly)
 
         val createResponse = create.createHandler(
             AdminRoleColumnGrantsCreateRequest(

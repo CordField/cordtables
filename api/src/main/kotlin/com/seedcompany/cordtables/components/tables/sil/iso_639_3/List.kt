@@ -43,7 +43,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sil-iso-639-3/list")
+    @PostMapping("sil/iso-639-3/list")
     @ResponseBody
     fun listHandler(@RequestBody req:SilIso6393ListRequest): SilIso6393ListResponse {
         var data: MutableList<iso6393> = mutableListOf()
@@ -86,9 +86,8 @@ class List(
         val size = jdbcResult.size
         if (jdbcResult.errorType == ErrorType.NoError){
             while (resultSet!!.next()) {
-
-                var id: Int? = resultSet!!.getInt("id")
-                if (resultSet!!.wasNull()) id = null
+                var id: String? = resultSet.getString("id")
+                if (resultSet.wasNull()) id = null
 
                 var _id: String? = resultSet!!.getString("_id")
                 if (resultSet!!.wasNull()) _id = null
@@ -114,23 +113,23 @@ class List(
                 var comment: String? = resultSet!!.getString("comment")
                 if (resultSet!!.wasNull()) comment = null
 
-                var created_by: Int? = resultSet!!.getInt("created_by")
-                if (resultSet!!.wasNull()) created_by = null
-
                 var created_at: String? = resultSet!!.getString("created_at")
                 if (resultSet!!.wasNull()) created_at = null
 
+                var created_by: String? = resultSet.getString("created_by")
+                if (resultSet.wasNull()) created_by = null
+
                 var modified_at: String? = resultSet!!.getString("modified_at")
                 if (resultSet!!.wasNull()) modified_at = null
+                
+                var modified_by: String? = resultSet.getString("modified_by")
+                if (resultSet.wasNull()) modified_by = null
 
-                var modified_by: Int? = resultSet!!.getInt("modified_by")
-                if (resultSet!!.wasNull()) modified_by = null
+                var owning_person: String? = resultSet.getString("owning_person")
+                if (resultSet.wasNull()) owning_person = null
 
-                var owning_person: Int? = resultSet!!.getInt("owning_person")
-                if (resultSet!!.wasNull()) owning_person = null
-
-                var owning_group: Int? = resultSet!!.getInt("owning_group")
-                if (resultSet!!.wasNull()) owning_group = null
+                var owning_group: String? = resultSet.getString("owning_group")
+                if (resultSet.wasNull()) owning_group = null
 
                 data.add(
                     iso6393(

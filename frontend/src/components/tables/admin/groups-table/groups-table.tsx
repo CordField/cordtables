@@ -7,14 +7,14 @@ class GroupsListRequest {
 }
 
 class GroupsRow {
-  id: number;
+  id: string;
   name: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
-  owningPerson: number;
-  owningGroup: number;
+  modifiedBy: string;
+  owningPerson: string;
+  owningGroup: string;
 }
 
 class GroupsListResponse {
@@ -34,7 +34,7 @@ class GroupCreateResponse {
 class GroupUpdateRequest {
   token: string;
   name: string;
-  id: number;
+  id: string;
 }
 
 class GroupUpdateResponse {
@@ -43,7 +43,7 @@ class GroupUpdateResponse {
 
 class GroupDeleteRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class GroupDeleteResponse {
@@ -71,7 +71,7 @@ export class CfGroups {
   }
 
   async getList() {
-    this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin-groups/list', { token: globals.globalStore.state.token });
+    this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin/groups/list', { token: globals.globalStore.state.token });
   }
 
   toggleNewForm = () => {
@@ -83,31 +83,31 @@ export class CfGroups {
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('admin-groups/create', { token: globals.globalStore.state.token, name: this.newRowName });
+    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('admin/groups/create', { token: globals.globalStore.state.token, name: this.newRowName });
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin-groups/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin/groups/list', { token: globals.globalStore.state.token });
     } else {
       console.warn('Error creating group');
     }
   };
 
-  updateName = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('admin-groups/update', { token: globals.globalStore.state.token, name: value, id });
+  updateName = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('admin/groups/update', { token: globals.globalStore.state.token, name: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin-groups/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin/groups/list', { token: globals.globalStore.state.token });
       return true;
     } else {
     }
   };
 
-  clickRemoveRowIcon = async (value: number): Promise<boolean> => {
-    this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('admin-groups/delete', { token: globals.globalStore.state.token, id: value });
+  clickRemoveRowIcon = async (value: string): Promise<boolean> => {
+    this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('admin/groups/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin-groups/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin/groups/list', { token: globals.globalStore.state.token });
       return true;
     } else {
       return false;

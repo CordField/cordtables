@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-field-regions/create-read")
+    @PostMapping("sc/field-regions/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: ScFieldRegionsCreateReadRequest): ScFieldRegionsCreateReadResponse {
 

@@ -21,7 +21,7 @@ data class ScGlobalPartnerTransitionsCreateRequest(
 
 data class ScGlobalPartnerTransitionsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-global-partner-transitions/create")
+    @PostMapping("sc/global-partner-transitions/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScGlobalPartnerTransitionsCreateRequest): ScGlobalPartnerTransitionsCreateResponse {
 
@@ -53,7 +53,7 @@ class Create(
             """
             insert into sc.global_partner_transitions(organization, transition_type, effective_date, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::sc.global_partner_transition_options,
                     ?::timestamp,
                     (
@@ -71,17 +71,18 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.globalPartnerTransition.organization,
             req.globalPartnerTransition.transition_type,
             req.globalPartnerTransition.effective_date,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

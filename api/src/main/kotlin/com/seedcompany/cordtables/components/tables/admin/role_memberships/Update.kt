@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.admin.role_memberships
 
-import com.seedcompany.cordtables.components.tables.admin.role_memberships.AdminRoleMembershipsUpdateRequest
-import com.seedcompany.cordtables.components.tables.admin.role_memberships.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.admin.role_memberships.AdminRoleMembershipsUpdateResponse
-import com.seedcompany.cordtables.components.tables.admin.role_memberships.roleMembershipInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class AdminRoleMembershipsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -38,11 +31,13 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("admin-role-memberships/update")
+    @PostMapping("admin/role-memberships/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminRoleMembershipsUpdateRequest): AdminRoleMembershipsUpdateResponse {
 
-        if (req.token == null) return AdminRoleMembershipsUpdateResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminRoleMembershipsUpdateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleMembershipsUpdateResponse(ErrorType.AdminOnly)
+
         if (req.column == null) return AdminRoleMembershipsUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return AdminRoleMembershipsUpdateResponse(ErrorType.MissingId)
 
@@ -54,7 +49,7 @@ class Update(
                     column = "role",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "person" -> {
@@ -64,7 +59,7 @@ class Update(
                     column = "person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_person" -> {
@@ -74,7 +69,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -84,7 +79,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

@@ -36,7 +36,7 @@ class Create(
     val ds: DataSource,
 ) {
 
-    @PostMapping("table/common-scripture-references/create")
+    @PostMapping("common/scripture-references/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScriptureReferenceCreateRequest): ScriptureReferenceCreateResponse {
 
@@ -71,7 +71,7 @@ class Create(
 
                 val insertStatementResult = statement.executeQuery()
                 if (insertStatementResult.next()) {
-                    val id = insertStatementResult.getInt("id")
+                    val id = insertStatementResult.getString("id")
                     insertedScriptureReference = ScriptureReference(
                         id,
                         req.book_start,

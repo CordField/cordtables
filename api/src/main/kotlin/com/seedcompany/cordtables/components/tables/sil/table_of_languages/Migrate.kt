@@ -40,7 +40,7 @@ class Migrate(
     val jdbcTemplate2 = JdbcTemplate(ds)
 
 
-    @PostMapping("migrate/sc-ethnologue")
+    @PostMapping("migrate/sc/ethnologue")
     @ResponseBody
     fun registerHandler() {
         val token = cord.login()

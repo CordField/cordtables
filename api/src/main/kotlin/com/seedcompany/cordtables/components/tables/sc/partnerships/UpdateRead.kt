@@ -17,7 +17,7 @@ import javax.sql.DataSource
 
 data class ScPartnershipsUpdateReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-partnerships/update-read")
+    @PostMapping("sc/partnerships/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScPartnershipsUpdateReadRequest): ScPartnershipsUpdateReadResponse {
 

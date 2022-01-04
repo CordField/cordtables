@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGroupMembershipExRequest {
   token: string;
   groupMembership: {
-    group_id: number;
-    person: number;
+    group_id: string;
+    person: string;
   };
 }
 class CreateGroupMembershipExResponse extends GenericResponse {
@@ -25,12 +25,11 @@ class AdminGroupMembershipListResponse {
   groupMemberships: AdminGroupMembership[];
 }
 
-
 class AdminGroupMembershipUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminGroupMembershipUpdateResponse {
@@ -39,12 +38,12 @@ class AdminGroupMembershipUpdateResponse {
 }
 
 class DeleteGroupMembershipExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGroupMembershipExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -53,14 +52,13 @@ class DeleteGroupMembershipExResponse extends GenericResponse {
   shadow: true,
 })
 export class AdminGroupMemberships {
-
   @State() groupMembershipsResponse: AdminGroupMembershipListResponse;
 
-  newGroup_id: number;
-  newPerson: number;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminGroupMembershipUpdateRequest, AdminGroupMembershipUpdateResponse>('admin-group-memberships/update-read', {
+  newGroup_id: string;
+  newPerson: string;
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<AdminGroupMembershipUpdateRequest, AdminGroupMembershipUpdateResponse>('admin/group-memberships/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -70,7 +68,10 @@ export class AdminGroupMemberships {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.groupMembershipsResponse = { error: ErrorType.NoError, groupMemberships: this.groupMembershipsResponse.groupMemberships.map(groupMembership => (groupMembership.id === id ? updateResponse.groupMembership : groupMembership)) };
+      this.groupMembershipsResponse = {
+        error: ErrorType.NoError,
+        groupMemberships: this.groupMembershipsResponse.groupMemberships.map(groupMembership => (groupMembership.id === id ? updateResponse.groupMembership : groupMembership)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -80,7 +81,7 @@ export class AdminGroupMemberships {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteGroupMembershipExRequest, DeleteGroupMembershipExResponse>('admin-group-memberships/delete', {
+    const deleteResponse = await fetchAs<DeleteGroupMembershipExRequest, DeleteGroupMembershipExResponse>('admin/group-memberships/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -95,17 +96,10 @@ export class AdminGroupMemberships {
   };
 
   async getList() {
-    this.groupMembershipsResponse = await fetchAs<AdminGroupMembershipListRequest, AdminGroupMembershipListResponse>('admin-group-memberships/list', {
+    this.groupMembershipsResponse = await fetchAs<AdminGroupMembershipListRequest, AdminGroupMembershipListResponse>('admin/group-memberships/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   group_idChange(event) {
     this.newGroup_id = event.target.value;
@@ -119,7 +113,7 @@ export class AdminGroupMemberships {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateGroupMembershipExRequest, CreateGroupMembershipExResponse>('admin-group-memberships/create-read', {
+    const createResponse = await fetchAs<CreateGroupMembershipExRequest, CreateGroupMembershipExResponse>('admin/group-memberships/create-read', {
       token: globals.globalStore.state.token,
       groupMembership: {
         group_id: this.newGroup_id,
@@ -136,26 +130,25 @@ export class AdminGroupMemberships {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'group_id',
       displayName: 'Group ID',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'person',
       displayName: 'person',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -204,7 +197,6 @@ export class AdminGroupMemberships {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -217,13 +209,12 @@ export class AdminGroupMemberships {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="group_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="group_id">Group ID</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="director" name="director" onInput={event => this.group_idChange(event)} />
+                <input type="text" id="director" name="director" onInput={event => this.group_idChange(event)} />
               </span>
             </div>
 
@@ -234,8 +225,7 @@ export class AdminGroupMemberships {
               <span class="form-thing">
                 <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -245,5 +235,4 @@ export class AdminGroupMemberships {
       </Host>
     );
   }
-
 }

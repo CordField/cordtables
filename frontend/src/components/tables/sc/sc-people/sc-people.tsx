@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePeopleExRequest {
   token: string;
   people: {
-    neo4j_id: string;
+    id: string;
     skills: string;
     status: string;
   };
@@ -26,12 +26,11 @@ class ScPeopleListResponse {
   peoples: ScPeople[];
 }
 
-
 class ScPeopleUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPeopleUpdateResponse {
@@ -40,12 +39,12 @@ class ScPeopleUpdateResponse {
 }
 
 class DeletePeopleExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePeopleExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,15 +53,13 @@ class DeletePeopleExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScPeoples {
-
   @State() peoplesResponse: ScPeopleListResponse;
-
-  newNeo4j_id: string;
+  newId: string;
   newSkills: string;
   newStatus: string;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScPeopleUpdateRequest, ScPeopleUpdateResponse>('sc-people/update-read', {
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScPeopleUpdateRequest, ScPeopleUpdateResponse>('sc/people/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -82,7 +79,7 @@ export class ScPeoples {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePeopleExRequest, DeletePeopleExResponse>('sc-people/delete', {
+    const deleteResponse = await fetchAs<DeletePeopleExRequest, DeletePeopleExResponse>('sc/people/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,7 +94,7 @@ export class ScPeoples {
   };
 
   async getList() {
-    this.peoplesResponse = await fetchAs<ScPeopleListRequest, ScPeopleListResponse>('sc-people/list', {
+    this.peoplesResponse = await fetchAs<ScPeopleListRequest, ScPeopleListResponse>('sc/people/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -108,9 +105,8 @@ export class ScPeoples {
   //   });
   // }
 
-
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
+  idChange(event) {
+    this.newId = event.target.value;
   }
 
   skillsChange(event) {
@@ -125,10 +121,10 @@ export class ScPeoples {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('sc-people/create-read', {
+    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('sc/people/create-read', {
       token: globals.globalStore.state.token,
       people: {
-        neo4j_id: this.newNeo4j_id,
+        id: this.newId,
         skills: this.newSkills,
         status: this.newStatus,
       },
@@ -147,16 +143,9 @@ export class ScPeoples {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
-    },
-    {
-      field: 'neo4j_id',
-      displayName: 'Neo4j_ ID',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
     },
     {
       field: 'skills',
@@ -217,7 +206,6 @@ export class ScPeoples {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -230,13 +218,12 @@ export class ScPeoples {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            <div id="id-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="neo4j_id">Neo4j ID</label>
+                <label htmlFor="id">ID</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
+                <input type="text" id="id" name="id" onInput={event => this.idChange(event)} />
               </span>
             </div>
 
@@ -257,7 +244,6 @@ export class ScPeoples {
                 <input type="text" id="status" name="status" onInput={event => this.statusChange(event)} />
               </span>
             </div>
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -267,5 +253,4 @@ export class ScPeoples {
       </Host>
     );
   }
-
 }

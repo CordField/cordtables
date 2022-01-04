@@ -12,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonPostsUpdateRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
         val column: String? = null,
         val value: Any? = null,
 )
@@ -31,7 +31,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common-posts/update")
+    @PostMapping("common/posts/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonPostsUpdateRequest): CommonPostsUpdateResponse {
 
@@ -58,7 +58,7 @@ class Update(
                         column = "thread",
                         id = req.id,
                         value = req.value,
-                        cast="::integer"
+                        cast = "::uuid"
                 )
             }
             "owning_person" -> {
@@ -67,7 +67,8 @@ class Update(
                         table = "common.posts",
                         column = "owning_person",
                         id = req.id,
-                        value = req.value
+                        value = req.value,
+                        cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -76,7 +77,8 @@ class Update(
                         table = "common.posts",
                         column = "owning_group",
                         id = req.id,
-                        value = req.value
+                        value = req.value,
+                        cast = "::uuid"
                 )
             }
         }

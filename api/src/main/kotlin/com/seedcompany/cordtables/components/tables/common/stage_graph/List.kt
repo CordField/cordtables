@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-stage-graph/list")
+    @PostMapping("common/stage-graph/list")
     @ResponseBody
     fun listHandler(@RequestBody req:CommonStageGraphListRequest): CommonStageGraphListResponse {
         var data: MutableList<stageGraph> = mutableListOf()
@@ -73,16 +73,16 @@ class List(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var from_stage: Int? = jdbcResult.getInt("from_stage")
+                var from_stage: String? = jdbcResult.getString("from_stage")
                 if (jdbcResult.wasNull()) from_stage = null
 
-                var to_stage: Int? = jdbcResult.getInt("to_stage")
+                var to_stage: String? = jdbcResult.getString("to_stage")
                 if (jdbcResult.wasNull()) to_stage = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
@@ -91,13 +91,13 @@ class List(
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(

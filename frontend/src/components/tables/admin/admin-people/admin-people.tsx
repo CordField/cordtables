@@ -15,13 +15,13 @@ class CreatePeopleExRequest {
     private_last_name: string;
     public_first_name: string;
     public_last_name: string;
-    primary_location: number;
+    primary_location: string;
     private_full_name: string;
     public_full_name: string;
     sensitivity_clearance: string;
     timezone: string;
     title: string;
-    status: string;
+    // status: string;
   };
 }
 class CreatePeopleExResponse extends GenericResponse {
@@ -37,12 +37,11 @@ class AdminPeopleListResponse {
   peoples: AdminPeople[];
 }
 
-
 class AdminPeopleUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminPeopleUpdateResponse {
@@ -51,12 +50,12 @@ class AdminPeopleUpdateResponse {
 }
 
 class DeletePeopleExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePeopleExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -65,7 +64,6 @@ class DeletePeopleExResponse extends GenericResponse {
   shadow: true,
 })
 export class AdminPeoples {
-
   @State() peoplesResponse: AdminPeopleListResponse;
 
   newAbout: string;
@@ -75,16 +73,16 @@ export class AdminPeoples {
   newPrivate_last_name: string;
   newPublic_first_name: string;
   newPublic_last_name: string;
-  newPrimary_location: number;
+  newPrimary_location: string;
   newPrivate_full_name: string;
   newPublic_full_name: string;
   newSensitivity_clearance: string;
   newTimezone: string;
   newTitle: string;
-  newStatus: string;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminPeopleUpdateRequest, AdminPeopleUpdateResponse>('admin-people/update-read', {
+  // newStatus: string;
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<AdminPeopleUpdateRequest, AdminPeopleUpdateResponse>('admin/people/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -104,7 +102,7 @@ export class AdminPeoples {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePeopleExRequest, DeletePeopleExResponse>('admin-people/delete', {
+    const deleteResponse = await fetchAs<DeletePeopleExRequest, DeletePeopleExResponse>('admin/people/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -119,17 +117,10 @@ export class AdminPeoples {
   };
 
   async getList() {
-    this.peoplesResponse = await fetchAs<AdminPeopleListRequest, AdminPeopleListResponse>('admin-people/list', {
+    this.peoplesResponse = await fetchAs<AdminPeopleListRequest, AdminPeopleListResponse>('admin/people/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   aboutChange(event) {
     this.newAbout = event.target.value;
@@ -183,16 +174,15 @@ export class AdminPeoples {
     this.newTitle = event.target.value;
   }
 
-  statusChange(event) {
-    this.newStatus = event.target.value;
-  }
-
+  // statusChange(event) {
+  //   this.newStatus = event.target.value;
+  // }
 
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('admin-people/create-read', {
+    const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('admin/people/create-read', {
       token: globals.globalStore.state.token,
       people: {
         about: this.newAbout,
@@ -208,7 +198,7 @@ export class AdminPeoples {
         sensitivity_clearance: this.newSensitivity_clearance,
         timezone: this.newTimezone,
         title: this.newTitle,
-        status: this.newStatus,
+        // status: this.newStatus,
       },
     });
 
@@ -221,12 +211,11 @@ export class AdminPeoples {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -303,12 +292,12 @@ export class AdminPeoples {
     {
       field: 'sensitivity_clearance',
       displayName: 'Sensitivity Clearance',
-      width:200,
+      width: 200,
       editable: true,
       selectOptions: [
-        {display: "Low", value: "Low"},
-        {display: "Medium", value: "Medium"},
-        {display: "High", value: "High"},
+        { display: 'Low', value: 'Low' },
+        { display: 'Medium', value: 'Medium' },
+        { display: 'High', value: 'High' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -326,13 +315,13 @@ export class AdminPeoples {
       editable: true,
       updateFn: this.handleUpdate,
     },
-    {
-      field: 'status',
-      displayName: 'Status',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
+    // {
+    //   field: 'status',
+    //   displayName: 'Status',
+    //   width: 200,
+    //   editable: true,
+    //   updateFn: this.handleUpdate,
+    // },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -377,7 +366,6 @@ export class AdminPeoples {
     await this.getList();
     // await this.getFilesList();
   }
-
 
   render() {
     return (
@@ -487,10 +475,16 @@ export class AdminPeoples {
               </span>
               <span class="form-thing">
                 <select id="sensitivity_clearance" name="sensitivity_clearance" onInput={event => this.sensitivity_clearanceChange(event)}>
-                    <option value="">Select Sensitivity Clearance</option>
-                    <option value="Low" selected={this.newSensitivity_clearance === "Low"}>Low</option>
-                    <option value="Medium" selected={this.newSensitivity_clearance === "Medium"}>Medium</option>
-                    <option value="High" selected={this.newSensitivity_clearance === "High"}>High</option>
+                  <option value="">Select Sensitivity Clearance</option>
+                  <option value="Low" selected={this.newSensitivity_clearance === 'Low'}>
+                    Low
+                  </option>
+                  <option value="Medium" selected={this.newSensitivity_clearance === 'Medium'}>
+                    Medium
+                  </option>
+                  <option value="High" selected={this.newSensitivity_clearance === 'High'}>
+                    High
+                  </option>
                 </select>
               </span>
             </div>
@@ -513,17 +507,14 @@ export class AdminPeoples {
               </span>
             </div>
 
-            <div id="status-holder" class="form-input-item form-thing">
+            {/* <div id="status-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="status">status</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="status" name="status" onInput={event => this.statusChange(event)} />
               </span>
-            </div>
-
-      
-            
+            </div> */}
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -533,5 +524,4 @@ export class AdminPeoples {
       </Host>
     );
   }
-
 }

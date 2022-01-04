@@ -21,7 +21,7 @@ data class CommonStageNotificationsCreateRequest(
 
 data class CommonStageNotificationsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-stage-notifications/create")
+    @PostMapping("common/stage-notifications/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonStageNotificationsCreateRequest): CommonStageNotificationsCreateResponse {
 
@@ -53,10 +53,10 @@ class Create(
             """
             insert into common.stage_notifications(stage, on_enter, on_exit, person,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::BOOLEAN,
                     ?::BOOLEAN,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -72,11 +72,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.stageNotification.stage,
             req.stageNotification.on_enter,
             req.stageNotification.on_exit,
@@ -84,6 +84,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

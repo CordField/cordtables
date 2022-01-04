@@ -17,7 +17,7 @@ import javax.sql.DataSource
 
 data class AdminRolesUpdateReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -42,9 +42,12 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("admin-roles/update-read")
+    @PostMapping("admin/roles/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: AdminRolesUpdateReadRequest): AdminRolesUpdateReadResponse {
+
+      if (req.token == null) return AdminRolesUpdateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRolesUpdateReadResponse(ErrorType.AdminOnly)
 
         val updateResponse = update.updateHandler(
             AdminRolesUpdateRequest(

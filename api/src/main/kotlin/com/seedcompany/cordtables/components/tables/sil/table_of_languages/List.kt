@@ -39,7 +39,7 @@ class List(
 
 //    var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sil-table-of-languages/list")
+    @PostMapping("sil/table-of-languages/list")
     @ResponseBody
     fun listHandler(@RequestBody req:SilTableOfLanguagesListRequest): SilTableOfLanguagesListResponse {
         var data: MutableList<tableOfLanguage> = mutableListOf()
@@ -89,8 +89,9 @@ class List(
         val size = jdbcResult.size
         if (jdbcResult.errorType == ErrorType.NoError){
             while (resultSet!!.next()) {
-                var id: Int? = resultSet!!.getInt("id")
-                if (resultSet!!.wasNull()) id = null
+              
+                var id: String? = resultSet.getString("id")
+                if (resultSet.wasNull()) id = null
 
                 var iso_639: String? = resultSet!!.getString("iso_639")
                 if (resultSet!!.wasNull()) iso_639 = null
@@ -146,24 +147,24 @@ class List(
                 var is_written: String? = resultSet!!.getString("is_written")
                 if (resultSet!!.wasNull()) is_written = null
 
-                var created_by: Int? = resultSet!!.getInt("created_by")
-                if (resultSet!!.wasNull()) created_by = null
-
                 var created_at: String? = resultSet!!.getString("created_at")
                 if (resultSet!!.wasNull()) created_at = null
 
+                var created_by: String? = resultSet.getString("created_by")
+                if (resultSet.wasNull()) created_by = null
+
                 var modified_at: String? = resultSet!!.getString("modified_at")
                 if (resultSet!!.wasNull()) modified_at = null
+                
+                var modified_by: String? = resultSet.getString("modified_by")
+                if (resultSet.wasNull()) modified_by = null
 
-                var modified_by: Int? = resultSet!!.getInt("modified_by")
-                if (resultSet!!.wasNull()) modified_by = null
+                var owning_person: String? = resultSet.getString("owning_person")
+                if (resultSet.wasNull()) owning_person = null
 
-                var owning_person: Int? = resultSet!!.getInt("owning_person")
-                if (resultSet!!.wasNull()) owning_person = null
-
-                var owning_group: Int? = resultSet!!.getInt("owning_group")
-                if (resultSet!!.wasNull()) owning_group = null
-
+                var owning_group: String? = resultSet.getString("owning_group")
+                if (resultSet.wasNull()) owning_group = null
+                
                 data.add(
                     tableOfLanguage(
                         id = id,

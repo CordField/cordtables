@@ -20,7 +20,7 @@ import javax.sql.DataSource
 
 data class AdminRoleTablePermissionsReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 data class AdminRoleTablePermissionsReadResponse(
@@ -42,11 +42,13 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("admin-role-table-permissions/read")
+    @PostMapping("admin/role-table-permissions/read")
     @ResponseBody
     fun readHandler(@RequestBody req: AdminRoleTablePermissionsReadRequest): AdminRoleTablePermissionsReadResponse {
 
-        if (req.token == null) return AdminRoleTablePermissionsReadResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminRoleTablePermissionsReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleTablePermissionsReadResponse(ErrorType.AdminOnly)
+
         if (req.id == null) return AdminRoleTablePermissionsReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
@@ -76,10 +78,10 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var role: Int? = jdbcResult.getInt("role")
+                var role: String? = jdbcResult.getString("role")
                 if (jdbcResult.wasNull()) role = null
 
                 var table_name: String? = jdbcResult.getString("table_name")
@@ -91,19 +93,19 @@ class Read(
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val roleTablePermission =

@@ -14,13 +14,13 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class ScPinnedProjectsDeleteRequest(
-    val id: Int,
+    val id: String,
     val token: String?,
 )
 
 data class ScPinnedProjectsDeleteResponse(
     val error: ErrorType,
-    val id: Int?
+    val id: String?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -32,7 +32,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-pinned-projects/delete")
+    @PostMapping("sc/pinned-projects/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScPinnedProjectsDeleteRequest): ScPinnedProjectsDeleteResponse {
 
@@ -41,23 +41,19 @@ class Delete(
             return ScPinnedProjectsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
-        var deletedLocationExId: Int? = null
+        var deletedLocationExId: String? = null
 
         this.ds.connection.use { conn ->
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from sc.pinned_projects where id = ? returning id"
+                    "delete from sc.pinned_projects where id = ?::uuid returning id"
                 )
-                deleteStatement.setInt(1, req.id)
-
-                deleteStatement.setInt(1,req.id)
-
-
+                deleteStatement.setString(1, req.id)
                 val deleteStatementResult = deleteStatement.executeQuery()
 
                 if (deleteStatementResult.next()) {
-                    deletedLocationExId  = deleteStatementResult.getInt("id")
+                    deletedLocationExId  = deleteStatementResult.getString("id")
                 }
             }
             catch (e:SQLException ){

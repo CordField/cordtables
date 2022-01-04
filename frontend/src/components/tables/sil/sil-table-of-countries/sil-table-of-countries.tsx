@@ -34,7 +34,7 @@ export class SilTableOfCountrys {
   }
 
   async getList(page) {
-    this.tableOfCountriesResponse = await fetchAs<SilTableOfCountryListRequest, SilTableOfCountryListResponse>('sil-table-of-countries/list', {
+    this.tableOfCountriesResponse = await fetchAs<SilTableOfCountryListRequest, SilTableOfCountryListResponse>('sil/table-of-countries/list', {
       token: globals.globalStore.state.token,
       page: page,
       resultsPerPage: 50,
@@ -61,77 +61,77 @@ export class SilTableOfCountrys {
       editable: false,
     },
     {
-        field: 'languages',
-        displayName: 'Languages',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'indigenous',
-        displayName: 'Indigenous',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'established',
-        displayName: 'Established',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'unestablished',
-        displayName: 'Unestablished',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'diversity',
-        displayName: 'Diversity',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'included',
-        displayName: 'Included',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'sum_of_populations',
-        displayName: 'Sum Of Populations',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'mean',
-        displayName: 'Mean',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'median',
-        displayName: 'Median',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'population',
-        displayName: 'Population',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'literacy_rate',
-        displayName: 'Literacy Rate',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'conventions',
-        displayName: 'Conventions',
-        width: 200,
-        editable: false,
-      },
+      field: 'languages',
+      displayName: 'Languages',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'indigenous',
+      displayName: 'Indigenous',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'established',
+      displayName: 'Established',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'unestablished',
+      displayName: 'Unestablished',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'diversity',
+      displayName: 'Diversity',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'included',
+      displayName: 'Included',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'sum_of_populations',
+      displayName: 'Sum Of Populations',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'mean',
+      displayName: 'Mean',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'median',
+      displayName: 'Median',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'population',
+      displayName: 'Population',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'literacy_rate',
+      displayName: 'Literacy Rate',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'conventions',
+      displayName: 'Conventions',
+      width: 200,
+      editable: false,
+    },
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -171,13 +171,12 @@ export class SilTableOfCountrys {
   ];
 
   async componentWillLoad() {
-    var url = new URL(window.location.href)
-    if(url.searchParams.has("page")){
-      this.currentPage = parseInt(url.searchParams.get("page"))>0?parseInt(url.searchParams.get("page")):1;
+    var url = new URL(window.location.href);
+    if (url.searchParams.has('page')) {
+      this.currentPage = parseInt(url.searchParams.get('page')) > 0 ? parseInt(url.searchParams.get('page')) : 1;
     }
     await this.getList(this.currentPage);
   }
-
 
   render() {
     return (
@@ -185,12 +184,10 @@ export class SilTableOfCountrys {
         <slot></slot>
         {/* table abstraction */}
         {this.tableOfCountriesResponse && <cf-table rowData={this.tableOfCountriesResponse.tableOfCountries} columnData={this.columnData}></cf-table>}
-        <cf-pagination current-page={this.currentPage} total-rows={this.tableOfCountriesResponse.size} results-per-page="50" page-url="sil-table-of-countries"></cf-pagination>
+        <cf-pagination current-page={this.currentPage} total-rows={this.tableOfCountriesResponse.size} results-per-page="50" page-url="table-of-countries"></cf-pagination>
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
-
       </Host>
     );
   }
-
 }

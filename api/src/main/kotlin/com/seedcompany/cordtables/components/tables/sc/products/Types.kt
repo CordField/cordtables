@@ -3,41 +3,40 @@ package com.seedcompany.cordtables.components.tables.sc.products
 import kotlin.collections.List
 
 data class product(
-    var id: Int? = null,
+    var id: String? = null,
 
-    val neo4j_id: String? = null,
     val name: String? = null,
-    val change_to_plan: Int? = null,
+    val change_to_plan: String? = null,
     val active: Boolean? = null,
-    val mediums: Any? = null,
-    val methodologies: String? = null,
+    val mediums: String? = null,
+    val methodology: String? = null,
     val purposes: String? = null,
     val type: String? = null,
 
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 
 data class productInput(
-    var id: Int? = null,
-    val neo4j_id: String? = null,
+    var id: String? = null,
+
     val name: String? = null,
-    val change_to_plan: Int? = null,
+    val change_to_plan: String? = null,
     val active: Boolean? = null,
-    val mediums: List<String> = listOf(),
-    val methodologies: String? = null,
+    val mediums: String? = null,
+    val methodology: String? = null,
     val purposes: String? = null,
     val type: String? = null,
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 
 enum class ProductMediums{

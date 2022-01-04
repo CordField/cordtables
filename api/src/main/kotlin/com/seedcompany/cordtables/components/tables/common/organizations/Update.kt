@@ -14,7 +14,7 @@ import javax.sql.DataSource
 
 data class CommonOrganizationsUpdateRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
         val column: String? = null,
         val value: Any? = null,
 )
@@ -33,7 +33,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common-organizations/update")
+    @PostMapping("common/organizations/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonOrganizationsUpdateRequest): CommonOrganizationsUpdateResponse {
 
@@ -76,6 +76,7 @@ class Update(
                         column = "primary_location",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
 
@@ -86,6 +87,7 @@ class Update(
                         column = "owning_person",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
 
@@ -96,6 +98,7 @@ class Update(
                         column = "owning_group",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
         }

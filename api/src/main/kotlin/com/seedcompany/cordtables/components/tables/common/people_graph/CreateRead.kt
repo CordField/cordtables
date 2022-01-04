@@ -38,7 +38,7 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-people-graph/create-read")
+    @PostMapping("common/people-graph/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: CommonPeopleGraphCreateReadRequest): CommonPeopleGraphCreateReadResponse {
 

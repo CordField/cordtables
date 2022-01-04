@@ -22,10 +22,10 @@ import {
 export class Threads {
   @State() commonThreadsResponse: CommonThreadsListResponse;
   newContent: string;
-  newChannel: number;
+  newChannel: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common-threads/update-read', {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common/threads/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -45,7 +45,7 @@ export class Threads {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteCommonThreadsRequest, DeleteCommonThreadsResponse>('common-threads/delete', {
+    const result = await fetchAs<DeleteCommonThreadsRequest, DeleteCommonThreadsResponse>('common/threads/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -62,7 +62,7 @@ export class Threads {
   }
 
   async getList() {
-    this.commonThreadsResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common-threads/list', {
+    this.commonThreadsResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common/threads/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -79,7 +79,7 @@ export class Threads {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common-threads/create-read', {
+    const result = await fetchAs<CreateCommonThreadsRequest, CreateCommonThreadsResponse>('common/threads/create-read', {
       token: globals.globalStore.state.token,
       thread: {
         content: this.newContent,
@@ -97,7 +97,7 @@ export class Threads {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },

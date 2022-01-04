@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateCoalitionMembershipExRequest {
   token: string;
   coalitionMembership: {
-    coalition: number;
-    organization: number;
+    coalition: string;
+    organization: string;
   };
 }
 class CreateCoalitionMembershipExResponse extends GenericResponse {
@@ -25,12 +25,11 @@ class CommonCoalitionMembershipListResponse {
   coalitionMemberships: CommonCoalitionMembership[];
 }
 
-
 class CommonCoalitionMembershipUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonCoalitionMembershipUpdateResponse {
@@ -39,12 +38,12 @@ class CommonCoalitionMembershipUpdateResponse {
 }
 
 class DeleteCoalitionMembershipExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteCoalitionMembershipExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -53,14 +52,13 @@ class DeleteCoalitionMembershipExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonCoalitionMemberships {
-
   @State() coalitionMembershipsResponse: CommonCoalitionMembershipListResponse;
 
-  newCoalition: number;
-  newOrganization: number;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonCoalitionMembershipUpdateRequest, CommonCoalitionMembershipUpdateResponse>('common-coalition-memberships/update-read', {
+  newCoalition: string;
+  newOrganization: string;
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonCoalitionMembershipUpdateRequest, CommonCoalitionMembershipUpdateResponse>('common/coalition-memberships/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -70,7 +68,12 @@ export class CommonCoalitionMemberships {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.coalitionMembershipsResponse = { error: ErrorType.NoError, coalitionMemberships: this.coalitionMembershipsResponse.coalitionMemberships.map(coalitionMembership => (coalitionMembership.id === id ? updateResponse.coalitionMembership : coalitionMembership)) };
+      this.coalitionMembershipsResponse = {
+        error: ErrorType.NoError,
+        coalitionMemberships: this.coalitionMembershipsResponse.coalitionMemberships.map(coalitionMembership =>
+          coalitionMembership.id === id ? updateResponse.coalitionMembership : coalitionMembership,
+        ),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -80,7 +83,7 @@ export class CommonCoalitionMemberships {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteCoalitionMembershipExRequest, DeleteCoalitionMembershipExResponse>('common-coalition-memberships/delete', {
+    const deleteResponse = await fetchAs<DeleteCoalitionMembershipExRequest, DeleteCoalitionMembershipExResponse>('common/coalition-memberships/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -95,17 +98,10 @@ export class CommonCoalitionMemberships {
   };
 
   async getList() {
-    this.coalitionMembershipsResponse = await fetchAs<CommonCoalitionMembershipListRequest, CommonCoalitionMembershipListResponse>('common-coalition-memberships/list', {
+    this.coalitionMembershipsResponse = await fetchAs<CommonCoalitionMembershipListRequest, CommonCoalitionMembershipListResponse>('common/coalition-memberships/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   coalitionChange(event) {
     this.newCoalition = event.target.value;
@@ -119,7 +115,7 @@ export class CommonCoalitionMemberships {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateCoalitionMembershipExRequest, CreateCoalitionMembershipExResponse>('common-coalition-memberships/create-read', {
+    const createResponse = await fetchAs<CreateCoalitionMembershipExRequest, CreateCoalitionMembershipExResponse>('common/coalition-memberships/create-read', {
       token: globals.globalStore.state.token,
       coalitionMembership: {
         coalition: this.newCoalition,
@@ -136,19 +132,18 @@ export class CommonCoalitionMemberships {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'coalition',
       displayName: 'Coalition',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -204,7 +199,6 @@ export class CommonCoalitionMemberships {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -231,11 +225,9 @@ export class CommonCoalitionMemberships {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
-     
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -245,5 +237,4 @@ export class CommonCoalitionMemberships {
       </Host>
     );
   }
-
 }

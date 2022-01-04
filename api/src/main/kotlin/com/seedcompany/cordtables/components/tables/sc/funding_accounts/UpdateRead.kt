@@ -17,7 +17,7 @@ import javax.sql.DataSource
 
 data class ScFundingAccountsUpdateReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
     val fundingAccount: fundingAccountInput? = null,
@@ -43,7 +43,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-funding-accounts/update-read")
+    @PostMapping("sc/funding-accounts/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScFundingAccountsUpdateReadRequest): ScFundingAccountsUpdateReadResponse {
 

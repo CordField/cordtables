@@ -20,7 +20,7 @@ import javax.sql.DataSource
 
 data class ScProductsReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 data class ScProductsReadResponse(
@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-products/read")
+    @PostMapping("sc/products/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScProductsReadRequest): ScProductsReadResponse {
 
@@ -59,12 +59,11 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "neo4j_id",
                     "name",
                     "change_to_plan",
                     "active",
                     "mediums",
-                    "methodologies",
+                    "methodology",
                     "purposes",
                     "type",
                     "created_at",
@@ -81,16 +80,14 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var name: String? = jdbcResult.getString("name")
                 if (jdbcResult.wasNull()) name = null
 
-                var change_to_plan: Int? = jdbcResult.getInt("change_to_plan")
+                var change_to_plan: String? = jdbcResult.getString("change_to_plan")
                 if (jdbcResult.wasNull()) change_to_plan = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
@@ -99,8 +96,8 @@ class Read(
                 var mediums: String? = jdbcResult.getString("mediums")
                 if (jdbcResult.wasNull()) mediums = null
 
-                var methodologies: String? = jdbcResult.getString("methodologies")
-                if (jdbcResult.wasNull()) methodologies = null
+                var methodology: String? = jdbcResult.getString("methodology")
+                if (jdbcResult.wasNull()) methodology = null
 
                 var purposes: String? = jdbcResult.getString("purposes")
                 if (jdbcResult.wasNull()) purposes = null
@@ -111,30 +108,29 @@ class Read(
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val product =
                     product(
                         id = id,
-                        neo4j_id = neo4j_id,
                         name = name,
                         change_to_plan = change_to_plan,
                         active = active,
                         mediums = (if (mediums == null) null else mediums.toString()),
-                        methodologies = methodologies,
+                        methodology = methodology,
                         purposes = purposes,
                         type = type,
                         created_at = created_at,

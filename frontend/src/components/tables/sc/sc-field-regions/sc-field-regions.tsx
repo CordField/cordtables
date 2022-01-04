@@ -8,8 +8,9 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateFieldRegionExRequest {
   token: string;
   fieldRegion: {
-    neo4j_id: string;
-    director: number;
+    // neo4j_id: string;
+    field_zone: string;
+    director: string;
     name: string;
   };
 }
@@ -26,12 +27,11 @@ class ScFieldRegionListResponse {
   fieldRegions: ScFieldRegion[];
 }
 
-
 class ScFieldRegionUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScFieldRegionUpdateResponse {
@@ -40,12 +40,12 @@ class ScFieldRegionUpdateResponse {
 }
 
 class DeleteFieldRegionExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFieldRegionExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,15 +54,15 @@ class DeleteFieldRegionExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScFieldRegions {
-
   @State() fieldRegionsResponse: ScFieldRegionListResponse;
 
-  newNeo4j_id: string;
-  newDirector: number;
+  // newNeo4j_id: string;
+  newField_zone: string;
+  newDirector: string;
   newName: string;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScFieldRegionUpdateRequest, ScFieldRegionUpdateResponse>('sc-field-regions/update-read', {
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScFieldRegionUpdateRequest, ScFieldRegionUpdateResponse>('sc/field-regions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +72,10 @@ export class ScFieldRegions {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.fieldRegionsResponse = { error: ErrorType.NoError, fieldRegions: this.fieldRegionsResponse.fieldRegions.map(fieldRegion => (fieldRegion.id === id ? updateResponse.fieldRegion : fieldRegion)) };
+      this.fieldRegionsResponse = {
+        error: ErrorType.NoError,
+        fieldRegions: this.fieldRegionsResponse.fieldRegions.map(fieldRegion => (fieldRegion.id === id ? updateResponse.fieldRegion : fieldRegion)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +85,7 @@ export class ScFieldRegions {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFieldRegionExRequest, DeleteFieldRegionExResponse>('sc-field-regions/delete', {
+    const deleteResponse = await fetchAs<DeleteFieldRegionExRequest, DeleteFieldRegionExResponse>('sc/field-regions/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,7 +100,7 @@ export class ScFieldRegions {
   };
 
   async getList() {
-    this.fieldRegionsResponse = await fetchAs<ScFieldRegionListRequest, ScFieldRegionListResponse>('sc-field-regions/list', {
+    this.fieldRegionsResponse = await fetchAs<ScFieldRegionListRequest, ScFieldRegionListResponse>('sc/field-regions/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -108,9 +111,12 @@ export class ScFieldRegions {
   //   });
   // }
 
+  // neo4jChange(event) {
+  //   this.newNeo4j_id = event.target.value;
+  // }
 
-  neo4jChange(event) {
-    this.newNeo4j_id = event.target.value;
+  field_zoneChange(event) {
+    this.newField_zone = event.target.value;
   }
 
   directorChange(event) {
@@ -121,15 +127,15 @@ export class ScFieldRegions {
     this.newName = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateFieldRegionExRequest, CreateFieldRegionExResponse>('sc-field-regions/create-read', {
+    const createResponse = await fetchAs<CreateFieldRegionExRequest, CreateFieldRegionExResponse>('sc/field-regions/create-read', {
       token: globals.globalStore.state.token,
       fieldRegion: {
-        neo4j_id: this.newNeo4j_id,
+        // neo4j_id: this.newNeo4j_id,
+        field_zone: this.newField_zone,
         director: this.newDirector,
         name: this.newName,
       },
@@ -144,32 +150,39 @@ export class ScFieldRegions {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
+    // {
+    //   field: 'neo4j_id',
+    //   displayName: 'neo4j_id',
+    //   width: 50,
+    //   editable: false,
+    //   deleteFn: this.handleDelete,
+    // },
+
     {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      field: 'field_zone',
+      displayName: 'Field Zone',
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'director',
       displayName: 'Director',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'name',
-      displayName: 'File Version Name',
+      displayName: 'Name',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
@@ -219,7 +232,6 @@ export class ScFieldRegions {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -232,12 +244,21 @@ export class ScFieldRegions {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            {/* <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">neo4j_id</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4jChange(event)} />
+              </span>
+            </div> */}
+
+            <div id="field_zone-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="field_zone">Field Zone</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="field_zone" name="field_zone" onInput={event => this.field_zoneChange(event)} />
               </span>
             </div>
 
@@ -246,7 +267,7 @@ export class ScFieldRegions {
                 <label htmlFor="director">Director</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="director" name="director" onInput={event => this.directorChange(event)} />
+                <input type="text" id="director" name="director" onInput={event => this.directorChange(event)} />
               </span>
             </div>
 
@@ -257,8 +278,7 @@ export class ScFieldRegions {
               <span class="form-thing">
                 <input type="text" id="field-region-name" name="field-region-name" onInput={event => this.fieldRegionNameChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -268,5 +288,4 @@ export class ScFieldRegions {
       </Host>
     );
   }
-
 }

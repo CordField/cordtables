@@ -21,7 +21,7 @@ data class CommonCellChannelsCreateRequest(
 
 data class CommonCellChannelsCreateResponse(
         val error: ErrorType,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -38,7 +38,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-cell-channels/create")
+    @PostMapping("common/cell-channels/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonCellChannelsCreateRequest): CommonCellChannelsCreateResponse {
 
@@ -52,7 +52,7 @@ class Create(
                 values(
                     ?::admin.table_name,
                     ?,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -68,17 +68,18 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-                Int::class.java,
+                String::class.java,
                 req.cell_channel.table_name,
                 req.cell_channel.column_name,
                 req.cell_channel.row,
                 req.token,
                 req.token,
                 req.token,
+                util.adminGroupId
         )
 
 

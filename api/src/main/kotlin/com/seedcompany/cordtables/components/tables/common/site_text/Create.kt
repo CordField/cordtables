@@ -19,7 +19,7 @@ data class CommonSiteTextCreateRequest(
 
 data class CommonSiteTextCreateResponse(
         val error: ErrorType,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -39,7 +39,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-site-texts/create")
+    @PostMapping("common/site-texts/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonSiteTextCreateRequest): CommonSiteTextCreateResponse {
 
@@ -71,15 +71,16 @@ class Create(
                   from admin.tokens 
                   where token = ?
                 ),
-                1
+                ?::uuid
             )
             returning id;
             """.trimIndent(),
-                Int::class.java,
+                String::class.java,
                 req.site_text.ethnologue,
                 req.token,
                 req.token,
                 req.token,
+                util.adminGroupId
             )
 
             return CommonSiteTextCreateResponse(error = ErrorType.NoError, id = id)

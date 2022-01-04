@@ -24,7 +24,7 @@ data class AdminRoleMembershipsListRequest(
 
 data class AdminRoleMembershipsListResponse(
     val error: ErrorType,
-    val roleMemberships: MutableList<roleMembership>?
+    val roleMemberships: MutableList<roleMembership>? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -42,9 +42,13 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("admin-role-memberships/list")
+    @PostMapping("admin/role-memberships/list")
     @ResponseBody
     fun listHandler(@RequestBody req:AdminRoleMembershipsListRequest): AdminRoleMembershipsListResponse {
+
+      if (req.token == null) return AdminRoleMembershipsListResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleMembershipsListResponse(ErrorType.AdminOnly)
+
         var data: MutableList<roleMembership> = mutableListOf()
         if (req.token == null) return AdminRoleMembershipsListResponse(ErrorType.TokenNotFound, mutableListOf())
 
@@ -74,16 +78,16 @@ class List(
             println(jdbcResult.row)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var role: Int? = jdbcResult.getInt("role")
+                var role: String? = jdbcResult.getString("role")
                 if (jdbcResult.wasNull()) role = null
 
-                var person: Int? = jdbcResult.getInt("person")
+                var person: String? = jdbcResult.getString("person")
                 if (jdbcResult.wasNull()) role = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
@@ -92,13 +96,13 @@ class List(
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(

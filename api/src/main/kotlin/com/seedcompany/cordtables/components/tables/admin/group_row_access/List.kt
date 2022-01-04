@@ -23,7 +23,7 @@ data class AdminGroupRowAccessListRequest(
 
 data class AdminGroupRowAccessListResponse(
     val error: ErrorType,
-    val groupRowAccesses: MutableList<groupRowAccess>?
+    val groupRowAccesses: MutableList<groupRowAccess>? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,11 +41,14 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("admin-group-row-access/list")
+    @PostMapping("admin/group-row-access/list")
     @ResponseBody
     fun listHandler(@RequestBody req:AdminGroupRowAccessListRequest): AdminGroupRowAccessListResponse {
+
+      if (req.token == null) return AdminGroupRowAccessListResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupRowAccessListResponse(ErrorType.AdminOnly)
+
         var data: MutableList<groupRowAccess> = mutableListOf()
-        if (req.token == null) return AdminGroupRowAccessListResponse(ErrorType.TokenNotFound, mutableListOf())
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
@@ -73,19 +76,19 @@ class List(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var group_id: Int? = jdbcResult.getInt("group_id")
+                var group_id: String? = jdbcResult.getString("group_id")
                 if (jdbcResult.wasNull()) group_id = null
 
                 var table_name: String? = jdbcResult.getString("table_name")
                 if (jdbcResult.wasNull()) table_name = null
 
-                var row: Int? = jdbcResult.getInt("row")
+                var row: String? = jdbcResult.getString("row")
                 if (jdbcResult.wasNull()) row = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
@@ -94,13 +97,13 @@ class List(
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 data.add(

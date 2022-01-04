@@ -4,7 +4,6 @@ import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
 data class SiteTextTranslationUpdateInput(
-  val site_text: Int,
-  val language: Int,
+  val site_text: String,
+  val language: String,
   val newValue: String?
 )
 
@@ -25,7 +24,7 @@ data class SiteTextTranslationUpdateRequest(
 
 data class SiteTextTranslationUpdateResponse(
   val error: ErrorType,
-  val id: Int? = null,
+  val id: String? = null,
 )
 
 
@@ -41,20 +40,20 @@ class Update(
 ) {
   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-  @PostMapping("common-site-text-translations/update")
+  @PostMapping("common/site-text-translations/update")
   @ResponseBody
   fun updateHandler(@RequestBody req: SiteTextTranslationUpdateRequest): SiteTextTranslationUpdateResponse {
 
     if (req.token == null) return SiteTextTranslationUpdateResponse(ErrorType.TokenNotFound)
     if (req.site_text_translation.language == null || req.site_text_translation.site_text == null) return SiteTextTranslationUpdateResponse(ErrorType.MissingId)
-    var id: Int? = null;
+    var id: String? = null;
 
     try {
       id = jdbcTemplate.queryForObject(
         """
-          select id from common.site_text_translations where language = ? and site_text = ?;
+          select id from common.site_text_translations where language = ?::uuid and site_text = ?::uuid;
       """.trimIndent(),
-        Int::class.java,
+        String::class.java,
         req.site_text_translation.language,
         req.site_text_translation.site_text
       )

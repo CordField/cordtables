@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateGroupExRequest {
   token: string;
   group: {
-    parent_group: number;
+    parent_group: string;
     name: string;
   };
 }
@@ -25,12 +25,11 @@ class AdminGroupListResponse {
   groups: AdminGroup[];
 }
 
-
 class AdminGroupUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminGroupUpdateResponse {
@@ -39,12 +38,12 @@ class AdminGroupUpdateResponse {
 }
 
 class DeleteGroupExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGroupExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -53,14 +52,13 @@ class DeleteGroupExResponse extends GenericResponse {
   shadow: true,
 })
 export class AdminGroups {
-
   @State() groupsResponse: AdminGroupListResponse;
 
-  newParent_group: number;
+  newParent_group: string;
   newName: string;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminGroupUpdateRequest, AdminGroupUpdateResponse>('admin-groups/update-read', {
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<AdminGroupUpdateRequest, AdminGroupUpdateResponse>('admin/groups/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -80,7 +78,7 @@ export class AdminGroups {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteGroupExRequest, DeleteGroupExResponse>('admin-groups/delete', {
+    const deleteResponse = await fetchAs<DeleteGroupExRequest, DeleteGroupExResponse>('admin/groups/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -95,17 +93,10 @@ export class AdminGroups {
   };
 
   async getList() {
-    this.groupsResponse = await fetchAs<AdminGroupListRequest, AdminGroupListResponse>('admin-groups/list', {
+    this.groupsResponse = await fetchAs<AdminGroupListRequest, AdminGroupListResponse>('admin/groups/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   parent_groupChange(event) {
     this.newParent_group = event.target.value;
@@ -115,12 +106,11 @@ export class AdminGroups {
     this.newName = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateGroupExRequest, CreateGroupExResponse>('admin-groups/create-read', {
+    const createResponse = await fetchAs<CreateGroupExRequest, CreateGroupExResponse>('admin/groups/create-read', {
       token: globals.globalStore.state.token,
       group: {
         parent_group: this.newParent_group,
@@ -130,6 +120,8 @@ export class AdminGroups {
 
     if (createResponse.error === ErrorType.NoError) {
       globals.globalStore.state.editMode = false;
+      this.newParent_group = "";
+      this.newName = "";
       this.getList();
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item inserted successfully', id: uuidv4(), type: 'success' });
     } else {
@@ -137,19 +129,18 @@ export class AdminGroups {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'parent_group',
       displayName: 'Parent Group',
-      width: 50,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -205,7 +196,6 @@ export class AdminGroups {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -234,8 +224,7 @@ export class AdminGroups {
               <span class="form-thing">
                 <input type="text" id="field-region-name" name="field-region-name" onInput={event => this.nameChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -245,5 +234,4 @@ export class AdminGroups {
       </Host>
     );
   }
-
 }

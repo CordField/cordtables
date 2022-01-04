@@ -12,13 +12,13 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class AdminRoleColumnGrantsDeleteRequest(
-    val id: Int,
+    val id: String,
     val token: String?,
 )
 
 data class AdminRoleColumnGrantsDeleteResponse(
     val error: ErrorType,
-    val id: Int?
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -30,32 +30,35 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("admin-role-column-grants/delete")
+    @PostMapping("admin/role-column-grants/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: AdminRoleColumnGrantsDeleteRequest): AdminRoleColumnGrantsDeleteResponse {
+
+      if (req.token == null) return AdminRoleColumnGrantsDeleteResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleColumnGrantsDeleteResponse(ErrorType.AdminOnly)
 
         if (req.token == null) return AdminRoleColumnGrantsDeleteResponse(ErrorType.TokenNotFound, null)
         if(!util.userHasDeletePermission(req.token, "admin.role_column_grants"))
             return AdminRoleColumnGrantsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
-        var deletedLocationExId: Int? = null
+        var deletedLocationExId: String? = null
 
         this.ds.connection.use { conn ->
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from admin.role_column_grants where id = ? returning id"
+                    "delete from admin.role_column_grants where id = ?::uuid returning id"
                 )
-                deleteStatement.setInt(1, req.id)
+                deleteStatement.setString(1, req.id)
 
-                deleteStatement.setInt(1,req.id)
+                deleteStatement.setString(1,req.id)
 
 
                 val deleteStatementResult = deleteStatement.executeQuery()
 
                 if (deleteStatementResult.next()) {
-                    deletedLocationExId  = deleteStatementResult.getInt("id")
+                    deletedLocationExId  = deleteStatementResult.getString("id")
                 }
             }
             catch (e:SQLException ){

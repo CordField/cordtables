@@ -1,8 +1,8 @@
 
 class ScGlobalPartnerAssessment {
-    id?: number | undefined;
+    id?: string | undefined;
 
-    partner?: number | undefined;
+    partner?: string | undefined;
     governance_trans?: string | undefined;
     director_trans?: string | undefined;
     identity_trans?: string | undefined;
@@ -20,9 +20,9 @@ class ScGlobalPartnerAssessment {
     tech_translation_opp?: string | undefined;
 
     created_at?: string | undefined;
-    created_by?: number | undefined;
+    created_by?: string | undefined;
     modified_at?: string | undefined;
-    modified_by?: number | undefined;
-    owning_person?: number | undefined;
-    owning_group?: number | undefined;
+    modified_by?: string | undefined;
+    owning_person?: string | undefined;
+    owning_group?: string | undefined;
 }

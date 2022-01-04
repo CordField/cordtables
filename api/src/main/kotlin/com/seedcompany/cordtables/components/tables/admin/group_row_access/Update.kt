@@ -1,11 +1,6 @@
 package com.seedcompany.cordtables.components.tables.admin.group_row_access
 
 import com.seedcompany.cordtables.common.*
-import com.seedcompany.cordtables.components.tables.admin.group_row_access.AdminGroupRowAccessUpdateRequest
-import com.seedcompany.cordtables.components.tables.admin.group_row_access.Update as CommonUpdate
-import com.seedcompany.cordtables.components.tables.admin.group_row_access.AdminGroupRowAccessUpdateResponse
-import com.seedcompany.cordtables.components.tables.admin.group_row_access.groupRowAccessInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -16,7 +11,7 @@ import javax.sql.DataSource
 
 data class AdminGroupRowAccessUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -35,11 +30,13 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("admin-group-row-access/update")
+    @PostMapping("admin/group-row-access/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: AdminGroupRowAccessUpdateRequest): AdminGroupRowAccessUpdateResponse {
 
-        if (req.token == null) return AdminGroupRowAccessUpdateResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminGroupRowAccessUpdateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupRowAccessUpdateResponse(ErrorType.AdminOnly)
+
         if (req.column == null) return AdminGroupRowAccessUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return AdminGroupRowAccessUpdateResponse(ErrorType.MissingId)
 
@@ -51,7 +48,7 @@ class Update(
                     column = "group_id",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "table_name" -> {
@@ -71,7 +68,7 @@ class Update(
                     column = "row",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_person" -> {
@@ -81,7 +78,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -91,7 +88,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

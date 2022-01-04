@@ -20,25 +20,25 @@ import javax.sql.DataSource
 
 
 data class SiteTextLanguage(
-  val language: Int,
+  val language: String?,
   val language_name: String? = null,
 )
 
 data class SiteTextString(
-  val id: Int,
+  val id: String?,
   val english: String,
   val comment: String?
 )
 
 data class SiteTextTranslation(
-  val language: Int,
+  val language: String?,
   val translations: MutableList<SiteTextTranslationExceptLanguage>?
 )
 
 @Serializable
 data class SiteTextTranslationExceptLanguage(
-  val id: Int,
-  val site_text: Int,
+  val id: String?,
+  val site_text: String?,
   val translation: String
 )
 
@@ -75,14 +75,14 @@ class SiteTextService(
     val query = """
             select stl.language, li.name
             from common.site_text_languages stl
-            inner join sil.language_index li on li.common_id = stl.language
+            inner join sil.language_index li on li.id = stl.language
         """.replace('\n', ' ')
 
     try {
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
       while (jdbcResult.next()) {
 
-        val language: Int = jdbcResult.getInt("language")
+        val language: String? = jdbcResult.getString("language")
 
         var language_name: String? = jdbcResult.getString("name")
         if (jdbcResult.wasNull()) language_name = null
@@ -115,7 +115,7 @@ class SiteTextService(
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
       while (jdbcResult.next()) {
 
-        val id: Int = jdbcResult.getInt("id")
+        val id: String? = jdbcResult.getString("id")
 
         var english: String? = jdbcResult.getString("english")
         if (jdbcResult.wasNull()) english = null
@@ -162,7 +162,7 @@ class SiteTextService(
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
       while (jdbcResult.next()) {
 
-        val language: Int = jdbcResult.getInt("language")
+        val language: String? = jdbcResult.getString("language")
 
         val translations: String = jdbcResult.getObject("translations").toString()
 
@@ -381,7 +381,7 @@ class SiteTextService(
 
         val query = """
             select
-                li.common_id as language
+                li.id as language
             from sil.language_index li
             where lang = :lang and country = :country and name_type = :name_type::sil.language_name_type and name = :name
         """.trimIndent()

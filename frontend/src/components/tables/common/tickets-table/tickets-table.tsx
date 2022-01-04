@@ -3,33 +3,33 @@ import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
-class CreateTicketRequest{
+class CreateTicketRequest {
   token: string;
-  ticket:{
+  ticket: {
     ticket_status: string;
-    parent: number;
-    content : string;
-  }
+    parent: string;
+    content: string;
+  };
 }
 
-class CommonTicketsRow{
-  id : number;
-  ticket_status : string;
-  parent : number;
-  content : string;
+class CommonTicketsRow {
+  id: string;
+  ticket_status: string;
+  parent: string;
+  content: string;
   created_at: string;
-  created_by: number;
+  created_by: string;
   modified_at: string;
-  modified_by: number;
-  owning_person: number;
-  owning_group: number;
+  modified_by: string;
+  owning_person: string;
+  owning_group: string;
 }
 
 class CreateTicketResponse extends GenericResponse {
   ticket: CommonTicketsRow;
 }
 
-class CommonTicketsListRequest{
+class CommonTicketsListRequest {
   token: string;
 }
 
@@ -42,7 +42,7 @@ class CommonTicketsUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonTicketsUpdateResponse {
@@ -51,12 +51,12 @@ class CommonTicketsUpdateResponse {
 }
 
 class DeleteTicketRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteTicketResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -65,16 +65,14 @@ class DeleteTicketResponse extends GenericResponse {
   shadow: true,
 })
 export class TicketsTable {
-
-  @Prop() onlyShowCreate : boolean = false;
+  @Prop() onlyShowCreate: boolean = false;
   @State() commonTicketsResponse: CommonTicketsListResponse;
   newTicketStatusName: string;
-  newParent: number;
+  newParent: string;
   newContent: string;
 
-
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> =>{
-    const updateResponse = await fetchAs<CommonTicketsUpdateRequest, CommonTicketsUpdateResponse>('common-tickets/update-read', {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonTicketsUpdateRequest, CommonTicketsUpdateResponse>('common/tickets/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -87,155 +85,162 @@ export class TicketsTable {
     } else {
       alert(updateResponse.error);
       return false;
-  }
-}
+    }
+  };
 
-handleDelete = async id => {
-  const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common-tickets/delete', {
-    id,
-    token: globals.globalStore.state.token,
-  });
-  if (result.error === ErrorType.NoError) {
-    this.getList();
-    return true;
-  } else {
-    return false;
-  }
-};
+  handleDelete = async id => {
+    const result = await fetchAs<DeleteTicketRequest, DeleteTicketResponse>('common/tickets/delete', {
+      id,
+      token: globals.globalStore.state.token,
+    });
+    if (result.error === ErrorType.NoError) {
+      this.getList();
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-columnData: ColumnDescription[] = [
-  {
-    field: 'id',
-    displayName: 'ID',
-    width: 50,
-    editable: false,
-    deleteFn: this.handleDelete,
-  },
-  {
-    field: 'ticket_status',
-    displayName: 'Ticket Status',
-    width: 100,
-    editable: true,
-    updateFn: this.handleUpdate,
-    selectOptions: [
-      { display: `-`, value: '' },
-      { display: `Open`, value: 'Open' },
-      { display: 'Blocked', value: 'Blocked' },
-      { display: 'Closed', value: 'Closed' },
-    ],
-  },
-  {
-    field: 'parent',
-    displayName: 'Parent',
-    width: 200,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-  {
-    field: 'content',
-    displayName: 'Content',
-    width: 200,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-  {
-    field: 'created_at',
-    displayName: 'Created At',
-    width: 250,
-    editable: false,
-  },
-  {
-    field: 'created_by',
-    displayName: 'Created By',
-    width: 100,
-    editable: false,
-  },
-  {
-    field: 'modified_at',
-    displayName: 'Last Modified',
-    width: 250,
-    editable: false,
-  },
-  {
-    field: 'modified_by',
-    displayName: 'Last Modified By',
-    width: 100,
-    editable: false,
-  },
-  {
-    field: 'owning_person',
-    displayName: 'Owning Person ID',
-    width: 100,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-  {
-    field: 'owning_group',
-    displayName: 'Owning Group ID',
-    width: 100,
-    editable: true,
-    updateFn: this.handleUpdate,
-  },
-];
-
-async componentWillLoad() {
-  await this.getList();
-}
-
-async getList() {
-  this.commonTicketsResponse = await fetchAs<CommonTicketsListRequest, CommonTicketsListResponse>('common-tickets/list', {
-    token: globals.globalStore.state.token,
-  });
-}
-
-ticketStatusNameChange(event) {
-  this.newTicketStatusName = event.target.value;
-}
-
-parentChange(event) {
-  this.newParent = event.target.value;
-}
-
-contentChange(event) {
-  this.newContent = event.target.value;
-}
-
-handleInsert = async (event: MouseEvent) => {
-  event.preventDefault();
-  event.stopPropagation();
-
-  const result = await fetchAs<CreateTicketRequest, CreateTicketResponse>('common-tickets/create-read', {
-    token: globals.globalStore.state.token,
-    ticket: {
-      ticket_status: this.newTicketStatusName,
-      parent: this.newParent,
-      content: this.newContent,
+  columnData: ColumnDescription[] = [
+    {
+      field: 'id',
+      displayName: 'ID',
+      width: 250,
+      editable: false,
+      deleteFn: this.handleDelete,
     },
-  });
+    {
+      field: 'ticket_status',
+      displayName: 'Ticket Status',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+      selectOptions: [
+        { display: `-`, value: '' },
+        { display: `Open`, value: 'Open' },
+        { display: 'Blocked', value: 'Blocked' },
+        { display: 'Closed', value: 'Closed' },
+      ],
+    },
+    {
+      field: 'parent',
+      displayName: 'Parent',
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'content',
+      displayName: 'Content',
+      width: 200,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'created_at',
+      displayName: 'Created At',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'created_by',
+      displayName: 'Created By',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'modified_at',
+      displayName: 'Last Modified',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'modified_by',
+      displayName: 'Last Modified By',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'owning_person',
+      displayName: 'Owning Person ID',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'owning_group',
+      displayName: 'Owning Group ID',
+      width: 100,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+  ];
 
-  if (result.error === ErrorType.NoError) {
-    globals.globalStore.state.editMode = false;
-    this.getList();
+  async componentWillLoad() {
+    await this.getList();
   }
-};
+
+  async getList() {
+    this.commonTicketsResponse = await fetchAs<CommonTicketsListRequest, CommonTicketsListResponse>('common/tickets/list', {
+      token: globals.globalStore.state.token,
+    });
+  }
+
+  ticketStatusNameChange(event) {
+    this.newTicketStatusName = event.target.value;
+  }
+
+  parentChange(event) {
+    this.newParent = event.target.value;
+  }
+
+  contentChange(event) {
+    this.newContent = event.target.value;
+  }
+
+  handleInsert = async (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const result = await fetchAs<CreateTicketRequest, CreateTicketResponse>('common/tickets/create-read', {
+      token: globals.globalStore.state.token,
+      ticket: {
+        ticket_status: this.newTicketStatusName,
+        parent: this.newParent,
+        content: this.newContent,
+      },
+    });
+
+    if (result.error === ErrorType.NoError) {
+      globals.globalStore.state.editMode = false;
+      this.getList();
+    }
+  };
 
   render() {
     return (
       <Host>
         <slot></slot>
-        
+
+        {/* table abstraction */}
+        {this.commonTicketsResponse && this.onlyShowCreate === false && <cf-table rowData={this.commonTicketsResponse.tickets} columnData={this.columnData}></cf-table>}
+
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
 
-{(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
+        {(globals.globalStore.state.editMode === true || this.onlyShowCreate === true) && (
           <form class="form-thing">
             <div id="ticket-status-holder" class="form-input-item form-thing">
-              <label> <strong> New Ticket: </strong></label><br/>
+              <label>
+                {' '}
+                <strong> New Ticket: </strong>
+              </label>
+              <br />
               <span class="form-thing">
                 <label htmlFor="ticket-status">Ticket Status:</label>
               </span>
               <span class="form-thing">
-                <select id="ticket-status" name="ticket-status"  onInput={event => this.ticketStatusNameChange(event)}>
+                <select id="ticket-status" name="ticket-status" onInput={event => this.ticketStatusNameChange(event)}>
                   <option value="-">-</option>
                   <option value="Open">Open</option>
                   <option value="Blocked">Blocked</option>
@@ -264,10 +269,7 @@ handleInsert = async (event: MouseEvent) => {
             </span>
           </form>
         )}
-          {/* table abstraction */}
-          {this.commonTicketsResponse && this.onlyShowCreate === false && <cf-table rowData={this.commonTicketsResponse.tickets} columnData={this.columnData}></cf-table>}
       </Host>
     );
   }
-
 }

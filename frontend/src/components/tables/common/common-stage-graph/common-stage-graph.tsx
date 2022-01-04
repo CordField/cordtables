@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateStageGraphExRequest {
   token: string;
   stageGraph: {
-    from_stage: number;
-    to_stage: number;
+    from_stage: string;
+    to_stage: string;
   };
 }
 class CreateStageGraphExResponse extends GenericResponse {
@@ -25,12 +25,11 @@ class CommonStageGraphListResponse {
   stageGraphs: CommonStageGraph[];
 }
 
-
 class CommonStageGraphUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonStageGraphUpdateResponse {
@@ -39,12 +38,12 @@ class CommonStageGraphUpdateResponse {
 }
 
 class DeleteStageGraphExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteStageGraphExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -53,14 +52,13 @@ class DeleteStageGraphExResponse extends GenericResponse {
   shadow: true,
 })
 export class CommonStageGraphs {
-
   @State() stageGraphsResponse: CommonStageGraphListResponse;
 
-  newFrom_stage: number;
-  newTo_stage: number;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonStageGraphUpdateRequest, CommonStageGraphUpdateResponse>('common-stage-graph/update-read', {
+  newFrom_stage: string;
+  newTo_stage: string;
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonStageGraphUpdateRequest, CommonStageGraphUpdateResponse>('common/stage-graph/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -70,7 +68,10 @@ export class CommonStageGraphs {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.stageGraphsResponse = { error: ErrorType.NoError, stageGraphs: this.stageGraphsResponse.stageGraphs.map(stageGraph => (stageGraph.id === id ? updateResponse.stageGraph : stageGraph)) };
+      this.stageGraphsResponse = {
+        error: ErrorType.NoError,
+        stageGraphs: this.stageGraphsResponse.stageGraphs.map(stageGraph => (stageGraph.id === id ? updateResponse.stageGraph : stageGraph)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -80,7 +81,7 @@ export class CommonStageGraphs {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteStageGraphExRequest, DeleteStageGraphExResponse>('common-stage-graph/delete', {
+    const deleteResponse = await fetchAs<DeleteStageGraphExRequest, DeleteStageGraphExResponse>('common/stage-graph/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -95,17 +96,10 @@ export class CommonStageGraphs {
   };
 
   async getList() {
-    this.stageGraphsResponse = await fetchAs<CommonStageGraphListRequest, CommonStageGraphListResponse>('common-stage-graph/list', {
+    this.stageGraphsResponse = await fetchAs<CommonStageGraphListRequest, CommonStageGraphListResponse>('common/stage-graph/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   from_stageChange(event) {
     this.newFrom_stage = event.target.value;
@@ -119,7 +113,7 @@ export class CommonStageGraphs {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateStageGraphExRequest, CreateStageGraphExResponse>('common-stage-graph/create-read', {
+    const createResponse = await fetchAs<CreateStageGraphExRequest, CreateStageGraphExResponse>('common/stage-graph/create-read', {
       token: globals.globalStore.state.token,
       stageGraph: {
         from_stage: this.newFrom_stage,
@@ -136,26 +130,25 @@ export class CommonStageGraphs {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'from_stage',
       displayName: 'From Stage',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'to_stage',
       displayName: 'To Stage',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -204,7 +197,6 @@ export class CommonStageGraphs {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -217,13 +209,12 @@ export class CommonStageGraphs {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="from_stage-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="from_stage">From Stage</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="from_stage" name="from_stage" onInput={event => this.from_stageChange(event)} />
+                <input type="text" id="from_stage" name="from_stage" onInput={event => this.from_stageChange(event)} />
               </span>
             </div>
 
@@ -234,8 +225,7 @@ export class CommonStageGraphs {
               <span class="form-thing">
                 <input type="text" id="to_stage" name="to_stage" onInput={event => this.to_stageChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -245,5 +235,4 @@ export class CommonStageGraphs {
       </Host>
     );
   }
-
 }

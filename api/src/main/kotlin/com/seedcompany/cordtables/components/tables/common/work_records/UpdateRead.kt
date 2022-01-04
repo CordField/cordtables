@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
 data class CommonWorkRecordUpdateReadRequest(
-  val token: String?,
-  val id: Int? = null,
-  val ticket: Int? = null,
-  val hours: Int? = null,
-  val minutes: Int? = null
+    val token: String?,
+    val id: String? = null,
+    val ticket: String? = null,
+    val hours: Int? = null,
+    val minutes: Int? = null
 )
 
 data class CommonWorkRecordUpdateReadResponse(
@@ -38,7 +38,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-work-records/update-read")
+    @PostMapping("common/work-records/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonWorkRecordUpdateReadRequest): CommonWorkRecordUpdateReadResponse {
 

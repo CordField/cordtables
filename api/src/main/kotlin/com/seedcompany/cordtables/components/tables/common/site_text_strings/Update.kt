@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
 data class SiteTextStringUpdateInput(
-  val id: Int,
+  val id: String,
   val column: String,
   val newValue: String?
 )
@@ -35,7 +35,7 @@ class Update(
   @Autowired
   val ds: DataSource,
 ) {
-  @PostMapping("common-site-text-strings/update")
+  @PostMapping("common/site-text-strings/update")
   @ResponseBody
   fun updateHandler(@RequestBody req: SiteTextStringUpdateRequest): SiteTextStringUpdateResponse {
 

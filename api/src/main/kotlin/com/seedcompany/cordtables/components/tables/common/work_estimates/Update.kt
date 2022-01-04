@@ -12,8 +12,8 @@ import javax.sql.DataSource
 
 data class CommonWorkEstimateUpdateRequest(
     val token: String?,
-    val id: Int? = null,
-    val ticket: Int? = null,
+    val id: String? = null,
+    val ticket: String? = null,
     val hours: Int? = null,
     val minutes: Int? = null
 )
@@ -32,13 +32,27 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-work-estimates/update")
+    @PostMapping("common/work-estimates/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonWorkEstimateUpdateRequest): CommonWorkEstimateUpdateResponse {
 
         if (req.token == null) return CommonWorkEstimateUpdateResponse(ErrorType.TokenNotFound)
         if (req.id == null) return CommonWorkEstimateUpdateResponse(ErrorType.MissingId)
 
+        println(req)
+
+        when (req.column) {
+
+             util.updateField(
+                    token = req.token,
+                    table = "common.work_estimates",
+                    column = "ticket",
+                    id = req.id,
+                    value = req.ticket,
+                    cast = "::uuid"
+                )
+
+            "hours" -> {
                 util.updateField(
                     token = req.token,
                     table = "common.work_estimates",

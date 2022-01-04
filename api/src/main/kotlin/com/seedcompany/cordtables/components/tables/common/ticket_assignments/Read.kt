@@ -22,7 +22,7 @@ import javax.sql.DataSource
 
 data class CommonTicketAssignmentReadRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 data class CommonTicketAssignmentReadResponse(
@@ -44,7 +44,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("common-ticket-assignments/read")
+    @PostMapping("common/ticket-assignments/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonTicketAssignmentReadRequest): CommonTicketAssignmentReadResponse {
 
@@ -77,31 +77,31 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var ticketId: Int? = jdbcResult.getInt("ticket")
+                var ticketId: String? = jdbcResult.getString("ticket")
                 if (jdbcResult.wasNull()) ticketId = null
 
-                var personId: Int? = jdbcResult.getInt("person")
+                var personId: String? = jdbcResult.getString("person")
                 if (jdbcResult.wasNull()) personId = null
 
                 var createdAt: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) createdAt = null
 
-                var createdBy: Int? = jdbcResult.getInt("created_by")
+                var createdBy: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) createdBy = null
 
                 var modifiedAt: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modifiedAt = null
 
-                var modifiedBy: Int? = jdbcResult.getInt("modified_by")
+                var modifiedBy: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modifiedBy = null
 
-                var owningPerson: Int? = jdbcResult.getInt("owning_person")
+                var owningPerson: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owningPerson = null
 
-                var owningGroup: Int? = jdbcResult.getInt("owning_group")
+                var owningGroup: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owningGroup = null
 
                 val ticket =

@@ -20,7 +20,7 @@ import javax.sql.DataSource
 
 data class AdminUsersReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 data class AdminUsersReadResponse(
@@ -42,11 +42,13 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("admin-users/read")
+    @PostMapping("admin/users/read")
     @ResponseBody
     fun readHandler(@RequestBody req: AdminUsersReadRequest): AdminUsersReadResponse {
 
-        if (req.token == null) return AdminUsersReadResponse(ErrorType.TokenNotFound)
+      if (req.token == null) return AdminUsersReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminUsersReadResponse(ErrorType.AdminOnly)
+
         if (req.id == null) return AdminUsersReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
@@ -76,10 +78,10 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var person: Int? = jdbcResult.getInt("person")
+                var person: String? = jdbcResult.getString("person")
                 if (jdbcResult.wasNull()) person = null
 
                 var email: String? = jdbcResult.getString("email")
@@ -91,19 +93,19 @@ class Read(
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val user =

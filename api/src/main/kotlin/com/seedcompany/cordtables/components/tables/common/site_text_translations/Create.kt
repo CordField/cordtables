@@ -19,7 +19,7 @@ data class SiteTextTranslationCreateRequest(
 
 data class SiteTextTranslationCreateResponse(
   val error: ErrorType,
-  val id: Int? = null,
+  val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -33,7 +33,7 @@ class Create(
 ) {
   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-  @PostMapping("common-site-text-translations/create")
+  @PostMapping("common/site-text-translations/create")
   @ResponseBody
   fun createHandler(@RequestBody req: SiteTextTranslationCreateRequest): SiteTextTranslationCreateResponse {
 
@@ -52,8 +52,8 @@ class Create(
                 owning_person, 
                 owning_group)
             values(
-                ?,
-                ?,
+                ?::uuid,
+                ?::uuid,
                 ?,
                 (
                   select person 
@@ -70,17 +70,18 @@ class Create(
                   from admin.tokens 
                   where token = ?
                 ),
-                1
+                ?::uuid
             )
             returning id;
             """.trimIndent(),
-        Int::class.java,
+        String::class.java,
         req.site_text_translation.language,
         req.site_text_translation.site_text,
         req.site_text_translation.translation,
         req.token,
         req.token,
         req.token,
+        util.adminGroupId
       )
 
       return SiteTextTranslationCreateResponse(error = ErrorType.NoError, id = id)

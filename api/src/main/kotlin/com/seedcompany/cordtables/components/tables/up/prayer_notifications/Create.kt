@@ -21,7 +21,7 @@ data class UpPrayerNotificationsCreateRequest(
 
 data class UpPrayerNotificationsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("up-prayer-notifications/create")
+    @PostMapping("up/prayer-notifications/create")
     @ResponseBody
     fun createHandler(@RequestBody req: UpPrayerNotificationsCreateRequest): UpPrayerNotificationsCreateResponse {
 
@@ -53,8 +53,8 @@ class Create(
             """
             insert into up.prayer_notifications(request, person,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -70,16 +70,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.prayerNotification.request,
             req.prayerNotification.person,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

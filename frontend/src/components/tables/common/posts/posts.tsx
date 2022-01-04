@@ -23,10 +23,10 @@ import {
 export class Posts {
   @State() commonPostsResponse: CommonPostsListResponse;
   newContent: string;
-  newThread: number;
+  newThread: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonPostsUpdateRequest, CommonPostsUpdateResponse>('common-posts/update-read', {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonPostsUpdateRequest, CommonPostsUpdateResponse>('common/posts/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -46,7 +46,7 @@ export class Posts {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteCommonPostsRequest, DeleteCommonPostsResponse>('common-posts/delete', {
+    const result = await fetchAs<DeleteCommonPostsRequest, DeleteCommonPostsResponse>('common/posts/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -63,7 +63,7 @@ export class Posts {
   }
 
   async getList() {
-    this.commonPostsResponse = await fetchAs<CommonPostsListRequest, CommonPostsListResponse>('common-posts/list', {
+    this.commonPostsResponse = await fetchAs<CommonPostsListRequest, CommonPostsListResponse>('common/posts/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -80,7 +80,7 @@ export class Posts {
     event.preventDefault();
     event.stopPropagation();
 
-    const result = await fetchAs<CreateCommonPostsRequest, CreateCommonPostsResponse>('common-posts/create-read', {
+    const result = await fetchAs<CreateCommonPostsRequest, CreateCommonPostsResponse>('common/posts/create-read', {
       token: globals.globalStore.state.token,
       post: {
         content: this.newContent,
@@ -98,7 +98,7 @@ export class Posts {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },

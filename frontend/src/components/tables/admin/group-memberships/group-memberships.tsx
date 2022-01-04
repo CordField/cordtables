@@ -8,13 +8,13 @@ class GroupMembershipsListRequest {
 }
 
 class GroupMembershipsRow {
-  id: number;
-  group: number;
-  person: number;
+  id: string;
+  group: string;
+  person: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
+  modifiedBy: string;
 }
 
 class GroupMembershipsListResponse {
@@ -24,8 +24,8 @@ class GroupMembershipsListResponse {
 
 class GroupCreateRequest {
   token: string;
-  group: number;
-  person: number;
+  group: string;
+  person: string;
 }
 
 class GroupCreateResponse {
@@ -35,7 +35,7 @@ class GroupCreateResponse {
 class GroupUpdateRequest {
   token: string;
   name: string;
-  id: number;
+  id: string;
 }
 
 class GroupUpdateResponse {
@@ -44,7 +44,7 @@ class GroupUpdateResponse {
 
 class GroupDeleteRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class GroupDeleteResponse {
@@ -63,8 +63,8 @@ export class GroupMemberships {
   createResponse: GroupCreateResponse;
   deleteResponse: GroupDeleteResponse;
 
-  newRowGroup: number;
-  newRowPerson: number;
+  newRowGroup: string;
+  newRowPerson: string;
 
   editableKeys = [];
 
@@ -73,7 +73,7 @@ export class GroupMemberships {
   }
 
   async getList() {
-    this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin-group-memberships/list', { token: globals.globalStore.state.token });
+    this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin/group-memberships/list', { token: globals.globalStore.state.token });
   }
 
   toggleNewForm = () => {
@@ -81,15 +81,15 @@ export class GroupMemberships {
   };
 
   inputGroup(event) {
-    this.newRowGroup = +event.target.value;
+    this.newRowGroup = event.target.value;
   }
 
   inputPerson(event) {
-    this.newRowPerson = +event.target.value;
+    this.newRowPerson = event.target.value;
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('admin-group-memberships/create', {
+    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('admin/group-memberships/create', {
       token: globals.globalStore.state.token,
       group: this.newRowGroup,
       person: this.newRowPerson,
@@ -97,27 +97,27 @@ export class GroupMemberships {
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin-group-memberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin/group-memberships/list', { token: globals.globalStore.state.token });
     } else {
       console.warn('Error creating group');
     }
   };
 
-  updateName = async (id: number, value: string): Promise<boolean> => {
+  updateName = async (id: string, value: string): Promise<boolean> => {
     this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('groupmemberships/update', { token: globals.globalStore.state.token, name: value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin-group-memberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin/group-memberships/list', { token: globals.globalStore.state.token });
       return true;
     } else {
     }
   };
 
-  clickRemoveRowIcon = async (value: number): Promise<boolean> => {
+  clickRemoveRowIcon = async (value: string): Promise<boolean> => {
     this.deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('groupmemberships/delete', { token: globals.globalStore.state.token, id: value });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin-group-memberships/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupMembershipsListRequest, GroupMembershipsListResponse>('admin/group-memberships/list', { token: globals.globalStore.state.token });
       return true;
     } else {
       return false;
@@ -168,7 +168,7 @@ export class GroupMemberships {
                   <input type="text" id="group-input" name="group" onInput={event => this.inputGroup(event)}></input>
                 </td>
                 <td>
-                  <input type="text" id="group-input" name="group" onInput={event => this.inputPerson(event)}></input>
+                  <input type="text" id="person-input" name="person" onInput={event => this.inputPerson(event)}></input>
                 </td>
                 <td class="disabled">&nbsp;</td>
                 <td class="disabled">&nbsp;</td>

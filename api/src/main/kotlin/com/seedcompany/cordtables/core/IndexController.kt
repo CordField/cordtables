@@ -46,7 +46,7 @@ class IndexController(
             "/home",
             "/register",
             "/login",
-            "/table/{table}",
+            "/table/{schema}/{table}",
             "/page/{page}",
             "/profile",
             "/email/{token}",

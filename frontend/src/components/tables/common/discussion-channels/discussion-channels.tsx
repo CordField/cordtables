@@ -24,8 +24,8 @@ export class DiscussionChannels {
   @State() discussionchannelsResponse: CommonDiscussionChannelListResponse;
   newDiscussionChannelName: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common-discussion-channels/update-read', {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common/discussion-channels/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -50,7 +50,7 @@ export class DiscussionChannels {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteCommonDiscussionChannelRequest, DeleteCommonDiscussionChannelResponse>('common-dicsussion-channels/delete', {
+    const deleteResponse = await fetchAs<DeleteCommonDiscussionChannelRequest, DeleteCommonDiscussionChannelResponse>('common/discussion-channels/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -65,7 +65,7 @@ export class DiscussionChannels {
   };
 
   async getList() {
-    this.discussionchannelsResponse = await fetchAs<CommonDiscussionChannelListRequest, CommonDiscussionChannelListResponse>('common-discussion-channels/list', {
+    this.discussionchannelsResponse = await fetchAs<CommonDiscussionChannelListRequest, CommonDiscussionChannelListResponse>('common/discussion-channels/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -78,7 +78,7 @@ export class DiscussionChannels {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common-discussion-channels/create-read', {
+    const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common/discussion-channels/create-read', {
       token: globals.globalStore.state.token,
       discussion_channel: {
         name: this.newDiscussionChannelName,

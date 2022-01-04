@@ -1,9 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.ticket_graph
 
-import com.seedcompany.cordtables.common.CommonTicketStatus
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -14,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonTicketGraphUpdateRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
         val column: String? = null,
         val value: Any? = null,
 )
@@ -33,7 +31,7 @@ class Update(
         @Autowired
         val ds: DataSource,
 ) {
-    @PostMapping("common-ticket-graph/update")
+    @PostMapping("common/ticket-graph/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonTicketGraphUpdateRequest): CommonTicketGraphUpdateResponse {
 
@@ -52,7 +50,7 @@ class Update(
                         column = "from_ticket",
                         id = req.id,
                         value = req.value,
-                        cast = "::integer"
+                        cast = "::uuid"
                 )
             }
 
@@ -63,7 +61,7 @@ class Update(
                         column = "to_ticket",
                         id = req.id,
                         value = req.value,
-                        cast = "::integer"
+                        cast = "::uuid"
                 )
             }
 
@@ -75,6 +73,7 @@ class Update(
                         column = "owning_person",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
 
@@ -85,6 +84,7 @@ class Update(
                         column = "owning_group",
                         id = req.id,
                         value = req.value,
+                        cast = "::uuid"
                 )
             }
         }

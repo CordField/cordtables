@@ -23,7 +23,7 @@ data class ScriptureReferenceListResponse(
 )
 
 data class ScriptureReference(
-    val id: Int?,
+    val id: String?,
     val book_start: String?,
     val book_end: String?,
     val chapter_start: Int?,
@@ -43,7 +43,7 @@ class List(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("table/common-scripture-references/list")
+    @PostMapping("common/scripture-references/list")
     @ResponseBody
     fun listHandler(@RequestBody req: ScriptureReferenceListRequest): ScriptureReferenceListResponse {
 
@@ -74,61 +74,61 @@ class List(
                     when 'id' in 
                         (select column_name from column_level_access) 
                     then id 
-                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                     then id 
                     else null 
                 end as id,
                 case 
                     when 'book_start' in (select column_name from column_level_access) 
                     then book_start
-                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                     then book_start
                     else null 
                 end as book_start,
                 case 
                 when 'book_end' in (select column_name from column_level_access) 
                     then book_end
-                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                     then book_end
                     else null 
                 end as book_end,
                 case 
                     when 'chapter_start' in (select column_name from column_level_access) 
                     then chapter_start 
-                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                     then chapter_start
                     else null 
                 end as chapter_start,
                 case 
                     when 'chapter_end' in (select column_name from column_level_access) 
                     then chapter_end
-                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                     then chapter_end
                     else null 
                 end as chapter_end,
                 case 
                     when 'verse_start' in (select column_name from column_level_access) 
                     then verse_start 
-                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                     then verse_start
                     else null 
                 end as verse_start,
                 case 
                     when 'verse_end' in (select column_name from column_level_access) 
                     then verse_end 
-                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1)) 
+                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
                     then verse_end
                     else null 
                 end as verse_end
                 from common.scripture_references
-                where (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = 1));
+                where (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid));
             """.trimIndent()
 
             val jdbcResult = jdbcTemplate.queryForRowSet(listSQL, paramSource)
     
             while (jdbcResult.next()) {
     
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
     
                 var bookStart: String? = jdbcResult.getString("book_start")

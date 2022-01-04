@@ -17,7 +17,7 @@ import javax.sql.DataSource
 
 data class ScGlobalPartnerPerformanceUpdateReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -42,7 +42,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("sc-global-partner-performance/update-read")
+    @PostMapping("sc/global-partner-performance/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: ScGlobalPartnerPerformanceUpdateReadRequest): ScGlobalPartnerPerformanceUpdateReadResponse {
 

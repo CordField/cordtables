@@ -20,7 +20,7 @@ data class CommonWorkRecordCreateRequest(
 
 data class CommonWorkRecordCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-work-records/create")
+    @PostMapping("common/work-records/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonWorkRecordCreateRequest): CommonWorkRecordCreateResponse {
 
@@ -50,14 +50,14 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into common.work_records(ticket, person, hours, minutes, comment, created_by, modified_by, owning_person, owning_group)
+            insert into common.work_records(person, ticket, hours, minutes, comment, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                     (
+                    (
                       select person 
                       from admin.tokens 
                       where token = ?
                     ),
+                    ?::uuid,
                     ?,
                     ?,
                     ?,
@@ -76,19 +76,20 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
-            req.work_record.ticket,
+            String::class.java,
             req.token,
+            req.work_record.ticket,
             req.work_record.hours,
             req.work_record.minutes,
             req.work_record.comment,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
         return CommonWorkRecordCreateResponse(error = ErrorType.NoError, id = id)

@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.groups
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.group_memberships.AdminGroupMembershipsUpdateResponse
 import com.seedcompany.cordtables.components.tables.admin.groups.groupInput
 import com.seedcompany.cordtables.components.tables.admin.groups.Read
 import com.seedcompany.cordtables.components.tables.admin.groups.Update
@@ -21,7 +22,7 @@ data class AdminGroupsCreateRequest(
 
 data class AdminGroupsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,9 +42,12 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin-groups/create")
+    @PostMapping("admin/groups/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminGroupsCreateRequest): AdminGroupsCreateResponse {
+
+      if (req.token == null) return AdminGroupsCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupsCreateResponse(ErrorType.AdminOnly)
 
         if (req.group.name == null) return AdminGroupsCreateResponse(error = ErrorType.InputMissingToken, null)
 
@@ -54,7 +58,7 @@ class Create(
             insert into admin.groups(name, parent_group,  created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -70,16 +74,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.group.name,
             req.group.parent_group,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

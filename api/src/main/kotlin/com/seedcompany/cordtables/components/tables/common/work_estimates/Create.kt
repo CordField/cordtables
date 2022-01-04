@@ -18,7 +18,7 @@ data class CommonWorkRecordCreateRequest(
 
 data class CommonWorkEstimateCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -39,7 +39,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-work-estimates/create")
+    @PostMapping("common/work-estimates/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonWorkRecordCreateRequest): CommonWorkEstimateCreateResponse {
 
@@ -47,14 +47,14 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into common.work_estimates(person, hours, minutes, comment, ticket, created_by, modified_by, owning_person, owning_group)
+            insert into common.work_estimates(person, ticket, hours, minutes, comment, created_by, modified_by, owning_person, owning_group)
                 values(
                      (
                       select person 
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?,
+                    ?::uuid,
                     ?,
                     ?,
                     ?,
@@ -73,19 +73,20 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.token,
+            req.work_estimate.ticket,
             req.work_estimate.hours,
             req.work_estimate.minutes,
             req.work_estimate.comment,
-            req.work_estimate.ticket,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
         return CommonWorkEstimateCreateResponse(error = ErrorType.NoError, id = id)

@@ -18,7 +18,7 @@ import javax.sql.DataSource
 
 data class ScLanguagesReadRequest(
         val token: String?,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 data class ScLanguagesReadResponse(
@@ -40,7 +40,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-languages/read")
+    @PostMapping("sc/languages/read")
     @ResponseBody
     fun readHandler(@RequestBody req: ScLanguagesReadRequest): ScLanguagesReadResponse {
 
@@ -57,7 +57,6 @@ class Read(
                         getList = false,
                         columns = arrayOf(
                                 "id",
-                                "neo4j_id",
 
                                 "ethnologue",
                                 "name",
@@ -143,7 +142,7 @@ class Read(
                                                     select person
                                                             from   admin.tokens
                                                             where  token = :token)
-                                                    and    role = 1)) then common.ST_AsLatLonText(coordinates::text)
+                                                    and    role = '${util.adminRole}'::uuid)) then common.ST_AsLatLonText(coordinates::text)
                         when owning_person =
                         (
                                 select person
@@ -171,7 +170,7 @@ class Read(
                                             select person
                                                     from   admin.tokens
                                                     where  token = :token)
-                                            and    role = 1)) then common.ST_AsGeoJSON(coordinates)
+                                            and    role = '${util.adminRole}'::uuid)) then common.ST_AsGeoJSON(coordinates)
                 when owning_person =
                 (
                         select person
@@ -190,13 +189,11 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-                if (jdbcResult.wasNull()) neo4j_id = null
 
-                var ethnologue: Int? = jdbcResult.getInt("ethnologue")
+                var ethnologue: String? = jdbcResult.getString("ethnologue")
                 if (jdbcResult.wasNull()) ethnologue = null
 
                 var name: String? = jdbcResult.getString("name")
@@ -402,19 +399,19 @@ class Read(
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 var coordinates_json: String? = jdbcResult.getString("coordinates_json")
@@ -423,7 +420,6 @@ class Read(
                 val language =
                         Language(
                                 id = id,
-                                neo4j_id = neo4j_id,
 
                                 ethnologue = ethnologue,
                                 name = name,

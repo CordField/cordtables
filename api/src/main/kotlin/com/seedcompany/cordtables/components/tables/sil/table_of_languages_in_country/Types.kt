@@ -1,7 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sil.table_of_languages_in_country
 
 data class tableOfLanguagesInCountry(
-    var id: Int? = null,
+    var id: String? = null,
 
     val iso_639: String? = null,
     val language_name: String? = null,
@@ -29,15 +29,15 @@ data class tableOfLanguagesInCountry(
     val extinct: Int? = null,
 
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 
 data class tableOfLanguagesInCountryInput(
-    var id: Int? = null,
+    var id: String? = null,
     val iso_639: String? = null,
     val language_name: String? = null,
     val uninverted_name: String? = null,
@@ -63,10 +63,10 @@ data class tableOfLanguagesInCountryInput(
     val dying: Int? = null,
     val extinct: Int? = null,
     val created_at: String? = null,
-    val created_by: Int? = null,
+    val created_by: String? = null,
     val modified_at: String? = null,
-    val modified_by: Int? = null,
-    val owning_person: Int? = null,
-    val owning_group: Int? = null,
+    val modified_by: String? = null,
+    val owning_person: String? = null,
+    val owning_group: String? = null,
 )
 

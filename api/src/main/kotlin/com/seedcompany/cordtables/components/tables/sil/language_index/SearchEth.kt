@@ -19,7 +19,7 @@ data class SilLanguageIndexSearchEthRequest(
 
 data class SilLanguageIndexSearchEthResponse(
   val error: ErrorType,
-  val id: Int? = null
+  val id: String? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -34,7 +34,7 @@ class SearchEth(
 
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-  @PostMapping("sil-language-index/search-eth")
+  @PostMapping("sil/language-index/search-eth")
   @ResponseBody
   fun listHandler(@RequestBody req: SilLanguageIndexSearchEthRequest): SilLanguageIndexSearchEthResponse {
     if (req.lang == null) return SilLanguageIndexSearchEthResponse(ErrorType.InputMissingColumn)
@@ -50,12 +50,12 @@ class SearchEth(
       limit 1
     """.trimIndent()
 
-    var id: Int? = null
+    var id: String? = null
 
     try {
       val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
       if (jdbcResult.next()) {
-        id = jdbcResult.getInt("id")
+        id = jdbcResult.getString("id")
       }
     } catch (e: SQLException) {
       println("error while searching ${e.message}")

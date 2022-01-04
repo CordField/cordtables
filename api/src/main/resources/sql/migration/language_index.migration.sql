@@ -7,21 +7,21 @@ CREATE OR REPLACE PROCEDURE sil.sil_migrate_language_index(
 LANGUAGE PLPGSQL
 AS $$
 DECLARE
-  vCommonId int;
-  vPersonId int;
+  vCommonId varchar(64);
+  vPersonId varchar(64);
+  vGroupId varchar(64);
 BEGIN
-  select id from admin.people
-  where sensitivity_clearance = 'High'
-  into vPersonId;
+  select id from admin.people  where sensitivity_clearance = 'High' into vPersonId;
+  SELECT id FROM admin.groups INTO vGroupId WHERE name='Administrators';
 
-  if vPersonId then
+  if vPersonId is not null then
     insert into common.languages(created_by, modified_by, owning_person, owning_group)
-    values (vPersonId, vPersonId, vPersonId, vPersonId)
+    values (vPersonId::uuid, vPersonId::uuid, vPersonId::uuid, vGroupId::uuid)
     returning id
     into vCommonId;
 
-    insert into sil.language_index(common_id, lang, country, name_type, name, created_by, modified_by, owning_person, owning_group)
-    values (vCommonId, pLang, pCountry, pNameType::sil.language_name_type, pName, vPersonId, vPersonId, vPersonId, vPersonId);
+    insert into sil.language_index(id, lang, country, name_type, name, created_by, modified_by, owning_person, owning_group)
+    values (vCommonId::uuid, pLang, pCountry, pNameType::sil.language_name_type, pName, vPersonId::uuid, vPersonId::uuid, vPersonId::uuid, vGroupId::uuid);
 
   end if;
 

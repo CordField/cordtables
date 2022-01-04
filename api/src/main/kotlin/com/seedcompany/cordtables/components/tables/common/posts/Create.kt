@@ -19,7 +19,7 @@ data class CommonPostsCreateRequest(
 
 data class CommonPostsCreateResponse(
         val error: ErrorType,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -33,7 +33,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-posts/create")
+    @PostMapping("common/posts/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonPostsCreateRequest): CommonPostsCreateResponse {
         if (req.token == null) return CommonPostsCreateResponse(error = com.seedcompany.cordtables.common.ErrorType.InputMissingToken, null)
@@ -45,7 +45,7 @@ class Create(
             insert into common.posts(content, thread, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -61,16 +61,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-                Int::class.java,
+                String::class.java,
                 req.post.content,
                 req.post.thread,
                 req.token,
                 req.token,
                 req.token,
+                util.adminGroupId
         )
 
 

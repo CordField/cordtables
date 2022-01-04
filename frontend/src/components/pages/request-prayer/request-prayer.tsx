@@ -11,12 +11,12 @@ import '@ionic/core'
 class SubmitPrayerRequestRequest {
     token: string;
     prayerRequest: {
-        request_language_id: number;
-        target_language_id: number;
+        request_language_id: string;
+        target_language_id: string;
         sensitivity: string;
         organization_name: string;
-        parent: number;
-        translator: number;
+        parent: string;
+        translator: string;
         location: string;
         title: string;
         content: string;
@@ -58,12 +58,12 @@ export class RequestPrayerPage {
     @State() prayerRequestsResponse: UpPrayerRequestListResponse;
     @State() peoplesResponse: AdminPeopleListResponse;
 
-    newRequest_language_id: number;
-    newTarget_language_id: number;
+    newRequest_language_id: string;
+    newTarget_language_id: string;
     newSensitivity: string;
     newOrganization_name: string;
-    newParent: number;
-    newTranslator: number;
+    newParent: string;
+    newTranslator: string;
     newLocation: string;
     newTitle: string;
     newContent: string;

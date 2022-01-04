@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateUserExRequest {
   token: string;
   user: {
-    person?: number;
+    person?: string;
     email?: string;
     password?: string;
   };
@@ -26,12 +26,11 @@ class AdminUserListResponse {
   users: AdminUser[];
 }
 
-
 class AdminUserUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class AdminUserUpdateResponse {
@@ -40,12 +39,12 @@ class AdminUserUpdateResponse {
 }
 
 class DeleteUserExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteUserExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,16 +53,14 @@ class DeleteUserExResponse extends GenericResponse {
   shadow: true,
 })
 export class AdminUsers {
-
   @State() usersResponse: AdminUserListResponse;
 
-  newPerson: number;
+  newPerson: string;
   newEmail?: string;
   newPassword?: string;
-  
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<AdminUserUpdateRequest, AdminUserUpdateResponse>('admin-users/update-read', {
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<AdminUserUpdateRequest, AdminUserUpdateResponse>('admin/users/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -83,7 +80,7 @@ export class AdminUsers {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteUserExRequest, DeleteUserExResponse>('admin-users/delete', {
+    const deleteResponse = await fetchAs<DeleteUserExRequest, DeleteUserExResponse>('admin/users/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -98,17 +95,10 @@ export class AdminUsers {
   };
 
   async getList() {
-    this.usersResponse = await fetchAs<AdminUserListRequest, AdminUserListResponse>('admin-users/list', {
+    this.usersResponse = await fetchAs<AdminUserListRequest, AdminUserListResponse>('admin/users/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   personChange(event) {
     this.newPerson = event.target.value;
@@ -126,12 +116,12 @@ export class AdminUsers {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateUserExRequest, CreateUserExResponse>('admin-users/create-read', {
+    const createResponse = await fetchAs<CreateUserExRequest, CreateUserExResponse>('admin/users/create-read', {
       token: globals.globalStore.state.token,
       user: {
         person: this.newPerson,
         email: this.newEmail,
-        password: this.newPassword
+        password: this.newPassword,
       },
     });
 
@@ -148,15 +138,15 @@ export class AdminUsers {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'person',
       displayName: 'Person',
-      width: 200,
-      editable: false,
+      width: 250,
+      editable: true,
       updateFn: this.handleUpdate,
     },
     {
@@ -211,7 +201,6 @@ export class AdminUsers {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -224,13 +213,12 @@ export class AdminUsers {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="person-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="person">Person</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="person" name="person" onInput={event => this.personChange(event)} />
+                <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
             </div>
 
@@ -241,7 +229,7 @@ export class AdminUsers {
               <span class="form-thing">
                 <input type="text" id="email" name="email" onInput={event => this.emailChange(event)} />
               </span>
-            </div>        
+            </div>
 
             <div id="password-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -250,8 +238,7 @@ export class AdminUsers {
               <span class="form-thing">
                 <input type="password" id="password" name="password" onInput={event => this.passwordChange(event)} />
               </span>
-            </div>       
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -261,6 +248,4 @@ export class AdminUsers {
       </Host>
     );
   }
-
 }
-

@@ -21,7 +21,7 @@ data class ScInternshipEngagementsCreateRequest(
 
 data class ScInternshipEngagementsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-internship-engagements/create")
+    @PostMapping("sc/internship-engagements/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScInternshipEngagementsCreateRequest): ScInternshipEngagementsCreateResponse {
 
@@ -51,33 +51,36 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.internship_engagements(project, ethnologue, change_to_plan, active, communications_complete_date, complete_date,
+            insert into sc.internship_engagements(project, change_to_plan, active, ceremony, communications_complete_date, complete_date,
              country_of_origin, disbursement_complete_date, end_date, end_date_override, growth_plan, initial_end_date, intern, last_reactivated_at,
-             mentor, methodology, paratext_registry, periodic_reports_directory, position, start_date, start_date_override, status, 
-             created_by, modified_by, owning_person, owning_group)
+             mentor, methodologies, paratext_registry, periodic_reports_directory, position, sensitivity, start_date, start_date_override, status, 
+             status_modified_at, last_suspended_at, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::boolean,
+                    ?::uuid,
                     ?::timestamp,
                     ?::timestamp,
-                    ?,
+                    ?::uuid,
                     ?::timestamp,
                     ?::timestamp,
                     ?::timestamp,
-                    ?,
+                    ?::uuid,
                     ?::timestamp,
-                    ?,
+                    ?::uuid,
                     ?::timestamp,
+                    ?::uuid,
+                    ARRAY[?]::common.product_methodologies[],
                     ?,
-                    ?::common.internship_methodology,
-                    ?,
-                    ?,
+                    ?::uuid,
                     ?::common.internship_position,
+                    ?::common.sensitivity,
                     ?::timestamp,
                     ?::timestamp,
                     ?::common.engagement_status,
+                    ?::timestamp,
+                    ?::timestamp,
                     (
                       select person 
                       from admin.tokens 
@@ -93,15 +96,15 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.internshipEngagement.project,
-            req.internshipEngagement.ethnologue,
             req.internshipEngagement.change_to_plan,
             req.internshipEngagement.active,
+            req.internshipEngagement.ceremony,
             req.internshipEngagement.communications_complete_date,
             req.internshipEngagement.complete_date,
             req.internshipEngagement.country_of_origin,
@@ -113,17 +116,20 @@ class Create(
             req.internshipEngagement.intern,
             req.internshipEngagement.last_reactivated_at,
             req.internshipEngagement.mentor,
-            req.internshipEngagement.methodology,
+            req.internshipEngagement.methodologies,
             req.internshipEngagement.paratext_registry,
             req.internshipEngagement.periodic_reports_directory,
             req.internshipEngagement.position,
+            req.internshipEngagement.sensitivity,
             req.internshipEngagement.start_date,
             req.internshipEngagement.start_date_override,
             req.internshipEngagement.status,
-
+            req.internshipEngagement.status_modified_at,
+            req.internshipEngagement.last_suspended_at,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

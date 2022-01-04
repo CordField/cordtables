@@ -38,14 +38,14 @@ class AppConfig(
 //    @Value("\${server.port}")
 //    val serverPort: String,
 //
-//    @Value("\${awsAccessKeyId}")
-//    val awsAccessKeyId: String,
-//
-//    @Value("\${awsSecretAccessKey}")
-//    val awsSecretAccessKey: String,
-//
-//    @Value("\${email.server}")
-//    val emailServer: String,
+    @Value("\${cord.awsAccessKeyId}")
+    val awsAccessKeyId: String,
+
+    @Value("\${cord.awsSecretAccessKey}")
+    val awsSecretAccessKey: String,
+
+    @Value("\${cord.email.server}")
+    val emailServer: String,
 //
 //    @Value("\${env}")
 //    val env: ConfigEnv,
@@ -68,8 +68,8 @@ class AppConfig(
     @Value("\${server.url}")
     val thisServerUrl: String,
 
-    @Value("\${cord.init.load-language-data}")
-    val loadLanguageData: Boolean = false,
+    @Value("\${cord.init.load-db-version}")
+    val loadDbVersion: Int = 1,
 
 ) {
     @get:Bean

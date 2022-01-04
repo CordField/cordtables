@@ -9,7 +9,7 @@ class CreateDirectoryExRequest {
   token: string;
   directory: {
     name: string;
-    parent: number;
+    parent: string;
   };
 }
 class CreateDirectoryExResponse extends GenericResponse {
@@ -29,7 +29,7 @@ class CommonDirectoryUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonDirectoryUpdateResponse {
@@ -38,12 +38,12 @@ class CommonDirectoryUpdateResponse {
 }
 
 class DeleteDirectoryExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteDirectoryExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -52,14 +52,12 @@ class DeleteDirectoryExResponse extends GenericResponse {
   shadow: true,
 })
 export class DirectoriesTable {
-
   @State() directoriesResponse: CommonDirectoryListResponse;
   newDirectoryName: string;
-  directoryParent: number;
+  directoryParent: string;
 
-
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonDirectoryUpdateRequest, CommonDirectoryUpdateResponse>('common-directories/update-read', {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonDirectoryUpdateRequest, CommonDirectoryUpdateResponse>('common/directories/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -69,7 +67,10 @@ export class DirectoriesTable {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.directoriesResponse = { error: ErrorType.NoError, directories: this.directoriesResponse.directories.map(directory => (directory.id === id ? updateResponse.directory : directory)) };
+      this.directoriesResponse = {
+        error: ErrorType.NoError,
+        directories: this.directoriesResponse.directories.map(directory => (directory.id === id ? updateResponse.directory : directory)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -79,7 +80,7 @@ export class DirectoriesTable {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteDirectoryExRequest, DeleteDirectoryExResponse>('common-directories/delete', {
+    const deleteResponse = await fetchAs<DeleteDirectoryExRequest, DeleteDirectoryExResponse>('common/directories/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -94,7 +95,7 @@ export class DirectoriesTable {
   };
 
   async getList() {
-    this.directoriesResponse = await fetchAs<CommonDirectoryListRequest, CommonDirectoryListResponse>('common-directories/list', {
+    this.directoriesResponse = await fetchAs<CommonDirectoryListRequest, CommonDirectoryListResponse>('common/directories/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -111,7 +112,7 @@ export class DirectoriesTable {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateDirectoryExRequest, CreateDirectoryExResponse>('common-directories/create-read', {
+    const createResponse = await fetchAs<CreateDirectoryExRequest, CreateDirectoryExResponse>('common/directories/create-read', {
       token: globals.globalStore.state.token,
       directory: {
         name: this.newDirectoryName,
@@ -128,21 +129,20 @@ export class DirectoriesTable {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'parent',
       displayName: 'Parent',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'name',
@@ -195,7 +195,6 @@ export class DirectoriesTable {
     await this.getList();
   }
 
-
   render() {
     return (
       <Host>
@@ -214,13 +213,13 @@ export class DirectoriesTable {
               </span>
               <span class="form-thing">
                 <select onInput={event => this.directoryParentChange(event)}>
-                {this.directoriesResponse.directories.map(option => (
-                  <option value={option.id}>{option.name}</option>
-                ))}
+                  {this.directoriesResponse.directories.map(option => (
+                    <option value={option.id}>{option.name}</option>
+                  ))}
                 </select>
               </span>
             </div>
-            
+
             <div id="directory-name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="directory-name">New Directory Name</label>
@@ -238,5 +237,4 @@ export class DirectoriesTable {
       </Host>
     );
   }
-
 }

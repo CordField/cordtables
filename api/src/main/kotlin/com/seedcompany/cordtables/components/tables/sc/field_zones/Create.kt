@@ -21,7 +21,7 @@ data class ScFieldZonesCreateRequest(
 
 data class ScFieldZonesCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,21 +41,19 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-field-zones/create")
+    @PostMapping("sc/field-zones/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScFieldZonesCreateRequest): ScFieldZonesCreateResponse {
 
         if (req.fieldZone.name == null) return ScFieldZonesCreateResponse(error = ErrorType.InputMissingToken, null)
 
-
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.field_zones(name, neo4j_id, director,  created_by, modified_by, owning_person, owning_group)
+            insert into sc.field_zones(name, director,  created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -71,17 +69,18 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.fieldZone.name,
-            req.fieldZone.neo4j_id,
+//            req.fieldZone.neo4j_id,
             req.fieldZone.director,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

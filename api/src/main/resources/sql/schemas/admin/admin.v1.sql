@@ -5,6 +5,13 @@ set schema 'common';
 
 CREATE EXTENSION if not exists hstore;
 create extension if not exists postgis;
+CREATE EXTENSION if not exists "uuid-ossp";
+
+create type admin.history_event_type as enum (
+  'INSERT',
+  'UPDATE',
+  'DELETE'
+);
 
 
 create type common.sensitivity as enum (
@@ -136,7 +143,7 @@ create type admin.db_vc_status as enum (
 );
 
 create table admin.database_version_control (
-  id serial primary key,
+  id uuid primary key default common.uuid_generate_v4(),
   version int not null,
   status admin.db_vc_status default 'In Progress',
   started timestamp not null default CURRENT_TIMESTAMP,
@@ -146,7 +153,7 @@ create table admin.database_version_control (
 -- PEOPLE ------------------------------------------------------------
 
 create table admin.people (
-  id serial primary key,
+  id uuid primary key default common.uuid_generate_v4(),
 
   about text,
   phone varchar(32),
@@ -155,7 +162,7 @@ create table admin.people (
   private_last_name varchar(32),
   public_first_name varchar(32),
   public_last_name varchar(32),
-  primary_location int,
+  primary_location uuid,
   private_full_name varchar(64),
   public_full_name varchar(64),
   sensitivity_clearance common.sensitivity default 'Low',
@@ -164,11 +171,11 @@ create table admin.people (
   status varchar(32),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int, -- not null doesn't work here, on startup
+  created_by uuid, -- not null doesn't work here, on startup
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int, -- not null doesn't work here, on startup
-  owning_person int, -- not null doesn't work here, on startup
-  owning_group int -- not null doesn't work here, on startup
+  modified_by uuid, -- not null doesn't work here, on startup
+  owning_person uuid, -- not null doesn't work here, on startup
+  owning_group uuid -- not null doesn't work here, on startup
 );
 
 alter table admin.people add constraint admin_people_created_by_fk foreign key (created_by) references admin.people(id);
@@ -179,17 +186,17 @@ alter table admin.people add constraint admin_people_owning_person_fk foreign ke
 -- GROUPS --------------------------------------------------------------------
 
 create table admin.groups(
-  id serial primary key,
+  id uuid primary key default common.uuid_generate_v4(),
 
   name varchar(64) not null,
-  parent_group int references admin.groups(id),
+  parent_group uuid references admin.groups(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int references admin.groups(id), -- not null doesn't work here, on startup
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid references admin.groups(id), -- not null doesn't work here, on startup
 
   unique (name, owning_group)
 );
@@ -197,34 +204,34 @@ create table admin.groups(
 alter table admin.people add constraint admin_people_owning_group_fk foreign key (owning_group) references admin.groups(id);
 
 create table admin.group_row_access(
-  id serial primary key,
+  id uuid primary key default common.uuid_generate_v4(),
 
-  group_id int not null references admin.groups(id),
+  group_id uuid not null references admin.groups(id),
   table_name admin.table_name not null,
-  row int not null,
+  row uuid not null,
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null references admin.people(id),
+	created_by uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
 
   unique (group_id, table_name, row)
 );
 
 create table admin.group_memberships(
-  id serial primary key,
+  id uuid primary key default common.uuid_generate_v4(),
 
-  group_id int not null references admin.groups(id),
-  person int not null references admin.people(id),
+  group_id uuid not null references admin.groups(id),
+  person uuid not null references admin.people(id),
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null references admin.people(id),
+	created_by uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
 
   unique (group_id, person)
 );
@@ -232,9 +239,9 @@ create table admin.group_memberships(
 -- PEER to PEER -------------------------------------------------------------
 
 create table admin.peers (
-  id serial primary key,
+  id uuid primary key default common.uuid_generate_v4(),
 
-  person int unique not null references admin.people(id),
+  person uuid unique unique not null references admin.people(id),
   url varchar(128) unique not null,
   peer_approved bool not null default false,
   url_confirmed bool not null default false,
@@ -243,44 +250,44 @@ create table admin.peers (
   session_token varchar(64) unique,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 -- ROLES --------------------------------------------------------------------
 
 create table admin.roles (
-	id serial primary key,
+	id uuid primary key default common.uuid_generate_v4(),
 
 	name varchar(255) not null,
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null references admin.people(id),
+	created_by uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
 
 	unique (name, owning_group)
 );
 
 create table admin.role_column_grants(
-	id serial primary key,
+	id uuid primary key default common.uuid_generate_v4(),
 
-	role int not null references admin.roles(id),
+	role uuid not null references admin.roles(id),
 	table_name admin.table_name not null,
 	column_name varchar(64) not null,
 	access_level admin.access_level not null,
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null references admin.people(id),
+	created_by uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
 
 	unique (role, table_name, column_name)
 );
@@ -291,34 +298,34 @@ create type admin.table_permission_grant_type as enum (
 );
 
 create table admin.role_table_permissions(
-  id serial primary key,
+  id uuid primary key default common.uuid_generate_v4(),
 
-  role int not null references admin.roles(id),
+  role uuid not null references admin.roles(id),
   table_name admin.table_name not null,
   table_permission admin.table_permission_grant_type not null,
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null references admin.people(id),
+	created_by uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
 
   unique (role, table_name, table_permission)
 );
 
 create table admin.role_memberships (
-  id serial primary key,
+  id uuid primary key default common.uuid_generate_v4(),
 
-	role int not null references admin.roles(id),
-	person int not null references admin.people(id),
+	role uuid not null references admin.roles(id),
+	person uuid unique not null references admin.people(id),
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by int not null references admin.people(id),
+	created_by uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id),
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
 
 	unique(role, person)
 );
@@ -326,34 +333,33 @@ create table admin.role_memberships (
 -- USERS ---------------------------------------------------------------------
 
 create table admin.users(
-  id serial primary key,
+  id uuid primary key references admin.people(id), -- not null added in v2
 
-  person int references admin.people(id) unique, -- not null added in v2
-  email varchar(255) unique not null,
+  email varchar(255) unique, -- not null
   password varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by int not null references admin.people(id),
+  created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by int not null references admin.people(id),
-  owning_person int not null references admin.people(id),
-  owning_group int not null references admin.groups(id)
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
 );
 
 -- AUTHENTICATION ------------------------------------------------------------
 
 create table if not exists admin.tokens (
-	id serial primary key,
+	id uuid primary key default common.uuid_generate_v4(),
 	token varchar(64) unique not null,
-	person int references admin.people(id),
+	person uuid references admin.people(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP
 );
 
 -- email tokens
 
 create table admin.email_tokens (
-	id serial primary key,
+	id uuid primary key default common.uuid_generate_v4(),
 	token varchar(512) unique not null,
-	user_id int not null references admin.users(id),
+	user_id uuid not null references admin.users(id),
 	created_at timestamp not null default CURRENT_TIMESTAMP
 );

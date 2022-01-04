@@ -21,7 +21,7 @@ data class CommonFileVersionsCreateRequest(
 
 data class CommonFileVersionsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-file-versions/create")
+    @PostMapping("common/file-versions/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonFileVersionsCreateRequest): CommonFileVersionsCreateResponse {
 
@@ -56,7 +56,7 @@ class Create(
                     ?,
                     ?,
                     ?::common.mime_type,
-                    ?,
+                    ?::uuid,
                     ?,
                     ?,
                     (
@@ -74,11 +74,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.fileVersion.name,
             req.fileVersion.category,
             req.fileVersion.mime_type,
@@ -88,6 +88,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

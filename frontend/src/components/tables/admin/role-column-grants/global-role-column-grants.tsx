@@ -4,67 +4,67 @@ import { GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 
 class readAllResponse extends GenericResponse {
-  id: number;
+  id: string;
   access_level?: String;
   column_name?: String;
   created_at?: String;
-  created_by?: number;
-  role?: number;
+  created_by?: string;
+  role?: string;
   modified_at?: String;
-  modified_by?: number;
+  modified_by?: string;
   table_name?: String;
   response?: Array<any>;
 }
 
 class readOneRequest {
-  id: number;
+  id: string;
 }
 
 class create {
   access_level?: String;
   column_name?: String;
   created_at?: String;
-  created_by?: number;
-  role?: number;
+  created_by?: string;
+  role?: string;
   table_name?: String;
   response?: Array<any>;
   token: String;
 }
 
 class update {
-  id: number;
+  id: string;
   access_level?: String;
   column_name?: String;
   created_at?: String;
-  created_by?: number;
+  created_by?: string;
   modified_at?: String;
-  modified_by?: number;
-  role?: number;
+  modified_by?: string;
+  role?: string;
   table_name?: String;
   response?: Array<any>;
   token: String;
 }
 
 class deleteRow {
-  id: number;
+  id: string;
   token: String;
 }
 
 const tableColumns = ['Id', 'Access Level', 'Column Name', 'Created At', 'Created By', 'Global Role', 'Modified At', 'Modified By', 'Table Name'];
 
 interface readOne {
-  id: number;
+  id: string;
   access_level?: string;
   column_name?: string;
   created_at?: string;
-  created_by?: number;
-  role?: number;
+  created_by?: string;
+  role?: string;
   modified_at?: string;
-  modified_by?: number;
+  modified_by?: string;
   table_name?: string;
 }
 
-let rowId = 0;
+let rowId = '';
 
 @Component({
   tag: 'role-column-grants',
@@ -80,14 +80,14 @@ export class GlobalRoleColumnGrants {
   @State() dataOne: Array<readOne>;
   @State() selectValue: string;
   @State() readOneValues: readOne = {
-    id: 0,
+    id: '',
     access_level: '',
     column_name: '',
     created_at: '',
-    created_by: 0,
-    role: 0,
+    created_by:'',
+    role: '',
     modified_at: '',
-    modified_by: 0,
+    modified_by: '',
     table_name: '',
   };
 
@@ -132,7 +132,7 @@ export class GlobalRoleColumnGrants {
   @Listen('modalOkay')
   async handleModalOkay(event) {
     if (event && event.detail) {
-      if (this.readOneValues.id === 0) {
+      if (this.readOneValues.id === '') {
         try {
           await fetchAs<create, readAllResponse>('table/role-column-grants-create', {
             access_level: this.selectValue,
@@ -170,7 +170,7 @@ export class GlobalRoleColumnGrants {
   @Listen('modalDelete')
   async handleModalDelete(event) {
     if (event && event.detail) {
-      if (this.readOneValues.id !== 0) {
+      if (this.readOneValues.id !== '') {
         try {
           await fetchAs<deleteRow, readAllResponse>('table/role-column-grants-delete', {
             id: this.readOneValues.id,
@@ -193,14 +193,14 @@ export class GlobalRoleColumnGrants {
     this.readOneValues.column_name = event.target.value;
   }
   handleChangeGlobalRole(event) {
-    this.readOneValues.role = parseInt(event.target.value);
+    this.readOneValues.role = event.target.value;
   }
   handleChangeTableName(event) {
     this.readOneValues.table_name = event.target.value;
   }
 
   cleanFields() {
-    this.readOneValues.id = 0;
+    this.readOneValues.id = '';
     this.readOneValues.column_name = '';
     this.readOneValues.created_at = '';
     this.readOneValues.created_by = null;

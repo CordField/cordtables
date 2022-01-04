@@ -8,22 +8,21 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateProjectExRequest {
   token: string;
   project: {
-    neo4j_id: string;
     name: string;
-    change_to_plan: number;
+    change_to_plan: string;
     active: boolean;
     department: string;
     estimated_submission: string;
-    field_region: number;
+    field_region: string;
     initial_mou_end: string;
-    marketing_location: number;
+    marketing_location: string;
     mou_start: string;
     mou_end: string;
-    owning_organization: number;
-    periodic_reports_directory: number;
-    posts_directory: number;
-    primary_location: number;
-    root_directory: number;
+    owning_organization: string;
+    periodic_reports_directory: string;
+    posts_directory: string;
+    primary_location: string;
+    root_directory: string;
     status: string;
     status_changed_at: string;
     step: string;
@@ -42,12 +41,11 @@ class ScProjectListResponse {
   projects: ScProject[];
 }
 
-
 class ScProjectUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScProjectUpdateResponse {
@@ -56,12 +54,12 @@ class ScProjectUpdateResponse {
 }
 
 class DeleteProjectExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteProjectExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -70,31 +68,29 @@ class DeleteProjectExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScProjects {
-
   @State() projectsResponse: ScProjectListResponse;
 
-  newNeo4j_id: string;
   newName: string;
-  newChange_to_plan: number;
+  newChange_to_plan: string;
   newActive: boolean;
   newDepartment: string;
   newEstimated_submission: string;
-  newField_region: number;
+  newField_region: string;
   newInitial_mou_end: string;
-  newMarketing_location: number;
+  newMarketing_location: string;
   newMou_start: string;
   newMou_end: string;
-  newOwning_organization: number;
-  newPeriodic_reports_directory: number;
-  newPosts_directory: number;
-  newPrimary_location: number;
-  newRoot_directory: number;
+  newOwning_organization: string;
+  newPeriodic_reports_directory: string;
+  newPosts_directory: string;
+  newPrimary_location: string;
+  newRoot_directory: string;
   newStatus: string;
   newStatus_changed_at: string;
   newStep: string;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScProjectUpdateRequest, ScProjectUpdateResponse>('sc-projects/update-read', {
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScProjectUpdateRequest, ScProjectUpdateResponse>('sc/projects/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -114,7 +110,7 @@ export class ScProjects {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteProjectExRequest, DeleteProjectExResponse>('sc-projects/delete', {
+    const deleteResponse = await fetchAs<DeleteProjectExRequest, DeleteProjectExResponse>('sc/projects/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -129,7 +125,7 @@ export class ScProjects {
   };
 
   async getList() {
-    this.projectsResponse = await fetchAs<ScProjectListRequest, ScProjectListResponse>('sc-projects/list', {
+    this.projectsResponse = await fetchAs<ScProjectListRequest, ScProjectListResponse>('sc/projects/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -139,11 +135,6 @@ export class ScProjects {
   //     token: globals.globalStore.state.token,
   //   });
   // }
-
-
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
 
   nameChange(event) {
     this.newName = event.target.value;
@@ -221,10 +212,9 @@ export class ScProjects {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateProjectExRequest, CreateProjectExResponse>('sc-projects/create-read', {
+    const createResponse = await fetchAs<CreateProjectExRequest, CreateProjectExResponse>('sc/projects/create-read', {
       token: globals.globalStore.state.token,
       project: {
-        neo4j_id: this.newNeo4j_id,
         name: this.newName,
         change_to_plan: this.newChange_to_plan,
         active: this.newActive,
@@ -243,7 +233,6 @@ export class ScProjects {
         status: this.newStatus,
         status_changed_at: this.newStatus_changed_at,
         step: this.newStep,
-        
       },
     });
 
@@ -256,25 +245,13 @@ export class ScProjects {
     }
   };
 
-
- 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
-    },
-
-
-    {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
     },
     {
       field: 'name',
@@ -296,8 +273,8 @@ export class ScProjects {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -390,11 +367,13 @@ export class ScProjects {
       displayName: 'Status',
       width: 200,
       editable: true,
-      isMulti: true,
+      isMulti: false,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'InDevelopment', value: 'InDevelopment' },
+        { display: 'Active', value: 'Active' },
+        { display: 'Terminated', value: 'Terminated' },
+        { display: 'Completed', value: 'Completed' },
+        { display: 'DidNotDevelop', value: 'DidNotDevelop' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -410,16 +389,39 @@ export class ScProjects {
       displayName: 'Step',
       width: 250,
       editable: true,
-      isMulti: true,
+      isMulti: false,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'EarlyConversations', value: 'EarlyConversations' },
+        { display: 'PendingConceptApproval', value: 'PendingConceptApproval' },
+        { display: 'PrepForConsultantEndorsement', value: 'PrepForConsultantEndorsement' },
+        { display: 'PendingConsultantEndorsement', value: 'PendingConsultantEndorsement' },
+        { display: 'PrepForFinancialEndorsement', value: 'PrepForFinancialEndorsement' },
+        { display: 'PendingFinancialEndorsement', value: 'PendingFinancialEndorsement' },
+        { display: 'FinalizingProposal', value: 'FinalizingProposal' },
+        { display: 'PendingRegionalDirectorApproval', value: 'PendingRegionalDirectorApproval' },
+        { display: 'PendingZoneDirectorApproval', value: 'PendingZoneDirectorApproval' },
+        { display: 'PendingFinanceConfirmation', value: 'PendingFinanceConfirmation' },
+        { display: 'OnHoldFinanceConfirmation', value: 'OnHoldFinanceConfirmation' },
+        { display: 'DidNotDevelop', value: 'DidNotDevelop' },
+        { display: 'Rejected', value: 'Rejected' },
+        { display: 'Active', value: 'Active' },
+        { display: 'ActiveChangedPlan', value: 'ActiveChangedPlan' },
+        { display: 'DiscussingChangeToPlan', value: 'DiscussingChangeToPlan' },
+        { display: 'PendingChangeToPlanApproval', value: 'PendingChangeToPlanApproval' },
+        { display: 'PendingChangeToPlanConfirmation', value: 'PendingChangeToPlanConfirmation' },
+        { display: 'DiscussingSuspension', value: 'DiscussingSuspension' },
+        { display: 'PendingSuspensionApproval', value: 'PendingSuspensionApproval' },
+        { display: 'Suspended', value: 'Suspended' },
+        { display: 'DiscussingReactivation', value: 'DiscussingReactivation' },
+        { display: 'PendingReactivationApproval', value: 'PendingReactivationApproval' },
+        { display: 'DiscussingTermination', value: 'DiscussingTermination' },
+        { display: 'PendingTerminationApproval', value: 'PendingTerminationApproval' },
+        { display: 'FinalizingCompletion', value: 'FinalizingCompletion' },
+        { display: 'Terminated', value: 'Terminated' },
+        { display: 'Completed', value: 'Completed' },
       ],
       updateFn: this.handleUpdate,
     },
-
-
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -465,7 +467,6 @@ export class ScProjects {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -478,18 +479,6 @@ export class ScProjects {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
-
-
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="neo4j_id">neo4j_id</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
-              </span>
-            </div>
-
             <div id="name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="name">Name</label>
@@ -497,14 +486,14 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="name" name="name" onInput={event => this.nameChange(event)} />
               </span>
-            </div>      
-            
+            </div>
+
             <div id="change_to_plan-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="change_to_plan">Change To Plan</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+                <input type="text" id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
               </span>
             </div>
 
@@ -513,13 +502,17 @@ export class ScProjects {
                 <label htmlFor="active">Active</label>
               </span>
               <span class="form-thing">
-              <select id="active" name="active" onInput={event => this.activeChange(event)}>
+                <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>True</option>
-                   <option value="false" selected={this.newActive === false}>False</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div>    
+            </div>
 
             <div id="department-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -537,14 +530,14 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="estimated_submission" name="estimated_submission" onInput={event => this.estimated_submissionChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="field_region-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="field_region">Field Region</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="field_region" name="field_region" onInput={event => this.field_regionChange(event)} />
+                <input type="text" id="field_region" name="field_region" onInput={event => this.field_regionChange(event)} />
               </span>
             </div>
 
@@ -555,14 +548,14 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="initial_mou_end" name="initial_mou_end" onInput={event => this.initial_mou_endChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="marketing_location-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="marketing_location">Marketing Location</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="marketing_location" name="marketing_location" onInput={event => this.marketing_locationChange(event)} />
+                <input type="text" id="marketing_location" name="marketing_location" onInput={event => this.marketing_locationChange(event)} />
               </span>
             </div>
 
@@ -573,7 +566,7 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="persmou_starton" name="mou_start" onInput={event => this.mou_startChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="mou_end-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -591,14 +584,14 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="owning_organization" name="owning_organization" onInput={event => this.owning_organizationChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="periodic_reports_directory-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="periodic_reports_directory">Periodic Reports Directory</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="periodic_reports_directory" name="periodic_reports_directory" onInput={event => this.periodic_reports_directoryChange(event)} />
+                <input type="text" id="periodic_reports_directory" name="periodic_reports_directory" onInput={event => this.periodic_reports_directoryChange(event)} />
               </span>
             </div>
 
@@ -607,16 +600,16 @@ export class ScProjects {
                 <label htmlFor="posts_directory">Posts Directory</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="posts_directory" name="posts_directory" onInput={event => this.posts_directoryChange(event)} />
+                <input type="text" id="posts_directory" name="posts_directory" onInput={event => this.posts_directoryChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="primary_location-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="primary_location">Primary Location</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="primary_location" name="primary_location" onInput={event => this.primary_locationChange(event)} />
+                <input type="text" id="primary_location" name="primary_location" onInput={event => this.primary_locationChange(event)} />
               </span>
             </div>
 
@@ -627,22 +620,33 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="root_directory" name="root_directory" onInput={event => this.root_directoryChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="status-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="status">Status</label>
               </span>
               <span class="form-thing">
-              <select id="status" name="status" multiple onInput={event => this.statusChange(event)}>
+                <select id="status" name="status" onInput={event => this.statusChange(event)}>
                   <option value="">Select Status</option>
-                  <option value="A" selected={this.newStatus === "A"}>A</option>
-                  <option value="B" selected={this.newStatus === "B"}>B</option>
-                  <option value="C" selected={this.newStatus === "C"}>C</option>
+                  <option value="InDevelopment" selected={this.newStatus === 'InDevelopment'}>
+                    InDevelopment
+                  </option>
+                  <option value="Active" selected={this.newStatus === 'Active'}>
+                    Active
+                  </option>
+                  <option value="Terminated" selected={this.newStatus === 'Terminated'}>
+                    Terminated
+                  </option>
+                  <option value="Completed" selected={this.newStatus === 'Completed'}>
+                    Completed
+                  </option>
+                  <option value="DidNotDevelop" selected={this.newStatus === 'DidNotDevelop'}>
+                    DidNotDevelop
+                  </option>
                 </select>
               </span>
             </div>
-
             <div id="status_changed_at-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="status_changed_at">Status Changed At</label>
@@ -650,27 +654,102 @@ export class ScProjects {
               <span class="form-thing">
                 <input type="text" id="status_changed_at" name="status_changed_at" onInput={event => this.status_changed_atChange(event)} />
               </span>
-            </div>    
+            </div>
 
             <div id="step-holder" class="form-input-item form-thing">
               <span class="form-step">
                 <label htmlFor="step">Step</label>
               </span>
               <span class="form-thing">
-              <select id="step" name="step" multiple onInput={event => this.stepChange(event)}>
+                <select id="step" name="step" onInput={event => this.stepChange(event)}>
                   <option value="">Select Step</option>
-                  <option value="A" selected={this.newStep === "A"}>A</option>
-                  <option value="B" selected={this.newStep === "B"}>B</option>
-                  <option value="C" selected={this.newStep === "C"}>C</option>
+                  <option value="EarlyConversations" selected={this.newStep === 'EarlyConversations'}>
+                    EarlyConversations
+                  </option>
+                  <option value="PendingConceptApproval" selected={this.newStep === 'PendingConceptApproval'}>
+                    PendingConceptApproval
+                  </option>
+                  <option value="PrepForConsultantEndorsement" selected={this.newStep === 'PrepForConsultantEndorsement'}>
+                    PrepForConsultantEndorsement
+                  </option>
+                  <option value="PendingConsultantEndorsement" selected={this.newStep === 'PendingConsultantEndorsement'}>
+                    PendingConsultantEndorsement
+                  </option>
+                  <option value="PrepForFinancialEndorsement" selected={this.newStep === 'PrepForFinancialEndorsement'}>
+                    PrepForFinancialEndorsement
+                  </option>
+                  <option value="PendingFinancialEndorsement" selected={this.newStep === 'PendingFinancialEndorsement'}>
+                    PendingFinancialEndorsement
+                  </option>
+                  <option value="FinalizingProposal" selected={this.newStep === 'FinalizingProposal'}>
+                    FinalizingProposal
+                  </option>
+                  <option value="PendingRegionalDirectorApproval" selected={this.newStep === 'PendingRegionalDirectorApproval'}>
+                    PendingRegionalDirectorApproval
+                  </option>
+                  <option value="PendingZoneDirectorApproval" selected={this.newStep === 'PendingZoneDirectorApproval'}>
+                    PendingZoneDirectorApproval
+                  </option>
+                  <option value="PendingFinanceConfirmation" selected={this.newStep === 'PendingFinanceConfirmation'}>
+                    PendingFinanceConfirmation
+                  </option>
+                  <option value="OnHoldFinanceConfirmation" selected={this.newStep === 'OnHoldFinanceConfirmation'}>
+                    OnHoldFinanceConfirmation
+                  </option>
+                  <option value="DidNotDevelop" selected={this.newStep === 'DidNotDevelop'}>
+                    DidNotDevelop
+                  </option>
+                  <option value="Rejected" selected={this.newStep === 'Rejected'}>
+                    Rejected
+                  </option>
+                  <option value="Active" selected={this.newStep === 'Active'}>
+                    Active
+                  </option>
+                  <option value="ActiveChangedPlan" selected={this.newStep === 'ActiveChangedPlan'}>
+                    ActiveChangedPlan
+                  </option>
+                  <option value="DiscussingChangeToPlan" selected={this.newStep === 'DiscussingChangeToPlan'}>
+                    DiscussingChangeToPlan
+                  </option>
+                  <option value="PendingChangeToPlanApproval" selected={this.newStep === 'PendingChangeToPlanApproval'}>
+                    PendingChangeToPlanApproval
+                  </option>
+                  <option value="PendingChangeToPlanConfirmation" selected={this.newStep === 'PendingChangeToPlanConfirmation'}>
+                    PendingChangeToPlanConfirmation
+                  </option>
+                  <option value="DiscussingSuspension" selected={this.newStep === 'DiscussingSuspension'}>
+                    DiscussingSuspension
+                  </option>
+                  <option value="PendingSuspensionApproval" selected={this.newStep === 'PendingSuspensionApproval'}>
+                    PendingSuspensionApproval
+                  </option>
+                  <option value="Suspended" selected={this.newStep === 'Suspended'}>
+                    Suspended
+                  </option>
+                  <option value="DiscussingReactivation" selected={this.newStep === 'DiscussingReactivation'}>
+                    DiscussingReactivation
+                  </option>
+                  <option value="PendingReactivationApproval" selected={this.newStep === 'PendingReactivationApproval'}>
+                    PendingReactivationApproval
+                  </option>
+                  <option value="DiscussingTermination" selected={this.newStep === 'DiscussingTermination'}>
+                    DiscussingTermination
+                  </option>
+                  <option value="PendingTerminationApproval" selected={this.newStep === 'PendingTerminationApproval'}>
+                    PendingTerminationApproval
+                  </option>
+                  <option value="FinalizingCompletion" selected={this.newStep === 'FinalizingCompletion'}>
+                    FinalizingCompletion
+                  </option>
+                  <option value="Terminated" selected={this.newStep === 'Terminated'}>
+                    Terminated
+                  </option>
+                  <option value="Completed" selected={this.newStep === 'Completed'}>
+                    Completed
+                  </option>
                 </select>
               </span>
             </div>
-
-            
-
-
-            
-
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>
@@ -679,5 +758,4 @@ export class ScProjects {
       </Host>
     );
   }
-
 }

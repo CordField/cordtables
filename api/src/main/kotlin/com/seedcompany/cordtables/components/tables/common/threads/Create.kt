@@ -19,7 +19,7 @@ data class CommonThreadsCreateRequest(
 
 data class CommonThreadsCreateResponse(
         val error: ErrorType,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -33,7 +33,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-threads/create")
+    @PostMapping("common/threads/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonThreadsCreateRequest): CommonThreadsCreateResponse {
         if (req.token == null) return CommonThreadsCreateResponse(error = com.seedcompany.cordtables.common.ErrorType.InputMissingToken, null)
@@ -45,7 +45,7 @@ class Create(
             insert into common.threads(content, channel, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -61,16 +61,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-                Int::class.java,
+                String::class.java,
                 req.thread.content,
                 req.thread.channel,
                 req.token,
                 req.token,
                 req.token,
+                util.adminGroupId
         )
 
 

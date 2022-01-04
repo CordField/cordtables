@@ -1,17 +1,17 @@
 
 class CommonPeopleToOrgRelationship {
-    id?: number | undefined;
+    id?: string | undefined;
 
-    org?: number | undefined;
-    person?: number | undefined;
+    org?: string | undefined;
+    person?: string | undefined;
     relationship_type?: string | undefined;
     begin_at?: string | undefined;
     end_at?: string | undefined;
 
     created_at?: string | undefined;
-    created_by?: number | undefined;
+    created_by?: string | undefined;
     modified_at?: string | undefined;
-    modified_by?: number | undefined;
-    owning_person?: number | undefined;
-    owning_group?: number | undefined;
+    modified_by?: string | undefined;
+    owning_person?: string | undefined;
+    owning_group?: string | undefined;
 }

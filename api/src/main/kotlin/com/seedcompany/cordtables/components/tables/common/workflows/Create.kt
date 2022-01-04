@@ -21,7 +21,7 @@ data class CommonWorkflowsCreateRequest(
 
 data class CommonWorkflowsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-workflows/create")
+    @PostMapping("common/workflows/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonWorkflowsCreateRequest): CommonWorkflowsCreateResponse {
 
@@ -69,15 +69,16 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.workflow.title,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

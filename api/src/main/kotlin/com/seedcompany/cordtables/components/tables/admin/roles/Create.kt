@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.roles
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.CommonFileVersionsUpdateReadResponse
 import com.seedcompany.cordtables.components.tables.admin.roles.roleInput
 import com.seedcompany.cordtables.components.tables.admin.roles.Read
 import com.seedcompany.cordtables.components.tables.admin.roles.Update
@@ -21,7 +22,7 @@ data class AdminRolesCreateRequest(
 
 data class AdminRolesCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,9 +42,12 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin-roles/create")
+    @PostMapping("admin/roles/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminRolesCreateRequest): AdminRolesCreateResponse {
+
+      if (req.token == null) return AdminRolesCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRolesCreateResponse(ErrorType.AdminOnly)
 
         if (req.role.name == null) return AdminRolesCreateResponse(error = ErrorType.InputMissingToken, null)
 
@@ -69,15 +73,16 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.role.name,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

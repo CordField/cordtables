@@ -21,7 +21,7 @@ data class CommonOrgChartPositionsCreateRequest(
 
 data class CommonOrgChartPositionsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-org-chart-positions/create")
+    @PostMapping("common/org-chart-positions/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonOrgChartPositionsCreateRequest): CommonOrgChartPositionsCreateResponse {
 
@@ -53,7 +53,7 @@ class Create(
             """
             insert into common.org_chart_positions(organization, name,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::INTEGER,
+                    ?::uuid,
                     ?,
                     (
                       select person 
@@ -70,16 +70,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.orgChartPosition.organization,
             req.orgChartPosition.name,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

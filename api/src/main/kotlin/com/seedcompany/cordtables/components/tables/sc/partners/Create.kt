@@ -20,7 +20,7 @@ data class ScPartnersCreateRequest(
 
 data class ScPartnersCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -37,7 +37,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-partners/create")
+    @PostMapping("sc/partners/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScPartnersCreateRequest): ScPartnersCreateResponse {
 
@@ -49,12 +49,12 @@ class Create(
             insert into sc.partners(organization, active, financial_reporting_types,  is_innovations_client, pmc_entity_code, point_of_contact,
              types, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::boolean,
                     ARRAY[?]::sc.financial_reporting_types[],
                     ?,
                     ?,
-                    ?,
+                    ?::uuid,
                     ARRAY[?]::sc.partner_types[],
                     (
                       select person 
@@ -71,11 +71,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.partner.organization,
             req.partner.active,
             req.partner.financial_reporting_types,
@@ -86,6 +86,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

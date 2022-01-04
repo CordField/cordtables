@@ -5,6 +5,7 @@ import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.tables.admin.group_memberships.groupMembershipInput
 import com.seedcompany.cordtables.components.tables.admin.group_memberships.Read
 import com.seedcompany.cordtables.components.tables.admin.group_memberships.Update
+import com.seedcompany.cordtables.components.tables.admin.group_row_access.AdminGroupRowAccessCreateResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -21,7 +22,7 @@ data class AdminGroupMembershipsCreateRequest(
 
 data class AdminGroupMembershipsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,10 +42,12 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin-group-memberships/create")
+    @PostMapping("admin/group-memberships/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminGroupMembershipsCreateRequest): AdminGroupMembershipsCreateResponse {
 
+      if (req.token == null) return AdminGroupMembershipsCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupMembershipsCreateResponse(ErrorType.AdminOnly)
         // if (req.groupMembership.name == null) return AdminGroupMembershipsCreateResponse(error = ErrorType.InputMissingToken, null)
 
 
@@ -53,8 +56,8 @@ class Create(
             """
             insert into admin.group_memberships(group_id, person,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -70,16 +73,17 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.groupMembership.group_id,
             req.groupMembership.person,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

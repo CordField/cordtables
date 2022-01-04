@@ -10,7 +10,7 @@ class CreateLanguageExRequest {
   language: {
     name: string;
     display_name: string;
-    ethnologue: number;
+    ethnologue: string;
   };
 }
 class CreateLanguageExResponse extends GenericResponse {
@@ -33,7 +33,7 @@ class ScLanguagesUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScLanguageUpdateResponse {
@@ -43,12 +43,12 @@ class ScLanguageUpdateResponse {
 }
 
 class DeleteLanguageExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteLanguageExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 @Component({
   tag: 'sc-languages',
@@ -60,10 +60,10 @@ export class ScLanguages {
   @State() currentPage: number = 1;
   newLanguageName: string;
   newDisplayName: string;
-  newEthnologue: number;
+  newEthnologue: string;
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc-languages/update-read', {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScLanguagesUpdateRequest, ScLanguageUpdateResponse>('sc/languages/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -87,7 +87,7 @@ export class ScLanguages {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('sc-languages/delete', {
+    const deleteResponse = await fetchAs<DeleteLanguageExRequest, DeleteLanguageExResponse>('sc/languages/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -102,7 +102,7 @@ export class ScLanguages {
   };
 
   async getList(page) {
-    this.languagesResponse = await fetchAs<ScLanguagesListRequest, ScLanguagesListResponse>('sc-languages/list', {
+    this.languagesResponse = await fetchAs<ScLanguagesListRequest, ScLanguagesListResponse>('sc/languages/list', {
       token: globals.globalStore.state.token,
       page: page,
       resultsPerPage: 5,
@@ -117,11 +117,15 @@ export class ScLanguages {
     this.newDisplayName = event.target.value;
   }
 
+  ethnologueChange(event) {
+    this.newEthnologue = event.target.value;
+  }
+
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('sc-languages/create-read', {
+    const createResponse = await fetchAs<CreateLanguageExRequest, CreateLanguageExResponse>('sc/languages/create-read', {
       token: globals.globalStore.state.token,
       language: {
         name: this.newLanguageName,
@@ -143,7 +147,7 @@ export class ScLanguages {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -727,7 +731,7 @@ export class ScLanguages {
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
-        <cf-pagination current-page={this.currentPage} total-rows={this.languagesResponse.size} results-per-page="5" page-url="sc-languages"></cf-pagination>
+        <cf-pagination current-page={this.currentPage} total-rows={this.languagesResponse.size} results-per-page="5" page-url="languages"></cf-pagination>
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
@@ -752,7 +756,7 @@ export class ScLanguages {
                 <label htmlFor="ethnologue">Ethnologue</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />
+                <input type="text" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
               </span>
             </div>
             <span class="form-thing">

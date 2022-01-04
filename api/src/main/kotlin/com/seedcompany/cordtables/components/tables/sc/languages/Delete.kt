@@ -12,13 +12,13 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class ScLanguagesDeleteRequest(
-    val id: Int,
+    val id: String,
     val token: String?,
 )
 
 data class ScLanguagesDeleteResponse(
     val error: ErrorType,
-    val id: Int?
+    val id: String?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -30,7 +30,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-languages/delete")
+    @PostMapping("sc/languages/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: ScLanguagesDeleteRequest): ScLanguagesDeleteResponse {
 
@@ -39,23 +39,19 @@ class Delete(
             return ScLanguagesDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
         println("req: $req")
-        var deletedLanguageExId: Int? = null
+        var deletedLanguageExId: String? = null
 
         this.ds.connection.use { conn ->
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from sc.languages where id = ? returning id"
+                    "delete from sc.languages where id = ?::uuid returning id"
                 )
-                deleteStatement.setInt(1, req.id)
-
-                deleteStatement.setInt(1,req.id)
-
-
+                deleteStatement.setString(1, req.id)
                 val deleteStatementResult = deleteStatement.executeQuery()
 
                 if (deleteStatementResult.next()) {
-                  deletedLanguageExId  = deleteStatementResult.getInt("id")
+                  deletedLanguageExId  = deleteStatementResult.getString("id")
                 }
             }
             catch (e:SQLException ){

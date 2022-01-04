@@ -22,7 +22,7 @@ data class CommonOrganizationsCreateRequest(
 
 data class CommonOrganizationsCreateResponse(
         val error: ErrorType,
-        val id: Int? = null,
+        val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -42,7 +42,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-organizations/create")
+    @PostMapping("common/organizations/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonOrganizationsCreateRequest): CommonOrganizationsCreateResponse {
 
@@ -64,7 +64,7 @@ class Create(
                 values(
                     ?,
                     ?::common.sensitivity,
-                    ?,
+                    ?::uuid,
                     (
                       select person 
                       from admin.tokens 
@@ -80,17 +80,18 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-                Int::class.java,
+                String::class.java,
                 req.organization.name,
                 req.organization.sensitivity,
                 req.organization.primary_location,
                 req.token,
                 req.token,
                 req.token,
+                util.adminGroupId
         )
 
 //        req.language.id = id

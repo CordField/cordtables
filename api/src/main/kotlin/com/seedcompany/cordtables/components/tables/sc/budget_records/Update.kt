@@ -12,7 +12,7 @@ import javax.sql.DataSource
 
 data class ScBudgetRecordsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -32,7 +32,7 @@ class Update(
     val ds: DataSource,
 ) {
 
-    @PostMapping("sc-budget-records/update")
+    @PostMapping("sc/budget-records/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScBudgetRecordsUpdateRequest): ScBudgetRecordsUpdateResponse {
 
@@ -49,6 +49,7 @@ class Update(
                     column = "budget",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -59,6 +60,7 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -100,6 +102,7 @@ class Update(
                     column = "partnership",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -110,6 +113,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -120,6 +124,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 

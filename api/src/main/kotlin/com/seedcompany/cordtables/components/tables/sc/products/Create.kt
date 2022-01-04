@@ -22,7 +22,7 @@ data class ScProductsCreateRequest(
 
 data class ScProductsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -42,7 +42,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-products/create")
+    @PostMapping("sc/products/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScProductsCreateRequest): ScProductsCreateResponse {
 
@@ -53,14 +53,13 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.products(neo4j_id, name, change_to_plan, active, mediums, methodologies, purposes, type,  created_by, modified_by, owning_person, owning_group)
+            insert into sc.products(name, change_to_plan, active, mediums, methodology, purposes, type,  created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?,
-                    ?,
-                    ?,
+                    ?::uuid,
+                    ?::boolean,
                     ARRAY[?]::common.product_mediums[],
-                    ARRAY[?]::common.product_methodologies[],
+                    ?::common.product_methodologies,
                     ARRAY[?]::common.product_purposes[],
                     ?::common.product_type,
                     (
@@ -78,22 +77,22 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
-            req.product.neo4j_id,
+            String::class.java,
             req.product.name,
             req.product.change_to_plan,
             req.product.active,
             req.product.mediums.toString().replace("[", "{").replace("]", "}"),
-            req.product.methodologies,
+            req.product.methodology,
             req.product.purposes,
             req.product.type,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

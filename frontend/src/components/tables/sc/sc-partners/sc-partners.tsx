@@ -8,12 +8,12 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePartnerExRequest {
   token: string;
   partner: {
-    organization: number;
+    organization: string;
     active: boolean;
     financial_reporting_types: string;
     is_innovations_client: boolean;
     pmc_entity_code: string;
-    point_of_contact: number;
+    point_of_contact: string;
     types: string;
   };
 }
@@ -30,12 +30,11 @@ class ScPartnerListResponse {
   partners: ScPartner[];
 }
 
-
 class ScPartnerUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPartnerUpdateResponse {
@@ -44,12 +43,12 @@ class ScPartnerUpdateResponse {
 }
 
 class DeletePartnerExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePartnerExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -58,19 +57,18 @@ class DeletePartnerExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScPartners {
-
   @State() partnersResponse: ScPartnerListResponse;
 
-  newOrganization: number;
+  newOrganization: string;
   newActive: boolean;
   newFinancial_reporting_types: string;
   newIs_innovations_client: boolean;
   newPmc_entity_code: string;
-  newPoint_of_contact: number;
+  newPoint_of_contact: string;
   newTypes: string;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScPartnerUpdateRequest, ScPartnerUpdateResponse>('sc-partners/update-read', {
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScPartnerUpdateRequest, ScPartnerUpdateResponse>('sc/partners/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -90,7 +88,7 @@ export class ScPartners {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePartnerExRequest, DeletePartnerExResponse>('sc-partners/delete', {
+    const deleteResponse = await fetchAs<DeletePartnerExRequest, DeletePartnerExResponse>('sc/partners/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -105,17 +103,10 @@ export class ScPartners {
   };
 
   async getList() {
-    this.partnersResponse = await fetchAs<ScPartnerListRequest, ScPartnerListResponse>('sc-partners/list', {
+    this.partnersResponse = await fetchAs<ScPartnerListRequest, ScPartnerListResponse>('sc/partners/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   organizationChange(event) {
     this.newOrganization = event.target.value;
@@ -145,7 +136,7 @@ export class ScPartners {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePartnerExRequest, CreatePartnerExResponse>('sc-partners/create-read', {
+    const createResponse = await fetchAs<CreatePartnerExRequest, CreatePartnerExResponse>('sc/partners/create-read', {
       token: globals.globalStore.state.token,
       partner: {
         organization: this.newOrganization,
@@ -154,7 +145,7 @@ export class ScPartners {
         is_innovations_client: this.newIs_innovations_client,
         pmc_entity_code: this.newPmc_entity_code,
         point_of_contact: this.newPoint_of_contact,
-        types: this.newTypes
+        types: this.newTypes,
       },
     });
 
@@ -171,14 +162,14 @@ export class ScPartners {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -188,8 +179,8 @@ export class ScPartners {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -200,9 +191,8 @@ export class ScPartners {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'Funded', value: 'Funded' },
+        { display: 'FieldEngaged', value: 'FieldEngaged' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -212,8 +202,8 @@ export class ScPartners {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "True", value: "true"},
-        {display: "False", value: "false"},
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -238,16 +228,14 @@ export class ScPartners {
       editable: true,
       isMulti: true,
       selectOptions: [
-        {display: "A", value: "A"},
-        {display: "B", value: "B"},
-        {display: "C", value: "C"},
+        { display: 'Managing', value: 'Managing' },
+        { display: 'Funding', value: 'Funding' },
+        { display: 'Impact', value: 'Impact' },
+        { display: 'Technical', value: 'Technical' },
+        { display: 'Resource', value: 'Resource' },
       ],
       updateFn: this.handleUpdate,
     },
-    
-
-
-
     {
       field: 'created_at',
       displayName: 'Created At',
@@ -293,7 +281,6 @@ export class ScPartners {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -306,13 +293,12 @@ export class ScPartners {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="organization-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 
@@ -323,22 +309,29 @@ export class ScPartners {
               <span class="form-thing">
                 <select id="active" name="active" onInput={event => this.activeChange(event)}>
                   <option value="">Select Active</option>
-                  <option value="true" selected={this.newActive === true}>True</option>
-                   <option value="false" selected={this.newActive === false}>False</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
 
             <div id="financial_reporting_types-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="financial_reporting_types">Financial Reporting Types</label>
               </span>
               <span class="form-thing">
-              <select id="financial_reporting_types" name="financial_reporting_types" multiple onInput={event => this.financial_reporting_typesChange(event)}>
+                <select id="financial_reporting_types" name="financial_reporting_types" multiple onInput={event => this.financial_reporting_typesChange(event)}>
                   <option value="">Select Financial Reporting Types</option>
-                  <option value="A" selected={this.newFinancial_reporting_types === 'A'}>A</option>
-                   <option value="B" selected={this.newFinancial_reporting_types === 'B'}>B</option>
-                   <option value="C" selected={this.newFinancial_reporting_types === 'C'}>C</option>
+                  <option value="Funded" selected={this.newFinancial_reporting_types === 'Funded'}>
+                    Funded
+                  </option>
+                  <option value="FieldEngaged" selected={this.newFinancial_reporting_types === 'FieldEngaged'}>
+                    FieldEngaged
+                  </option>
                 </select>
               </span>
             </div>
@@ -348,13 +341,17 @@ export class ScPartners {
                 <label htmlFor="is_innovations_client">Is Innovations Client</label>
               </span>
               <span class="form-thing">
-              <select id="is_innovations_client" name="is_innovations_client" onInput={event => this.is_innovations_clientChange(event)}>
+                <select id="is_innovations_client" name="is_innovations_client" onInput={event => this.is_innovations_clientChange(event)}>
                   <option value="">Select Is Innovations Client</option>
-                  <option value="true" selected={this.newIs_innovations_client === true}>True</option>
-                   <option value="false" selected={this.newIs_innovations_client === false}>False</option>
+                  <option value="true" selected={this.newIs_innovations_client === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newIs_innovations_client === false}>
+                    False
+                  </option>
                 </select>
               </span>
-            </div> 
+            </div>
 
             <div id="pmc_entity_code-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -370,9 +367,9 @@ export class ScPartners {
                 <label htmlFor="point_of_contact">Point Of Contact</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="point_of_contact" name="point_of_contact" onInput={event => this.point_of_contactChange(event)} />
+                <input type="text" id="point_of_contact" name="point_of_contact" onInput={event => this.point_of_contactChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="types-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -381,15 +378,24 @@ export class ScPartners {
               <span class="form-thing">
                 <select id="types" name="types" multiple onInput={event => this.typesChange(event)}>
                   <option value="">Select Types</option>
-                  <option value="A" selected={this.newTypes === 'A'}>A</option>
-                   <option value="B" selected={this.newTypes === 'B'}>B</option>
-                   <option value="C" selected={this.newTypes === 'C'}>C</option>
+                  <option value="Managing" selected={this.newTypes === 'Managing'}>
+                    Managing
+                  </option>
+                  <option value="Funding" selected={this.newTypes === 'Funding'}>
+                    Funding
+                  </option>
+                  <option value="Impact" selected={this.newTypes === 'Impact'}>
+                    Impact
+                  </option>
+                  <option value="Technical" selected={this.newTypes === 'Technical'}>
+                    Technical
+                  </option>
+                  <option value="Resource" selected={this.newTypes === 'Resource'}>
+                    Resource
+                  </option>
                 </select>
               </span>
             </div>
-
-            
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -399,5 +405,4 @@ export class ScPartners {
       </Host>
     );
   }
-
 }

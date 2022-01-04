@@ -12,8 +12,8 @@ import javax.sql.DataSource
 
 data class CommonWorkEstimateUpdateReadRequest(
     val token: String?,
-    val id: Int? = null,
-    val ticket: Int? = null,
+    val id: String? = null,
+    val ticket: String? = null,
     val hours: Int? = null,
     val minutes: Int? = null
 )
@@ -38,7 +38,7 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("common-work-estimates/update-read")
+    @PostMapping("common/work-estimates/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonWorkEstimateUpdateReadRequest): CommonWorkEstimateUpdateReadResponse {
 

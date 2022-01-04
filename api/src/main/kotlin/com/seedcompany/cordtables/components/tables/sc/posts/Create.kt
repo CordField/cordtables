@@ -21,7 +21,7 @@ data class ScPostsCreateRequest(
 
 data class ScPostsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-posts/create")
+    @PostMapping("sc/posts/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScPostsCreateRequest): ScPostsCreateResponse {
 
@@ -52,7 +52,7 @@ class Create(
             """
             insert into sc.posts(directory, type, shareability, body, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::sc.post_type,
                     ?::sc.post_shareability,
                     ?,
@@ -71,11 +71,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.post.directory,
             req.post.type,
             req.post.shareability,
@@ -83,6 +83,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

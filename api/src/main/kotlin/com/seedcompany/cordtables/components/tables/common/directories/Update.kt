@@ -1,11 +1,8 @@
 package com.seedcompany.cordtables.components.tables.common.directories
 
 
-import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.sc.languages.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -16,7 +13,7 @@ import javax.sql.DataSource
 
 data class CommonDirectoriesUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -35,7 +32,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-directories/update")
+    @PostMapping("common/directories/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonDirectoriesUpdateRequest): CommonDirectoriesUpdateResponse {
 
@@ -57,6 +54,7 @@ class Update(
                     column = "parent",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -77,6 +75,7 @@ class Update(
                     column = "created_at",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -87,6 +86,7 @@ class Update(
                     column = "created_by",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "modified_at" -> {
@@ -96,6 +96,7 @@ class Update(
                     column = "modified_at",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
             "modified_by" -> {
@@ -105,6 +106,7 @@ class Update(
                     column = "modified_by",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -116,6 +118,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 
@@ -126,6 +129,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
+                    cast = "::uuid"
                 )
             }
 

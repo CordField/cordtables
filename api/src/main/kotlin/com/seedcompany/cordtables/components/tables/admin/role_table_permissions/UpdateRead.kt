@@ -17,7 +17,7 @@ import javax.sql.DataSource
 
 data class CommonFileVersionsUpdateReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -42,9 +42,12 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("admin-role-table-permissions/update-read")
+    @PostMapping("admin/role-table-permissions/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: CommonFileVersionsUpdateReadRequest): CommonFileVersionsUpdateReadResponse {
+
+      if (req.token == null) return CommonFileVersionsUpdateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return CommonFileVersionsUpdateReadResponse(ErrorType.AdminOnly)
 
         val updateResponse = update.updateHandler(
             AdminRoleTablePermissionsUpdateRequest(

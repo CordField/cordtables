@@ -3,6 +3,7 @@ package com.seedcompany.cordtables.components.tables.admin.role_table_permission
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.TableNames
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.role_memberships.AdminRoleMembershipsUpdateReadResponse
 import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.roleTablePermissionInput
 import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.Read
 import com.seedcompany.cordtables.components.tables.admin.role_table_permissions.Update
@@ -22,7 +23,7 @@ data class AdminRoleTablePermissionsCreateRequest(
 
 data class AdminRoleTablePermissionsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -42,9 +43,12 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin-role-table-permissions/create")
+    @PostMapping("admin/role-table-permissions/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminRoleTablePermissionsCreateRequest): AdminRoleTablePermissionsCreateResponse {
+
+      if (req.token == null) return AdminRoleTablePermissionsCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleTablePermissionsCreateResponse(ErrorType.AdminOnly)
 
         // if (req.roleTablePermission.name == null) return AdminRoleTablePermissionsCreateResponse(error = ErrorType.InputMissingToken, null)
 
@@ -54,7 +58,7 @@ class Create(
             """
             insert into admin.role_table_permissions(role, table_name, table_permission,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::admin.table_name,
                     ?::admin.table_permission_grant_type,
                     (
@@ -72,17 +76,18 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.roleTablePermission.role,
             req.roleTablePermission.table_name,
             req.roleTablePermission.table_permission,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

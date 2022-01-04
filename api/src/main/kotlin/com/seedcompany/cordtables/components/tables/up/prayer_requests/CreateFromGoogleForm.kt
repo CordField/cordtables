@@ -39,7 +39,7 @@ data class UpPrayerRequestsCreateFromFormRequest(
 
 data class UpPrayerRequestsCreateFromFormResponse(
   val error: ErrorType,
-  val id: Int? = null,
+  val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -80,25 +80,25 @@ class CreateFromGoogleForm(
    *
    */
 
-  @PostMapping("up-prayer-requests/create-from-form")
+  @PostMapping("up/prayer-requests/create-from-form")
   @ResponseBody
   fun createHandler(@RequestBody req: UpPrayerRequestsCreateFromFormRequest): UpPrayerRequestsCreateFromFormResponse {
-    var creatorUserId: Int?
-    var translatorUserId: Int?
+    var creatorUserId: String?
+    var translatorUserId: String?
 
     creatorUserId = checkUserExists(req.prayerForm.creatorEmail)
     translatorUserId = req.prayerForm.translatorEmail?.let { checkUserExists(it) }
 
     var langExists = req.prayerForm.ethCode?.let { getSilLanguageData(it) }
 
-    if(creatorUserId == 0){
+    if(creatorUserId == null){
       val pass = util.encoder.encode("somepassword")
       val tkn = util.createToken()
       reg.registerDB(req.prayerForm.creatorEmail, pass, tkn)
       creatorUserId = checkUserExists(req.prayerForm.creatorEmail)
     }
 
-    if(translatorUserId == 0){
+    if(translatorUserId == null){
       val pass = util.encoder.encode("somepassword")
       val tkn = util.createToken()
       req.prayerForm.translatorEmail?.let { reg.registerDB(it, pass, tkn) }
@@ -109,23 +109,23 @@ class CreateFromGoogleForm(
       """
             insert into up.prayer_requests(request_language_id, sensitivity, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::common.sensitivity,
-                    ?,
+                    ?::uuid,
                     ?,
                     ?,
                     ?,
                     false,
                     ?::up.prayer_type,
-                    ?,
-                    ?,
-                    ?,
-                    1
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid,
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-      Int::class.java,
-      langExists!!.common_id,
+      String::class.java,
+      langExists!!.id,
       req.prayerForm.sensitivity,
       translatorUserId,
       req.prayerForm.location,
@@ -135,6 +135,7 @@ class CreateFromGoogleForm(
       creatorUserId,
       creatorUserId,
       creatorUserId,
+      util.adminGroupId
     )
     return UpPrayerRequestsCreateFromFormResponse(error = ErrorType.NoError, id = id)
   }
@@ -146,8 +147,7 @@ class CreateFromGoogleForm(
       """.trimIndent()
     ){ rs, rowNum ->
       languageIndex(
-        rs.getInt("id"),
-        rs.getInt("common_id"),
+        rs.getString("id"),
         rs.getString("lang"),
         rs.getString("country"),
         rs.getString("name_type"),
@@ -157,31 +157,31 @@ class CreateFromGoogleForm(
     return data.first()
   }
 
-  fun checkDataExists(table: String, field: String, fieldValue: String): Int {
-    var id: Int?
+  fun checkDataExists(table: String, field: String, fieldValue: String): String? {
+    var id: String?
     id = jdbcTemplate.queryForObject(
       """
           SELECT id FROM $table WHERE $field = ?;
       """.trimIndent(),
-      Int::class.java,
+      String::class.java,
       fieldValue,
     )
     return  id;
   }
 
 
-  fun checkUserExists(email: String):Int{
+  fun checkUserExists(email: String): String?{
     return try {
       jdbcTemplate.queryForObject(
         """
             SELECT id FROM admin.users WHERE email = ?;
           """.trimIndent(),
-        Int::class.java,
+        String::class.java,
         email
         )
     }
     catch (e: EmptyResultDataAccessException){
-      0
+      null
     }
   }
 

@@ -21,7 +21,7 @@ data class ScPeopleCreateRequest(
 
 data class ScPeopleCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("sc-people/create")
+    @PostMapping("sc/people/create")
     @ResponseBody
     fun createHandler(@RequestBody req: ScPeopleCreateRequest): ScPeopleCreateResponse {
 
@@ -51,9 +51,9 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.people(neo4j_id, skills, status, created_by, modified_by, owning_person, owning_group)
+            insert into sc.people(id, skills, status, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ARRAY[?],
                     ?,
                     (
@@ -71,17 +71,18 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
-            req.people.neo4j_id,
+            String::class.java,
+            req.people.id,
             req.people.skills,
             req.people.status,
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

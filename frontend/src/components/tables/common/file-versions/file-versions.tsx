@@ -11,7 +11,7 @@ class CreateFileVersionExRequest {
     category: string;
     mime_type: string;
     name: string;
-    file: number;
+    file: string;
     file_url: string;
     file_size: number;
   };
@@ -42,7 +42,7 @@ class CommonFileVersionUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonFileVersionUpdateResponse {
@@ -51,12 +51,12 @@ class CommonFileVersionUpdateResponse {
 }
 
 class DeleteFileVersionExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFileVersionExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -65,20 +65,18 @@ class DeleteFileVersionExResponse extends GenericResponse {
   shadow: true,
 })
 export class FileVersions {
-
   @State() fileVersionsResponse: CommonFileVersionListResponse;
   @State() filesResponse: CommonFileListResponse;
 
   newCategory: string;
   newMimeType: string;
   newName: string;
-  newFile: number;
+  newFile: string;
   newFileUrl: string;
   newFileSize: number;
 
-
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonFileVersionUpdateRequest, CommonFileVersionUpdateResponse>('common-file-versions/update-read', {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonFileVersionUpdateRequest, CommonFileVersionUpdateResponse>('common/file-versions/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -88,7 +86,10 @@ export class FileVersions {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.fileVersionsResponse = { error: ErrorType.NoError, fileVersions: this.fileVersionsResponse.fileVersions.map(fileVersion => (fileVersion.id === id ? updateResponse.fileVersion : fileVersion)) };
+      this.fileVersionsResponse = {
+        error: ErrorType.NoError,
+        fileVersions: this.fileVersionsResponse.fileVersions.map(fileVersion => (fileVersion.id === id ? updateResponse.fileVersion : fileVersion)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -98,7 +99,7 @@ export class FileVersions {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFileVersionExRequest, DeleteFileVersionExResponse>('common-file-versions/delete', {
+    const deleteResponse = await fetchAs<DeleteFileVersionExRequest, DeleteFileVersionExResponse>('common/file-versions/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -113,13 +114,13 @@ export class FileVersions {
   };
 
   async getList() {
-    this.fileVersionsResponse = await fetchAs<CommonFileVersionListRequest, CommonFileVersionListResponse>('common-file-versions/list', {
+    this.fileVersionsResponse = await fetchAs<CommonFileVersionListRequest, CommonFileVersionListResponse>('common/file-versions/list', {
       token: globals.globalStore.state.token,
     });
   }
 
   async getFilesList() {
-    this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+    this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common/files/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -140,7 +141,7 @@ export class FileVersions {
     this.newFileUrl = event.target.value;
   }
 
-  fileSizeChange(event){
+  fileSizeChange(event) {
     this.newFileSize = event.target.value;
   }
 
@@ -152,7 +153,7 @@ export class FileVersions {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateFileVersionExRequest, CreateFileVersionExResponse>('common-file-versions/create-read', {
+    const createResponse = await fetchAs<CreateFileVersionExRequest, CreateFileVersionExResponse>('common/file-versions/create-read', {
       token: globals.globalStore.state.token,
       fileVersion: {
         category: this.newCategory,
@@ -173,28 +174,32 @@ export class FileVersions {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'category',
       displayName: 'category',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'mime_type',
       displayName: 'Mime Type',
       width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      editable: true,
+      selectOptions: [
+        { display: 'A', value: 'A' },
+        { display: 'B', value: 'B' },
+        { display: 'C', value: 'C' },
+      ],
+      updateFn: this.handleUpdate,
     },
     {
       field: 'name',
@@ -295,7 +300,18 @@ export class FileVersions {
                 <label htmlFor="mimetype">Mime Type</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="mimetype" name="mimetype" onInput={event => this.mimetypeChange(event)} />
+                <select id="mimetype" name="mimetype" onInput={event => this.mimetypeChange(event)}>
+                  <option value="">Select Mime Type</option>
+                  <option value="A" selected={this.newMimeType === 'A'}>
+                    A
+                  </option>
+                  <option value="B" selected={this.newMimeType === 'B'}>
+                    B
+                  </option>
+                  <option value="C" selected={this.newMimeType === 'C'}>
+                    C
+                  </option>
+                </select>
               </span>
             </div>
 
@@ -314,10 +330,10 @@ export class FileVersions {
               </span>
               <span class="form-thing">
                 <select name="file" onInput={event => this.fileChange(event)}>
-                <option value="">Select A Directory</option>
-                {this.filesResponse.files.map(option => (
-                  <option value={option.id}>{option.name}</option>
-                ))}
+                  <option value="">Select A File</option>
+                  {this.filesResponse.files.map(option => (
+                    <option value={option.id}>{option.name}</option>
+                  ))}
                 </select>
               </span>
             </div>
@@ -339,8 +355,6 @@ export class FileVersions {
                 <input type="number" id="file-size" name="file-size" onInput={event => this.fileSizeChange(event)} />
               </span>
             </div>
-            
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -350,5 +364,4 @@ export class FileVersions {
       </Host>
     );
   }
-
 }

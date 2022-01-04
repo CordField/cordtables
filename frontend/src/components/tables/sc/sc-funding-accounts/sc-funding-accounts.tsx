@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateFundingAccountExRequest {
   token: string;
   fundingAccount: {
-    neo4j_id: string ;
     account_number: number;
     name: string;
   };
@@ -26,12 +25,11 @@ class ScFundingAccountListResponse {
   fundingAccounts: ScFundingAccount[];
 }
 
-
 class ScFundingAccountUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScFundingAccountUpdateResponse {
@@ -40,12 +38,12 @@ class ScFundingAccountUpdateResponse {
 }
 
 class DeleteFundingAccountExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFundingAccountExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,15 +52,13 @@ class DeleteFundingAccountExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScFundingAccounts {
-
   @State() fundingAccountsResponse: ScFundingAccountListResponse;
 
-  newNeo4j_id: string ;
   newAccount_number: number;
   newName: string;
- 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScFundingAccountUpdateRequest, ScFundingAccountUpdateResponse>('sc-funding-accounts/update-read', {
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScFundingAccountUpdateRequest, ScFundingAccountUpdateResponse>('sc/funding-accounts/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +68,10 @@ export class ScFundingAccounts {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.fundingAccountsResponse = { error: ErrorType.NoError, fundingAccounts: this.fundingAccountsResponse.fundingAccounts.map(fundingAccount => (fundingAccount.id === id ? updateResponse.fundingAccount : fundingAccount)) };
+      this.fundingAccountsResponse = {
+        error: ErrorType.NoError,
+        fundingAccounts: this.fundingAccountsResponse.fundingAccounts.map(fundingAccount => (fundingAccount.id === id ? updateResponse.fundingAccount : fundingAccount)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +81,7 @@ export class ScFundingAccounts {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFundingAccountExRequest, DeleteFundingAccountExResponse>('sc-funding-accounts/delete', {
+    const deleteResponse = await fetchAs<DeleteFundingAccountExRequest, DeleteFundingAccountExResponse>('sc/funding-accounts/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,7 +96,7 @@ export class ScFundingAccounts {
   };
 
   async getList() {
-    this.fundingAccountsResponse = await fetchAs<ScFundingAccountListRequest, ScFundingAccountListResponse>('sc-funding-accounts/list', {
+    this.fundingAccountsResponse = await fetchAs<ScFundingAccountListRequest, ScFundingAccountListResponse>('sc/funding-accounts/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -108,10 +107,9 @@ export class ScFundingAccounts {
   //   });
   // }
 
-
-  neo4j_idChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
+  // neo4j_idChange(event) {
+  //   this.newNeo4j_id = event.target.value;
+  // }
 
   account_numberChange(event) {
     this.newAccount_number = event.target.value;
@@ -125,10 +123,10 @@ export class ScFundingAccounts {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateFundingAccountExRequest, CreateFundingAccountExResponse>('sc-funding-accounts/create-read', {
+    const createResponse = await fetchAs<CreateFundingAccountExRequest, CreateFundingAccountExResponse>('sc/funding-accounts/create-read', {
       token: globals.globalStore.state.token,
       fundingAccount: {
-        neo4j_id: this.newNeo4j_id,
+        // neo4j_id: this.newNeo4j_id,
         account_number: this.newAccount_number,
         name: this.newName,
       },
@@ -143,23 +141,21 @@ export class ScFundingAccounts {
     }
   };
 
-
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
-    {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 200,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
+    // {
+    //   field: 'neo4j_id',
+    //   displayName: 'neo4j_id',
+    //   width: 200,
+    //   editable: true,
+    //   updateFn: this.handleUpdate,
+    // },
     {
       field: 'account_number',
       displayName: 'Account Number',
@@ -219,7 +215,6 @@ export class ScFundingAccounts {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -232,14 +227,14 @@ export class ScFundingAccounts {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            {/* <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="neo4j_id-thing">
                 <label htmlFor="neo4j_id">No4j_id</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4j_idChange(event)} />
               </span>
-            </div>
+            </div> */}
 
             <div id="account_number-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -248,7 +243,7 @@ export class ScFundingAccounts {
               <span class="form-thing">
                 <input type="number" id="account_number" name="account_number" onInput={event => this.account_numberChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="name-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -258,7 +253,6 @@ export class ScFundingAccounts {
                 <input type="text" id="name" name="name" onInput={event => this.nameChange(event)} />
               </span>
             </div>
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -268,5 +262,4 @@ export class ScFundingAccounts {
       </Host>
     );
   }
-
 }

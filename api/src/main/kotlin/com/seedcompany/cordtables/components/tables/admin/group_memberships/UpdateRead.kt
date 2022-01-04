@@ -17,7 +17,7 @@ import javax.sql.DataSource
 
 data class AdminGroupMembershipsUpdateReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -42,9 +42,12 @@ class UpdateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("admin-group-memberships/update-read")
+    @PostMapping("admin/group-memberships/update-read")
     @ResponseBody
     fun updateReadHandler(@RequestBody req: AdminGroupMembershipsUpdateReadRequest): AdminGroupMembershipsUpdateReadResponse {
+
+      if (req.token == null) return AdminGroupMembershipsUpdateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupMembershipsUpdateReadResponse(ErrorType.AdminOnly)
 
         val updateResponse = update.updateHandler(
             AdminGroupMembershipsUpdateRequest(

@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateFieldZoneExRequest {
   token: string;
   fieldZone: {
-    neo4j_id: string;
-    director: number;
+    // neo4j_id: string;
+    director: string;
     name: string;
   };
 }
@@ -26,12 +26,11 @@ class ScFieldZoneListResponse {
   fieldZones: ScFieldZone[];
 }
 
-
 class ScFieldZoneUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScFieldZoneUpdateResponse {
@@ -40,12 +39,12 @@ class ScFieldZoneUpdateResponse {
 }
 
 class DeleteFieldZoneExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFieldZoneExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -54,15 +53,14 @@ class DeleteFieldZoneExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScFieldZones {
-
   @State() fieldZonesResponse: ScFieldZoneListResponse;
 
-  newNeo4j_id: string;
-  newDirector: number;
+  // newNeo4j_id: string;
+  newDirector: string;
   newName: string;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScFieldZoneUpdateRequest, ScFieldZoneUpdateResponse>('sc-field-zones/update-read', {
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScFieldZoneUpdateRequest, ScFieldZoneUpdateResponse>('sc/field-zones/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -72,7 +70,10 @@ export class ScFieldZones {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.fieldZonesResponse = { error: ErrorType.NoError, fieldZones: this.fieldZonesResponse.fieldZones.map(fieldZone => (fieldZone.id === id ? updateResponse.fieldZone : fieldZone)) };
+      this.fieldZonesResponse = {
+        error: ErrorType.NoError,
+        fieldZones: this.fieldZonesResponse.fieldZones.map(fieldZone => (fieldZone.id === id ? updateResponse.fieldZone : fieldZone)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -82,7 +83,7 @@ export class ScFieldZones {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFieldZoneExRequest, DeleteFieldZoneExResponse>('sc-field-zones/delete', {
+    const deleteResponse = await fetchAs<DeleteFieldZoneExRequest, DeleteFieldZoneExResponse>('sc/field-zones/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -97,7 +98,7 @@ export class ScFieldZones {
   };
 
   async getList() {
-    this.fieldZonesResponse = await fetchAs<ScFieldZoneListRequest, ScFieldZoneListResponse>('sc-field-zones/list', {
+    this.fieldZonesResponse = await fetchAs<ScFieldZoneListRequest, ScFieldZoneListResponse>('sc/field-zones/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -108,10 +109,9 @@ export class ScFieldZones {
   //   });
   // }
 
-
-  neo4jChange(event) {
-    this.newNeo4j_id = event.target.value;
-  }
+  // neo4jChange(event) {
+  //   this.newNeo4j_id = event.target.value;
+  // }
 
   directorChange(event) {
     this.newDirector = event.target.value;
@@ -121,15 +121,14 @@ export class ScFieldZones {
     this.newName = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateFieldZoneExRequest, CreateFieldZoneExResponse>('sc-field-zones/create-read', {
+    const createResponse = await fetchAs<CreateFieldZoneExRequest, CreateFieldZoneExResponse>('sc/field-zones/create-read', {
       token: globals.globalStore.state.token,
       fieldZone: {
-        neo4j_id: this.newNeo4j_id,
+        // neo4j_id: this.newNeo4j_id,
         director: this.newDirector,
         name: this.newName,
       },
@@ -144,32 +143,31 @@ export class ScFieldZones {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
-    {
-      field: 'neo4j_id',
-      displayName: 'neo4j_id',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
-    },
+    // {
+    //   field: 'neo4j_id',
+    //   displayName: 'neo4j_id',
+    //   width: 50,
+    //   editable: false,
+    //   deleteFn: this.handleDelete,
+    // },
     {
       field: 'director',
       displayName: 'Director',
-      width: 50,
-      editable: false,
-      deleteFn: this.handleDelete,
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
     },
     {
       field: 'name',
-      displayName: 'File Version Name',
+      displayName: 'Name',
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
@@ -231,21 +229,21 @@ export class ScFieldZones {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="neo4j_id-holder" class="form-input-item form-thing">
+            {/* <div id="neo4j_id-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="neo4j_id">neo4j_id</label>
               </span>
               <span class="form-thing">
                 <input type="text" id="neo4j_id" name="neo4j_id" onInput={event => this.neo4jChange(event)} />
               </span>
-            </div>
+            </div> */}
 
             <div id="director-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="director">Director</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="director" name="director" onInput={event => this.directorChange(event)} />
+                <input type="text" id="director" name="director" onInput={event => this.directorChange(event)} />
               </span>
             </div>
 
@@ -256,8 +254,7 @@ export class ScFieldZones {
               <span class="form-thing">
                 <input type="text" id="field-Zone-name" name="field-Zone-name" onInput={event => this.fieldZoneNameChange(event)} />
               </span>
-            </div>        
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -267,5 +264,4 @@ export class ScFieldZones {
       </Host>
     );
   }
-
 }

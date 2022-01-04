@@ -12,13 +12,13 @@ import java.sql.SQLException
 import javax.sql.DataSource
 
 data class CommonWorkRecordsDeleteRequest(
-    val id: Int,
+    val id: String,
     val token: String?,
 )
 
 data class CommonWorkRecordsDeleteResponse(
     val error: ErrorType,
-    val id: Int?
+    val id: String?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -29,7 +29,7 @@ class Delete(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-work-records/delete")
+    @PostMapping("common/work-records/delete")
     @ResponseBody
     fun deleteHandler(@RequestBody req: CommonWorkRecordsDeleteRequest): CommonWorkRecordsDeleteResponse {
 
@@ -37,23 +37,23 @@ class Delete(
         if(!util.userHasDeletePermission(req.token, "common.work_records"))
             return CommonWorkRecordsDeleteResponse(ErrorType.DoesNotHaveDeletePermission, null)
 
-        var deletedTicketId: Int? = null
+        var deletedTicketId: String? = null
 
         this.ds.connection.use { conn ->
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from common.work_records where id = ? returning id"
+                    "delete from common.work_records where id = ?::uuid returning id"
                 )
-                deleteStatement.setInt(1, req.id)
+                deleteStatement.setString(1, req.id)
 
-                deleteStatement.setInt(1,req.id)
+                deleteStatement.setString(1,req.id)
 
 
                 val deleteStatementResult = deleteStatement.executeQuery()
 
                 if (deleteStatementResult.next()) {
-                    deletedTicketId = deleteStatementResult.getInt("id")
+                    deletedTicketId = deleteStatementResult.getString("id")
                 }
             }
             catch (e:SQLException ){

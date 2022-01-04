@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateOrganizationLocationExRequest {
   token: string;
   organizationLocation: {
-    organization: number;
-    location: number;
+    organization: string;
+    location: string;
   };
 }
 class CreateOrganizationLocationExResponse extends GenericResponse {
@@ -25,12 +25,11 @@ class ScOrganizationLocationListResponse {
   organizationLocations: ScOrganizationLocation[];
 }
 
-
 class ScOrganizationLocationUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScOrganizationLocationUpdateResponse {
@@ -39,12 +38,12 @@ class ScOrganizationLocationUpdateResponse {
 }
 
 class DeleteOrganizationLocationExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteOrganizationLocationExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -53,14 +52,13 @@ class DeleteOrganizationLocationExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScOrganizationLocations {
-
   @State() organizationLocationsResponse: ScOrganizationLocationListResponse;
 
-  newOrganization: number;
-  newLocation: number;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScOrganizationLocationUpdateRequest, ScOrganizationLocationUpdateResponse>('sc-organization-locations/update-read', {
+  newOrganization: string;
+  newLocation: string;
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScOrganizationLocationUpdateRequest, ScOrganizationLocationUpdateResponse>('sc/organization-locations/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -70,7 +68,12 @@ export class ScOrganizationLocations {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.organizationLocationsResponse = { error: ErrorType.NoError, organizationLocations: this.organizationLocationsResponse.organizationLocations.map(organizationLocation => (organizationLocation.id === id ? updateResponse.organizationLocation : organizationLocation)) };
+      this.organizationLocationsResponse = {
+        error: ErrorType.NoError,
+        organizationLocations: this.organizationLocationsResponse.organizationLocations.map(organizationLocation =>
+          organizationLocation.id === id ? updateResponse.organizationLocation : organizationLocation,
+        ),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -80,7 +83,7 @@ export class ScOrganizationLocations {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteOrganizationLocationExRequest, DeleteOrganizationLocationExResponse>('sc-organization-locations/delete', {
+    const deleteResponse = await fetchAs<DeleteOrganizationLocationExRequest, DeleteOrganizationLocationExResponse>('sc/organization-locations/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -95,17 +98,10 @@ export class ScOrganizationLocations {
   };
 
   async getList() {
-    this.organizationLocationsResponse = await fetchAs<ScOrganizationLocationListRequest, ScOrganizationLocationListResponse>('sc-organization-locations/list', {
+    this.organizationLocationsResponse = await fetchAs<ScOrganizationLocationListRequest, ScOrganizationLocationListResponse>('sc/organization-locations/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   organizationChange(event) {
     this.newOrganization = event.target.value;
@@ -115,14 +111,11 @@ export class ScOrganizationLocations {
     this.newLocation = event.target.value;
   }
 
-  
-
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateOrganizationLocationExRequest, CreateOrganizationLocationExResponse>('sc-organization-locations/create-read', {
+    const createResponse = await fetchAs<CreateOrganizationLocationExRequest, CreateOrganizationLocationExResponse>('sc/organization-locations/create-read', {
       token: globals.globalStore.state.token,
       organizationLocation: {
         organization: this.newOrganization,
@@ -139,26 +132,25 @@ export class ScOrganizationLocations {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'organization',
       displayName: 'Organization',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'location',
       displayName: 'Location',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -207,7 +199,6 @@ export class ScOrganizationLocations {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -225,7 +216,7 @@ export class ScOrganizationLocations {
                 <label htmlFor="organization">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
               </span>
             </div>
 
@@ -234,10 +225,9 @@ export class ScOrganizationLocations {
                 <label htmlFor="location">Location</label>
               </span>
               <span class="form-thing">
-                <input type="number" id="location" name="location" onInput={event => this.locationChange(event)} />
+                <input type="text" id="location" name="location" onInput={event => this.locationChange(event)} />
               </span>
-            </div> 
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -247,5 +237,4 @@ export class ScOrganizationLocations {
       </Host>
     );
   }
-
 }

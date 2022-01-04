@@ -1,14 +1,7 @@
 package com.seedcompany.cordtables.components.tables.sc.partnerships
 
-import com.seedcompany.cordtables.components.tables.sc.partnerships.ScPartnershipsUpdateRequest
-import com.seedcompany.cordtables.components.tables.sc.partnerships.Update as CommonUpdate
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.sc.partnerships.ScPartnershipsUpdateResponse
-import com.seedcompany.cordtables.components.tables.sc.partnerships.partnershipInput
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,7 +12,7 @@ import javax.sql.DataSource
 
 data class ScPartnershipsUpdateRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
     val column: String? = null,
     val value: Any? = null,
 )
@@ -38,7 +31,7 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("sc-partnerships/update")
+    @PostMapping("sc/partnerships/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: ScPartnershipsUpdateRequest): ScPartnershipsUpdateResponse {
 
@@ -54,7 +47,7 @@ class Update(
                     column = "project",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "partner" -> {
@@ -64,7 +57,7 @@ class Update(
                     column = "partner",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "change_to_plan" -> {
@@ -74,7 +67,7 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "active" -> {
@@ -84,7 +77,7 @@ class Update(
                     column = "active",
                     id = req.id,
                     value = req.value,
-                    cast = "::BOOLEAN"
+                    cast = "::boolean"
                 )
             }
             "agreement" -> {
@@ -94,7 +87,7 @@ class Update(
                     column = "agreement",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
 
@@ -106,7 +99,7 @@ class Update(
                     column = "owning_person",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
             "owning_group" -> {
@@ -116,7 +109,7 @@ class Update(
                     column = "owning_group",
                     id = req.id,
                     value = req.value,
-                    cast = "::INTEGER"
+                    cast = "::uuid"
                 )
             }
         }

@@ -43,7 +43,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sil-country-codes/list")
+    @PostMapping("sil/country-codes/list")
     @ResponseBody
     fun listHandler(@RequestBody req:SilCountryCodesListRequest): SilCountryCodesListResponse {
         var data: MutableList<countryCode> = mutableListOf()
@@ -71,12 +71,14 @@ class List(
             )
         )
 
+
         val resultSet = jdbcResult.result
         val size = jdbcResult.size
         if (jdbcResult.errorType == ErrorType.NoError){
             while (resultSet!!.next()) {
-                var id: Int? = resultSet!!.getInt("id")
-                if (resultSet!!.wasNull()) id = null
+
+                var id: String? = resultSet.getString("id")
+                if (resultSet.wasNull()) id = null
 
                 var country: String? = resultSet!!.getString("country")
                 if (resultSet!!.wasNull()) country = null
@@ -87,8 +89,8 @@ class List(
                 var area: String? = resultSet!!.getString("area")
                 if (resultSet!!.wasNull()) area = null
 
-                var created_by: Int? = resultSet!!.getInt("created_by")
-                if (resultSet!!.wasNull()) created_by = null
+                var created_by: String? = resultSet.getString("created_by")
+                if (resultSet.wasNull()) created_by = null
 
                 var created_at: String? = resultSet!!.getString("created_at")
                 if (resultSet!!.wasNull()) created_at = null
@@ -96,14 +98,14 @@ class List(
                 var modified_at: String? = resultSet!!.getString("modified_at")
                 if (resultSet!!.wasNull()) modified_at = null
 
-                var modified_by: Int? = resultSet!!.getInt("modified_by")
-                if (resultSet!!.wasNull()) modified_by = null
+                var modified_by: String? = resultSet.getString("modified_by")
+                if (resultSet.wasNull()) modified_by = null
 
-                var owning_person: Int? = resultSet!!.getInt("owning_person")
-                if (resultSet!!.wasNull()) owning_person = null
+                var owning_person: String? = resultSet.getString("owning_person")
+                if (resultSet.wasNull()) owning_person = null
 
-                var owning_group: Int? = resultSet!!.getInt("owning_group")
-                if (resultSet!!.wasNull()) owning_group = null
+                var owning_group: String? = resultSet.getString("owning_group")
+                if (resultSet.wasNull()) owning_group = null
 
                 data.add(
                   countryCode(

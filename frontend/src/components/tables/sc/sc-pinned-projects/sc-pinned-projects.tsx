@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePinnedProjectExRequest {
   token: string;
   pinnedProject: {
-    person: number;
-    project: number;
+    person: string;
+    project: string;
   };
 }
 class CreatePinnedProjectExResponse extends GenericResponse {
@@ -25,12 +25,11 @@ class ScPinnedProjectListResponse {
   pinnedProjects: ScPinnedProject[];
 }
 
-
 class ScPinnedProjectUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPinnedProjectUpdateResponse {
@@ -39,12 +38,12 @@ class ScPinnedProjectUpdateResponse {
 }
 
 class DeletePinnedProjectExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePinnedProjectExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -53,14 +52,13 @@ class DeletePinnedProjectExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScPinnedProjects {
-
   @State() pinnedProjectsResponse: ScPinnedProjectListResponse;
 
-  newPerson: number;
-  newProject: number;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScPinnedProjectUpdateRequest, ScPinnedProjectUpdateResponse>('sc-pinned-projects/update-read', {
+  newPerson: string;
+  newProject: string;
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScPinnedProjectUpdateRequest, ScPinnedProjectUpdateResponse>('sc/pinned-projects/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -70,7 +68,10 @@ export class ScPinnedProjects {
     console.log(updateResponse);
 
     if (updateResponse.error == ErrorType.NoError) {
-      this.pinnedProjectsResponse = { error: ErrorType.NoError, pinnedProjects: this.pinnedProjectsResponse.pinnedProjects.map(pinnedProject => (pinnedProject.id === id ? updateResponse.pinnedProject : pinnedProject)) };
+      this.pinnedProjectsResponse = {
+        error: ErrorType.NoError,
+        pinnedProjects: this.pinnedProjectsResponse.pinnedProjects.map(pinnedProject => (pinnedProject.id === id ? updateResponse.pinnedProject : pinnedProject)),
+      };
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -80,7 +81,7 @@ export class ScPinnedProjects {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePinnedProjectExRequest, DeletePinnedProjectExResponse>('sc-pinned-projects/delete', {
+    const deleteResponse = await fetchAs<DeletePinnedProjectExRequest, DeletePinnedProjectExResponse>('sc/pinned-projects/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -95,17 +96,10 @@ export class ScPinnedProjects {
   };
 
   async getList() {
-    this.pinnedProjectsResponse = await fetchAs<ScPinnedProjectListRequest, ScPinnedProjectListResponse>('sc-pinned-projects/list', {
+    this.pinnedProjectsResponse = await fetchAs<ScPinnedProjectListRequest, ScPinnedProjectListResponse>('sc/pinned-projects/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   projectChange(event) {
     this.newProject = event.target.value;
@@ -115,12 +109,11 @@ export class ScPinnedProjects {
     this.newPerson = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePinnedProjectExRequest, CreatePinnedProjectExResponse>('sc-pinned-projects/create-read', {
+    const createResponse = await fetchAs<CreatePinnedProjectExRequest, CreatePinnedProjectExResponse>('sc/pinned-projects/create-read', {
       token: globals.globalStore.state.token,
       pinnedProject: {
         person: this.newPerson,
@@ -137,26 +130,25 @@ export class ScPinnedProjects {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'person',
       displayName: 'Person',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
     {
       field: 'project',
       displayName: 'Project',
-      width: 200,
+      width: 250,
       editable: true,
       updateFn: this.handleUpdate,
     },
@@ -205,7 +197,6 @@ export class ScPinnedProjects {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -218,7 +209,6 @@ export class ScPinnedProjects {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="person-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="person">Person</label>
@@ -226,7 +216,7 @@ export class ScPinnedProjects {
               <span class="form-thing">
                 <input type="text" id="person" name="person" onInput={event => this.personChange(event)} />
               </span>
-            </div> 
+            </div>
 
             <div id="project-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -236,7 +226,6 @@ export class ScPinnedProjects {
                 <input type="text" id="project" name="project" onInput={event => this.projectChange(event)} />
               </span>
             </div>
-            
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -246,5 +235,4 @@ export class ScPinnedProjects {
       </Host>
     );
   }
-
 }

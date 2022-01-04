@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePostExRequest {
   token: string;
   post: {
-    directory: number;
+    directory: string;
     type: string;
     shareability: string;
     body: string;
@@ -27,12 +27,11 @@ class ScPostListResponse {
   posts: ScPost[];
 }
 
-
 class ScPostUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class ScPostUpdateResponse {
@@ -41,12 +40,12 @@ class ScPostUpdateResponse {
 }
 
 class DeletePostExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeletePostExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 @Component({
@@ -55,16 +54,15 @@ class DeletePostExResponse extends GenericResponse {
   shadow: true,
 })
 export class ScPosts {
-
   @State() postsResponse: ScPostListResponse;
 
-  newDirectory: number;
+  newDirectory: string;
   newType: string;
   newShareability: string;
   newBody: string;
-  
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<ScPostUpdateRequest, ScPostUpdateResponse>('sc-posts/update-read', {
+
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<ScPostUpdateRequest, ScPostUpdateResponse>('sc/posts/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -84,7 +82,7 @@ export class ScPosts {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeletePostExRequest, DeletePostExResponse>('sc-posts/delete', {
+    const deleteResponse = await fetchAs<DeletePostExRequest, DeletePostExResponse>('sc/posts/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -99,17 +97,10 @@ export class ScPosts {
   };
 
   async getList() {
-    this.postsResponse = await fetchAs<ScPostListRequest, ScPostListResponse>('sc-posts/list', {
+    this.postsResponse = await fetchAs<ScPostListRequest, ScPostListResponse>('sc/posts/list', {
       token: globals.globalStore.state.token,
     });
   }
-
-  // async getFilesList() {
-  //   this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
-  //     token: globals.globalStore.state.token,
-  //   });
-  // }
-
 
   directoryChange(event) {
     this.newDirectory = event.target.value;
@@ -127,12 +118,11 @@ export class ScPosts {
     this.newBody = event.target.value;
   }
 
-
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreatePostExRequest, CreatePostExResponse>('sc-posts/create-read', {
+    const createResponse = await fetchAs<CreatePostExRequest, CreatePostExResponse>('sc/posts/create-read', {
       token: globals.globalStore.state.token,
       post: {
         directory: this.newDirectory,
@@ -155,7 +145,7 @@ export class ScPosts {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -172,9 +162,9 @@ export class ScPosts {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "Note", value: "Note"},
-        {display: "Story", value: "Story"},
-        {display: "Prayer", value: "Prayer"},
+        { display: 'Note', value: 'Note' },
+        { display: 'Story', value: 'Story' },
+        { display: 'Prayer', value: 'Prayer' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -184,10 +174,10 @@ export class ScPosts {
       width: 200,
       editable: true,
       selectOptions: [
-        {display: "Project Team", value: "Project Team"},
-        {display: "Internal", value: "Internal"},
-        {display: "Ask to Share Externally", value: "Ask to Share Externally"},
-        {display: "External", value: "External"},
+        { display: 'Project Team', value: 'Project Team' },
+        { display: 'Internal', value: 'Internal' },
+        { display: 'Ask to Share Externally', value: 'Ask to Share Externally' },
+        { display: 'External', value: 'External' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -244,7 +234,6 @@ export class ScPosts {
     // await this.getFilesList();
   }
 
-
   render() {
     return (
       <Host>
@@ -257,7 +246,6 @@ export class ScPosts {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-
             <div id="directory-holder" class="form-input-item form-thing">
               <span class="directory-thing">
                 <label htmlFor="directory">Directory</label>
@@ -274,14 +262,18 @@ export class ScPosts {
               <span class="form-thing">
                 <select id="type" name="type" onInput={event => this.typeChange(event)}>
                   <option value="">Select Type</option>
-                  <option value="Note" selected={this.newType === 'Note'}>Note</option>
-                   <option value="Story" selected={this.newType === 'Story'}>Story</option>
-                   <option value="Prayer" selected={this.newType === 'Prayer'}>Prayer</option>
+                  <option value="Note" selected={this.newType === 'Note'}>
+                    Note
+                  </option>
+                  <option value="Story" selected={this.newType === 'Story'}>
+                    Story
+                  </option>
+                  <option value="Prayer" selected={this.newType === 'Prayer'}>
+                    Prayer
+                  </option>
                 </select>
-
               </span>
-            </div> 
-
+            </div>
 
             <div id="shareability-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -290,12 +282,19 @@ export class ScPosts {
               <span class="form-thing">
                 <select id="shareability" name="shareability" onInput={event => this.shareabilityChange(event)}>
                   <option value="">Select Type</option>
-                  <option value="Project Team" selected={this.newShareability === 'Project Team'}>Project Team</option>
-                   <option value="Internal" selected={this.newShareability === 'Internal'}>Internal</option>
-                   <option value="Ask to Share Externally" selected={this.newShareability === 'Ask to Share Externally'}>Ask to Share Externally</option>
-                   <option value="External" selected={this.newShareability === 'External'}>External</option>
+                  <option value="Project Team" selected={this.newShareability === 'Project Team'}>
+                    Project Team
+                  </option>
+                  <option value="Internal" selected={this.newShareability === 'Internal'}>
+                    Internal
+                  </option>
+                  <option value="Ask to Share Externally" selected={this.newShareability === 'Ask to Share Externally'}>
+                    Ask to Share Externally
+                  </option>
+                  <option value="External" selected={this.newShareability === 'External'}>
+                    External
+                  </option>
                 </select>
-
               </span>
             </div>
 
@@ -304,10 +303,9 @@ export class ScPosts {
                 <label htmlFor="body">Body</label>
               </span>
               <span class="form-thing">
-                <textarea  id="body" name="body" onInput={event => this.bodyChange(event)}></textarea>
+                <textarea id="body" name="body" onInput={event => this.bodyChange(event)}></textarea>
               </span>
-            </div> 
-            
+            </div>
 
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
@@ -317,5 +315,4 @@ export class ScPosts {
       </Host>
     );
   }
-
 }

@@ -1,4 +1,4 @@
-  import { Component, Host, h, State } from '@stencil/core';
+import { Component, Host, h, State } from '@stencil/core';
 import { ActionType, ErrorType } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
@@ -7,13 +7,13 @@ class GroupRowAccessListRequest {
 }
 
 class GroupRowAccessRow {
-  id: number;
-  group: number;
-  person: number;
+  id: string;
+  group: string;
+  person: string;
   createdAt: string;
-  createdBy: number;
+  createdBy: string;
   modifiedAt: string;
-  modifiedBy: number;
+  modifiedBy: string;
 }
 
 class GroupRowAccessListResponse {
@@ -23,7 +23,7 @@ class GroupRowAccessListResponse {
 
 class GroupRowAccessCreateRequest {
   token: string;
-  group: number;
+  group: string;
   tableName: string;
   row: number;
 }
@@ -34,7 +34,7 @@ class GroupRowAccessCreateResponse {
 
 class GroupRowAccessDeleteRequest {
   token: string;
-  id: number;
+  id: string;
 }
 
 class GroupRowAccessDeleteResponse {
@@ -53,7 +53,7 @@ export class GroupsRowAccess {
   createResponse: GroupRowAccessCreateResponse;
   deleteResponse: GroupRowAccessDeleteResponse;
 
-  newRowGroup: number;
+  newRowGroup: string;
   newRowTableName: string;
   newRowRow: number;
 
@@ -64,7 +64,7 @@ export class GroupsRowAccess {
   }
 
   async getList() {
-    this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('admin-group-row-access/list', { token: globals.globalStore.state.token });
+    this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('admin/group-row-access/list', { token: globals.globalStore.state.token });
   }
 
   toggleNewForm = () => {
@@ -72,7 +72,7 @@ export class GroupsRowAccess {
   };
 
   inputGroup(event) {
-    this.newRowGroup = +event.target.value;
+    this.newRowGroup = event.target.value;
   }
 
   inputTableName(event) {
@@ -84,7 +84,7 @@ export class GroupsRowAccess {
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GroupRowAccessCreateRequest, GroupRowAccessCreateResponse>('admin-group-row-access/create', {
+    this.createResponse = await fetchAs<GroupRowAccessCreateRequest, GroupRowAccessCreateResponse>('admin/group-row-access/create', {
       token: globals.globalStore.state.token,
       group: this.newRowGroup,
       tableName: this.newRowTableName,
@@ -93,17 +93,20 @@ export class GroupsRowAccess {
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
-      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('admin-group-row-access/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('admin/group-row-access/list', { token: globals.globalStore.state.token });
     } else {
       console.warn('Error creating group');
     }
   };
 
-  clickRemoveRowIcon = async (value: number): Promise<boolean> => {
-    this.deleteResponse = await fetchAs<GroupRowAccessDeleteRequest, GroupRowAccessDeleteResponse>('admin-group-row-access/delete', { token: globals.globalStore.state.token, id: value });
+  clickRemoveRowIcon = async (value: string): Promise<boolean> => {
+    this.deleteResponse = await fetchAs<GroupRowAccessDeleteRequest, GroupRowAccessDeleteResponse>('admin/group-row-access/delete', {
+      token: globals.globalStore.state.token,
+      id: value,
+    });
 
     if (this.deleteResponse.error === ErrorType.NoError) {
-      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('grouprowaccess/list', { token: globals.globalStore.state.token });
+      this.listResponse = await fetchAs<GroupRowAccessListRequest, GroupRowAccessListResponse>('admin/group-row-access/list', { token: globals.globalStore.state.token });
       return true;
     } else {
       return false;

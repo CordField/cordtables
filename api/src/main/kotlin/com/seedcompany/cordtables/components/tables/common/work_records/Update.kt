@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
 data class CommonWorkRecordUpdateRequest(
-  val token: String?,
-  val id: Int? = null,
-  val ticket: Int? = null,
-  val hours: Int? = null,
-  val minutes: Int? = null
+    val token: String?,
+    val id: String? = null,
+    val ticket: String? = null,
+    val hours: Int? = null,
+    val minutes: Int? = null
 )
 
 data class CommonWorkRecordUpdateResponse(
@@ -32,13 +32,22 @@ class Update(
     @Autowired
     val ds: DataSource,
 ) {
-    @PostMapping("common-work-records/update")
+    @PostMapping("common/work-records/update")
     @ResponseBody
     fun updateHandler(@RequestBody req: CommonWorkRecordUpdateRequest): CommonWorkRecordUpdateResponse {
 
         if (req.token == null) return CommonWorkRecordUpdateResponse(ErrorType.TokenNotFound)
         if (req.id == null) return CommonWorkRecordUpdateResponse(ErrorType.MissingId)
 
+                
+                 util.updateField(
+                    token = req.token,
+                    table = "common.work_records",
+                    column = "ticket",
+                    id = req.id,
+                    value = req.ticket,
+                    cast = "::uuid"
+                )
 
                 util.updateField(
                     token = req.token,
@@ -48,7 +57,8 @@ class Update(
                     value = req.hours,
                     cast = "::integer"
                 )
-
+            }
+            "minutes" -> {
                 util.updateField(
                     token = req.token,
                     table = "common.work_records",
@@ -57,10 +67,7 @@ class Update(
                     value = req.minutes,
                     cast = "::integer"
                 )
-
-
-
-
+                
         return CommonWorkRecordUpdateResponse(ErrorType.NoError)
     }
 }

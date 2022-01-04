@@ -18,7 +18,7 @@ class UpdateGlobalRoleRequest {
   token: string;
   columnToUpdate: string;
   updatedColumnValue: string | number;
-  id: number;
+  id: string;
 }
 
 class UpdateGlobalRoleResponse extends GenericResponse {
@@ -26,12 +26,12 @@ class UpdateGlobalRoleResponse extends GenericResponse {
 }
 
 class DeleteGlobalRoleRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteGlobalRoleResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
 
 class ReadGlobalRoleRequest {
@@ -94,7 +94,7 @@ export class GlobalRoles {
     );
   }
 
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<UpdateGlobalRoleRequest, UpdateGlobalRoleResponse>('role/update', {
       token: globals.globalStore.state.token,
       updatedColumnValue: value,
@@ -104,7 +104,7 @@ export class GlobalRoles {
 
     if (updateResponse.error == ErrorType.NoError) {
       const result = await fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('role/read', { token: globals.globalStore.state.token });
-      this.globalRoles = result.data.sort((a, b) => a.id - b.id);
+      this.globalRoles = result.data; //.sort((a, b) => a.id - b.id);
       return true;
     } else {
       alert(updateResponse.error);
@@ -149,7 +149,7 @@ export class GlobalRoles {
     fetchAs<ReadGlobalRoleRequest, ReadGlobalRoleResponse>('role/read', {
       token: globals.globalStore.state.token,
     }).then(res => {
-      this.globalRoles = res.data.sort((a, b) => a.id - b.id);
+      this.globalRoles = res.data; //.sort((a, b) => a.id - b.id);
     });
   }
   render() {

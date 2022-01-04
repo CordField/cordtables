@@ -4,6 +4,7 @@ import com.seedcompany.cordtables.common.AccessLevels
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.TableNames
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.people.AdminPeopleUpdateReadResponse
 import com.seedcompany.cordtables.components.tables.admin.role_column_grants.roleColumnGrantInput
 import com.seedcompany.cordtables.components.tables.admin.role_column_grants.Read
 import com.seedcompany.cordtables.components.tables.admin.role_column_grants.Update
@@ -23,7 +24,7 @@ data class AdminRoleColumnGrantsCreateRequest(
 
 data class AdminRoleColumnGrantsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -43,9 +44,12 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("admin-role-column-grants/create")
+    @PostMapping("admin/role-column-grants/create")
     @ResponseBody
     fun createHandler(@RequestBody req: AdminRoleColumnGrantsCreateRequest): AdminRoleColumnGrantsCreateResponse {
+
+      if (req.token == null) return AdminRoleColumnGrantsCreateResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminRoleColumnGrantsCreateResponse(ErrorType.AdminOnly)
 
         // if (req.roleColumnGrant.name == null) return AdminRoleColumnGrantsCreateResponse(error = ErrorType.InputMissingToken, null)
 
@@ -55,7 +59,7 @@ class Create(
             """
             insert into admin.role_column_grants(role, table_name, column_name, access_level,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?,
+                    ?::uuid,
                     ?::admin.table_name,
                     ?,
                     ?::admin.access_level,
@@ -74,11 +78,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.roleColumnGrant.role,
             req.roleColumnGrant.table_name,
             req.roleColumnGrant.column_name,
@@ -86,6 +90,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

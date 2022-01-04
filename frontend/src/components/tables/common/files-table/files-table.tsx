@@ -9,7 +9,7 @@ class CreateFileExRequest {
   token: string;
   file: {
     name: string;
-    directory: number;
+    directory: string;
     // display_name: string;
   };
 }
@@ -39,7 +39,7 @@ class CommonFileUpdateRequest {
   token: string;
   column: string;
   value: any;
-  id: number;
+  id: string;
 }
 
 class CommonFileUpdateResponse {
@@ -48,15 +48,13 @@ class CommonFileUpdateResponse {
 }
 
 class DeleteFileExRequest {
-  id: number;
+  id: string;
   token: string;
 }
 
 class DeleteFileExResponse extends GenericResponse {
-  id: number;
+  id: string;
 }
-
-
 
 @Component({
   tag: 'files-table',
@@ -64,15 +62,13 @@ class DeleteFileExResponse extends GenericResponse {
   shadow: true,
 })
 export class FilesTable {
-
   @State() filesResponse: CommonFileListResponse;
   @State() directoriesResponse: CommonDirectoryListResponse;
   newFileName: string;
-  newFileDirectory: number;
+  newFileDirectory: string;
 
-
-  handleUpdate = async (id: number, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonFileUpdateRequest, CommonFileUpdateResponse>('common-files/update-read', {
+  handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
+    const updateResponse = await fetchAs<CommonFileUpdateRequest, CommonFileUpdateResponse>('common/files/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -92,7 +88,7 @@ export class FilesTable {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteFileExRequest, DeleteFileExResponse>('common-files/delete', {
+    const deleteResponse = await fetchAs<DeleteFileExRequest, DeleteFileExResponse>('common/files/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -107,13 +103,13 @@ export class FilesTable {
   };
 
   async getList() {
-    this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common-files/list', {
+    this.filesResponse = await fetchAs<CommonFileListRequest, CommonFileListResponse>('common/files/list', {
       token: globals.globalStore.state.token,
     });
   }
 
   async getDirectories() {
-    this.directoriesResponse = await fetchAs<CommonDirectoryListRequest, CommonDirectoryListResponse>('common-directories/list', {
+    this.directoriesResponse = await fetchAs<CommonDirectoryListRequest, CommonDirectoryListResponse>('common/directories/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -130,7 +126,7 @@ export class FilesTable {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateFileExRequest, CreateFileExResponse>('common-files/create-read', {
+    const createResponse = await fetchAs<CreateFileExRequest, CreateFileExResponse>('common/files/create-read', {
       token: globals.globalStore.state.token,
       file: {
         name: this.newFileName,
@@ -147,19 +143,18 @@ export class FilesTable {
     }
   };
 
-
   columnData: ColumnDescription[] = [
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
     {
       field: 'directory',
       displayName: 'Directory',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -234,13 +229,13 @@ export class FilesTable {
               <span class="form-thing">
                 <select onInput={event => this.fileDirectoryChange(event)}>
                   <option value="">Select A Directory</option>
-                {this.directoriesResponse.directories.map(option => (
-                  <option value={option.id}>{option.name}</option>
-                ))}
+                  {this.directoriesResponse.directories.map(option => (
+                    <option value={option.id}>{option.name}</option>
+                  ))}
                 </select>
               </span>
             </div>
-            
+
             <div id="file-name-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="file-name">New File Name</label>
@@ -258,5 +253,4 @@ export class FilesTable {
       </Host>
     );
   }
-
 }

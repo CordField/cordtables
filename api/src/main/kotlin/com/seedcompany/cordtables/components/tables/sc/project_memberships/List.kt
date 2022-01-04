@@ -42,7 +42,7 @@ class List(
 
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc-project-memberships/list")
+    @PostMapping("sc/project-memberships/list")
     @ResponseBody
     fun listHandler(@RequestBody req:ScProjectMembershipsListRequest): ScProjectMembershipsListResponse {
         var data: MutableList<projectMembership> = mutableListOf()
@@ -73,7 +73,7 @@ class List(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
                 var group_id: Int? = jdbcResult.getInt("group_id")

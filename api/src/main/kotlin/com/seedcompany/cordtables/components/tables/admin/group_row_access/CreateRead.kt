@@ -2,6 +2,7 @@ package com.seedcompany.cordtables.components.tables.admin.group_row_access
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.admin.group_memberships.AdminGroupMembershipsUpdateReadResponse
 import com.seedcompany.cordtables.components.tables.admin.group_row_access.*
 import com.seedcompany.cordtables.components.tables.admin.group_row_access.AdminGroupRowAccessCreateRequest
 import com.seedcompany.cordtables.components.tables.admin.group_row_access.Create
@@ -38,9 +39,12 @@ class CreateRead(
     @Autowired
     val read: Read,
 ) {
-    @PostMapping("admin-group-row-access/create-read")
+    @PostMapping("admin/group-row-access/create-read")
     @ResponseBody
     fun createReadHandler(@RequestBody req: AdminGroupRowAccessCreateReadRequest): AdminGroupRowAccessCreateReadResponse {
+
+      if (req.token == null) return AdminGroupRowAccessCreateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return AdminGroupRowAccessCreateReadResponse(ErrorType.AdminOnly)
 
         val createResponse = create.createHandler(
             AdminGroupRowAccessCreateRequest(

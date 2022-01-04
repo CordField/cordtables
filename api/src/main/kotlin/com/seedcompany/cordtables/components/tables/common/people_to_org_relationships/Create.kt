@@ -21,7 +21,7 @@ data class CommonPeopleToOrgRelationshipsCreateRequest(
 
 data class CommonPeopleToOrgRelationshipsCreateResponse(
     val error: ErrorType,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 
-    @PostMapping("common-people-to-org-relationships/create")
+    @PostMapping("common/people-to-org-relationships/create")
     @ResponseBody
     fun createHandler(@RequestBody req: CommonPeopleToOrgRelationshipsCreateRequest): CommonPeopleToOrgRelationshipsCreateResponse {
 
@@ -53,8 +53,8 @@ class Create(
             """
             insert into common.people_to_org_relationships(org, person, relationship_type, begin_at, end_at, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::INTEGER,
-                    ?::INTEGER,
+                    ?::uuid,
+                    ?::uuid,
                     ?::common.people_to_org_relationship_type,
                     ?::timestamp,
                     ?::timestamp,
@@ -73,11 +73,11 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    1
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
-            Int::class.java,
+            String::class.java,
             req.peopleToOrgRelationship.org,
             req.peopleToOrgRelationship.person,
             req.peopleToOrgRelationship.relationship_type,
@@ -86,6 +86,7 @@ class Create(
             req.token,
             req.token,
             req.token,
+            util.adminGroupId
         )
 
 //        req.language.id = id

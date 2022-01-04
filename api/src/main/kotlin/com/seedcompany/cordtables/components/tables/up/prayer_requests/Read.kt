@@ -20,7 +20,7 @@ import javax.sql.DataSource
 
 data class UpPrayerRequestsReadRequest(
     val token: String?,
-    val id: Int? = null,
+    val id: String? = null,
 )
 
 data class UpPrayerRequestsReadResponse(
@@ -42,7 +42,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("up-prayer-requests/read")
+    @PostMapping("up/prayer-requests/read")
     @ResponseBody
     fun readHandler(@RequestBody req: UpPrayerRequestsReadRequest): UpPrayerRequestsReadResponse {
 
@@ -84,13 +84,13 @@ class Read(
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
 
-                var id: Int? = jdbcResult.getInt("id")
+                var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-                var request_language_id: Int? = jdbcResult.getInt("request_language_id")
+                var request_language_id: String? = jdbcResult.getString("request_language_id")
                 if (jdbcResult.wasNull()) request_language_id = null
 
-                var target_language_id: Int? = jdbcResult.getInt("target_language_id")
+                var target_language_id: String? = jdbcResult.getString("target_language_id")
                 if (jdbcResult.wasNull()) target_language_id = null
 
                 var sensitivity: String? = jdbcResult.getString("sensitivity")
@@ -99,10 +99,10 @@ class Read(
                 var organization_name: String? = jdbcResult.getString("organization_name")
                 if (jdbcResult.wasNull()) organization_name = null
 
-                var parent: Int? = jdbcResult.getInt("parent")
+                var parent: String? = jdbcResult.getString("parent")
                 if (jdbcResult.wasNull()) parent = null
 
-                var translator: Int? = jdbcResult.getInt("translator")
+                var translator: String? = jdbcResult.getString("translator")
                 if (jdbcResult.wasNull()) translator = null
 
                 var location: String? = jdbcResult.getString("location")
@@ -123,19 +123,19 @@ class Read(
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
-                var created_by: Int? = jdbcResult.getInt("created_by")
+                var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
                 var modified_at: String? = jdbcResult.getString("modified_at")
                 if (jdbcResult.wasNull()) modified_at = null
 
-                var modified_by: Int? = jdbcResult.getInt("modified_by")
+                var modified_by: String? = jdbcResult.getString("modified_by")
                 if (jdbcResult.wasNull()) modified_by = null
 
-                var owning_person: Int? = jdbcResult.getInt("owning_person")
+                var owning_person: String? = jdbcResult.getString("owning_person")
                 if (jdbcResult.wasNull()) owning_person = null
 
-                var owning_group: Int? = jdbcResult.getInt("owning_group")
+                var owning_group: String? = jdbcResult.getString("owning_group")
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val prayerRequest =
