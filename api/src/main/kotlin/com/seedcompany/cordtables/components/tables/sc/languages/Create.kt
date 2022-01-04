@@ -45,14 +45,45 @@ class Create(
         if (req.token == null) return ScLanguagesCreateResponse(error = ErrorType.InputMissingToken, null)
 
 
-        // create row with required fields, use id to update cells afterwards one by one
+        // looks like we can get away with this...
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.languages(name, display_name, ethnologue, created_by, modified_by, owning_person, owning_group)
+            insert into sc.languages(
+                display_name, 
+                display_name_pronunciation, 
+                ethnologue, 
+                has_external_first_scripture,
+                is_dialect,                       
+                is_sign_language, 
+                is_least_of_these, 
+                least_of_these_reason, 
+                name,
+                population_override,
+                registry_of_dialects_code,
+                sensitivity,
+                sign_language_code,
+                sponsor_estimated_end_date, 
+                tags, 
+                created_by, 
+                modified_by, 
+                owning_person, 
+                owning_group)
                 values(
                     ?,
                     ?,
+                    ?::uuid,
                     ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    '${req.language.sensitivity}',
+                    ?,
+                    ?,
+                    '${req.language.tags?.joinToString(separator = ",", prefix = "{", postfix = "}") {"\"${it}\""}}',
                     (
                       select person 
                       from admin.tokens 
@@ -68,14 +99,24 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?
+                    ?::uuid
                 )
             returning id;
         """.trimIndent(),
             String::class.java,
-            req.language.name,
             req.language.display_name,
+            req.language.display_name_pronunciation,
             req.language.ethnologue,
+            req.language.has_external_first_scripture,
+            req.language.is_dialect,
+            req.language.is_sign_language,
+            req.language.is_least_of_these,
+            req.language.least_of_these_reason,
+            req.language.name,
+            req.language.population_override,
+            req.language.registry_of_dialects_code,
+            req.language.sign_language_code,
+            req.language.sponsor_estimated_end_date,
             req.token,
             req.token,
             req.token,
