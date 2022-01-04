@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
+import javax.sql.rowset.serial.SerialArray
 
 data class ScLanguagesReadRequest(
         val token: String?,
@@ -73,6 +74,8 @@ class Read(
                                 "sensitivity",
                                 "sign_language_code",
                                 "sponsor_estimated_end_date",
+                                "has_external_first_scripture",
+                                "first_scripture_engagement",
 
                                 "prioritization",
                                 "progress_bible",
@@ -205,8 +208,8 @@ class Read(
                 var display_name_pronunciation: String? = jdbcResult.getString("display_name_pronunciation")
                 if (jdbcResult.wasNull()) display_name_pronunciation = null
 
-                var tags: String? = jdbcResult.getString("tags")
-                if (jdbcResult.wasNull()) tags = null
+                var tags: MutableList<Any> = if(jdbcResult.getObject("tags") == null) { mutableListOf<Any>()} else { ((jdbcResult.getObject("tags") as SerialArray).array as Array<Any>).toMutableList() }
+                if (jdbcResult.wasNull()) tags = mutableListOf()
 
                 var preset_inventory: Boolean? = jdbcResult.getBoolean("preset_inventory")
                 if (jdbcResult.wasNull()) preset_inventory = null
@@ -219,6 +222,12 @@ class Read(
 
                 var is_least_of_these: Boolean? = jdbcResult.getBoolean("is_least_of_these")
                 if (jdbcResult.wasNull()) is_least_of_these = null
+
+                var has_external_first_scripture: Boolean? = jdbcResult.getBoolean("has_external_first_scripture")
+                if (jdbcResult.wasNull()) has_external_first_scripture = null
+
+                var first_scripture_engagement: Int? = jdbcResult.getInt("first_scripture_engagement")
+                if (jdbcResult.wasNull()) first_scripture_engagement = null
 
                 var least_of_these_reason: String? = jdbcResult.getString("least_of_these_reason")
                 if (jdbcResult.wasNull()) least_of_these_reason = null
@@ -425,7 +434,7 @@ class Read(
                                 name = name,
                                 display_name = display_name,
                                 display_name_pronunciation = display_name_pronunciation,
-                                tags = tags,
+                                tags = tags.filterIsInstance<String>().toMutableList(),
                                 preset_inventory = preset_inventory,
                                 is_dialect = is_dialect,
                                 is_sign_language = is_sign_language,
@@ -436,6 +445,8 @@ class Read(
                                 sensitivity = if (sensitivity == null) null else CommonSensitivity.valueOf(sensitivity),
                                 sign_language_code = sign_language_code,
                                 sponsor_estimated_end_date = sponsor_estimated_end_date,
+                                has_external_first_scripture = has_external_first_scripture,
+                                first_scripture_engagement = first_scripture_engagement,
 
                                 prioritization = prioritization,
                                 progress_bible = progress_bible,
@@ -500,7 +511,7 @@ class Read(
                                 suggested_strategies = suggested_strategies,
                                 comments = comments,
                                 coordinates = coordinates,
-                                coordinates_json=coordinates_json,
+                                coordinates_json =coordinates_json,
                                 created_at = created_at,
                                 created_by = created_by,
                                 modified_at = modified_at,
