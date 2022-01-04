@@ -37,8 +37,10 @@ public class HomePage extends Page {
 	/**
 	 * 
 	 */
-	public void login() {
-		this.loginOption.click();
+	public void login(WebElement menu) {
+		WebElement menuHeader = SeleniumUtils.expand_shadow_element(driver,
+				menu.findElement(By.tagName("cf-header-menu")));
+		menuHeader.findElement(By.cssSelector("button.menu-item:nth-child(2)")).click();
 	}
 
 	/**
@@ -49,29 +51,6 @@ public class HomePage extends Page {
 		WebElement menuHeader = SeleniumUtils.expand_shadow_element(driver,
 				menu.findElement(By.tagName("cf-header-menu")));
 		menuHeader.findElement(By.cssSelector("button.menu-item:nth-child(3)")).click();
-	}
-
-	/**
-	 * Method to load the app.
-	 * @return
-	 */
-	public WebElement loadApp() {
-		return SeleniumUtils.expand_shadow_element(driver, driver.findElement(By.tagName("app-root")));
-	}
-
-	/**
-	 * Method to open the menu on home page.
-	 * 
-	 * @return
-	 */
-	public WebElement open_menu() {
-		WebElement appRoot = loadApp();
-		WebElement appHeader = SeleniumUtils.expand_shadow_element(driver,
-				appRoot.findElement(By.tagName("cf-header")));
-		WebElement ionIcon = SeleniumUtils.expand_shadow_element(driver, appHeader.findElement(By.tagName("ion-icon")));
-		WebElement menu = ionIcon.findElement(By.cssSelector(".ionicon"));
-		menu.click();
-		return appHeader;
 	}
 
 }

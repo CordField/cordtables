@@ -61,6 +61,16 @@ public class RegistrationPage extends Page {
 		WebElement registrationForm = registrationApp.findElement(By.cssSelector("form"));
 		registrationForm.findElement(By.cssSelector("#email")).sendKeys(email);
 		registrationForm.findElement(By.cssSelector("#password")).sendKeys(password);
+		submitRegistrationForm(registrationForm);
+	}
+
+	/**
+	 * function to submit the registration form.
+	 * 
+	 * @param registrationForm
+	 */
+	public void submitRegistrationForm(WebElement registrationForm) {
+		System.out.println(registrationForm.findElement(By.cssSelector("#register-button")).getText());
 		registrationForm.findElement(By.cssSelector("#register-button")).click();
 	}
 

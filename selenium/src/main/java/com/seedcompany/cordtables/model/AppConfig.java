@@ -11,6 +11,24 @@ public class AppConfig {
 	private String url;
 	private String username;
 	private String password;
+	private String newUser;
+	private String newUserPassword;
+
+	public String getNewUser() {
+		return newUser;
+	}
+
+	public void setNewUser(String newUser) {
+		this.newUser = newUser;
+	}
+
+	public String getNewUserPassword() {
+		return newUserPassword;
+	}
+
+	public void setNewUserPassword(String newUserPassword) {
+		this.newUserPassword = newUserPassword;
+	}
 
 	public String getUrl() {
 		return url;
