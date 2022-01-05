@@ -455,7 +455,7 @@ create table sc.people (
   id uuid primary key references admin.people(id),
 
 	skills varchar(32)[],
-	status varchar(32),
+	status varchar(32), -- todo might be an enum
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -557,7 +557,7 @@ create table sc.change_to_plans (
   owning_group uuid not null references admin.groups(id)
 );
 
-create table sc.periodic_reports_directory ( -- security not needed
+create table sc.periodic_reports_directory ( -- todo is this still needed? should be common.directory?  -- security not needed
   id uuid primary key default common.uuid_generate_v4(),
   created_at timestamp not null default CURRENT_TIMESTAMP
 );
@@ -565,7 +565,7 @@ create table sc.periodic_reports_directory ( -- security not needed
 create table sc.periodic_reports (
   id uuid primary key default common.uuid_generate_v4(),
 
-  directory uuid references sc.periodic_reports_directory(id),
+  directory uuid references sc.periodic_reports_directory(id), -- todo should this be common.directory?
   end_at timestamp,
   report_file uuid references common.files(id),
   start_at timestamp,
@@ -595,8 +595,8 @@ create table sc.projects (
 	mou_start timestamp,
 	mou_end timestamp,
 	owning_organization uuid references sc.organizations(id),
-	periodic_reports_directory uuid references sc.periodic_reports_directory(id),
-	posts_directory uuid references sc.posts_directory(id),
+	periodic_reports_directory uuid references sc.periodic_reports_directory(id), -- todo should this be common.directory?
+	posts_directory uuid references sc.posts_directory(id), -- todo should this be common.directory?
 	primary_location uuid references sc.locations(id),
 	root_directory uuid references common.directories(id),
 	status sc.project_status,

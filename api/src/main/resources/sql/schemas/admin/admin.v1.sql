@@ -157,18 +157,18 @@ create table admin.people (
 
   about text,
   phone varchar(32),
-  picture varchar(255),
+  picture varchar(255), -- todo might make this a file reference
   private_first_name varchar(32),
   private_last_name varchar(32),
   public_first_name varchar(32),
   public_last_name varchar(32),
-  primary_location uuid,
-  private_full_name varchar(64),
-  public_full_name varchar(64),
+  primary_location uuid references common.locations(id),
+  private_full_name varchar(64), -- todo make computed column
+  public_full_name varchar(64), -- todo make compute column
   sensitivity_clearance common.sensitivity default 'Low',
-  timezone varchar(32),
+  timezone varchar(32), -- todo research type / foreign key reference
   title varchar(255),
-  status varchar(32),
+  status varchar(32), -- todo might be an enum
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid, -- not null doesn't work here, on startup
