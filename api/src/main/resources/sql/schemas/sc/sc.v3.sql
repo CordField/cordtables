@@ -815,6 +815,7 @@ create table sc.language_engagements (
   periodic_reports_directory uuid references sc.periodic_reports_directory(id),
   pnp varchar(255),
   pnp_file uuid references common.files(id),
+  sensitivity common.sensitivity not null default 'High',
   start_date timestamp,
   start_date_override timestamp,
   status common.engagement_status,
@@ -922,6 +923,7 @@ create table sc.products (
   id uuid primary key default common.uuid_generate_v4(),
 
   name varchar(64), -- not null
+  title varchar(64),
   change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
   mediums common.product_mediums[],
@@ -1041,7 +1043,7 @@ create table sc.internship_engagements (
   methodologies common.product_methodologies[],
   periodic_reports_directory uuid references sc.periodic_reports_directory(id),
   position common.internship_position,
-  sensitivity common.sensitivity,
+  sensitivity common.sensitivity not null default 'High',
   start_date timestamp,
   start_date_override timestamp,
   status common.engagement_status,

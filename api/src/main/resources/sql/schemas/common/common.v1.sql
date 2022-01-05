@@ -508,7 +508,7 @@ create table common.education_by_person (
 create table common.organizations (
 	id uuid primary key default common.uuid_generate_v4(),
 
-	name varchar(255) unique, -- not null
+	name varchar(255),  -- unique not null
 	sensitivity common.sensitivity default 'High',
 	primary_location uuid references common.locations(id),
 
@@ -634,7 +634,7 @@ create table common.files (
 create table common.file_versions (
   id uuid primary key default common.uuid_generate_v4(),
 
-  mime_type varchar(255), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
+  mime_type varchar(255), -- not null,
   name varchar(255), -- not null,
   file uuid references common.files(id), -- not null
   file_url varchar(255), -- not null,

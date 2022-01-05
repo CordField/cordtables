@@ -1034,6 +1034,24 @@ class Neo4j2(
 
     queue.offer(
       PropertyCreate(
+        baseNode = "Product",
+        property = "title",
+        table = "sc.products",
+        column = "title"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Producible",
+        property = "name",
+        table = "sc.products",
+        column = "name"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
         baseNode = "Project",
         property = "name",
         table = "sc.projects",
@@ -1150,6 +1168,15 @@ class Neo4j2(
         property = "financialReportReceivedAt",
         table = "sc.projects",
         column = "report_received_at"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Project",
+        property = "departmentId",
+        table = "sc.projects",
+        column = "department"
       )
     )
 
@@ -1356,7 +1383,6 @@ class Neo4j2(
             .list()
             .forEach {
               when {
-                property == "email" && it.get("p.value").asString() == "devops@tsco.org" -> return@forEach
                 it.get("type").asString() == "FLOAT" ->
                   updateStatement.setDouble(1, it.get("p.value").asDouble())
                 it.get("type").asString() == "STRING" ->
@@ -1801,6 +1827,50 @@ class Neo4j2(
       )
     )
 
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "FileVersion",
+        type = "parent",
+        toBaseNode = "File",
+        table = "common.file_versions",
+        column = "file",
+        baseNodeToPlaceInColumn = "File"
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Partnership",
+        type = "mou",
+        toBaseNode = "Property",
+        table = "sc.partnerships",
+        column = "mou",
+        baseNodeToPlaceInColumn = ""
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Partnership",
+        type = "agreement",
+        toBaseNode = "Property",
+        table = "sc.partnerships",
+        column = "agreement",
+        baseNodeToPlaceInColumn = ""
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "InternshipEngagement",
+        type = "growthPlan",
+        toBaseNode = "Property",
+        table = "sc.internship_engagements",
+        column = "growth_plan",
+        baseNodeToPlaceInColumn = ""
+      )
+    )
+
     val migrationStart = DateTime.now().millis
 
     val concurrency = 1
@@ -1863,10 +1933,14 @@ class Neo4j2(
 
         for (i in 0..ceil((relationshipsCount / batchSize).toDouble()).toInt()) {
 
-          session.run("MATCH (from:$fromBaseNode)-[r:$type { active: true }]-(to:$toBaseNode) RETURN from.id, to.id skip ${i * batchSize} limit $batchSize")
+          session.run("MATCH (from:$fromBaseNode)-[r:$type { active: true }]-(to:$toBaseNode) RETURN from.id, to.id, to.value skip ${i * batchSize} limit $batchSize")
             .list()
             .forEach {
-              if (baseNodeToPlaceInColumn == toBaseNode) {
+              if (toBaseNode == "Property") {
+                updateStatement.setString(2, it.get("from.id").asString())
+                updateStatement.setString(1, it.get("to.value").asString())
+              }
+              else if (baseNodeToPlaceInColumn == toBaseNode) {
                 updateStatement.setString(1, it.get("to.id").asString())
                 updateStatement.setString(2, it.get("from.id").asString())
               } else {
@@ -1927,9 +2001,9 @@ class Neo4j2(
     queue.offer(BaseNodeCreate("FieldZone", "sc.field_zones"))
     queue.offer(BaseNodeCreate("FieldRegion", "sc.field_regions"))
     queue.offer(BaseNodeCreate("ScriptureRange", "common.scripture_references"))
-//    queue.offer(BaseNodeCreate("Film", "sc.products"))
-//    queue.offer(BaseNodeCreate("Story", "sc.products"))
-//    queue.offer(BaseNodeCreate("EthnoArt", "sc.products"))
+    queue.offer(BaseNodeCreate("Film", "sc.products"))
+    queue.offer(BaseNodeCreate("Story", "sc.products"))
+    queue.offer(BaseNodeCreate("EthnoArt", "sc.products"))
 
     val migrationStart = DateTime.now().millis
 
