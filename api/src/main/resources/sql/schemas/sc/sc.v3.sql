@@ -166,7 +166,7 @@ DO $$ BEGIN
 END; $$;
 
 create table sc.partners (
-  id uuid primary key default public.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),
 
   organization uuid references common.organizations(id),
 	active bool,
@@ -191,7 +191,6 @@ create table sc.partners (
 create table sc.ethnologue (
   id uuid primary key default common.uuid_generate_v4(),
 
-  language_index uuid not null references sil.language_index(id),
   code varchar(32),
   language_name varchar(64), -- override for language_index
   population int,

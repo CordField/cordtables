@@ -49,17 +49,19 @@ class DatabaseVersionControl(
     while (getSchemaVersion() < version) {
       when (getSchemaVersion()) {
         1 -> {
-          println("upgrading schema to version 2")
-          toVersion2()
-        }
-        2 -> {
+//          println("upgrading schema to version 2")
+//          toVersion2()
           println("upgrading schema to version 3")
           toVersion3()
         }
-        3 -> {
-          println("upgrading schema to version 4")
-          toVersion4()
-        }
+//        2 -> {
+//          println("upgrading schema to version 3")
+//          toVersion3()
+//        }
+//        3 -> {
+//          println("upgrading schema to version 4")
+//          toVersion4()
+//        }
         else -> {
           break
         }

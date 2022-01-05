@@ -1329,13 +1329,13 @@ class Neo4j2(
       val updateStatement: PreparedStatement = if (enum != null) {
         conn.prepareStatement(
           """
-              update $tableName set $column = cast(? as $enum) where id = public.uuid_generate_v5(public.uuid_ns_url(), ?)
+              update $tableName set $column = cast(? as $enum) where id = common.uuid_generate_v5(common.uuid_ns_url(), ?)
               """.trimIndent()
         )
       } else {
         conn.prepareStatement(
           """
-              update $tableName set $column = ? where id = public.uuid_generate_v5(public.uuid_ns_url(), ?);
+              update $tableName set $column = ? where id = common.uuid_generate_v5(common.uuid_ns_url(), ?);
               """.trimIndent()
         )
       }
@@ -1357,7 +1357,6 @@ class Neo4j2(
             .forEach {
               when {
                 property == "email" && it.get("p.value").asString() == "devops@tsco.org" -> return@forEach
-                property == "password" && it.get("p.value").asString() == "\$argon2i\$v=19\$m=4096,t=3,p=1\$6oarrIhzHj8JPpEw1rIzdQ\$1/Br0R7/Fh42D5mhlzD6sLx/y3lk4qvjlug8ZSefd/M" -> return@forEach
                 it.get("type").asString() == "FLOAT" ->
                   updateStatement.setDouble(1, it.get("p.value").asDouble())
                 it.get("type").asString() == "STRING" ->
@@ -1852,19 +1851,19 @@ class Neo4j2(
 
       val updateStatement: PreparedStatement = conn.prepareStatement(
         """
-        update $tableName set $column = public.uuid_generate_v5(public.uuid_ns_url(), ?) where id = public.uuid_generate_v5(public.uuid_ns_url(), ?);
+        update $tableName set $column = common.uuid_generate_v5(common.uuid_ns_url(), ?) where id = common.uuid_generate_v5(common.uuid_ns_url(), ?);
       """.trimIndent()
       )
 
       neo4j.session().use { session ->
 
         val relationshipsCount =
-          session.run("MATCH (n:$fromBaseNode)-[r:$type]-(m:$toBaseNode) RETURN count(r) as count").single()
+          session.run("MATCH (n:$fromBaseNode)-[r:$type { active: true }]-(m:$toBaseNode) RETURN count(r) as count").single()
             .get("count").asInt()
 
         for (i in 0..ceil((relationshipsCount / batchSize).toDouble()).toInt()) {
 
-          session.run("MATCH (from:$fromBaseNode)-[r:$type]-(to:$toBaseNode) RETURN from.id, to.id skip ${i * batchSize} limit $batchSize")
+          session.run("MATCH (from:$fromBaseNode)-[r:$type { active: true }]-(to:$toBaseNode) RETURN from.id, to.id skip ${i * batchSize} limit $batchSize")
             .list()
             .forEach {
               if (baseNodeToPlaceInColumn == toBaseNode) {
@@ -1975,7 +1974,7 @@ class Neo4j2(
       val insertStmt: PreparedStatement = conn.prepareStatement(
         """
         insert into $tableName(id, created_by, modified_by, owning_person, owning_group) 
-        values(public.uuid_generate_v5(public.uuid_ns_url(), ?), '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
+        values(common.uuid_generate_v5(common.uuid_ns_url(), ?), '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
       """.trimIndent()
       )
 

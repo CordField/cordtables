@@ -39,4 +39,3 @@ alter table sc.product_scripture_references alter column scripture_reference set
 alter table sc.product_scripture_references alter column change_to_plan set not null;
 alter table sc.internship_engagements alter column project set not null;
 alter table sc.internship_engagements alter column change_to_plan set not null;
-alter table sc.ceremonies alter column ethnologue set not null;
