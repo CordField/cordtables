@@ -2,19 +2,17 @@ import { ErrorType } from './types';
 
 type fetchAs = <REQ, RES>(path: string, data: REQ) => Promise<RES>;
 
-export function throttle(fn:fetchAs, delay) {
+export function throttle(fn: fetchAs, delay) {
   let last = 0;
   let lastData = null;
-  let lastPath = null;
   return (path, data) => {
     const now = new Date().getTime();
-    console.log({ data, lastData, path, lastPath });
-    if (now - last < delay && JSON.stringify(data) === JSON.stringify(lastData) && path === lastPath) {
+    console.log({ data, lastData });
+    if (now - last < delay && JSON.stringify(data) === JSON.stringify(lastData)) {
       return { error: ErrorType.RequestMadeTooSoon };
     }
     last = now; //so that for next execution
     lastData = data;
-    lastPath = path;
     return fn(path, data);
   };
 }

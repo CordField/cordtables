@@ -1,7 +1,7 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
-import { fetchAs } from '../../../../common/utility';
+import { throttledFetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -25,7 +25,7 @@ export class DiscussionChannels {
   newDiscussionChannelName: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common/discussion-channels/update-read', {
+    const updateResponse = await throttledFetchAs<CommonDiscussionChannelUpdateRequest, CommonDiscussionChannelUpdateResponse>('common/discussion-channels/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -50,7 +50,7 @@ export class DiscussionChannels {
   };
 
   handleDelete = async id => {
-    const deleteResponse = await fetchAs<DeleteCommonDiscussionChannelRequest, DeleteCommonDiscussionChannelResponse>('common/discussion-channels/delete', {
+    const deleteResponse = await throttledFetchAs<DeleteCommonDiscussionChannelRequest, DeleteCommonDiscussionChannelResponse>('common/discussion-channels/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -65,7 +65,7 @@ export class DiscussionChannels {
   };
 
   async getList() {
-    this.discussionchannelsResponse = await fetchAs<CommonDiscussionChannelListRequest, CommonDiscussionChannelListResponse>('common/discussion-channels/list', {
+    this.discussionchannelsResponse = await throttledFetchAs<CommonDiscussionChannelListRequest, CommonDiscussionChannelListResponse>('common/discussion-channels/list', {
       token: globals.globalStore.state.token,
     });
   }
@@ -78,7 +78,7 @@ export class DiscussionChannels {
     event.preventDefault();
     event.stopPropagation();
 
-    const createResponse = await fetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common/discussion-channels/create-read', {
+    const createResponse = await throttledFetchAs<CreateCommonDiscussionChannelRequest, CreateCommonDiscussionChannelResponse>('common/discussion-channels/create-read', {
       token: globals.globalStore.state.token,
       discussion_channel: {
         name: this.newDiscussionChannelName,

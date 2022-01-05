@@ -1,7 +1,7 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
-import { fetchAs, throttledFetchAs } from '../../../../common/utility';
+import { throttledFetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import {
   CommonThreadsListRequest,
@@ -25,7 +25,7 @@ export class Threads {
   newChannel: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
-    const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common/threads/update-read', {
+    const updateResponse = await throttledFetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common/threads/update-read', {
       token: globals.globalStore.state.token,
       column: columnName,
       id: id,
@@ -45,7 +45,7 @@ export class Threads {
   };
 
   handleDelete = async id => {
-    const result = await fetchAs<DeleteCommonThreadsRequest, DeleteCommonThreadsResponse>('common/threads/delete', {
+    const result = await throttledFetchAs<DeleteCommonThreadsRequest, DeleteCommonThreadsResponse>('common/threads/delete', {
       id,
       token: globals.globalStore.state.token,
     });
@@ -62,7 +62,7 @@ export class Threads {
   }
 
   async getList() {
-    this.commonThreadsResponse = await fetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common/threads/list', {
+    this.commonThreadsResponse = await throttledFetchAs<CommonThreadsListRequest, CommonThreadsListResponse>('common/threads/list', {
       token: globals.globalStore.state.token,
     });
   }
