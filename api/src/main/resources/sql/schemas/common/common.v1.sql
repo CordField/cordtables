@@ -651,8 +651,7 @@ create type common.ticket_status as enum (
 
 create table common.tickets (
 	id uuid primary key default common.uuid_generate_v4(),
-  
-  title text not null,
+  title varchar(64) not null,
 	ticket_status common.ticket_status not null default 'Open',
 	parent uuid,
 	content text not null,
