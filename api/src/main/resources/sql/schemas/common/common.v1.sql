@@ -191,7 +191,7 @@ create table common.languages(
 create table common.site_text_strings(
   id uuid primary key default common.uuid_generate_v4(),
 
-  english varchar(64) not null, -- US English, all translations including other English locales will be in the translation table
+  english varchar(64) unique not null, -- US English, all translations including other English locales will be in the translation table
   comment text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -219,18 +219,19 @@ create table common.site_text_translations(
   unique (language, site_text)
 );
 
-create table common.site_text_languages(
-  id uuid primary key default common.uuid_generate_v4(),
-
-  language uuid not null references common.languages(id),
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
-);
+-- this table shouldn't be needed anymore
+--create table common.site_text_languages(
+--  id uuid primary key default common.uuid_generate_v4(),
+--
+--  language uuid not null references common.languages(id),
+--
+--  created_at timestamp not null default CURRENT_TIMESTAMP,
+--  created_by uuid not null references admin.people(id),
+--  modified_at timestamp not null default CURRENT_TIMESTAMP,
+--  modified_by uuid not null references admin.people(id),
+--  owning_person uuid not null references admin.people(id),
+--  owning_group uuid not null references admin.groups(id)
+--);
 
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
 

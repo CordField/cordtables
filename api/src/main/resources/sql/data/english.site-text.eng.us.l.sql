@@ -1,0 +1,5 @@
+-- the english 'translation' of the site text strings in site-text-strings.data.sql
+
+-- this file will be refactored into a csv file soon
+insert into common.site_text_translations(language, site_text, translation, created_by, modified_by, owning_person, owning_group) values ( (select id from sil.language_index where lang = 'eng' and country = 'US' and name_type = 'L' limit 1), (select id from common.site_text_strings where english = 'cord-title'), 'Cord', (select id from admin.people limit 1), (select id from admin.people limit 1), (select id from admin.people limit 1), (select id from admin.groups limit 1) );
+insert into common.site_text_translations(language, site_text, translation, created_by, modified_by, owning_person, owning_group) values ( (select id from sil.language_index where lang = 'eng' and country = 'US' and name_type = 'L' limit 1), (select id from common.site_text_strings where english = 'tables-title'), 'Field', (select id from admin.people limit 1), (select id from admin.people limit 1), (select id from admin.people limit 1), (select id from admin.groups limit 1) );
