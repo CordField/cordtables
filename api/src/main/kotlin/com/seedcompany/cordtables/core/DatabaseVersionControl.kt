@@ -221,6 +221,12 @@ class DatabaseVersionControl(
       bootstrapStatement.close()
     }
 
+
+    // load site text
+    jdbcTemplate.execute("call sil.sil_migrate_language_index('eng', 'US', 'L', 'English');") // for english site text to use
+    runSqlFile("sql/data/site-text-strings.data.sql") // todo refactor to csv
+    runSqlFile("sql/data/english.site-text.eng.us.l.sql") // todo refactor to csv
+
     // update version control table
     jdbcTemplate.execute(
       """
