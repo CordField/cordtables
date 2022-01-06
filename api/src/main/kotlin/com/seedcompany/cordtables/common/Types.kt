@@ -192,7 +192,7 @@ enum class MimeTypes(val value: String) {
   ImageXPortablePixmap("image/x-portable-pixmap"),
   ImageXRgb("image/x-rgb"),
   ImageXTga("image/x-tga"),
-  ImageXBitmap("image/x-xbitmap"),
+  ImageXXbitmap("image/x-xbitmap"),
   ImageXXpixmap("image/x-xpixmap"),
   ImageXwindowdump("image/xwindowdump"),
   MessageRfc822("message/rfc822"),
