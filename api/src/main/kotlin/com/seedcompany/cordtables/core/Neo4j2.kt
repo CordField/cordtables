@@ -28,6 +28,15 @@ data class BaseNodeCreate(
   val tableName: String,
 )
 
+data class BaseNodePairCreate(
+  val baseNode: String,
+  val secondBaseNode: String,
+  val type: String,
+  val column: String,
+  val secondColumn: String,
+  val tableName: String
+)
+
 data class RelationshipCreate(
   val fromBaseNode: String,
   val toBaseNode: String,
@@ -99,6 +108,7 @@ class Neo4j2(
 
     if (adminPersonId != null && adminGroupId != null) {
       migrateBaseNodes()
+      migrateBaseNodePairs()
       migrateRelationships()
       migrateProperties()
     }
@@ -1180,6 +1190,78 @@ class Neo4j2(
       )
     )
 
+    // Producibles
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "EthnoArt",
+        property = "name",
+        table = "sc.products",
+        column = "type",
+        enum = "sc.product_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Film",
+        property = "name",
+        table = "sc.products",
+        column = "type",
+        enum = "sc.product_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Story",
+        property = "name",
+        table = "sc.products",
+        column = "type",
+        enum = "sc.product_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "Song",
+        property = "name",
+        table = "sc.products",
+        column = "type",
+        enum = "sc.product_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "DirectScriptureProduct",
+        property = "methodology",
+        table = "sc.products",
+        column = "type",
+        enum = "sc.product_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "DerivativeScriptureProduct",
+        property = "methodology",
+        table = "sc.products",
+        column = "type",
+        enum = "sc.product_type"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "OtherProduct",
+        property = "title",
+        table = "sc.products",
+        column = "type",
+        enum = "sc.product_type"
+      )
+    )
+
     queue.offer(
       PropertyCreate(
         baseNode = "User",
@@ -1349,7 +1431,6 @@ class Neo4j2(
   ) {
 
     val batchSize = 2000
-    val props = arrayOf("planned", "lukePartnership", "firstScripture", "openToInvestorVisit")
 
     ds.connection.use { conn ->
 
@@ -1385,8 +1466,13 @@ class Neo4j2(
               when {
                 it.get("type").asString() == "FLOAT" ->
                   updateStatement.setDouble(1, it.get("p.value").asDouble())
-                it.get("type").asString() == "STRING" ->
-                  updateStatement.setString(1, it.get("p.value").asString())
+                it.get("type").asString() == "STRING" -> {
+                  if (baseNode in arrayOf("Story", "Film", "Song", "EthnoArt", "DirectScriptureProduct", "DerivativeScriptureProduct", "OtherProduct")) {
+                    updateStatement.setString(1, baseNode)
+                  } else {
+                    updateStatement.setString(1, it.get("p.value").asString())
+                  }
+                }
                 it.get("type").asString() == "BOOLEAN" ->
                   updateStatement.setBoolean(1, it.get("p.value").asBoolean())
                 it.get("type").asString() == "LocalDate" ->
@@ -1397,8 +1483,9 @@ class Neo4j2(
                   updateStatement.setArray(1, conn.createArrayOf("text", it.get("p.value").asList().toTypedArray()))
                 baseNode == "Project" && property == "type" ->
                   updateStatement.setString(1, it.get("n.type").asString())
+
                 else ->
-                  if (property in props) {
+                  if (property in arrayOf("planned", "lukePartnership", "firstScripture", "openToInvestorVisit")) {
                     updateStatement.setBoolean(1, false)
                   } else
                   return@forEach
@@ -2080,6 +2167,135 @@ class Neo4j2(
 
         baseNodesMigrated.addAndGet(totalBaseNodes)
         println("total $baseNode: $totalBaseNodes")
+      }
+    }
+  }
+
+  suspend fun migrateBaseNodePairs() {
+    val queue = ConcurrentLinkedQueue<BaseNodePairCreate>()
+
+    queue.offer(
+      BaseNodePairCreate(
+        baseNode = "Organization",
+        type = "locations",
+        secondBaseNode = "Location",
+        column = "organization",
+        secondColumn = "location",
+        tableName = "sc.organization_locations"
+      )
+    )
+
+    queue.offer(
+      BaseNodePairCreate(
+        baseNode = "Language",
+        type = "locations",
+        secondBaseNode = "Location",
+        column = "language",
+        secondColumn = "location",
+        tableName = "sc.language_locations"
+      )
+    )
+
+    queue.offer(
+      BaseNodePairCreate(
+        baseNode = "Project",
+        type = "primaryLocation",
+        secondBaseNode = "Location",
+        column = "project",
+        secondColumn = "location",
+        tableName = "sc.project_locations"
+      )
+    )
+
+    queue.offer(
+      BaseNodePairCreate(
+        baseNode = "User",
+        type = "education",
+        secondBaseNode = "Education",
+        column = "person",
+        secondColumn = "education",
+        tableName = "common.education_by_person"
+      )
+    )
+
+    val migrationStart = DateTime.now().millis
+
+    val concurrency = 1
+
+    coroutineScope {
+      for (t in 1..concurrency) {
+        launch {
+          println("coroutine $t: start")
+          delay(1)
+          while (true) {
+            val createRequest = queue.poll() ?: break
+            println("coroutine $t, fetching ${createRequest.baseNode}-${createRequest.secondBaseNode}")
+            migrateBaseNodePairsByLabel(
+              adminPersonId!!,
+              adminGroupId!!,
+              createRequest.baseNode,
+              createRequest.secondBaseNode,
+              createRequest.type,
+              createRequest.column,
+              createRequest.secondColumn,
+              createRequest.tableName
+            )
+            delay(1)
+          }
+          println("coroutine $t: end")
+        }
+        delay(1)
+      }
+    }
+    println("${relationshipsMigrated.get()} Base Nodes in ${(DateTime.now().millis - migrationStart) / 1000F} seconds")
+  }
+
+  suspend fun migrateBaseNodePairsByLabel(
+    adminPersonId: String,
+    adminGroupId: String,
+    baseNode: String,
+    secondBaseNode: String,
+    type: String,
+    column: String,
+    secondColumn: String,
+    tableName: String
+  ) {
+
+    val batchSize = 2000
+
+    ds.connection.use { conn ->
+      val insertStmt: PreparedStatement = conn.prepareStatement(
+        """
+          insert into $tableName($column, $secondColumn, created_by, modified_by, owning_person, owning_group)
+          values(common.uuid_generate_v5(common.uuid_ns_url(), ?), 
+                 common.uuid_generate_v5(common.uuid_ns_url(), ?),
+                 '$adminPersonId', 
+                 '$adminPersonId', 
+                 '$adminPersonId', 
+                 '$adminGroupId');
+        """.trimIndent()
+      )
+
+      neo4j.session().use { session ->
+
+        val baseNodePairsCount =
+          session.run("MATCH (n:$baseNode)-[r:$type { active: true }]-(m:$secondBaseNode) RETURN count(r) as count").single()
+            .get("count").asInt()
+
+        for (i in 0..ceil((baseNodePairsCount / batchSize).toDouble()).toInt()) {
+
+          session.run("MATCH (from:$baseNode)-[r:$type { active: true }]-(to:$secondBaseNode) RETURN from.id, to.id skip ${i * batchSize} limit $batchSize")
+            .list()
+            .forEach {
+              insertStmt.setString(1, it.get("from.id").asString())
+              insertStmt.setString(2, it.get("to.id").asString())
+              insertStmt.addBatch()
+            }
+          insertStmt.executeBatch()
+        }
+
+        relationshipsMigrated.addAndGet(baseNodePairsCount)
+        println("total $baseNode - $secondBaseNode: $baseNodePairsCount")
       }
     }
   }

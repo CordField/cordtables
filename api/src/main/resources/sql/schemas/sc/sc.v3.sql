@@ -882,7 +882,9 @@ create type common.product_purposes as enum (
 
 create type sc.product_type as enum (
   'BibleStories',
-  'EthnoArts',
+  'DirectScriptureProduct',
+  'DerivativeScriptureProduct',
+  'EthnoArt',
   'Film',
   'FullBible',
   'Genesis',
@@ -893,7 +895,8 @@ create type sc.product_type as enum (
   'NewTestamentFull',
   'OldTestamentPortions',
   'OldTestamentFull',
-  'Songs',
+  'OtherProduct',
+  'Song',
   'Story'
 );
 create type common.progress_measurement as enum (

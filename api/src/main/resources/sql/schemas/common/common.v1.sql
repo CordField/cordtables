@@ -489,7 +489,7 @@ create table common.education_entries (
 create table common.education_by_person (
   id uuid primary key default common.uuid_generate_v4(),
 
-  person uuid unique not null references admin.people(id),
+  person uuid not null references admin.people(id),
   education uuid not null references common.education_entries(id),
   graduation_year int,
   
