@@ -220,18 +220,18 @@ create table common.site_text_translations(
 );
 
 -- this table shouldn't be needed anymore
---create table common.site_text_languages(
---  id uuid primary key default common.uuid_generate_v4(),
---
---  language uuid not null references common.languages(id),
---
---  created_at timestamp not null default CURRENT_TIMESTAMP,
---  created_by uuid not null references admin.people(id),
---  modified_at timestamp not null default CURRENT_TIMESTAMP,
---  modified_by uuid not null references admin.people(id),
---  owning_person uuid not null references admin.people(id),
---  owning_group uuid not null references admin.groups(id)
---);
+create table common.site_text_languages(
+  id uuid primary key default common.uuid_generate_v4(),
+
+  language uuid not null references common.languages(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
+);
 
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
 
