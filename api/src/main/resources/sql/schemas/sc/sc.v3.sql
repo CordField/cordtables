@@ -456,6 +456,7 @@ create table sc.people (
 
 	skills varchar(32)[],
 	status varchar(32), -- todo might be an enum
+	title varchar(255),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),

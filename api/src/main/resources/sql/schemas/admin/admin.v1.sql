@@ -167,8 +167,6 @@ create table admin.people (
   public_full_name varchar(64), -- todo make compute column
   sensitivity_clearance common.sensitivity default 'Low',
   timezone varchar(32), -- todo research type / foreign key reference
-  title varchar(255),
-  status varchar(32), -- todo might be an enum
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid, -- not null doesn't work here, on startup
@@ -332,10 +330,10 @@ create table admin.role_memberships (
 
 -- USERS ---------------------------------------------------------------------
 
-create table admin.users(
+create table admin.users( -- todo might change to user_accounts
   id uuid primary key references admin.people(id), -- not null added in v2
 
-  email varchar(255) unique, -- not null
+  email varchar(255) unique, -- not null todo maybe merge with admin.people
   password varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,

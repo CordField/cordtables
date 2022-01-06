@@ -30,6 +30,7 @@ create type common.egids_scale as enum (
 -- meant to be extended by all orgs, so everyone has a globally unique id to reference within their language lists
 create table common.languages(
   id uuid primary key default common.uuid_generate_v4(),
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
