@@ -30,6 +30,7 @@ create table sc.posts (
   type sc.post_type, --not null,
   shareability sc.post_shareability, --not null,
   body text, --not null,
+  creator uuid references admin.people(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -639,7 +640,7 @@ create table sc.project_members (
 
 create table sc.pinned_projects (
   id uuid primary key default common.uuid_generate_v4(),
-	person uuid unique references sc.people(id), -- not null
+	person uuid references sc.people(id), -- not null
 	project uuid references sc.projects(id), -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -941,6 +942,7 @@ create table sc.products (
   describe_completion text,
   description text,
   type sc.product_type,
+  produces uuid references sc.products(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -955,6 +957,7 @@ create table sc.products (
 create table sc.product_scripture_references (
   id uuid primary key default common.uuid_generate_v4(),
   product uuid references sc.products(id), -- not null
+  scripture_references_override uuid references common.scripture_references(id),
   scripture_reference uuid references common.scripture_references(id), -- not null
   change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,

@@ -1264,6 +1264,34 @@ class Neo4j2(
 
     queue.offer(
       PropertyCreate(
+        baseNode = "ScriptureRange",
+        property = "range",
+        table = "common.scripture_references",
+        column = ""
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "StepProgress",
+        property = "completed",
+        table = "sc.step_progress",
+        column = "completed"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
+        baseNode = "StepProgress",
+        property = "step",
+        table = "sc.step_progress",
+        column = "step",
+        enum = "common.product_methodology_step"
+      )
+    )
+
+    queue.offer(
+      PropertyCreate(
         baseNode = "User",
         property = "about",
         table = "admin.people",
@@ -1437,14 +1465,20 @@ class Neo4j2(
       val updateStatement: PreparedStatement = if (enum != null) {
         conn.prepareStatement(
           """
-              update $tableName set $column = cast(? as $enum) where id = common.uuid_generate_v5(common.uuid_ns_url(), ?)
-              """.trimIndent()
+          update $tableName set $column = cast(? as $enum) where id = common.uuid_generate_v5(common.uuid_ns_url(), ?)
+        """.trimIndent()
         )
-      } else {
+      } else if (baseNode == "ScriptureRange") {
         conn.prepareStatement(
           """
-              update $tableName set $column = ? where id = common.uuid_generate_v5(common.uuid_ns_url(), ?);
-              """.trimIndent()
+          update $tableName set range_start = ?, range_end = ? where id = common.uuid_generate_v5(common.uuid_ns_url(), ?)
+        """.trimIndent())
+      }
+        else {
+        conn.prepareStatement(
+          """
+          update $tableName set $column = ? where id = common.uuid_generate_v5(common.uuid_ns_url(), ?);
+        """.trimIndent()
         )
       }
 
@@ -1455,11 +1489,18 @@ class Neo4j2(
             .get("count").asInt()
 
         for (i in 0..ceil((propertyCount / batchSize).toDouble()).toInt()) {
-          val query = if (baseNode == "Project" && property == "type") {
-            "MATCH (n:$baseNode) RETURN n.type, n.id skip ${i * batchSize} limit $batchSize"
-          } else {
-            "MATCH (n:$baseNode)-[r:$property { active: true }]-(p) RETURN n.id, p.value, apoc.meta.type(p.value) as type skip ${i * batchSize} limit $batchSize"
-          }
+          val query =
+            when {
+              baseNode == "Project" && property == "type" ->
+                "MATCH (n:$baseNode) RETURN n.type, n.id skip ${i * batchSize} limit $batchSize"
+              baseNode == "ScriptureRange" ->
+                "MATCH (n:$baseNode) RETURN n.start, n.end, id(n) skip ${i * batchSize} limit $batchSize"
+              baseNode == "StepProgress" && property == "step" ->
+                "MATCH (n:$baseNode) RETURN n.step, n.id skip ${i * batchSize} limit $batchSize"
+              else ->  {
+                "MATCH (n:$baseNode)-[r:$property { active: true }]-(p) RETURN n.id, p.value, apoc.meta.type(p.value) as type skip ${i * batchSize} limit $batchSize"
+              }
+            }
           session.run(query)
             .list()
             .forEach {
@@ -1467,11 +1508,9 @@ class Neo4j2(
                 it.get("type").asString() == "FLOAT" ->
                   updateStatement.setDouble(1, it.get("p.value").asDouble())
                 it.get("type").asString() == "STRING" -> {
-                  if (baseNode in arrayOf("Story", "Film", "Song", "EthnoArt", "DirectScriptureProduct", "DerivativeScriptureProduct", "OtherProduct")) {
+                  if (baseNode in arrayOf("Story", "Film", "Song", "EthnoArt", "DirectScriptureProduct", "DerivativeScriptureProduct", "OtherProduct"))
                     updateStatement.setString(1, baseNode)
-                  } else {
-                    updateStatement.setString(1, it.get("p.value").asString())
-                  }
+                  else updateStatement.setString(1, it.get("p.value").asString())
                 }
                 it.get("type").asString() == "BOOLEAN" ->
                   updateStatement.setBoolean(1, it.get("p.value").asBoolean())
@@ -1483,14 +1522,20 @@ class Neo4j2(
                   updateStatement.setArray(1, conn.createArrayOf("text", it.get("p.value").asList().toTypedArray()))
                 baseNode == "Project" && property == "type" ->
                   updateStatement.setString(1, it.get("n.type").asString())
-
+                baseNode == "StepProgress" && property == "step" ->
+                  updateStatement.setString(1, it.get("n.step").asString())
+                baseNode == "ScriptureRange" -> {
+                  updateStatement.setInt(1, it.get("n.start").asInt())
+                  updateStatement.setInt(2, it.get("n.end").asInt())
+                }
                 else ->
                   if (property in arrayOf("planned", "lukePartnership", "firstScripture", "openToInvestorVisit")) {
                     updateStatement.setBoolean(1, false)
                   } else
                   return@forEach
               }
-              updateStatement.setString(2, it.get("n.id").asString())
+              if (baseNode == "ScriptureRange") updateStatement.setString(3, it.get("id(n)").asInt().toString())
+              else updateStatement.setString(2, it.get("n.id").asString())
               updateStatement.addBatch()
             }
           updateStatement.executeBatch()
@@ -1958,6 +2003,61 @@ class Neo4j2(
       )
     )
 
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Post",
+        type = "creator",
+        toBaseNode = "Property",
+        table = "sc.posts",
+        column = "creator",
+        baseNodeToPlaceInColumn = ""
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "PeriodicReport",
+        type = "progress",
+        toBaseNode = "ProductProgress",
+        table = "sc.product_progress",
+        column = "report",
+        baseNodeToPlaceInColumn = "PeriodicReport"
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "Product",
+        type = "progress",
+        toBaseNode = "ProductProgress",
+        table = "sc.product_progress",
+        column = "product",
+        baseNodeToPlaceInColumn = "Product"
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "ProductProgress",
+        type = "step",
+        toBaseNode = "StepProgress",
+        table = "sc.step_progress",
+        column = "product_progress",
+        baseNodeToPlaceInColumn = "ProductProgress"
+      )
+    )
+
+    queue.offer(
+      RelationshipCreate(
+        fromBaseNode = "DerivativeScriptureProduct",
+        type = "produces",
+        toBaseNode = "Producible",
+        table = "sc.products",
+        column = "produces",
+        baseNodeToPlaceInColumn = "Producible"
+      )
+    )
+
     val migrationStart = DateTime.now().millis
 
     val concurrency = 1
@@ -2091,6 +2191,8 @@ class Neo4j2(
     queue.offer(BaseNodeCreate("Film", "sc.products"))
     queue.offer(BaseNodeCreate("Story", "sc.products"))
     queue.offer(BaseNodeCreate("EthnoArt", "sc.products"))
+    queue.offer(BaseNodeCreate("ProductProgress", "sc.product_progress"))
+    queue.offer(BaseNodeCreate("StepProgress", "sc.step_progress"))
 
     val migrationStart = DateTime.now().millis
 
@@ -2218,6 +2320,39 @@ class Neo4j2(
       )
     )
 
+    queue.offer(
+      BaseNodePairCreate(
+        baseNode = "User",
+        type = "pinned",
+        secondBaseNode = "Project",
+        column = "person",
+        secondColumn = "project",
+        tableName = "sc.pinned_projects"
+      )
+    )
+
+    queue.offer(
+      BaseNodePairCreate(
+        baseNode = "DerivativeScriptureProduct",
+        type = "scriptureReferencesOverride",
+        secondBaseNode = "ScriptureRange",
+        column = "product",
+        secondColumn = "scripture_references_override",
+        tableName = "sc.product_scripture_references"
+      )
+    )
+
+    queue.offer(
+      BaseNodePairCreate(
+        baseNode = "Producible",
+        type = "scriptureReferences",
+        secondBaseNode = "ScriptureRange",
+        column = "product",
+        secondColumn = "scripture_reference",
+        tableName = "sc.product_scripture_references"
+      )
+    )
+
     val migrationStart = DateTime.now().millis
 
     val concurrency = 1
@@ -2283,12 +2418,18 @@ class Neo4j2(
             .get("count").asInt()
 
         for (i in 0..ceil((baseNodePairsCount / batchSize).toDouble()).toInt()) {
+          val query = if (secondBaseNode == "ScriptureRange") {
+            "MATCH (from:$baseNode)-[r:$type { active: true }]-(to:$secondBaseNode) RETURN from.id, id(to) skip ${i * batchSize} limit $batchSize"
+          } else {
+            "MATCH (from:$baseNode)-[r:$type ${if (type != "pinned") "{ active: true }" else ""}]-(to:$secondBaseNode) RETURN from.id, to.id skip ${i * batchSize} limit $batchSize"
+          }
 
-          session.run("MATCH (from:$baseNode)-[r:$type { active: true }]-(to:$secondBaseNode) RETURN from.id, to.id skip ${i * batchSize} limit $batchSize")
+          session.run(query)
             .list()
             .forEach {
               insertStmt.setString(1, it.get("from.id").asString())
-              insertStmt.setString(2, it.get("to.id").asString())
+              if (secondBaseNode == "ScriptureRange") insertStmt.setString(2, it.get("id(to)").asInt().toString())
+              else insertStmt.setString(2, it.get("to.id").asString())
               insertStmt.addBatch()
             }
           insertStmt.executeBatch()
