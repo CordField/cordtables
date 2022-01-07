@@ -18,6 +18,34 @@ DECLARE
 BEGIN
   -- todo
 
+  call common.create_sc_ethnologue(1,2,3, vEnglishEthId);
+  call create_language(vEnglishEthId ,2,3, 'asdf');
+END; $$;
+
+CREATE OR REPLACE PROCEDURE common.create_sc_ethnologue()
+LANGUAGE PLPGSQL
+AS $$
+DECLARE
+  vEnglishEthId int;
+  vSpanishEthId int;
+  vHindiEthId int;
+  vKannadaEthId int;
+BEGIN
+  -- todo
+  select id from sil.language_index limit 1 into asdf;
+END; $$;
+
+CREATE OR REPLACE PROCEDURE create_language()
+LANGUAGE PLPGSQL
+AS $$
+DECLARE
+  vEnglishEthId int;
+  vSpanishEthId int;
+  vHindiEthId int;
+  vKannadaEthId int;
+BEGIN
+  -- todo
+
 END; $$;
 
 call load_dummy_data();
