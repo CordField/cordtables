@@ -376,7 +376,7 @@ export class AdminPeoples {
 
         {/* create form - we'll only do creates using the minimum amount of fields
          and then expect the user to use the update functionality to do the rest*/}
-
+        
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
             <div id="about-holder" class="form-input-item form-thing">

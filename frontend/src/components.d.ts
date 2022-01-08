@@ -265,6 +265,9 @@ export namespace Components {
     }
     interface ScriptureReferences {
     }
+    interface SearchForm {
+        "columnNames": string[];
+    }
     interface SilCountryCodes {
     }
     interface SilIso6393 {
@@ -967,6 +970,12 @@ declare global {
         prototype: HTMLScriptureReferencesElement;
         new (): HTMLScriptureReferencesElement;
     };
+    interface HTMLSearchFormElement extends Components.SearchForm, HTMLStencilElement {
+    }
+    var HTMLSearchFormElement: {
+        prototype: HTMLSearchFormElement;
+        new (): HTMLSearchFormElement;
+    };
     interface HTMLSilCountryCodesElement extends Components.SilCountryCodes, HTMLStencilElement {
     }
     var HTMLSilCountryCodesElement: {
@@ -1236,6 +1245,7 @@ declare global {
         "sc-project-locations": HTMLScProjectLocationsElement;
         "sc-projects": HTMLScProjectsElement;
         "scripture-references": HTMLScriptureReferencesElement;
+        "search-form": HTMLSearchFormElement;
         "sil-country-codes": HTMLSilCountryCodesElement;
         "sil-iso-639-3": HTMLSilIso6393Element;
         "sil-iso-639-3-macrolanguages": HTMLSilIso6393MacrolanguagesElement;
@@ -1529,6 +1539,10 @@ declare namespace LocalJSX {
     }
     interface ScriptureReferences {
     }
+    interface SearchForm {
+        "columnNames"?: string[];
+        "onSearchResults"?: (event: CustomEvent<any>) => void;
+    }
     interface SilCountryCodes {
     }
     interface SilIso6393 {
@@ -1703,6 +1717,7 @@ declare namespace LocalJSX {
         "sc-project-locations": ScProjectLocations;
         "sc-projects": ScProjects;
         "scripture-references": ScriptureReferences;
+        "search-form": SearchForm;
         "sil-country-codes": SilCountryCodes;
         "sil-iso-639-3": SilIso6393;
         "sil-iso-639-3-macrolanguages": SilIso6393Macrolanguages;
@@ -1842,6 +1857,7 @@ declare module "@stencil/core" {
             "sc-project-locations": LocalJSX.ScProjectLocations & JSXBase.HTMLAttributes<HTMLScProjectLocationsElement>;
             "sc-projects": LocalJSX.ScProjects & JSXBase.HTMLAttributes<HTMLScProjectsElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
+            "search-form": LocalJSX.SearchForm & JSXBase.HTMLAttributes<HTMLSearchFormElement>;
             "sil-country-codes": LocalJSX.SilCountryCodes & JSXBase.HTMLAttributes<HTMLSilCountryCodesElement>;
             "sil-iso-639-3": LocalJSX.SilIso6393 & JSXBase.HTMLAttributes<HTMLSilIso6393Element>;
             "sil-iso-639-3-macrolanguages": LocalJSX.SilIso6393Macrolanguages & JSXBase.HTMLAttributes<HTMLSilIso6393MacrolanguagesElement>;
