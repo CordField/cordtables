@@ -24,7 +24,7 @@ data class SearchRequest(
 
 data class SearchResponse(
   val error: ErrorType,
-  val data: people? = null
+  val data: MutableList<people>? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -44,6 +44,7 @@ class Search(
   fun searchHandler(@RequestBody req: SearchRequest): SearchResponse {
     if (req.token == null) return SearchResponse(ErrorType.InputMissingToken)
     if (!util.isAdmin(req.token)) return SearchResponse(ErrorType.AdminOnly)
+    var data: MutableList<people> = mutableListOf()
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
     val whereClause = "${req.searchColumnName} like '${req.searchKeyword}%'"
@@ -145,7 +146,7 @@ class Search(
         var owning_group: String? = jdbcResult.getString("owning_group")
         if (jdbcResult.wasNull()) owning_group = null
 
-        val people =
+        data.add(
           people(
             id = id,
             about = about,
@@ -168,16 +169,15 @@ class Search(
             modified_by = modified_by,
             owning_person = owning_person,
             owning_group = owning_group,
-          )
+          ))
 
-        return SearchResponse(ErrorType.NoError, data = people)
 
       }
     } catch (e: SQLException) {
       println("error while listing ${e.message}")
       return SearchResponse(ErrorType.SQLReadError)
     }
-    return SearchResponse(error=ErrorType.UnknownError)
+    return SearchResponse(ErrorType.NoError, data)
   }
 
 }

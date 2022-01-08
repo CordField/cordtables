@@ -13,7 +13,7 @@ class SearchRequest {
 
 class SearchResponse<T> {
   error: ErrorType;
-  data?: T;
+  data?: T[];
 }
 
 @Component({
@@ -23,12 +23,13 @@ class SearchResponse<T> {
 })
 export class Search {
   @Prop() columnNames: string[] = [];
-  @State() searchColumnName: string = this.columnNames[0];
-  @State() searchKeyword: string = '';
+  searchColumnName: string = this.columnNames[0];
+  searchKeyword: string = '';
   @Event({ eventName: 'searchResults' }) searchResults: EventEmitter<any>;
-  async handleSubmit() {
+  async handleSubmit(e) {
+    e.preventDefault();
     const searchUrl = window.location.href.split('/').slice(-2).join('/').concat('/search');
-
+    console.log(this.searchKeyword);
     const result = await fetchAs<SearchRequest, SearchResponse<any>>(searchUrl, {
       //   tableName: searchUrl.split('/').join('.'),
       searchColumnName: this.searchColumnName,
@@ -44,7 +45,7 @@ export class Search {
   render() {
     return (
       <Host>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={e => this.handleSubmit(e)}>
           {
             //1.dropdown for the column names
             //2.text field for the search term
@@ -60,7 +61,7 @@ export class Search {
             ))}
           </select>
           <label htmlFor="searchKeyword">
-            <input type="text" name="searchKeyword" value={this.searchKeyword} />
+            <input type="text" name="searchKeyword" value={this.searchKeyword} onChange={e => (this.searchKeyword = (e.target as HTMLInputElement).value)} />
           </label>
           <button>Search!</button>
         </form>
