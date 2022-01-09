@@ -48,7 +48,6 @@ class Search(
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
     val whereClause = "${req.searchColumnName} like '${req.searchKeyword}%'"
-    paramSource.addValue("token", req.token)
     val query = secureList.getSecureListQueryHandler(
       GetSecureListQueryRequest(
         tableName = "admin.people",
