@@ -7,6 +7,7 @@ import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
 import com.seedcompany.cordtables.components.tables.common.discussion_channels.CommonDiscussionChannelsListResponse
+import com.seedcompany.cordtables.components.tables.sc.global_partner_engagements.globalPartnerEngagement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -37,6 +38,7 @@ class Controller (
 ) {
     // val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
+    val jdbcTemplate2: JdbcTemplate = JdbcTemplate(ds)
 
     @CrossOrigin(origins =  ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
     @PostMapping("sc/partners-crm/list")
@@ -109,7 +111,7 @@ class Controller (
                         sensitivity = jdbcResult.getString("sensitivity"),
                         primary_location = jdbcResult.getString("primary_location"),
                         created_at = jdbcResult.getString("created_at"),
-                        modified_at = jdbcResult.getString("modified_at"),
+                        modified_at = jdbcResult.getString("modified_at")
                    )
                 )
             }
@@ -231,6 +233,7 @@ class Controller (
                     translation_performance = jdbcResult.getString("translation_performance"),
                     created_at = jdbcResult.getString("created_at"),
                     modified_at = jdbcResult.getString("modified_at"),
+                    engagements = jdbcResult.getString("id")?.let { this.getEngagements(it, req.token!!) }
                 )
             }
         }
@@ -240,7 +243,8 @@ class Controller (
         return PartnerReadResponse(error = error, partner = partner)
     }
 
-    fun getEngagements(partner: String, token: String){
+    fun getEngagements(partner: String, token: String): MutableList<globalPartnerEngagement>{
+        var data: MutableList<globalPartnerEngagement> = mutableListOf()
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", token)
         val query = secureList.getSecureListQueryHandler(
@@ -265,13 +269,73 @@ class Controller (
                 )
             )
         ).query
-
         try {
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
+            while (jdbcResult.next()){
+                data.add(
+                    globalPartnerEngagement(
+                        id = jdbcResult.getString("id"),
+                        organization = jdbcResult.getString("organization"),
+                        type = jdbcResult.getString("type"),
+                        mou_start = jdbcResult.getString("mou_start"),
+                        mou_end = jdbcResult.getString("mou_end"),
+                        sc_roles = jdbcResult.getString("sc_roles"),
+                        partner_roles = jdbcResult.getString("partner_roles"),
+                        created_at = jdbcResult.getString("created_at")
+                    )
+                )
+            }
+        }
+        catch (e: SQLException){
+            println("sql error :${e.message}")
+        }
+        return data
+    }
+
+  /*
+    @CrossOrigin(origins =  ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+    @PostMapping("sc/partners-crm/generate-data")
+    @ResponseBody
+    fun generatePartnersData(){
+        val token = ""
+        val sql = """
+            SELECT * FROM common.organizations WHERE id NOT IN(SELECT id FROM sc.partners) OFFSET 0 LIMIT 25000;
+        """.trimIndent()
+        val paramSource = MapSqlParameterSource()
+        paramSource.addValue("token", token)
+        try {
+            val jdbcResult = jdbcTemplate.queryForRowSet(sql, paramSource)
+            while (jdbcResult.next()){
+                var id = jdbcResult.getString("id")
+                var insertId = jdbcTemplate2.queryForObject("""
+                    INSERT INTO sc.partners (id, active, financial_reporting_types, is_innovations_client, pmc_entity_code, point_of_contact, types, address, sensitivity,
+                     created_at, created_by, modified_at, modified_by, owning_person, owning_group) VALUES (
+                        '${jdbcResult.getString("id")}'::uuid,
+                        (round(random())::int)::boolean, 
+                        ARRAY[(ARRAY['Funded','FieldEngaged'])[floor(random() * 2 + 1)::int]]::sc.financial_reporting_types[],
+                        (round(random())::int)::boolean, 
+                        SUBSTR(md5(random()::text),1,8),
+                        '452aa149-05aa-4b32-ad47-d732f673d3e2'::uuid,
+                        ARRAY[(ARRAY['Managing','Funding','Impact','Technical','Resource'])[floor(random() * 5 + 1)::int]]::sc.partner_types[],
+                        md5(random()::text),
+                        ((ARRAY['Low','Medium','High'])[floor(random() * 3 + 1)::int])::common.sensitivity,
+                        now(),
+                        '452aa149-05aa-4b32-ad47-d732f673d3e2'::uuid,
+                        now(),
+                        '452aa149-05aa-4b32-ad47-d732f673d3e2'::uuid,
+                        '452aa149-05aa-4b32-ad47-d732f673d3e2'::uuid,
+                        '2cbce651-1a69-4a98-a04a-ff7a3a3d07fd'::uuid
+                    ) returning id;
+                """.trimIndent(),
+                  String::class.java)
+
+                println("INSERTED partner $insertId")
+            }
         }
         catch (e: SQLException){
 
         }
     }
+  */
 
 }

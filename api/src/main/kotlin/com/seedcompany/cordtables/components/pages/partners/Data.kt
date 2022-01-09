@@ -1,6 +1,7 @@
 package com.seedcompany.cordtables.components.pages.partners
 
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.components.tables.sc.global_partner_engagements.globalPartnerEngagement
 import com.seedcompany.cordtables.components.tables.sil.country_codes.countryCode
 
 class Data {
@@ -44,6 +45,7 @@ data class Partner(
     val reporting_performance: String? = null,
     val financial_performance: String? = null,
     val translation_performance: String? = null,
+    val engagements: MutableList<globalPartnerEngagement>? = mutableListOf()
 )
 
 data class PartnersRequest(
