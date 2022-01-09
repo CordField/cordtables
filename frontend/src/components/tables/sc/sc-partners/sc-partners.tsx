@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class CreatePartnerExRequest {
   token: string;
   partner: {
-    organization: string;
+    id: string;
     active: boolean;
     financial_reporting_types: string;
     is_innovations_client: boolean;
@@ -59,7 +59,7 @@ class DeletePartnerExResponse extends GenericResponse {
 export class ScPartners {
   @State() partnersResponse: ScPartnerListResponse;
 
-  newOrganization: string;
+  newId: string;
   newActive: boolean;
   newFinancial_reporting_types: string;
   newIs_innovations_client: boolean;
@@ -108,8 +108,8 @@ export class ScPartners {
     });
   }
 
-  organizationChange(event) {
-    this.newOrganization = event.target.value;
+  idChange(event) {
+    this.newId = event.target.value;
   }
 
   activeChange(event) {
@@ -139,7 +139,7 @@ export class ScPartners {
     const createResponse = await fetchAs<CreatePartnerExRequest, CreatePartnerExResponse>('sc/partners/create-read', {
       token: globals.globalStore.state.token,
       partner: {
-        organization: this.newOrganization,
+        id: this.newId,
         active: this.newActive,
         financial_reporting_types: this.newFinancial_reporting_types,
         is_innovations_client: this.newIs_innovations_client,
@@ -165,13 +165,6 @@ export class ScPartners {
       width: 250,
       editable: false,
       deleteFn: this.handleDelete,
-    },
-    {
-      field: 'organization',
-      displayName: 'Organization',
-      width: 250,
-      editable: true,
-      updateFn: this.handleUpdate,
     },
     {
       field: 'active',
@@ -295,10 +288,10 @@ export class ScPartners {
           <form class="form-thing">
             <div id="organization-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="organization">Organization</label>
+                <label htmlFor="id">Organization</label>
               </span>
               <span class="form-thing">
-                <input type="text" id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+                <input type="text" id="id" name="id" onInput={event => this.idChange(event)} />
               </span>
             </div>
 

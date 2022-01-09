@@ -185,9 +185,13 @@ export namespace Components {
     }
     interface PartnerCrm {
     }
+    interface PartnerDetails {
+        "partnerDetail": PartnerDetail;
+    }
     interface PartnerListItem {
         "columnData": any[];
-        "rowData": ScPartner;
+        "rowData": PartnerDetail;
+        "selected": string;
     }
     interface PeersTable {
     }
@@ -751,6 +755,12 @@ declare global {
         prototype: HTMLPartnerCrmElement;
         new (): HTMLPartnerCrmElement;
     };
+    interface HTMLPartnerDetailsElement extends Components.PartnerDetails, HTMLStencilElement {
+    }
+    var HTMLPartnerDetailsElement: {
+        prototype: HTMLPartnerDetailsElement;
+        new (): HTMLPartnerDetailsElement;
+    };
     interface HTMLPartnerListItemElement extends Components.PartnerListItem, HTMLStencilElement {
     }
     var HTMLPartnerListItemElement: {
@@ -1240,6 +1250,7 @@ declare global {
         "page-root": HTMLPageRootElement;
         "pagination-bar": HTMLPaginationBarElement;
         "partner-crm": HTMLPartnerCrmElement;
+        "partner-details": HTMLPartnerDetailsElement;
         "partner-list-item": HTMLPartnerListItemElement;
         "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
@@ -1496,9 +1507,14 @@ declare namespace LocalJSX {
     }
     interface PartnerCrm {
     }
+    interface PartnerDetails {
+        "partnerDetail"?: PartnerDetail;
+    }
     interface PartnerListItem {
         "columnData"?: any[];
-        "rowData"?: ScPartner;
+        "onPartnerItemClicked"?: (event: CustomEvent<string>) => void;
+        "rowData"?: PartnerDetail;
+        "selected"?: string;
     }
     interface PeersTable {
     }
@@ -1587,6 +1603,7 @@ declare namespace LocalJSX {
     interface ScriptureReferences {
     }
     interface SearchInput {
+        "onDoSearch"?: (event: CustomEvent<string>) => void;
     }
     interface SilCountryCodes {
     }
@@ -1724,6 +1741,7 @@ declare namespace LocalJSX {
         "page-root": PageRoot;
         "pagination-bar": PaginationBar;
         "partner-crm": PartnerCrm;
+        "partner-details": PartnerDetails;
         "partner-list-item": PartnerListItem;
         "peers-table": PeersTable;
         "people-table": PeopleTable;
@@ -1868,6 +1886,7 @@ declare module "@stencil/core" {
             "page-root": LocalJSX.PageRoot & JSXBase.HTMLAttributes<HTMLPageRootElement>;
             "pagination-bar": LocalJSX.PaginationBar & JSXBase.HTMLAttributes<HTMLPaginationBarElement>;
             "partner-crm": LocalJSX.PartnerCrm & JSXBase.HTMLAttributes<HTMLPartnerCrmElement>;
+            "partner-details": LocalJSX.PartnerDetails & JSXBase.HTMLAttributes<HTMLPartnerDetailsElement>;
             "partner-list-item": LocalJSX.PartnerListItem & JSXBase.HTMLAttributes<HTMLPartnerListItemElement>;
             "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;

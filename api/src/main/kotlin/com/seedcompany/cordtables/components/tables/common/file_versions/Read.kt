@@ -1,7 +1,6 @@
 package com.seedcompany.cordtables.components.tables.common.file_versions
 
 import com.seedcompany.cordtables.common.MimeTypes
-import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery

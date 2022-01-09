@@ -1,7 +1,5 @@
 package com.seedcompany.cordtables.components.tables.common.work_estimates
 
-import com.seedcompany.cordtables.components.tables.common.work_records.CommonWorkRecords
-
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery

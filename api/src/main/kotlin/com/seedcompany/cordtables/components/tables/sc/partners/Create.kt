@@ -66,7 +66,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    (
+                    (33322
                       select person 
                       from admin.tokens 
                       where token = ?
@@ -76,7 +76,7 @@ class Create(
             returning id;
         """.trimIndent(),
             String::class.java,
-            req.partner.organization,
+            req.partner.id,
             req.partner.active,
             req.partner.financial_reporting_types,
             req.partner.is_innovations_client,
