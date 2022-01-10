@@ -258,3 +258,5 @@ CREATE TABLE sil.table_of_languages_in_country (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id)
 );
+
+-- todo Ken to give additional SIL tables

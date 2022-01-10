@@ -57,6 +57,7 @@ create table sc.funding_accounts (
 
 -- LOCATION TABLES ----------------------------------------------------------
 
+-- todo Ken to review in DOMO
 create table sc.field_zones (
 	id uuid primary key default common.uuid_generate_v4(),
 
@@ -71,6 +72,7 @@ create table sc.field_zones (
   owning_group uuid not null references admin.groups(id)
 );
 
+-- todo Ken to review in DOMO
 create table sc.field_regions (
 	id uuid primary key default common.uuid_generate_v4(),
 	field_zone uuid references sc.field_zones(id),
@@ -86,15 +88,14 @@ create table sc.field_regions (
   owning_group uuid not null references admin.groups(id)
 );
 
--- extension table from commmon
+-- extension table from common
 create table sc.locations (
 	id uuid unique not null references common.locations(id),
 
+  -- todo research using aliases
 	default_region uuid references sc.field_regions(id),
 	funding_account uuid references sc.funding_accounts(id),
-	iso_alpha_3 char(3),
-	name varchar(32) unique, -- not null
-	type common.location_type, -- not null
+	sensitivity common.sensitivity not null default 'High',
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -104,12 +105,16 @@ create table sc.locations (
   owning_group uuid not null references admin.groups(id)
 );
 
+-- todo may need to create field location table
+
 -- ORGANIZATION TABLES
 
 -- extension table from commmon
+-- todo combine table with partners
 create table sc.organizations (
 	id uuid primary key references common.organizations(id),
-  
+
+  -- todo move to common table
 	address varchar(255),
 	sensitivity common.sensitivity,
 	root_directory uuid references common.directories(id),
@@ -187,23 +192,22 @@ create table sc.partners (
 
 -- LANGUAGE TABLES ----------------------------------------------------------
 
-create table sc.ethnologue (
-  id uuid primary key default common.uuid_generate_v4(),
-
-  language_index uuid not null references sil.language_index(id),
-  code varchar(32),
-  language_name varchar(64), -- override for language_index
-  population int,
-  provisional_code varchar(32),
-  sensitivity common.sensitivity not null default 'High',
-
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
-);
+--create table sc.ethnologue (
+--  id uuid primary key default common.uuid_generate_v4(),
+--
+--  language_index uuid not null references sil.language_index(id),
+--  code varchar(32),
+--  language_name varchar(64), -- override for language_index
+--  population int,
+--  provisional_code varchar(32),
+--
+--  created_at timestamp not null default CURRENT_TIMESTAMP,
+--  created_by uuid not null references admin.people(id),
+--  modified_at timestamp not null default CURRENT_TIMESTAMP,
+--  modified_by uuid not null references admin.people(id),
+--  owning_person uuid not null references admin.people(id),
+--  owning_group uuid not null references admin.groups(id)
+--);
 
 create type sc.least_reached_progress_scale as enum (
     '0',
@@ -281,9 +285,9 @@ create type sc.begin_work_rel_pol_obstacles_scale as enum (
 );
 
 create table sc.languages(
-	id uuid primary key default common.uuid_generate_v4(),
+	id uuid primary key references common.languages(id),
 
-  ethnologue uuid references sc.ethnologue(id), -- not null
+  ethnologue uuid references sc.ethnologue(id),
   name varchar(255) unique, -- not null
   display_name varchar(255) unique, -- not null
   display_name_pronunciation varchar(255),
@@ -291,12 +295,13 @@ create table sc.languages(
   preset_inventory bool,
   is_dialect bool,
   is_sign_language bool,
-  is_least_of_these bool,
+  is_least_of_these bool, -- todo is going away, keep for historical
   least_of_these_reason varchar(255),
   population_override int,
-  registry_of_dialects_code varchar(32),
+  provisional_code char(3),
+  registry_of_dialects_code char(5),
   sensitivity common.sensitivity,
-  sign_language_code varchar(32),
+  sign_language_code char(4),
   sponsor_start_date timestamp,
   sponsor_estimated_end_date timestamp,
   has_external_first_scripture bool,

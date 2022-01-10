@@ -3,7 +3,6 @@ alter table sc.field_zones alter column name set not null;
 alter table sc.field_regions alter column name set not null;
 alter table sc.locations alter column name set not null;
 alter table sc.locations alter column type set not null;
-alter table sc.languages alter column ethnologue set not null;
 alter table sc.languages alter column name set not null;
 alter table sc.languages alter column display_name set not null;
 alter table sc.periodic_reports alter column directory set not null;

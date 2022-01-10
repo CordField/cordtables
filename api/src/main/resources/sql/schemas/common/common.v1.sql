@@ -292,10 +292,10 @@ create type common.location_type as enum (
 create table common.locations (
 	id uuid primary key default common.uuid_generate_v4(),
 
+	iso_3166_alpha_3 char(3) unique, -- todo research this column
 	name varchar(255) unique, -- not null,
-	sensitivity common.sensitivity not null default 'High',
+	sensitivity common.sensitivity not null default 'High', -- todo research the need for this
 	type common.location_type, -- not null,
-	iso_alpha3 char(3) unique,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by uuid not null references admin.people(id),
@@ -440,13 +440,18 @@ create table common.coalition_memberships(
 
 -- FILES & DIRECTORIES ----------------------------------------------------------
 
+-- todo research cascading deletes
 create table common.directories (
   id uuid primary key default common.uuid_generate_v4(),
 
   parent uuid references common.directories(id),
   name varchar(255), -- not null
   
-	-- todo
+	-- todo add triggers for derived data
+	-- size
+	-- total files (not directories or versions)
+	-- id of first file created
+	-- modified at/by of most recent file version added in any dir/sub
 	-- add derived data from sub-directories/files
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -460,7 +465,7 @@ create table common.directories (
 create table common.files (
   id uuid primary key default common.uuid_generate_v4(),
 
-  directory uuid references common.directories(id), --not null
+  parent uuid references common.directories(id), --not null
 	name varchar(255), -- not null
 
   -- todo, derived data
@@ -476,11 +481,9 @@ create table common.files (
 create table common.file_versions (
   id uuid primary key default common.uuid_generate_v4(),
 
-  category varchar(255),
   mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
   name varchar(255), -- not null,
-  file uuid references common.files(id), -- not null
-  file_url varchar(255), -- not null,
+  parent uuid references common.files(id), -- not null
   file_size int, -- bytes
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
