@@ -12,8 +12,7 @@ data class GetSecureListQueryRequest(
     val custom_columns: String? = null,
     val filter: String = "",
     val join: String = "",
-    val searchField: String = "",
-    val searchKeyword: String = "",
+//    val searchKeyword: String = "",
     val getList: Boolean = true, // get read if false
     val whereClause: String = ""
 )
@@ -148,6 +147,7 @@ class GetSecureListQuery() {
           ${req.filter};
           """.trimIndent().replace('\n',' ')
       }
+      println(response.query)
         return response
     }
 

@@ -1,9 +1,10 @@
-import { Component, Host, h, State } from '@stencil/core';
+import { Component, Host, h, State, Listen } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import {
+  CommonThread,
   CommonThreadsListRequest,
   CommonThreadsListResponse,
   CommonThreadsUpdateRequest,
@@ -23,6 +24,10 @@ export class Threads {
   @State() commonThreadsResponse: CommonThreadsListResponse;
   newContent: string;
   newChannel: string;
+  @Listen('searchResults')
+  async showSearchResults(event: CustomEvent<any>) {
+    this.commonThreadsResponse = { error: ErrorType.NoError, threads: event.detail as CommonThread[] };
+  }
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<CommonThreadsUpdateRequest, CommonThreadsUpdateResponse>('common/threads/update-read', {
@@ -159,6 +164,8 @@ export class Threads {
     return (
       <Host>
         <slot></slot>
+
+        <search-form columnNames={['id', 'content', 'channel', 'created_at', 'created_by', 'modified_at', 'modified_by', 'owning_person', 'owning_group']}></search-form>
         {this.commonThreadsResponse && <cf-table rowData={this.commonThreadsResponse.threads} columnData={this.columnData}></cf-table>}
 
         {globals.globalStore.state.editMode === true && (

@@ -1,4 +1,4 @@
-import { Component, Host, h, State } from '@stencil/core';
+import { Component, Host, h, State, Listen } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
@@ -65,7 +65,10 @@ class DeletePeopleExResponse extends GenericResponse {
 })
 export class AdminPeoples {
   @State() peoplesResponse: AdminPeopleListResponse;
-
+  @Listen('searchResults')
+  async showSearchResults(event: CustomEvent<any>) {
+    this.peoplesResponse = { error: ErrorType.NoError, peoples: event.detail as AdminPeople[] };
+  }
   newAbout: string;
   newPhone: string;
   newPicture: string;
@@ -371,6 +374,31 @@ export class AdminPeoples {
     return (
       <Host>
         <slot></slot>
+        <search-form
+          columnNames={[
+            'id',
+            'about',
+            'phone',
+            'picture',
+            'private_first_name',
+            'private_last_name',
+            'public_first_name',
+            'public_last_name',
+            'primary_location',
+            'private_full_name',
+            'public_full_name',
+            'sensitivity_clearance',
+            'timezone',
+            'title',
+            //                    "status",
+            'created_at',
+            'created_by',
+            'modified_at',
+            'modified_by',
+            'owning_person',
+            'owning_group',
+          ]}
+        ></search-form>
         {/* table abstraction */}
         {this.peoplesResponse && <cf-table rowData={this.peoplesResponse.peoples} columnData={this.columnData}></cf-table>}
 
