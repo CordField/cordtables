@@ -7,7 +7,7 @@ export class ColumnDescription {
   updateFn?: (id: string, columnName: any, value: any) => Promise<boolean>;
   deleteFn?: (id: string) => Promise<boolean>;
   selectOptions?: Array<{ display: string; value: any }> | null = null;
-  
+  foreignKey?: string = null;
 }
 
 export type CellType = 'header' | 'data' | 'action';

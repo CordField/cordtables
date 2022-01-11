@@ -1,6 +1,6 @@
 import { Component, Host, h, State, Listen } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import {
@@ -119,6 +119,7 @@ export class Threads {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/discussion-channels',
     },
     {
       field: 'created_at',
@@ -131,6 +132,7 @@ export class Threads {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
     },
     {
       field: 'modified_at',
@@ -143,6 +145,7 @@ export class Threads {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
     },
     {
       field: 'owning_person',
@@ -150,6 +153,7 @@ export class Threads {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
     },
     {
       field: 'owning_group',
@@ -159,7 +163,31 @@ export class Threads {
       updateFn: this.handleUpdate,
     },
   ];
-
+  async updateForeignKeys() {
+    for (const thread of this.commonThreadsResponse.threads) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: column.displayName,
+            resultColumnName: 'public_first_name',
+            tableName: 'admin.people',
+            searchKeyword: thread[column.displayName],
+          });
+          // if (autocompleteData.error === ErrorType.NoError) {
+          //   this.commonThreadsResponse = {
+          //     error: ErrorType.NoError,
+          //     threads: this.commonThreadsResponse.threads.map(threadInResponse => {
+          //       if (threadInResponse.id === thread.id) {
+          //       }
+          //       return threadInResponse.i;
+          //     }),
+          //   };
+          // }
+        }
+      }
+    }
+  }
   render() {
     return (
       <Host>
