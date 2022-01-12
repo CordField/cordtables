@@ -10,7 +10,7 @@ create table sc.posts_directory ( -- does not need to be secure
 );
 
 create type sc.post_shareability as enum (
-  'Project Team',
+  'Membership',
   'Internal',
   'Ask to Share Externally',
   'External'
@@ -30,6 +30,7 @@ create table sc.posts (
   type sc.post_type, --not null,
   shareability sc.post_shareability, --not null,
   body text, --not null,
+  creator uuid references admin.people(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -46,7 +47,7 @@ create table sc.funding_accounts (
 
 	account_number int unique, -- not null,
 	name varchar(255),
-	
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -93,7 +94,7 @@ create table sc.locations (
 	default_region uuid references sc.field_regions(id),
 	funding_account uuid references sc.funding_accounts(id),
 	iso_alpha_3 char(3),
-	name varchar(32) unique, -- not null
+	name varchar(255) unique, -- not null
 	type common.location_type, -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -109,9 +110,9 @@ create table sc.locations (
 -- extension table from commmon
 create table sc.organizations (
 	id uuid primary key references common.organizations(id),
-  
+
 	address varchar(255),
-	sensitivity common.sensitivity,
+	sensitivity common.sensitivity not null default 'High',
 	root_directory uuid references common.directories(id),
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -166,8 +167,9 @@ DO $$ BEGIN
 END; $$;
 
 create table sc.partners (
-	id uuid primary key references common.organizations(id),
+  id uuid primary key default common.uuid_generate_v4(),
 
+  organization uuid references common.organizations(id),
 	active bool,
 	financial_reporting_types sc.financial_reporting_types[],
 	is_innovations_client bool,
@@ -175,7 +177,7 @@ create table sc.partners (
 	point_of_contact uuid references admin.people(id),
 	types sc.partner_types[],
 	address varchar(255),
-	sensitivity common.sensitivity,
+	sensitivity common.sensitivity not null default 'High',
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -190,7 +192,6 @@ create table sc.partners (
 create table sc.ethnologue (
   id uuid primary key default common.uuid_generate_v4(),
 
-  language_index uuid not null references sil.language_index(id),
   code varchar(32),
   language_name varchar(64), -- override for language_index
   population int,
@@ -297,7 +298,6 @@ create table sc.languages(
   registry_of_dialects_code varchar(32),
   sensitivity common.sensitivity,
   sign_language_code varchar(32),
-  sponsor_start_date timestamp,
   sponsor_estimated_end_date timestamp,
   has_external_first_scripture bool,
 
@@ -469,8 +469,8 @@ create table sc.person_unavailabilities (
   id uuid primary key default common.uuid_generate_v4(),
 
   person uuid references admin.people(id),
-	period_start timestamp not null default CURRENT_TIMESTAMP,
-	period_end timestamp not null default CURRENT_TIMESTAMP,
+	period_start timestamp,
+	period_end timestamp,
 	description text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -626,7 +626,7 @@ create table sc.project_members (
 	person uuid references sc.people(id), --not null
 	group_id uuid unique references admin.groups(id), --not null
 	role uuid references admin.roles(id), --not null
-	sensitivity common.sensitivity,
+	sensitivity common.sensitivity not null default 'High',
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -640,7 +640,7 @@ create table sc.project_members (
 
 create table sc.pinned_projects (
   id uuid primary key default common.uuid_generate_v4(),
-	person uuid unique references sc.people(id), -- not null
+	person uuid references sc.people(id), -- not null
 	project uuid references sc.projects(id), -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -661,7 +661,7 @@ create table sc.partnerships (
   id uuid primary key default common.uuid_generate_v4(),
 
   project uuid references sc.projects(id), -- not null
-  partner uuid references sc.organizations(id), -- not null
+  partner uuid references sc.partners(id), -- not null
   change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
   agreement_status sc.partnership_agreement_status,
@@ -674,7 +674,7 @@ create table sc.partnerships (
   mou_end_override timestamp,
   financial_reporting_type sc.financial_reporting_types,
   is_primary bool,
-  sensitivity common.sensitivity,
+  sensitivity common.sensitivity not null default 'High',
 
   types sc.partner_types[],  -- added because exists in neo4j
   
@@ -704,8 +704,7 @@ create table sc.budgets (
   status common.budget_status,
   universal_template uuid references common.files(id),
   universal_template_file_url varchar(255),
-  sensitivity common.sensitivity,
-  total decimal,
+  sensitivity common.sensitivity not null default 'High',
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -726,7 +725,7 @@ create table sc.budget_records (
   amount decimal,
   fiscal_year int,
   organization uuid references sc.organizations(id),
-  sensitivity common.sensitivity,
+  sensitivity common.sensitivity not null default 'High',
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -794,12 +793,6 @@ create type common.engagement_status as enum (
 		'Rejected'
 );
 
--- todo
-create type common.project_engagement_tag as enum (
-		'A',
-		'B',
-		'C'
-);
 
 create table sc.language_engagements (
   id uuid primary key default common.uuid_generate_v4(),
@@ -810,7 +803,6 @@ create table sc.language_engagements (
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
   is_open_to_investor_visit bool,
-  communications_complete_date timestamp,
   complete_date timestamp,
   disbursement_complete_date timestamp,
   end_date timestamp,
@@ -818,14 +810,13 @@ create table sc.language_engagements (
   initial_end_date timestamp,
   is_first_scripture bool,
   is_luke_partnership bool,
-  is_sent_printing bool,
   last_suspended_at timestamp,
   last_reactivated_at timestamp,
   paratext_registry varchar(32),
   periodic_reports_directory uuid references sc.periodic_reports_directory(id),
   pnp varchar(255),
   pnp_file uuid references common.files(id),
-  product_engagement_tag common.project_engagement_tag,
+  sensitivity common.sensitivity not null default 'High',
   start_date timestamp,
   start_date_override timestamp,
   status common.engagement_status,
@@ -892,7 +883,9 @@ create type common.product_purposes as enum (
 
 create type sc.product_type as enum (
   'BibleStories',
-  'EthnoArts',
+  'DirectScriptureProduct',
+  'DerivativeScriptureProduct',
+  'EthnoArt',
   'Film',
   'FullBible',
   'Genesis',
@@ -903,7 +896,8 @@ create type sc.product_type as enum (
   'NewTestamentFull',
   'OldTestamentPortions',
   'OldTestamentFull',
-  'Songs',
+  'OtherProduct',
+  'Song',
   'Story'
 );
 create type common.progress_measurement as enum (
@@ -933,6 +927,7 @@ create table sc.products (
   id uuid primary key default common.uuid_generate_v4(),
 
   name varchar(64), -- not null
+  title varchar(64),
   change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
   mediums common.product_mediums[],
@@ -943,10 +938,11 @@ create table sc.products (
   progress_step_measurement common.progress_measurement,
   progress_target decimal,
   engagement uuid references sc.language_engagements(id),
-  sensitivity common.sensitivity,
+  sensitivity common.sensitivity not null default 'High',
   describe_completion text,
   description text,
   type sc.product_type,
+  produces uuid references sc.products(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -961,6 +957,7 @@ create table sc.products (
 create table sc.product_scripture_references (
   id uuid primary key default common.uuid_generate_v4(),
   product uuid references sc.products(id), -- not null
+  scripture_references_override uuid references common.scripture_references(id),
   scripture_reference uuid references common.scripture_references(id), -- not null
   change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
@@ -1039,7 +1036,6 @@ create table sc.internship_engagements (
 	project uuid references sc.projects(id), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
   active bool,
-  communications_complete_date timestamp,
   complete_date timestamp,
   country_of_origin uuid references common.locations(id),
   disbursement_complete_date timestamp,
@@ -1051,10 +1047,9 @@ create table sc.internship_engagements (
   last_reactivated_at timestamp,
   mentor uuid references admin.people(id),
   methodologies common.product_methodologies[],
-  paratext_registry varchar(32),
   periodic_reports_directory uuid references sc.periodic_reports_directory(id),
   position common.internship_position,
-  sensitivity common.sensitivity,
+  sensitivity common.sensitivity not null default 'High',
   start_date timestamp,
   start_date_override timestamp,
   status common.engagement_status,
@@ -1081,7 +1076,6 @@ create table sc.ceremonies (
 
   internship_engagement uuid references sc.internship_engagements(id),
   language_engagement uuid references sc.language_engagements(id),
-  ethnologue uuid references sil.table_of_languages(id),
   actual_date timestamp,
   estimated_date timestamp,
   is_planned bool,

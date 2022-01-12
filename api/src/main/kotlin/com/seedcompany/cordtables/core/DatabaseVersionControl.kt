@@ -146,7 +146,7 @@ class DatabaseVersionControl(
 
   private fun toVersion4() {
     // sc
-    runSqlFile("sql/schemas/sc/sc.v4.sql")
+//    runSqlFile("sql/schemas/sc/sc.v4.sql")
     setVersionNumber(4)
   }
 
@@ -158,10 +158,12 @@ class DatabaseVersionControl(
 
   private fun toVersion2() {
     // admin
-    runSqlFile("sql/schemas/admin/admin.v2.sql")
+
+//    runSqlFile("sql/schemas/admin/admin.v2.sql")
 
     // common
-    runSqlFile("sql/schemas/common/common.v2.sql")
+
+//    runSqlFile("sql/schemas/common/common.v2.sql")
 
     setVersionNumber(2)
   }

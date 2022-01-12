@@ -151,12 +151,8 @@ create type common.book_name as enum (
 create table common.scripture_references (
   id uuid primary key default common.uuid_generate_v4(),
 
-  book_start common.book_name,
-  book_end common.book_name,
-  chapter_start int,
-  chapter_end int,
-  verse_start int,
-  verse_end int,
+  range_start int,
+  range_end int,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -304,10 +300,19 @@ ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk fore
 
 -- Education
 
+create type common.education_degree as enum (
+  'Primary',
+  'Secondary',
+  'Associates',
+  'Bachelors',
+  'Masters',
+  'Doctorate'
+);
+
 create table common.education_entries (
   id uuid primary key default common.uuid_generate_v4(),
 
-  degree varchar(64),
+  degree common.education_degree,
   institution varchar(64),
   major varchar(64),
   
@@ -324,7 +329,7 @@ create table common.education_entries (
 create table common.education_by_person (
   id uuid primary key default common.uuid_generate_v4(),
 
-  person uuid unique not null references admin.people(id),
+  person uuid not null references admin.people(id),
   education uuid not null references common.education_entries(id),
   graduation_year int,
   
@@ -343,7 +348,7 @@ create table common.education_by_person (
 create table common.organizations (
 	id uuid primary key default common.uuid_generate_v4(),
 
-	name varchar(255) unique, -- not null
+	name varchar(255),  -- unique not null
 	sensitivity common.sensitivity default 'High',
 	primary_location uuid references common.locations(id),
 
@@ -468,6 +473,7 @@ create table common.files (
 
 create table common.file_versions (
   id uuid primary key default common.uuid_generate_v4(),
+
 
   mime_type varchar(128),
   name varchar(255), -- not null,
