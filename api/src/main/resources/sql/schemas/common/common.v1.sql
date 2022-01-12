@@ -444,7 +444,7 @@ create table common.coalition_memberships(
 create table common.directories (
   id uuid primary key default common.uuid_generate_v4(),
 
-  parent uuid references common.directories(id),
+  parent_directories_id uuid references common.directories(id),
   name varchar(255), -- not null
   
 	-- todo add triggers for derived data
@@ -465,7 +465,7 @@ create table common.directories (
 create table common.files (
   id uuid primary key default common.uuid_generate_v4(),
 
-  parent uuid references common.directories(id), --not null
+  parent_directories_id uuid references common.directories(id), --not null
 	name varchar(255), -- not null
 
   -- todo, derived data
@@ -483,7 +483,7 @@ create table common.file_versions (
 
   mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
   name varchar(255), -- not null,
-  parent uuid references common.files(id), -- not null
+  parent_files_id uuid references common.files(id), -- not null
   file_size int, -- bytes
 
   created_at timestamp not null default CURRENT_TIMESTAMP,

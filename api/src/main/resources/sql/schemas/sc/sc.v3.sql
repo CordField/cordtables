@@ -177,7 +177,7 @@ create table sc.partners (
 	financial_reporting_types sc.financial_reporting_types[],
 	is_innovations_client bool,
 	pmc_entity_code varchar(32),
-	point_of_contact uuid references admin.people(id),
+	point_of_contact_people_id uuid references admin.people(id),
 	types sc.partner_types[],
 	address varchar(255),
 	sensitivity common.sensitivity,
