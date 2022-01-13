@@ -132,6 +132,7 @@ export class Threads {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
     },
     {
       field: 'modified_at',
@@ -144,6 +145,7 @@ export class Threads {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
     },
     {
       field: 'owning_person',
@@ -151,6 +153,7 @@ export class Threads {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
     },
     {
       field: 'owning_group',
