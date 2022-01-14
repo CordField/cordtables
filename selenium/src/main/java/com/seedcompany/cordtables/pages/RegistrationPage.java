@@ -1,6 +1,7 @@
 package com.seedcompany.cordtables.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
@@ -43,7 +44,7 @@ public class RegistrationPage extends Page {
 	 * @return
 	 */
 	public boolean isRegistrationPageLoaded() {
-		WebElement registrationApp = SeleniumUtils.expand_shadow_element(driver,
+		SearchContext registrationApp = SeleniumUtils.expand_shadow_element(
 				this.rootApp.findElement(By.tagName("cf-register")));
 		WebElement registrationForm = registrationApp.findElement(By.cssSelector("form"));
 		return (registrationForm != null);
@@ -56,8 +57,8 @@ public class RegistrationPage extends Page {
 	 * @param password
 	 */
 	public void fillRegistrationForm(String email, String password) {
-		WebElement registrationApp = SeleniumUtils.expand_shadow_element(driver,
-				this.rootApp.findElement(By.tagName("cf-register")));
+		SearchContext registrationApp = SeleniumUtils.expand_shadow_element(
+				this.rootApp.findElement(By.cssSelector("cf-register.hydrated")));
 		WebElement registrationForm = registrationApp.findElement(By.cssSelector("form"));
 		registrationForm.findElement(By.cssSelector("#email")).sendKeys(email);
 		registrationForm.findElement(By.cssSelector("#password")).sendKeys(password);

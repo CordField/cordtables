@@ -1,6 +1,7 @@
 package com.seedcompany.cordtables.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
@@ -35,21 +36,21 @@ public class HomePage extends Page {
 	}
 
 	/**
-	 * 
+	 * Method to go into the login page
 	 */
-	public void login(WebElement menu) {
-		WebElement menuHeader = SeleniumUtils.expand_shadow_element(driver,
-				menu.findElement(By.tagName("cf-header-menu")));
+	public void login(SearchContext menu) {
+		SearchContext menuHeader = SeleniumUtils
+				.expand_shadow_element(menu.findElement(By.cssSelector("cf-header-menu.hydrated")));
 		menuHeader.findElement(By.cssSelector("button.menu-item:nth-child(2)")).click();
 	}
 
 	/**
-	 * @param menu
+	 * @param menu method to click on the the register button
 	 */
-	public void register(WebElement menu) {
+	public void register(SearchContext menu) {
 
-		WebElement menuHeader = SeleniumUtils.expand_shadow_element(driver,
-				menu.findElement(By.tagName("cf-header-menu")));
+		SearchContext menuHeader = SeleniumUtils
+				.expand_shadow_element(menu.findElement(By.cssSelector("cf-header-menu.hydrated")));
 		menuHeader.findElement(By.cssSelector("button.menu-item:nth-child(3)")).click();
 	}
 

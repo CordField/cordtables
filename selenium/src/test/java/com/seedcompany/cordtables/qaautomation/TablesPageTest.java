@@ -11,6 +11,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.seedcompany.cordtables.model.TablesOption;
 import com.seedcompany.cordtables.pages.HomePage;
 import com.seedcompany.cordtables.pages.LoginPage;
 import com.seedcompany.cordtables.pages.MainPage;
@@ -24,13 +25,12 @@ import com.seedcompany.cordtables.utils.SeleniumUtils;
  *
  */
 
-public class LoginPageTest extends BaseTestSuite {
+public class TablesPageTest extends BaseTestSuite {
 
-	Logger logger = Logger.getLogger(LoginPageTest.class.getName());
+	Logger logger = Logger.getLogger(TablesPageTest.class.getName());
 
 	@BeforeMethod
 	public void initPageObject() {
-
 
 	}
 
@@ -41,13 +41,13 @@ public class LoginPageTest extends BaseTestSuite {
 	}
 
 	/**
-	 * Test case to verify if user come to home page and click on login page to
-	 * enter login details and successfully logged in.
+	 * Test case to verify if user is admin and logging into system, he is able to
+	 * view the table options.
 	 * 
 	 */
 	@Test
 
-	public void login_whenValidCredentials_thenSuccess() {
+	public void admin_tables_loading_success() {
 		HomePage homepage = PageFactory.initElements(driver, HomePage.class);
 		homepage.login(homepage.openMenu());
 		LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
@@ -61,6 +61,8 @@ public class LoginPageTest extends BaseTestSuite {
 				mainPage.getRootApp().findElement(By.cssSelector("custom-accordion.hydrated")));
 		assertNotNull(mainMenu);
 		assertNotNull(mainMenu.findElement(By.cssSelector(".accordion")));
+		
+		mainPage.selectTable(TablesOption.ADMIN_GROUP_MEMBERSHIPS);
 
 	}
 
