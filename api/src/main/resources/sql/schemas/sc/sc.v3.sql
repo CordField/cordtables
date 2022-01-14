@@ -189,10 +189,9 @@ create table sc.partners (
 
 create table sc.ethnologue (
   id uuid primary key default common.uuid_generate_v4(),
-
   language_index uuid not null references sil.language_index(id),
   code varchar(32),
-  language_name varchar(64), -- override for language_index
+  language_name varchar(75), -- override for language_index
   population int,
   provisional_code varchar(32),
   sensitivity common.sensitivity not null default 'High',
