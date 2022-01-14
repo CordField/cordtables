@@ -620,7 +620,7 @@ create table sc.projects (
 );
 
 create table sc.project_members (
-  id uuid primary key default common.uuid_generate_v4(),
+  id uuid primary key default common.uuid_generate_v4(),+
 
 	project uuid references sc.projects(id), --not null
 	person uuid references sc.people(id), --not null

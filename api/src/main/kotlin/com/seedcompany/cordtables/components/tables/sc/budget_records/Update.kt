@@ -82,6 +82,7 @@ class Update(
                     column = "amount",
                     id = req.id,
                     value = req.value,
+                    cast = "::decimal"
                 )
             }
 
@@ -95,14 +96,25 @@ class Update(
                 )
             }
 
-            "partnership" -> {
+            "organization" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.budget_records",
-                    column = "partnership",
+                    column = "organization",
                     id = req.id,
                     value = req.value,
                     cast = "::uuid"
+                )
+            }
+
+            "sensitivity" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.budget_records",
+                    column = "sensitivity",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::common.sensitivity"
                 )
             }
 

@@ -3,7 +3,6 @@ package com.seedcompany.cordtables.components.tables.sc.internship_engagements
 data class internshipEngagement(
     var id: String? = null,
 
-
     val project: String? = null,
     val change_to_plan: String? = null,
     val active: Boolean? = null,
@@ -37,6 +36,31 @@ data class internshipEngagement(
     val owning_person: String? = null,
     val owning_group: String? = null,
 )
+
+//project uuid references sc.projects(id), -- not null
+//change_to_plan uuid references sc.change_to_plans(id), -- not null
+//active bool,
+//communications_complete_date timestamp,
+//complete_date timestamp,
+//country_of_origin uuid references common.locations(id),
+//disbursement_complete_date timestamp,
+//end_date timestamp,
+//end_date_override timestamp,
+//growth_plan uuid references common.files(id), --references files, not file-versions in neo4j
+//initial_end_date timestamp,
+//intern uuid references admin.people(id),
+//last_reactivated_at timestamp,
+//mentor uuid references admin.people(id),
+//methodologies common.product_methodologies[],
+//paratext_registry varchar(32),
+//periodic_reports_directory uuid references sc.periodic_reports_directory(id),
+//position common.internship_position,
+//sensitivity common.sensitivity,
+//start_date timestamp,
+//start_date_override timestamp,
+//status common.engagement_status,
+//status_modified_at timestamp,
+//last_suspended_at timestamp,
 
 
 data class internshipEngagementInput(
