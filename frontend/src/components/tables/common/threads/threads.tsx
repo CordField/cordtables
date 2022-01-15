@@ -119,6 +119,7 @@ export class Threads {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/discussion-channels',
     },
     {
       field: 'created_at',
@@ -131,6 +132,7 @@ export class Threads {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
     },
     {
       field: 'modified_at',
@@ -143,6 +145,7 @@ export class Threads {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
     },
     {
       field: 'owning_person',
@@ -150,6 +153,7 @@ export class Threads {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
     },
     {
       field: 'owning_group',
@@ -157,6 +161,7 @@ export class Threads {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
     },
   ];
 
@@ -164,7 +169,6 @@ export class Threads {
     return (
       <Host>
         <slot></slot>
-
         <search-form columnNames={['id', 'content', 'channel', 'created_at', 'created_by', 'modified_at', 'modified_by', 'owning_person', 'owning_group']}></search-form>
         {this.commonThreadsResponse && <cf-table rowData={this.commonThreadsResponse.threads} columnData={this.columnData}></cf-table>}
 
@@ -172,7 +176,7 @@ export class Threads {
           <form class="form-thing">
             <label>
               {' '}
-              <strong> New Post: </strong>
+              <strong>New Thread:</strong>
             </label>
             <div id="table-name-holder" class="form-input-item form-thing">
               <br />

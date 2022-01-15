@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
+import { foreignKeyClickedObject } from "./common/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
 export namespace Components {
@@ -146,6 +147,8 @@ export namespace Components {
     interface FileVersions {
     }
     interface FilesTable {
+    }
+    interface ForeignRow {
     }
     interface GenericTable {
         "columns": Array<any>;
@@ -645,6 +648,12 @@ declare global {
     var HTMLFilesTableElement: {
         prototype: HTMLFilesTableElement;
         new (): HTMLFilesTableElement;
+    };
+    interface HTMLForeignRowElement extends Components.ForeignRow, HTMLStencilElement {
+    }
+    var HTMLForeignRowElement: {
+        prototype: HTMLForeignRowElement;
+        new (): HTMLForeignRowElement;
     };
     interface HTMLGenericTableElement extends Components.GenericTable, HTMLStencilElement {
     }
@@ -1191,6 +1200,7 @@ declare global {
         "education-entries": HTMLEducationEntriesElement;
         "file-versions": HTMLFileVersionsElement;
         "files-table": HTMLFilesTableElement;
+        "foreign-row": HTMLForeignRowElement;
         "generic-table": HTMLGenericTableElement;
         "group-memberships": HTMLGroupMembershipsElement;
         "groups-page": HTMLGroupsPageElement;
@@ -1305,6 +1315,7 @@ declare namespace LocalJSX {
     interface CfCell2 {
         "cellType"?: CellType;
         "columnDescription"?: ColumnDescription;
+        "onForeignKeyClicked"?: (event: CustomEvent<foreignKeyClickedObject>) => void;
         "rowId"?: string;
         "value"?: any;
     }
@@ -1419,6 +1430,8 @@ declare namespace LocalJSX {
     interface FileVersions {
     }
     interface FilesTable {
+    }
+    interface ForeignRow {
     }
     interface GenericTable {
         "columns"?: Array<any>;
@@ -1663,6 +1676,7 @@ declare namespace LocalJSX {
         "education-entries": EducationEntries;
         "file-versions": FileVersions;
         "files-table": FilesTable;
+        "foreign-row": ForeignRow;
         "generic-table": GenericTable;
         "group-memberships": GroupMemberships;
         "groups-page": GroupsPage;
@@ -1803,6 +1817,7 @@ declare module "@stencil/core" {
             "education-entries": LocalJSX.EducationEntries & JSXBase.HTMLAttributes<HTMLEducationEntriesElement>;
             "file-versions": LocalJSX.FileVersions & JSXBase.HTMLAttributes<HTMLFileVersionsElement>;
             "files-table": LocalJSX.FilesTable & JSXBase.HTMLAttributes<HTMLFilesTableElement>;
+            "foreign-row": LocalJSX.ForeignRow & JSXBase.HTMLAttributes<HTMLForeignRowElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
             "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
