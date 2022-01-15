@@ -1,0 +1,9 @@
+.card {
+  padding: 10px;
+  overflow: auto;
+  max-height: 10vh;
+}
+
+.card__row {
+  padding: 2px 0;
+}

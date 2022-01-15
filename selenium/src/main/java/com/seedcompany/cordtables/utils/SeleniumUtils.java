@@ -1,19 +1,27 @@
 package com.seedcompany.cordtables.utils;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.PageLoadStrategy;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.collect.ImmutableMap;
 import com.seedcompany.cordtables.model.BrowserDriverConfig;
 
 /**
@@ -26,6 +34,7 @@ import com.seedcompany.cordtables.model.BrowserDriverConfig;
 public class SeleniumUtils {
 
 	private static final Logger logger = Logger.getLogger(SeleniumUtils.class.getName());
+	private static final String Firefox = null;
 
 	/**
 	 * This method can be used to get the web driver that can be used to access the
@@ -37,9 +46,10 @@ public class SeleniumUtils {
 	public static WebDriver getDriver(BrowserDriverConfig browserConfig) {
 
 		WebDriver driver = null;
+		System.out.println("browserConfig.getType()::" + browserConfig.getType());
 		try {
 			switch (browserConfig.getType()) {
-			case BrowserType.CHROME:
+			case "CHROME":
 
 				System.setProperty("webdriver.chrome.driver", browserConfig.getDriverPath());
 				final ChromeOptions chromeOptions = new ChromeOptions();
@@ -56,24 +66,53 @@ public class SeleniumUtils {
 				chromeOptions.setCapability("chrome.verbose", browserConfig.isVerbose());
 				chromeOptions.addArguments("--disable-web-security");
 				chromeOptions.addArguments("--allow-running-insecure-content");
+				// chromeOptions.setExperimentalOption("w3c", false);
 				driver = new ChromeDriver(chromeOptions);
 				break;
 
-			default:
+			case "FIREFOX":
 
 				if (driver == null) {
+
+					// System.setProperty("webdriver.gecko.driver","C:\\temp\\geckodriver.exe");
+
+					System.setProperty("webdriver.gecko.driver",browserConfig.getDriverPath()+"\\geckodriver.exe");
+
+					File pathBinary = new File("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
+					if (!pathBinary.exists()) {
+						pathBinary = new File("C:\\Program Files\\MozillaFirefox\\firefox.exe");
+					}
+					// FirefoxBinary firefoxBinary = new
+					// FirefoxBinary(pathBinary);
+
+					// final FirefoxProfile firefoxProfile = new
+					// FirefoxProfile();
+					final GeckoDriverService gecoService = new GeckoDriverService.Builder().build();
+					final FirefoxOptions options = new FirefoxOptions();
+					options.setHeadless(true);
+					options.setLogLevel(FirefoxDriverLogLevel.ERROR);
+					options.setCapability("marionette", true);
+					driver = new FirefoxDriver(gecoService, options);
+
+				}
+			default:
+
+				System.out.println("preparing for default configurations.");
+				if (driver == null) {
 					// default is chrome.
-					System.setProperty("webdriver.chrome.driver", "C:\\tools\\chromedriver.exe");
+					System.setProperty("webdriver.chrome.driver", "C:\\tools\\driver\\chromedriver.exe");
 					final ChromeOptions bChromeOptions = new ChromeOptions();
 					bChromeOptions.addArguments("--no-sandbox");
 					bChromeOptions.addArguments("enable-automation");
-					// chromeOptions.addArguments("--headless");
+					bChromeOptions.addArguments("--headless");
 					bChromeOptions.addArguments("--window-size=1920,1080");
 					bChromeOptions.addArguments("--disable-extensions");
 					bChromeOptions.addArguments("--dns-prefetch-disable");
 					bChromeOptions.addArguments("--disable-gpu");
 					bChromeOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 					bChromeOptions.setCapability("chrome.verbose", true);
+					
+					bChromeOptions.setCapability("chromeOptions", ImmutableMap.of("w3c", false));
 					// disable logging
 					// disable the web security
 					bChromeOptions.addArguments("--disable-web-security");
@@ -135,7 +174,12 @@ public class SeleniumUtils {
 	public static WebElement expand_shadow_element(WebDriver driver, WebElement element) {
 		WebElement shadow_root = (WebElement) ((JavascriptExecutor) driver)
 				.executeScript("return arguments[0].shadowRoot", element);
+
 		return shadow_root;
+	}
+
+	public static SearchContext expand_shadow_element(WebElement element) {
+		return element.getShadowRoot();
 	}
 
 	/**
@@ -161,6 +205,22 @@ public class SeleniumUtils {
 	 * @return
 	 */
 	public static WebElement IsElementFound(WebDriver d, By elementValue, WebElement parent) {
+		try {
+			WebElement myDynamicElement = parent.findElement(elementValue);
+			return myDynamicElement;
+		} catch (final Exception e) {
+			// logger.error("TimeoutException : ()", e);
+		}
+		return null;
+	}
+
+	/**
+	 * @param d
+	 * @param elementValue
+	 * @param parent
+	 * @return
+	 */
+	public static WebElement IsElementFound(WebDriver d, By elementValue, SearchContext parent) {
 		try {
 			WebElement myDynamicElement = parent.findElement(elementValue);
 			return myDynamicElement;

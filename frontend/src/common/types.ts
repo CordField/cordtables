@@ -17,6 +17,10 @@ export enum AppState {
   Loaded = 'Loaded',
   TranslationLoaded = 'TranslationLoaded',
 }
+export interface foreignKeyClickedObject {
+  id: string;
+  tableUrl: string;
+}
 
 //export type EgidsScale = `0` | `1` | `2` | `3` | `4` | `5` | `6a` | `6b` | `7` | `8a` | `8b` | `9` | `10`;
 
@@ -113,6 +117,7 @@ export class AutocompleteResponse {
 export class GenericResponse {
   public error: ErrorType;
 }
+export class GenericRequest {}
 
 export enum ActionType {
   Delete = 'Delete',

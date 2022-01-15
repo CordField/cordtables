@@ -1,6 +1,7 @@
 package com.seedcompany.cordtables.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -13,13 +14,13 @@ public abstract class Page {
 
 	protected WebDriver driver;
 
-	public WebElement rootApp;
+	public SearchContext rootApp;
 
-	public WebElement getRootApp() {
+	public SearchContext getRootApp() {
 		return rootApp;
 	}
 
-	public void setRootApp(WebElement rootApp) {
+	public void setRootApp(SearchContext rootApp) {
 		this.rootApp = rootApp;
 	}
 
@@ -41,8 +42,8 @@ public abstract class Page {
 	 * 
 	 * @return
 	 */
-	public WebElement loadApp() {
-		this.rootApp = SeleniumUtils.expand_shadow_element(driver, driver.findElement(By.tagName("app-root")));
+	public SearchContext loadApp() {
+		this.rootApp = SeleniumUtils.expand_shadow_element(driver.findElement(By.tagName("app-root")));
 		return this.rootApp;
 	}
 
@@ -51,25 +52,30 @@ public abstract class Page {
 	 * 
 	 * @return
 	 */
-	public WebElement openMenu() {
-		WebElement appRoot = loadApp();
-		WebElement appHeader = SeleniumUtils.expand_shadow_element(driver,
-				appRoot.findElement(By.tagName("cf-header")));
-		WebElement ionIcon = SeleniumUtils.expand_shadow_element(driver, appHeader.findElement(By.tagName("ion-icon")));
+	public SearchContext openMenu() {
+		SeleniumUtils.wait(2);
+		SearchContext appRoot = loadApp();
+		SeleniumUtils.wait(1);
+		SearchContext appHeader = SeleniumUtils
+				.expand_shadow_element(appRoot.findElement(By.cssSelector("cf-header.hydrated")));
+		SearchContext ionIcon = SeleniumUtils
+				.expand_shadow_element(appHeader.findElement(By.cssSelector("ion-icon.md")));
 		WebElement menu = ionIcon.findElement(By.cssSelector(".ionicon"));
 		menu.click();
+		SeleniumUtils.wait(1);
 		return appHeader;
 	}
 
 	/**
-	 * 
+	 * Method for logout
 	 */
 	public void logout() {
 		try {
 
-			WebElement menuHeader = SeleniumUtils.expand_shadow_element(driver,
-					openMenu().findElement(By.tagName("cf-header-menu")));
+			SearchContext menuHeader = SeleniumUtils
+					.expand_shadow_element(openMenu().findElement(By.cssSelector("cf-header-menu.hydrated")));
 			menuHeader.findElement(By.cssSelector("button.menu-item:nth-child(4)")).click();
+			SeleniumUtils.wait(1);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

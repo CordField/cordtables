@@ -231,7 +231,6 @@ export class Threads {
     return (
       <Host>
         <slot></slot>
-
         <search-form columnNames={['id', 'content', 'channel', 'created_at', 'created_by', 'modified_at', 'modified_by', 'owning_person', 'owning_group']}></search-form>
         {this.commonThreadsResponse && <cf-table rowData={this.commonThreadsResponse.threads} columnData={this.columnData}></cf-table>}
 
@@ -239,7 +238,7 @@ export class Threads {
           <form class="form-thing">
             <label>
               {' '}
-              <strong> New Post: </strong>
+              <strong>New Thread:</strong>
             </label>
             <div id="table-name-holder" class="form-input-item form-thing">
               <br />
