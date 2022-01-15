@@ -31,10 +31,10 @@ export class ForeignRow {
     return (
       <Host>
         <slot></slot>
-        <div>
+        <div class="card">
           {Object.keys(this.foreignRow).map(key => (
-            <div>
-              {key}:{this.foreignRow[key]}
+            <div class="card__row">
+              <span class="card__key">{key}</span> : <span class="card__value">{this.foreignRow[key]}</span>
             </div>
           ))}
         </div>

@@ -8,6 +8,7 @@ export class ColumnDescription {
   deleteFn?: (id: string) => Promise<boolean>;
   selectOptions?: Array<{ display: string; value: any }> | null = null;
   foreignKey?: string | null = null;
+  foreignTableColumn?: string | null = null;
 }
 
 export type CellType = 'header' | 'data' | 'action';
