@@ -98,6 +98,18 @@ export interface globalRoleTablePermissions {
   tablePermission: string;
 }
 
+export class AutocompleteRequest {
+  searchColumnName: string;
+  resultColumnName: string;
+  token: string;
+  searchKeyword: string;
+  tableName: string;
+}
+export class AutocompleteResponse {
+  error: ErrorType;
+  data: any;
+}
+
 export class GenericResponse {
   public error: ErrorType;
 }
