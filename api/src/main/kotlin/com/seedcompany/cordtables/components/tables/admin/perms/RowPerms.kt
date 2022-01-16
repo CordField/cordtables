@@ -30,7 +30,7 @@ data class RowPermsResponse(
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("AdminPeopleRead")
+@Controller("AdminRowPerms")
 class RowPerms(@Autowired
                val util: Utility,
 
