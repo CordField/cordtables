@@ -24,6 +24,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.collect.ImmutableMap;
 import com.seedcompany.cordtables.model.BrowserDriverConfig;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
+
 /**
  * This class contains the utility methods that can be used to interact with
  * browser.
@@ -51,7 +54,12 @@ public class SeleniumUtils {
 			switch (browserConfig.getType()) {
 			case "CHROME":
 
-				System.setProperty("webdriver.chrome.driver", browserConfig.getDriverPath());
+				// System.setProperty("webdriver.chrome.driver", browserConfig.getDriverPath());
+
+				String isHeadless = System.getProperty("test.execution.background.disabled");
+				if (isHeadless != null && !isHeadless.isEmpty()) {
+					browserConfig.setHeadless(!Boolean.valueOf(isHeadless));
+				}
 				final ChromeOptions chromeOptions = new ChromeOptions();
 				chromeOptions.addArguments("--no-sandbox");
 				chromeOptions.addArguments("enable-automation");
@@ -67,6 +75,7 @@ public class SeleniumUtils {
 				chromeOptions.addArguments("--disable-web-security");
 				chromeOptions.addArguments("--allow-running-insecure-content");
 				// chromeOptions.setExperimentalOption("w3c", false);
+				WebDriverManager.getInstance(DriverManagerType.CHROME).setup();
 				driver = new ChromeDriver(chromeOptions);
 				break;
 
@@ -76,7 +85,7 @@ public class SeleniumUtils {
 
 					// System.setProperty("webdriver.gecko.driver","C:\\temp\\geckodriver.exe");
 
-					System.setProperty("webdriver.gecko.driver",browserConfig.getDriverPath()+"\\geckodriver.exe");
+					System.setProperty("webdriver.gecko.driver", browserConfig.getDriverPath() + "\\geckodriver.exe");
 
 					File pathBinary = new File("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
 					if (!pathBinary.exists()) {
@@ -111,7 +120,7 @@ public class SeleniumUtils {
 					bChromeOptions.addArguments("--disable-gpu");
 					bChromeOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 					bChromeOptions.setCapability("chrome.verbose", true);
-					
+
 					bChromeOptions.setCapability("chromeOptions", ImmutableMap.of("w3c", false));
 					// disable logging
 					// disable the web security
