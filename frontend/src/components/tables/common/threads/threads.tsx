@@ -215,7 +215,7 @@ export class Threads {
             token: globals.globalStore.state.token,
             searchColumnName: 'id',
             resultColumnName: column.foreignTableColumn,
-            tableName: column.foreignKey.split('/').join('.'),
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
             searchKeyword: thread[column.field],
           });
           console.log(autocompleteData);
