@@ -1,3 +1,4 @@
+import { loadingController } from '@ionic/core';
 import { Component, Host, h, State, Listen } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
 import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
@@ -221,7 +222,10 @@ export class Threads {
           if (autocompleteData.error === ErrorType.NoError) {
             this.threads = this.commonThreadsResponse.threads.map(thread2 => {
               if (thread.id === thread2.id) {
-                thread2[column.field] = autocompleteData.data;
+                thread2[column.field] = {
+                  value: thread[column.field],
+                  displayValue: autocompleteData.data,
+                };
               }
               return thread2;
             });
@@ -241,7 +245,9 @@ export class Threads {
           <cf-table rowData={this.commonThreadsResponse.threads} columnData={this.columnData}></cf-table>
         ) : this.applicationState === 'autocompleteResponse' ? (
           <cf-table rowData={this.threads} columnData={this.columnData}></cf-table>
-        ) : null}
+        ) : (
+          'loading...'
+        )}
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
