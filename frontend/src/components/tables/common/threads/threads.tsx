@@ -22,6 +22,8 @@ import {
 })
 export class Threads {
   @State() commonThreadsResponse: CommonThreadsListResponse;
+  @State() threads: CommonThread[] = [];
+  @State() applicationState: 'loading' | 'initialResponse' | 'autocompleteResponse' = 'loading';
   newContent: string;
   newChannel: string;
   @Listen('searchResults')
@@ -71,39 +73,41 @@ export class Threads {
       token: globals.globalStore.state.token,
     });
     if (this.commonThreadsResponse.error === ErrorType.NoError) {
-      await this.getForeignKeyColumns();
+      this.applicationState = 'initialResponse';
+      // this.threads = this.commonThreadsResponse.threads;
+      await this.updateForeignKeys();
     }
   }
 
-  async getForeignKeyColumns() {
-    let foreignKeyValue;
-    this.commonThreadsResponse.threads.map(thread => {
-      this.columnData.map(column => {
-        console.log(column);
-        if (column.foreignKey !== undefined && column.foreignKey !== null)
-          fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
-            searchColumnName: 'id',
-            resultColumnName: column.foreignTableColumn,
-            // convert resultColumnName to CamelCase
-            token: globals.globalStore.state.token,
-            searchKeyword: thread[column.field],
-            tableName: column.foreignKey.split('/').join('.'),
-          }).then(foreignKeyValue => {
-            if (foreignKeyValue.error === ErrorType.NoError) {
-              this.commonThreadsResponse = {
-                error: ErrorType.NoError,
-                threads: this.commonThreadsResponse.threads.map(thread2 => {
-                  if (thread2.id === thread.id) {
-                    thread2[column.displayName] = foreignKeyValue.data;
-                  }
-                  return thread2;
-                }),
-              };
-            }
-          });
-      });
-    });
-  }
+  // async getForeignKeyColumns() {
+  //   let foreignKeyValue;
+  //   this.commonThreadsResponse.threads.map(thread => {
+  //     this.columnData.map(column => {
+  //       console.log(column);
+  //       if (column.foreignKey !== undefined && column.foreignKey !== null)
+  //         fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+  //           searchColumnName: 'id',
+  //           resultColumnName: column.foreignTableColumn,
+  //           // convert resultColumnName to CamelCase
+  //           token: globals.globalStore.state.token,
+  //           searchKeyword: thread[column.field],
+  //           tableName: column.foreignKey.split('/').join('.'),
+  //         }).then(foreignKeyValue => {
+  //           if (foreignKeyValue.error === ErrorType.NoError) {
+  //             this.commonThreadsResponse = {
+  //               error: ErrorType.NoError,
+  //               threads: this.commonThreadsResponse.threads.map(thread2 => {
+  //                 if (thread2.id === thread.id) {
+  //                   thread2[column.displayName] = foreignKeyValue.data;
+  //                 }
+  //                 return thread2;
+  //               }),
+  //             };
+  //           }
+  //         });
+  //     });
+  //   });
+  // }
 
   contentChange(event) {
     this.newContent = event.target.value;
@@ -205,34 +209,39 @@ export class Threads {
   async updateForeignKeys() {
     for (const thread of this.commonThreadsResponse.threads) {
       for (const column of this.columnData) {
-        if (column.foreignKey !== null) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
           const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
             token: globals.globalStore.state.token,
-            searchColumnName: column.displayName,
-            resultColumnName: 'public_first_name',
-            tableName: 'admin.people',
-            searchKeyword: thread[column.displayName],
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.'),
+            searchKeyword: thread[column.field],
           });
-          // if (autocompleteData.error === ErrorType.NoError) {
-          //   this.commonThreadsResponse = {
-          //     error: ErrorType.NoError,
-          //     threads: this.commonThreadsResponse.threads.map(threadInResponse => {
-          //       if (threadInResponse.id === thread.id) {
-          //       }
-          //       return threadInResponse.i;
-          //     }),
-          //   };
-          // }
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.threads = this.commonThreadsResponse.threads.map(thread2 => {
+              if (thread.id === thread2.id) {
+                thread2[column.field] = autocompleteData.data;
+              }
+              return thread2;
+            });
+          }
         }
       }
     }
+    this.applicationState = 'autocompleteResponse';
+    console.log(this.applicationState, this.threads);
   }
   render() {
     return (
       <Host>
         <slot></slot>
         <search-form columnNames={['id', 'content', 'channel', 'created_at', 'created_by', 'modified_at', 'modified_by', 'owning_person', 'owning_group']}></search-form>
-        {this.commonThreadsResponse && <cf-table rowData={this.commonThreadsResponse.threads} columnData={this.columnData}></cf-table>}
+        {this.applicationState === 'initialResponse' ? (
+          <cf-table rowData={this.commonThreadsResponse.threads} columnData={this.columnData}></cf-table>
+        ) : this.applicationState === 'autocompleteResponse' ? (
+          <cf-table rowData={this.threads} columnData={this.columnData}></cf-table>
+        ) : null}
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
