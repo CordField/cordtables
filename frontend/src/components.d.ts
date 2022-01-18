@@ -40,6 +40,7 @@ export namespace Components {
     interface CfCell2 {
         "cellType": CellType;
         "columnDescription": ColumnDescription;
+        "displayValue": any;
         "rowId": string;
         "value": any;
     }
@@ -1315,6 +1316,7 @@ declare namespace LocalJSX {
     interface CfCell2 {
         "cellType"?: CellType;
         "columnDescription"?: ColumnDescription;
+        "displayValue"?: any;
         "onForeignKeyClicked"?: (event: CustomEvent<foreignKeyClickedObject>) => void;
         "rowId"?: string;
         "value"?: any;

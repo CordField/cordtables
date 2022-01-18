@@ -123,6 +123,7 @@ export class AdminPeoples {
     this.peoplesResponse = await fetchAs<AdminPeopleListRequest, AdminPeopleListResponse>('admin/people/list', {
       token: globals.globalStore.state.token,
     });
+    
   }
 
   aboutChange(event) {

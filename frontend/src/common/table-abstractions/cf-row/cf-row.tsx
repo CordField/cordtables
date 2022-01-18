@@ -30,7 +30,7 @@ export class CfRow {
 
             {this.columnData &&
               this.columnData.map(columnDescription => (
-                <cf-cell2 rowId={""} value={columnDescription.displayName} columnDescription={columnDescription} cellType={'header'}></cf-cell2>
+                <cf-cell2 rowId={''} value={columnDescription.displayName} columnDescription={columnDescription} cellType={'header'}></cf-cell2>
               ))}
           </div>
         )}
@@ -38,9 +38,27 @@ export class CfRow {
           {/* {globals.globalStore.state.editMode === true && this.row && this.row.id && (
             <cf-cell2 rowId={this.row.id} columnDescription={this.actionColumn} cellType={'action'}></cf-cell2>
           )} */}
+
           {this.columnData &&
             this.row &&
-            this.columnData.map(columnDescription => <cf-cell2 rowId={this.row.id} value={this.row[columnDescription.field]} columnDescription={columnDescription}></cf-cell2>)}
+            this.columnData.map(columnDescription => {
+              console.group();
+              console.log(typeof this.row[columnDescription.field]);
+              console.log(this.row[columnDescription.field]);
+              console.log(this.row[columnDescription.field].value);
+              console.log(this.row[columnDescription.field].displayValue);
+              console.groupEnd();
+              return typeof this.row[columnDescription.field] === 'string' ? (
+                <cf-cell2 rowId={this.row.id} value={this.row[columnDescription.field]} columnDescription={columnDescription} displayValue={''}></cf-cell2>
+              ) : (
+                <cf-cell2
+                  rowId={this.row.id}
+                  value={this.row[columnDescription.field].value}
+                  displayValue={this.row[columnDescription.field].displayValue}
+                  columnDescription={columnDescription}
+                ></cf-cell2>
+              );
+            })}
         </div>
       </Host>
     );

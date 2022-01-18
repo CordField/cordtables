@@ -13,6 +13,7 @@ export class CfCell {
   @Element() el: HTMLElement;
 
   @Prop() rowId: string;
+  @Prop() displayValue: any = null;
   @Prop() value: any;
   @Prop() columnDescription: ColumnDescription;
   @Prop() cellType: CellType = 'data';
@@ -26,6 +27,7 @@ export class CfCell {
 
   connectedCallback() {
     this.newValue = this.value;
+    console.log(this.value, this.displayValue, 'cf-cell2');
   }
   linkToForeignKey() {
     console.log('event emitted');
@@ -104,14 +106,14 @@ export class CfCell {
               <span class="value-wrapper">
                 {typeof this.value === 'boolean' && <span>{this.value.toString()}</span>}
                 {typeof this.value === 'number' && <span>{this.value.toString()}</span>}
-                {typeof this.value === 'object' && <span>{this.value}</span>}
+                {typeof this.value === 'object' && <span>{JSON.stringify(this.value)}</span>}
                 {this.columnDescription.foreignKey !== null && this.columnDescription.foreignKey !== undefined && this.cellType === 'data' && (
                   <span
                     class="cell-link"
                     // style={{ color: 'blue' }}
                     onClick={this.linkToForeignKey.bind(this)}
                   >
-                    {this.value}
+                    {this.displayValue}
                   </span>
                 )}
 
