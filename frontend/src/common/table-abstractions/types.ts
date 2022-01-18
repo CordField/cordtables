@@ -1,5 +1,5 @@
 export class ColumnDescription {
-  field: any;
+  field: keyof any;
   displayName: string;
   width: number;
   editable: boolean;
