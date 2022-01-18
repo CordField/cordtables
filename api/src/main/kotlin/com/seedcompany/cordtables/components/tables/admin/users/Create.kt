@@ -85,7 +85,6 @@ class Create(
             returning id;
         """.trimIndent(),
             String::class.java,
-            req.user.person,
             req.user.email,
             pash,
             req.token,

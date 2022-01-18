@@ -113,7 +113,6 @@ class List(
                 data.add(
                     user(
                         id = id,
-                        person = person,
                         email = email,
                         password = password,
                         created_at = created_at,
