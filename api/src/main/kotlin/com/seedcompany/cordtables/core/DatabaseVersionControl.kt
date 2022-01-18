@@ -56,10 +56,6 @@ class DatabaseVersionControl(
           println("upgrading schema to version 3")
           toVersion3()
         }
-        3 -> {
-          println("upgrading schema to version 4")
-          toVersion4()
-        }
         else -> {
           break
         }
@@ -144,26 +140,21 @@ class DatabaseVersionControl(
     )
   }
 
-  private fun toVersion4() {
-    // sc
-//    runSqlFile("sql/schemas/sc/sc.v4.sql")
-    setVersionNumber(4)
-  }
-
   private fun toVersion3() {
+    // admin
+    runSqlFile("sql/schemas/admin/admin.v3.sql")
+
+    // common
+    runSqlFile("sql/schemas/common/common.v3.sql")
+
     // sc
     runSqlFile("sql/schemas/sc/sc.v3.sql")
     setVersionNumber(3)
   }
 
   private fun toVersion2() {
-    // admin
-
-//    runSqlFile("sql/schemas/admin/admin.v2.sql")
-
-    // common
-
-//    runSqlFile("sql/schemas/common/common.v2.sql")
+    // sc
+    runSqlFile("sql/schemas/sc/sc.v2.sql")
 
     setVersionNumber(2)
   }
