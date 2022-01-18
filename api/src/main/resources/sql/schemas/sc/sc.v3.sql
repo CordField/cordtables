@@ -26,6 +26,8 @@ create type sc.post_type as enum (
 create table sc.posts (
   id uuid primary key default common.uuid_generate_v4(),
 
+  parent uuid,
+  parent_type admin.table_name,
   directory uuid references sc.posts_directory(id), -- not null
   type sc.post_type, --not null,
   shareability sc.post_shareability, --not null,
@@ -292,7 +294,7 @@ create table sc.languages(
   display_name varchar(255) unique, -- not null
   display_name_pronunciation varchar(255),
   tags text[],
-  preset_inventory bool,
+  is_preset_inventory bool, -- if false = grandfathered
   is_dialect bool,
   is_sign_language bool,
   is_least_of_these bool, -- todo is going away, keep for historical
@@ -302,8 +304,8 @@ create table sc.languages(
   registry_of_dialects_code char(5),
   sensitivity common.sensitivity,
   sign_language_code char(4),
-  sponsor_start_date timestamp,
-  sponsor_estimated_end_date timestamp,
+  sponsor_start_date timestamp, -- derived
+  sponsor_estimated_end_date timestamp, -- todo research this field. new?
   has_external_first_scripture bool,
 
 --	language_name varchar(32),
@@ -334,6 +336,7 @@ create table sc.languages(
 	egids_level common.egids_scale,
 	egids_value decimal default 0, -- calculated from _level
 
+  -- todo research removing value columns
 	least_reached_progress_jps_level sc.least_reached_progress_scale,
 	least_reached_value decimal default 0, -- calculated from _level
 
