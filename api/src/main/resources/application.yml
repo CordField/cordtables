@@ -15,10 +15,6 @@ cord:
   awsSecretAccessKey: ${AWS_SECRET_ACCESS_KEY}
   email:
     server: ${EMAIL_SERVER}
-cord-api:
-  url: ${CORD_API_GRAPHQL_URL}
-  email: ${CORD_API_EMAIL}
-  password: ${CORD_API_PASSWORD}
 server:
   port: ${SERVER_PORT}
   url: ${SERVER_URL}
