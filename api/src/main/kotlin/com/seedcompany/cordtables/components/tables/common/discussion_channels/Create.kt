@@ -75,7 +75,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
         req.discussion_channel.id = id
