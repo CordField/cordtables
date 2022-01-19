@@ -79,6 +79,8 @@ class PrayerRequestsTestSuite(
 
       System.setProperty("CORD_ADMIN_PASSWORD", util.cordAdminPassword)
 
+      registry.add("cord.admin.password") { util.cordAdminPassword }
+
       registry.add("spring.datasource.username") { util.dbUser }
       registry.add("spring.datasource.password") { util.dbPassword }
       registry.add(

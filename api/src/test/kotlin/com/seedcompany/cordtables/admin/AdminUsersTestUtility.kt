@@ -5,6 +5,7 @@ import com.seedcompany.cordtables.components.user.LoginRequest
 import com.seedcompany.cordtables.components.user.LoginReturn
 import com.seedcompany.cordtables.components.user.RegisterRequest
 import com.seedcompany.cordtables.components.user.RegisterReturn
+import com.seedcompany.cordtables.core.AppConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.stereotype.Component
@@ -17,6 +18,9 @@ class AdminUsersTestUtility(
 
   @Autowired
   val rest: TestRestTemplate,
+
+  @Autowired
+  val appConfig: AppConfig,
 ) {
 
   fun register(port: String, email: String, password: String): RegisterReturn {
@@ -51,7 +55,7 @@ class AdminUsersTestUtility(
   }
 
   fun getAdminToken(port: String): String {
-    val adminLogin = login(port = port, email = testUtil.cordAdminEmail, password = testUtil.cordAdminPassword)
+    val adminLogin = login(port = port, email = testUtil.cordAdminEmail, password = appConfig.cordAdminPassword)
     return adminLogin.token!!
   }
 
