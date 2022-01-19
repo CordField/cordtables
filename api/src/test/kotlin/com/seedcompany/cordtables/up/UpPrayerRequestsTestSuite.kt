@@ -22,11 +22,6 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.nio.file.Paths
 
-//data class UpPrayerRequestsListResponseString(
-//  val error: String,
-//  val prayerRequests: MutableList<prayerRequest>?
-//)
-
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PrayerRequestsTestSuite(
