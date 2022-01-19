@@ -55,7 +55,7 @@ class AdminUsersTestUtility(
   }
 
   fun getAdminToken(port: String): String {
-    val adminLogin = login(port = port, email = testUtil.cordAdminEmail, password = appConfig.cordAdminPassword)
+    val adminLogin = login(port = port, email = testUtil.cordAdminEmail, password = testUtil.cordAdminPassword)
     return adminLogin.token!!
   }
 
