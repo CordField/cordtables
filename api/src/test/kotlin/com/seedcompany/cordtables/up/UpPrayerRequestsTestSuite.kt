@@ -3,7 +3,11 @@ package com.seedcompany.cordtables.up
 import com.seedcompany.cordtables.TestUtility
 import com.seedcompany.cordtables.admin.AdminUsersTestUtility
 import com.seedcompany.cordtables.common.CommonLanguagesTestUtility
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.PrayerForm
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsCreateFromFormRequest
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsCreateFromFormResponse
 import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequestInput
+import com.seedcompany.cordtables.sil.SilLanguageIndexTestUtility
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -36,7 +40,7 @@ class PrayerRequestsTestSuite(
   val usersUtil: AdminUsersTestUtility,
 
   @Autowired
-  val commonLanguagesUtil: CommonLanguagesTestUtility,
+  val silLanguageIndexUtil: SilLanguageIndexTestUtility,
 
   @Autowired
   val rest: TestRestTemplate,
@@ -96,7 +100,33 @@ class PrayerRequestsTestSuite(
   @Test
   fun `create prayer request from form`() {
 
-    val commonLangId = commonLanguagesUtil.`create common language`(port = port.toString())
+    val ethCode = "eng"
+
+    // create language first
+    val silLangIndexId = silLanguageIndexUtil.`create sil language_index entry`(port = port.toString(), lang = ethCode)
+
+    // create prayer entry
+    val prayerCreateResponse = rest.postForEntity(
+      "http://localhost:$port/up/prayer-requests/create-from-form",
+      UpPrayerRequestsCreateFromFormRequest(
+        token = usersUtil.getAdminToken(port = port.toString()),
+        prayerForm = PrayerForm(
+          creatorEmail = "creator_email@asdf.asdf",
+          translatorEmail = "translator_email@asdf.asdf",
+          ethCode = ethCode,
+          sensitivity = "Low",
+          location = "location",
+          prayerType = "Request",
+          title = "title",
+          content = "content",
+        ),
+      ),
+      UpPrayerRequestsCreateFromFormResponse::class.java,
+    )
+
+    assert(prayerCreateResponse !== null) {"response was null"}
+    assert(prayerCreateResponse.body !== null) {"response body was null"}
+    assert(prayerCreateResponse.body!!.id !== null) {"response id was null"}
 
   }
 
