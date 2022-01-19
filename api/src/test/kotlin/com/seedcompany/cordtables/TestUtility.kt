@@ -1,10 +1,16 @@
 package com.seedcompany.cordtables
 
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.jdbc.DataSourceBuilder
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
+import javax.sql.DataSource
 
 @Component
 class TestUtility {
 
+  val cordAdminEmail = "devops@tsco.org"
   val cordAdminPassword = "asdfasdf"
 
   val dbUser = "postgres"
