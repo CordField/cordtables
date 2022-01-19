@@ -595,24 +595,22 @@ create table sc.projects (
 
 	name varchar(32), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
-	active bool,
-	department varchar(255),
+	department_id varchar(5),
 	estimated_submission timestamp,
 	field_region uuid references sc.field_regions(id),
-	initial_mou_end timestamp,
+	initial_mou_end timestamp, -- todo date
 	marketing_location uuid references sc.locations(id),
-	mou_start timestamp,
-	mou_end timestamp,
-	owning_organization uuid references sc.organizations(id),
-	periodic_reports_directory uuid references sc.periodic_reports_directory(id), -- todo should this be common.directory?
-	posts_directory uuid references sc.posts_directory(id), -- todo should this be common.directory?
+	mou_start timestamp, -- todo date
+	mou_end timestamp, -- todo date
+	periodic_reports_directory uuid references common.directories(id),
+	posts_directory uuid references common.directories(id),
 	primary_location uuid references sc.locations(id),
 	root_directory uuid references common.directories(id),
-	status sc.project_status,
+	status sc.project_status, -- not null todo
 	status_changed_at timestamp,
-	step sc.project_step,
+	step sc.project_step, -- not null todo
 	step_changed_at timestamp,
-	sensitivity common.sensitivity,
+	sensitivity common.sensitivity, -- not null todo
 	tags text[],
 	preset_inventory bool,
 	type sc.project_type,
@@ -947,7 +945,7 @@ create table sc.products (
   mediums common.product_mediums[],
   methodology common.product_methodologies,
   approach common.product_approach,
-  purposes common.product_purposes[],
+  purposes common.product_purposes[], -- todo may need for historical data, delete
   steps common.product_methodology_step[],
   progress_step_measurement common.progress_measurement,
   progress_target decimal,

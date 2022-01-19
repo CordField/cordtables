@@ -156,7 +156,7 @@ create table admin.people (
   id uuid primary key default common.uuid_generate_v4(),
 
   about text,
-  phone varchar(32),
+  phone varchar(32), -- todo refactor many-to-many
   picture varchar(255), -- todo might make this a file reference
   private_first_name varchar(32),
   private_last_name varchar(32),

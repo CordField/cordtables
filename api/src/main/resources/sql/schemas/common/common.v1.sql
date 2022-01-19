@@ -386,6 +386,7 @@ create type common.position_relationship_types as enum (
 create table common.org_chart_position_graph(
   id uuid primary key default common.uuid_generate_v4(),
 
+  -- todo add time tracking
   from_position uuid not null references common.org_chart_positions(id),
   to_position uuid not null references common.org_chart_positions(id),
   relationship_type common.position_relationship_types,
