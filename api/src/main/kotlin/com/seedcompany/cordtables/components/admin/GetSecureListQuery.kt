@@ -115,7 +115,7 @@ class GetSecureListQuery() {
             response.query += """
               from ${req.tableName} 
               where
-                  id = :id::uuid
+                  id = :id
           """.replace('\n', ' ')
 
 //            response.query += """

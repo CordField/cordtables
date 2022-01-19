@@ -46,8 +46,7 @@ class Update(
                     table = "sc.person_unavailabilities",
                     column = "person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "period_start" -> {
@@ -86,8 +85,7 @@ class Update(
                     table = "sc.person_unavailabilities",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -96,8 +94,7 @@ class Update(
                     table = "sc.person_unavailabilities",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

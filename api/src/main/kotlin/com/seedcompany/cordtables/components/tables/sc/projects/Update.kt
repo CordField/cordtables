@@ -55,8 +55,7 @@ class Update(
                     table = "sc.projects",
                     column = "change_to_plan",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "active" -> {
@@ -94,8 +93,7 @@ class Update(
                     table = "sc.projects",
                     column = "field_region",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "initial_mou_end" -> {
@@ -114,8 +112,7 @@ class Update(
                     table = "sc.projects",
                     column = "marketing_location",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "mou_start" -> {
@@ -144,8 +141,7 @@ class Update(
                     table = "sc.projects",
                     column = "owning_organization",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "periodic_reports_directory" -> {
@@ -154,8 +150,7 @@ class Update(
                     table = "sc.projects",
                     column = "periodic_reports_directory",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "posts_directory" -> {
@@ -164,8 +159,7 @@ class Update(
                     table = "sc.projects",
                     column = "posts_directory",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "primary_location" -> {
@@ -174,8 +168,7 @@ class Update(
                     table = "sc.projects",
                     column = "primary_location",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "root_directory" -> {
@@ -184,8 +177,7 @@ class Update(
                     table = "sc.projects",
                     column = "root_directory",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "status" -> {
@@ -226,8 +218,7 @@ class Update(
                     table = "sc.projects",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -236,8 +227,7 @@ class Update(
                     table = "sc.projects",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

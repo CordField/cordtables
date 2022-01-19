@@ -77,7 +77,7 @@ class ForgotPassword (
     var id: String? = ""
     try {
       id  = jdbcTemplate.queryForObject("""
-                INSERT INTO admin.email_tokens (token, user_id) VALUES ( ?, ?::uuid) RETURNING  id;
+                INSERT INTO admin.email_tokens (token, user_id) VALUES ( ?, ?) RETURNING  id;
             """.trimIndent(),
         String::class.java,
         token,

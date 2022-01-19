@@ -56,7 +56,7 @@ class Create(
             insert into sc.global_partner_assessments(partner, governance_trans, director_trans, identity_trans, growth_trans, comm_support_trans, systems_trans, fin_management_trans, 
             hr_trans, it_trans, program_design_trans, tech_translation_trans, director_opp, financial_management_opp, program_design_opp,tech_translation_opp, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::sc.partner_maturity_scale,
                     ?::sc.partner_maturity_scale,
                     ?::sc.partner_maturity_scale,
@@ -87,7 +87,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

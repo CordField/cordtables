@@ -53,7 +53,7 @@ class Create(
             """
             insert into sc.global_partner_performance(organization, reporting_performance, financial_performance, translation_performance, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::sc.partner_performance_options,
                     ?::sc.partner_performance_options,
                     ?::sc.partner_performance_options,
@@ -72,7 +72,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

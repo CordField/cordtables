@@ -59,7 +59,6 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-//                    "neo4j_id",
                     "director",
                     "name",
                     "created_at",

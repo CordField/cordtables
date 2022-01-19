@@ -67,8 +67,7 @@ class Update(
                         table = "common.cell_channels",
                         column = "row",
                         id = req.id,
-                        value = req.value,
-                        cast ="::uuid"
+                        value = req.value
                 )
             }
             "owning_person" -> {
@@ -77,8 +76,7 @@ class Update(
                         table = "common.cell_channels",
                         column = "owning_person",
                         id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
+                        value = req.value
                 )
             }
             "owning_group" -> {
@@ -87,8 +85,7 @@ class Update(
                         table = "common.cell_channels",
                         column = "owning_group",
                         id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
+                        value = req.value
                 )
             }
         }

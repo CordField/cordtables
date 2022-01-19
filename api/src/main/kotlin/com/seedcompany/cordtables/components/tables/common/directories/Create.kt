@@ -51,7 +51,7 @@ class Create(
             insert into common.directories(name, parent, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?::uuid,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -67,7 +67,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -79,8 +79,6 @@ class Create(
             req.token,
             util.adminGroupId
         )
-
-//        req.language.id = id
 
         return CommonDirectoriesCreateResponse(error = ErrorType.NoError, id = id)
     }

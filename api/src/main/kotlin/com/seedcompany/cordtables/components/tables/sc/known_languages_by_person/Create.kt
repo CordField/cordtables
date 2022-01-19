@@ -53,8 +53,8 @@ class Create(
             """
             insert into sc.known_languages_by_person(person, known_language,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -70,7 +70,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -82,8 +82,6 @@ class Create(
             req.token,
             util.adminGroupId
         )
-
-//        req.language.id = id
 
         return ScKnownLanguagesByPersonCreateResponse(error = ErrorType.NoError, id = id)
     }

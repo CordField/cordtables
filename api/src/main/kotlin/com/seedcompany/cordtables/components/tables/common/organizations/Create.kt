@@ -64,7 +64,7 @@ class Create(
                 values(
                     ?,
                     ?::common.sensitivity,
-                    ?::uuid,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -80,7 +80,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

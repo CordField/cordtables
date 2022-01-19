@@ -59,7 +59,6 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-//                    "neo4j_id",
                     "field_zone",
                     "director",
                     "name",
@@ -80,13 +79,8 @@ class Read(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-//                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-//                if (jdbcResult.wasNull()) neo4j_id = null
-
                 var field_zone: String? = jdbcResult.getString("field_zone")
                 if (jdbcResult.wasNull()) field_zone = null
-
-
 
                 var director: String? = jdbcResult.getString("director")
                 if (jdbcResult.wasNull()) director = null
@@ -115,7 +109,6 @@ class Read(
                 val fieldRegion =
                     fieldRegion(
                         id = id,
-//                        neo4j_id = neo4j_id,
                         field_zone = field_zone,
                         director = director,
                         name = name,

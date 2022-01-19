@@ -84,7 +84,7 @@ class ResetPassword (
             return try {
                 var passHash: String = util.encoder.encode(req.newPassword)
                 jdbcTemplate.update("""
-                        UPDATE admin.users SET password = ? WHERE id= ?::uuid;
+                        UPDATE admin.users SET password = ? WHERE id= ?;
                     """.trimIndent(),
                     passHash,
                     userId
@@ -94,7 +94,7 @@ class ResetPassword (
                 this.ds.connection.use { conn ->
                     try {
                         var userStatement = conn.prepareCall("""
-                            SELECT id, email FROM admin.users WHERE id = ?::uuid;
+                            SELECT id, email FROM admin.users WHERE id = ?;
                         """.trimIndent())
                         userStatement.setString(1, userId)
                         var userResult = userStatement.executeQuery()

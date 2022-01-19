@@ -53,8 +53,7 @@ class Update(
                     table = "common.directories",
                     column = "parent",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
 
@@ -68,57 +67,13 @@ class Update(
                 )
             }
 
-            "created_at" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "common.directories",
-                    column = "created_at",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
-                )
-            }
-
-            "created_by" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "common.directories",
-                    column = "created_by",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
-                )
-            }
-            "modified_at" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "common.directories",
-                    column = "modified_at",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
-                )
-            }
-            "modified_by" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "common.directories",
-                    column = "modified_by",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
-                )
-            }
-
-
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
                     table = "common.directories",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
 
@@ -128,13 +83,10 @@ class Update(
                     table = "common.directories",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
 
-
-//            else -> null
         }
 
         return CommonDirectoriesUpdateResponse(ErrorType.NoError)

@@ -47,8 +47,7 @@ class Update(
                     table = "sc.global_partner_assessments",
                     column = "partner",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "governance_trans" -> {

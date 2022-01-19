@@ -47,8 +47,7 @@ class Update(
                     table = "admin.group_memberships",
                     column = "group_id",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "person" -> {
@@ -57,8 +56,7 @@ class Update(
                     table = "admin.group_memberships",
                     column = "person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_person" -> {
@@ -67,8 +65,7 @@ class Update(
                     table = "admin.group_memberships",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -77,8 +74,7 @@ class Update(
                     table = "admin.group_memberships",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }
