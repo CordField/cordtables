@@ -63,6 +63,8 @@ class Read(
                     "pmc_entity_code",
                     "point_of_contact",
                     "types",
+                    "address",
+                    "sensitivity",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -101,6 +103,12 @@ class Read(
                 var types: String? = jdbcResult.getString("types")
                 if (jdbcResult.wasNull()) types = null
 
+                var address: String? = jdbcResult.getString("address")
+                if (jdbcResult.wasNull()) address = null
+
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
+
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
 
@@ -129,6 +137,8 @@ class Read(
                         pmc_entity_code = pmc_entity_code,
                         point_of_contact = point_of_contact,
                         types = types,
+                        address = address,
+                        sensitivity = sensitivity,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

@@ -2,22 +2,23 @@ package com.seedcompany.cordtables.common
 
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryResponse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.support.rowset.SqlRowSet
 import org.springframework.stereotype.Component
+import java.sql.ResultSet
 import java.sql.SQLException
 import javax.sql.DataSource
 
 
-data class GetPaginatedResultSetRequest(
+data class GetPaginatedResultSetV2Request(
   val token: String,
   val tableName: String,
   val columns: Array<String>,
   val joinColumns: MutableMap<String, MutableMap<String, String>> = mutableMapOf(),
   val joinTables: String = "",
   val custom_columns: String? = null,
-  val id: String? = null,
   val filter: String = "",
   val searchColumns: Array<String> = arrayOf(),
   val searchKeyword: String = "",
@@ -25,22 +26,24 @@ data class GetPaginatedResultSetRequest(
   val whereClause: String = "",
   val resultsPerPage: Int = 50,
   val page: Int = 1,
+  val id: String? = null
 )
 
-data class  GetPaginatedResultSetResponse(
+data class  GetPaginatedResultSetV2Response(
   val errorType: ErrorType,
-  val result: SqlRowSet? = null,
+  val query: String,
   val size: Int
 )
 
 @Component
-class GetPaginatedResultSet (
+class GetPaginatedResultSetV2 (
   @Autowired
   val ds: DataSource,
 ) {
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
+  // var jdbcTemplate1: JdbcTemplate = JdbcTemplate(ds)
 
-  fun getPaginatedResultSetHandler(req: GetPaginatedResultSetRequest) :GetPaginatedResultSetResponse {
+  fun getPaginatedResultSetHandler(req: GetPaginatedResultSetV2Request) :GetPaginatedResultSetV2Response {
 
     val getAdminRoleIdSubQueryText = """
       select id from admin.roles where name = 'Administrator'
@@ -56,7 +59,7 @@ class GetPaginatedResultSet (
               inner join admin.tokens as c 
               on b.person = c.person
               where a.table_name = '${req.tableName}'
-              and c.token = :token
+              and c.token = '${req.token}'
           ), 
           public_row_level_access as 
           (
@@ -78,7 +81,7 @@ class GetPaginatedResultSet (
               inner join admin.tokens c 
               on b.person = c.person 
               where a.table_name = '${req.tableName}'
-              and c.token = :token
+              and c.token = '${req.token}'
           ),
           public_column_level_access as 
           (
@@ -101,8 +104,8 @@ class GetPaginatedResultSet (
           columns += """
                         case
                             when '${field.key}' in (select column_name from column_level_access) then ${table.key}.${field.key}
-                            when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) then ${table.key}.${field.key}
-                            when ${req.tableName}.owning_person = (select person from admin.tokens where token = :token) then ${table.key}.${field.key}
+                            when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = '${req.token}') and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) then ${table.key}.${field.key}
+                            when ${req.tableName}.owning_person = (select person from admin.tokens where token = '${req.token}') then ${table.key}.${field.key}
                             when '${field.key}' in (select column_name from public_column_level_access) then ${table.key}.${field.key}
                             else null
                         end as ${field.value} 
@@ -115,8 +118,8 @@ class GetPaginatedResultSet (
         """
                     case
                         when '$it' in (select column_name from column_level_access) then $it 
-                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) then $it
-                        when owning_person = (select person from admin.tokens where token = :token) then $it 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = '${req.token}') and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) then $it
+                        when owning_person = (select person from admin.tokens where token = '${req.token}') then $it 
                         when '$it' in (select column_name from public_column_level_access) then $it 
                         else null 
                     end as $it
@@ -128,8 +131,8 @@ class GetPaginatedResultSet (
 //          """
 //              case
 //                  when '$it' in (select column_name from column_level_access) then $it
-//                  when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = ($getAdminRoleIdSubQueryText))) then $it
-//                  when owning_person = (select person from admin.tokens where token = :token) then $it
+//                  when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = '${req.token}') and role = ($getAdminRoleIdSubQueryText))) then $it
+//                  when owning_person = (select person from admin.tokens where token = '${req.token}') then $it
 //                  when '$it' in (select column_name from public_column_level_access) then $it
 //                  else null""
 //              end as $it
@@ -157,17 +160,17 @@ class GetPaginatedResultSet (
     if (req.getList) {
       query += """
               where (${req.tableName}.id in (select row from row_level_access) or
-                  (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
-                  ${req.tableName}.owning_person = (select person from admin.tokens where token = :token) or
+                  (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = '${req.token}') and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
+                  ${req.tableName}.owning_person = (select person from admin.tokens where token = '${req.token}') or
                   ${req.tableName}.id in (select row from public_row_level_access))
               """.replace('\n', ' ')
     } else {
       query += """
               where
-                  ${req.tableName}.id = :id::uuid and
+                  ${req.tableName}.id = '${req.id}'::uuid and
                   ((${req.tableName}.id in (select row from row_level_access) or
-                  (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
-                  ${req.tableName}.owning_person = (select person from admin.tokens where token = :token) or
+                  (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = '${req.token}') and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
+                  ${req.tableName}.owning_person = (select person from admin.tokens where token = '${req.token}') or
                   ${req.tableName}.id in (select row from public_row_level_access)))
               """.replace('\n', ' ')
     }
@@ -195,29 +198,21 @@ class GetPaginatedResultSet (
     }
 
     var offset = (req.page-1)*req.resultsPerPage
-    var limitQuery = query
-    if(req.getList){
-        limitQuery = "$query LIMIT :limit OFFSET :offset ";
-    }
+    var limitQuery = "$query LIMIT ${req.resultsPerPage} OFFSET $offset ";
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
-    if (req.getList) {
-      paramSource.addValue("limit", req.resultsPerPage)
-      paramSource.addValue("offset", offset)
-    }
-    else{
-      paramSource.addValue("id", req.id)
-    }
+//      paramSource.addValue("limit", req.resultsPerPage)
+//      paramSource.addValue("offset", offset)
     return try {
       val resultRows = jdbcTemplate.queryForRowSet(query, paramSource)
       resultRows.last();
       val totalRows = resultRows.getRow();
 
-      val jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)
-      GetPaginatedResultSetResponse(ErrorType.NoError, result = jdbcResult, size = totalRows)
+      GetPaginatedResultSetV2Response(ErrorType.NoError, query = limitQuery, size = totalRows)
+
     } catch (e: SQLException) {
       println("error while listing ${e.message}")
-      GetPaginatedResultSetResponse(ErrorType.SQLReadError, size = 0)
+      GetPaginatedResultSetV2Response(ErrorType.SQLReadError, size = 0, query = "")
     }
   }
 }

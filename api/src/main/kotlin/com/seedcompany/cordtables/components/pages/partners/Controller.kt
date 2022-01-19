@@ -1,12 +1,7 @@
 package com.seedcompany.cordtables.components.pages.partners
 
-import com.seedcompany.cordtables.common.ErrorType
-import com.seedcompany.cordtables.common.GetPaginatedResultSet
-import com.seedcompany.cordtables.common.GetPaginatedResultSetRequest
-import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.common.*
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.common.discussion_channels.CommonDiscussionChannelsListResponse
 import com.seedcompany.cordtables.components.tables.sc.global_partner_engagements.globalPartnerEngagement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
@@ -32,6 +27,9 @@ class Controller (
 
   @Autowired
   val secureResultSet: GetPaginatedResultSet,
+
+  @Autowired
+  val secureResultSetV2: GetPaginatedResultSetV2,
 
   @Autowired
   val secureList: GetSecureListQuery,
@@ -71,10 +69,8 @@ class Controller (
             )
         )
 
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", req.token)
         try {
-            val resultSet = secureResultSet.getPaginatedResultSetHandler(
+            val queryObj = secureResultSet.getPaginatedResultSetHandler(
                 GetPaginatedResultSetRequest(
                     tableName = "sc.partners",
                     filter = "order by id",
@@ -91,28 +87,26 @@ class Controller (
                     columns = arrayOf()
                 )
             )
-            val jdbcResult = resultSet.result
-            size = resultSet.size
-
-            // val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult!!.next()){
+            var dbResultSet = queryObj.result
+            while (dbResultSet!!.next()){
+                val financial_reporting_types = (dbResultSet.getObject("financial_reporting_types") as SerialArray).array as Array<out Any>
                 data.add(
                     Partner(
-                        id = jdbcResult.getString("id"),
-                        active = jdbcResult.getBoolean("active"),
-                        financial_reporting_types = jdbcResult.getString("financial_reporting_types"),
-                        is_innovations_client = jdbcResult.getString("is_innovations_client"),
-                        pmc_entity_code = jdbcResult.getString("pmc_entity_code"),
-                        point_of_contact = jdbcResult.getString("point_of_contact"),
-                        types = jdbcResult.getString("types"),
-                        address = jdbcResult.getString("address"),
-                        partner_sensitivity = jdbcResult.getString("partner_sensitivity"),
-                        name = jdbcResult.getString("name"),
-                        sensitivity = jdbcResult.getString("sensitivity"),
-                        primary_location = jdbcResult.getString("primary_location"),
-                        created_at = jdbcResult.getString("created_at"),
-                        modified_at = jdbcResult.getString("modified_at")
-                   )
+                        id = dbResultSet.getString("id"),
+                        active = dbResultSet.getBoolean("active"),
+                        financial_reporting_types = financial_reporting_types,
+                        is_innovations_client = dbResultSet.getBoolean("is_innovations_client"),
+                        pmc_entity_code = dbResultSet.getString("pmc_entity_code"),
+                        point_of_contact = dbResultSet.getString("point_of_contact"),
+                        types = dbResultSet.getString("types"),
+                        address = dbResultSet.getString("address"),
+                        partner_sensitivity = dbResultSet.getString("partner_sensitivity"),
+                        name = dbResultSet.getString("name"),
+                        sensitivity = dbResultSet.getString("sensitivity"),
+                        primary_location = dbResultSet.getString("primary_location"),
+                        created_at = dbResultSet.getString("created_at"),
+                        modified_at = dbResultSet.getString("modified_at")
+                    )
                 )
             }
         }
@@ -169,87 +163,87 @@ class Controller (
                 "tech_translation_opp" to "tech_translation_opp"
             ),
             "sc.global_partner_performance" to mutableMapOf(
+                "id" to "gppid",
                 "reporting_performance" to "reporting_performance",
                 "financial_performance" to "financial_performance",
                 "translation_performance" to "translation_performance"
             )
         )
 
-        val paramSource = MapSqlParameterSource()
-        paramSource.addValue("token", req.token)
-        paramSource.addValue("id", req.id)
+
+
         val joinString = """
              sc.partners
                   LEFT JOIN common.organizations ON sc.partners.id=common.organizations.id
                   LEFT JOIN sc.global_partner_assessments ON sc.partners.id=sc.global_partner_assessments.partner
                   LEFT JOIN sc.global_partner_performance ON sc.partners.id=sc.global_partner_performance.organization
         """.trimIndent()
-        val query = secureList.getSecureListQueryHandler(
-            GetSecureListQueryRequest(
+
+        val jdbcResult = secureResultSet.getPaginatedResultSetHandler(
+            GetPaginatedResultSetRequest(
+                token = req.token!!,
                 tableName = "sc.partners",
                 filter = "order by id",
                 getList = false,
                 joinColumns = columnsNew,
                 joinTables = joinString,
-                columns = arrayOf()
+                columns = arrayOf(),
+                id = req.id
             )
-        ).query
+        ).result
 
-        try {
-            var jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()){
-                partner = Partner(
-                    id = jdbcResult.getString("id"),
-                    active = jdbcResult.getBoolean("active"),
-                    financial_reporting_types = jdbcResult.getString("financial_reporting_types"),
-                    is_innovations_client = jdbcResult.getString("is_innovations_client"),
-                    pmc_entity_code = jdbcResult.getString("pmc_entity_code"),
-                    point_of_contact = jdbcResult.getString("point_of_contact"),
-                    types = jdbcResult.getString("types"),
-                    address = jdbcResult.getString("address"),
-                    partner_sensitivity = jdbcResult.getString("partner_sensitivity"),
-                    name = jdbcResult.getString("name"),
-                    sensitivity = jdbcResult.getString("sensitivity"),
-                    primary_location = jdbcResult.getString("primary_location"),
-                    gpaid = jdbcResult.getString("gpaid"),
-                    partner = jdbcResult.getString("partner"),
-                    governance_trans = jdbcResult.getString("governance_trans"),
-                    director_trans = jdbcResult.getString("director_trans"),
-                    identity_trans = jdbcResult.getString("identity_trans"),
-                    growth_trans = jdbcResult.getString("growth_trans"),
-                    comm_support_trans = jdbcResult.getString("comm_support_trans"),
-                    systems_trans = jdbcResult.getString("systems_trans"),
-                    fin_management_trans = jdbcResult.getString("fin_management_trans"),
-                    hr_trans = jdbcResult.getString("hr_trans"),
-                    it_trans = jdbcResult.getString("it_trans"),
-                    program_design_trans = jdbcResult.getString("program_design_trans"),
-                    tech_translation_trans = jdbcResult.getString("tech_translation_trans"),
-                    director_opp = jdbcResult.getString("director_opp"),
-                    financial_management_opp = jdbcResult.getString("financial_management_opp"),
-                    program_design_opp = jdbcResult.getString("program_design_opp"),
-                    tech_translation_opp = jdbcResult.getString("tech_translation_opp"),
-                    reporting_performance = jdbcResult.getString("reporting_performance"),
-                    financial_performance = jdbcResult.getString("financial_performance"),
-                    translation_performance = jdbcResult.getString("translation_performance"),
-                    created_at = jdbcResult.getString("created_at"),
-                    modified_at = jdbcResult.getString("modified_at"),
-                    engagements = jdbcResult.getString("id")?.let { this.getEngagements(it, req.token!!) }
-                )
-            }
-        }
-        catch (e: SQLException){
-            println("SQL ERROR: ${e.message}")
+        while (jdbcResult!!.next()){
+            val financial_reporting_types = (jdbcResult.getObject("financial_reporting_types") as SerialArray).array as Array<out Any>
+            partner = Partner(
+                id = jdbcResult.getString("id"),
+                active = jdbcResult.getBoolean("active"),
+                financial_reporting_types = financial_reporting_types,
+                is_innovations_client = jdbcResult.getBoolean("is_innovations_client"),
+                pmc_entity_code = jdbcResult.getString("pmc_entity_code"),
+                point_of_contact = jdbcResult.getString("point_of_contact"),
+                types = jdbcResult.getString("types"),
+                address = jdbcResult.getString("address"),
+                partner_sensitivity = jdbcResult.getString("partner_sensitivity"),
+                name = jdbcResult.getString("name"),
+                sensitivity = jdbcResult.getString("sensitivity"),
+                primary_location = jdbcResult.getString("primary_location"),
+                gpaid = jdbcResult.getString("gpaid"),
+                gppid = jdbcResult.getString("gppid"),
+                partner = jdbcResult.getString("partner"),
+                governance_trans = jdbcResult.getString("governance_trans"),
+                director_trans = jdbcResult.getString("director_trans"),
+                identity_trans = jdbcResult.getString("identity_trans"),
+                growth_trans = jdbcResult.getString("growth_trans"),
+                comm_support_trans = jdbcResult.getString("comm_support_trans"),
+                systems_trans = jdbcResult.getString("systems_trans"),
+                fin_management_trans = jdbcResult.getString("fin_management_trans"),
+                hr_trans = jdbcResult.getString("hr_trans"),
+                it_trans = jdbcResult.getString("it_trans"),
+                program_design_trans = jdbcResult.getString("program_design_trans"),
+                tech_translation_trans = jdbcResult.getString("tech_translation_trans"),
+                director_opp = jdbcResult.getString("director_opp"),
+                financial_management_opp = jdbcResult.getString("financial_management_opp"),
+                program_design_opp = jdbcResult.getString("program_design_opp"),
+                tech_translation_opp = jdbcResult.getString("tech_translation_opp"),
+                reporting_performance = jdbcResult.getString("reporting_performance"),
+                financial_performance = jdbcResult.getString("financial_performance"),
+                translation_performance = jdbcResult.getString("translation_performance"),
+                created_at = jdbcResult.getString("created_at"),
+                modified_at = jdbcResult.getString("modified_at"),
+                engagements = jdbcResult.getString("id")?.let { this.getEngagements(it, req.token!!) }
+            )
         }
         return PartnerReadResponse(error = error, partner = partner)
     }
 
-    fun getEngagements(partner: String, token: String): MutableList<globalPartnerEngagement>{
-        var data: MutableList<globalPartnerEngagement> = mutableListOf()
+    fun getEngagements(partner: String, token: String): MutableList<GlobalPartnerEngagement>{
+        var data: MutableList<GlobalPartnerEngagement> = mutableListOf()
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", token)
-        val query = secureList.getSecureListQueryHandler(
-            GetSecureListQueryRequest(
+        val queryRes = secureResultSet.getPaginatedResultSetHandler(
+            GetPaginatedResultSetRequest(
                 tableName = "sc.global_partner_engagements",
+                token = token,
                 filter = "order by id",
                 whereClause = "organization='$partner'",
                 columns = arrayOf(
@@ -268,29 +262,29 @@ class Controller (
                     "owning_group",
                 )
             )
-        ).query
-        try {
-            val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
-            while (jdbcResult.next()){
-                data.add(
-                    globalPartnerEngagement(
-                        id = jdbcResult.getString("id"),
-                        organization = jdbcResult.getString("organization"),
-                        type = jdbcResult.getString("type"),
-                        mou_start = jdbcResult.getString("mou_start"),
-                        mou_end = jdbcResult.getString("mou_end"),
-                        sc_roles = jdbcResult.getString("sc_roles"),
-                        partner_roles = jdbcResult.getString("partner_roles"),
-                        created_at = jdbcResult.getString("created_at")
-                    )
+        )
+
+        val jdbcResult = queryRes.result
+        while (jdbcResult!!.next()){
+            val sc_roles = (jdbcResult.getObject("sc_roles") as SerialArray).array as Array<out Any>
+            val partner_roles = (jdbcResult.getObject("partner_roles") as SerialArray).array as Array<out Any>
+            data.add(
+                GlobalPartnerEngagement(
+                    id = jdbcResult.getString("id"),
+                    organization = jdbcResult.getString("organization"),
+                    type = jdbcResult.getString("type"),
+                    mou_start = jdbcResult.getString("mou_start"),
+                    mou_end = jdbcResult.getString("mou_end"),
+                    sc_roles = sc_roles,
+                    partner_roles = partner_roles,
+                    created_at = jdbcResult.getString("created_at")
                 )
-            }
-        }
-        catch (e: SQLException){
-            println("sql error :${e.message}")
+            )
         }
         return data
     }
+
+
 
   /*
     @CrossOrigin(origins =  ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])

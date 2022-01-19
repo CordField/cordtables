@@ -30,6 +30,13 @@ class ScPartnerDetailsResponse{
     partner: PartnerDetail;
 }
 
+class AdminGroupMembershipUpdateRequest{
+
+}
+class AdminGroupMembershipUpdateResponse{
+
+}
+
 @Component({
     tag: 'partner-crm',
     styleUrl: 'partner-crm.css',
@@ -47,9 +54,13 @@ export class PartnerCRM{
     @Listen('partnerItemClicked', { target: 'body' })
     async getChangedValue(event: CustomEvent) {
         this.selectedPartner = event.detail
+        await this.loadPartnerDetails(this.selectedPartner);
+    }
+
+    async loadPartnerDetails(partner){
         this.partnerDetailsResponse = await fetchAs<ScPartnerDetailsRequest, ScPartnerDetailsResponse>('sc/partners-crm/read', {
             token: globals.globalStore.state.token,
-            id: event.detail
+            id: partner
         });
     }
 
@@ -59,9 +70,18 @@ export class PartnerCRM{
         await this.getPartnersList(this.currentPage, this.search);
     }
 
+    @Listen('reloadPartners', { target: 'body' })
+    async reloadPartners(event: CustomEvent) {
+        console.log("asdf");
+        this.currentPage = event.detail;
+        await this.loadPartnerDetails(this.selectedPartner);
+        // await this.getPartnersList(this.currentPage, this.search);
+    }
+
     @Listen('doSearch', { target: 'body' })
     async searchPartners(event: CustomEvent) {
         this.search = event.detail;
+        this.currentPage = 1;
         await this.getPartnersList(this.currentPage, this.search);
     }
 
@@ -82,8 +102,9 @@ export class PartnerCRM{
     async componentWillLoad() {
         await this.getPartnersList(this.currentPage, this.search);
         // await this.getFilesList();
-
     }
+
+    
 
     render() {
         return (

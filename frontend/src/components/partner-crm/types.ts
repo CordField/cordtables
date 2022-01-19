@@ -1,11 +1,15 @@
+class MultiSelectData{
+    value?: string | undefined;
+    type?: string | undefined;
+}
 class PartnerEngagement{
     id?: string = null;
     organization?: string | undefined;
-    type?: string | undefined;
+    type?: object[] | undefined;
     mou_start?: string | undefined;
     mou_end?: string | undefined;
-    sc_roles?: string | undefined;
-    partner_roles?: string | undefined;
+    sc_roles?: MultiSelectData[] = null;
+    partner_roles?: MultiSelectData[] = null;
     created_at?: string | undefined;
     created_by?: string | undefined;
     modified_at?: string | undefined;
@@ -17,8 +21,8 @@ class PartnerEngagement{
 class PartnerDetail {
     id?: string = null;
     active?: boolean = null;
-    financial_reporting_types?: string = null;
-    is_innovations_client?: string = null;
+    financial_reporting_types?: MultiSelectData[] = null;
+    is_innovations_client?: boolean = null;
     pmc_entity_code?: string = null;
     point_of_contact?: string = null;
     types?: string = null;
@@ -29,6 +33,7 @@ class PartnerDetail {
     primary_location?: string = null;
 
     gpaid?: string = null;
+    gppid?: string = null;
     partner?: string = null;
     governance_trans?: string = null;
     director_trans?: string = null;

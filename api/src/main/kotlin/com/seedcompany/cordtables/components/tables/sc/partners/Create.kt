@@ -42,12 +42,11 @@ class Create(
     fun createHandler(@RequestBody req: ScPartnersCreateRequest): ScPartnersCreateResponse {
 
         // if (req.partner.name == null) return ScPartnersCreateResponse(error = ErrorType.InputMissingToken, null)
-
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
             insert into sc.partners(id, active, financial_reporting_types,  is_innovations_client, pmc_entity_code, point_of_contact,
-             types, created_by, modified_by, owning_person, owning_group)
+             types, address, sensitivity, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?::uuid,
                     ?::boolean,
@@ -56,6 +55,8 @@ class Create(
                     ?,
                     ?::uuid,
                     ARRAY[?]::sc.partner_types[],
+                    ?,
+                    ?::common.sensitivity,
                     (
                       select person 
                       from admin.tokens 
@@ -83,6 +84,8 @@ class Create(
             req.partner.pmc_entity_code,
             req.partner.point_of_contact,
             req.partner.types,
+            req.partner.address,
+            req.partner.sensitivity,
             req.token,
             req.token,
             req.token,

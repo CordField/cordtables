@@ -63,6 +63,8 @@ class List(
                     "pmc_entity_code",
                     "point_of_contact",
                     "types",
+                    "address",
+                    "sensitivity",
 
                     "created_at",
                     "created_by",
@@ -102,6 +104,12 @@ class List(
                 var types: String? = jdbcResult.getString("types")
                 if (jdbcResult.wasNull()) types = null
 
+                var address: String? = jdbcResult.getString("address")
+                if (jdbcResult.wasNull()) address = null
+
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
+
                 var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
 
@@ -130,6 +138,8 @@ class List(
                         pmc_entity_code = pmc_entity_code,
                         point_of_contact = point_of_contact,
                         types = types,
+                        address = address,
+                        sensitivity = sensitivity,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

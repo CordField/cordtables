@@ -42,6 +42,17 @@ export namespace Components {
         "rowId": string;
         "value": any;
     }
+    interface CfEditable {
+        "enableEdit": boolean;
+        "endPoint": string;
+        "field": string;
+        "multiSelect"?: boolean;
+        "rowData": any;
+        "rowId": string;
+        "selectOptions"?: Array<{ display: string; value: any }> | null;
+        "updateFn"?: (id: string, columnName: any, value: any, endpoint: string) => Promise<boolean>;
+        "value": any;
+    }
     interface CfForgotPassword {
         "history": RouterHistory;
     }
@@ -436,6 +447,12 @@ declare global {
     var HTMLCfCell2Element: {
         prototype: HTMLCfCell2Element;
         new (): HTMLCfCell2Element;
+    };
+    interface HTMLCfEditableElement extends Components.CfEditable, HTMLStencilElement {
+    }
+    var HTMLCfEditableElement: {
+        prototype: HTMLCfEditableElement;
+        new (): HTMLCfEditableElement;
     };
     interface HTMLCfForgotPasswordElement extends Components.CfForgotPassword, HTMLStencilElement {
     }
@@ -1243,6 +1260,7 @@ declare global {
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "cf-cell2": HTMLCfCell2Element;
+        "cf-editable": HTMLCfEditableElement;
         "cf-forgot-password": HTMLCfForgotPasswordElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
@@ -1408,6 +1426,18 @@ declare namespace LocalJSX {
         "cellType"?: CellType;
         "columnDescription"?: ColumnDescription;
         "rowId"?: string;
+        "value"?: any;
+    }
+    interface CfEditable {
+        "enableEdit"?: boolean;
+        "endPoint"?: string;
+        "field"?: string;
+        "multiSelect"?: boolean;
+        "onReloadPartners"?: (event: CustomEvent<number>) => void;
+        "rowData"?: any;
+        "rowId"?: string;
+        "selectOptions"?: Array<{ display: string; value: any }> | null;
+        "updateFn"?: (id: string, columnName: any, value: any, endpoint: string) => Promise<boolean>;
         "value"?: any;
     }
     interface CfForgotPassword {
@@ -1752,6 +1782,7 @@ declare namespace LocalJSX {
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "cf-cell2": CfCell2;
+        "cf-editable": CfEditable;
         "cf-forgot-password": CfForgotPassword;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
@@ -1903,6 +1934,7 @@ declare module "@stencil/core" {
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "cf-cell2": LocalJSX.CfCell2 & JSXBase.HTMLAttributes<HTMLCfCell2Element>;
+            "cf-editable": LocalJSX.CfEditable & JSXBase.HTMLAttributes<HTMLCfEditableElement>;
             "cf-forgot-password": LocalJSX.CfForgotPassword & JSXBase.HTMLAttributes<HTMLCfForgotPasswordElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
