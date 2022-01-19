@@ -47,8 +47,7 @@ class Update(
                     table = "common.files",
                     column = "directory",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "name" -> {
@@ -66,8 +65,7 @@ class Update(
                     table = "common.files",
                     column = "created_at",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "created_by" -> {
@@ -76,8 +74,7 @@ class Update(
                     table = "common.files",
                     column = "created_by",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "modified_at" -> {
@@ -86,8 +83,7 @@ class Update(
                     table = "common.files",
                     column = "modified_at",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "modified_by" -> {
@@ -96,8 +92,7 @@ class Update(
                     table = "common.files",
                     column = "modified_by",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_person" -> {
@@ -106,8 +101,7 @@ class Update(
                     table = "common.files",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -116,8 +110,7 @@ class Update(
                     table = "common.files",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

@@ -53,8 +53,8 @@ class Create(
             """
             insert into common.stage_graph(from_stage, to_stage,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -70,7 +70,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

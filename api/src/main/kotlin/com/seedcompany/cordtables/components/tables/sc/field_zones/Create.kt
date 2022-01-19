@@ -53,7 +53,7 @@ class Create(
             insert into sc.field_zones(name, director,  created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?::uuid,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -69,21 +69,18 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
             String::class.java,
             req.fieldZone.name,
-//            req.fieldZone.neo4j_id,
             req.fieldZone.director,
             req.token,
             req.token,
             req.token,
             util.adminGroupId
         )
-
-//        req.language.id = id
 
         return ScFieldZonesCreateResponse(error = ErrorType.NoError, id = id)
     }

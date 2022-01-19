@@ -59,7 +59,6 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-//                    "neo4j_id",
                     "sensitivity",
                     "root_directory",
                     "address",
@@ -79,9 +78,6 @@ class Read(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-//                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-//                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var sensitivity: String? = jdbcResult.getString("sensitivity")
                 if (jdbcResult.wasNull()) sensitivity = null
@@ -113,7 +109,6 @@ class Read(
                 val organization =
                     organization(
                         id = id,
-//                        neo4j_id = neo4j_id,
                         sensitivity = sensitivity,
                         root_directory = root_directory,
                         address = address,

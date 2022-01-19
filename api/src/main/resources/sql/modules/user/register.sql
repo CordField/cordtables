@@ -3,14 +3,14 @@ CREATE OR REPLACE PROCEDURE admin.register(
   IN p_password VARCHAR(50),
   in p_token varchar(64),
   INOUT error_type VARCHAR(32), 
-  INOUT user_id uuid
+  INOUT user_id varchar(32)
 )
 LANGUAGE PLPGSQL
 AS $$
 DECLARE
-  vAdminPersonId uuid;
-  vAdminGroupId uuid;
-  vPersonId uuid;
+  vAdminPersonId varchar(32);
+  vAdminGroupId varchar(32);
+  vPersonId varchar(32);
   vEmail VARCHAR(255);
   vToken varchar(512);
 BEGIN

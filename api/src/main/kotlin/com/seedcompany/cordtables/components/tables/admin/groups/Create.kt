@@ -58,7 +58,7 @@ class Create(
             insert into admin.groups(name, parent_group,  created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?::uuid,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -74,7 +74,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -86,8 +86,6 @@ class Create(
             req.token,
             util.adminGroupId
         )
-
-//        req.language.id = id
 
         return AdminGroupsCreateResponse(error = ErrorType.NoError, id = id)
     }

@@ -50,8 +50,8 @@ class Create(
             """
             insert into sc.budget_records(budget, change_to_plan, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -67,7 +67,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

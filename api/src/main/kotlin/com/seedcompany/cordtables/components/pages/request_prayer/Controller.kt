@@ -101,13 +101,13 @@ class Controller (
             """
             insert into up.prayer_requests(request_language_id, target_language_id, sensitivity, organization_name, parent, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     ?::common.sensitivity,
                     ?,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
+                    ?,
                     ?,
                     ?,
                     ?::boolean,
@@ -127,7 +127,7 @@ class Controller (
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -157,8 +157,8 @@ class Controller (
     fun update(@RequestBody req: CommonPrayerRequestsUpdateRequest): CommonPrayerRequestsCreateResponse{
         val id: String = jdbcTemplate.queryForObject(
             """
-                UPDATE up.prayer_requests SET request_language_id=?::uuid, target_language_id=?::uuid, sensitivity=?::common.sensitivity, organization_name=?, parent=?::uuid, translator=?::uuid, location=?::uuid,
-                  title=?, content=?, reviewed=?::boolean, prayer_type=?::up.prayer_type WHERE id=?::uuid AND created_by=(
+                UPDATE up.prayer_requests SET request_language_id=?, target_language_id=?, sensitivity=?::common.sensitivity, organization_name=?, parent=?, translator=?, location=?,
+                  title=?, content=?, reviewed=?::boolean, prayer_type=?::up.prayer_type WHERE id=? AND created_by=(
                     select person 
                     from admin.tokens 
                     where token = ?
@@ -205,7 +205,7 @@ class Controller (
             )
         }
         var sql = """
-            SELECT * FROM up.prayer_requests WHERE id='${req.id}'::uuid and created_by=(
+            SELECT * FROM up.prayer_requests WHERE id='${req.id}' and created_by=(
                 SELECT person FROM admin.tokens WHERE token='${req.token}'
             )
         """.trimIndent()
@@ -240,14 +240,14 @@ class Controller (
     fun notify(@RequestBody req: PrayerRequestNotifyRequest): CommonPrayerRequestsCreateResponse{
         var existingNotifications: ArrayList<Int> = ArrayList()
         var id:String = "";
-        var sql: String = "SELECT count(id) as cnt FROM up.prayer_notifications WHERE request='${req.selectedRequest}'::uuid AND person=(select person from admin.tokens where token = '${req.token}')"
+        var sql: String = "SELECT count(id) as cnt FROM up.prayer_notifications WHERE request='${req.selectedRequest}' AND person=(select person from admin.tokens where token = '${req.token}')"
         var count = jdbcTemplate.queryForObject(sql, Long::class.java, )
         println(count)
         if (count != null && count > 0) {
             if(req.action == "remove"){
                 id = jdbcTemplate.queryForObject(
                     """
-                        DELETE FROM up.prayer_notifications WHERE request = ?::uuid AND  person = (
+                        DELETE FROM up.prayer_notifications WHERE request = ? AND  person = (
                             select person 
                             from admin.tokens 
                             where token = ?
@@ -266,7 +266,7 @@ class Controller (
                     """
                         INSERT INTO up.prayer_notifications (request, person,  created_by, modified_by, owning_person, owning_group) 
                             VALUES (
-                                ?::uuid,
+                                ?,
                                 (
                                     select person 
                                     from admin.tokens 
@@ -287,7 +287,7 @@ class Controller (
                                     from admin.tokens 
                                     where token = ?
                                 ),
-                                ?::uuid
+                                ?
                             )
                         returning id;
                     """.trimIndent(),

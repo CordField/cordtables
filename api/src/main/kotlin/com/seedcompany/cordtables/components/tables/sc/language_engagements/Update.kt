@@ -46,8 +46,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "project",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "ethnologue" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "ethnologue",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "change_to_plan" -> {
@@ -66,8 +64,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "change_to_plan",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "active" -> {
@@ -86,8 +83,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "ceremony",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "is_open_to_investor_visit" -> {
@@ -96,8 +92,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "is_open_to_investor_visit",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "communications_complete_date" -> {
@@ -226,8 +221,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "periodic_reports_directory",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "pnp" -> {
@@ -245,8 +239,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "pnp_file",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "product_engagement_tag" -> {
@@ -314,8 +307,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -324,8 +316,7 @@ class Update(
                     table = "sc.language_engagements",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

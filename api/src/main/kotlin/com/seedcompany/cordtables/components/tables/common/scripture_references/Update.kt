@@ -71,7 +71,7 @@ class Update(
                         counter++
                     }
                 }
-                updateSql = "$updateSql where id = ?::uuid returning *"
+                updateSql = "$updateSql where id = ? returning *"
                 println(updateSql)
                 val updateStatement = conn.prepareCall(
                     updateSql

@@ -49,12 +49,12 @@ class Create(
             insert into sc.partners(organization, active, financial_reporting_types,  is_innovations_client, pmc_entity_code, point_of_contact,
              types, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::boolean,
                     ARRAY[?]::sc.financial_reporting_types[],
                     ?,
                     ?,
-                    ?::uuid,
+                    ?,
                     ARRAY[?]::sc.partner_types[],
                     (
                       select person 
@@ -71,7 +71,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -88,8 +88,6 @@ class Create(
             req.token,
             util.adminGroupId
         )
-
-//        req.language.id = id
 
         return ScPartnersCreateResponse(error = ErrorType.NoError, id = id)
     }

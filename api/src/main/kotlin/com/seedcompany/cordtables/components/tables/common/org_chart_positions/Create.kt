@@ -53,7 +53,7 @@ class Create(
             """
             insert into common.org_chart_positions(organization, name,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?,
                     (
                       select person 
@@ -70,7 +70,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
