@@ -135,7 +135,7 @@ class CreateFromGoogleForm(
       creatorUserId,
       creatorUserId,
       creatorUserId,
-      util.adminGroupId
+      util.adminGroupId()
     )
     return UpPrayerRequestsCreateFromFormResponse(error = ErrorType.NoError, id = id)
   }

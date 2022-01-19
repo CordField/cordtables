@@ -80,7 +80,7 @@ class Create(
                 req.token,
                 req.token,
                 req.token,
-                util.adminGroupId
+                util.adminGroupId()
             )
 
             return CommonSiteTextCreateResponse(error = ErrorType.NoError, id = id)
