@@ -571,9 +571,17 @@ create table sc.periodic_reports_directory ( -- todo is this still needed? shoul
   created_at timestamp not null default CURRENT_TIMESTAMP
 );
 
+create type sc.periodic_report_parent_type as enum (
+		'a',
+		'b',
+		'c'
+);
+
 create table sc.periodic_reports (
   id uuid primary key default common.uuid_generate_v4(),
 
+  parent uuid,
+  type sc.periodic_report_parent_type,
   directory uuid references sc.periodic_reports_directory(id), -- todo should this be common.directory?
   end_at timestamp,
   report_file uuid references common.files(id),
@@ -589,6 +597,11 @@ create table sc.periodic_reports (
   owning_group uuid not null references admin.groups(id)
 );
 
+create type sc.financial_report_period_type as enum (
+		'Monthly',
+		'Quarterly'
+);
+
 -- extension table to common
 create table sc.projects (
   id uuid primary key default common.uuid_generate_v4(),
@@ -596,25 +609,52 @@ create table sc.projects (
 	name varchar(32), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
 	department_id varchar(5),
-	estimated_submission timestamp,
+	estimated_submission timestamp, -- todo date
 	field_region uuid references sc.field_regions(id),
+	financial_report_period sc.financial_report_period_type default 'Quarterly',
 	initial_mou_end timestamp, -- todo date
 	marketing_location uuid references sc.locations(id),
 	mou_start timestamp, -- todo date
 	mou_end timestamp, -- todo date
-	periodic_reports_directory uuid references common.directories(id),
-	posts_directory uuid references common.directories(id),
 	primary_location uuid references sc.locations(id),
 	root_directory uuid references common.directories(id),
 	status sc.project_status, -- not null todo
-	status_changed_at timestamp,
 	step sc.project_step, -- not null todo
 	step_changed_at timestamp,
 	sensitivity common.sensitivity, -- not null todo
 	tags text[],
-	preset_inventory bool,
 	type sc.project_type,
-	report_received_at timestamp,
+	financial_report_received_at timestamp, -- legacy, not in api
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
+
+	unique (id, change_to_plan)
+);
+
+create table sc.translation_projects (
+  id uuid primary key default sc.projects(),
+  change_to_plan uuid references sc.change_to_plans(id), -- not null
+
+	preset_inventory bool,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
+
+	unique (id, change_to_plan)
+);
+
+create table sc.internship_projects (
+  id uuid primary key default sc.projects(),
+  change_to_plan uuid references sc.change_to_plans(id), -- not null -- todo rename change to plan => changesets
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),

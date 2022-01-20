@@ -147,8 +147,6 @@ export namespace Components {
     }
     interface FilesTable {
     }
-    interface ForeignRow {
-    }
     interface GenericTable {
         "columns": Array<any>;
         "name": String;
@@ -266,9 +264,6 @@ export namespace Components {
     interface ScProjects {
     }
     interface ScriptureReferences {
-    }
-    interface SearchForm {
-        "columnNames": string[];
     }
     interface SilCountryCodes {
     }
@@ -648,12 +643,6 @@ declare global {
         prototype: HTMLFilesTableElement;
         new (): HTMLFilesTableElement;
     };
-    interface HTMLForeignRowElement extends Components.ForeignRow, HTMLStencilElement {
-    }
-    var HTMLForeignRowElement: {
-        prototype: HTMLForeignRowElement;
-        new (): HTMLForeignRowElement;
-    };
     interface HTMLGenericTableElement extends Components.GenericTable, HTMLStencilElement {
     }
     var HTMLGenericTableElement: {
@@ -978,12 +967,6 @@ declare global {
         prototype: HTMLScriptureReferencesElement;
         new (): HTMLScriptureReferencesElement;
     };
-    interface HTMLSearchFormElement extends Components.SearchForm, HTMLStencilElement {
-    }
-    var HTMLSearchFormElement: {
-        prototype: HTMLSearchFormElement;
-        new (): HTMLSearchFormElement;
-    };
     interface HTMLSilCountryCodesElement extends Components.SilCountryCodes, HTMLStencilElement {
     }
     var HTMLSilCountryCodesElement: {
@@ -1199,7 +1182,6 @@ declare global {
         "education-entries": HTMLEducationEntriesElement;
         "file-versions": HTMLFileVersionsElement;
         "files-table": HTMLFilesTableElement;
-        "foreign-row": HTMLForeignRowElement;
         "generic-table": HTMLGenericTableElement;
         "group-memberships": HTMLGroupMembershipsElement;
         "groups-page": HTMLGroupsPageElement;
@@ -1254,7 +1236,6 @@ declare global {
         "sc-project-locations": HTMLScProjectLocationsElement;
         "sc-projects": HTMLScProjectsElement;
         "scripture-references": HTMLScriptureReferencesElement;
-        "search-form": HTMLSearchFormElement;
         "sil-country-codes": HTMLSilCountryCodesElement;
         "sil-iso-639-3": HTMLSilIso6393Element;
         "sil-iso-639-3-macrolanguages": HTMLSilIso6393MacrolanguagesElement;
@@ -1429,8 +1410,6 @@ declare namespace LocalJSX {
     }
     interface FilesTable {
     }
-    interface ForeignRow {
-    }
     interface GenericTable {
         "columns"?: Array<any>;
         "name"?: String;
@@ -1549,10 +1528,6 @@ declare namespace LocalJSX {
     interface ScProjects {
     }
     interface ScriptureReferences {
-    }
-    interface SearchForm {
-        "columnNames"?: string[];
-        "onSearchResults"?: (event: CustomEvent<any>) => void;
     }
     interface SilCountryCodes {
     }
@@ -1674,7 +1649,6 @@ declare namespace LocalJSX {
         "education-entries": EducationEntries;
         "file-versions": FileVersions;
         "files-table": FilesTable;
-        "foreign-row": ForeignRow;
         "generic-table": GenericTable;
         "group-memberships": GroupMemberships;
         "groups-page": GroupsPage;
@@ -1729,7 +1703,6 @@ declare namespace LocalJSX {
         "sc-project-locations": ScProjectLocations;
         "sc-projects": ScProjects;
         "scripture-references": ScriptureReferences;
-        "search-form": SearchForm;
         "sil-country-codes": SilCountryCodes;
         "sil-iso-639-3": SilIso6393;
         "sil-iso-639-3-macrolanguages": SilIso6393Macrolanguages;
@@ -1815,7 +1788,6 @@ declare module "@stencil/core" {
             "education-entries": LocalJSX.EducationEntries & JSXBase.HTMLAttributes<HTMLEducationEntriesElement>;
             "file-versions": LocalJSX.FileVersions & JSXBase.HTMLAttributes<HTMLFileVersionsElement>;
             "files-table": LocalJSX.FilesTable & JSXBase.HTMLAttributes<HTMLFilesTableElement>;
-            "foreign-row": LocalJSX.ForeignRow & JSXBase.HTMLAttributes<HTMLForeignRowElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
             "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
@@ -1870,7 +1842,6 @@ declare module "@stencil/core" {
             "sc-project-locations": LocalJSX.ScProjectLocations & JSXBase.HTMLAttributes<HTMLScProjectLocationsElement>;
             "sc-projects": LocalJSX.ScProjects & JSXBase.HTMLAttributes<HTMLScProjectsElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
-            "search-form": LocalJSX.SearchForm & JSXBase.HTMLAttributes<HTMLSearchFormElement>;
             "sil-country-codes": LocalJSX.SilCountryCodes & JSXBase.HTMLAttributes<HTMLSilCountryCodesElement>;
             "sil-iso-639-3": LocalJSX.SilIso6393 & JSXBase.HTMLAttributes<HTMLSilIso6393Element>;
             "sil-iso-639-3-macrolanguages": LocalJSX.SilIso6393Macrolanguages & JSXBase.HTMLAttributes<HTMLSilIso6393MacrolanguagesElement>;
