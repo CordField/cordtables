@@ -146,7 +146,7 @@ class Controller (
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
         return CommonPrayerRequestsCreateResponse(error = ErrorType.NoError, id = id)
     }
@@ -215,6 +215,7 @@ class Controller (
         }
         else{
             var reData = result.get(0)
+
             data = PrayerRequestGetData(
                 id = reData.id,
                 request_language_id = reData.request_language_id,
@@ -297,7 +298,7 @@ class Controller (
                     req.token,
                     req.token,
                     req.token,
-                    util.adminGroupId
+                    util.adminGroupId()
                 )
             }
         }

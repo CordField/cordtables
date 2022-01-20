@@ -2,7 +2,6 @@
 class ScPartner {
     id?: string | undefined;
 
-    organization?: string | undefined; 
 	active?: boolean | undefined; 
 	financial_reporting_types?: string | undefined;
 	is_innovations_client?: boolean | undefined;

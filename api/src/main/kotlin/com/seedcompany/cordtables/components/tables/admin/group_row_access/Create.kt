@@ -84,7 +84,7 @@ class Create(
       req.token,
       req.token,
       req.token,
-      util.adminGroupId
+      util.adminGroupId()
     )
 
     return AdminGroupRowAccessCreateResponse(error = ErrorType.NoError, id = id)

@@ -44,14 +44,20 @@ class DeleteBudgetRecordResponse extends GenericResponse {
 }
 
 @Component({
-  tag: 'sc-budgetrecords',
+  tag: 'sc-budget-records',
   styleUrl: 'sc-budget-records.css',
   shadow: true,
 })
 export class ScBudgetRecords {
   @State() budgetrecordsResponse: ScBudgetRecordsListResponse;
-  newBudgetRecordId: string;
-  newBudgetChangeToPlan: string;
+
+  newBudget: string;
+  newChange_to_plan: string;
+  newActive: boolean;
+  newAmount: number;
+  newFiscal_year: number;
+  newOrganization: string;
+  newSensitivity: string;
 
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<ScBudgetRecordsUpdateRequest, ScBudgetRecordUpdateResponse>('sc/budget-records/update-read', {
@@ -88,7 +94,7 @@ export class ScBudgetRecords {
     {
       field: 'id',
       displayName: 'ID',
-      width: 50,
+      width: 250,
       editable: false,
       deleteFn: this.handleDelete,
     },
@@ -111,6 +117,10 @@ export class ScBudgetRecords {
       displayName: 'Active',
       width: 50,
       editable: true,
+      selectOptions: [
+        { display: 'True', value: 'true' },
+        { display: 'False', value: 'false' },
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -128,10 +138,22 @@ export class ScBudgetRecords {
       updateFn: this.handleUpdate,
     },
     {
-      field: 'partnership',
-      displayName: 'Partnership',
+      field: 'organization',
+      displayName: 'organization',
       width: 100,
       editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'sensitivity',
+      displayName: 'sensitivity',
+      width: 100,
+      editable: true,
+      selectOptions: [
+        { display: 'Low', value: 'Low' },
+        { display: 'Medium', value: 'Medium' },
+        { display: 'High', value: 'High' },
+      ],
       updateFn: this.handleUpdate,
     },
     {
@@ -184,13 +206,36 @@ export class ScBudgetRecords {
     });
   }
 
-  budgetrecordBudgetChange(event) {
-    this.newBudgetRecordId = event.target.value;
+
+  budgetChange(event) {
+    this.newBudget = event.target.value;
   }
 
-  budgetRecordChangetoPlanChange(event) {
-    this.newBudgetChangeToPlan = event.target.value;
+  change_to_planChange(event) {
+    this.newChange_to_plan = event.target.value;
   }
+
+  activeChange(event) {
+    this.newActive = event.target.value;
+  }
+
+  amountChange(event) {
+    this.newAmount = event.target.value;
+  }
+
+  fiscal_yearChange(event) {
+    this.newFiscal_year = event.target.value;
+  }
+
+  organizationChange(event) {
+    this.newOrganization = event.target.value;
+  }
+
+  sensitivityChange(event) {
+    this.newSensitivity = event.target.value;
+  }
+
+
 
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
@@ -199,8 +244,13 @@ export class ScBudgetRecords {
     const result = await fetchAs<CreateBudgetRecordRequest, CreateBudgetRecordResponse>('sc/budget-records/create-read', {
       token: globals.globalStore.state.token,
       budget_record: {
-        budget: this.newBudgetRecordId,
-        change_to_plan: this.newBudgetChangeToPlan,
+        budget: this.newBudget,
+        change_to_plan: this.newChange_to_plan,
+        active: this.newActive,
+        amount: this.newAmount,
+        fiscal_year: this.newFiscal_year,
+        organization: this.newOrganization,
+        sensitivity: this.newSensitivity,
       },
     });
 
@@ -221,22 +271,90 @@ export class ScBudgetRecords {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="budgetrecord-budget-holder" class="form-input-item form-thing">
+
+            <div id="budget-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="budgetrecord-budget">Budget ID</label>
+                <label htmlFor="budget">Budget ID</label>
               </span>
               <span class="form-thing">
-                <input id="budgetrecord-name" name="budgetrecord-budget" onInput={event => this.budgetrecordBudgetChange(event)} />
-              </span>
-            </div>
-            <div id="budgetrecord-change_to_plan-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="budgetrecord-change_to_plan">Change to Plan</label>
-              </span>
-              <span class="form-thing">
-                <input id="budgetrecord-name" name="budgetrecord-budget" onInput={event => this.budgetRecordChangetoPlanChange(event)} />
+                <input id="budget" name="budget" onInput={event => this.budgetChange(event)} />
               </span>
             </div>
+
+            <div id="change_to_plan-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="change_to_plan">Change To Plan</label>
+              </span>
+              <span class="form-thing">
+                <input id="change_to_plan" name="change_to_plan" onInput={event => this.change_to_planChange(event)} />
+              </span>
+            </div>
+
+            <div id="active-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="active">Active</label>
+              </span>
+              <span class="form-thing">
+                <select id="active" name="active" onInput={event => this.activeChange(event)}>
+                  <option value="">Select Active</option>
+                  <option value="true" selected={this.newActive === true}>
+                    True
+                  </option>
+                  <option value="false" selected={this.newActive === false}>
+                    False
+                  </option>
+                </select>
+              </span>
+            </div>
+
+            <div id="amount-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="amount">Amount</label>
+              </span>
+              <span class="form-thing">
+                <input id="amount" name="amount" onInput={event => this.amountChange(event)} />
+              </span>
+            </div>
+
+            <div id="fiscal_year-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="fiscal_year">Fiscal Year</label>
+              </span>
+              <span class="form-thing">
+                <input id="fiscal_year" name="fiscal_year" onInput={event => this.fiscal_yearChange(event)} />
+              </span>
+            </div>
+
+            <div id="organization-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="budget">Organization</label>
+              </span>
+              <span class="form-thing">
+                <input id="organization" name="organization" onInput={event => this.organizationChange(event)} />
+              </span>
+            </div>
+
+            <div id="sensitivity-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="sensitivity">Sensitivity</label>
+              </span>
+              <span class="form-thing">
+                <select id="sensitivity" name="sensitivity" onInput={event => this.sensitivityChange(event)}>
+                  <option value="">Select Sensitivity</option>
+                  <option value="Low" selected={this.newSensitivity === 'Low'}>
+                    Low
+                  </option>
+                  <option value="Medium" selected={this.newSensitivity === 'Medium'}>
+                    Medium
+                  </option>
+                  <option value="High" selected={this.newSensitivity === 'High'}>
+                    High
+                  </option>
+                </select>
+              </span>
+            </div>
+      
+
             <span class="form-thing">
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>

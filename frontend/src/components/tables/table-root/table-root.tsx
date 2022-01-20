@@ -78,9 +78,13 @@ export class TableRoot {
           <stencil-route url={'/table/common/ticket-feedback'} component="ticket-feedback" />
           <stencil-route url={'/table/common/scripture-reference'} component="scripture-references" />
 
+          <stencil-route url={'/table/common/blog-posts'} component="common-blog-posts" />
+          <stencil-route url={'/table/common/blogs'} component="common-blogs" />
+          <stencil-route url={'/table/common/discussion-channels'} component="common-discussion-channels" />
+
           <stencil-route url={'/table/sc/locations'} component="sc-locations" />
           <stencil-route url={'/table/common/cell-channels'} component="common-cell-channels" />
-          <stencil-route url={'/table/common/discussion-channels'} component="discussion-channels" />
+          {/* <stencil-route url={'/table/common/discussion-channels'} component="discussion-channels" /> */}
           <stencil-route url={'/table/common/threads'} component="common-threads" />
           <stencil-route url={'/table/common/posts'} component="common-posts" />
           <stencil-route url={'/table/sc/languages'} component="sc-languages" />
@@ -99,6 +103,16 @@ export class TableRoot {
           <stencil-route url={'/table/sc/ethnologue'} component="sc-ethnologue" />
           <stencil-route url={'/table/sc/global-partner-transitions'} component="sc-global-partner-transitions" />
           <stencil-route url={'/table/sc/people'} component="sc-people" />
+
+          <stencil-route url={'/table/sc/budget-records-partnerships'} component="sc-budget-records-partnerships" />
+          <stencil-route url={'/table/sc/budgets'} component="sc-budgets" />
+          <stencil-route url={'/table/sc/ceremonies'} component="sc-ceremonies" />
+          <stencil-route url={'/table/sc/change-to-plans'} component="sc-change-to-plans" />
+          <stencil-route url={'/table/sc/language-locations'} component="sc-language-locations" />
+          <stencil-route url={'/table/sc/periodic-reports'} component="sc-periodic-reports" />
+          <stencil-route url={'/table/sc/project-members'} component="sc-project-members" />
+
+          
           <stencil-route
             url={['/table/common/site-text', '/table/common/site-text-languages', '/table/common/site-text-translations', '/table/common/site-text-strings']}
             component="site-text"

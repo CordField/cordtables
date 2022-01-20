@@ -77,7 +77,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
         return CommonDirectoriesCreateResponse(error = ErrorType.NoError, id = id)

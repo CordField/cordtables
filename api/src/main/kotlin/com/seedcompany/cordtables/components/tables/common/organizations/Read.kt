@@ -1,7 +1,5 @@
 package com.seedcompany.cordtables.components.tables.common.organizations
 
-import com.seedcompany.cordtables.components.tables.common.organizations.*
-
 import com.seedcompany.cordtables.common.CommonSensitivity
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility

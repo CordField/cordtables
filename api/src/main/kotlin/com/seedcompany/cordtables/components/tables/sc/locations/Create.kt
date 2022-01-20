@@ -1,12 +1,10 @@
 package com.seedcompany.cordtables.components.tables.sc.locations
 
-import com.seedcompany.cordtables.components.tables.common.locations.Create as CommonCreate
-import com.seedcompany.cordtables.components.tables.common.locations.CommonLocationsCreateRequest
+import com.seedcompany.cordtables.components.tables.common.languages.Create as CommonCreate
 import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.common.enumContains
-import com.seedcompany.cordtables.components.tables.common.locations.locationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
@@ -129,7 +127,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
         req.location.id = id

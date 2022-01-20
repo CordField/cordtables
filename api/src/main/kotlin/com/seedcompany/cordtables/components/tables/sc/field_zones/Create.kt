@@ -79,7 +79,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
         return ScFieldZonesCreateResponse(error = ErrorType.NoError, id = id)

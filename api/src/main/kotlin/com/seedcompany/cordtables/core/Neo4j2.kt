@@ -21,6 +21,14 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
 import kotlin.math.ceil
 
+data class Neo4jMigrationRequest(
+  val token: String? = null,
+)
+
+data class Neo4jMigrationResponse(
+  val error: ErrorType,
+)
+
 data class BaseNodeCreate(
   val baseNode: String,
   val tableName: String,

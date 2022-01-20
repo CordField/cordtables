@@ -1,0 +1,31 @@
+.partner-details .box-title{
+   padding:0px 15px;
+   margin-top: 25px;
+   margin-bottom: 10px;
+}
+.partner-details .box-title h5{
+    font-size: 16px;
+    margin: 0px;
+    padding: 0px;
+}
+.partner-details-box{
+    width: 500px;
+    padding: 15px;
+    border: 1px solid #000;
+
+}
+.partner-details-box .row{
+    display: flex;
+    width: 100%;
+}
+.partner-details-box .row .column{
+    border: 1px solid silver;
+    padding: 10px;
+    font-size: 14px;
+}
+.partner-details-box .row .column.col-4{
+    width: 35%;
+}
+.partner-details-box .row .column.col-8{
+    width: 65%;
+}

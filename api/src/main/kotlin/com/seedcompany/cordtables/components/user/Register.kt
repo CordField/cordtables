@@ -49,7 +49,7 @@ class Register (
         val pash = util.encoder.encode(req.password)
         val token = util.createToken()
 
-      val adminGroupId = util.adminGroupId
+      val adminGroupId = util.adminGroupId()
 
         val resultList = registerDB(req.email, pash, token)
         errorType = resultList[0] as ErrorType
