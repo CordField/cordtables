@@ -18,9 +18,6 @@ class AdminUsersTestUtility(
 
   @Autowired
   val rest: TestRestTemplate,
-
-  @Autowired
-  val appConfig: AppConfig,
 ) {
 
   fun register(port: String, email: String, password: String): RegisterReturn {
