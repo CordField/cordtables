@@ -65,8 +65,7 @@ class Update(
                     table = "common.notes",
                     column = "row",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "content" -> {
@@ -84,8 +83,7 @@ class Update(
                     table = "common.notes",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -94,8 +92,7 @@ class Update(
                     table = "common.notes",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

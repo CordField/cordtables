@@ -52,8 +52,8 @@ class Create(
             """
             insert into common.ticket_feedback(ticket, stakeholder, feedback, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     ?::common.ticket_feedback_options,
                     (
                       select person 
@@ -70,7 +70,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

@@ -56,9 +56,9 @@ class Create(
             """
             insert into sc.periodic_reports(directory, end_at, report_file, start_at, type, skipped_reason, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::timestamp,
-                    ?::uuid,
+                    ?,
                     ?::timestamp,
                     ?::sc.periodic_report_type,
                     ?,
@@ -77,7 +77,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -93,8 +93,6 @@ class Create(
             req.token,
             util.adminGroupId()
         )
-
-//        req.language.id = id
 
         return ScPeriodicReportsCreateResponse(error = ErrorType.NoError, id = id)
     }

@@ -43,7 +43,7 @@ class Delete(
       try {
 
         val deleteStatement = conn.prepareCall(
-          "delete from common.site_text_translations where id = ?::uuid returning id"
+          "delete from common.site_text_translations where id = ? returning id"
         )
         deleteStatement.setString(1, req.id)
 

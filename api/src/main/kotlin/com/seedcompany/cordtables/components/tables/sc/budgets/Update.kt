@@ -47,8 +47,7 @@ class Update(
           table = "sc.budgets",
           column = "change_to_plan",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
       "project" -> {
@@ -57,8 +56,7 @@ class Update(
           table = "sc.budgets",
           column = "project",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
 
@@ -78,8 +76,7 @@ class Update(
           table = "sc.budgets",
           column = "universal_template",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
       "universal_template_file_url" -> {
@@ -118,8 +115,7 @@ class Update(
           table = "sc.budgets",
           column = "owning_person",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
       "owning_group" -> {
@@ -128,8 +124,7 @@ class Update(
           table = "sc.budgets",
           column = "owning_group",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
     }

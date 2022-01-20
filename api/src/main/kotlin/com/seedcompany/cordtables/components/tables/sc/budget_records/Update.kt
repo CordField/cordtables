@@ -49,7 +49,6 @@ class Update(
                     column = "budget",
                     id = req.id,
                     value = req.value,
-                    cast = "::uuid"
                 )
             }
 
@@ -60,7 +59,6 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
-                    cast = "::uuid"
                 )
             }
 
@@ -92,7 +90,7 @@ class Update(
                     table = "sc.budget-records",
                     column = "fiscal_year",
                     id = req.id,
-                    value = req.value,
+                    value = req.value
                 )
             }
 
@@ -102,8 +100,7 @@ class Update(
                     table = "sc.budget_records",
                     column = "organization",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
 
@@ -124,8 +121,7 @@ class Update(
                     table = "sc.budget_records",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
 
@@ -135,12 +131,10 @@ class Update(
                     table = "sc.budget_records",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
 
-//            else -> null
         }
 
         return ScBudgetRecordsUpdateResponse(ErrorType.NoError)

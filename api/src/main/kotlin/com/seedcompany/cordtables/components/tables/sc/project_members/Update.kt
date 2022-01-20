@@ -47,8 +47,7 @@ class Update(
                     table = "sc.project_members",
                     column = "project",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "person" -> {
@@ -57,8 +56,7 @@ class Update(
                     table = "sc.project_members",
                     column = "person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
 
@@ -68,8 +66,7 @@ class Update(
               table = "sc.project_members",
               column = "group_id",
               id = req.id,
-              value = req.value,
-              cast = "::uuid"
+              value = req.value
             )
           }
 
@@ -79,8 +76,7 @@ class Update(
               table = "sc.project_members",
               column = "role",
               id = req.id,
-              value = req.value,
-              cast = "::uuid"
+              value = req.value
             )
           }
 
@@ -100,8 +96,7 @@ class Update(
                     table = "sc.project_members",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -110,8 +105,7 @@ class Update(
                     table = "sc.project_members",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

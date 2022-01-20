@@ -139,8 +139,7 @@ class Update(
                         table = "sc.languages",
                         column = "ethnologue",
                         id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
+                        value = req.value
                 )
             }
 

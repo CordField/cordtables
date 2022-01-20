@@ -356,7 +356,7 @@ class Utility(
                               where token = ?
                             ),
                         modified_at = CURRENT_TIMESTAMP
-                    where id = ?::uuid;
+                    where id = ?;
                 """.trimIndent(),
         value,
         token,

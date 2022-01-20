@@ -53,8 +53,8 @@ class Create(
             """
             insert into common.people_graph(from_person, to_person, rel_type, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     ?::common.people_to_people_relationship_types,
                     (
                       select person 
@@ -71,7 +71,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

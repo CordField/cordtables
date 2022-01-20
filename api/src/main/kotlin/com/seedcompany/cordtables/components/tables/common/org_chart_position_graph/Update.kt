@@ -46,8 +46,7 @@ class Update(
                     table = "common.org_chart_position_graph",
                     column = "from_position",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "to_position" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "common.org_chart_position_graph",
                     column = "to_position",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "relationship_type" -> {
@@ -76,8 +74,7 @@ class Update(
                     table = "common.org_chart_position_graph",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -86,8 +83,7 @@ class Update(
                     table = "common.org_chart_position_graph",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }
