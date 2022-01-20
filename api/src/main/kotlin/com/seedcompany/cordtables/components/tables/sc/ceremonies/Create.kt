@@ -56,9 +56,9 @@ class Create(
       """
             insert into sc.ceremonies(internship_engagement, language_engagement, ethnologue, actual_date, estimated_date, is_planned, type,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
+                    ?,
                     ?::timestamp,
                     ?::timestamp,
                     ?::boolean,
@@ -78,7 +78,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -95,8 +95,6 @@ class Create(
       req.token,
       util.adminGroupId()
     )
-
-//        req.language.id = id
 
     return ScCeremoniesCreateResponse(error = ErrorType.NoError, id = id)
   }

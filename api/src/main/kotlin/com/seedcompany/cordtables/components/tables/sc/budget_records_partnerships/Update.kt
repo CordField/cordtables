@@ -47,8 +47,7 @@ class Update(
                     table = "sc.budget_records_partnerships",
                     column = "budget_record",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "partnership" -> {
@@ -57,8 +56,7 @@ class Update(
                     table = "sc.budget_records_partnerships",
                     column = "partnership",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_person" -> {
@@ -67,8 +65,7 @@ class Update(
                     table = "sc.budget_records_partnerships",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -77,8 +74,7 @@ class Update(
                     table = "sc.budget_records_partnerships",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

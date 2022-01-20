@@ -56,7 +56,7 @@ class Create(
             """
             insert into common.blog_posts(blog, content,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?,
                     (
                       select person 
@@ -73,7 +73,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -85,8 +85,6 @@ class Create(
             req.token,
             util.adminGroupId()
         )
-
-//        req.language.id = id
 
         return CommonBlogPostsCreateResponse(error = ErrorType.NoError, id = id)
     }

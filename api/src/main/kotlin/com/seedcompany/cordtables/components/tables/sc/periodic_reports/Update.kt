@@ -47,8 +47,7 @@ class Update(
                     table = "sc.periodic_reports",
                     column = "directory",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "end_at" -> {
@@ -67,8 +66,7 @@ class Update(
                     table = "sc.periodic_reports",
                     column = "report_file",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "start_at" -> {
@@ -106,8 +104,7 @@ class Update(
                     table = "sc.periodic_reports",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -116,8 +113,7 @@ class Update(
                     table = "sc.periodic_reports",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

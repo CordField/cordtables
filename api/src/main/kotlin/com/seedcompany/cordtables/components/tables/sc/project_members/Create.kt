@@ -56,10 +56,10 @@ class Create(
             """
             insert into sc.project_members(project, person, group_id, role, sensitivity, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
                     ?::common.sensitivity,
                     (
                       select person 
@@ -76,7 +76,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -91,8 +91,7 @@ class Create(
             req.token,
             util.adminGroupId()
         )
-
-//        req.language.id = id
+      
 
         return ScProjectMembersCreateResponse(error = ErrorType.NoError, id = id)
     }

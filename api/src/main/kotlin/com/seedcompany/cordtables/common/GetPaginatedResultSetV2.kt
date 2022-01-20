@@ -167,7 +167,7 @@ class GetPaginatedResultSetV2 (
     } else {
       query += """
               where
-                  ${req.tableName}.id = '${req.id}'::uuid and
+                  ${req.tableName}.id = '${req.id}' and
                   ((${req.tableName}.id in (select row from row_level_access) or
                   (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = '${req.token}') and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
                   ${req.tableName}.owning_person = (select person from admin.tokens where token = '${req.token}') or

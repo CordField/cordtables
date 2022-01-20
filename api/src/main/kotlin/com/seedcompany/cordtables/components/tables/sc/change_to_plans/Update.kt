@@ -76,8 +76,7 @@ class Update(
           table = "sc.change_to_plans",
           column = "owning_person",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
       "owning_group" -> {
@@ -86,8 +85,7 @@ class Update(
           table = "sc.change_to_plans",
           column = "owning_group",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
     }
