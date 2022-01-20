@@ -89,7 +89,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
         return CommonWorkRecordCreateResponse(error = ErrorType.NoError, id = id)

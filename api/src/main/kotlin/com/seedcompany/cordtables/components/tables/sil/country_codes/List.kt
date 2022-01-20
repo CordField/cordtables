@@ -71,7 +71,6 @@ class List(
             )
         )
 
-
         val resultSet = jdbcResult.result
         val size = jdbcResult.size
         if (jdbcResult.errorType == ErrorType.NoError){

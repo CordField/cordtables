@@ -1,13 +1,14 @@
 package com.seedcompany.cordtables.components.tables.sc.budget_records
 
 data class BudgetRecord(
-    var id: String? = null,
-    var budget: String? = null,
-    var change_to_plan: String? = null,
-    var active: Boolean? = null,
-    var amount: Double? = null,
-    var fiscal_year: Int? = null,
-    var partnership: String? = null,
+    val id: String? = null,
+    val budget: String? = null,
+    val change_to_plan: String? = null,
+    val active: Boolean? = null,
+    val amount: Double? = null,
+    val fiscal_year: Int? = null,
+    val organization: String? = null,
+    val sensitivity: String? = null,
     val created_at: String? = null,
     val created_by: String? = null,
     val modified_at: String? = null,
@@ -17,7 +18,13 @@ data class BudgetRecord(
 )
 
 data class BudgetRecordInput(
-//    var id: Int? = null,
-    var budget: String,
-    var change_to_plan: String,
+    val id: String? = null,
+    val budget: String? = null,
+    val change_to_plan: String? = null,
+    val active: Boolean? = null,
+    val amount: Double? = null,
+    val fiscal_year: Int? = null,
+    val organization: String? = null,
+    val sensitivity: String? = null,
 )
+

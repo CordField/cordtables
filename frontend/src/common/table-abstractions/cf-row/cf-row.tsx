@@ -44,20 +44,27 @@ export class CfRow {
             this.columnData.map(columnDescription => {
               console.group();
               console.log(typeof this.row[columnDescription.field]);
+              console.log(columnDescription.field);
               console.log(this.row[columnDescription.field]);
-              console.log(this.row[columnDescription.field].value);
-              console.log(this.row[columnDescription.field].displayValue);
+              console.log(this.row[columnDescription.field]?.value);
+              console.log(this.row[columnDescription.field]?.displayValue);
               console.groupEnd();
-              return typeof this.row[columnDescription.field] === 'string' ? (
-                <cf-cell2 rowId={this.row.id} value={this.row[columnDescription.field]} columnDescription={columnDescription} displayValue={''}></cf-cell2>
-              ) : (
-                <cf-cell2
-                  rowId={this.row.id}
-                  value={this.row[columnDescription.field].value}
-                  displayValue={this.row[columnDescription.field].displayValue}
-                  columnDescription={columnDescription}
-                ></cf-cell2>
-              );
+              if (typeof this.row[columnDescription.field] === 'string') {
+                return <cf-cell2 rowId={this.row.id} value={this.row[columnDescription.field]} columnDescription={columnDescription} displayValue={''}></cf-cell2>;
+              } else {
+                // if (this.row[columnDescription.field] !== null && this.row[columnDescription.field] !== undefined) {
+                return (
+                  <cf-cell2
+                    rowId={this.row.id}
+                    value={this.row[columnDescription.field]?.value}
+                    displayValue={this.row[columnDescription.field]?.displayValue}
+                    columnDescription={columnDescription}
+                  ></cf-cell2>
+                );
+                // }
+                // console.log('case3');
+                // return <cf-cell2 rowId={this.row.id} value={null} displayValue={null} columnDescription={columnDescription} />;
+              }
             })}
         </div>
       </Host>

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
-import  javax.sql.rowset.serial.SerialArray;
 
 import org.springframework.jdbc.core.RowMapper
 import java.sql.ResultSet

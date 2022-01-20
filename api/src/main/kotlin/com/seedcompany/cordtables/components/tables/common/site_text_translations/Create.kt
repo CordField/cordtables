@@ -81,7 +81,7 @@ class Create(
         req.token,
         req.token,
         req.token,
-        util.adminGroupId
+        util.adminGroupId()
       )
 
       return SiteTextTranslationCreateResponse(error = ErrorType.NoError, id = id)

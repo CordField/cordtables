@@ -11,13 +11,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
-public enum class ConfigEnv {
-    local,
-    test,
-    prod,
-}
-
-
 @OpenAPIDefinition(
 info = Info(
   title = "Cord Tables ",
@@ -35,9 +28,6 @@ servers = [
 @EnableConfigurationProperties
 class AppConfig(
 
-//    @Value("\${server.port}")
-//    val serverPort: String,
-//
     @Value("\${cord.awsAccessKeyId}")
     val awsAccessKeyId: String,
 
@@ -46,24 +36,9 @@ class AppConfig(
 
     @Value("\${cord.email.server}")
     val emailServer: String,
-//
-//    @Value("\${env}")
-//    val env: ConfigEnv,
 
     @Value ("\${cord.admin.password}")
     val cordAdminPassword: String,
-
-    @Value("\${spring.datasource.password}")
-    val dbPassword: String,
-
-    @Value("\${cord-api.url}")
-    val cordApiGraphqlUrl: String,
-
-    @Value("\${cord-api.email}")
-    val cordApiEmail: String,
-
-    @Value("\${cord-api.password}")
-    val cordApiPassword: String,
 
     @Value("\${server.url}")
     val thisServerUrl: String,

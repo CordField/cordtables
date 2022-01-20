@@ -1,0 +1,16 @@
+a{
+    cursor: pointer;
+}
+a.selected{
+    color: #fff;
+    background-color: #64b145;
+    width: 100%;
+    display: block;
+}
+.partner-list-item{
+    padding:10px;
+    border: 1px solid silver;
+    font-size: 14px;
+    
+    margin: 5px 0px;
+}
