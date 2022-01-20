@@ -334,6 +334,7 @@ export class UpPrayerRequests {
 
   async componentWillLoad() {
     await this.getList();
+    console.log('hi', this.prayerRequestsResponse);
     // await this.getFilesList();
   }
 
@@ -341,7 +342,6 @@ export class UpPrayerRequests {
   target_language_id: number;
   sensitivity: string;
   organization_name: string;
-
   render() {
     return (
       <Host>
