@@ -47,8 +47,7 @@ class Update(
           table = "sc.ceremonies",
           column = "internship_engagement",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
       "language_engagement" -> {
@@ -57,8 +56,7 @@ class Update(
           table = "sc.ceremonies",
           column = "language_engagement",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
       "ethnologue" -> {
@@ -67,8 +65,7 @@ class Update(
           table = "sc.ceremonies",
           column = "ethnologue",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
       "actual_date" -> {
@@ -118,8 +115,7 @@ class Update(
           table = "sc.ceremonies",
           column = "owning_person",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
       "owning_group" -> {
@@ -128,8 +124,7 @@ class Update(
           table = "sc.ceremonies",
           column = "owning_group",
           id = req.id,
-          value = req.value,
-          cast = "::uuid"
+          value = req.value
         )
       }
     }

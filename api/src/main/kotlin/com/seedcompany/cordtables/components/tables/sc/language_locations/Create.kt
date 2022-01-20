@@ -56,8 +56,8 @@ class Create(
             """
             insert into sc.language_locations(language, location,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -73,7 +73,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -85,8 +85,6 @@ class Create(
             req.token,
             util.adminGroupId()
         )
-
-//        req.language.id = id
 
         return ScLanguageLocationsCreateResponse(error = ErrorType.NoError, id = id)
     }

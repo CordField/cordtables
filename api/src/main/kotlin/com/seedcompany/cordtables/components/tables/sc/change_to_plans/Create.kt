@@ -74,7 +74,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -87,8 +87,6 @@ class Create(
       req.token,
       util.adminGroupId()
     )
-
-//        req.language.id = id
 
     return ScChangeToPlansCreateResponse(error = ErrorType.NoError, id = id)
   }

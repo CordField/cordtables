@@ -47,8 +47,7 @@ class Update(
                     table = "common.blog_posts",
                     column = "blog",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "person" -> {
@@ -66,8 +65,7 @@ class Update(
                     table = "common.blog_posts",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -76,8 +74,7 @@ class Update(
                     table = "common.blog_posts",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }
