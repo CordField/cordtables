@@ -29,16 +29,16 @@ data class CommonOrganizationsCreateResponse(
 @Controller("CommonOrganizationsCreate")
 class Create(
     @Autowired
-        val util: Utility,
+    val util: Utility,
 
     @Autowired
-        val ds: DataSource,
+    val ds: DataSource,
 
     @Autowired
-        val update: Update,
+    val update: Update,
 
     @Autowired
-        val read: Read,
+    val read: Read,
 ) {
     val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
 

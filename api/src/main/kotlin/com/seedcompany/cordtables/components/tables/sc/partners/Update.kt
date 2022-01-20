@@ -67,7 +67,7 @@ class Update(
                     column = "financial_reporting_types",
                     id = req.id,
                     value = req.value,
-                    cast = "::sc.financial_reporting_types"
+                    cast = "::sc.financial_reporting_types[]"
                 )
             }
             "is_innovations_client" -> {
@@ -107,6 +107,27 @@ class Update(
                     id = req.id,
                     value = req.value,
                     cast = "::sc.partner_types[]"
+                )
+            }
+
+            "address" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.partners",
+                    column = "address",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+
+            "sensitivity" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.partners",
+                    column = "sensitivity",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::common.sensitivity"
                 )
             }
 

@@ -195,18 +195,18 @@ class List(
             if (jdbcResult.wasNull()) owningGroup = null
 
             items.add(
-                    CommonOrganizations(
-                            id = id,
-                            name = name,
-                            sensitivity = sensitivity,
-                            primary_location = primaryLocation,
-                            created_at = createdAt,
-                            created_by = createdBy,
-                            modified_at = modifiedAt,
-                            modified_by = modifiedBy,
-                            owning_person = owningPerson,
-                            owning_group = owningGroup,
-                    )
+                CommonOrganizations(
+                    id = id,
+                    name = name,
+                    sensitivity = sensitivity,
+                    primary_location = primaryLocation,
+                    created_at = createdAt,
+                    created_by = createdBy,
+                    modified_at = modifiedAt,
+                    modified_by = modifiedBy,
+                    owning_person = owningPerson,
+                    owning_group = owningGroup,
+                )
             )
         }
 

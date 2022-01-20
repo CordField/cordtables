@@ -10,6 +10,8 @@ data class partner(
     val pmc_entity_code: String? = null,
     val point_of_contact: String? = null,
     val types: String? = null,
+    val address: String? = null,
+    val sensitivity: String? = null,
 
     val created_at: String? = null,
     val created_by: String? = null,
@@ -29,6 +31,8 @@ data class partnerInput(
     val pmc_entity_code: String? = null,
     val point_of_contact: String? = null,
     val types: String? = null,
+    val address: String? = null,
+    val sensitivity: String? = null,
 
     val created_at: String? = null,
     val created_by: String? = null,

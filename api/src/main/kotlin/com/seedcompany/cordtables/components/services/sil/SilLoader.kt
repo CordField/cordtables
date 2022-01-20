@@ -26,11 +26,10 @@ class SilLoader (
     @PostMapping("services/sil/load")
     @ResponseBody
     fun loadHandler(@RequestBody req: SilLoaderRequest): SilLoaderResponse {
-      if (req.token == null) return SilLoaderResponse(ErrorType.InputMissingToken)
+        if (req.token == null) return SilLoaderResponse(ErrorType.InputMissingToken)
+        if (!util.isAdmin(req.token)) return SilLoaderResponse(ErrorType.AdminOnly)
 
-      if(util.isAdmin(req.token)) return SilLoaderResponse(ErrorType.AdminOnly)
-
-      try {
+        try {
             vc.loadSilData()
         } catch(ex: Exception) {
             return SilLoaderResponse(ErrorType.SQLUpdateError)
