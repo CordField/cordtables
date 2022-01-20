@@ -68,8 +68,7 @@ class Update(
                     table = "common.file_versions",
                     column = "file",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "file_url" -> {
@@ -96,8 +95,7 @@ class Update(
                     table = "common.file_versions",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -106,8 +104,7 @@ class Update(
                     table = "common.file_versions",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

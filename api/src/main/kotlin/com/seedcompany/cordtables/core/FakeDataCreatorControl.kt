@@ -158,7 +158,11 @@ class FakeDataCreatorControl (
 
         count++
         if (count == 1) continue
+<<<<<<< HEAD
+        commonOrganizationsNamesQuery += "('${sensitivity}', '${name}', '${adminPeopleId}', '${adminPeopleId}', '${adminPeopleId}', '${adminGroupId}'), "
+=======
         commonOrganizationsNamesQuery += "('${sensitivity}', '${name}', '${commonLocationsId}', '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminGroupId}'::uuid), "
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
       }
 
       commonOrganizationsNamesQuery = commonOrganizationsNamesQuery.dropLast(2) + ";"

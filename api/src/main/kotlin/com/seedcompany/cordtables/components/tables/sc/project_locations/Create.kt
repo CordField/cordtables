@@ -53,9 +53,9 @@ class Create(
             insert into sc.project_locations(active, change_to_plan, location, project, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?::boolean,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -71,7 +71,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

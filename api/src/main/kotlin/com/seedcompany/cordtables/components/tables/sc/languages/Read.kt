@@ -142,7 +142,11 @@ class Read(
                                                     select person
                                                             from   admin.tokens
                                                             where  token = :token)
-                                                    and    role = '${util.adminRole()}'::uuid)) then common.ST_AsLatLonText(coordinates::text)
+<<<<<<< HEAD
+                                                    and    role = '${util.adminRole}')) then common.ST_AsLatLonText(coordinates::text)
+=======
+                                                    and    role = '${util.adminRole()}')) then common.ST_AsLatLonText(coordinates::text)
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                         when owning_person =
                         (
                                 select person
@@ -170,7 +174,11 @@ class Read(
                                             select person
                                                     from   admin.tokens
                                                     where  token = :token)
-                                            and    role = '${util.adminRole()}'::uuid)) then common.ST_AsGeoJSON(coordinates)
+<<<<<<< HEAD
+                                            and    role = '${util.adminRole}')) then common.ST_AsGeoJSON(coordinates)
+=======
+                                            and    role = '${util.adminRole()}')) then common.ST_AsGeoJSON(coordinates)
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                 when owning_person =
                 (
                         select person

@@ -73,7 +73,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -85,7 +85,6 @@ class Create(
             util.adminGroupId()
         )
 
-//        req.language.id = id
 
         return AdminRolesCreateResponse(error = ErrorType.NoError, id = id)
     }

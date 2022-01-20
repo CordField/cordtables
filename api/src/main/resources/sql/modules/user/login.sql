@@ -2,7 +2,7 @@ CREATE OR REPLACE PROCEDURE admin.login(
     in p_email VARCHAR(255),
     in p_token varchar(64),
     inout error_type varchar(32),
-    inout user_id uuid  
+    inout user_id varchar(32)
 )
 LANGUAGE PLPGSQL
 AS $$
@@ -16,7 +16,7 @@ BEGIN
 
     if user_id is not null then
       insert into admin.tokens ("token", "person")
-      values (p_token, user_id::uuid);
+      values (p_token, user_id::varchar);
 
       error_type = 'NoError';
 

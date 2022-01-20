@@ -112,7 +112,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then id
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then id
+=======
+                                                and    role = '${util.adminRole()}')) then id
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -140,7 +144,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then ethnologue
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then ethnologue
+=======
+                                                and    role = '${util.adminRole()}')) then ethnologue
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -168,7 +176,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then name
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then name
+=======
+                                                and    role = '${util.adminRole()}')) then name
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -196,7 +208,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then display_name
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then display_name
+=======
+                                                and    role = '${util.adminRole()}')) then display_name
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -224,7 +240,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then display_name_pronunciation
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then display_name_pronunciation
+=======
+                                                and    role = '${util.adminRole()}')) then display_name_pronunciation
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -252,7 +272,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then tags
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then tags
+=======
+                                                and    role = '${util.adminRole()}')) then tags
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -280,7 +304,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then preset_inventory
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then preset_inventory
+=======
+                                                and    role = '${util.adminRole()}')) then preset_inventory
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -308,7 +336,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then is_dialect
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then is_dialect
+=======
+                                                and    role = '${util.adminRole()}')) then is_dialect
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -336,7 +368,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then is_sign_language
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then is_sign_language
+=======
+                                                and    role = '${util.adminRole()}')) then is_sign_language
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -364,7 +400,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then is_least_of_these
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then is_least_of_these
+=======
+                                                and    role = '${util.adminRole()}')) then is_least_of_these
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -392,7 +432,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then least_of_these_reason
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then least_of_these_reason
+=======
+                                                and    role = '${util.adminRole()}')) then least_of_these_reason
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -420,7 +464,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then population_override
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then population_override
+=======
+                                                and    role = '${util.adminRole()}')) then population_override
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -448,7 +496,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then registry_of_dialects_code
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then registry_of_dialects_code
+=======
+                                                and    role = '${util.adminRole()}')) then registry_of_dialects_code
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -476,7 +528,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then sensitivity
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then sensitivity
+=======
+                                                and    role = '${util.adminRole()}')) then sensitivity
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -504,7 +560,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then sign_language_code
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then sign_language_code
+=======
+                                                and    role = '${util.adminRole()}')) then sign_language_code
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -532,7 +592,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then sponsor_estimated_end_date
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then sponsor_estimated_end_date
+=======
+                                                and    role = '${util.adminRole()}')) then sponsor_estimated_end_date
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -560,7 +624,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then prioritization
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then prioritization
+=======
+                                                and    role = '${util.adminRole()}')) then prioritization
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -588,7 +656,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then progress_bible
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then progress_bible
+=======
+                                                and    role = '${util.adminRole()}')) then progress_bible
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -616,7 +688,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then location_long
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then location_long
+=======
+                                                and    role = '${util.adminRole()}')) then location_long
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -644,7 +720,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then island
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then island
+=======
+                                                and    role = '${util.adminRole()}')) then island
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -672,7 +752,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then province
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then province
+=======
+                                                and    role = '${util.adminRole()}')) then province
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -700,7 +784,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then first_language_population
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then first_language_population
+=======
+                                                and    role = '${util.adminRole()}')) then first_language_population
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -728,7 +816,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then population_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then population_value
+=======
+                                                and    role = '${util.adminRole()}')) then population_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -756,7 +848,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then egids_level
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then egids_level
+=======
+                                                and    role = '${util.adminRole()}')) then egids_level
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -784,7 +880,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role ='${util.adminRole()}'::uuid)) then egids_value
+<<<<<<< HEAD
+                                                and    role ='${util.adminRole}')) then egids_value
+=======
+                                                and    role ='${util.adminRole()}')) then egids_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -812,7 +912,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role ='${util.adminRole()}'::uuid)) then least_reached_progress_jps_level
+<<<<<<< HEAD
+                                                and    role ='${util.adminRole}')) then least_reached_progress_jps_level
+=======
+                                                and    role ='${util.adminRole()}')) then least_reached_progress_jps_level
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -840,7 +944,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then least_reached_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then least_reached_value
+=======
+                                                and    role = '${util.adminRole()}')) then least_reached_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -868,7 +976,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then partner_interest_level
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then partner_interest_level
+=======
+                                                and    role = '${util.adminRole()}')) then partner_interest_level
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -896,7 +1008,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then partner_interest_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then partner_interest_value
+=======
+                                                and    role = '${util.adminRole()}')) then partner_interest_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -924,7 +1040,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then partner_interest_description
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then partner_interest_description
+=======
+                                                and    role = '${util.adminRole()}')) then partner_interest_description
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -952,7 +1072,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then partner_interest_source
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then partner_interest_source
+=======
+                                                and    role = '${util.adminRole()}')) then partner_interest_source
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -980,7 +1104,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then multiple_languages_leverage_linguistic_level
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then multiple_languages_leverage_linguistic_level
+=======
+                                                and    role = '${util.adminRole()}')) then multiple_languages_leverage_linguistic_level
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1008,7 +1136,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then multiple_languages_leverage_linguistic_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then multiple_languages_leverage_linguistic_value
+=======
+                                                and    role = '${util.adminRole()}')) then multiple_languages_leverage_linguistic_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1036,7 +1168,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then multiple_languages_leverage_linguistic_description
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then multiple_languages_leverage_linguistic_description
+=======
+                                                and    role = '${util.adminRole()}')) then multiple_languages_leverage_linguistic_description
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1064,7 +1200,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then multiple_languages_leverage_linguistic_source
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then multiple_languages_leverage_linguistic_source
+=======
+                                                and    role = '${util.adminRole()}')) then multiple_languages_leverage_linguistic_source
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1092,7 +1232,12 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then multiple_languages_leverage_joint_training_level
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then multiple_languages_leverage_joint_training_level
+=======
+                                                and    role = '${util.adminRole()}')) then multiple_languages_leverage_joint_training_level
+
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1120,7 +1265,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then multiple_languages_leverage_joint_training_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then multiple_languages_leverage_joint_training_value
+=======
+                                                and    role = '${util.adminRole()}')) then multiple_languages_leverage_joint_training_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1148,7 +1297,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then multiple_languages_leverage_joint_training_description
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then multiple_languages_leverage_joint_training_description
+=======
+                                                and    role = '${util.adminRole()}')) then multiple_languages_leverage_joint_training_description
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1176,7 +1329,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then multiple_languages_leverage_joint_training_source
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then multiple_languages_leverage_joint_training_source
+=======
+                                                and    role = '${util.adminRole()}')) then multiple_languages_leverage_joint_training_source
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1204,7 +1361,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then lang_comm_int_in_language_development_level
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then lang_comm_int_in_language_development_level
+=======
+                                                and    role = '${util.adminRole()}')) then lang_comm_int_in_language_development_level
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1232,7 +1393,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then lang_comm_int_in_language_development_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then lang_comm_int_in_language_development_value
+=======
+                                                and    role = '${util.adminRole()}')) then lang_comm_int_in_language_development_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1260,7 +1425,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then lang_comm_int_in_language_development_description
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then lang_comm_int_in_language_development_description
+=======
+                                                and    role = '${util.adminRole()}')) then lang_comm_int_in_language_development_description
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1288,7 +1457,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then lang_comm_int_in_language_development_source
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then lang_comm_int_in_language_development_source
+=======
+                                                and    role = '${util.adminRole()}')) then lang_comm_int_in_language_development_source
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1316,7 +1489,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then lang_comm_int_in_scripture_translation_level
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then lang_comm_int_in_scripture_translation_level
+=======
+                                                and    role = '${util.adminRole()}')) then lang_comm_int_in_scripture_translation_level
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1344,7 +1521,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then lang_comm_int_in_scripture_translation_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then lang_comm_int_in_scripture_translation_value
+=======
+                                                and    role = '${util.adminRole()}')) then lang_comm_int_in_scripture_translation_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1372,7 +1553,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then lang_comm_int_in_scripture_translation_description
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then lang_comm_int_in_scripture_translation_description
+=======
+                                                and    role = '${util.adminRole()}')) then lang_comm_int_in_scripture_translation_description
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1400,7 +1585,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then lang_comm_int_in_scripture_translation_source
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then lang_comm_int_in_scripture_translation_source
+=======
+                                                and    role = '${util.adminRole()}')) then lang_comm_int_in_scripture_translation_source
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1428,7 +1617,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then access_to_scripture_in_lwc_level
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then access_to_scripture_in_lwc_level
+=======
+                                                and    role = '${util.adminRole()}')) then access_to_scripture_in_lwc_level
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1456,7 +1649,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then access_to_scripture_in_lwc_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then access_to_scripture_in_lwc_value
+=======
+                                                and    role = '${util.adminRole()}')) then access_to_scripture_in_lwc_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1484,7 +1681,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then access_to_scripture_in_lwc_description
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then access_to_scripture_in_lwc_description
+=======
+                                                and    role = '${util.adminRole()}')) then access_to_scripture_in_lwc_description
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1512,7 +1713,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then access_to_scripture_in_lwc_source
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then access_to_scripture_in_lwc_source
+=======
+                                                and    role = '${util.adminRole()}')) then access_to_scripture_in_lwc_source
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1540,7 +1745,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then begin_work_geo_challenges_level
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then begin_work_geo_challenges_level
+=======
+                                                and    role = '${util.adminRole()}')) then begin_work_geo_challenges_level
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1568,7 +1777,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then begin_work_geo_challenges_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then begin_work_geo_challenges_value
+=======
+                                                and    role = '${util.adminRole()}')) then begin_work_geo_challenges_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1596,7 +1809,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then begin_work_geo_challenges_description
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then begin_work_geo_challenges_description
+=======
+                                                and    role = '${util.adminRole()}')) then begin_work_geo_challenges_description
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1624,7 +1841,12 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then begin_work_geo_challenges_source
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then begin_work_geo_challenges_source
+=======
+                                                and    role = '${util.adminRole()}')) then begin_work_geo_challenges_source
+
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1652,7 +1874,12 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then begin_work_rel_pol_obstacles_level
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then begin_work_rel_pol_obstacles_level
+=======
+                                                and    role = '${util.adminRole()}')) then begin_work_rel_pol_obstacles_level
+
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1680,7 +1907,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then begin_work_rel_pol_obstacles_value
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then begin_work_rel_pol_obstacles_value
+=======
+                                                and    role = '${util.adminRole()}')) then begin_work_rel_pol_obstacles_value
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1708,7 +1939,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then begin_work_rel_pol_obstacles_description
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then begin_work_rel_pol_obstacles_description
+=======
+                                                and    role = '${util.adminRole()}')) then begin_work_rel_pol_obstacles_description
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1736,7 +1971,12 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then begin_work_rel_pol_obstacles_source
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then begin_work_rel_pol_obstacles_source
+=======
+                                                and    role = '${util.adminRole()}')) then begin_work_rel_pol_obstacles_source
+
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1764,7 +2004,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then suggested_strategies
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then suggested_strategies
+=======
+                                                and    role = '${util.adminRole()}')) then suggested_strategies
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1792,7 +2036,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then comments
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then comments
+=======
+                                                and    role = '${util.adminRole()}')) then comments
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1820,7 +2068,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then created_at
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then created_at
+=======
+                                                and    role = '${util.adminRole()}')) then created_at
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1848,7 +2100,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then created_by
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then created_by
+=======
+                                                and    role = '${util.adminRole()}')) then created_by
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1876,7 +2132,12 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then modified_at
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then modified_at
+=======
+                                                and    role = '${util.adminRole()}')) then modified_at
+
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1904,7 +2165,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then modified_by
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then modified_by
+=======
+                                                and    role = '${util.adminRole()}')) then modified_by
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1932,7 +2197,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then owning_person
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then owning_person
+=======
+                                                and    role = '${util.adminRole()}')) then owning_person
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1960,7 +2229,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then owning_group
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then owning_group
+=======
+                                                and    role = '${util.adminRole()}')) then owning_group
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -1988,7 +2261,11 @@ select
                                                               select person
                                                               from   admin.tokens
                                                               where  token = :token)
-                                                and    role = '${util.adminRole()}'::uuid)) then common.ST_AsLatLonText(coordinates::text)
+<<<<<<< HEAD
+                                                and    role = '${util.adminRole}')) then common.ST_AsLatLonText(coordinates::text)
+=======
+                                                and    role = '${util.adminRole()}')) then common.ST_AsLatLonText(coordinates::text)
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                   when owning_person =
                            (
                                   select person
@@ -2016,7 +2293,11 @@ or
                                             select person
                                             from   admin.tokens
                                             where  token = :token)
-                              and    role = '${util.adminRole()}'::uuid))
+<<<<<<< HEAD
+                              and    role = '${util.adminRole}'))
+=======
+                              and    role = '${util.adminRole()}'))
+>>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
 or       owning_person =
          (
                 select person

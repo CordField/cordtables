@@ -81,8 +81,7 @@ class Update(
             table = "sc.locations",
             column = "funding_account",
             id = req.location.id!!,
-            value = req.location.funding_account,
-            cast = "::uuid"
+            value = req.location.funding_account
         )
 
         if (req.location.default_region != null) util.updateField(
@@ -90,8 +89,7 @@ class Update(
             table = "sc.locations",
             column = "default_region",
             id = req.location.id!!,
-            value = req.location.default_region,
-            cast = "::uuid"
+            value = req.location.default_region
         )
 
         if (req.location.iso_alpha_3 != null) util.updateField(
@@ -117,7 +115,6 @@ class Update(
             column = "owning_person",
             id = req.location.id!!,
             value = req.location.owning_person,
-            cast = "::uuid"
         )
 
         if (req.location.owning_group != null) util.updateField(
@@ -125,8 +122,7 @@ class Update(
             table = "sc.locations",
             column = "owning_group",
             id = req.location.id!!,
-            value = req.location.owning_group,
-            cast = "::uuid"
+            value = req.location.owning_group
         )
 
         return ScLocationsUpdateResponse(ErrorType.NoError)

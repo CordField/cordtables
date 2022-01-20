@@ -46,8 +46,7 @@ class Update(
                     table = "sc.partners",
                     column = "organization",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "active" -> {
@@ -95,8 +94,7 @@ class Update(
                     table = "sc.partners",
                     column = "point_of_contact",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "types" -> {
@@ -137,8 +135,7 @@ class Update(
                     table = "sc.partners",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -147,8 +144,7 @@ class Update(
                     table = "sc.partners",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

@@ -53,7 +53,7 @@ class Create(
             """
             insert into sc.people(id, skills, status, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ARRAY[?],
                     ?,
                     (
@@ -71,7 +71,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

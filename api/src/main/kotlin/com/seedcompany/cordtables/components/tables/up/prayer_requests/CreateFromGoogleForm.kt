@@ -109,18 +109,18 @@ class CreateFromGoogleForm(
       """
             insert into up.prayer_requests(request_language_id, sensitivity, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::common.sensitivity,
-                    ?::uuid,
+                    ?,
                     ?,
                     ?,
                     ?,
                     false,
                     ?::up.prayer_type,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid
+                    ?,
+                    ?,
+                    ?,
+                    ?
                 )
             returning id;
         """.trimIndent(),

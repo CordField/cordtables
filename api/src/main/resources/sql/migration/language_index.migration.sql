@@ -16,12 +16,12 @@ BEGIN
 
   if vPersonId is not null then
     insert into common.languages(created_by, modified_by, owning_person, owning_group)
-    values (vPersonId::uuid, vPersonId::uuid, vPersonId::uuid, vGroupId::uuid)
+    values (vPersonId, vPersonId, vPersonId, vGroupId)
     returning id
     into vCommonId;
 
     insert into sil.language_index(id, lang, country, name_type, name, created_by, modified_by, owning_person, owning_group)
-    values (vCommonId::uuid, pLang, pCountry, pNameType::sil.language_name_type, pName, vPersonId::uuid, vPersonId::uuid, vPersonId::uuid, vGroupId::uuid)
+    values (vCommonId, pLang, pCountry, pNameType::sil.language_name_type, pName, vPersonId, vPersonId, vPersonId, vGroupId)
     on conflict do nothing;
 
   end if;
