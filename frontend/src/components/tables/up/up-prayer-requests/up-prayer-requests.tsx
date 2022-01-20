@@ -209,6 +209,8 @@ export class UpPrayerRequests {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/languages',
+      foreignTableColumn: 'id',
     },
     {
       field: 'target_language_id',
@@ -216,6 +218,8 @@ export class UpPrayerRequests {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/languages',
+      foreignTableColumn: 'id',
     },
     {
       field: 'sensitivity',
@@ -251,6 +255,8 @@ export class UpPrayerRequests {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'location',
