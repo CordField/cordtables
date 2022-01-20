@@ -242,6 +242,8 @@ export class UpPrayerRequests {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'up/prayer-requests',
+      foreignTableColumn: 'title',
     },
     {
       field: 'translator',
