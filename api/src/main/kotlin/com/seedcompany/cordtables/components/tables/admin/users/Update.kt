@@ -42,16 +42,6 @@ class Update(
         if (req.id == null) return AdminUsersUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-            "person" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "admin.users",
-                    column = "person",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
-                )
-            }
             "email" -> {
                 if (req.value == null || !util.isEmailValid(req.value as String?)) return AdminUsersUpdateResponse(ErrorType.InvalidEmail)
                 util.updateField(

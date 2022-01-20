@@ -63,7 +63,6 @@ class List(
                 searchKeyword = "aslambabu@gmail.com",
                 columns = arrayOf(
                     "id",
-                    "person",
                     "email",
                     "password",
                     "created_at",
@@ -82,9 +81,6 @@ class List(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var person: String? = jdbcResult.getString("person")
-                if (jdbcResult.wasNull()) person = null
 
                 var email: String? = jdbcResult.getString("email")
                 if (jdbcResult.wasNull()) email = null
@@ -113,7 +109,6 @@ class List(
                 data.add(
                     user(
                         id = id,
-                        person = person,
                         email = email,
                         password = password,
                         created_at = created_at,

@@ -60,7 +60,7 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into admin.users(person, email, password, created_by, modified_by, owning_person, owning_group)
+            insert into admin.users(id, email, password, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?::uuid,
                     ?,
@@ -85,7 +85,7 @@ class Create(
             returning id;
         """.trimIndent(),
             String::class.java,
-            req.user.person,
+            req.user.id,
             req.user.email,
             pash,
             req.token,
