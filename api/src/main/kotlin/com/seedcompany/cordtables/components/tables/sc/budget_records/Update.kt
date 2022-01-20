@@ -79,12 +79,8 @@ class Update(
                     table = "sc.budget_records",
                     column = "amount",
                     id = req.id,
-<<<<<<< HEAD
-                    value = req.value
-=======
                     value = req.value,
                     cast = "::decimal"
->>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                 )
             }
 
@@ -95,8 +91,6 @@ class Update(
                     column = "fiscal_year",
                     id = req.id,
                     value = req.value
-<<<<<<< HEAD
-=======
                 )
             }
 
@@ -107,7 +101,6 @@ class Update(
                     column = "organization",
                     id = req.id,
                     value = req.value
->>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                 )
             }
 
@@ -117,12 +110,8 @@ class Update(
                     table = "sc.budget_records",
                     column = "sensitivity",
                     id = req.id,
-<<<<<<< HEAD
-                    value = req.value
-=======
                     value = req.value,
                     cast = "::common.sensitivity"
->>>>>>> 265ec00a093154c2e6e210200e49d926a3d0ac92
                 )
             }
 
