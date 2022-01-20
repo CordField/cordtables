@@ -57,8 +57,8 @@ class List(
             GetSecureListQueryRequest(
                 tableName = "admin.users",
                 filter = "order by id",
-                searchField = "email",
-                searchKeyword = "aslambabu@gmail.com",
+//                searchField = "email",
+//                searchKeyword = "aslambabu@gmail.com",
                 columns = arrayOf(
                     "id",
                     "person",

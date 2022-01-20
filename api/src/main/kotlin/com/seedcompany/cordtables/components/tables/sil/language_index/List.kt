@@ -22,7 +22,7 @@ data class SilLanguageIndexListRequest(
 data class SilLanguageIndexListResponse(
     val error: ErrorType,
     val size: Int,
-    val languageIndexes: MutableList<languageIndex>?
+    val languageIndexes: MutableList<LanguageIndex>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -43,7 +43,7 @@ class List(
     @PostMapping("sil/language-index/list")
     @ResponseBody
     fun listHandler(@RequestBody req:SilLanguageIndexListRequest): SilLanguageIndexListResponse {
-        var data: MutableList<languageIndex> = mutableListOf()
+        var data: MutableList<LanguageIndex> = mutableListOf()
         if (req.token == null) return SilLanguageIndexListResponse(ErrorType.TokenNotFound, size = 0, mutableListOf())
 
         var whereClause = ""
@@ -115,7 +115,7 @@ class List(
                 if (resultSet.wasNull()) owning_group = null
                 
                 data.add(
-                    languageIndex(
+                    LanguageIndex(
                         id = id,
                         lang = lang,
                         country = country,

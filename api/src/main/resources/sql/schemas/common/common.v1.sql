@@ -2,13 +2,6 @@
 
 -- ENUMS ----
 
--- todo
-create type common.mime_type as enum (
-  'A',
-  'B',
-  'C'
-);
-
 -- SITE TEXT --------------------------------------------------------------------------------
 
 create type common.egids_scale as enum (
@@ -41,7 +34,7 @@ create table common.languages(
 create table common.site_text_strings(
   id uuid primary key default common.uuid_generate_v4(),
 
-  english varchar(64) not null, -- US English, all translations including other English locales will be in the translation table
+  english varchar(64) unique not null, -- US English, all translations including other English locales will be in the translation table
   comment text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -69,6 +62,7 @@ create table common.site_text_translations(
   unique (language, site_text)
 );
 
+-- this table shouldn't be needed anymore
 create table common.site_text_languages(
   id uuid primary key default common.uuid_generate_v4(),
 
@@ -475,8 +469,7 @@ create table common.files (
 create table common.file_versions (
   id uuid primary key default common.uuid_generate_v4(),
 
-  category varchar(255),
-  mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
+  mime_type varchar(128),
   name varchar(255), -- not null,
   file uuid references common.files(id), -- not null
   file_url varchar(255), -- not null,
@@ -500,8 +493,7 @@ create type common.ticket_status as enum (
 
 create table common.tickets (
 	id uuid primary key default common.uuid_generate_v4(),
-  
-  title text not null,
+  title varchar(64) not null,
 	ticket_status common.ticket_status not null default 'Open',
 	parent uuid,
 	content text not null,

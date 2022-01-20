@@ -13,8 +13,9 @@ import javax.sql.DataSource
 data class CommonWorkRecordUpdateRequest(
     val token: String?,
     val id: String? = null,
-    val column: String? = null,
-    val value: Any? = null,
+    val ticket: String? = null,
+    val hours: Int? = null,
+    val minutes: Int? = null
 )
 
 data class CommonWorkRecordUpdateResponse(
@@ -36,86 +37,36 @@ class Update(
     fun updateHandler(@RequestBody req: CommonWorkRecordUpdateRequest): CommonWorkRecordUpdateResponse {
 
         if (req.token == null) return CommonWorkRecordUpdateResponse(ErrorType.TokenNotFound)
-        if (req.column == null) return CommonWorkRecordUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return CommonWorkRecordUpdateResponse(ErrorType.MissingId)
 
-        println(req)
-
-        when (req.column) {
-
-            "person" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "common.work_records",
-                    column = "person",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
-                )
-            }
-            "ticket" -> {
-                util.updateField(
+                
+                 util.updateField(
                     token = req.token,
                     table = "common.work_records",
                     column = "ticket",
                     id = req.id,
-                    value = req.value,
+                    value = req.ticket,
                     cast = "::uuid"
                 )
-            }
 
-            "hours" -> {
                 util.updateField(
                     token = req.token,
                     table = "common.work_records",
                     column = "hours",
                     id = req.id,
-                    value = req.value,
+                    value = req.hours,
                     cast = "::integer"
                 )
-            }
-            "minutes" -> {
+
                 util.updateField(
                     token = req.token,
                     table = "common.work_records",
                     column = "minutes",
                     id = req.id,
-                    value = req.value,
+                    value = req.minutes,
                     cast = "::integer"
                 )
-            }
-            "comment" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "common.work_records",
-                    column = "comment",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::text"
-                )
-            }
-            "owning_person" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "common.work_records",
-                    column = "owning_person",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
-                )
-            }
-            "owning_group" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "common.work_records",
-                    column = "owning_group",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
-                )
-            }
-        }
-
+                
         return CommonWorkRecordUpdateResponse(ErrorType.NoError)
     }
 }

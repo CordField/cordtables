@@ -1,6 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.file_versions
 
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.MimeTypes
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.tables.common.file_versions.CommonFileVersionInput
 import com.seedcompany.cordtables.components.tables.common.file_versions.Read
@@ -51,11 +52,10 @@ class Create(
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into common.file_versions(name, category, mime_type, file, file_url, file_size, created_by, modified_by, owning_person, owning_group)
+            insert into common.file_versions(name, mime_type, file, file_url, file_size, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
                     ?,
-                    ?::common.mime_type,
                     ?::uuid,
                     ?,
                     ?,
@@ -80,18 +80,15 @@ class Create(
         """.trimIndent(),
             String::class.java,
             req.fileVersion.name,
-            req.fileVersion.category,
-            req.fileVersion.mime_type,
+            MimeTypes.values().find { req.fileVersion.mime_type == it.value }?.value,
             req.fileVersion.file,
             req.fileVersion.file_url,
             req.fileVersion.file_size,
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
-
-//        req.language.id = id
 
         return CommonFileVersionsCreateResponse(error = ErrorType.NoError, id = id)
     }

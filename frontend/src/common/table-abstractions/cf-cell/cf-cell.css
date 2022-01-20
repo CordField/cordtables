@@ -10,6 +10,13 @@
   padding-bottom: 5px;
 }
 
+.cell-link {
+  color: blue;
+}
+.cell-link:hover {
+  cursor: pointer;
+}
+
 .header {
   /* border: 1px solid blue; */
 
@@ -72,5 +79,5 @@
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  content: '...'
+  content: '...';
 }

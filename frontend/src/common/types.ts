@@ -1,3 +1,5 @@
+import { AnyLayer } from 'mapbox-gl';
+
 export enum ErrorType {
   NoError = 'NoError',
   UnknownError = 'UnknownError',
@@ -11,9 +13,13 @@ export enum ErrorType {
 }
 
 export enum AppState {
-  Init = 'Init', 
+  Init = 'Init',
   Loaded = 'Loaded',
   TranslationLoaded = 'TranslationLoaded',
+}
+export interface foreignKeyClickedObject {
+  id: string;
+  tableUrl: string;
 }
 
 //export type EgidsScale = `0` | `1` | `2` | `3` | `4` | `5` | `6a` | `6b` | `7` | `8a` | `8b` | `9` | `10`;
@@ -99,6 +105,7 @@ export interface globalRoleTablePermissions {
 export class GenericResponse {
   public error: ErrorType;
 }
+export class GenericRequest {}
 
 export enum ActionType {
   Delete = 'Delete',
@@ -130,21 +137,34 @@ export interface AdminUser {
 export type SiteTextLanguage = {
   language: string;
   language_name: string;
-}
+};
 
 export type SiteTextString = {
-  id: string,
-  english: string,
-  comment: string
-}
+  id: string;
+  english: string;
+  comment: string;
+};
 
 export type SiteTextTranslation = {
-  id: string,
-  site_text: string,
-  translation: string
-}
+  id: string;
+  site_text: string;
+  translation: string;
+};
 
 export type SiteTextTranslationList = {
-  language: string,
-  translations: Array<SiteTextTranslation>
-}
+  language: string;
+  translations: Array<SiteTextTranslation>;
+};
+
+export type AutocompleteRequest = {
+  searchColumnName: string;
+  token: string;
+  resultColumnName: string;
+  searchKeyword: string;
+  tableName: string;
+};
+
+export type AutocompleteResponse = {
+  error: ErrorType;
+  data: any;
+};

@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
+import { foreignKeyClickedObject } from "./common/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
 export namespace Components {
@@ -39,18 +40,8 @@ export namespace Components {
     interface CfCell2 {
         "cellType": CellType;
         "columnDescription": ColumnDescription;
+        "displayValue": any;
         "rowId": string;
-        "value": any;
-    }
-    interface CfEditable {
-        "enableEdit": boolean;
-        "endPoint": string;
-        "field": string;
-        "multiSelect"?: boolean;
-        "rowData": any;
-        "rowId": string;
-        "selectOptions"?: Array<{ display: string; value: any }> | null;
-        "updateFn"?: (id: string, columnName: any, value: any, endpoint: string) => Promise<boolean>;
         "value": any;
     }
     interface CfForgotPassword {
@@ -163,6 +154,8 @@ export namespace Components {
     interface FilesTable {
     }
     interface FilterMenu {
+    }
+    interface ForeignRow {
     }
     interface GenericTable {
         "columns": Array<any>;
@@ -301,6 +294,9 @@ export namespace Components {
     interface ScProjects {
     }
     interface ScriptureReferences {
+    }
+    interface SearchForm {
+        "columnNames": string[];
     }
     interface SearchInput {
     }
@@ -447,12 +443,6 @@ declare global {
     var HTMLCfCell2Element: {
         prototype: HTMLCfCell2Element;
         new (): HTMLCfCell2Element;
-    };
-    interface HTMLCfEditableElement extends Components.CfEditable, HTMLStencilElement {
-    }
-    var HTMLCfEditableElement: {
-        prototype: HTMLCfEditableElement;
-        new (): HTMLCfEditableElement;
     };
     interface HTMLCfForgotPasswordElement extends Components.CfForgotPassword, HTMLStencilElement {
     }
@@ -705,6 +695,12 @@ declare global {
     var HTMLFilterMenuElement: {
         prototype: HTMLFilterMenuElement;
         new (): HTMLFilterMenuElement;
+    };
+    interface HTMLForeignRowElement extends Components.ForeignRow, HTMLStencilElement {
+    }
+    var HTMLForeignRowElement: {
+        prototype: HTMLForeignRowElement;
+        new (): HTMLForeignRowElement;
     };
     interface HTMLGenericTableElement extends Components.GenericTable, HTMLStencilElement {
     }
@@ -1078,6 +1074,12 @@ declare global {
         prototype: HTMLScriptureReferencesElement;
         new (): HTMLScriptureReferencesElement;
     };
+    interface HTMLSearchFormElement extends Components.SearchForm, HTMLStencilElement {
+    }
+    var HTMLSearchFormElement: {
+        prototype: HTMLSearchFormElement;
+        new (): HTMLSearchFormElement;
+    };
     interface HTMLSearchInputElement extends Components.SearchInput, HTMLStencilElement {
     }
     var HTMLSearchInputElement: {
@@ -1260,7 +1262,6 @@ declare global {
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "cf-cell2": HTMLCfCell2Element;
-        "cf-editable": HTMLCfEditableElement;
         "cf-forgot-password": HTMLCfForgotPasswordElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
@@ -1303,6 +1304,7 @@ declare global {
         "file-versions": HTMLFileVersionsElement;
         "files-table": HTMLFilesTableElement;
         "filter-menu": HTMLFilterMenuElement;
+        "foreign-row": HTMLForeignRowElement;
         "generic-table": HTMLGenericTableElement;
         "group-memberships": HTMLGroupMembershipsElement;
         "groups-page": HTMLGroupsPageElement;
@@ -1365,6 +1367,7 @@ declare global {
         "sc-project-members": HTMLScProjectMembersElement;
         "sc-projects": HTMLScProjectsElement;
         "scripture-references": HTMLScriptureReferencesElement;
+        "search-form": HTMLSearchFormElement;
         "search-input": HTMLSearchInputElement;
         "sil-country-codes": HTMLSilCountryCodesElement;
         "sil-iso-639-3": HTMLSilIso6393Element;
@@ -1425,19 +1428,9 @@ declare namespace LocalJSX {
     interface CfCell2 {
         "cellType"?: CellType;
         "columnDescription"?: ColumnDescription;
+        "displayValue"?: any;
+        "onForeignKeyClicked"?: (event: CustomEvent<foreignKeyClickedObject>) => void;
         "rowId"?: string;
-        "value"?: any;
-    }
-    interface CfEditable {
-        "enableEdit"?: boolean;
-        "endPoint"?: string;
-        "field"?: string;
-        "multiSelect"?: boolean;
-        "onReloadPartners"?: (event: CustomEvent<number>) => void;
-        "rowData"?: any;
-        "rowId"?: string;
-        "selectOptions"?: Array<{ display: string; value: any }> | null;
-        "updateFn"?: (id: string, columnName: any, value: any, endpoint: string) => Promise<boolean>;
         "value"?: any;
     }
     interface CfForgotPassword {
@@ -1557,6 +1550,8 @@ declare namespace LocalJSX {
     interface FilesTable {
     }
     interface FilterMenu {
+    }
+    interface ForeignRow {
     }
     interface GenericTable {
         "columns"?: Array<any>;
@@ -1698,6 +1693,10 @@ declare namespace LocalJSX {
     }
     interface ScriptureReferences {
     }
+    interface SearchForm {
+        "columnNames"?: string[];
+        "onSearchResults"?: (event: CustomEvent<any>) => void;
+    }
     interface SearchInput {
         "onDoSearch"?: (event: CustomEvent<string>) => void;
     }
@@ -1782,7 +1781,6 @@ declare namespace LocalJSX {
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "cf-cell2": CfCell2;
-        "cf-editable": CfEditable;
         "cf-forgot-password": CfForgotPassword;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
@@ -1825,6 +1823,7 @@ declare namespace LocalJSX {
         "file-versions": FileVersions;
         "files-table": FilesTable;
         "filter-menu": FilterMenu;
+        "foreign-row": ForeignRow;
         "generic-table": GenericTable;
         "group-memberships": GroupMemberships;
         "groups-page": GroupsPage;
@@ -1887,6 +1886,7 @@ declare namespace LocalJSX {
         "sc-project-members": ScProjectMembers;
         "sc-projects": ScProjects;
         "scripture-references": ScriptureReferences;
+        "search-form": SearchForm;
         "search-input": SearchInput;
         "sil-country-codes": SilCountryCodes;
         "sil-iso-639-3": SilIso6393;
@@ -1934,7 +1934,6 @@ declare module "@stencil/core" {
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "cf-cell2": LocalJSX.CfCell2 & JSXBase.HTMLAttributes<HTMLCfCell2Element>;
-            "cf-editable": LocalJSX.CfEditable & JSXBase.HTMLAttributes<HTMLCfEditableElement>;
             "cf-forgot-password": LocalJSX.CfForgotPassword & JSXBase.HTMLAttributes<HTMLCfForgotPasswordElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
@@ -1977,6 +1976,7 @@ declare module "@stencil/core" {
             "file-versions": LocalJSX.FileVersions & JSXBase.HTMLAttributes<HTMLFileVersionsElement>;
             "files-table": LocalJSX.FilesTable & JSXBase.HTMLAttributes<HTMLFilesTableElement>;
             "filter-menu": LocalJSX.FilterMenu & JSXBase.HTMLAttributes<HTMLFilterMenuElement>;
+            "foreign-row": LocalJSX.ForeignRow & JSXBase.HTMLAttributes<HTMLForeignRowElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
             "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
@@ -2039,6 +2039,7 @@ declare module "@stencil/core" {
             "sc-project-members": LocalJSX.ScProjectMembers & JSXBase.HTMLAttributes<HTMLScProjectMembersElement>;
             "sc-projects": LocalJSX.ScProjects & JSXBase.HTMLAttributes<HTMLScProjectsElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
+            "search-form": LocalJSX.SearchForm & JSXBase.HTMLAttributes<HTMLSearchFormElement>;
             "search-input": LocalJSX.SearchInput & JSXBase.HTMLAttributes<HTMLSearchInputElement>;
             "sil-country-codes": LocalJSX.SilCountryCodes & JSXBase.HTMLAttributes<HTMLSilCountryCodesElement>;
             "sil-iso-639-3": LocalJSX.SilIso6393 & JSXBase.HTMLAttributes<HTMLSilIso6393Element>;

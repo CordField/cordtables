@@ -1,6 +1,5 @@
 package com.seedcompany.cordtables.qaautomation;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
@@ -8,7 +7,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -43,8 +42,7 @@ public class RegistrationTest extends BaseTestSuite {
 
 	private void lauchRegistration(String email) {
 		HomePage homePage = PageFactory.initElements(driver, HomePage.class);
-		WebElement menu = homePage.openMenu();
-		homePage.register(menu);
+		homePage.register(homePage.openMenu());
 		registrationPage = PageFactory.initElements(driver, RegistrationPage.class);
 		registrationPage.loadApp();
 		this.registrationPage.fillRegistrationForm(email, this.testConfig.getAppConfigs().getNewUserPassword());
@@ -58,12 +56,14 @@ public class RegistrationTest extends BaseTestSuite {
 	public void registration_successful() {
 
 		Random randomGenerator = new Random();
-		this.lauchRegistration(this.testConfig.getAppConfigs().getNewUser() + randomGenerator.nextInt() + "@test.com");
+		String testUser = this.testConfig.getAppConfigs().getNewUser() + randomGenerator.nextInt() + "@test.com";
+		System.out.println("testUser::"+testUser);
+		this.lauchRegistration(testUser);
 		SeleniumUtils.wait(10);
 		MainPage mainPage = PageFactory.initElements(driver, MainPage.class);
 		mainPage.loadApp();
-		WebElement mainMenu = SeleniumUtils.expand_shadow_element(driver,
-				mainPage.getRootApp().findElement(By.tagName("custom-accordion")));
+		SearchContext mainMenu = SeleniumUtils
+				.expand_shadow_element(mainPage.getRootApp().findElement(By.cssSelector("custom-accordion.hydrated")));
 		assertNotNull(mainMenu);
 		assertNotNull(mainMenu.findElement(By.cssSelector(".accordion")));
 
@@ -76,9 +76,7 @@ public class RegistrationTest extends BaseTestSuite {
 	@Test
 	public void registration_whenDuplicateEmail_Thenfailure() {
 		SeleniumUtils.openSession(driver, testConfig.getAppConfigs().getUrl());
-		SeleniumUtils.wait(10);
-		this.lauchRegistration(this.testConfig.getAppConfigs().getNewUser() + "@test.com");
-		SeleniumUtils.wait(10);
+		this.lauchRegistration(testConfig.getAppConfigs().getNewUser() + "@test.com");
 		MainPage mainPage = PageFactory.initElements(driver, MainPage.class);
 		mainPage.loadApp();
 

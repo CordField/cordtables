@@ -40,7 +40,7 @@ class Read(
 ) {
     var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-    @PostMapping("sc/file-versions/read")
+    @PostMapping("common/file-versions/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonFileVersionsReadRequest): CommonFileVersionsReadResponse {
 
@@ -57,7 +57,6 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "category",
                     "mime_type",
                     "name",
                     "file",
@@ -79,9 +78,6 @@ class Read(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var category: String? = jdbcResult.getString("category")
-                if (jdbcResult.wasNull()) category = null
 
                 var mime_type: String? = jdbcResult.getString("mime_type")
                 if (jdbcResult.wasNull()) mime_type = null
@@ -119,8 +115,7 @@ class Read(
                 val fileVersion =
                     CommonFileVersion(
                         id = id,
-                        category = category,
-                        mime_type = if (mime_type == null) null else MimeTypes.valueOf(mime_type),
+                        mime_type = MimeTypes.values().find { mime_type == it.value }?.value,
                         name = name,
                         file = file,
                         file_url = file_url,

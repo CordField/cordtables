@@ -161,6 +161,7 @@ class GetSecureListQuery() {
           ${req.filter};
           """.trimIndent().replace('\n',' ')
       }
+      println(response.query)
         return response
     }
 

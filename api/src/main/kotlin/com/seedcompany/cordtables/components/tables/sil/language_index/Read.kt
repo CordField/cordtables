@@ -21,8 +21,8 @@ data class SilLanguageIndexReadRequest(
 )
 
 data class SilLanguageIndexReadResponse(
-    val error: ErrorType,
-    val languageIndex: languageIndex? = null,
+  val error: ErrorType,
+  val languageIndex: LanguageIndex? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -108,7 +108,7 @@ class Read(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val languageIndex =
-                    languageIndex(
+                    LanguageIndex(
                         id = id,
                         lang = lang,
                         country = country,

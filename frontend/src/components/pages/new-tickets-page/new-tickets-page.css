@@ -15,8 +15,19 @@
 .container{
 	margin: 0 auto;
 	display: flex;
-  padding: 10px;
+  width: 100%;
+  flex-direction: row;
   margin-top: 5%;
+}
+
+.general-container{
+  margin: 0 auto;
+	display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  max-height: 600px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .mainPage {
@@ -38,6 +49,10 @@
     margin-left: 1%;
 }
 
+.work-estimate-update-container {
+  margin-left: 10px;
+}
+
 .generalTickets{
   display: flex;
   flex-direction: column;
@@ -46,12 +61,17 @@
 
 .mainTicketContainer {
   margin-left: -0.5%;
-  width: 50%;
+  width: 80%;
 }
 
-.container{
-    display: flex;
-    flex-direction: row;
+.main-estimates-container {
+  margin-left: -0.5%;
+  width: 80%;
+}
+
+.main-work-hours-container {
+  margin-left: -0.5%;
+  width: 80%;
 }
 
 .sideContainer {
@@ -77,6 +97,28 @@
 ion-radio::part(mark){
     color: blue;
     opacity: 1;
+}
+
+.main-input {
+  
+}
+
+.ticket-estimates-work-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.ticket-estimates-container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.ticket-work-hours-container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
 }
 
 #ticket-status {

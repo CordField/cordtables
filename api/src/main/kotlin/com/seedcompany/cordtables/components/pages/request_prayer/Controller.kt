@@ -146,7 +146,7 @@ class Controller (
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
         return CommonPrayerRequestsCreateResponse(error = ErrorType.NoError, id = id)
     }
@@ -298,7 +298,7 @@ class Controller (
                     req.token,
                     req.token,
                     req.token,
-                    util.adminGroupId
+                    util.adminGroupId()
                 )
             }
         }
