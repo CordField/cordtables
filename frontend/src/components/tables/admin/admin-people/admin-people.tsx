@@ -505,15 +505,9 @@ export class AdminPeoples {
               <span class="form-thing">
                 <select id="sensitivity_clearance" name="sensitivity_clearance" onInput={event => this.sensitivity_clearanceChange(event)}>
                   <option value="">Select Sensitivity Clearance</option>
-                  <option value="Low" selected={this.newSensitivity_clearance === 'Low'}>
-                    Low
-                  </option>
-                  <option value="Medium" selected={this.newSensitivity_clearance === 'Medium'}>
-                    Medium
-                  </option>
-                  <option value="High" selected={this.newSensitivity_clearance === 'High'}>
-                    High
-                  </option>
+                  <option value="Low" selected={this.newSensitivity_clearance === 'Low'}>Low</option>
+                  <option value="Medium" selected={this.newSensitivity_clearance === 'Medium'}>Medium</option>
+                  <option value="High" selected={this.newSensitivity_clearance === 'High'}>High</option>
                 </select>
               </span>
             </div>
