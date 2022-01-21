@@ -55,6 +55,7 @@ class FakeDataCreatorControl (
 
     loadCommonLocationsNamesFakeData(adminPeopleId, adminGroupId!!)
     loadCommonOrganizationsFakeData(adminPeopleId, adminGroupId!!)
+    loadCommonScriptureReferencesFakeData(adminPeopleId, adminGroupId!!)
 
 
   }
@@ -98,6 +99,57 @@ class FakeDataCreatorControl (
         println(ex)
 
         println("LocationsNames.tab load failed")
+      }
+
+    } catch (ex: Exception) {
+      println("exception ${ex}")
+    } finally {
+      urlConnection.disconnect()
+    }
+  }
+
+  private fun loadCommonScriptureReferencesFakeData(adminPeopleId: String, adminGroupId: String){
+
+    val url = URL("https://raw.githubusercontent.com/CordField/datasets/main/ScriptureReferences.tab")
+    val urlConnection = url.openConnection() as HttpURLConnection
+
+    try {
+
+      val readBuffer = BufferedReader(
+        InputStreamReader(
+          urlConnection.inputStream
+        )
+      );
+
+      var commonScriptureReferencesQuery =
+        "insert into common.scripture_references(book_start, book_end, chapter_start, chapter_end, verse_start, verse_end, created_by, modified_by, owning_person, owning_group) values "
+      var count = 0
+      var text: List<String> = readBuffer.readLines()
+
+
+      for (line in text) {
+        val splitArray = line.split(":")
+        val bookStart = splitArray[0].replace("^\\s+".toRegex(), "")
+        val bookEnd = splitArray[1].replace("^\\s+".toRegex(), "")
+        val chapterStart = splitArray[2].replace("^\\s+".toRegex(), "")
+        val chapterEnd = splitArray[3].replace("^\\s+".toRegex(), "")
+        val verseStart = splitArray[4].replace("^\\s+".toRegex(), "")
+        val verseEnd = splitArray[5].replace("^\\s+".toRegex(), "")
+
+
+        count++
+        if (count == 1) continue
+        commonScriptureReferencesQuery += "('${bookStart}', '${bookEnd}', '${chapterStart}' , '${chapterEnd}', '${verseStart}', '${verseEnd}',  '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminGroupId}'::uuid), "
+      }
+      commonScriptureReferencesQuery = commonScriptureReferencesQuery.dropLast(2) + ";"
+
+      try {
+        runSqlString(commonScriptureReferencesQuery)
+        println("ScriptureReferences.tab load successfully")
+      } catch (ex: Exception) {
+        println(ex)
+
+        println("ScriptureReferences.tab load failed")
       }
 
     } catch (ex: Exception) {
