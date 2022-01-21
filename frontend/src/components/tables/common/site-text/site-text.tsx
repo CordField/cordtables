@@ -24,7 +24,7 @@ type SiteTextStringUpdateResponse = {
 };
 
 type SiteTextTranslationUpdateInput = {
-  language: number;
+  language: string;
   site_text: string;
   newValue: string;
 };
@@ -62,7 +62,7 @@ type SiteTextStringCreateResponse = {
 };
 
 type LanguageIndex = {
-  id: number;
+  id: string;
   lang: string;
   country: string;
   name_type: string;
@@ -86,7 +86,7 @@ type LanguageIndexListResponseWithPage = LanguageIndexListResponse & { page: num
 
 type SiteTextLanguageCreateRequest = {
   token: string;
-  language: number;
+  language: string;
 };
 
 const resultsPerPage = 10;
@@ -191,7 +191,7 @@ export class SiteText {
     }
   };
 
-  handleSiteTextTranslationUpdate = async (id: string, column: number, newValue: string): Promise<boolean> => {
+  handleSiteTextTranslationUpdate = async (id: string, column: string, newValue: string): Promise<boolean> => {
     const updateResponse = await fetchAs<SiteTextTranslationUpdateRequest, SiteTextTranslationUpdateResponse>('common/site-text-translations/update-read', {
       token: globals.globalStore.state.token,
       site_text_translation: {
@@ -277,7 +277,7 @@ export class SiteText {
     this.loading = true;
 
     return new Promise((resolve, reject) => {
-      fetchAs<LanguageIndexListRequest, LanguageIndexListResponse>('sil-language-index/list', {
+      fetchAs<LanguageIndexListRequest, LanguageIndexListResponse>('sil/language-index/list', {
         token: globals.globalStore.state.token,
         search,
         page,
