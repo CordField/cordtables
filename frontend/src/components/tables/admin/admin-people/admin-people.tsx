@@ -378,6 +378,13 @@ export class AdminPeoples {
          and then expect the user to use the update functionality to do the rest*/}
 
         {globals.globalStore.state.editMode === true && (
+          <div class="wrapper">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-4">test</div>
+              </div>
+            </div>
+
           <form class="form-thing">
             <div id="about-holder" class="form-input-item form-thing">
               <span class="form-thing">
@@ -520,6 +527,7 @@ export class AdminPeoples {
               <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
             </span>
           </form>
+          </div>
         )}
       </Host>
     );

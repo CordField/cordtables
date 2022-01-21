@@ -184,7 +184,7 @@ export class PrayerRequestEditPage {
     }
 
     async getParentsList() {
-        this.prayerRequestsResponse = await fetchAs<UpPrayerRequestListRequest, UpPrayerRequestListResponse>('up-prayer-requests/list', {
+        this.prayerRequestsResponse = await fetchAs<UpPrayerRequestListRequest, UpPrayerRequestListResponse>('up/prayer-requests/list', {
           token: globals.globalStore.state.token,
         });
     }

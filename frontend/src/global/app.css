@@ -8,7 +8,7 @@
   Any global CSS variables should also be applied here.
 */
 
-@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css');
+/* @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css'); */
 html {
   box-sizing: border-box;
   font-size: 62.5%;
@@ -35,6 +35,7 @@ body {
   color: var(--color-gray-darkest);
 }
 
-#container {
+.container {
   width: 1000px;
 }
+

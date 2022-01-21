@@ -196,12 +196,10 @@ class GetPaginatedResultSet (
 
     var offset = (req.page-1)*req.resultsPerPage
     var limitQuery = query
-    if(req.getList){
-        limitQuery = "$query LIMIT :limit OFFSET :offset ";
-    }
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
     if (req.getList) {
+      limitQuery = "$query LIMIT :limit OFFSET :offset ";
       paramSource.addValue("limit", req.resultsPerPage)
       paramSource.addValue("offset", offset)
     }
@@ -212,6 +210,8 @@ class GetPaginatedResultSet (
       val resultRows = jdbcTemplate.queryForRowSet(query, paramSource)
       resultRows.last();
       val totalRows = resultRows.getRow();
+
+      println(totalRows)
 
       val jdbcResult = jdbcTemplate.queryForRowSet(limitQuery, paramSource)
       GetPaginatedResultSetResponse(ErrorType.NoError, result = jdbcResult, size = totalRows)
