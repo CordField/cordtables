@@ -46,8 +46,7 @@ class Update(
                     table = "common.stage_notifications",
                     column = "stage",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "on_enter" -> {
@@ -76,8 +75,7 @@ class Update(
                     table = "common.stage_notifications",
                     column = "person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_person" -> {
@@ -86,8 +84,7 @@ class Update(
                     table = "common.stage_notifications",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -96,8 +93,7 @@ class Update(
                     table = "common.stage_notifications",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

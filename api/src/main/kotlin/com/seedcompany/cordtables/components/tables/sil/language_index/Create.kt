@@ -43,7 +43,7 @@ class Create(
       """
             insert into sil.language_index(id, lang, country, name_type, name, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?,
                     ?,
                     ?::sil.language_name_type,
@@ -63,7 +63,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

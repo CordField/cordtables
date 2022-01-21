@@ -55,8 +55,7 @@ class Update(
                     table = "sc.field_regions",
                     column = "field_zone",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "director" -> {
@@ -65,8 +64,7 @@ class Update(
                     table = "sc.field_regions",
                     column = "director",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "name" -> {
@@ -84,8 +82,7 @@ class Update(
                     table = "sc.field_regions",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -94,8 +91,7 @@ class Update(
                     table = "sc.field_regions",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

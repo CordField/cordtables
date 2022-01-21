@@ -53,8 +53,8 @@ class Create(
             """
             insert into common.stage_role_column_grants(stage, role, table_name, column_name, access_level, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     ?::admin.table_name,
                     ?,
                     ?::admin.access_level,
@@ -73,7 +73,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),

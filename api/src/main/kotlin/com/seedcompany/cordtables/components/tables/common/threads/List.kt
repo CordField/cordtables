@@ -49,7 +49,7 @@ class List(
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
         if(req.channelId!==null){
-          whereClause = "channel = :channelId::uuid"
+          whereClause = "channel = :channelId"
           paramSource.addValue("channelId", req.channelId)
         }
 

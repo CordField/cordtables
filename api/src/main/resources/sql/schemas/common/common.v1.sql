@@ -22,58 +22,58 @@ create type common.egids_scale as enum (
 
 -- meant to be extended by all orgs, so everyone has a globally unique id to reference within their language lists
 create table common.languages(
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.site_text_strings(
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
   english varchar(64) unique not null, -- US English, all translations including other English locales will be in the translation table
   comment text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.site_text_translations(
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-  language uuid not null references common.languages(id),
-  site_text uuid not null references common.site_text_strings(id) on delete cascade,
+  language varchar(32) not null references common.languages(id),
+  site_text varchar(32) not null references common.site_text_strings(id) on delete cascade,
   translation varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
   unique (language, site_text)
 );
 
 -- this table shouldn't be needed anymore
 create table common.site_text_languages(
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-  language uuid not null references common.languages(id),
+  language varchar(32) not null references common.languages(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 -- SCRIPTURE REFERENCE -----------------------------------------------------------------
@@ -149,7 +149,7 @@ create type common.book_name as enum (
 );
 
 create table common.scripture_references (
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
   book_start common.book_name,
   book_end common.book_name,
@@ -159,117 +159,117 @@ create table common.scripture_references (
   verse_end int,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 -- CHAT ------------------------------------------------------------
 
 create table common.discussion_channels (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 	name varchar(32) not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
   unique (name, owning_group)
 );
 
 create table common.cell_channels (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
   table_name admin.table_name not null,
   column_name varchar(64) not null,
-  row uuid not null,
+  row varchar(32) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
   unique (table_name, column_name, row)
 );
 
 create table common.threads (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
-	channel uuid not null references common.discussion_channels(id) on delete cascade,
+	channel varchar(32) not null references common.discussion_channels(id) on delete cascade,
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.posts (
-	id uuid primary key default common.uuid_generate_v4(),
-	thread uuid not null references common.threads(id) on delete cascade,
+	id varchar(32) primary key default common.nanoid(),
+	thread varchar(32) not null references common.threads(id) on delete cascade,
 	content text not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 -- BLOGS ---------------
 
 create table common.blogs (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
 	title varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
   unique (title, owning_group)
 );
 
 create table common.blog_posts (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
-  blog uuid not null references common.blogs(id),
+  blog varchar(32) not null references common.blogs(id),
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 -- NOTES ----------------------------------------------------
 
 create table common.notes (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
   table_name admin.table_name not null,
   column_name varchar(64) not null,
-  row uuid not null,
+  row varchar(32) not null,
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 -- LOCATION -----------------------------------------------------------------
@@ -283,7 +283,7 @@ create type common.location_type as enum (
 );
 
 create table common.locations (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
 	name varchar(255) unique, -- not null,
 	sensitivity common.sensitivity not null default 'High',
@@ -291,11 +291,11 @@ create table common.locations (
 	iso_alpha3 char(3) unique,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by uuid not null references admin.people(id),
+	created_by varchar(32) not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 ALTER TABLE admin.people ADD CONSTRAINT common_people_primary_location_fk foreign key (primary_location) references common.locations(id);
@@ -305,35 +305,35 @@ ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk fore
 -- Education
 
 create table common.education_entries (
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
   degree varchar(64),
   institution varchar(64),
   major varchar(64),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
   unique (degree, institution, major)
 );
 
 create table common.education_by_person (
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-  person uuid unique not null references admin.people(id),
-  education uuid not null references common.education_entries(id),
+  person varchar(32) unique not null references admin.people(id),
+  education varchar(32) not null references common.education_entries(id),
   graduation_year int,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
   unique (person, education)
 );
@@ -341,32 +341,32 @@ create table common.education_by_person (
 -- ORGANIZATIONS ------------------------------------------------------------
 
 create table common.organizations (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
 	name varchar(255) unique, -- not null
 	sensitivity common.sensitivity default 'High',
-	primary_location uuid references common.locations(id),
+	primary_location varchar(32) references common.locations(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.org_chart_positions(
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-  organization uuid not null references common.organizations(id),
+  organization varchar(32) not null references common.organizations(id),
   name varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
   unique (organization, name)
 );
@@ -377,18 +377,18 @@ create type common.position_relationship_types as enum (
 );
 
 create table common.org_chart_position_graph(
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-  from_position uuid not null references common.org_chart_positions(id),
-  to_position uuid not null references common.org_chart_positions(id),
+  from_position varchar(32) not null references common.org_chart_positions(id),
+  to_position varchar(32) not null references common.org_chart_positions(id),
   relationship_type common.position_relationship_types,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
   unique (from_position, to_position, relationship_type)
 );
@@ -401,32 +401,32 @@ create type common.involvement_options as enum (
 );
 
 create table common.coalitions(
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
   name varchar(64) unique not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 -- coalition memberships
 
 create table common.coalition_memberships(
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-  coalition uuid not null references common.coalitions(id),
-  organization uuid not null references common.organizations(id),
+  coalition varchar(32) not null references common.coalitions(id),
+  organization varchar(32) not null references common.organizations(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
   unique (coalition, organization)
 );
@@ -434,53 +434,53 @@ create table common.coalition_memberships(
 -- FILES & DIRECTORIES ----------------------------------------------------------
 
 create table common.directories (
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-  parent uuid references common.directories(id),
+  parent varchar(32) references common.directories(id),
   name varchar(255), -- not null
   
 	-- todo
 	-- add derived data from sub-directories/files
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.files (
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-  directory uuid references common.directories(id), --not null
+  directory varchar(32) references common.directories(id), --not null
 	name varchar(255), -- not null
 
   -- todo, derived data
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.file_versions (
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
   mime_type varchar(128),
   name varchar(255), -- not null,
-  file uuid references common.files(id), -- not null
+  file varchar(32) references common.files(id), -- not null
   file_url varchar(255), -- not null,
   file_size int, -- bytes
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 -- TICKETS ----------------------------------------------------------------------
@@ -492,54 +492,54 @@ create type common.ticket_status as enum (
 );
 
 create table common.tickets (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
   title varchar(64) not null,
 	ticket_status common.ticket_status not null default 'Open',
-	parent uuid,
+	parent varchar(32),
 	content text not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 ALTER TABLE common.tickets ADD CONSTRAINT common_tickets_parent_fk foreign key (parent) references common.tickets(id);
 
 create table common.ticket_graph (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
-	from_ticket uuid not null references common.tickets(id),
-	to_ticket uuid not null references common.tickets(id),
+	from_ticket varchar(32) not null references common.tickets(id),
+	to_ticket varchar(32) not null references common.tickets(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.ticket_assignments (
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
-	ticket uuid not null references common.tickets(id),
-	person uuid unique not null references admin.people(id),
+	ticket varchar(32) not null references common.tickets(id),
+	person varchar(32) unique not null references admin.people(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.work_records(
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
-	person uuid not null references admin.people(id),
-	ticket uuid not null references common.tickets(id),
+	person varchar(32) not null references admin.people(id),
+	ticket varchar(32) not null references common.tickets(id),
 	hours int not null,
 	minutes int default 0,
 	total_time decimal generated always as (
@@ -548,17 +548,17 @@ create table common.work_records(
 	comment text,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.work_estimates(
-	id uuid primary key default common.uuid_generate_v4(),
-    ticket uuid references common.tickets(id),
-	person uuid not null references admin.people(id),
+	id varchar(32) primary key default common.nanoid(),
+    ticket varchar(32) references common.tickets(id),
+	person varchar(32) not null references admin.people(id),
 	hours int not null,
 	minutes int default 0,
 	total_time decimal generated always as (
@@ -567,11 +567,11 @@ create table common.work_estimates(
 	comment text,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create type common.ticket_feedback_options as enum (
@@ -580,97 +580,97 @@ create type common.ticket_feedback_options as enum (
 );
 
 create table common.ticket_feedback(
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
-	ticket uuid references common.tickets(id),
-	stakeholder uuid not null references admin.people(id),
+	ticket varchar(32) references common.tickets(id),
+	stakeholder varchar(32) not null references admin.people(id),
 	feedback common.ticket_feedback_options not null,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 -- WORKFLOW -----------------------------------------------------------------
 
 create table common.workflows(
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
 	title varchar(128) not null unique,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.stages(
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
 	title varchar(128) not null unique,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create table common.stage_graph(
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
-	from_stage uuid not null references common.stages(id),
-	to_stage uuid not null references common.stages(id),
+	from_stage varchar(32) not null references common.stages(id),
+	to_stage varchar(32) not null references common.stages(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
   unique (from_stage, to_stage)
 );
 
 create table common.stage_role_column_grants(
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
-  stage uuid not null references common.stages(id),
-	role uuid not null references admin.roles(id),
+  stage varchar(32) not null references common.stages(id),
+	role varchar(32) not null references admin.roles(id),
 	table_name admin.table_name not null,
 	column_name varchar(64) not null,
 	access_level admin.access_level not null,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by uuid not null references admin.people(id),
+	created_by varchar(32) not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
 
 	unique (role, table_name, column_name)
 );
 
 create table common.stage_notifications(
-	id uuid primary key default common.uuid_generate_v4(),
+	id varchar(32) primary key default common.nanoid(),
 
-	stage uuid not null references common.stages(id),
+	stage varchar(32) not null references common.stages(id),
 	on_enter bool default false,
 	on_exit bool default false,
-	person uuid unique references admin.people(id),
+	person varchar(32) unique references admin.people(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 -- SOCIAL GRAPH ----------------------------------------------------
@@ -690,20 +690,20 @@ create type common.people_to_org_relationship_type as enum (
 );
 
 create table common.people_to_org_relationships (
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-	org uuid not null references common.organizations(id),
-	person uuid unique not null references admin.people(id),
+	org varchar(32) not null references common.organizations(id),
+	person varchar(32) unique not null references admin.people(id),
 	relationship_type common.people_to_org_relationship_type,
   begin_at timestamp,
   end_at timestamp,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );
 
 create type common.people_to_people_relationship_types as enum (
@@ -713,16 +713,16 @@ create type common.people_to_people_relationship_types as enum (
 );
 
 create table common.people_graph (
-  id uuid primary key default common.uuid_generate_v4(),
+  id varchar(32) primary key default common.nanoid(),
 
-  from_person uuid unique not null references admin.people(id),
-  to_person uuid unique not null references admin.people(id),
+  from_person varchar(32) unique not null references admin.people(id),
+  to_person varchar(32) unique not null references admin.people(id),
   rel_type common.people_to_people_relationship_types not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by varchar(32) not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id)
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id)
 );

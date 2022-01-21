@@ -55,7 +55,6 @@ class List(
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
-//                    "neo4j_id",
                     "account_number",
                     "name",
                     "created_at",
@@ -74,9 +73,6 @@ class List(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-//                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-//                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var account_number: Int? = jdbcResult.getInt("account_number")
                 if (jdbcResult.wasNull()) account_number = null
@@ -105,7 +101,6 @@ class List(
                 data.add(
                     fundingAccount(
                         id = id,
-//                        neo4j_id = neo4j_id,
                         account_number = account_number,
                         name = name,
                         created_at = created_at,

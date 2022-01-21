@@ -46,8 +46,7 @@ class Update(
                     table = "sc.global_partner_engagement_people",
                     column = "engagement",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "person" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "sc.global_partner_engagement_people",
                     column = "person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "role" -> {
@@ -76,8 +74,7 @@ class Update(
                     table = "sc.global_partner_engagement_people",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -86,8 +83,7 @@ class Update(
                     table = "sc.global_partner_engagement_people",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

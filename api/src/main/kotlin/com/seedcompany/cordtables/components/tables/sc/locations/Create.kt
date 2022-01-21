@@ -92,9 +92,9 @@ class Create(
                 owning_person, 
                 owning_group)
             values(
-                ?::uuid,
-                ?::uuid,
-                ?::uuid,
+                ?,
+                ?,
+                ?,
                 ?,
                 ?,
                 ?::common.location_type,
@@ -113,7 +113,7 @@ class Create(
                   from admin.tokens 
                   where token = ?
                 ),
-                ?::uuid
+                ?
             )
             returning id;
         """.trimIndent(),

@@ -49,12 +49,12 @@ class Create(
             """
             insert into sc.budget_records(budget, change_to_plan, active, amount, fiscal_year, organization, sensitivity,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     ?::boolean,
                     ?::decimal,
                     ?::integer,
-                    ?::uuid,
+                    ?,
                     ?::common.sensitivity,
                     (
                       select person 
@@ -71,7 +71,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -89,7 +89,6 @@ class Create(
             util.adminGroupId()
         )
 
-//        req.budget_record.id = id
 
         return ScBudgetRecordsCreateResponse(error = ErrorType.NoError, id = id)
     }

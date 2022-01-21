@@ -167,7 +167,6 @@ class DatabaseVersionControl(
   }
 
   private fun toVersion1() {
-//    runSqlFile("sql/helpers/uuid.sql")
 
     println("version 1 not found. creating schema.")
 
@@ -261,7 +260,7 @@ class DatabaseVersionControl(
         val areaEntry = splitArray[2]
         count++
         if (count == 1) continue
-        countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminGroupId}'::uuid), "
+        countryCodesQuery += "('${countryIdEntry}', '${nameEntry}', '${areaEntry}', '${adminPeopleId}', '${adminPeopleId}', '${adminPeopleId}', '${adminGroupId}'), "
       }
 
       countryCodesQuery = countryCodesQuery.dropLast(2) + ";"
@@ -307,7 +306,7 @@ class DatabaseVersionControl(
         val name = splitArray[3]
         count++
         if (count == 1) continue
-        languageCodesQuery += "('${lang}', '${country}', '${langStatus}', '${name}', '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminGroupId}'::uuid), "
+        languageCodesQuery += "('${lang}', '${country}', '${langStatus}', '${name}', '${adminPeopleId}', '${adminPeopleId}', '${adminPeopleId}', '${adminGroupId}'), "
       }
       languageCodesQuery = languageCodesQuery.dropLast(2) + ";"
 
@@ -391,7 +390,7 @@ class DatabaseVersionControl(
           try {
 
             val insertSQL =
-              ("insert into sil.iso_639_3_names(_id, print_name, inverted_name, created_by, modified_by, owning_person, owning_group) values (?, ?, ?, ?::uuid, ?::uuid, ?::uuid, ?::uuid)")
+              ("insert into sil.iso_639_3_names(_id, print_name, inverted_name, created_by, modified_by, owning_person, owning_group) values (?, ?, ?, ?, ?, ?, ?)")
             val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
             for (line in text) {
@@ -449,7 +448,7 @@ class DatabaseVersionControl(
 
           val insertSQL = """
                         insert into sil.iso_639_3(_id, part_2b, part_2t, part_1, scope, type, ref_name, comment, created_by, modified_by, owning_person, owning_group)
-                        values  (?, ?, ?, ?, ?::sil.iso_639_3_scope_options, ?::sil.iso_639_3_type_options, ?, ?, ?::uuid, ?::uuid, ?::uuid, ?::uuid)"""
+                        values  (?, ?, ?, ?, ?::sil.iso_639_3_scope_options, ?::sil.iso_639_3_type_options, ?, ?, ?, ?, ?, ?)"""
           val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
           for (line in text) {
@@ -515,7 +514,7 @@ class DatabaseVersionControl(
         try {
 
           val insertSQL =
-            "insert into sil.iso_639_3_retirements(_id, ref_name, ret_reason, change_to, ret_remedy, effective, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_retirement_reason_options, ?, ?, ?, ?::uuid, ?::uuid, ?::uuid, ?::uuid)"
+            "insert into sil.iso_639_3_retirements(_id, ref_name, ret_reason, change_to, ret_remedy, effective, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_retirement_reason_options, ?, ?, ?, ?, ?, ?, ?)"
           val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
           for (line in text) {
@@ -585,7 +584,7 @@ class DatabaseVersionControl(
         try {
 
           val insertSQL =
-            "insert into sil.iso_639_3_macrolanguages(m_id, i_id, i_status, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_status_options, ?::uuid, ?::uuid, ?::uuid, ?::uuid)"
+            "insert into sil.iso_639_3_macrolanguages(m_id, i_id, i_status, created_by, modified_by, owning_person, owning_group) values (?, ?, ?::sil.iso_639_3_status_options, ?, ?, ?, ?)"
           val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
 
           for (line in text) {

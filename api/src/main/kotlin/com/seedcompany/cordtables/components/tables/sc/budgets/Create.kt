@@ -56,10 +56,10 @@ class Create(
       """
             insert into sc.budgets(change_to_plan, project, status, universal_template, universal_template_file_url, sensitivity, total,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     ?::common.budget_status,
-                    ?::uuid,
+                    ?,
                     ?,
                     ?::common.sensitivity,
                     ?::DECIMAL,
@@ -78,7 +78,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -95,8 +95,6 @@ class Create(
       req.token,
       util.adminGroupId()
     )
-
-//        req.language.id = id
 
     return ScBudgetsCreateResponse(error = ErrorType.NoError, id = id)
   }

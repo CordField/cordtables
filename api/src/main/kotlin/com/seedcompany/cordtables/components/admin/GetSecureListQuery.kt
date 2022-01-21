@@ -139,7 +139,7 @@ class GetSecureListQuery() {
         } else {
             response.query += """
             where
-                ${req.tableName}.id = :id::uuid and
+                ${req.tableName}.id = :id and
                 ((${req.tableName}.id in (select row from row_level_access) or
                 (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
                 ${req.tableName}.owning_person = (select person from admin.tokens where token = :token) or

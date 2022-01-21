@@ -46,8 +46,7 @@ class Update(
                     table = "common.work_estimates",
                     column = "ticket",
                     id = req.id,
-                    value = req.ticket,
-                    cast = "::uuid"
+                    value = req.ticket
                 )
 
                 util.updateField(
