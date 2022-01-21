@@ -1,4 +1,4 @@
-import { AnyLayer } from 'mapbox-gl';
+// import { AnyLayer } from 'mapbox-gl';
 
 export enum ErrorType {
   NoError = 'NoError',

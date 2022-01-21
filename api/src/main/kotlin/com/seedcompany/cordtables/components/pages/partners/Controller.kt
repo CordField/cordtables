@@ -88,6 +88,7 @@ class Controller (
                 )
             )
             var dbResultSet = queryObj.result
+            size = queryObj.size
             while (dbResultSet!!.next()){
                 val financial_reporting_types = (dbResultSet.getObject("financial_reporting_types") as SerialArray).array as Array<out Any>
                 data.add(
