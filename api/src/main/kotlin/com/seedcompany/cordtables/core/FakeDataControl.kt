@@ -14,6 +14,7 @@ import javax.sql.DataSource
 
 enum class FakeDataControlRequestType {
   LoadCommonFakeData,
+  LoadScFakeData
 }
 
 data class FakeDataControlRequest(
@@ -48,6 +49,10 @@ class FakeDataControl(
     when (req.type){
       FakeDataControlRequestType.LoadCommonFakeData -> {
         vc.loadCommonFakeData()
+      }
+
+      FakeDataControlRequestType.LoadScFakeData -> {
+        vc.loadScFakeData()
       }
     }
 

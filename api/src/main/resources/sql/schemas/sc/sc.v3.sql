@@ -61,7 +61,7 @@ create table sc.field_zones (
 	id uuid primary key default common.uuid_generate_v4(),
 
 	director uuid references admin.people(id),
-	name varchar(32) unique, -- not null
+	name varchar(64) unique, -- not null
 	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
