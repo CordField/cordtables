@@ -240,15 +240,8 @@ export class Threads {
     return (
       <Host>
         <slot></slot>
-        <search-form columnNames={['id', 'content', 'channel', 'created_at', 'created_by', 'modified_at', 'modified_by', 'owning_person', 'owning_group']}></search-form>
-        {this.applicationState === 'initialResponse' ? (
-          <cf-table rowData={this.commonThreadsResponse.threads} columnData={this.columnData}></cf-table>
-        ) : this.applicationState === 'autocompleteResponse' ? (
-          <cf-table rowData={this.threads} columnData={this.columnData}></cf-table>
-        ) : (
-          'loading...'
-        )}
-
+        <search-form columnNames={['id', 'content', 'channel', 'created_at', 'created_by', 'modified_at', 'modified_by', 'owning_person', 'owning_group']}></search-form>(
+        <cf-table rowData={this.commonThreadsResponse.threads} columnData={this.columnData}></cf-table>)
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
             <label>
