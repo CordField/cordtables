@@ -16,7 +16,7 @@ export class AppRoot {
 
   @State() showSelect = false;
 
-  pages = ['Groups', 'Roles', 'Organizations', 'Slack', 'Tickets'];
+  pages = ['Groups', 'Roles', 'Organizations', 'Slack', 'Tickets', 'Prayer Requests'];
 
   selectChange(event) {
     const table = event.target.value;
@@ -90,10 +90,13 @@ export class AppRoot {
                             <div class="scrollable">
                               <ion-list style={{ marginLeft: '10px' }}>
                                 {this.pages.map(page => (
-                                  <ion-item href={`/page/${page.toLowerCase()}`}>
+                                  <ion-item href={`/page/${page.toLowerCase().replace(" ","-")}`}>
                                     <ion-label>{page} Page</ion-label>
                                   </ion-item>
                                 ))}
+                                <ion-item href={`/sc/partner-crm`}>
+                                    <ion-label>Partner CRM</ion-label>
+                                  </ion-item>
                               </ion-list>
                             </div>
                           </custom-accordion>
