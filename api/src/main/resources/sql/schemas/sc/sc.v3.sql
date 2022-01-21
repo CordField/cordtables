@@ -59,7 +59,6 @@ create table sc.funding_accounts (
 
 create table sc.field_zones (
 	id varchar(32) primary key default common.nanoid(),
-
 	director varchar(32) references admin.people(id),
 	name varchar(32) unique, -- not null
 	
