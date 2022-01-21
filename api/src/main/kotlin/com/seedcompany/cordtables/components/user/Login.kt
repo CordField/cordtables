@@ -111,7 +111,7 @@ class Login (
             statement.execute()
             try {
                 errorType = ErrorType.valueOf(statement.getString(3))
-                userId = statement.getObject(4).toString()
+                userId = statement.getString(4)
             } catch (ex: IllegalArgumentException) {
               println("error")
                 throw ex

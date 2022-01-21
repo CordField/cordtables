@@ -76,13 +76,13 @@ class Register (
             statement.setString(4, errorType.name)
             statement.setString(5, null)
             statement.registerOutParameter(4, java.sql.Types.VARCHAR)
-            statement.registerOutParameter(5, java.sql.Types.OTHER)
+            statement.registerOutParameter(5, java.sql.Types.VARCHAR)
 
             statement.execute()
 
             try {
                 errorType = ErrorType.valueOf(statement.getString(4))
-                userId = statement.getObject(5).toString()
+                userId = statement.getString(5)
             } catch (ex: IllegalArgumentException) {
                 errorType = ErrorType.UnknownError
             }
