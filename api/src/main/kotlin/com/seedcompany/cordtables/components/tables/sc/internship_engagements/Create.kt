@@ -56,24 +56,24 @@ class Create(
              mentor, methodologies, paratext_registry, periodic_reports_directory, position, sensitivity, start_date, start_date_override, status, 
              status_modified_at, last_suspended_at, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     ?::boolean,
-                    ?::uuid,
+                    ?,
                     ?::timestamp,
                     ?::timestamp,
-                    ?::uuid,
+                    ?,
                     ?::timestamp,
                     ?::timestamp,
                     ?::timestamp,
-                    ?::uuid,
+                    ?,
                     ?::timestamp,
-                    ?::uuid,
+                    ?,
                     ?::timestamp,
-                    ?::uuid,
+                    ?,
                     ARRAY[?]::common.product_methodologies[],
                     ?,
-                    ?::uuid,
+                    ?,
                     ?::common.internship_position,
                     ?::common.sensitivity,
                     ?::timestamp,
@@ -96,7 +96,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -129,10 +129,8 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
-
-//        req.language.id = id
 
         return ScInternshipEngagementsCreateResponse(error = ErrorType.NoError, id = id)
     }

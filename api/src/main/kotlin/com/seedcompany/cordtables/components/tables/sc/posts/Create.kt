@@ -52,7 +52,7 @@ class Create(
             """
             insert into sc.posts(directory, type, shareability, body, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::sc.post_type,
                     ?::sc.post_shareability,
                     ?,
@@ -71,7 +71,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -83,7 +83,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
 //        req.language.id = id

@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
 import { CellType, ColumnDescription } from "./common/table-abstractions/types";
+import { foreignKeyClickedObject } from "./common/types";
 import { MenuClickedEvent } from "./components/header/types";
 import { TinyUpdateEvent } from "./components/cf-tiny/types";
 export namespace Components {
@@ -39,7 +40,19 @@ export namespace Components {
     interface CfCell2 {
         "cellType": CellType;
         "columnDescription": ColumnDescription;
+        "displayValue": any;
         "rowId": string;
+        "value": any;
+    }
+    interface CfEditable {
+        "enableEdit": boolean;
+        "endPoint": string;
+        "field": string;
+        "multiSelect"?: boolean;
+        "rowData": any;
+        "rowId": string;
+        "selectOptions"?: Array<{ display: string; value: any }> | null;
+        "updateFn"?: (id: string, columnName: any, value: any, endpoint: string) => Promise<boolean>;
         "value": any;
     }
     interface CfForgotPassword {
@@ -91,11 +104,17 @@ export namespace Components {
         "initialHTMLContent": string;
         "uid": string;
     }
+    interface CommonBlogPosts {
+    }
+    interface CommonBlogs {
+    }
     interface CommonCellChannels {
     }
     interface CommonCoalitionMemberships {
     }
     interface CommonCoalitions {
+    }
+    interface CommonDiscussionChannels {
     }
     interface CommonLocations {
     }
@@ -137,8 +156,6 @@ export namespace Components {
     }
     interface DirectoriesTable {
     }
-    interface DiscussionChannels {
-    }
     interface EducationByPerson {
     }
     interface EducationEntries {
@@ -146,6 +163,10 @@ export namespace Components {
     interface FileVersions {
     }
     interface FilesTable {
+    }
+    interface FilterMenu {
+    }
+    interface ForeignRow {
     }
     interface GenericTable {
         "columns": Array<any>;
@@ -179,6 +200,18 @@ export namespace Components {
     interface PageRoot {
         "match": MatchResults;
     }
+    interface PaginationBar {
+    }
+    interface PartnerCrm {
+    }
+    interface PartnerDetails {
+        "partnerDetail": PartnerDetail;
+    }
+    interface PartnerListItem {
+        "columnData": any[];
+        "rowData": PartnerDetail;
+        "selected": string;
+    }
     interface PeersTable {
     }
     interface PeopleTable {
@@ -203,13 +236,15 @@ export namespace Components {
     }
     interface RolesTable {
     }
-    interface ScBudgetrecords {
+    interface ScBudgetRecords {
+    }
+    interface ScBudgetRecordsPartnerships {
     }
     interface ScBudgets {
     }
     interface ScCeremonies {
     }
-    interface ScChangeToPlan {
+    interface ScChangeToPlans {
     }
     interface ScEthnologue {
     }
@@ -235,6 +270,8 @@ export namespace Components {
     }
     interface ScLanguageEngagements {
     }
+    interface ScLanguageLocations {
+    }
     interface ScLanguages {
     }
     interface ScLocations {
@@ -249,6 +286,8 @@ export namespace Components {
     }
     interface ScPeople {
     }
+    interface ScPeriodicReports {
+    }
     interface ScPersonUnavailabilities {
     }
     interface ScPinnedProjects {
@@ -261,9 +300,16 @@ export namespace Components {
     }
     interface ScProjectLocations {
     }
+    interface ScProjectMembers {
+    }
     interface ScProjects {
     }
     interface ScriptureReferences {
+    }
+    interface SearchForm {
+        "columnNames": string[];
+    }
+    interface SearchInput {
     }
     interface SilCountryCodes {
     }
@@ -409,6 +455,12 @@ declare global {
         prototype: HTMLCfCell2Element;
         new (): HTMLCfCell2Element;
     };
+    interface HTMLCfEditableElement extends Components.CfEditable, HTMLStencilElement {
+    }
+    var HTMLCfEditableElement: {
+        prototype: HTMLCfEditableElement;
+        new (): HTMLCfEditableElement;
+    };
     interface HTMLCfForgotPasswordElement extends Components.CfForgotPassword, HTMLStencilElement {
     }
     var HTMLCfForgotPasswordElement: {
@@ -493,6 +545,18 @@ declare global {
         prototype: HTMLCfTinyElement;
         new (): HTMLCfTinyElement;
     };
+    interface HTMLCommonBlogPostsElement extends Components.CommonBlogPosts, HTMLStencilElement {
+    }
+    var HTMLCommonBlogPostsElement: {
+        prototype: HTMLCommonBlogPostsElement;
+        new (): HTMLCommonBlogPostsElement;
+    };
+    interface HTMLCommonBlogsElement extends Components.CommonBlogs, HTMLStencilElement {
+    }
+    var HTMLCommonBlogsElement: {
+        prototype: HTMLCommonBlogsElement;
+        new (): HTMLCommonBlogsElement;
+    };
     interface HTMLCommonCellChannelsElement extends Components.CommonCellChannels, HTMLStencilElement {
     }
     var HTMLCommonCellChannelsElement: {
@@ -510,6 +574,12 @@ declare global {
     var HTMLCommonCoalitionsElement: {
         prototype: HTMLCommonCoalitionsElement;
         new (): HTMLCommonCoalitionsElement;
+    };
+    interface HTMLCommonDiscussionChannelsElement extends Components.CommonDiscussionChannels, HTMLStencilElement {
+    }
+    var HTMLCommonDiscussionChannelsElement: {
+        prototype: HTMLCommonDiscussionChannelsElement;
+        new (): HTMLCommonDiscussionChannelsElement;
     };
     interface HTMLCommonLocationsElement extends Components.CommonLocations, HTMLStencilElement {
     }
@@ -613,12 +683,6 @@ declare global {
         prototype: HTMLDirectoriesTableElement;
         new (): HTMLDirectoriesTableElement;
     };
-    interface HTMLDiscussionChannelsElement extends Components.DiscussionChannels, HTMLStencilElement {
-    }
-    var HTMLDiscussionChannelsElement: {
-        prototype: HTMLDiscussionChannelsElement;
-        new (): HTMLDiscussionChannelsElement;
-    };
     interface HTMLEducationByPersonElement extends Components.EducationByPerson, HTMLStencilElement {
     }
     var HTMLEducationByPersonElement: {
@@ -642,6 +706,18 @@ declare global {
     var HTMLFilesTableElement: {
         prototype: HTMLFilesTableElement;
         new (): HTMLFilesTableElement;
+    };
+    interface HTMLFilterMenuElement extends Components.FilterMenu, HTMLStencilElement {
+    }
+    var HTMLFilterMenuElement: {
+        prototype: HTMLFilterMenuElement;
+        new (): HTMLFilterMenuElement;
+    };
+    interface HTMLForeignRowElement extends Components.ForeignRow, HTMLStencilElement {
+    }
+    var HTMLForeignRowElement: {
+        prototype: HTMLForeignRowElement;
+        new (): HTMLForeignRowElement;
     };
     interface HTMLGenericTableElement extends Components.GenericTable, HTMLStencilElement {
     }
@@ -721,6 +797,30 @@ declare global {
         prototype: HTMLPageRootElement;
         new (): HTMLPageRootElement;
     };
+    interface HTMLPaginationBarElement extends Components.PaginationBar, HTMLStencilElement {
+    }
+    var HTMLPaginationBarElement: {
+        prototype: HTMLPaginationBarElement;
+        new (): HTMLPaginationBarElement;
+    };
+    interface HTMLPartnerCrmElement extends Components.PartnerCrm, HTMLStencilElement {
+    }
+    var HTMLPartnerCrmElement: {
+        prototype: HTMLPartnerCrmElement;
+        new (): HTMLPartnerCrmElement;
+    };
+    interface HTMLPartnerDetailsElement extends Components.PartnerDetails, HTMLStencilElement {
+    }
+    var HTMLPartnerDetailsElement: {
+        prototype: HTMLPartnerDetailsElement;
+        new (): HTMLPartnerDetailsElement;
+    };
+    interface HTMLPartnerListItemElement extends Components.PartnerListItem, HTMLStencilElement {
+    }
+    var HTMLPartnerListItemElement: {
+        prototype: HTMLPartnerListItemElement;
+        new (): HTMLPartnerListItemElement;
+    };
     interface HTMLPeersTableElement extends Components.PeersTable, HTMLStencilElement {
     }
     var HTMLPeersTableElement: {
@@ -781,11 +881,17 @@ declare global {
         prototype: HTMLRolesTableElement;
         new (): HTMLRolesTableElement;
     };
-    interface HTMLScBudgetrecordsElement extends Components.ScBudgetrecords, HTMLStencilElement {
+    interface HTMLScBudgetRecordsElement extends Components.ScBudgetRecords, HTMLStencilElement {
     }
-    var HTMLScBudgetrecordsElement: {
-        prototype: HTMLScBudgetrecordsElement;
-        new (): HTMLScBudgetrecordsElement;
+    var HTMLScBudgetRecordsElement: {
+        prototype: HTMLScBudgetRecordsElement;
+        new (): HTMLScBudgetRecordsElement;
+    };
+    interface HTMLScBudgetRecordsPartnershipsElement extends Components.ScBudgetRecordsPartnerships, HTMLStencilElement {
+    }
+    var HTMLScBudgetRecordsPartnershipsElement: {
+        prototype: HTMLScBudgetRecordsPartnershipsElement;
+        new (): HTMLScBudgetRecordsPartnershipsElement;
     };
     interface HTMLScBudgetsElement extends Components.ScBudgets, HTMLStencilElement {
     }
@@ -799,11 +905,11 @@ declare global {
         prototype: HTMLScCeremoniesElement;
         new (): HTMLScCeremoniesElement;
     };
-    interface HTMLScChangeToPlanElement extends Components.ScChangeToPlan, HTMLStencilElement {
+    interface HTMLScChangeToPlansElement extends Components.ScChangeToPlans, HTMLStencilElement {
     }
-    var HTMLScChangeToPlanElement: {
-        prototype: HTMLScChangeToPlanElement;
-        new (): HTMLScChangeToPlanElement;
+    var HTMLScChangeToPlansElement: {
+        prototype: HTMLScChangeToPlansElement;
+        new (): HTMLScChangeToPlansElement;
     };
     interface HTMLScEthnologueElement extends Components.ScEthnologue, HTMLStencilElement {
     }
@@ -877,6 +983,12 @@ declare global {
         prototype: HTMLScLanguageEngagementsElement;
         new (): HTMLScLanguageEngagementsElement;
     };
+    interface HTMLScLanguageLocationsElement extends Components.ScLanguageLocations, HTMLStencilElement {
+    }
+    var HTMLScLanguageLocationsElement: {
+        prototype: HTMLScLanguageLocationsElement;
+        new (): HTMLScLanguageLocationsElement;
+    };
     interface HTMLScLanguagesElement extends Components.ScLanguages, HTMLStencilElement {
     }
     var HTMLScLanguagesElement: {
@@ -919,6 +1031,12 @@ declare global {
         prototype: HTMLScPeopleElement;
         new (): HTMLScPeopleElement;
     };
+    interface HTMLScPeriodicReportsElement extends Components.ScPeriodicReports, HTMLStencilElement {
+    }
+    var HTMLScPeriodicReportsElement: {
+        prototype: HTMLScPeriodicReportsElement;
+        new (): HTMLScPeriodicReportsElement;
+    };
     interface HTMLScPersonUnavailabilitiesElement extends Components.ScPersonUnavailabilities, HTMLStencilElement {
     }
     var HTMLScPersonUnavailabilitiesElement: {
@@ -955,6 +1073,12 @@ declare global {
         prototype: HTMLScProjectLocationsElement;
         new (): HTMLScProjectLocationsElement;
     };
+    interface HTMLScProjectMembersElement extends Components.ScProjectMembers, HTMLStencilElement {
+    }
+    var HTMLScProjectMembersElement: {
+        prototype: HTMLScProjectMembersElement;
+        new (): HTMLScProjectMembersElement;
+    };
     interface HTMLScProjectsElement extends Components.ScProjects, HTMLStencilElement {
     }
     var HTMLScProjectsElement: {
@@ -966,6 +1090,18 @@ declare global {
     var HTMLScriptureReferencesElement: {
         prototype: HTMLScriptureReferencesElement;
         new (): HTMLScriptureReferencesElement;
+    };
+    interface HTMLSearchFormElement extends Components.SearchForm, HTMLStencilElement {
+    }
+    var HTMLSearchFormElement: {
+        prototype: HTMLSearchFormElement;
+        new (): HTMLSearchFormElement;
+    };
+    interface HTMLSearchInputElement extends Components.SearchInput, HTMLStencilElement {
+    }
+    var HTMLSearchInputElement: {
+        prototype: HTMLSearchInputElement;
+        new (): HTMLSearchInputElement;
     };
     interface HTMLSilCountryCodesElement extends Components.SilCountryCodes, HTMLStencilElement {
     }
@@ -1143,6 +1279,7 @@ declare global {
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "cf-cell2": HTMLCfCell2Element;
+        "cf-editable": HTMLCfEditableElement;
         "cf-forgot-password": HTMLCfForgotPasswordElement;
         "cf-header": HTMLCfHeaderElement;
         "cf-header-menu": HTMLCfHeaderMenuElement;
@@ -1157,9 +1294,12 @@ declare global {
         "cf-table-body": HTMLCfTableBodyElement;
         "cf-table-footer": HTMLCfTableFooterElement;
         "cf-tiny": HTMLCfTinyElement;
+        "common-blog-posts": HTMLCommonBlogPostsElement;
+        "common-blogs": HTMLCommonBlogsElement;
         "common-cell-channels": HTMLCommonCellChannelsElement;
         "common-coalition-memberships": HTMLCommonCoalitionMembershipsElement;
         "common-coalitions": HTMLCommonCoalitionsElement;
+        "common-discussion-channels": HTMLCommonDiscussionChannelsElement;
         "common-locations": HTMLCommonLocationsElement;
         "common-notes": HTMLCommonNotesElement;
         "common-org-chart-position-graph": HTMLCommonOrgChartPositionGraphElement;
@@ -1177,11 +1317,12 @@ declare global {
         "create-update-modal": HTMLCreateUpdateModalElement;
         "custom-accordion": HTMLCustomAccordionElement;
         "directories-table": HTMLDirectoriesTableElement;
-        "discussion-channels": HTMLDiscussionChannelsElement;
         "education-by-person": HTMLEducationByPersonElement;
         "education-entries": HTMLEducationEntriesElement;
         "file-versions": HTMLFileVersionsElement;
         "files-table": HTMLFilesTableElement;
+        "filter-menu": HTMLFilterMenuElement;
+        "foreign-row": HTMLForeignRowElement;
         "generic-table": HTMLGenericTableElement;
         "group-memberships": HTMLGroupMembershipsElement;
         "groups-page": HTMLGroupsPageElement;
@@ -1195,6 +1336,10 @@ declare global {
         "page-not-found": HTMLPageNotFoundElement;
         "page-prayer-requests": HTMLPagePrayerRequestsElement;
         "page-root": HTMLPageRootElement;
+        "pagination-bar": HTMLPaginationBarElement;
+        "partner-crm": HTMLPartnerCrmElement;
+        "partner-details": HTMLPartnerDetailsElement;
+        "partner-list-item": HTMLPartnerListItemElement;
         "peers-table": HTMLPeersTableElement;
         "people-table": HTMLPeopleTableElement;
         "people-to-org-relationships": HTMLPeopleToOrgRelationshipsElement;
@@ -1205,10 +1350,11 @@ declare global {
         "role-table-permissions": HTMLRoleTablePermissionsElement;
         "roles-page": HTMLRolesPageElement;
         "roles-table": HTMLRolesTableElement;
-        "sc-budgetrecords": HTMLScBudgetrecordsElement;
+        "sc-budget-records": HTMLScBudgetRecordsElement;
+        "sc-budget-records-partnerships": HTMLScBudgetRecordsPartnershipsElement;
         "sc-budgets": HTMLScBudgetsElement;
         "sc-ceremonies": HTMLScCeremoniesElement;
-        "sc-change-to-plan": HTMLScChangeToPlanElement;
+        "sc-change-to-plans": HTMLScChangeToPlansElement;
         "sc-ethnologue": HTMLScEthnologueElement;
         "sc-field-regions-table": HTMLScFieldRegionsTableElement;
         "sc-field-zones": HTMLScFieldZonesElement;
@@ -1221,6 +1367,7 @@ declare global {
         "sc-internship-engagements": HTMLScInternshipEngagementsElement;
         "sc-known-languages-by-person": HTMLScKnownLanguagesByPersonElement;
         "sc-language-engagements": HTMLScLanguageEngagementsElement;
+        "sc-language-locations": HTMLScLanguageLocationsElement;
         "sc-languages": HTMLScLanguagesElement;
         "sc-locations": HTMLScLocationsElement;
         "sc-organization-locations": HTMLScOrganizationLocationsElement;
@@ -1228,14 +1375,18 @@ declare global {
         "sc-partners": HTMLScPartnersElement;
         "sc-partnerships": HTMLScPartnershipsElement;
         "sc-people": HTMLScPeopleElement;
+        "sc-periodic-reports": HTMLScPeriodicReportsElement;
         "sc-person-unavailabilities": HTMLScPersonUnavailabilitiesElement;
         "sc-pinned-projects": HTMLScPinnedProjectsElement;
         "sc-posts": HTMLScPostsElement;
         "sc-product-scripture-references": HTMLScProductScriptureReferencesElement;
         "sc-products": HTMLScProductsElement;
         "sc-project-locations": HTMLScProjectLocationsElement;
+        "sc-project-members": HTMLScProjectMembersElement;
         "sc-projects": HTMLScProjectsElement;
         "scripture-references": HTMLScriptureReferencesElement;
+        "search-form": HTMLSearchFormElement;
+        "search-input": HTMLSearchInputElement;
         "sil-country-codes": HTMLSilCountryCodesElement;
         "sil-iso-639-3": HTMLSilIso6393Element;
         "sil-iso-639-3-macrolanguages": HTMLSilIso6393MacrolanguagesElement;
@@ -1295,7 +1446,21 @@ declare namespace LocalJSX {
     interface CfCell2 {
         "cellType"?: CellType;
         "columnDescription"?: ColumnDescription;
+        "displayValue"?: any;
+        "onForeignKeyClicked"?: (event: CustomEvent<foreignKeyClickedObject>) => void;
         "rowId"?: string;
+        "value"?: any;
+    }
+    interface CfEditable {
+        "enableEdit"?: boolean;
+        "endPoint"?: string;
+        "field"?: string;
+        "multiSelect"?: boolean;
+        "onReloadPartners"?: (event: CustomEvent<number>) => void;
+        "rowData"?: any;
+        "rowId"?: string;
+        "selectOptions"?: Array<{ display: string; value: any }> | null;
+        "updateFn"?: (id: string, columnName: any, value: any, endpoint: string) => Promise<boolean>;
         "value"?: any;
     }
     interface CfForgotPassword {
@@ -1350,11 +1515,17 @@ declare namespace LocalJSX {
         "onContentUpdate"?: (event: CustomEvent<TinyUpdateEvent>) => void;
         "uid"?: string;
     }
+    interface CommonBlogPosts {
+    }
+    interface CommonBlogs {
+    }
     interface CommonCellChannels {
     }
     interface CommonCoalitionMemberships {
     }
     interface CommonCoalitions {
+    }
+    interface CommonDiscussionChannels {
     }
     interface CommonLocations {
     }
@@ -1400,8 +1571,6 @@ declare namespace LocalJSX {
     }
     interface DirectoriesTable {
     }
-    interface DiscussionChannels {
-    }
     interface EducationByPerson {
     }
     interface EducationEntries {
@@ -1409,6 +1578,10 @@ declare namespace LocalJSX {
     interface FileVersions {
     }
     interface FilesTable {
+    }
+    interface FilterMenu {
+    }
+    interface ForeignRow {
     }
     interface GenericTable {
         "columns"?: Array<any>;
@@ -1443,6 +1616,19 @@ declare namespace LocalJSX {
     interface PageRoot {
         "match"?: MatchResults;
     }
+    interface PaginationBar {
+    }
+    interface PartnerCrm {
+    }
+    interface PartnerDetails {
+        "partnerDetail"?: PartnerDetail;
+    }
+    interface PartnerListItem {
+        "columnData"?: any[];
+        "onPartnerItemClicked"?: (event: CustomEvent<string>) => void;
+        "rowData"?: PartnerDetail;
+        "selected"?: string;
+    }
     interface PeersTable {
     }
     interface PeopleTable {
@@ -1467,13 +1653,15 @@ declare namespace LocalJSX {
     }
     interface RolesTable {
     }
-    interface ScBudgetrecords {
+    interface ScBudgetRecords {
+    }
+    interface ScBudgetRecordsPartnerships {
     }
     interface ScBudgets {
     }
     interface ScCeremonies {
     }
-    interface ScChangeToPlan {
+    interface ScChangeToPlans {
     }
     interface ScEthnologue {
     }
@@ -1499,6 +1687,8 @@ declare namespace LocalJSX {
     }
     interface ScLanguageEngagements {
     }
+    interface ScLanguageLocations {
+    }
     interface ScLanguages {
     }
     interface ScLocations {
@@ -1513,6 +1703,8 @@ declare namespace LocalJSX {
     }
     interface ScPeople {
     }
+    interface ScPeriodicReports {
+    }
     interface ScPersonUnavailabilities {
     }
     interface ScPinnedProjects {
@@ -1525,9 +1717,18 @@ declare namespace LocalJSX {
     }
     interface ScProjectLocations {
     }
+    interface ScProjectMembers {
+    }
     interface ScProjects {
     }
     interface ScriptureReferences {
+    }
+    interface SearchForm {
+        "columnNames"?: string[];
+        "onSearchResults"?: (event: CustomEvent<any>) => void;
+    }
+    interface SearchInput {
+        "onDoSearch"?: (event: CustomEvent<string>) => void;
     }
     interface SilCountryCodes {
     }
@@ -1610,6 +1811,7 @@ declare namespace LocalJSX {
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "cf-cell2": CfCell2;
+        "cf-editable": CfEditable;
         "cf-forgot-password": CfForgotPassword;
         "cf-header": CfHeader;
         "cf-header-menu": CfHeaderMenu;
@@ -1624,9 +1826,12 @@ declare namespace LocalJSX {
         "cf-table-body": CfTableBody;
         "cf-table-footer": CfTableFooter;
         "cf-tiny": CfTiny;
+        "common-blog-posts": CommonBlogPosts;
+        "common-blogs": CommonBlogs;
         "common-cell-channels": CommonCellChannels;
         "common-coalition-memberships": CommonCoalitionMemberships;
         "common-coalitions": CommonCoalitions;
+        "common-discussion-channels": CommonDiscussionChannels;
         "common-locations": CommonLocations;
         "common-notes": CommonNotes;
         "common-org-chart-position-graph": CommonOrgChartPositionGraph;
@@ -1644,11 +1849,12 @@ declare namespace LocalJSX {
         "create-update-modal": CreateUpdateModal;
         "custom-accordion": CustomAccordion;
         "directories-table": DirectoriesTable;
-        "discussion-channels": DiscussionChannels;
         "education-by-person": EducationByPerson;
         "education-entries": EducationEntries;
         "file-versions": FileVersions;
         "files-table": FilesTable;
+        "filter-menu": FilterMenu;
+        "foreign-row": ForeignRow;
         "generic-table": GenericTable;
         "group-memberships": GroupMemberships;
         "groups-page": GroupsPage;
@@ -1662,6 +1868,10 @@ declare namespace LocalJSX {
         "page-not-found": PageNotFound;
         "page-prayer-requests": PagePrayerRequests;
         "page-root": PageRoot;
+        "pagination-bar": PaginationBar;
+        "partner-crm": PartnerCrm;
+        "partner-details": PartnerDetails;
+        "partner-list-item": PartnerListItem;
         "peers-table": PeersTable;
         "people-table": PeopleTable;
         "people-to-org-relationships": PeopleToOrgRelationships;
@@ -1672,10 +1882,11 @@ declare namespace LocalJSX {
         "role-table-permissions": RoleTablePermissions;
         "roles-page": RolesPage;
         "roles-table": RolesTable;
-        "sc-budgetrecords": ScBudgetrecords;
+        "sc-budget-records": ScBudgetRecords;
+        "sc-budget-records-partnerships": ScBudgetRecordsPartnerships;
         "sc-budgets": ScBudgets;
         "sc-ceremonies": ScCeremonies;
-        "sc-change-to-plan": ScChangeToPlan;
+        "sc-change-to-plans": ScChangeToPlans;
         "sc-ethnologue": ScEthnologue;
         "sc-field-regions-table": ScFieldRegionsTable;
         "sc-field-zones": ScFieldZones;
@@ -1688,6 +1899,7 @@ declare namespace LocalJSX {
         "sc-internship-engagements": ScInternshipEngagements;
         "sc-known-languages-by-person": ScKnownLanguagesByPerson;
         "sc-language-engagements": ScLanguageEngagements;
+        "sc-language-locations": ScLanguageLocations;
         "sc-languages": ScLanguages;
         "sc-locations": ScLocations;
         "sc-organization-locations": ScOrganizationLocations;
@@ -1695,14 +1907,18 @@ declare namespace LocalJSX {
         "sc-partners": ScPartners;
         "sc-partnerships": ScPartnerships;
         "sc-people": ScPeople;
+        "sc-periodic-reports": ScPeriodicReports;
         "sc-person-unavailabilities": ScPersonUnavailabilities;
         "sc-pinned-projects": ScPinnedProjects;
         "sc-posts": ScPosts;
         "sc-product-scripture-references": ScProductScriptureReferences;
         "sc-products": ScProducts;
         "sc-project-locations": ScProjectLocations;
+        "sc-project-members": ScProjectMembers;
         "sc-projects": ScProjects;
         "scripture-references": ScriptureReferences;
+        "search-form": SearchForm;
+        "search-input": SearchInput;
         "sil-country-codes": SilCountryCodes;
         "sil-iso-639-3": SilIso6393;
         "sil-iso-639-3-macrolanguages": SilIso6393Macrolanguages;
@@ -1749,6 +1965,7 @@ declare module "@stencil/core" {
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "cf-cell2": LocalJSX.CfCell2 & JSXBase.HTMLAttributes<HTMLCfCell2Element>;
+            "cf-editable": LocalJSX.CfEditable & JSXBase.HTMLAttributes<HTMLCfEditableElement>;
             "cf-forgot-password": LocalJSX.CfForgotPassword & JSXBase.HTMLAttributes<HTMLCfForgotPasswordElement>;
             "cf-header": LocalJSX.CfHeader & JSXBase.HTMLAttributes<HTMLCfHeaderElement>;
             "cf-header-menu": LocalJSX.CfHeaderMenu & JSXBase.HTMLAttributes<HTMLCfHeaderMenuElement>;
@@ -1763,9 +1980,12 @@ declare module "@stencil/core" {
             "cf-table-body": LocalJSX.CfTableBody & JSXBase.HTMLAttributes<HTMLCfTableBodyElement>;
             "cf-table-footer": LocalJSX.CfTableFooter & JSXBase.HTMLAttributes<HTMLCfTableFooterElement>;
             "cf-tiny": LocalJSX.CfTiny & JSXBase.HTMLAttributes<HTMLCfTinyElement>;
+            "common-blog-posts": LocalJSX.CommonBlogPosts & JSXBase.HTMLAttributes<HTMLCommonBlogPostsElement>;
+            "common-blogs": LocalJSX.CommonBlogs & JSXBase.HTMLAttributes<HTMLCommonBlogsElement>;
             "common-cell-channels": LocalJSX.CommonCellChannels & JSXBase.HTMLAttributes<HTMLCommonCellChannelsElement>;
             "common-coalition-memberships": LocalJSX.CommonCoalitionMemberships & JSXBase.HTMLAttributes<HTMLCommonCoalitionMembershipsElement>;
             "common-coalitions": LocalJSX.CommonCoalitions & JSXBase.HTMLAttributes<HTMLCommonCoalitionsElement>;
+            "common-discussion-channels": LocalJSX.CommonDiscussionChannels & JSXBase.HTMLAttributes<HTMLCommonDiscussionChannelsElement>;
             "common-locations": LocalJSX.CommonLocations & JSXBase.HTMLAttributes<HTMLCommonLocationsElement>;
             "common-notes": LocalJSX.CommonNotes & JSXBase.HTMLAttributes<HTMLCommonNotesElement>;
             "common-org-chart-position-graph": LocalJSX.CommonOrgChartPositionGraph & JSXBase.HTMLAttributes<HTMLCommonOrgChartPositionGraphElement>;
@@ -1783,11 +2003,12 @@ declare module "@stencil/core" {
             "create-update-modal": LocalJSX.CreateUpdateModal & JSXBase.HTMLAttributes<HTMLCreateUpdateModalElement>;
             "custom-accordion": LocalJSX.CustomAccordion & JSXBase.HTMLAttributes<HTMLCustomAccordionElement>;
             "directories-table": LocalJSX.DirectoriesTable & JSXBase.HTMLAttributes<HTMLDirectoriesTableElement>;
-            "discussion-channels": LocalJSX.DiscussionChannels & JSXBase.HTMLAttributes<HTMLDiscussionChannelsElement>;
             "education-by-person": LocalJSX.EducationByPerson & JSXBase.HTMLAttributes<HTMLEducationByPersonElement>;
             "education-entries": LocalJSX.EducationEntries & JSXBase.HTMLAttributes<HTMLEducationEntriesElement>;
             "file-versions": LocalJSX.FileVersions & JSXBase.HTMLAttributes<HTMLFileVersionsElement>;
             "files-table": LocalJSX.FilesTable & JSXBase.HTMLAttributes<HTMLFilesTableElement>;
+            "filter-menu": LocalJSX.FilterMenu & JSXBase.HTMLAttributes<HTMLFilterMenuElement>;
+            "foreign-row": LocalJSX.ForeignRow & JSXBase.HTMLAttributes<HTMLForeignRowElement>;
             "generic-table": LocalJSX.GenericTable & JSXBase.HTMLAttributes<HTMLGenericTableElement>;
             "group-memberships": LocalJSX.GroupMemberships & JSXBase.HTMLAttributes<HTMLGroupMembershipsElement>;
             "groups-page": LocalJSX.GroupsPage & JSXBase.HTMLAttributes<HTMLGroupsPageElement>;
@@ -1801,6 +2022,10 @@ declare module "@stencil/core" {
             "page-not-found": LocalJSX.PageNotFound & JSXBase.HTMLAttributes<HTMLPageNotFoundElement>;
             "page-prayer-requests": LocalJSX.PagePrayerRequests & JSXBase.HTMLAttributes<HTMLPagePrayerRequestsElement>;
             "page-root": LocalJSX.PageRoot & JSXBase.HTMLAttributes<HTMLPageRootElement>;
+            "pagination-bar": LocalJSX.PaginationBar & JSXBase.HTMLAttributes<HTMLPaginationBarElement>;
+            "partner-crm": LocalJSX.PartnerCrm & JSXBase.HTMLAttributes<HTMLPartnerCrmElement>;
+            "partner-details": LocalJSX.PartnerDetails & JSXBase.HTMLAttributes<HTMLPartnerDetailsElement>;
+            "partner-list-item": LocalJSX.PartnerListItem & JSXBase.HTMLAttributes<HTMLPartnerListItemElement>;
             "peers-table": LocalJSX.PeersTable & JSXBase.HTMLAttributes<HTMLPeersTableElement>;
             "people-table": LocalJSX.PeopleTable & JSXBase.HTMLAttributes<HTMLPeopleTableElement>;
             "people-to-org-relationships": LocalJSX.PeopleToOrgRelationships & JSXBase.HTMLAttributes<HTMLPeopleToOrgRelationshipsElement>;
@@ -1811,10 +2036,11 @@ declare module "@stencil/core" {
             "role-table-permissions": LocalJSX.RoleTablePermissions & JSXBase.HTMLAttributes<HTMLRoleTablePermissionsElement>;
             "roles-page": LocalJSX.RolesPage & JSXBase.HTMLAttributes<HTMLRolesPageElement>;
             "roles-table": LocalJSX.RolesTable & JSXBase.HTMLAttributes<HTMLRolesTableElement>;
-            "sc-budgetrecords": LocalJSX.ScBudgetrecords & JSXBase.HTMLAttributes<HTMLScBudgetrecordsElement>;
+            "sc-budget-records": LocalJSX.ScBudgetRecords & JSXBase.HTMLAttributes<HTMLScBudgetRecordsElement>;
+            "sc-budget-records-partnerships": LocalJSX.ScBudgetRecordsPartnerships & JSXBase.HTMLAttributes<HTMLScBudgetRecordsPartnershipsElement>;
             "sc-budgets": LocalJSX.ScBudgets & JSXBase.HTMLAttributes<HTMLScBudgetsElement>;
             "sc-ceremonies": LocalJSX.ScCeremonies & JSXBase.HTMLAttributes<HTMLScCeremoniesElement>;
-            "sc-change-to-plan": LocalJSX.ScChangeToPlan & JSXBase.HTMLAttributes<HTMLScChangeToPlanElement>;
+            "sc-change-to-plans": LocalJSX.ScChangeToPlans & JSXBase.HTMLAttributes<HTMLScChangeToPlansElement>;
             "sc-ethnologue": LocalJSX.ScEthnologue & JSXBase.HTMLAttributes<HTMLScEthnologueElement>;
             "sc-field-regions-table": LocalJSX.ScFieldRegionsTable & JSXBase.HTMLAttributes<HTMLScFieldRegionsTableElement>;
             "sc-field-zones": LocalJSX.ScFieldZones & JSXBase.HTMLAttributes<HTMLScFieldZonesElement>;
@@ -1827,6 +2053,7 @@ declare module "@stencil/core" {
             "sc-internship-engagements": LocalJSX.ScInternshipEngagements & JSXBase.HTMLAttributes<HTMLScInternshipEngagementsElement>;
             "sc-known-languages-by-person": LocalJSX.ScKnownLanguagesByPerson & JSXBase.HTMLAttributes<HTMLScKnownLanguagesByPersonElement>;
             "sc-language-engagements": LocalJSX.ScLanguageEngagements & JSXBase.HTMLAttributes<HTMLScLanguageEngagementsElement>;
+            "sc-language-locations": LocalJSX.ScLanguageLocations & JSXBase.HTMLAttributes<HTMLScLanguageLocationsElement>;
             "sc-languages": LocalJSX.ScLanguages & JSXBase.HTMLAttributes<HTMLScLanguagesElement>;
             "sc-locations": LocalJSX.ScLocations & JSXBase.HTMLAttributes<HTMLScLocationsElement>;
             "sc-organization-locations": LocalJSX.ScOrganizationLocations & JSXBase.HTMLAttributes<HTMLScOrganizationLocationsElement>;
@@ -1834,14 +2061,18 @@ declare module "@stencil/core" {
             "sc-partners": LocalJSX.ScPartners & JSXBase.HTMLAttributes<HTMLScPartnersElement>;
             "sc-partnerships": LocalJSX.ScPartnerships & JSXBase.HTMLAttributes<HTMLScPartnershipsElement>;
             "sc-people": LocalJSX.ScPeople & JSXBase.HTMLAttributes<HTMLScPeopleElement>;
+            "sc-periodic-reports": LocalJSX.ScPeriodicReports & JSXBase.HTMLAttributes<HTMLScPeriodicReportsElement>;
             "sc-person-unavailabilities": LocalJSX.ScPersonUnavailabilities & JSXBase.HTMLAttributes<HTMLScPersonUnavailabilitiesElement>;
             "sc-pinned-projects": LocalJSX.ScPinnedProjects & JSXBase.HTMLAttributes<HTMLScPinnedProjectsElement>;
             "sc-posts": LocalJSX.ScPosts & JSXBase.HTMLAttributes<HTMLScPostsElement>;
             "sc-product-scripture-references": LocalJSX.ScProductScriptureReferences & JSXBase.HTMLAttributes<HTMLScProductScriptureReferencesElement>;
             "sc-products": LocalJSX.ScProducts & JSXBase.HTMLAttributes<HTMLScProductsElement>;
             "sc-project-locations": LocalJSX.ScProjectLocations & JSXBase.HTMLAttributes<HTMLScProjectLocationsElement>;
+            "sc-project-members": LocalJSX.ScProjectMembers & JSXBase.HTMLAttributes<HTMLScProjectMembersElement>;
             "sc-projects": LocalJSX.ScProjects & JSXBase.HTMLAttributes<HTMLScProjectsElement>;
             "scripture-references": LocalJSX.ScriptureReferences & JSXBase.HTMLAttributes<HTMLScriptureReferencesElement>;
+            "search-form": LocalJSX.SearchForm & JSXBase.HTMLAttributes<HTMLSearchFormElement>;
+            "search-input": LocalJSX.SearchInput & JSXBase.HTMLAttributes<HTMLSearchInputElement>;
             "sil-country-codes": LocalJSX.SilCountryCodes & JSXBase.HTMLAttributes<HTMLSilCountryCodesElement>;
             "sil-iso-639-3": LocalJSX.SilIso6393 & JSXBase.HTMLAttributes<HTMLSilIso6393Element>;
             "sil-iso-639-3-macrolanguages": LocalJSX.SilIso6393Macrolanguages & JSXBase.HTMLAttributes<HTMLSilIso6393MacrolanguagesElement>;

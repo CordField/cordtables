@@ -1,6 +1,7 @@
 package com.seedcompany.cordtables.components.tables.common.file_versions
 
 import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.MimeTypes
 import com.seedcompany.cordtables.common.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -41,16 +42,8 @@ class Update(
 
 
         when (req.column) {
-            "category" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "common.file_versions",
-                    column = "category",
-                    id = req.id,
-                    value = req.value,
-                )
-            }
-            "mime_type" -> {
+            "mime_type", -> {
+              if (MimeTypes.values().find { req.value == it.value } != null) {
                 util.updateField(
                     token = req.token,
                     table = "common.file_versions",
@@ -58,6 +51,7 @@ class Update(
                     id = req.id,
                     value = req.value,
                 )
+              }
             }
             "name" -> {
                 util.updateField(
@@ -74,8 +68,7 @@ class Update(
                     table = "common.file_versions",
                     column = "file",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "file_url" -> {
@@ -102,8 +95,7 @@ class Update(
                     table = "common.file_versions",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -112,8 +104,7 @@ class Update(
                     table = "common.file_versions",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

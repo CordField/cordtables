@@ -1,5 +1,8 @@
 package com.seedcompany.cordtables.common
 
+import com.seedcompany.cordtables.components.admin.GetSecureListQuery
+import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
+import com.seedcompany.cordtables.components.tables.admin.users.AdminUsersListResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
@@ -8,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.queryForObject
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.stereotype.Component
+import java.sql.SQLException
 import java.util.regex.Pattern
 import javax.sql.DataSource
 
@@ -17,14 +21,12 @@ class Utility(
 //    val appConfig: AppConfig,
   @Autowired
   val ds: DataSource,
+  @Autowired
+  val secureList: GetSecureListQuery,
 ) {
 
   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
   val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
-  val adminGroupId: String? = this.adminGroupId()
-  val adminRole: String? = this.adminRole()
-  val publicGroupId: String? = this.publicGroupId()
-  val personId: String? = this.personId()
 
   //language=SQL
   val getUserIdFromSessionIdQuery = """
@@ -354,7 +356,7 @@ class Utility(
                               where token = ?
                             ),
                         modified_at = CURRENT_TIMESTAMP
-                    where id = ?::uuid;
+                    where id = ?;
                 """.trimIndent(),
         value,
         token,
@@ -498,7 +500,43 @@ class Utility(
       null
     }
   }
+
+  //  need to figure out if this would work for non string types
+//  need to modify the secureListQueryHandler
+  fun getSearchResults(tableName: String, columnName: String, searchKeyword: String, token: String): MutableList<Any?> {
+    val paramSource = MapSqlParameterSource()
+    val whereClause = "$columnName like '%$searchKeyword'"
+    paramSource.addValue("token", token)
+    val query = secureList.getSecureListQueryHandler(
+      GetSecureListQueryRequest(
+        tableName = tableName,
+        filter = "order by id",
+        columns = arrayOf(
+          columnName
+        ),
+        whereClause = whereClause
+//        searchKeyword = searchKeyword
+      )
+    ).query
+    try {
+      val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
+      var resultList = mutableListOf<Any?>()
+      while (jdbcResult.next()) {
+//        for none string types, we can have a switch case here instead
+        var columnNameValue: Any? = jdbcResult.getString(columnName)
+        if (jdbcResult.wasNull()) columnNameValue = null
+          resultList.add(columnNameValue)
+      }
+      return resultList;
+    }
+    catch(e: SQLException) {
+      println("error while listing ${e.message}")
+      return mutableListOf()
+    }
+
+  }
 }
+
 
 inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
   return enumValues<T>().any { it.name == name }

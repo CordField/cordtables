@@ -21,6 +21,14 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.sql.DataSource
 import kotlin.math.ceil
 
+data class Neo4jMigrationRequest(
+  val token: String? = null,
+)
+
+data class Neo4jMigrationResponse(
+  val error: ErrorType,
+)
+
 data class BaseNodeCreate(
   val baseNode: String,
   val tableName: String,
@@ -170,7 +178,7 @@ class Neo4j2(
 
       val updateStatement: PreparedStatement = conn.prepareStatement(
         """
-        update $tableName set $column = ? where id = common.uuid_generate_v5(common.uuid_ns_url(), ?);
+        update $tableName set $column = ? where id = ?;
       """.trimIndent()
       )
 
@@ -604,7 +612,7 @@ class Neo4j2(
 
       val updateStatement: PreparedStatement = conn.prepareStatement(
         """
-        update $tableName set $column = common.uuid_generate_v5(common.uuid_ns_url(), ?) where id = common.uuid_generate_v5(common.uuid_ns_url(), ?);
+        update $tableName set $column = ? where id = ?;
       """.trimIndent()
       )
 
@@ -727,7 +735,7 @@ class Neo4j2(
       val insertStmt: PreparedStatement = conn.prepareStatement(
         """
         insert into $tableName(id, created_by, modified_by, owning_person, owning_group) 
-        values(common.uuid_generate_v5(common.uuid_ns_url(), ?), '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
+        values(?, '$adminPersonId', '$adminPersonId', '$adminPersonId', '$adminGroupId');
       """.trimIndent()
       )
 

@@ -1,11 +1,9 @@
 package com.seedcompany.cordtables.components.tables.sc.organizations
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sc.organizations.organization
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -57,7 +55,6 @@ class List(
                 filter = "order by id",
                 columns = arrayOf(
                     "id",
-//                    "neo4j_id",
                     "sensitivity",
                     "root_directory",
                     "address",
@@ -78,9 +75,6 @@ class List(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-//                var neo4j_id: String? = jdbcResult.getString("neo4j_id")
-//                if (jdbcResult.wasNull()) neo4j_id = null
 
                 var sensitivity: String? = jdbcResult.getString("sensitivity")
                 if (jdbcResult.wasNull()) sensitivity = null
@@ -112,7 +106,6 @@ class List(
                 data.add(
                     organization(
                         id = id,
-//                        neo4j_id = neo4j_id,
                         sensitivity = sensitivity,
                         root_directory = root_directory,
                         address = address,

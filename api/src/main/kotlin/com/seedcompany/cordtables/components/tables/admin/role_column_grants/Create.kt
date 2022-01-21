@@ -59,7 +59,7 @@ class Create(
             """
             insert into admin.role_column_grants(role, table_name, column_name, access_level,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::admin.table_name,
                     ?,
                     ?::admin.access_level,
@@ -78,7 +78,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -90,10 +90,8 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
-
-//        req.language.id = id
 
         return AdminRoleColumnGrantsCreateResponse(error = ErrorType.NoError, id = id)
     }

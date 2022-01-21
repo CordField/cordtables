@@ -49,8 +49,7 @@ class Update(
                         table = "common.ticket_graph",
                         column = "from_ticket",
                         id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
+                        value = req.value
                 )
             }
 
@@ -60,8 +59,7 @@ class Update(
                         table = "common.ticket_graph",
                         column = "to_ticket",
                         id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
+                        value = req.value
                 )
             }
 
@@ -72,8 +70,7 @@ class Update(
                         table = "common.ticket_graph",
                         column = "owning_person",
                         id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
+                        value = req.value
                 )
             }
 
@@ -83,8 +80,7 @@ class Update(
                         table = "common.ticket_graph",
                         column = "owning_group",
                         id = req.id,
-                        value = req.value,
-                        cast = "::uuid"
+                        value = req.value
                 )
             }
         }

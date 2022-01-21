@@ -7,19 +7,21 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 
 data class GetSecureListQueryRequest(
-    val tableName: String,
-    val columns: Array<String>,
-    val custom_columns: String? = null,
-    val filter: String = "",
-    val join: String = "",
-    val searchField: String = "",
-    val searchKeyword: String = "",
-    val getList: Boolean = true, // get read if false
-    val whereClause: String = ""
+  val tableName: String,
+  val columns: Array<String>,
+  val joinColumns: MutableMap<String, MutableMap<String, String>> = mutableMapOf(),
+  val joinTables: String = "",
+  val custom_columns: String? = null,
+  val filter: String = "",
+  val searchField: String = "",
+  val searchKeyword: String = "",
+  val getList: Boolean = true, // get read if false
+  val whereClause: String = ""
 )
 
 data class GetSecureListQueryResponse(
     var query: String,
+
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -79,18 +81,36 @@ class GetSecureListQuery() {
             )
             select
         """.replace('\n', ' ')
-
-        val columns = req.columns.map {
-            """
-                case
-                    when '$it' in (select column_name from column_level_access) then $it 
-                    when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) then $it
-                    when owning_person = (select person from admin.tokens where token = :token) then $it 
-                    when '$it' in (select column_name from public_column_level_access) then $it 
-                    else null 
-                end as $it
-            """.replace('\n', ' ')
+        var columns: List<String> = listOf()
+        if(req.joinColumns.isNotEmpty()){
+            for (table in req.joinColumns){
+                for (field in table.value){
+                    columns += """
+                        case
+                            when '${field.key}' in (select column_name from column_level_access) then ${table.key}.${field.key}
+                            when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) then ${table.key}.${field.key}
+                            when ${req.tableName}.owning_person = (select person from admin.tokens where token = :token) then ${table.key}.${field.key}
+                            when '${field.key}' in (select column_name from public_column_level_access) then ${table.key}.${field.key}
+                            else null
+                        end as ${field.value} 
+                    """.trimIndent()
+                }
+            }
         }
+        else{
+            columns = req.columns.map {
+                """
+                    case
+                        when '$it' in (select column_name from column_level_access) then $it 
+                        when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) then $it
+                        when owning_person = (select person from admin.tokens where token = :token) then $it 
+                        when '$it' in (select column_name from public_column_level_access) then $it 
+                        else null 
+                    end as $it
+                """.replace('\n', ' ')
+            }
+        }
+
 
         response.query += columns.joinToString()
         if(req.custom_columns!=null) {
@@ -98,42 +118,35 @@ class GetSecureListQuery() {
             response.query += req.custom_columns.replace('\n', ' ')
         }
 
-        if (req.getList) {
-
+        if(req.joinTables!=""){
             response.query += """
-                from ${req.tableName} ${req.join} WHERE 1=1
-               """.replace('\n', ' ')
-
-//            response.query += """
-//            from ${req.tableName}
-//            where (id in (select row from row_level_access) or
-//                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
-//                owning_person = (select person from admin.tokens where token = :token) or
-//                id in (select row from public_row_level_access))
-//        """.replace('\n', ' ')
-
-        } else {
+              from ${req.joinTables} 
+            """.trimIndent()
+        }
+        else {
             response.query += """
-              from ${req.tableName} 
-              where
-                  id = :id::uuid
-          """.replace('\n', ' ')
-
-//            response.query += """
-//            from ${req.tableName}
-//            where
-//                id = :id and
-//                ((id in (select row from row_level_access) or
-//                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
-//                owning_person = (select person from admin.tokens where token = :token) or
-//                id in (select row from public_row_level_access)))
-//        """.replace('\n', ' ')
-
+              from ${req.tableName}  
+            """.trimIndent()
         }
 
-//        if(req.searchField != "" && req.searchKeyword!=""){
-//
-//        }
+         if (req.getList) {
+            response.query += """
+            where (${req.tableName}.id in (select row from row_level_access) or
+                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
+                ${req.tableName}.owning_person = (select person from admin.tokens where token = :token) or
+                ${req.tableName}.id in (select row from public_row_level_access))
+            """.replace('\n', ' ')
+        } else {
+            response.query += """
+            where
+                ${req.tableName}.id = :id and
+                ((${req.tableName}.id in (select row from row_level_access) or
+                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = (SELECT id FROM admin.roles WHERE name='Administrator'))) or
+                ${req.tableName}.owning_person = (select person from admin.tokens where token = :token) or
+                ${req.tableName}.id in (select row from public_row_level_access)))
+            """.replace('\n', ' ')
+        }
+
 
       if(req.whereClause!=="") {
         response.query += """
@@ -148,6 +161,7 @@ class GetSecureListQuery() {
           ${req.filter};
           """.trimIndent().replace('\n',' ')
       }
+      println(response.query)
         return response
     }
 

@@ -2,7 +2,7 @@ package com.seedcompany.cordtables.components.tables.up.prayer_requests
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
-import com.seedcompany.cordtables.components.tables.sil.language_index.languageIndex
+import com.seedcompany.cordtables.components.tables.sil.language_index.LanguageIndex
 import com.seedcompany.cordtables.components.user.Register
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
@@ -109,18 +109,18 @@ class CreateFromGoogleForm(
       """
             insert into up.prayer_requests(request_language_id, sensitivity, translator, location, title, content, reviewed, prayer_type, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::common.sensitivity,
-                    ?::uuid,
+                    ?,
                     ?,
                     ?,
                     ?,
                     false,
                     ?::up.prayer_type,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid
+                    ?,
+                    ?,
+                    ?,
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -135,18 +135,18 @@ class CreateFromGoogleForm(
       creatorUserId,
       creatorUserId,
       creatorUserId,
-      util.adminGroupId
+      util.adminGroupId()
     )
     return UpPrayerRequestsCreateFromFormResponse(error = ErrorType.NoError, id = id)
   }
 
-  fun getSilLanguageData(ethCode: String): languageIndex {
+  fun getSilLanguageData(ethCode: String): LanguageIndex {
     var data = jdbcTemplate.query(
       """
         SELECT * FROM sil.language_index WHERE lang='${ethCode}'
       """.trimIndent()
     ){ rs, rowNum ->
-      languageIndex(
+      LanguageIndex(
         rs.getString("id"),
         rs.getString("lang"),
         rs.getString("country"),

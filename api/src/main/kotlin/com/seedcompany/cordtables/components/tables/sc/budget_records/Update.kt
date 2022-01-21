@@ -49,7 +49,6 @@ class Update(
                     column = "budget",
                     id = req.id,
                     value = req.value,
-                    cast = "::uuid"
                 )
             }
 
@@ -60,7 +59,6 @@ class Update(
                     column = "change_to_plan",
                     id = req.id,
                     value = req.value,
-                    cast = "::uuid"
                 )
             }
 
@@ -82,6 +80,7 @@ class Update(
                     column = "amount",
                     id = req.id,
                     value = req.value,
+                    cast = "::decimal"
                 )
             }
 
@@ -91,18 +90,28 @@ class Update(
                     table = "sc.budget-records",
                     column = "fiscal_year",
                     id = req.id,
-                    value = req.value,
+                    value = req.value
                 )
             }
 
-            "partnership" -> {
+            "organization" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.budget_records",
-                    column = "partnership",
+                    column = "organization",
+                    id = req.id,
+                    value = req.value
+                )
+            }
+
+            "sensitivity" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.budget_records",
+                    column = "sensitivity",
                     id = req.id,
                     value = req.value,
-                    cast = "::uuid"
+                    cast = "::common.sensitivity"
                 )
             }
 
@@ -112,8 +121,7 @@ class Update(
                     table = "sc.budget_records",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
 
@@ -123,12 +131,10 @@ class Update(
                     table = "sc.budget_records",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
 
-//            else -> null
         }
 
         return ScBudgetRecordsUpdateResponse(ErrorType.NoError)

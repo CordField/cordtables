@@ -1,5 +1,7 @@
-import { Component, Host, h, Prop, State, Element } from '@stencil/core';
+import { Component, Host, h, Prop, State, Element, Event, EventEmitter } from '@stencil/core';
+import { timingSafeEqual } from 'crypto';
 import { globals } from '../../../core/global.store';
+import { foreignKeyClickedObject } from '../../types';
 import { CellType, ColumnDescription } from '../types';
 
 @Component({
@@ -11,6 +13,7 @@ export class CfCell {
   @Element() el: HTMLElement;
 
   @Prop() rowId: string;
+  @Prop() displayValue: any = null;
   @Prop() value: any;
   @Prop() columnDescription: ColumnDescription;
   @Prop() cellType: CellType = 'data';
@@ -20,9 +23,15 @@ export class CfCell {
   @State() newValue: any;
 
   @State() width: number;
+  @Event({ bubbles: true }) foreignKeyClicked: EventEmitter<foreignKeyClickedObject>;
 
   connectedCallback() {
     this.newValue = this.value;
+    console.log(this.value, this.displayValue, 'cf-cell2');
+  }
+  linkToForeignKey() {
+    console.log('event emitted');
+    this.foreignKeyClicked.emit({ tableUrl: this.columnDescription.foreignKey, id: this.value });
   }
 
   clickEdit = () => {
@@ -85,6 +94,7 @@ export class CfCell {
     return (
       <Host>
         <slot></slot>
+
         {/* holds entire cell - width is calculated based on base value and edit mode */}
         <span
           class={this.cellType === 'header' ? 'value-view header both' : 'value-view data both'}
@@ -96,13 +106,25 @@ export class CfCell {
               <span class="value-wrapper">
                 {typeof this.value === 'boolean' && <span>{this.value.toString()}</span>}
                 {typeof this.value === 'number' && <span>{this.value.toString()}</span>}
-                {typeof this.value === 'object' && <span>{this.value}</span>}
+                {typeof this.value === 'object' && <span>{JSON.stringify(this.value)}</span>}
+                {this.columnDescription.foreignKey !== null && this.columnDescription.foreignKey !== undefined && this.cellType === 'data' && (
+                  <span
+                    class="cell-link"
+                    // style={{ color: 'blue' }}
+                    onClick={this.linkToForeignKey.bind(this)}
+                  >
+                    {this.displayValue}
+                  </span>
+                )}
 
                 {/* for header cells - they'll never be enums */}
                 {typeof this.value === 'string' && this.cellType === 'header' && <span title={this.value}>{this.value}</span>}
 
                 {/* for data cell strings that aren't enums */}
-                {typeof this.value === 'string' && this.cellType === 'data' && this.columnDescription.selectOptions === undefined && <span title={this.value}>{this.value}</span>}
+                {typeof this.value === 'string' &&
+                  this.cellType === 'data' &&
+                  this.columnDescription.selectOptions === undefined &&
+                  this.columnDescription.foreignKey === undefined && <span title={this.value}>{this.value}</span>}
 
                 {/* for enums - we need to show their display */}
                 {typeof this.value === 'string' && this.cellType === 'data' && this.columnDescription.selectOptions !== undefined && (

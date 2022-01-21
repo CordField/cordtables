@@ -53,6 +53,8 @@ public class AutomationTestConfig {
 		this.browserConfigs = new BrowserDriverConfig();
 		this.browserConfigs.setType(configs.getProperty("browser.config.driver.type", BrowserType.CHROME));
 		this.browserConfigs.setDriverPath(configs.getProperty("browser.config.driver.path"));
+		this.browserConfigs.setHeadless(!Boolean.valueOf(configs.getProperty("test.execution.background.disabled", "false")));
+		this.browserConfigs.setVerbose(Boolean.valueOf(configs.getProperty("browser.config.debug.enabled", "false")));
 
 	}
 

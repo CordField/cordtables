@@ -1,11 +1,9 @@
 package com.seedcompany.cordtables.components.tables.admin.users
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.admin.users.user
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -59,11 +57,10 @@ class List(
             GetSecureListQueryRequest(
                 tableName = "admin.users",
                 filter = "order by id",
-                searchField = "email",
-                searchKeyword = "aslambabu@gmail.com",
+//                searchField = "email",
+//                searchKeyword = "aslambabu@gmail.com",
                 columns = arrayOf(
                     "id",
-                    "person",
                     "email",
                     "password",
                     "created_at",
@@ -82,9 +79,6 @@ class List(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var person: String? = jdbcResult.getString("person")
-                if (jdbcResult.wasNull()) person = null
 
                 var email: String? = jdbcResult.getString("email")
                 if (jdbcResult.wasNull()) email = null
@@ -113,7 +107,6 @@ class List(
                 data.add(
                     user(
                         id = id,
-                        person = person,
                         email = email,
                         password = password,
                         created_at = created_at,

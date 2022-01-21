@@ -122,7 +122,7 @@ class FakeDataCreatorControl (
 
         count++
         if (count == 1) continue
-        commonLocationsNamesQuery += "('${sensitivity}', '${name}', '${type}' , '${isoAlpha3}',  '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminGroupId}'::uuid), "
+        commonLocationsNamesQuery += "('${sensitivity}', '${name}', '${type}' , '${isoAlpha3}',  '${adminPeopleId}', '${adminPeopleId}', '${adminPeopleId}', '${adminGroupId}'), "
       }
       commonLocationsNamesQuery = commonLocationsNamesQuery.dropLast(2) + ";"
 
@@ -291,7 +291,7 @@ class FakeDataCreatorControl (
 
         count++
         if (count == 1) continue
-        commonOrganizationsNamesQuery += "('${sensitivity}', '${name}', '${commonLocationsId}', '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminGroupId}'::uuid), "
+        commonOrganizationsNamesQuery += "('${sensitivity}', '${name}', '${commonLocationsId}', '${adminPeopleId}', '${adminPeopleId}', '${adminPeopleId}', '${adminGroupId}'), "
       }
 
       commonOrganizationsNamesQuery = commonOrganizationsNamesQuery.dropLast(2) + ";"

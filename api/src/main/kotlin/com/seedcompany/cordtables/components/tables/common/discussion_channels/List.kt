@@ -22,7 +22,7 @@ data class CommonDiscussionChannelsListRequest(
 
 data class CommonDiscussionChannelsListResponse(
     val error: ErrorType,
-    val discussion_channels: MutableList<DiscussionChannel>?
+    val discussionChannels: MutableList<DiscussionChannel>?
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])

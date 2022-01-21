@@ -48,8 +48,7 @@ class Update(
                     table = "common.ticket_feedback",
                     column = "ticket",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "stakeholder" -> {
@@ -58,8 +57,7 @@ class Update(
                     table = "common.ticket_feedback",
                     column = "stakeholder",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "feedback" -> {
@@ -78,8 +76,7 @@ class Update(
                     table = "common.ticket_feedback",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -88,8 +85,7 @@ class Update(
                     table = "common.ticket_feedback",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

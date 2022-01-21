@@ -1,4 +1,4 @@
-import { Component, h, Host, Prop, State } from '@stencil/core';
+import { Component, h, Host, Listen, Prop, State } from '@stencil/core';
 import { injectHistory, RouterHistory } from '@stencil/router';
 import { globals } from '../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -74,6 +74,7 @@ export class AppRoot {
       <div id="root-wrap-outer">
         <cf-notif />
         <cf-header />
+        <foreign-row />
         {globals.globalStore.state.appState === AppState.TranslationLoaded && (
           <div id="root-wrap-inner">
             <div>
@@ -131,6 +132,7 @@ export class AppRoot {
                   <stencil-route url="/forgot-password" component="cf-forgot-password" />
                   <stencil-route url="/reset-password/:token" component="cf-reset-password" />
                   <stencil-route url="/table/:table" component="table-root" />
+                  <stencil-route url="/sc/partner-crm" component="partner-crm" />
 
                   <stencil-route url="/page/:page/:requestId?" component="page-root" />
                 </stencil-route-switch>

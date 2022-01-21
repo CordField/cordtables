@@ -53,7 +53,7 @@ class Create(
             """
             insert into sc.ethnologue(language_index, code, language_name, population, provisional_code, sensitivity, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?,
                     ?,
                     ?,
@@ -74,7 +74,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -89,7 +89,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
 //        req.language.id = id

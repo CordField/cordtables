@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 class CreateFileVersionExRequest {
   token: string;
   fileVersion: {
-    category: string;
     mime_type: string;
     name: string;
     file: string;
@@ -68,7 +67,6 @@ export class FileVersions {
   @State() fileVersionsResponse: CommonFileVersionListResponse;
   @State() filesResponse: CommonFileListResponse;
 
-  newCategory: string;
   newMimeType: string;
   newName: string;
   newFile: string;
@@ -125,10 +123,6 @@ export class FileVersions {
     });
   }
 
-  categoryChange(event) {
-    this.newCategory = event.target.value;
-  }
-
   mimetypeChange(event) {
     this.newMimeType = event.target.value;
   }
@@ -156,7 +150,6 @@ export class FileVersions {
     const createResponse = await fetchAs<CreateFileVersionExRequest, CreateFileVersionExResponse>('common/file-versions/create-read', {
       token: globals.globalStore.state.token,
       fileVersion: {
-        category: this.newCategory,
         mime_type: this.newMimeType,
         name: this.newName,
         file: this.newFile,
@@ -183,21 +176,159 @@ export class FileVersions {
       deleteFn: this.handleDelete,
     },
     {
-      field: 'category',
-      displayName: 'category',
-      width: 250,
-      editable: true,
-      updateFn: this.handleUpdate,
-    },
-    {
       field: 'mime_type',
       displayName: 'Mime Type',
-      width: 50,
+      width: 250,
       editable: true,
       selectOptions: [
-        { display: 'A', value: 'A' },
-        { display: 'B', value: 'B' },
-        { display: 'C', value: 'C' },
+        { display: 'application/msword', value: 'application/msword' },
+        { display: 'application/pdf', value: 'application/pdf' },
+        { display: 'application/postscript', value: 'application/postscript' },
+        { display: 'application/rtf', value: 'application/rtf' },
+        { display: 'application/vnd.ms-excel', value: 'application/vnd.ms-excel' },
+        { display: 'application/vnd.ms-excel.sheet.macroEnabled.12', value: 'application/vnd.ms-excel.sheet.macroEnabled.12' },
+        { display: 'application/vnd.ms-excel.sheet.binary.macroEnabled.12', value: 'application/vnd.ms-excel.sheet.binary.macroEnabled.12' },
+        { display: 'application/vnd.ms-outlook', value: 'application/vnd.ms-outlook' },
+        { display: 'application/octet-stream', value: 'application/octet-stream' },
+        { display: 'application/vnd.ms-powerpoint', value: 'application/vnd.ms-powerpoint' },
+        { display: 'application/vnd.ms-project', value: 'application/vnd.ms-project' },
+        { display: 'application/vnd.oasis.opendocument.chart', value: 'application/vnd.oasis.opendocument.chart' },
+        { display: 'application/vnd.oasis.opendocument.chart-template', value: 'application/vnd.oasis.opendocument.chart-template' },
+        { display: 'application/vnd.oasis.opendocument.database', value: 'application/vnd.oasis.opendocument.database' },
+        { display: 'application/vnd.oasis.opendocument.graphics', value: 'application/vnd.oasis.opendocument.graphics' },
+        { display: 'application/vnd.oasis.opendocument.graphics-template', value: 'application/vnd.oasis.opendocument.graphics-template' },
+        { display: 'application/vnd.oasis.opendocument.image', value: 'application/vnd.oasis.opendocument.image' },
+        { display: 'application/vnd.oasis.opendocument.image-template', value: 'application/vnd.oasis.opendocument.image-template' },
+        { display: 'application/vnd.oasis.opendocument.presentation', value: 'application/vnd.oasis.opendocument.presentation' },
+        { display: 'application/vnd.oasis.opendocument.presentation-template', value: 'application/vnd.oasis.opendocument.presentation-template' },
+        { display: 'application/vnd.oasis.opendocument.spreadsheet', value: 'application/vnd.oasis.opendocument.spreadsheet' },
+        { display: 'application/vnd.oasis.opendocument.spreadsheet-template', value: 'application/vnd.oasis.opendocument.spreadsheet-template' },
+        { display: 'application/vnd.oasis.opendocument.text', value: 'application/vnd.oasis.opendocument.text' },
+        { display: 'application/vnd.oasis.opendocument.text-master', value: 'application/vnd.oasis.opendocument.text-master' },
+        { display: 'application/vnd.oasis.opendocument.text-template', value: 'application/vnd.oasis.opendocument.text-template' },
+        { display: 'application/vnd.oasis.opendocument.text-web', value: 'application/vnd.oasis.opendocument.text-web' },
+        { display: 'application/vnd.openxmlformats-officedocument.presentationml.slide', value: 'application/vnd.openxmlformats-officedocument.presentationml.slide' },
+        { display: 'application/vnd.openxmlformats-officedocument.presentationml.slideshow', value: 'application/vnd.openxmlformats-officedocument.presentationml.slideshow' },
+        { display: 'application/vnd.openxmlformats-officedocument.presentationml.template', value: 'application/vnd.openxmlformats-officedocument.presentationml.template' },
+        { display: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', value: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+        { display: 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', value: 'application/vnd.openxmlformats-officedocument.spreadsheetml.template' },
+        { display: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', value: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' },
+        { display: 'application/vnd.openxmlformats-officedocument.wordprocessingml.template', value: 'application/vnd.openxmlformats-officedocument.wordprocessingml.template' },
+        { display: 'application/vnd.visio', value: 'application/vnd.visio' },
+        { display: 'application/vnd.wordperfect', value: 'application/vnd.wordperfect' },
+        { display: 'application/x-font-ghostscript', value: 'application/x-font-ghostscript' },
+        { display: 'application/x-font-linux-psf', value: 'application/x-font-linux-psf' },
+        { display: 'application/x-font-pcf', value: 'application/x-font-pcf' },
+        { display: 'application/x-font-snf', value: 'application/x-font-snf' },
+        { display: 'application/x-font-type1', value: 'application/x-font-type1' },
+        { display: 'application/x-gtar', value: 'application/x-gtar' },
+        { display: 'application/x-iso9660-image', value: 'application/x-iso9660-image' },
+        { display: 'application/x-ms-wmd', value: 'application/x-ms-wmd' },
+        { display: 'application/x-msaccess', value: 'application/x-msaccess' },
+        { display: 'application/x-mspublisher', value: 'application/x-mspublisher' },
+        { display: 'application/x-mswrite', value: 'application/x-mswrite' },
+        { display: 'application/x-tar', value: 'application/x-tar' },
+        { display: 'application/x-tex', value: 'application/x-tex' },
+        { display: 'application/x-tex-tfm', value: 'application/x-tex-tfm' },
+        { display: 'application/x-texinfo', value: 'application/x-texinfo' },
+        { display: 'application/x-zip-compressed', value: 'application/x-zip-compressed' },
+        { display: 'application/zip', value: 'application/zip' },
+        { display: 'audio/adpcm', value: 'audio/adpcm' },
+        { display: 'audio/basic', value: 'audio/basic' },
+        { display: 'audio/midi', value: 'audio/midi' },
+        { display: 'audio/mp4', value: 'audio/mp4' },
+        { display: 'audio/mpeg', value: 'audio/mpeg' },
+        { display: 'audio/ogg', value: 'audio/ogg' },
+        { display: 'audio/s3m', value: 'audio/s3m' },
+        { display: 'audio/silk', value: 'audio/silk' },
+        { display: 'audio/vnd.rip', value: 'audio/vnd.rip' },
+        { display: 'audio/webm', value: 'audio/webm' },
+        { display: 'audio/x-aac', value: 'audio/x-aac' },
+        { display: 'audio/x-aiff', value: 'audio/x-aiff' },
+        { display: 'audio/x-caf', value: 'audio/x-caf' },
+        { display: 'audio/x-flac', value: 'audio/x-flac' },
+        { display: 'audio/x-matroska', value: 'audio/x-matroska' },
+        { display: 'audio/x-mpegurl', value: 'audio/x-mpegurl' },
+        { display: 'audio/x-ms-wax', value: 'audio/x-ms-wax' },
+        { display: 'audio/x-ms-wma', value: 'audio/x-ms-wma' },
+        { display: 'audio/xpn-realaudio', value: 'audio/xpn-realaudio' },
+        { display: 'audio/x-wav', value: 'audio/x-wav' },
+        { display: 'audio/xm', value: 'audio/xm' },
+        { display: 'font/otf', value: 'font/otf' },
+        { display: 'font/ttf', value: 'font/ttf' },
+        { display: 'font/woff', value: 'font/woff' },
+        { display: 'font/woff2', value: 'font/woff2' },
+        { display: 'image/bmp', value: 'image/bmp' },
+        { display: 'image/cgm', value: 'image/cgm' },
+        { display: 'image/g3fax', value: 'image/g3fax' },
+        { display: 'image/gif', value: 'image/gif' },
+        { display: 'image/ief', value: 'image/ief' },
+        { display: 'image/jpeg', value: 'image/jpeg' },
+        { display: 'image/ktx', value: 'image/ktx' },
+        { display: 'image/png', value: 'image/png' },
+        { display: 'image/sgi', value: 'image/sgi' },
+        { display: 'image/svg+xml', value: 'image/svg+xml' },
+        { display: 'image/tiff', value: 'image/tiff' },
+        { display: 'image/vnd.adobe.photoshop', value: 'image/vnd.adobe.photoshop' },
+        { display: 'image/vnd.dwg', value: 'image/vnd.dwg' },
+        { display: 'image/vnd.dxf', value: 'image/vnd.dxf' },
+        { display: 'image/x-3ds', value: 'image/x-3ds' },
+        { display: 'image/x-cmu-raster', value: 'image/x-cmu-raster' },
+        { display: 'image/x-cmx', value: 'image/x-cmx' },
+        { display: 'image/x-freehand', value: 'image/x-freehand' },
+        { display: 'image/x-icon', value: 'image/x-icon' },
+        { display: 'image/x-mrsid-image', value: 'image/x-mrsid-image' },
+        { display: 'image/x-pcx', value: 'image/x-pcx' },
+        { display: 'image/x-pict', value: 'image/x-pict' },
+        { display: 'image/x-portable-anymap', value: 'image/x-portable-anymap' },
+        { display: 'image/x-portable-bitmap', value: 'image/x-portable-bitmap' },
+        { display: 'image/x-portable-graymap', value: 'image/x-portable-graymap' },
+        { display: 'image/x-portable-pixmap', value: 'image/x-portable-pixmap' },
+        { display: 'image/x-rgb', value: 'image/x-rgb' },
+        { display: 'image/x-tga', value: 'image/x-tga' },
+        { display: 'image/x-xbitmap', value: 'image/x-xbitmap' },
+        { display: 'image/x-xpixmap', value: 'image/x-xpixmap' },
+        { display: 'image/xwindowdump', value: 'image/xwindowdump' },
+        { display: 'message/rfc822', value: 'message/rfc822' },
+        { display: 'text/calendar', value: 'text/calendar' },
+        { display: 'text/css', value: 'text/css' },
+        { display: 'text/csv', value: 'text/csv' },
+        { display: 'text/html', value: 'text/html' },
+        { display: 'text/plain', value: 'text/plain' },
+        { display: 'text/richtext', value: 'text/richtext' },
+        { display: 'text/rtf', value: 'text/rtf' },
+        { display: 'text/sgml', value: 'text/sgml' },
+        { display: 'text/tab-separated-values', value: 'text/tab-separated-values' },
+        { display: 'video/3gpp', value: 'video/3gpp' },
+        { display: 'video/3gp2', value: 'video/3gp2' },
+        { display: 'video/h261', value: 'video/h261' },
+        { display: 'video/h263', value: 'video/h263' },
+        { display: 'video/h264', value: 'video/h264' },
+        { display: 'video/jpeg', value: 'video/jpeg' },
+        { display: 'video/jpm', value: 'video/jpm' },
+        { display: 'video/mj2', value: 'video/mj2' },
+        { display: 'video/mp4', value: 'video/mp4' },
+        { display: 'video/mpeg', value: 'video/mpeg' },
+        { display: 'video/ogg', value: 'video/ogg' },
+        { display: 'video/quicktime', value: 'video/quicktime' },
+        { display: 'video/vnd.mpegurl', value: 'video/vnd.mpegurl' },
+        { display: 'video/vnd.vivo', value: 'video/vnd.vivo' },
+        { display: 'video/webm', value: 'video/webm' },
+        { display: 'video/x-f4v', value: 'video/x-f4v' },
+        { display: 'video/x-fli', value: 'video/x-fli' },
+        { display: 'video/x-flv', value: 'video/x-flv' },
+        { display: 'video/x-m4v', value: 'video/x-m4v' },
+        { display: 'video/x-matroska', value: 'video/x-matroska' },
+        { display: 'video/x-mng', value: 'video/x-mng' },
+        { display: 'video/x-ms-asf', value: 'video/x-ms-asf' },
+        { display: 'video/x-ms-vob', value: 'video/x-ms-vob' },
+        { display: 'video/x-ms-wm', value: 'video/x-ms-wm' },
+        { display: 'video/x-ms-wmv', value: 'video/x-ms-wmv' },
+        { display: 'video/x-ms-wmx', value: 'video/x-ms-wmx' },
+        { display: 'video/x-ms-wvx', value: 'video/x-ms-wvx' },
+        { display: 'video/x-msvideo', value: 'video/x-msvideo' },
+        { display: 'video/x-sgi-movie', value: 'video/x-sgi-movie' },
+        { display: 'video/x-smv', value: 'video/x-smv' },
       ],
       updateFn: this.handleUpdate,
     },
@@ -286,31 +417,20 @@ export class FileVersions {
 
         {globals.globalStore.state.editMode === true && (
           <form class="form-thing">
-            <div id="category-name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="category-name">Category</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="category-name" name="category-name" onInput={event => this.categoryChange(event)} />
-              </span>
-            </div>
-
             <div id="mimetype-holder" class="form-input-item form-thing">
               <span class="form-thing">
                 <label htmlFor="mimetype">Mime Type</label>
               </span>
               <span class="form-thing">
                 <select id="mimetype" name="mimetype" onInput={event => this.mimetypeChange(event)}>
-                  <option value="">Select Mime Type</option>
-                  <option value="A" selected={this.newMimeType === 'A'}>
-                    A
+                  <option disabled selected value="">
+                    Select Mime Type
                   </option>
-                  <option value="B" selected={this.newMimeType === 'B'}>
-                    B
-                  </option>
-                  <option value="C" selected={this.newMimeType === 'C'}>
-                    C
-                  </option>
+                  {this.columnData[1].selectOptions.map(mimeType => (
+                    <option key={mimeType.value} selected={this.newMimeType === mimeType.value}>
+                      {mimeType.value}
+                    </option>
+                  ))}
                 </select>
               </span>
             </div>

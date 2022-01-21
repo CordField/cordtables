@@ -1,12 +1,9 @@
 package com.seedcompany.cordtables.components.tables.admin.users
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.admin.users.user
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -61,7 +58,6 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-                    "person",
                     "email",
                     "password",
                     "created_at",
@@ -80,9 +76,6 @@ class Read(
 
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
-
-                var person: String? = jdbcResult.getString("person")
-                if (jdbcResult.wasNull()) person = null
 
                 var email: String? = jdbcResult.getString("email")
                 if (jdbcResult.wasNull()) email = null
@@ -111,7 +104,6 @@ class Read(
                 val user =
                     user(
                         id = id,
-                        person = person,
                         email = email,
                         password = password,
                         created_at = created_at,
