@@ -98,6 +98,8 @@ export class AdminUsers {
     this.usersResponse = await fetchAs<AdminUserListRequest, AdminUserListResponse>('admin/users/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.usersResponse.error === ErrorType.NoError) {
+    }
   }
 
   personChange(event) {

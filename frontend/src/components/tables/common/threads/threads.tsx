@@ -23,8 +23,7 @@ import {
 })
 export class Threads {
   @State() commonThreadsResponse: CommonThreadsListResponse;
-  @State() threads: CommonThread[] = [];
-  @State() applicationState: 'loading' | 'initialResponse' | 'autocompleteResponse' = 'loading';
+
   newContent: string;
   newChannel: string;
   @Listen('searchResults')
@@ -74,7 +73,6 @@ export class Threads {
       token: globals.globalStore.state.token,
     });
     if (this.commonThreadsResponse.error === ErrorType.NoError) {
-      this.applicationState = 'initialResponse';
       // this.threads = this.commonThreadsResponse.threads;
       await this.updateForeignKeys();
     }
@@ -233,8 +231,6 @@ export class Threads {
         }
       }
     }
-    this.applicationState = 'autocompleteResponse';
-    console.log(this.applicationState, this.threads);
   }
   render() {
     return (

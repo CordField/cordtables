@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -94,10 +94,40 @@ export class AdminRoles {
     this.rolesResponse = await fetchAs<AdminRoleListRequest, AdminRoleListResponse>('admin/roles/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.rolesResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
   }
 
   nameChange(event) {
     this.newName = event.target.value;
+  }
+  async updateForeignKeys() {
+    for (const adminRole of this.rolesResponse.roles) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: adminRole[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.rolesResponse.roles.map(adminRole2 => {
+              if (adminRole.id === adminRole2.id) {
+                adminRole2[column.field] = {
+                  value: adminRole[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return adminRole2;
+            });
+          }
+        }
+      }
+    }
   }
 
   handleInsert = async (event: MouseEvent) => {
@@ -146,6 +176,8 @@ export class AdminRoles {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -158,6 +190,8 @@ export class AdminRoles {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -165,6 +199,8 @@ export class AdminRoles {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -172,6 +208,8 @@ export class AdminRoles {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 

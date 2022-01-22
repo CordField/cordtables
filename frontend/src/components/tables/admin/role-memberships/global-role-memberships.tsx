@@ -1,5 +1,5 @@
 import { Component, Host, h, State } from '@stencil/core';
-import { ActionType, ErrorType } from '../../../../common/types';
+import { ActionType, AutocompleteRequest, AutocompleteResponse, ErrorType } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 class GroupsGlobalRoleMembershipsRequest {
@@ -74,13 +74,15 @@ export class GlobalRoleMemberships {
   editableKeys = ['name'];
 
   async connectedCallback() {
-    this.getList();
+    await this.getList();
   }
 
   async getList() {
     this.listResponse = await fetchAs<GroupsGlobalRoleMembershipsRequest, GlobalRoleMembershipsListResponse>('role-memberships/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.listResponse.error === ErrorType.NoError) {
+    }
   }
 
   toggleNewForm = () => {

@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -99,6 +99,37 @@ export class AdminGroupMemberships {
     this.groupMembershipsResponse = await fetchAs<AdminGroupMembershipListRequest, AdminGroupMembershipListResponse>('admin/group-memberships/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.groupMembershipsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
+  }
+
+  async updateForeignKeys() {
+    for (const groupMembership of this.groupMembershipsResponse.groupMemberships) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: groupMembership[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.groupMembershipsResponse.groupMemberships.map(groupMembership2 => {
+              if (groupMembership.id === groupMembership2.id) {
+                groupMembership2[column.field] = {
+                  value: groupMembership[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return groupMembership2;
+            });
+          }
+        }
+      }
+    }
   }
 
   group_idChange(event) {
@@ -144,6 +175,8 @@ export class AdminGroupMemberships {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
     {
       field: 'person',
@@ -151,6 +184,8 @@ export class AdminGroupMemberships {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'created_at',
@@ -163,6 +198,8 @@ export class AdminGroupMemberships {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -175,6 +212,8 @@ export class AdminGroupMemberships {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -182,6 +221,8 @@ export class AdminGroupMemberships {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -189,6 +230,8 @@ export class AdminGroupMemberships {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 
