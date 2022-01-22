@@ -2047,16 +2047,16 @@ class Neo4j2(
       )
     )
 
-    queue.offer(
-      RelationshipCreate(
-        fromBaseNode = "DerivativeScriptureProduct",
-        type = "produces",
-        toBaseNode = "Producible",
-        table = "sc.products",
-        column = "produces",
-        baseNodeToPlaceInColumn = "Producible"
-      )
-    )
+//    queue.offer(
+//      RelationshipCreate(
+//        fromBaseNode = "DerivativeScriptureProduct",
+//        type = "produces",
+//        toBaseNode = "Producible",
+//        table = "sc.products",
+//        column = "produces",
+//        baseNodeToPlaceInColumn = "Producible"
+//      )
+//    )
 
     val migrationStart = DateTime.now().millis
 

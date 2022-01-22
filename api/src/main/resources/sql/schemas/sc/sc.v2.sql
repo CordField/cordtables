@@ -285,8 +285,8 @@ create table sc.languages(
 	id uuid primary key default common.uuid_generate_v4(),
 
   ethnologue uuid references sc.ethnologue(id), -- not null
-  name varchar(255) unique, -- not null
-  display_name varchar(255) unique, -- not null
+  name varchar(255), -- not null unique
+  display_name varchar(255), -- not null unique
   display_name_pronunciation varchar(255),
   tags text[],
   preset_inventory bool,
@@ -584,7 +584,7 @@ create table sc.periodic_reports (
 create table sc.projects (
   id uuid primary key default common.uuid_generate_v4(),
 
-	name varchar(32), -- not null
+	name varchar(64), -- not null
 	change_to_plan uuid references sc.change_to_plans(id), -- not null
 	active bool,
 	department varchar(255),
@@ -812,7 +812,7 @@ create table sc.language_engagements (
   is_luke_partnership bool,
   last_suspended_at timestamp,
   last_reactivated_at timestamp,
-  paratext_registry varchar(32),
+  paratext_registry varchar(64),
   periodic_reports_directory uuid references sc.periodic_reports_directory(id),
   pnp varchar(255),
   pnp_file uuid references common.files(id),
@@ -843,7 +843,8 @@ create type common.product_mediums as enum (
   'TrainedStoryTellers',
   'Audio',
   'Video',
-  'Other'
+  'Other',
+  'OralTranslation'
 );
 
 
@@ -942,7 +943,7 @@ create table sc.products (
   describe_completion text,
   description text,
   type sc.product_type,
-  produces uuid references sc.products(id),
+  produces uuid, -- references sc.products(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),

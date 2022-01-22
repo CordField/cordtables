@@ -284,7 +284,7 @@ create table common.locations (
 	name varchar(255) unique, -- not null,
 	sensitivity common.sensitivity not null default 'High',
 	type common.location_type, -- not null,
-	iso_alpha3 char(3) unique,
+	iso_alpha3 char(3), -- todo is this unique?
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
 	created_by uuid not null references admin.people(id),
@@ -321,9 +321,9 @@ create table common.education_entries (
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
+  owning_group uuid not null references admin.groups(id)
 
-  unique (degree, institution, major)
+--  unique (degree, institution, major)
 );
 
 create table common.education_by_person (
