@@ -16,7 +16,7 @@ export class AppRoot {
 
   @State() showSelect = false;
 
-  pages = ['Groups', 'Roles', 'Organizations', 'Slack', 'Tickets', 'Prayer Requests'];
+  pages = ['Groups', 'Roles', 'Organizations', 'Slack', 'Tickets', 'Prayer Requests', 'Partner CRM'];
 
   selectChange(event) {
     const table = event.target.value;
@@ -94,9 +94,6 @@ export class AppRoot {
                                     <ion-label>{page} Page</ion-label>
                                   </ion-item>
                                 ))}
-                                <ion-item href={`/sc/partner-crm`}>
-                                    <ion-label>Partner CRM</ion-label>
-                                  </ion-item>
                               </ion-list>
                             </div>
                           </custom-accordion>
@@ -135,8 +132,6 @@ export class AppRoot {
                   <stencil-route url="/forgot-password" component="cf-forgot-password" />
                   <stencil-route url="/reset-password/:token" component="cf-reset-password" />
                   <stencil-route url="/table/:table" component="table-root" />
-                  <stencil-route url="/sc/partner-crm" component="partner-crm" />
-
                   <stencil-route url="/page/:page/:requestId?" component="page-root" />
                 </stencil-route-switch>
               </stencil-router>
