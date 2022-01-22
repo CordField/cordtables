@@ -1,6 +1,6 @@
 import { Component, Host, h, State, Listen } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -123,7 +123,36 @@ export class AdminPeoples {
     this.peoplesResponse = await fetchAs<AdminPeopleListRequest, AdminPeopleListResponse>('admin/people/list', {
       token: globals.globalStore.state.token,
     });
-    
+    if (this.peoplesResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
+  }
+  async updateForeignKeys() {
+    for (const person of this.peoplesResponse.peoples) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: person[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.peoplesResponse.peoples.map(person2 => {
+              if (person.id === person2.id) {
+                person2[column.field] = {
+                  value: person[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return person2;
+            });
+          }
+        }
+      }
+    }
   }
 
   aboutChange(event) {
@@ -337,6 +366,8 @@ export class AdminPeoples {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -349,6 +380,8 @@ export class AdminPeoples {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -356,6 +389,8 @@ export class AdminPeoples {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -363,6 +398,8 @@ export class AdminPeoples {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 
@@ -505,9 +542,15 @@ export class AdminPeoples {
               <span class="form-thing">
                 <select id="sensitivity_clearance" name="sensitivity_clearance" onInput={event => this.sensitivity_clearanceChange(event)}>
                   <option value="">Select Sensitivity Clearance</option>
-                  <option value="Low" selected={this.newSensitivity_clearance === 'Low'}>Low</option>
-                  <option value="Medium" selected={this.newSensitivity_clearance === 'Medium'}>Medium</option>
-                  <option value="High" selected={this.newSensitivity_clearance === 'High'}>High</option>
+                  <option value="Low" selected={this.newSensitivity_clearance === 'Low'}>
+                    Low
+                  </option>
+                  <option value="Medium" selected={this.newSensitivity_clearance === 'Medium'}>
+                    Medium
+                  </option>
+                  <option value="High" selected={this.newSensitivity_clearance === 'High'}>
+                    High
+                  </option>
                 </select>
               </span>
             </div>
