@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -53,6 +53,7 @@ class DeleteGroupExResponse extends GenericResponse {
 })
 export class AdminGroups {
   @State() groupsResponse: AdminGroupListResponse;
+  @State() groups: AdminGroup[];
 
   newParent_group: string;
   newName: string;
@@ -96,8 +97,40 @@ export class AdminGroups {
     this.groupsResponse = await fetchAs<AdminGroupListRequest, AdminGroupListResponse>('admin/groups/list', {
       token: globals.globalStore.state.token,
     });
+    console.log(this.groupsResponse);
+    if (this.groupsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+      console.log('here');
+    }
   }
-
+  async updateForeignKeys() {
+    for (const thread of this.groupsResponse.groups) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: thread[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.groups = this.groupsResponse.groups.map(thread2 => {
+              if (thread.id === thread2.id) {
+                thread2[column.field] = {
+                  value: thread[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return thread2;
+            });
+          }
+        }
+      }
+    }
+    console.log('helllo', this.groups);
+  }
   parent_groupChange(event) {
     this.newParent_group = event.target.value;
   }
@@ -120,8 +153,8 @@ export class AdminGroups {
 
     if (createResponse.error === ErrorType.NoError) {
       globals.globalStore.state.editMode = false;
-      this.newParent_group = "";
-      this.newName = "";
+      this.newParent_group = '';
+      this.newName = '';
       this.getList();
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item inserted successfully', id: uuidv4(), type: 'success' });
     } else {
@@ -162,6 +195,8 @@ export class AdminGroups {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -174,6 +209,8 @@ export class AdminGroups {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -181,6 +218,8 @@ export class AdminGroups {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -188,6 +227,8 @@ export class AdminGroups {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 

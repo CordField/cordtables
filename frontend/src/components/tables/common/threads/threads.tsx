@@ -220,7 +220,7 @@ export class Threads {
           });
           console.log(autocompleteData);
           if (autocompleteData.error === ErrorType.NoError) {
-            this.threads = this.commonThreadsResponse.threads.map(thread2 => {
+            this.commonThreadsResponse.threads.map(thread2 => {
               if (thread.id === thread2.id) {
                 thread2[column.field] = {
                   value: thread[column.field],
