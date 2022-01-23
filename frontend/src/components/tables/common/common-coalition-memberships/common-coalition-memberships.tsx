@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -101,6 +101,37 @@ export class CommonCoalitionMemberships {
     this.coalitionMembershipsResponse = await fetchAs<CommonCoalitionMembershipListRequest, CommonCoalitionMembershipListResponse>('common/coalition-memberships/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.coalitionMembershipsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
+  }
+
+  async updateForeignKeys() {
+    for (const coalitionMembership of this.coalitionMembershipsResponse.coalitionMemberships) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: coalitionMembership[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.coalitionMembershipsResponse.coalitionMemberships.map(coalitionMembership2 => {
+              if (coalitionMembership.id === coalitionMembership2.id) {
+                coalitionMembership2[column.field] = {
+                  value: coalitionMembership[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return coalitionMembership2;
+            });
+          }
+        }
+      }
+    }
   }
 
   coalitionChange(event) {
@@ -146,6 +177,8 @@ export class CommonCoalitionMemberships {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/coalitions',
+      foreignTableColumn: 'name',
     },
     {
       field: 'organization',
@@ -153,6 +186,8 @@ export class CommonCoalitionMemberships {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/organizations',
+      foreignTableColumn: 'name',
     },
     {
       field: 'created_at',
@@ -165,6 +200,8 @@ export class CommonCoalitionMemberships {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -177,6 +214,8 @@ export class CommonCoalitionMemberships {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -184,6 +223,8 @@ export class CommonCoalitionMemberships {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -191,6 +232,8 @@ export class CommonCoalitionMemberships {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 

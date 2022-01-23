@@ -103,7 +103,7 @@ export class CommonBlogs {
   }
 
   async updateForeignKeys() {
-    for (const thread of this.blogsResponse.blogs) {
+    for (const blog of this.blogsResponse.blogs) {
       for (const column of this.columnData) {
         if (column.foreignKey !== null && column.foreignKey !== undefined) {
           const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
@@ -111,18 +111,18 @@ export class CommonBlogs {
             searchColumnName: 'id',
             resultColumnName: column.foreignTableColumn,
             tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
-            searchKeyword: thread[column.field],
+            searchKeyword: blog[column.field],
           });
           console.log(autocompleteData);
           if (autocompleteData.error === ErrorType.NoError) {
-            this.blogsResponse.blogs.map(thread2 => {
-              if (thread.id === thread2.id) {
-                thread2[column.field] = {
-                  value: thread[column.field],
+            this.blogsResponse.blogs.map(blog2 => {
+              if (blog.id === blog2.id) {
+                blog2[column.field] = {
+                  value: blog[column.field],
                   displayValue: autocompleteData.data,
                 };
               }
-              return thread2;
+              return blog2;
             });
           }
         }

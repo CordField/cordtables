@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -98,6 +98,36 @@ export class DirectoriesTable {
     this.directoriesResponse = await fetchAs<CommonDirectoryListRequest, CommonDirectoryListResponse>('common/directories/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.directoriesResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
+  }
+  async updateForeignKeys() {
+    for (const blog of this.directoriesResponse.directories) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: blog[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.directoriesResponse.directories.map(blog2 => {
+              if (blog.id === blog2.id) {
+                blog2[column.field] = {
+                  value: blog[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return blog2;
+            });
+          }
+        }
+      }
+    }
   }
 
   directoryNameChange(event) {
@@ -143,6 +173,8 @@ export class DirectoriesTable {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/directories',
+      foreignTableColumn: 'name',
     },
     {
       field: 'name',
@@ -162,6 +194,8 @@ export class DirectoriesTable {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -174,6 +208,8 @@ export class DirectoriesTable {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -181,6 +217,8 @@ export class DirectoriesTable {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -188,6 +226,8 @@ export class DirectoriesTable {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 
@@ -209,10 +249,11 @@ export class DirectoriesTable {
           <form class="form-thing">
             <div id="directory-name-holder" class="form-input-item form-thing">
               <span class="form-thing">
-                <label htmlFor="directory-name">New Directory Name</label>
+                <label htmlFor="directory-name">Directory Parent Name</label>
               </span>
               <span class="form-thing">
                 <select onInput={event => this.directoryParentChange(event)}>
+                  <option value="">-</option>
                   {this.directoriesResponse.directories.map(option => (
                     <option value={option.id}>{option.name}</option>
                   ))}
