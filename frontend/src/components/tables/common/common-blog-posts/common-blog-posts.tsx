@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -99,8 +99,38 @@ export class CommonBlogPosts {
     this.blogPostsResponse = await fetchAs<CommonBlogPostListRequest, CommonBlogPostListResponse>('common/blog-posts/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.blogPostsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
   }
 
+  async updateForeignKeys() {
+    for (const thread of this.blogPostsResponse.blogPosts) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: thread[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.blogPostsResponse.blogPosts.map(thread2 => {
+              if (thread.id === thread2.id) {
+                thread2[column.field] = {
+                  value: thread[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return thread2;
+            });
+          }
+        }
+      }
+    }
+  }
   blogChange(event) {
     this.newBlog = event.target.value;
   }
@@ -144,6 +174,8 @@ export class CommonBlogPosts {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/blogs',
+      foreignTableColumn: 'title',
     },
     {
       field: 'content',
@@ -163,6 +195,8 @@ export class CommonBlogPosts {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -175,6 +209,8 @@ export class CommonBlogPosts {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -182,6 +218,8 @@ export class CommonBlogPosts {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -189,6 +227,8 @@ export class CommonBlogPosts {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 
@@ -223,7 +263,7 @@ export class CommonBlogPosts {
                 <label htmlFor="content">Content</label>
               </span>
               <span class="form-thing">
-                <textarea id="content" name="content" onInput={event => this.contentChange(event)} ></textarea>
+                <textarea id="content" name="content" onInput={event => this.contentChange(event)}></textarea>
               </span>
             </div>
 

@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
@@ -111,8 +111,38 @@ export class CellChannelsTable {
     this.commonCellChannelsResponse = await fetchAs<CommonCellChannelsListRequest, CommonCellChannelsListResponse>('common/cell-channels/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.commonCellChannelsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
   }
 
+  async updateForeignKeys() {
+    for (const thread of this.commonCellChannelsResponse.cell_channels) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: thread[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.commonCellChannelsResponse.cell_channels.map(thread2 => {
+              if (thread.id === thread2.id) {
+                thread2[column.field] = {
+                  value: thread[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return thread2;
+            });
+          }
+        }
+      }
+    }
+  }
   columnNameChange(event) {
     this.newColumnName = event.target.value;
   }
@@ -197,6 +227,8 @@ export class CellChannelsTable {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -209,6 +241,8 @@ export class CellChannelsTable {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -216,6 +250,8 @@ export class CellChannelsTable {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -223,6 +259,8 @@ export class CellChannelsTable {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 
