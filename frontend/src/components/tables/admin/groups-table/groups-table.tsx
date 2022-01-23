@@ -1,7 +1,7 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { v4 } from 'uuid';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ActionType, ErrorType } from '../../../../common/types';
+import { ActionType, AutocompleteRequest, AutocompleteResponse, ErrorType } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 class GroupsListRequest {
@@ -21,12 +21,12 @@ class GroupsRow {
 
 class GroupsListResponse {
   error: ErrorType;
-  groups: Array<GroupsRow>;
+  groups: AdminGroup[];
 }
 
 class GroupCreateRequest {
   token: string;
-  name: string;
+  group: { name: string };
 }
 
 class GroupCreateResponse {
@@ -66,7 +66,7 @@ export class CfGroups {
   createResponse: GroupCreateResponse;
   deleteResponse: GroupDeleteResponse;
 
-  newRowName: string;
+  newName: string;
 
   handleDelete = async id => {
     const deleteResponse = await fetchAs<GroupDeleteRequest, GroupDeleteResponse>('admin/groups/delete', {
@@ -115,8 +115,15 @@ export class CfGroups {
       deleteFn: this.handleDelete,
     },
     {
-      field: 'title',
-      displayName: 'Title',
+      field: 'name',
+      displayName: 'Name',
+      width: 250,
+      editable: true,
+      updateFn: this.handleUpdate,
+    },
+    {
+      field: 'parent_group',
+      displayName: 'Parent Group',
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
@@ -176,7 +183,35 @@ export class CfGroups {
   async getList() {
     this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin/groups/list', { token: globals.globalStore.state.token });
     if (this.listResponse.error === ErrorType.NoError) {
-      // await this.updateForeignKeys();
+      await this.updateForeignKeys();
+    }
+  }
+
+  async updateForeignKeys() {
+    for (const thread of this.listResponse.groups) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: thread[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.listResponse.groups.map(thread2 => {
+              if (thread.id === thread2.id) {
+                thread2[column.field] = {
+                  value: thread[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return thread2;
+            });
+          }
+        }
+      }
     }
   }
 
@@ -185,11 +220,11 @@ export class CfGroups {
   };
 
   inputName(event) {
-    this.newRowName = event.target.value;
+    this.newName = event.target.value;
   }
 
   submit = async () => {
-    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('admin/groups/create', { token: globals.globalStore.state.token, name: this.newRowName });
+    this.createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('admin/groups/create', { token: globals.globalStore.state.token, group: { name: this.newName } });
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.showNewForm = false;
@@ -200,12 +235,32 @@ export class CfGroups {
   };
 
   updateName = async (id: string, columnName: string, value: string): Promise<boolean> => {
-    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('admin/groups/update', { token: globals.globalStore.state.token, name: value, id });
+    this.createResponse = await fetchAs<GroupUpdateRequest, GroupUpdateResponse>('admin/groups/update', { token: globals.globalStore.state.token, column: columnName, value, id });
 
     if (this.createResponse.error == ErrorType.NoError) {
       this.listResponse = await fetchAs<GroupsListRequest, GroupsListResponse>('admin/groups/list', { token: globals.globalStore.state.token });
       return true;
     } else {
+    }
+  };
+
+  handleInsert = async (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const createResponse = await fetchAs<GroupCreateRequest, GroupCreateResponse>('admin/groups/create-read', {
+      token: globals.globalStore.state.token,
+      group: {
+        name: this.newName,
+      },
+    });
+
+    if (createResponse.error === ErrorType.NoError) {
+      globals.globalStore.state.editMode = false;
+      this.getList();
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item inserted successfully', id: v4(), type: 'success' });
+    } else {
+      globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: createResponse.error, id: v4(), type: 'error' });
     }
   };
 
@@ -225,7 +280,8 @@ export class CfGroups {
       <Host>
         <slot></slot>
         <h3>Groups</h3>
-        <div id="table-wrap">
+        {this.listResponse && <cf-table rowData={this.listResponse.groups} columnData={this.columnData}></cf-table>}
+        {/* <div id="table-wrap">
           <table>
             <tr>
               {this.listResponse && this.listResponse.groups && this.listResponse.groups.length > 0 && Object.keys(this.listResponse.groups[0]).map(key => <th>{key}</th>)}
@@ -269,9 +325,26 @@ export class CfGroups {
               </tr>
             )}
           </table>
-        </div>
+        </div> */}
 
-        <div id="button-group">
+        {globals.globalStore.state.editMode === true && (
+          <form class="form-thing">
+            <div id="title-holder" class="form-input-item form-thing">
+              <span class="form-thing">
+                <label htmlFor="title">Blog Title</label>
+              </span>
+              <span class="form-thing">
+                <input type="text" id="name" name="name" onInput={event => this.inputName(event)} />
+              </span>
+            </div>
+
+            <span class="form-thing">
+              <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
+            </span>
+          </form>
+        )}
+
+        {/* <div id="button-group">
           {!this.showNewForm && (
             <button id="new-button" onClick={this.toggleNewForm}>
               Create New Group
@@ -288,7 +361,7 @@ export class CfGroups {
               </button>
             </div>
           )}
-        </div>
+        </div> */}
       </Host>
     );
   }
