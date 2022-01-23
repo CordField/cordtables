@@ -104,8 +104,6 @@ export class PartnerCRM{
         // await this.getFilesList();
     }
 
-    
-
     render() {
         return (
             <Host>
