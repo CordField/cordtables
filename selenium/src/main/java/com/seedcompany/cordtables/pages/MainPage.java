@@ -65,7 +65,7 @@ public class MainPage extends Page {
 	 * This method is use to select the table option under Menu
 	 */
 	public void selectTable(TablesOption option) {
-		SeleniumUtils.wait(10);
+		SeleniumUtils.wait(3);
 		this.loadApp();
 		SearchContext mainMenu = SeleniumUtils
 				.expand_shadow_element(this.rootApp.findElement(By.cssSelector("custom-accordion.hydrated")));

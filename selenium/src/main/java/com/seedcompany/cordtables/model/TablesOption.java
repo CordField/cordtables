@@ -10,7 +10,8 @@ public enum TablesOption {
 
 	ADMIN_DB_VERSION_CONTROL("admin-database-version-control", "admin.database-version-control"),
 	ADMIN_GROUP_ROW_ACCESS("admin-group-row-access", "admin.group-row-access"),
-	ADMIN_GROUP_MEMBERSHIPS("admin-group-memberships", "admin.group-memberships");
+	ADMIN_GROUP_MEMBERSHIPS("admin-group-memberships", "admin.group-memberships"),
+	UP_PRAYER_REQUESTS("up-prayer-requests", "up.prayer-requests");
 
 	private String tag;
 	private String name;
