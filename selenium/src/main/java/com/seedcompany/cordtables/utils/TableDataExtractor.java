@@ -1,6 +1,8 @@
 package com.seedcompany.cordtables.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
@@ -37,9 +39,9 @@ public class TableDataExtractor {
 	public SearchContext table(TablesOption option) {
 
 		SearchContext dataComponent = SeleniumUtils
-				.expand_shadow_element(this.tableRoot().findElement(By.tagName(option.getTag())));
+				.expand_shadow_element(this.tableRoot().findElement(By.cssSelector(option.getTag())));
 
-		SearchContext table = SeleniumUtils.expand_shadow_element(dataComponent.findElement(By.tagName("cf-table")));
+		SearchContext table = SeleniumUtils.expand_shadow_element(dataComponent.findElement(By.cssSelector("cf-table")));
 
 		return table;
 
@@ -47,17 +49,17 @@ public class TableDataExtractor {
 
 	public List<WebElement> header(WebElement table) {
 
-		SearchContext headerRow = SeleniumUtils.expand_shadow_element(table.findElement(By.tagName("cf-row")));
+		SearchContext headerRow = SeleniumUtils.expand_shadow_element(table.findElement(By.cssSelector("cf-row")));
 
-		return headerRow.findElement(By.xpath("//*[@id=\'header-row\']")).findElements(By.tagName("cf-cell2"));
+		return headerRow.findElement(By.xpath("//*[@id=\'header-row\']")).findElements(By.cssSelector("cf-cell2"));
 
 	}
 
 	public List<WebElement> rows(SearchContext table) {
 
-		SearchContext body = SeleniumUtils.expand_shadow_element(table.findElement(By.tagName("cf-table-body")));
+		SearchContext body = SeleniumUtils.expand_shadow_element(table.findElement(By.cssSelector("cf-table-body")));
 
-		return body.findElements(By.tagName("cf-row"));
+		return body.findElements(By.cssSelector("cf-row"));
 
 	}
 
@@ -65,7 +67,7 @@ public class TableDataExtractor {
 
 		SearchContext datarow = SeleniumUtils.expand_shadow_element(row);
 
-		return datarow.findElements(By.tagName("cf-cell2"));
+		return datarow.findElements(By.cssSelector("cf-cell2"));
 
 	}
 
@@ -76,17 +78,42 @@ public class TableDataExtractor {
 
 	}
 
-	public void extract(TablesOption option) {
+	public List<List<String>> extractData(TablesOption option) {
 
+		List<List<String>> result = new ArrayList<List<String>>();
+		List<String> rowData = null;
 		SearchContext table = this.table(option);
 		List<WebElement> records = this.rows(table);
 		for (WebElement record : records) {
 			List<WebElement> data = this.columns(record);
+			rowData = new ArrayList<>();
 			for (WebElement col : data) {
-				System.out.println("Data::" + this.columnData(col));
+				// System.out.println("Data::" + this.columnData(col));
+				rowData.add(this.columnData(col));
 			}
+			result.add(rowData);
 		}
 
+		return result;
+	}
+
+	public List<List<WebElement>> readTable(TablesOption option) {
+
+		List<List<WebElement>> result = new ArrayList<>();
+		List<WebElement> rowData = null;
+		SearchContext table = this.table(option);
+		List<WebElement> records = this.rows(table);
+		for (WebElement record : records) {
+			List<WebElement> data = this.columns(record);
+			rowData = new ArrayList<>();
+			for (WebElement col : data) {
+				// System.out.println("Data::" + this.columnData(col));
+				rowData.add(col);
+			}
+			result.add(rowData);
+		}
+
+		return result;
 	}
 
 }
