@@ -158,12 +158,15 @@ create type common.book_name as enum (
 create table common.scripture_references (
   id uuid primary key default common.uuid_generate_v4(),
 
-  book_start common.book_name,
-  book_end common.book_name,
-  chapter_start int,
-  chapter_end int,
-  verse_start int,
-  verse_end int,
+  start int, -- absolute verse
+  end int,
+
+--  book_start common.book_name,
+--  book_end common.book_name,
+--  chapter_start int,
+--  chapter_end int,
+--  verse_start int,
+--  verse_end int,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
