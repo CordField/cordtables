@@ -90,7 +90,7 @@ export class AppRoot {
                             <div class="scrollable">
                               <ion-list style={{ marginLeft: '10px' }}>
                                 {this.pages.map(page => (
-                                  <ion-item href={`/page/${page.toLowerCase().replace(" ","-")}`}>
+                                  <ion-item href={`/page/${page.toLowerCase().replace(' ', '-')}`}>
                                     <ion-label>{page} Page</ion-label>
                                   </ion-item>
                                 ))}
@@ -114,9 +114,13 @@ export class AppRoot {
                   </div>
                   <div class="edit-button">
                     {this.path != '/page/tickets' && (
-                      <button onClick={this.toggleEditMode} style={{ float: 'right' }}>
-                        Edit Mode: {globals.globalStore.state.editMode.toString()}
-                      </button>
+                      // <button onClick={this.toggleEditMode} style={{ float: 'right' }}>
+                      //   Edit Mode: {globals.globalStore.state.editMode.toString()}
+                      // </button>
+                      <div style={{ float: 'right' }}>
+                        <span>Edit Mode</span>
+                        <ion-toggle onIonChange={this.toggleEditMode}></ion-toggle>
+                      </div>
                     )}
                   </div>
                 </div>
