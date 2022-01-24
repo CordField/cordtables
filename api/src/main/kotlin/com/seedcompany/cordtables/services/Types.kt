@@ -8,8 +8,8 @@ data class LanguageIndexKey (
 )
 
 data class SiteTextTranslationInput (
-  val language: Int,
-  val site_text: Int,
+  val language: String,
+  val site_text: String,
   val translation: String,
   val token: String,
 )
