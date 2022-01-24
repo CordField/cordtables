@@ -256,6 +256,8 @@ export class SiteText {
   };
 
   makeRows = () => {
+    console.debug('globalStore siteTextStrings', globals.globalStore.state.siteTextStrings);
+    console.debug('globals.globalStore.state.siteTextTranslations', globals.globalStore.state.siteTextTranslations);
     return globals.globalStore.state.siteTextStrings.map((siteTextString: SiteTextString) => {
       const row = {
         id: siteTextString.id,
@@ -264,9 +266,10 @@ export class SiteText {
       };
 
       globals.globalStore.state.siteTextLanguages.forEach((siteTextLanguage: SiteTextLanguage) => {
-        row[siteTextLanguage.language] = globals.globalStore.state.siteTextTranslations[siteTextLanguage.language]
+        const value = globals.globalStore.state.siteTextTranslations[siteTextLanguage.language]
           ? globals.globalStore.state.siteTextTranslations[siteTextLanguage.language][siteTextString.english]
           : undefined;
+        row[siteTextLanguage.language] = { value, displayValue: value === undefined ? '' : value };
       });
 
       return row;
@@ -302,6 +305,7 @@ export class SiteText {
   componentDidLoad() {
     this.columnData = this.makeColumns();
     this.rowData = this.makeRows();
+    console.debug('rowData', this.rowData);
     this.loadLanguages(1);
   }
 
