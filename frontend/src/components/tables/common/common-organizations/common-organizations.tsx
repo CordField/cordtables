@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 
@@ -140,6 +140,8 @@ export class ScLanguages {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/locations',
+      foreignTableColumn: 'name',
     },
     {
       field: 'created_at',
@@ -152,6 +154,8 @@ export class ScLanguages {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -164,6 +168,8 @@ export class ScLanguages {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -171,6 +177,8 @@ export class ScLanguages {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -178,6 +186,8 @@ export class ScLanguages {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 
@@ -189,6 +199,37 @@ export class ScLanguages {
     this.commonOrganizationsResponse = await fetchAs<CommonOrganizationsListRequest, organizationsListResponse>('common/organizations/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.commonOrganizationsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
+  }
+
+  async updateForeignKeys() {
+    for (const organization of this.commonOrganizationsResponse.organizations) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: organization[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.commonOrganizationsResponse.organizations.map(organization2 => {
+              if (organization.id === organization2.id) {
+                organization2[column.field] = {
+                  value: organization[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return organization2;
+            });
+          }
+        }
+      }
+    }
   }
 
   organizationNameChange(event) {

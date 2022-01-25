@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -103,6 +103,37 @@ export class CommonOrgChartPositionGraphs {
     this.orgChartPositionGraphsResponse = await fetchAs<CommonOrgChartPositionGraphListRequest, CommonOrgChartPositionGraphListResponse>('common/org-chart-position-graph/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.orgChartPositionGraphsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
+  }
+
+  async updateForeignKeys() {
+    for (const orgChartPosition of this.orgChartPositionGraphsResponse.orgChartPositionGraphs) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: orgChartPosition[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.orgChartPositionGraphsResponse.orgChartPositionGraphs.map(orgChartPosition2 => {
+              if (orgChartPosition.id === orgChartPosition2.id) {
+                orgChartPosition2[column.field] = {
+                  value: orgChartPosition[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return orgChartPosition2;
+            });
+          }
+        }
+      }
+    }
   }
 
   from_positionChange(event) {
@@ -153,6 +184,8 @@ export class CommonOrgChartPositionGraphs {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/org-chart-postions',
+      foreignTableColumn: 'name',
     },
     {
       field: 'relationship_type',
@@ -171,6 +204,8 @@ export class CommonOrgChartPositionGraphs {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/org-chart-postions',
+      foreignTableColumn: 'name',
     },
     {
       field: 'created_at',
@@ -183,6 +218,8 @@ export class CommonOrgChartPositionGraphs {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -195,6 +232,8 @@ export class CommonOrgChartPositionGraphs {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -202,6 +241,8 @@ export class CommonOrgChartPositionGraphs {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -209,6 +250,8 @@ export class CommonOrgChartPositionGraphs {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 
