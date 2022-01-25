@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -100,8 +100,38 @@ export class CommonLocations {
     this.locationsResponse = await fetchAs<CommonLocationListRequest, CommonLocationListResponse>('common/locations/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.locationsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
   }
 
+  async updateForeignKeys() {
+    for (const location of this.locationsResponse.locations) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: location[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.locationsResponse.locations.map(location2 => {
+              if (location.id === location2.id) {
+                location2[column.field] = {
+                  value: location[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return location2;
+            });
+          }
+        }
+      }
+    }
+  }
   nameChange(event) {
     this.newName = event.target.value;
   }
@@ -200,6 +230,8 @@ export class CommonLocations {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -212,6 +244,8 @@ export class CommonLocations {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -219,6 +253,8 @@ export class CommonLocations {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -226,6 +262,8 @@ export class CommonLocations {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 
