@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -113,6 +113,37 @@ export class CommonPeopleToOrgRelationships {
         token: globals.globalStore.state.token,
       },
     );
+    if (this.peopleToOrgRelationshipsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
+  }
+
+  async updateForeignKeys() {
+    for (const peopleToOrg of this.peopleToOrgRelationshipsResponse.peopleToOrgRelationships) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: peopleToOrg[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.peopleToOrgRelationshipsResponse.peopleToOrgRelationships.map(peopleToOrg2 => {
+              if (peopleToOrg.id === peopleToOrg2.id) {
+                peopleToOrg2[column.field] = {
+                  value: peopleToOrg[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return peopleToOrg2;
+            });
+          }
+        }
+      }
+    }
   }
 
   orgChange(event) {
@@ -173,6 +204,8 @@ export class CommonPeopleToOrgRelationships {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/organizations',
+      foreignTableColumn: 'name',
     },
     {
       field: 'person',
@@ -180,6 +213,8 @@ export class CommonPeopleToOrgRelationships {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'relationship_type',
@@ -227,6 +262,8 @@ export class CommonPeopleToOrgRelationships {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -239,6 +276,8 @@ export class CommonPeopleToOrgRelationships {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -246,6 +285,8 @@ export class CommonPeopleToOrgRelationships {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -253,6 +294,8 @@ export class CommonPeopleToOrgRelationships {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 

@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import {
@@ -66,6 +66,9 @@ export class Posts {
     this.commonPostsResponse = await fetchAs<CommonPostsListRequest, CommonPostsListResponse>('common/posts/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.commonPostsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
   }
 
   contentChange(event) {
@@ -115,6 +118,8 @@ export class Posts {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common.threads',
+      foreignTableColumn: 'content',
     },
     {
       field: 'created_at',
@@ -127,6 +132,8 @@ export class Posts {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -139,6 +146,8 @@ export class Posts {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -146,6 +155,8 @@ export class Posts {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -153,8 +164,38 @@ export class Posts {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
+
+  async updateForeignKeys() {
+    for (const post of this.commonPostsResponse.posts) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: post[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.commonPostsResponse.posts.map(post2 => {
+              if (post.id === post2.id) {
+                post2[column.field] = {
+                  value: post[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return post2;
+            });
+          }
+        }
+      }
+    }
+  }
 
   render() {
     return (

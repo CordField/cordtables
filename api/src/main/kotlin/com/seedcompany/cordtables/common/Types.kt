@@ -351,7 +351,7 @@ enum class AccessLevels{
 }
 
 data class PeopleDetails(
-  val id: Int,
+  val id: String,
   val public_first_name: String?,
   val public_last_name: String?
 )

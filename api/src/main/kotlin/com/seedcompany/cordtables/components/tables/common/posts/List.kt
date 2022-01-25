@@ -19,7 +19,7 @@ import javax.sql.DataSource
 
 data class CommonPostsListRequest(
   val token: String?,
-  val threadId: Integer? = null
+  val threadId: String? = null
 )
 
 data class CommonPostsListResponse(

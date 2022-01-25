@@ -424,7 +424,7 @@ class Utility(
       while (result.next()) {
         peopleDetails.add(
           PeopleDetails(
-            id = result.getInt(1),
+            id = result.getString(1),
             public_first_name = result.getString(2),
             public_last_name = result.getString(3)
           )
