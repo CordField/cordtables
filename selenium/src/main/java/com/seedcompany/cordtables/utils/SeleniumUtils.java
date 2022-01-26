@@ -75,6 +75,7 @@ public class SeleniumUtils {
 				chromeOptions.setCapability("chrome.verbose", browserConfig.isVerbose());
 				chromeOptions.addArguments("--disable-web-security");
 				chromeOptions.addArguments("--allow-running-insecure-content");
+				if(browserConfig.isDevMode())
 				chromeOptions.addArguments("--auto-open-devtools-for-tabs");
 				// chromeOptions.setExperimentalOption("w3c", false);
 				WebDriverManager.getInstance(DriverManagerType.CHROME).setup();

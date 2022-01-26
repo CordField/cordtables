@@ -141,8 +141,10 @@ public class UpPrayerTablePage extends Page {
 	}
 
 	public List<String> getExistingRequests() {
-		this.extractor = new TableDataExtractor(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
+		WebElement tableContainer = this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main"));
+		this.extractor = new TableDataExtractor(tableContainer,
 				this.driver);
+		SeleniumUtils.scrollToElement(tableContainer, driver);
 		List<List<String>> records = extractor.extractData(TablesOption.UP_PRAYER_REQUESTS);
 		return records.stream().map(r -> {
 			return r.get(0);
