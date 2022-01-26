@@ -74,7 +74,7 @@ public class TableDataExtractor {
 	public String columnData(WebElement column) {
 
 		SearchContext dataCol = SeleniumUtils.expand_shadow_element(column);
-		return dataCol.findElement(By.className("value-wrapper")).findElement(By.tagName("span")).getText();
+		return dataCol.findElement(By.className("value-wrapper")).getText();
 
 	}
 
