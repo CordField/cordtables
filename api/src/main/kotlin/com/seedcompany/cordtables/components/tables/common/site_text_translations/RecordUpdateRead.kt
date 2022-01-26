@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
-data class SiteTextTranslationUpdateReadRequest(
+data class SiteTextTranslationRecordUpdateReadRequest(
   val token: String,
-  val site_text_translation: SiteTextTranslationUpdateInput,
+  val site_text_translation: SiteTextTranslationRecordUpdateInput,
 )
 
-data class SiteTextTranslationUpdateReadResponse(
+data class SiteTextTranslationRecordUpdateReadResponse(
   val error: ErrorType,
   val site_text_translation: SiteTextTranslation? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("CommonSiteTextTranslationUpdateRead")
-class UpdateRead(
+@Controller("CommonSiteTextTranslationRecordUpdateRead")
+class RecordUpdateRead(
   @Autowired
   val util: Utility,
 
@@ -30,32 +30,32 @@ class UpdateRead(
   val ds: DataSource,
 
   @Autowired
-  val update: Update,
+  val update: RecordUpdate,
 
   @Autowired
   val read: Read,
 ) {
-  @PostMapping("common/site-text-translations/update-read")
+  @PostMapping("common/site-text-translations/record/update-read")
   @ResponseBody
-  fun updateReadHandler(@RequestBody req: SiteTextTranslationUpdateReadRequest): SiteTextTranslationUpdateReadResponse {
+  fun updateReadHandler(@RequestBody req: SiteTextTranslationRecordUpdateReadRequest): SiteTextTranslationRecordUpdateReadResponse {
 
     val updateResponse = update.updateHandler(
-      SiteTextTranslationUpdateRequest(
+      SiteTextTranslationRecordUpdateRequest(
         token = req.token,
         site_text_translation = req.site_text_translation,
       )
     )
     if (updateResponse.error != ErrorType.NoError) {
-      return SiteTextTranslationUpdateReadResponse(updateResponse.error)
+      return SiteTextTranslationRecordUpdateReadResponse(updateResponse.error)
     }
 
     val readResponse = read.readHandler(
       SiteTextTranslationReadRequest(
         token = req.token,
-        id = updateResponse.id
+        id = req.site_text_translation.id
       )
     )
 
-    return SiteTextTranslationUpdateReadResponse(error = readResponse.error, readResponse.site_text_translation)
+    return SiteTextTranslationRecordUpdateReadResponse(error = readResponse.error, readResponse.site_text_translation)
   }
 }
