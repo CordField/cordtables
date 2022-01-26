@@ -16,19 +16,19 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.sql.SQLException
 import javax.sql.DataSource
 
-data class SearchRequest(
+data class SiteTextStringSearchRequest(
   val searchColumnName: String,
   val token: String,
   val searchKeyword: String = ""
 )
 
-data class SearchResponse(
+data class SiteTextStringSearchResponse(
   val error: ErrorType,
-  val data: MutableList<people>? = null
+  val data: MutableList<SiteTextString>? = null
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
-@Controller("Search")
+@Controller("SiteTextStringSearch")
 class Search(
   @Autowired
   val util: Utility,
@@ -39,35 +39,23 @@ class Search(
 ){
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
-  @PostMapping("admin/people/search")
+  @PostMapping("common/site-text-strings/search")
   @ResponseBody
-  fun searchHandler(@RequestBody req: SearchRequest): SearchResponse {
-    if (req.token == null) return SearchResponse(ErrorType.InputMissingToken)
-    if (!util.isAdmin(req.token)) return SearchResponse(ErrorType.AdminOnly)
-    var data: MutableList<people> = mutableListOf()
+  fun searchHandler(@RequestBody req: SiteTextStringSearchRequest): SiteTextStringSearchResponse {
+    if (req.token == null) return SiteTextStringSearchResponse(ErrorType.InputMissingToken)
+//    if (!util.isAdmin(req.token)) return SiteTextStringSearchResponse(ErrorType.AdminOnly)
+    var data: MutableList<SiteTextString> = mutableListOf()
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("token", req.token)
     val whereClause = "${req.searchColumnName} like '${req.searchKeyword}%'"
     val query = secureList.getSecureListQueryHandler(
       GetSecureListQueryRequest(
-        tableName = "admin.people",
+        tableName = "common.site_text_strings",
 //        filter = "order by id",
         columns = arrayOf(
           "id",
-          "about",
-          "phone",
-          "picture",
-          "private_first_name",
-          "private_last_name",
-          "public_first_name",
-          "public_last_name",
-          "primary_location",
-          "private_full_name",
-          "public_full_name",
-          "sensitivity_clearance",
-          "timezone",
-          "title",
-//                    "status",
+          "english",
+          "comment",
           "created_at",
           "created_by",
           "modified_at",
@@ -85,47 +73,11 @@ class Search(
         var id: String? = jdbcResult.getString("id")
         if (jdbcResult.wasNull()) id = null
 
-        var about: String? = jdbcResult.getString("about")
-        if (jdbcResult.wasNull()) about = null
+        var english: String? = jdbcResult.getString("english")
+        if (jdbcResult.wasNull()) english = null
 
-        var phone: String? = jdbcResult.getString("phone")
-        if (jdbcResult.wasNull()) phone = null
-
-        var picture: String? = jdbcResult.getString("picture")
-        if (jdbcResult.wasNull()) picture = null
-
-        var private_first_name: String? = jdbcResult.getString("private_first_name")
-        if (jdbcResult.wasNull()) private_first_name = null
-
-        var private_last_name: String? = jdbcResult.getString("private_last_name")
-        if (jdbcResult.wasNull()) private_last_name = null
-
-        var public_first_name: String? = jdbcResult.getString("public_first_name")
-        if (jdbcResult.wasNull()) public_first_name = null
-
-        var public_last_name: String? = jdbcResult.getString("public_last_name")
-        if (jdbcResult.wasNull()) public_last_name = null
-
-        var primary_location: String? = jdbcResult.getString("primary_location")
-        if (jdbcResult.wasNull()) primary_location = null
-
-        var private_full_name: String? = jdbcResult.getString("private_full_name")
-        if (jdbcResult.wasNull()) private_full_name = null
-
-        var public_full_name: String? = jdbcResult.getString("public_full_name")
-        if (jdbcResult.wasNull()) public_full_name = null
-
-        var sensitivity_clearance: String? = jdbcResult.getString("sensitivity_clearance")
-        if (jdbcResult.wasNull()) sensitivity_clearance = null
-
-        var timezone: String? = jdbcResult.getString("timezone")
-        if (jdbcResult.wasNull()) timezone = null
-
-        var title: String? = jdbcResult.getString("title")
-        if (jdbcResult.wasNull()) title = null
-
-//                var status: String? = jdbcResult.getString("status")
-//                if (jdbcResult.wasNull()) status = null
+        var comment: String? = jdbcResult.getString("comment")
+        if (jdbcResult.wasNull()) comment = null
 
         var created_at: String? = jdbcResult.getString("created_at")
         if (jdbcResult.wasNull()) created_at = null
@@ -144,39 +96,25 @@ class Search(
 
         var owning_group: String? = jdbcResult.getString("owning_group")
         if (jdbcResult.wasNull()) owning_group = null
-
         data.add(
-          people(
-            id = id,
-            about = about,
-            phone = phone,
-            picture = picture,
-            private_first_name = private_first_name,
-            private_last_name = private_last_name,
-            public_first_name = public_first_name,
-            public_last_name = public_last_name,
-            primary_location = primary_location,
-            private_full_name = private_full_name,
-            public_full_name = public_full_name,
-            sensitivity_clearance = if (sensitivity_clearance == null) null else Sensitivities.valueOf(sensitivity_clearance),
-            timezone = timezone,
-            title = title,
-//                        status = status,
+          SiteTextString(
+            id = id!!,
+            english = english!!,
+            comment = comment,
             created_at = created_at,
             created_by = created_by,
             modified_at = modified_at,
             modified_by = modified_by,
             owning_person = owning_person,
-            owning_group = owning_group,
-          ))
-
-
+            owning_group = owning_group
+          )
+        )
       }
     } catch (e: SQLException) {
       println("error while listing ${e.message}")
-      return SearchResponse(ErrorType.SQLReadError)
+      return SiteTextStringSearchResponse(ErrorType.SQLReadError)
     }
-    return SearchResponse(ErrorType.NoError, data)
+    return SiteTextStringSearchResponse(ErrorType.NoError, data)
   }
 
 }
