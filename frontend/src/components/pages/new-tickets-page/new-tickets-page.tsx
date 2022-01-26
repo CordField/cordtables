@@ -44,9 +44,36 @@ class AssignTicketRequest{
     }
 }
 
+class AssignTicketUpdateRequest{
+  token: string;
+  id: string;
+  ticket: string;
+  person: string;
+  
+}
+
+class AssignTicketUpdateResponse{
+  error: ErrorType;
+  id: string;
+}
+
+class ReadTicketAssignmentRequest{
+  token: string;
+  ticket: string;
+}
+
 class AssignTicketResponse{
     error: ErrorType;
     id: string;
+}
+
+class ReadTicketAssignmentResponse{
+  error: ErrorType;
+  ticket_assignment: {
+    id: string;
+    ticket: string,
+    person: string,
+  }
 }
 
 class CreateTicketRequest{
@@ -74,6 +101,7 @@ class UpdateTicketRequest {
 class updateWorkEstimateRequest {
   token: string;
   id: string;
+  ticket: string;
   hours?: number;
   minutes?: number;
 }
@@ -81,6 +109,7 @@ class updateWorkEstimateRequest {
 class updateWorkRecordRequest {
   token: string;
   id: string;
+  ticket: string;
   hours?: number;
   minutes?: number;
 }
@@ -385,7 +414,7 @@ export class NewTicketsPage {
       this.newTicketStatusName = this.CommonTicketsReadResponse.ticket.ticket_status;
       this.newTicketContent = this.CommonTicketsReadResponse.ticket.content;
       this.isOpen = !this.isOpen;
-      if (this.CommonTicketsReadResponse.ticket.parent)this.parentChange(this.CommonTicketsReadResponse.ticket.parent)
+      this.CommonTicketsReadResponse.ticket.parent ? this.parentChange(this.CommonTicketsReadResponse.ticket.parent) : this.parentChange(null)
 
     }
   }
@@ -554,14 +583,32 @@ qq
 
 
   assignTicketToPerson = async (ticketId, personId) =>{
-    const result = await fetchAs<AssignTicketRequest, AssignTicketResponse>('common/ticket/assignments/create-read', {
+    const idTicketAlreadyAssigned = await this.readTicketAssignment(ticketId);
+    if (idTicketAlreadyAssigned) {
+      await fetchAs<AssignTicketUpdateRequest, AssignTicketResponse>('common/ticket-assignments/update-read', {
         token: globals.globalStore.state.token,
-        ticket_assignment: {
-          ticket: ticketId,
-          person: personId
-  
+        id: idTicketAlreadyAssigned,
+        ticket: ticketId,
+        person: personId
+        });
+
+    } else {
+      await fetchAs<AssignTicketRequest, AssignTicketResponse>('common/ticket-assignments/create-read', {
+      token: globals.globalStore.state.token,
+      ticket_assignment: {
+        ticket: ticketId,
+        person: personId
         },
       });
+    }
+  }
+
+  readTicketAssignment = async (ticketId) => {
+    const result = await fetchAs<ReadTicketAssignmentRequest, ReadTicketAssignmentResponse>('common/ticket-assignments/read', {
+      token: globals.globalStore.state.token,
+      ticket: ticketId
+    });
+    return result.ticket_assignment && result.ticket_assignment [0] ? result.ticket_assignment[0].id : null;
   }
 
   addEstimateToTicket = () => {
@@ -624,7 +671,9 @@ qq
 
 
   async onClickUpdateWorkEstimates(id, hours, minutes) {
+    console.log('id: ', id);
     this.workEstimateId = id;
+    console.log('new id: ', this.workEstimateId);
     this.newHoursWorkEstimates = hours;
     this.newMinutesWorkEstimates = minutes;
   }
@@ -649,10 +698,13 @@ qq
   onClickSubmitUpdateWorkEstimates = async (event: MouseEvent) => {
     event.preventDefault(); 
     event.stopPropagation();
+    console.log('id Submit: ', this.workEstimateId);
+    console.log('id Ticket: ', this.ticketId);
     
     const result = await fetchAs<updateWorkEstimateRequest, ReadWorkEstimatesResponse>('common/work-estimates/update-read', {
       token: globals.globalStore.state.token,
       id: this.workEstimateId,
+      ticket: this.ticketId,
       hours: this.newHoursWorkEstimates,
       minutes: this.newMinutesWorkEstimates
 
@@ -701,6 +753,7 @@ qq
     const result = await fetchAs<updateWorkRecordRequest, updateWorkRecordResponse>('common/work-records/update-read', {
       token: globals.globalStore.state.token,
       id: this.workRecordId,
+      ticket: this.ticketId,
       hours: this.newHoursWorkRecords,
       minutes: this.newMinutesWorkRecords
 
@@ -718,10 +771,13 @@ qq
   }
   
   parentChange(event) {
-    if(event.target && event.target.value){
-      this.newParent = event.target.value;
-    } else {
-      this.newParent = event;
+    this.newParent = null;
+    if(event){
+      if(event.target && event.target.value){
+        this.newParent = event.target.value;
+      } else {
+        this.newParent = event;
+      }
     }
   }
   

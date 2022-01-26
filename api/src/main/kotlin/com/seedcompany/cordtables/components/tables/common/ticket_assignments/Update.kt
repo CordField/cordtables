@@ -14,8 +14,10 @@ import javax.sql.DataSource
 data class CommonTicketAssignmentUpdateRequest(
         val token: String?,
         val id: String? = null,
-        val column: String? = null,
         val value: Any? = null,
+        val ticket: String? = null,
+        val person: String? = null,
+
 )
 
 data class CommonTicketAssignmentUpdateResponse(
@@ -37,54 +39,29 @@ class Update(
     fun updateHandler(@RequestBody req: CommonTicketAssignmentUpdateRequest): CommonTicketAssignmentUpdateResponse {
 
         if (req.token == null) return CommonTicketAssignmentUpdateResponse(ErrorType.TokenNotFound)
-        if (req.column == null) return CommonTicketAssignmentUpdateResponse(ErrorType.InputMissingColumn)
         if (req.id == null) return CommonTicketAssignmentUpdateResponse(ErrorType.MissingId)
 
         println(req)
 
-        when (req.column) {
-
-            "ticket" -> {
                 util.updateField(
                         token = req.token,
                         table = "common.ticket_assignments",
                         column = "ticket",
                         id = req.id,
-                        value = req.value
+                        value = req.ticket
                 )
-            }
 
-            "person" -> {
+
                 util.updateField(
                         token = req.token,
                         table = "common.ticket_assignments",
                         column = "person",
                         id = req.id,
-                        value = req.value
+                        value = req.person
                 )
-            }
 
 
-            "owning_person" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "common.ticket_assignments",
-                        column = "owning_person",
-                        id = req.id,
-                        value = req.value
-                )
-            }
 
-            "owning_group" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "common.ticket_assignments",
-                        column = "owning_group",
-                        id = req.id,
-                        value = req.value
-                )
-            }
-        }
 
         return CommonTicketAssignmentUpdateResponse(ErrorType.NoError)
     }

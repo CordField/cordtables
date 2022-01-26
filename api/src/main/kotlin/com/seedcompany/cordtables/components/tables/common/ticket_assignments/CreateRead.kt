@@ -22,7 +22,7 @@ data class CommonTicketAssignmentCreateReadRequest(
 
 data class CommonTicketAssignmentCreateReadResponse(
         val error: ErrorType,
-            val ticket_assignment: CommonTicketAssignments? = null,
+        val ticket_assignment: MutableList<CommonTicketAssignments>? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -58,6 +58,7 @@ class CreateRead(
         val readResponse = read.readHandler(
                 CommonTicketAssignmentReadRequest(
                         token = req.token,
+                        ticket = req.ticket_assignment.ticket,
                         id = createResponse!!.id
                 )
         )
