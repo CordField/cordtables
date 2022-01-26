@@ -12,6 +12,15 @@ public class BrowserDriverConfig {
 	private String binaryPath;
 	private String type;
 	private boolean headless;
+	private boolean devMode;
+
+	public boolean isDevMode() {
+		return devMode;
+	}
+
+	public void setDevMode(boolean devMode) {
+		this.devMode = devMode;
+	}
 
 	public String getType() {
 		return type;

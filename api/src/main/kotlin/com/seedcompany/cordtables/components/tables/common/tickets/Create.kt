@@ -53,7 +53,7 @@ class Create(
                     error = ErrorType.ValueDoesNotMap
             )
         }
-    println(req.token)
+    println(req)
     // create row with required fields, use id to update cells afterwards one by one
     val id = jdbcTemplate.queryForObject(
             """

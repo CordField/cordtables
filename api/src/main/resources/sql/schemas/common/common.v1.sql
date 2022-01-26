@@ -525,7 +525,7 @@ create table common.ticket_assignments (
 	id varchar(32) primary key default common.nanoid(),
 
 	ticket varchar(32) not null references common.tickets(id),
-	person varchar(32) unique not null references admin.people(id),
+	person varchar(32) not null references admin.people(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by varchar(32) not null references admin.people(id),

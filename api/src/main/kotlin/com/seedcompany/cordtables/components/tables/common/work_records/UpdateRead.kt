@@ -46,6 +46,7 @@ class UpdateRead(
             CommonWorkRecordUpdateRequest(
               token = req.token,
               id = req.id,
+              ticket = req.ticket,
               hours = req.hours,
               minutes = req.minutes
             )

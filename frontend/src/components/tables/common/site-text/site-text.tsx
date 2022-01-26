@@ -24,7 +24,7 @@ type SiteTextStringUpdateResponse = {
 };
 
 type SiteTextTranslationUpdateInput = {
-  language: number;
+  language: string;
   site_text: string;
   newValue: string;
 };
@@ -62,7 +62,7 @@ type SiteTextStringCreateResponse = {
 };
 
 type LanguageIndex = {
-  id: number;
+  id: string;
   lang: string;
   country: string;
   name_type: string;
@@ -86,7 +86,7 @@ type LanguageIndexListResponseWithPage = LanguageIndexListResponse & { page: num
 
 type SiteTextLanguageCreateRequest = {
   token: string;
-  language: number;
+  language: string;
 };
 
 const resultsPerPage = 10;
@@ -191,7 +191,7 @@ export class SiteText {
     }
   };
 
-  handleSiteTextTranslationUpdate = async (id: string, column: number, newValue: string): Promise<boolean> => {
+  handleSiteTextTranslationUpdate = async (id: string, column: string, newValue: string): Promise<boolean> => {
     const updateResponse = await fetchAs<SiteTextTranslationUpdateRequest, SiteTextTranslationUpdateResponse>('common/site-text-translations/update-read', {
       token: globals.globalStore.state.token,
       site_text_translation: {
@@ -256,6 +256,8 @@ export class SiteText {
   };
 
   makeRows = () => {
+    console.debug('globalStore siteTextStrings', globals.globalStore.state.siteTextStrings);
+    console.debug('globals.globalStore.state.siteTextTranslations', globals.globalStore.state.siteTextTranslations);
     return globals.globalStore.state.siteTextStrings.map((siteTextString: SiteTextString) => {
       const row = {
         id: siteTextString.id,
@@ -264,9 +266,10 @@ export class SiteText {
       };
 
       globals.globalStore.state.siteTextLanguages.forEach((siteTextLanguage: SiteTextLanguage) => {
-        row[siteTextLanguage.language] = globals.globalStore.state.siteTextTranslations[siteTextLanguage.language]
+        const value = globals.globalStore.state.siteTextTranslations[siteTextLanguage.language]
           ? globals.globalStore.state.siteTextTranslations[siteTextLanguage.language][siteTextString.english]
           : undefined;
+        row[siteTextLanguage.language] = { value, displayValue: value === undefined ? '' : value };
       });
 
       return row;
@@ -277,7 +280,7 @@ export class SiteText {
     this.loading = true;
 
     return new Promise((resolve, reject) => {
-      fetchAs<LanguageIndexListRequest, LanguageIndexListResponse>('sil-language-index/list', {
+      fetchAs<LanguageIndexListRequest, LanguageIndexListResponse>('sil/language-index/list', {
         token: globals.globalStore.state.token,
         search,
         page,
@@ -302,6 +305,7 @@ export class SiteText {
   componentDidLoad() {
     this.columnData = this.makeColumns();
     this.rowData = this.makeRows();
+    console.debug('rowData', this.rowData);
     this.loadLanguages(1);
   }
 

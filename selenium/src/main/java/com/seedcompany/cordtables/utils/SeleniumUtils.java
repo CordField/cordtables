@@ -16,8 +16,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.GeckoDriverService;
-import org.openqa.selenium.remote.BrowserType;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -74,6 +75,8 @@ public class SeleniumUtils {
 				chromeOptions.setCapability("chrome.verbose", browserConfig.isVerbose());
 				chromeOptions.addArguments("--disable-web-security");
 				chromeOptions.addArguments("--allow-running-insecure-content");
+				if(browserConfig.isDevMode())
+				chromeOptions.addArguments("--auto-open-devtools-for-tabs");
 				// chromeOptions.setExperimentalOption("w3c", false);
 				WebDriverManager.getInstance(DriverManagerType.CHROME).setup();
 				driver = new ChromeDriver(chromeOptions);
@@ -239,4 +242,26 @@ public class SeleniumUtils {
 		return null;
 	}
 
+	public static void scrollToElement(WebElement target, WebDriver driver) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].scrollIntoView();", target);
+	}
+
+	public static void scrollDown(WebDriver driver) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+	}
+
+	public static void scrollHorizontally(WebElement target, WebDriver driver) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].scrollIntoView();", target);
+	}
+
+	public static void log(WebDriver driver) {
+		LogEntries les = driver.manage().logs().get(LogType.PERFORMANCE);
+		System.out.println("**********Performance Logs*****************");
+		for (LogEntry le : les) {
+			System.out.println(le.getMessage());
+		}
+	}
 }

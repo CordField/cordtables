@@ -14,7 +14,7 @@ public abstract class Page {
 
 	protected WebDriver driver;
 
-	public SearchContext rootApp;
+	protected SearchContext rootApp;
 
 	public SearchContext getRootApp() {
 		return rootApp;
@@ -43,7 +43,7 @@ public abstract class Page {
 	 * @return
 	 */
 	public SearchContext loadApp() {
-		this.rootApp = SeleniumUtils.expand_shadow_element(driver.findElement(By.tagName("app-root")));
+		this.setRootApp(SeleniumUtils.expand_shadow_element(driver.findElement(By.tagName("app-root"))));
 		return this.rootApp;
 	}
 
