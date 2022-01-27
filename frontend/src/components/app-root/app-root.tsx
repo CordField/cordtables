@@ -76,7 +76,7 @@ export class AppRoot {
         <cf-header />
         <foreign-row />
         {globals.globalStore.state.appState === AppState.TranslationLoaded && (
-          <div id="root-wrap-inner">
+          <div part="test" id="root-wrap-inner">
             <div>
               {!globals.globalStore.state.isLoggedIn && <div>Please login or register</div>}
 

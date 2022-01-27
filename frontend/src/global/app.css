@@ -38,3 +38,20 @@ body {
 #container {
   width: 1000px;
 }
+
+app-root::part(testelement){
+  font-size: 25px;
+  color: yellow;
+}
+:host /deep/ app-root {
+  background-color: red;
+  color: green;
+}
+
+app-root /deep/ #root-wrap-outer {
+  color: greenyellow;
+}
+
+admin-people div{
+  color: green;
+}
