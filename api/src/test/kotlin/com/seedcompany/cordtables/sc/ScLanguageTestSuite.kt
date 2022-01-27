@@ -57,7 +57,6 @@ class ScLanguageTestSuite (
         @DynamicPropertySource
         @JvmStatic
         fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
-            println(home)
             System.setProperty("DB_DOMAIN", util.dbDomain)
             System.setProperty("DB_DATABASE", util.dbDatabase)
             System.setProperty("DB_PORT", util.dbPort.toString())
@@ -129,7 +128,6 @@ class ScLanguageTestSuite (
             ScLanguagesUpdateResponse::class.java
         )
 
-        println(updateNameResponse)
         assert(updateNameResponse !== null) {"response was null"}
         assert(updateNameResponse.body !== null) {"response body was null"}
         // assert(updateNameResponse.body.)
@@ -368,7 +366,7 @@ class ScLanguageTestSuite (
             ),
             ScLanguagesUpdateResponse::class.java
         )
-        println(updateLocationLongResponse.body)
+
         assert(updateLocationLongResponse !== null) {"response was null"}
         assert(updateLocationLongResponse.body !== null) {"response body was null"}
 

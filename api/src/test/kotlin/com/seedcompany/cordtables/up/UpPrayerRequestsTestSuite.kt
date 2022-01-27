@@ -62,7 +62,7 @@ class PrayerRequestsTestSuite(
     @DynamicPropertySource
     @JvmStatic
     fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
-      println(home)
+
       System.setProperty("DB_DOMAIN", util.dbDomain)
       System.setProperty("DB_DATABASE", util.dbDatabase)
       System.setProperty("DB_PORT", util.dbPort.toString())
@@ -113,7 +113,7 @@ class PrayerRequestsTestSuite(
                     target_language_id = languageId,
                     sensitivity = "Low",
                     organization_name = "Test Organization",
-                    parent = "",
+                    parent = null,
                     translator = translator,
                     location = "Texas",
                     title = "Test Prayer Request",
