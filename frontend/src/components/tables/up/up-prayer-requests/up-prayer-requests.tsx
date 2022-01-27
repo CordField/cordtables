@@ -428,15 +428,9 @@ export class UpPrayerRequests {
               <span class="form-thing">
                 <select id="sensitivity" name="sensitivity" onChange={event => this.sensitivityChange(event)}>
                   <option value="">Select Sensitivity</option>
-                  <option value="Low" selected={this.newSensitivity === 'Low'}>
-                    Low
-                  </option>
-                  <option value="Medium" selected={this.newSensitivity === 'Medium'}>
-                    Medium
-                  </option>
-                  <option value="High" selected={this.newSensitivity === 'High'}>
-                    High
-                  </option>
+                  <option value="Low" selected={this.newSensitivity === 'Low'}>Low</option>
+                  <option value="Medium" selected={this.newSensitivity === 'Medium'}>Medium</option>
+                  <option value="High" selected={this.newSensitivity === 'High'}>High</option>
                 </select>
               </span>
             </div>

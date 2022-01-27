@@ -10,7 +10,8 @@ data class Language(
     val name: String? = null,
     val display_name: String? = null,
     val display_name_pronunciation: String? = null,
-    val tags: String? = null,
+    // val tags: String? = null,
+    val tags: Array<out Any>? = arrayOf(),
     val preset_inventory: Boolean? = null,
     val is_dialect: Boolean? = null,
     val is_sign_language: Boolean? = null,
@@ -75,7 +76,25 @@ data class Language(
     val owning_group: String? = null,
     val coordinates: String? = null,
     val coordinates_json: String? = null
-)
+) {
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as Language
+
+    if (tags != null) {
+      if (other.tags == null) return false
+      if (!tags.contentEquals(other.tags)) return false
+    } else if (other.tags != null) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    return tags?.contentHashCode() ?: 0
+  }
+}
 
 data class LanguageInput(
 //    var id: Int? = null,

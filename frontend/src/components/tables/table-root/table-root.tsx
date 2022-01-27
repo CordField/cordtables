@@ -113,11 +113,12 @@ export class TableRoot {
           <stencil-route url={'/table/sc/project-members'} component="sc-project-members" />
 
           
-          <stencil-route
+          {/* <stencil-route
             url={['/table/common/site-text', '/table/common/site-text-languages', '/table/common/site-text-translations', '/table/common/site-text-strings']}
             component="site-text"
-          />
-
+          /> */}
+          <stencil-route url={'/table/common/site-text-strings'} component="site-text-strings" />
+          <stencil-route url={'/table/common/site-text-translations'} component="site-text-translations" />
           <stencil-route url={'/table/sil/country-codes'} component="sil-country-codes" />
           <stencil-route url={'/table/sil/language-codes'} component="sil-language-codes" />
           <stencil-route url={'/table/sil/language-index'} component="sil-language-index" />

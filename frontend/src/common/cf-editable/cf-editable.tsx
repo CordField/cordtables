@@ -13,7 +13,7 @@ export class CfEditable {
     @Prop() field: string;
     @Prop() rowId: string;
     @Prop() endPoint: string;
-    @Prop() value: any;
+    @Prop() value: any = null;
     @Prop() enableEdit: boolean = false;
     @Prop() selectOptions?: Array<{ display: string; value: any }> | null = null;
     @Prop() multiSelect?: boolean = false;
@@ -74,6 +74,7 @@ export class CfEditable {
     }
   
     render() {
+      console.log(this.value)
       return (
         <Host>
           <slot></slot>
@@ -83,7 +84,9 @@ export class CfEditable {
                 {this.selectOptions != null ? (
                   <select name="s" onInput={event => this.handleSelect(event, this.multiSelect)} multiple={this.multiSelect}>
                     {this.selectOptions && this.selectOptions.length > 0 && this.selectOptions.map(option => (
-                      <option value={option.value} selected={typeof this.value=="string"?(this.value==option.value):(this.value.filter(obj => obj.value===option.value).length > 0)}>{option.display}</option>
+                      <option value={option.value} selected={this.value != null ?
+                        (typeof this.value=="string"?(this.value==option.value):(this.value.filter(obj => obj.value===option.value).length > 0)) : (false)
+                      }>{option.display}</option>
                     ))}
                   </select>
                 ):(
@@ -100,14 +103,21 @@ export class CfEditable {
               </span>
             ):(
               <span>
-                {typeof this.value === 'boolean' && <span>{this.value.toString()}</span>}
-                {typeof this.value === 'number' && <span>{this.value.toString()}</span>}
-                {typeof this.value === 'object' && this.value.constructor.name == "Array" && <span>
-                  {this.value.map(obj => 
-                    <span> {obj.value} </span>
-                  )}  
-                </span>}
-                {typeof this.value === 'string' && <span title={this.value}>{this.value}</span>}
+                {this.value != null ? (
+                  <span>
+                    {typeof this.value === 'boolean' && <span>{this.value.toString()}</span>}
+                    {typeof this.value === 'number' && <span>{this.value.toString()}</span>}
+                    {typeof this.value === 'object' && this.value.constructor.name == "Array" && <span>
+                      {this.value.map(obj => 
+                        <span> {obj.value} </span>
+                      )}  
+                    </span>}
+                    {typeof this.value === 'string' && <span title={this.value}>{this.value}</span>}
+                  </span>
+                ):(
+                  <span></span>
+                )}
+                
               </span>
             )}
             {this.enableEdit && !this.showEdit && (
