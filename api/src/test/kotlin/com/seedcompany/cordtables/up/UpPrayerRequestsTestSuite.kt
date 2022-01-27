@@ -1,12 +1,10 @@
 package com.seedcompany.cordtables.up
 
 import com.seedcompany.cordtables.TestUtility
+import com.seedcompany.cordtables.admin.AdminPeopleTestUtility
 import com.seedcompany.cordtables.admin.AdminUsersTestUtility
 import com.seedcompany.cordtables.common.CommonLanguagesTestUtility
-import com.seedcompany.cordtables.components.tables.up.prayer_requests.PrayerForm
-import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsCreateFromFormRequest
-import com.seedcompany.cordtables.components.tables.up.prayer_requests.UpPrayerRequestsCreateFromFormResponse
-import com.seedcompany.cordtables.components.tables.up.prayer_requests.prayerRequestInput
+import com.seedcompany.cordtables.components.tables.up.prayer_requests.*
 import com.seedcompany.cordtables.sil.SilLanguageIndexTestUtility
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,6 +34,12 @@ class PrayerRequestsTestSuite(
 
   @Autowired
   val silLanguageIndexUtil: SilLanguageIndexTestUtility,
+
+  @Autowired
+  val commonLanguagesTestUtility: CommonLanguagesTestUtility,
+
+  @Autowired
+  val adminPeopleTestUtility: AdminPeopleTestUtility,
 
   @Autowired
   val rest: TestRestTemplate,
@@ -69,7 +73,7 @@ class PrayerRequestsTestSuite(
       System.setProperty("SERVER_PORT", util.serverPort.toString())
 
       System.setProperty("AWS_ACCESS_KEY_ID", util.awsAccessKey)
-      System.setProperty("AWS_SECRET_ACCESS_KEY", util.awsSecret)
+      System.setProperty("AWS_SECRET_ACCESS_KEY", util.awsSecret)+
 
       System.setProperty("EMAIL_SERVER", util.emailServer)
 
@@ -94,38 +98,68 @@ class PrayerRequestsTestSuite(
     exposeHostPorts(port);
   }
 
-  @Test
-  fun `create prayer request from form`() {
+    @Test
+    fun `create prayer request`(){
 
-    val ethCode = "eng"
+        val languageId = commonLanguagesTestUtility.`create common language`(port = port.toString())
+        val translator = adminPeopleTestUtility.`create admin people`(port = port.toString())
 
-    // create language first
-    val silLangIndexId = silLanguageIndexUtil.`create sil language_index entry`(port = port.toString(), lang = ethCode)
+        val prayerRequestCreateResponse = rest.postForEntity(
+            "http://localhost:$port/up/prayer-requests/create",
+            UpPrayerRequestsCreateRequest(
+                token = usersUtil.getAdminToken(port = port.toString()),
+                prayerRequest = prayerRequestInput(
+                    request_language_id = languageId,
+                    target_language_id = languageId,
+                    sensitivity = "Low",
+                    organization_name = "Test Organization",
+                    parent = "",
+                    translator = translator,
+                    location = "Texas",
+                    title = "Test Prayer Request",
+                    content = "Test Prayer Request Content",
+                    reviewed = true,
+                    prayer_type = "Request",
+                )
+            ),
+            UpPrayerRequestsCreateResponse::class.java
+        )
 
-    // create prayer entry
-    val prayerCreateResponse = rest.postForEntity(
-      "http://localhost:$port/up/prayer-requests/create-from-form",
-      UpPrayerRequestsCreateFromFormRequest(
-        token = usersUtil.getAdminToken(port = port.toString()),
-        prayerForm = PrayerForm(
-          creatorEmail = "creator_email@asdf.asdf",
-          translatorEmail = "translator_email@asdf.asdf",
-          ethCode = ethCode,
-          sensitivity = "Low",
-          location = "location",
-          prayerType = "Request",
-          title = "title",
-          content = "content",
-        ),
-      ),
-      UpPrayerRequestsCreateFromFormResponse::class.java,
-    )
+        assert(prayerRequestCreateResponse !== null) {"response was null"}
+        assert(prayerRequestCreateResponse.body !== null) {"response body was null"}
+        assert(prayerRequestCreateResponse.body!!.id !== null) {"response id was null"}
+    }
 
-    assert(prayerCreateResponse !== null) {"response was null"}
-    assert(prayerCreateResponse.body !== null) {"response body was null"}
-    assert(prayerCreateResponse.body!!.id !== null) {"response id was null"}
+    @Test
+    fun `create prayer request from form`() {
 
-  }
+        val ethCode = "eng"
+
+        // create language first
+        val silLangIndexId = silLanguageIndexUtil.`create sil language_index entry`(port = port.toString(), lang = ethCode)
+
+        // create prayer entry
+        val prayerCreateResponse = rest.postForEntity(
+            "http://localhost:$port/up/prayer-requests/create-from-form",
+            UpPrayerRequestsCreateFromFormRequest(
+                token = usersUtil.getAdminToken(port = port.toString()),
+                prayerForm = PrayerForm(
+                    creatorEmail = "creator_email@asdf.asdf",
+                    translatorEmail = "translator_email@asdf.asdf",
+                    ethCode = ethCode,
+                    sensitivity = "Low",
+                    location = "location",
+                    prayerType = "Request",
+                    title = "title",
+                    content = "content",
+                ),
+            ),
+            UpPrayerRequestsCreateFromFormResponse::class.java,
+        )
+        assert(prayerCreateResponse !== null) {"response was null"}
+        assert(prayerCreateResponse.body !== null) {"response body was null"}
+        assert(prayerCreateResponse.body!!.id !== null) {"response id was null"}
+    }
 
 }
 

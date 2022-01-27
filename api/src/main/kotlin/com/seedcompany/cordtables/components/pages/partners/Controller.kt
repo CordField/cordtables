@@ -2,7 +2,6 @@ package com.seedcompany.cordtables.components.pages.partners
 
 import com.seedcompany.cordtables.common.*
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.tables.sc.global_partner_engagements.globalPartnerEngagement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -90,7 +89,8 @@ class Controller (
             var dbResultSet = queryObj.result
             size = queryObj.size
             while (dbResultSet!!.next()){
-                val financial_reporting_types = (dbResultSet.getObject("financial_reporting_types") as SerialArray).array as Array<out Any>
+                var financial_reporting_types:Array<out Any>? =  (dbResultSet.getObject("financial_reporting_types") as? SerialArray)?.array as Array<out Any>?
+
                 data.add(
                     Partner(
                         id = dbResultSet.getString("id"),
@@ -194,7 +194,7 @@ class Controller (
         ).result
 
         while (jdbcResult!!.next()){
-            val financial_reporting_types = (jdbcResult.getObject("financial_reporting_types") as SerialArray).array as Array<out Any>
+            val financial_reporting_types: Array<out Any>? = (jdbcResult.getObject("financial_reporting_types") as? SerialArray)?.array as Array<out Any>?
             partner = Partner(
                 id = jdbcResult.getString("id"),
                 active = jdbcResult.getBoolean("active"),
