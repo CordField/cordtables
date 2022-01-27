@@ -46,6 +46,7 @@ class Controller (
         var size:Int = 0
         if (req.token == null) return PartnersResponse(ErrorType.TokenNotFound, size = size, partners = mutableListOf())
 
+      
         var columnsNew = mutableMapOf(
             "sc.partners" to mutableMapOf(
                 "id" to "id",
