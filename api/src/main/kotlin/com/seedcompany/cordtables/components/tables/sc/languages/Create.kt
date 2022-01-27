@@ -82,7 +82,7 @@ class Create(
                     ?,
                     '${req.language.sensitivity}',
                     ?,
-                    ?,
+                    ?::timestamp,
                     '${req.language.tags?.joinToString(separator = ",", prefix = "{", postfix = "}") {"\"${it}\""}}',
                     (
                       select person 

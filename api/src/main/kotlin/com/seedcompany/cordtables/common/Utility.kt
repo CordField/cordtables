@@ -335,7 +335,7 @@ class Utility(
       .map { it.replace('_', '-') };
   }
 
-  fun updateField(token: String, table: String, column: String, id: String?, value: Any?, cast: String? = "") {
+  fun updateField(token: String, table: String, column: String, id: String?, value: Any?, cast: String? = "", nullable: Boolean? = true) {
 
     if (userHasUpdatePermission(
         token = token,
