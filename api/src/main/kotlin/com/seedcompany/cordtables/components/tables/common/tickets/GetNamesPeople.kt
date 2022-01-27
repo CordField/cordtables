@@ -53,7 +53,6 @@ class ListAllPeople(
     paramSource.addValue("token", req.token)
 
     val filter = if(req.wordToSearch.isNullOrBlank()) "" else "public_full_name LIKE '%' || '${req.wordToSearch}' || '%' "
-    println(filter)
 
     val query = secureList.getSecureListQueryHandler(
       GetSecureListQueryRequest(

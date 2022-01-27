@@ -14,12 +14,12 @@ import javax.sql.DataSource
 
 data class SiteTextLanguageCreateRequest(
   val token: String? = null,
-  val language: Int,
+  val language: String,
 )
 
 data class SiteTextLanguageCreateResponse(
   val error: ErrorType,
-  val id: Int? = null,
+  val id: String? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -41,7 +41,7 @@ class Create(
     if (req.language == null) return SiteTextLanguageCreateResponse(error = ErrorType.InputMissingColumn, null)
 
     try {
-      val id = jdbcTemplate.queryForObject(
+      val id: String = jdbcTemplate.queryForObject(
         """
             insert into common.site_text_languages(
                 language,
@@ -50,7 +50,7 @@ class Create(
                 owning_person, 
                 owning_group)
             values(
-                ?,
+                ?::uuid,
                 (
                   select person 
                   from admin.tokens 
@@ -66,15 +66,16 @@ class Create(
                   from admin.tokens 
                   where token = ?
                 ),
-                1
+                ?::uuid
             )
             returning id;
             """.trimIndent(),
-        Int::class.java,
+        String::class.java,
         req.language,
         req.token,
         req.token,
         req.token,
+        util.adminGroupId()
       )
 
       return SiteTextLanguageCreateResponse(error = ErrorType.NoError, id = id)

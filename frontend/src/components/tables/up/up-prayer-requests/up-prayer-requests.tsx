@@ -494,7 +494,7 @@ export class UpPrayerRequests {
                 <label htmlFor="reviewed">Reviewed</label>
               </span>
               <span class="form-thing">
-                <select id="reviewed" name="reviewed" onInput={event => this.reviewedChange(event)}>
+                <select id="reviewed" name="reviewed" onChange={event => this.reviewedChange(event)}>
                   <option value="">Select Reviewed</option>
                   <option value="true" selected={this.newReviewed === true}>
                     True
@@ -511,7 +511,7 @@ export class UpPrayerRequests {
                 <label htmlFor="prayer_type">Prayer Type</label>
               </span>
               <span class="form-thing">
-                <select id="prayer_type" name="prayer_type" onInput={event => this.prayer_typeChange(event)}>
+                <select id="prayer_type" name="prayer_type" onChange={event => this.prayer_typeChange(event)}>
                   <option value="">Select Prayer Type</option>
                   <option value="Request" selected={this.newPrayer_type === 'Request'}>
                     Request
