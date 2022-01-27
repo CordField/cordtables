@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -105,8 +105,38 @@ export class CommonStageNotifications {
     this.stageNotificationsResponse = await fetchAs<CommonStageNotificationListRequest, CommonStageNotificationListResponse>('common/stage-notifications/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.stageNotificationsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
   }
 
+  async updateForeignKeys() {
+    for (const stageNotification of this.stageNotificationsResponse.stageNotifications) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: stageNotification[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.stageNotificationsResponse.stageNotifications.map(stageNotification2 => {
+              if (stageNotification.id === stageNotification2.id) {
+                stageNotification2[column.field] = {
+                  value: stageNotification[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return stageNotification2;
+            });
+          }
+        }
+      }
+    }
+  }
   stageChange(event) {
     this.newStage = event.target.value;
   }
@@ -160,6 +190,8 @@ export class CommonStageNotifications {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/stages',
+      foreignTableColumn: 'title',
     },
     {
       field: 'on_enter',
@@ -189,6 +221,8 @@ export class CommonStageNotifications {
       width: 200,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'created_at',
@@ -201,6 +235,8 @@ export class CommonStageNotifications {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -213,6 +249,8 @@ export class CommonStageNotifications {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -220,6 +258,8 @@ export class CommonStageNotifications {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -227,6 +267,8 @@ export class CommonStageNotifications {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 

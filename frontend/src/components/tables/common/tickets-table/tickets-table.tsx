@@ -129,6 +129,7 @@ export class TicketsTable {
       editable: true,
       updateFn: this.handleUpdate,
     },
+    { field: 'title', displayName: 'Title', width: 200, editable: true, updateFn: this.handleUpdate },
     {
       field: 'content',
       displayName: 'Content',
@@ -136,6 +137,7 @@ export class TicketsTable {
       editable: true,
       updateFn: this.handleUpdate,
     },
+
     {
       field: 'created_at',
       displayName: 'Created At',

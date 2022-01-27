@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -107,8 +107,38 @@ export class CommonStageRoleColumnGrants {
     this.stageRoleColumnGrantsResponse = await fetchAs<CommonStageRoleColumnGrantListRequest, CommonStageRoleColumnGrantListResponse>('common/stage-role-column-grants/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.stageRoleColumnGrantsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
   }
 
+  async updateForeignKeys() {
+    for (const stageRoleColumnGrant of this.stageRoleColumnGrantsResponse.stageRoleColumnGrants) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: stageRoleColumnGrant[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.stageRoleColumnGrantsResponse.stageRoleColumnGrants.map(stageRoleColumnGrant2 => {
+              if (stageRoleColumnGrant.id === stageRoleColumnGrant2.id) {
+                stageRoleColumnGrant2[column.field] = {
+                  value: stageRoleColumnGrant[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return stageRoleColumnGrant2;
+            });
+          }
+        }
+      }
+    }
+  }
   stageChange(event) {
     this.newStage = event.target.value;
   }
@@ -167,6 +197,8 @@ export class CommonStageRoleColumnGrants {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'common/stages',
+      foreignTableColumn: 'title',
     },
     {
       field: 'role',
@@ -174,6 +206,8 @@ export class CommonStageRoleColumnGrants {
       width: 250,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/roles',
+      foreignTableColumn: 'name',
     },
     {
       field: 'table_name',
@@ -293,6 +327,8 @@ export class CommonStageRoleColumnGrants {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -305,6 +341,8 @@ export class CommonStageRoleColumnGrants {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -312,6 +350,8 @@ export class CommonStageRoleColumnGrants {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -319,6 +359,8 @@ export class CommonStageRoleColumnGrants {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 

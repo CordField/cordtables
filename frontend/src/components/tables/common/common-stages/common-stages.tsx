@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 import { v4 as uuidv4 } from 'uuid';
@@ -94,6 +94,37 @@ export class CommonStages {
     this.stagesResponse = await fetchAs<CommonStageListRequest, CommonStageListResponse>('common/stages/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.stagesResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
+  }
+
+  async updateForeignKeys() {
+    for (const stage of this.stagesResponse.stages) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: stage[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.stagesResponse.stages.map(stage2 => {
+              if (stage.id === stage2.id) {
+                stage2[column.field] = {
+                  value: stage[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return stage2;
+            });
+          }
+        }
+      }
+    }
   }
 
   titleChange(event) {
@@ -146,6 +177,8 @@ export class CommonStages {
       displayName: 'Created By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'modified_at',
@@ -158,6 +191,8 @@ export class CommonStages {
       displayName: 'Last Modified By',
       width: 100,
       editable: false,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_person',
@@ -165,6 +200,8 @@ export class CommonStages {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/people',
+      foreignTableColumn: 'public_first_name',
     },
     {
       field: 'owning_group',
@@ -172,6 +209,8 @@ export class CommonStages {
       width: 100,
       editable: true,
       updateFn: this.handleUpdate,
+      foreignKey: 'admin/groups',
+      foreignTableColumn: 'name',
     },
   ];
 
