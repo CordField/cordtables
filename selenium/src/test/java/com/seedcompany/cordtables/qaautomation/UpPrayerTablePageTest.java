@@ -77,12 +77,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--2mk7_we-s";
-		formDetails.targetLanguageId = "--2mk7_we-s";
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -104,12 +104,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--2mk7_we-s";
-		formDetails.targetLanguageId = "--2mk7_we-s";
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -131,12 +131,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--2mk7_we-s";
-		formDetails.targetLanguageId = "--2mk7_we-s";
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -157,12 +157,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--2mk7_we-s";
-		formDetails.targetLanguageId = "--2mk7_we-s";
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -183,12 +183,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -210,12 +210,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -237,12 +237,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -264,12 +264,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -291,12 +291,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -318,12 +318,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -345,12 +345,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -372,12 +372,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
-
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.parent ="";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -406,12 +406,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -433,12 +433,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -460,12 +460,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -487,12 +487,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -514,12 +514,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -541,12 +541,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -566,8 +566,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedTrueAndPrayerTypeCelebration() {
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
@@ -622,12 +622,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityLow_ReviewTrue() {
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
@@ -640,7 +640,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		formDetails.parent = prayerData.prayerId;
 		formDetails.sensitivity = "Low";
 		formDetails.prayerType = "Update";
-		formDetails.reviewed = "false";
+		formDetails.reviewed = "true";
 		validatePrayerRequestUpdate(formDetails);
 	}
 
@@ -652,7 +652,27 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityMedium_ReviewFalse() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "High";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "true";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, false);
 
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity = "Medium";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "false";
+		validatePrayerRequestUpdate(formDetails);
 	}
 
 	/**
@@ -664,7 +684,27 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityMedium_ReviewTrue() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "High";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "false";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, false);
 
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity = "Medium";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "true";
+		validatePrayerRequestUpdate(formDetails);
 	}
 
 	/**
@@ -676,7 +716,27 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityHigh_ReviewFalse() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "Low";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "true";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, true);
 
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity="High";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "false";
+		validatePrayerRequestUpdate(formDetails);
 	}
 
 	/**
@@ -687,18 +747,28 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityHigh_ReviewTrue() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "Medium";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "false";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, false);
 
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity = "High";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "true";
+		validatePrayerRequestUpdate(formDetails);
 	}
-
-	/**
-	 * Method to validate the celebration prayer request creation scenario.
-	 * 
-	 * @param formDetails
-	 */
-	private void validateCelebrationPrayerRequestCreation(UpPrayerRequestForm formDetails) {
-
-	}
-
 	/**
 	 * Method to validate the prayer request creation scenario.
 	 * 
