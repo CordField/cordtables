@@ -92,6 +92,7 @@ export class UpPrayerRequests {
         error: ErrorType.NoError,
         prayerRequests: this.prayerRequestsResponse.prayerRequests.map(prayerRequest => (prayerRequest.id === id ? updateResponse.prayerRequest : prayerRequest)),
       };
+      this.getList();
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
