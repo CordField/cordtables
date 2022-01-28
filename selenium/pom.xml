@@ -30,7 +30,6 @@
 			<artifactId>selenium-chrome-driver</artifactId>
 			<version>4.1.1</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -41,6 +40,14 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.9</version>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apachepoi/poi-ooxml-->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.17</version>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
 		<dependency>
 			<groupId>io.github.bonigarcia</groupId>
