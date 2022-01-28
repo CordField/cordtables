@@ -90,20 +90,36 @@ export class AppRoot {
                             <div class="scrollable">
                               <ion-list style={{ marginLeft: '10px' }}>
                                 {this.pages.map(page => (
-                                  <ion-item href={`/page/${page.toLowerCase().replace(" ","-")}`}>
+                                  <ion-item href={`/page/${page.toLowerCase().replace(' ', '-')}`}>
                                     <ion-label>{page} Page</ion-label>
                                   </ion-item>
                                 ))}
                               </ion-list>
                             </div>
                           </custom-accordion>
-                          <custom-accordion width="100%" label="Tables" color="#64b145" marginLeft="10px">
+                          <custom-accordion width="100%" label="Schemas" color="#64b145" marginLeft="10px">
                             <div class="scrollable">
                               <ion-list style={{ marginLeft: '10px' }}>
-                                {globals.globalStore.state.readableTables.map(table => (
+                                {/* {globals.globalStore.state.readableTables.map(table => (
                                   <ion-item href={`/table/${table.split('.').join('/')}`}>
                                     <ion-label>{table} </ion-label>
                                   </ion-item>
+                                ))} */}
+                                {['common', 'admin', 'sc', 'sil', 'up'].map(schema => (
+                                  <custom-accordion width="100%" label={schema} color="#64b145" marginLeft="10px">
+                                    <div class="scrollable">
+                                      <ion-list style={{ marginLeft: '10px' }}>
+                                        {globals.globalStore.state.readableTables.map(table => {
+                                          if (table.split('.')[0] === schema)
+                                            return (
+                                              <ion-item href={`/table/${table.split('.').join('/')}`}>
+                                                <ion-label>{table.split('.')[1]} </ion-label>
+                                              </ion-item>
+                                            );
+                                        })}
+                                      </ion-list>
+                                    </div>
+                                  </custom-accordion>
                                 ))}
                               </ion-list>
                             </div>
@@ -114,9 +130,13 @@ export class AppRoot {
                   </div>
                   <div class="edit-button">
                     {this.path != '/page/tickets' && (
-                      <button onClick={this.toggleEditMode} style={{ float: 'right' }}>
-                        Edit Mode: {globals.globalStore.state.editMode.toString()}
-                      </button>
+                      // <button onClick={this.toggleEditMode} style={{ float: 'right' }}>
+                      //   Edit Mode: {globals.globalStore.state.editMode.toString()}
+                      // </button>
+                      <div style={{ float: 'right' }}>
+                        <span>Edit Mode</span>
+                        <ion-toggle onIonChange={this.toggleEditMode}></ion-toggle>
+                      </div>
                     )}
                   </div>
                 </div>
