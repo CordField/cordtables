@@ -140,10 +140,29 @@ public class UpPrayerTablePage extends Page {
 
 	}
 
+	public List<String> findPrayerRequest(String prayerId) {
+		List<String> data = null;
+		try {
+			this.enableEditMode();
+			this.extractor = new TableDataExtractor(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
+					this.driver);
+			List<List<WebElement>> records = extractor.readTable(TablesOption.UP_PRAYER_REQUESTS);
+			for (List<WebElement> r : records) {
+				WebElement idCol = r.get(0);
+				if (prayerId.equalsIgnoreCase(this.extractor.columnData(idCol))) {
+
+					data = r.stream().map(c -> this.extractor.columnData(c)).collect(Collectors.toList());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+
 	public List<String> getExistingRequests() {
 		WebElement tableContainer = this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main"));
-		this.extractor = new TableDataExtractor(tableContainer,
-				this.driver);
+		this.extractor = new TableDataExtractor(tableContainer, this.driver);
 		SeleniumUtils.scrollToElement(tableContainer, driver);
 		List<List<String>> records = extractor.extractData(TablesOption.UP_PRAYER_REQUESTS);
 		return records.stream().map(r -> {

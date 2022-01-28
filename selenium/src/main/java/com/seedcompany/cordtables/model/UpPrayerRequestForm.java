@@ -13,13 +13,14 @@ public class UpPrayerRequestForm {
 	public String content;
 	public String reviewed;
 	public String prayerType;
+	public String prayerId;
 
 	@Override
 	public String toString() {
 		return "UpPrayerRequestForm [requestLanguageId=" + requestLanguageId + ", targetLanguageId=" + targetLanguageId
 				+ ", sensitivity=" + sensitivity + ", organizationName=" + organizationName + ", parent=" + parent
 				+ ", translator=" + translator + ", location=" + location + ", title=" + title + ", content=" + content
-				+ ", reviewed=" + reviewed + ", prayerType=" + prayerType + "]";
+				+ ", reviewed=" + reviewed + ", prayerType=" + prayerType + ", prayerId=" + prayerId + "]";
 	}
 
 }
