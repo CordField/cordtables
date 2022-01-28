@@ -42,13 +42,13 @@ export class CfRow {
           {this.columnData &&
             this.row &&
             this.columnData.map(columnDescription => {
-              console.group();
-              console.log(typeof this.row[columnDescription.field]);
+              // console.group();
+              // console.log(typeof this.row[columnDescription.field]);
               console.log(columnDescription.field);
               console.log(this.row[columnDescription.field]);
-              console.log(this.row[columnDescription.field]?.value);
-              console.log(this.row[columnDescription.field]?.displayValue);
-              console.groupEnd();
+              // console.log(columnDescription.field +' : '+ this.row[columnDescription.field]?.value);
+              // console.log(this.row[columnDescription.field]?.displayValue);
+              // console.groupEnd();
               if (typeof this.row[columnDescription.field] === 'string') {
                 return <cf-cell2 rowId={this.row.id} value={this.row[columnDescription.field]} columnDescription={columnDescription} displayValue={''}></cf-cell2>;
               } else {
