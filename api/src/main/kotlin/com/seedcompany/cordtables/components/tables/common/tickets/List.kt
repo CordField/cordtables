@@ -19,8 +19,8 @@ import javax.sql.DataSource
 
 data class CommonTicketsListRequest(
         val token: String?,
-        val limit: Number,
-        val offset: Number
+        val limit: Number?,
+        val offset: Number?
 )
 
 data class CommonTicketsListResponse(
@@ -129,6 +129,7 @@ class   List(
             println("error while listing ${e.message}")
             return CommonTicketsListResponse(ErrorType.SQLReadError, mutableListOf())
         }
+      println(data)
         return CommonTicketsListResponse(ErrorType.NoError, data)
     }
 }

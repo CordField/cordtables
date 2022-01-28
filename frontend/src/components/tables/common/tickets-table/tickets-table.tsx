@@ -1,6 +1,6 @@
 import { Component, Host, h, State, Prop } from '@stencil/core';
 import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse } from '../../../../common/types';
+import { AutocompleteRequest, AutocompleteResponse, ErrorType, GenericResponse } from '../../../../common/types';
 import { fetchAs } from '../../../../common/utility';
 import { globals } from '../../../../core/global.store';
 class CreateTicketRequest {
@@ -16,6 +16,7 @@ class CommonTicketsRow {
   id: string;
   ticket_status: string;
   parent: string;
+  title: string;
   content: string;
   created_at: string;
   created_by: string;
@@ -186,6 +187,37 @@ export class TicketsTable {
     this.commonTicketsResponse = await fetchAs<CommonTicketsListRequest, CommonTicketsListResponse>('common/tickets/list', {
       token: globals.globalStore.state.token,
     });
+    if (this.commonTicketsResponse.error === ErrorType.NoError) {
+      await this.updateForeignKeys();
+    }
+  }
+
+  async updateForeignKeys() {
+    for (const ticket of this.commonTicketsResponse.tickets) {
+      for (const column of this.columnData) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+          const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
+            token: globals.globalStore.state.token,
+            searchColumnName: 'id',
+            resultColumnName: column.foreignTableColumn,
+            tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
+            searchKeyword: ticket[column.field],
+          });
+          console.log(autocompleteData);
+          if (autocompleteData.error === ErrorType.NoError) {
+            this.commonTicketsResponse.tickets.map(ticket2 => {
+              if (ticket.id === ticket2.id) {
+                ticket2[column.field] = {
+                  value: ticket[column.field],
+                  displayValue: autocompleteData.data,
+                };
+              }
+              return ticket2;
+            });
+          }
+        }
+      }
+    }
   }
 
   ticketStatusNameChange(event) {
