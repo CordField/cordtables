@@ -92,6 +92,7 @@ export class UpPrayerRequests {
         error: ErrorType.NoError,
         prayerRequests: this.prayerRequestsResponse.prayerRequests.map(prayerRequest => (prayerRequest.id === id ? updateResponse.prayerRequest : prayerRequest)),
       };
+      this.getList();
       globals.globalStore.state.notifications = globals.globalStore.state.notifications.concat({ text: 'item updated successfully', id: uuidv4(), type: 'success' });
       return true;
     } else {
@@ -116,9 +117,12 @@ export class UpPrayerRequests {
   };
 
   async getList() {
-    this.prayerRequestsResponse = await fetchAs<UpPrayerRequestListRequest, UpPrayerRequestListResponse>('up/prayer-requests/list', {
+    var response = await fetchAs<UpPrayerRequestListRequest, UpPrayerRequestListResponse>('up/prayer-requests/list', {
       token: globals.globalStore.state.token,
     });
+    if(response.error == ErrorType.NoError){
+      await this.updateForeignKeys(response);
+    }
   }
 
   request_language_idChange(event) {
@@ -352,25 +356,27 @@ export class UpPrayerRequests {
 
   async componentWillLoad() {
     await this.getList();
-    console.log('hi', this.prayerRequestsResponse);
+    // console.log('hi', this.prayerRequestsResponse);
     // await this.getFilesList();
-    await this.updateForeignKeys();
+    
   }
 
-  async updateForeignKeys() {
-    for (const prayerRequest of this.prayerRequestsResponse.prayerRequests) {
+  async updateForeignKeys(prayerResponse) {
+    for (const prayerRequest of prayerResponse.prayerRequests) {
       for (const column of this.columnData) {
-        if (column.foreignKey !== null && column.foreignKey !== undefined) {
+        if (column.foreignKey !== null && column.foreignKey !== undefined && prayerRequest[column.field.toString()]!==null) {
+          // console.log("column.field:"+column.field.toString());
+          // console.log(prayerRequest[column.field])
           const autocompleteData = await fetchAs<AutocompleteRequest, AutocompleteResponse>('admin/autocomplete', {
             token: globals.globalStore.state.token,
             searchColumnName: 'id',
             resultColumnName: column.foreignTableColumn,
             tableName: column.foreignKey.split('/').join('.').replace('-', '_'),
-            searchKeyword: prayerRequest[column.field],
+            searchKeyword: prayerRequest[column.field.toString()],
           });
-          console.log(autocompleteData);
+          // console.log(autocompleteData);
           if (autocompleteData.error === ErrorType.NoError) {
-            this.prayerRequests = this.prayerRequestsResponse.prayerRequests.map(prayerRequest2 => {
+            this.prayerRequests = prayerResponse.prayerRequests.map(prayerRequest2 => {
               if (prayerRequest.id === prayerRequest2.id) {
                 prayerRequest2[column.field] = {
                   value: prayerRequest[column.field],
@@ -383,6 +389,8 @@ export class UpPrayerRequests {
         }
       }
     }
+    prayerResponse.prayerRequests = this.prayerRequests
+    this.prayerRequestsResponse = prayerResponse
     this.applicationState = 'autocompleteResponse';
     console.log(this.applicationState, this.prayerRequests);
   }
