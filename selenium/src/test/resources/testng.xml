@@ -6,6 +6,7 @@
 		<classes>
 			<class name="com.seedcompany.cordtables.qaautomation.RegistrationTest" />
 			<class name="com.seedcompany.cordtables.qaautomation.LoginPageTest" />
+			<class name="com.seedcompany.cordtables.qaautomation.UpPrayerTablePageTest" />
 		</classes>
 	</test>
 
