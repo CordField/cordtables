@@ -156,17 +156,14 @@ create table admin.people (
   id uuid primary key default common.uuid_generate_v4(),
 
   about text,
-  phone varchar(32), -- todo refactor many-to-many
-  picture varchar(255), -- todo might make this a file reference
+  picture varchar(32) references common.files,
   private_first_name varchar(32),
   private_last_name varchar(32),
   public_first_name varchar(32),
   public_last_name varchar(32),
   primary_location uuid references common.locations(id),
-  private_full_name varchar(64), -- todo make computed column
-  public_full_name varchar(64), -- todo make compute column
   sensitivity_clearance common.sensitivity default 'Low',
-  timezone varchar(32), -- todo research type / foreign key reference
+  timezone varchar(64),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid, -- not null doesn't work here, on startup
@@ -330,12 +327,26 @@ create table admin.role_memberships (
 
 -- USERS ---------------------------------------------------------------------
 
-create table admin.users( -- todo might change to user_accounts
+create table admin.user_email_accounts(
   id uuid primary key references admin.people(id), -- not null added in v2
 
-  email varchar(255) unique, -- not null todo maybe merge with admin.people
+  email varchar(255) unique,
   password varchar(255),
   
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
+);
+
+create table admin.user_phone_accounts(
+  id uuid primary key references admin.people(id), -- not null added in v2
+
+  phone varchar(64) unique,
+  password varchar(255),
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,

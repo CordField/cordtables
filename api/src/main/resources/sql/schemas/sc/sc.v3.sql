@@ -304,8 +304,8 @@ create table sc.languages(
   registry_of_dialects_code char(5),
   sensitivity common.sensitivity,
   sign_language_code char(4),
-  sponsor_start_date timestamp, -- derived
-  sponsor_estimated_end_date timestamp, -- todo research this field. new?
+  sponsor_start_date date, -- derived
+  sponsor_estimated_end_date date, -- todo research this field. new?
   has_external_first_scripture bool,
 
 --	language_name varchar(32),
@@ -478,8 +478,8 @@ create table sc.person_unavailabilities (
   id uuid primary key default common.uuid_generate_v4(),
 
   person uuid references admin.people(id),
-	period_start timestamp not null default CURRENT_TIMESTAMP,
-	period_end timestamp not null default CURRENT_TIMESTAMP,
+	period_start date not null,
+	period_end date not null,
 	description text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -538,25 +538,25 @@ create type sc.project_type as enum (
 );
 
 -- todo
-create type sc.change_to_plan_type as enum (
+create type sc.change_set_type as enum (
 		'a',
 		'b',
 		'c'
 );
 
 -- todo
-create type sc.change_to_plan_status as enum (
+create type sc.change_set_status as enum (
 		'a',
 		'b',
 		'c'
 );
 
-create table sc.change_to_plans (
+create table sc.change_sets (
   id uuid primary key default common.uuid_generate_v4(),
 
-  status sc.change_to_plan_status,
+  status sc.change_set_status,
   summary text,
-  type sc.change_to_plan_type,
+  type sc.change_set_type,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -583,9 +583,9 @@ create table sc.periodic_reports (
   parent uuid,
   type sc.periodic_report_parent_type,
   directory uuid references sc.periodic_reports_directory(id), -- todo should this be common.directory?
-  end_at timestamp,
+  end_at date,
   report_file uuid references common.files(id),
-  start_at timestamp,
+  start_at date,
   type sc.periodic_report_type,
   skipped_reason text,
   
@@ -607,15 +607,15 @@ create table sc.projects (
   id uuid primary key default common.uuid_generate_v4(),
 
 	name varchar(32), -- not null
-	change_to_plan uuid references sc.change_to_plans(id), -- not null
+	change_set uuid references sc.change_sets(id), -- not null
 	department_id varchar(5),
-	estimated_submission timestamp, -- todo date
+	estimated_submission date, 
 	field_region uuid references sc.field_regions(id),
 	financial_report_period sc.financial_report_period_type default 'Quarterly',
-	initial_mou_end timestamp, -- todo date
+	initial_mou_end date, 
 	marketing_location uuid references sc.locations(id),
-	mou_start timestamp, -- todo date
-	mou_end timestamp, -- todo date
+	mou_start date,
+	mou_end date, 
 	primary_location uuid references sc.locations(id),
 	root_directory uuid references common.directories(id),
 	status sc.project_status, -- not null todo
@@ -633,12 +633,12 @@ create table sc.projects (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id),
 
-	unique (id, change_to_plan)
+	unique (id, change_set)
 );
 
 create table sc.translation_projects (
   id uuid primary key default sc.projects(),
-  change_to_plan uuid references sc.change_to_plans(id), -- not null
+  change_set uuid references sc.change_sets(id), -- not null
 
 	preset_inventory bool,
 
@@ -649,12 +649,12 @@ create table sc.translation_projects (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id),
 
-	unique (id, change_to_plan)
+	unique (id, change_set)
 );
 
 create table sc.internship_projects (
   id uuid primary key default sc.projects(),
-  change_to_plan uuid references sc.change_to_plans(id), -- not null -- todo rename change to plan => changesets
+  change_set uuid references sc.change_sets(id), -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -663,7 +663,7 @@ create table sc.internship_projects (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id),
 
-	unique (id, change_to_plan)
+	unique (id, change_set)
 );
 
 create table sc.project_members (
@@ -709,16 +709,16 @@ create table sc.partnerships (
 
   project uuid references sc.projects(id), -- not null
   partner uuid references sc.organizations(id), -- not null
-  change_to_plan uuid references sc.change_to_plans(id), -- not null
+  change_set uuid references sc.change_sets(id), -- not null
   active bool, -- todo does still exist?
   agreement_status sc.partnership_agreement_status,
   mou uuid references common.files(id),
   agreement uuid references common.files(id),
   mou_status sc.partnership_agreement_status,
-  mou_start timestamp, -- derived from sc.projects unless overridden
-  mou_end timestamp, -- derived from sc.projects unless overridden
-  mou_start_override timestamp,
-  mou_end_override timestamp,
+  mou_start date, -- derived from sc.projects unless overridden
+  mou_end date, -- derived from sc.projects unless overridden
+  mou_start_override date,
+  mou_end_override date,
   financial_reporting_type sc.financial_reporting_types,
   is_primary bool,
   sensitivity common.sensitivity,
@@ -746,7 +746,7 @@ create type common.budget_status as enum (
 create table sc.budgets (
   id uuid primary key default common.uuid_generate_v4(),
 
-  change_to_plan uuid, -- not null
+  change_set uuid, -- not null
   project uuid references sc.projects(id), -- not null
   status common.budget_status,
   universal_template uuid references common.files(id),
@@ -759,14 +759,14 @@ create table sc.budgets (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id),
 
-  unique (id, change_to_plan)
+  unique (id, change_set)
 );
 
 create table sc.budget_records (
   id uuid primary key default common.uuid_generate_v4(),
 
   budget uuid references sc.budgets(id), -- not null
-  change_to_plan uuid references sc.change_to_plans(id), -- not null
+  change_set uuid references sc.change_sets(id), -- not null
   amount decimal,
   fiscal_year int,
   partnership uuid not null references sc.partnerships(id),
@@ -788,7 +788,7 @@ create table sc.project_locations (
   id uuid primary key default common.uuid_generate_v4(),
 
   active bool,
-  change_to_plan uuid references sc.change_to_plans(id), -- not null
+  change_set uuid references sc.change_sets(id), -- not null
   location uuid references sc.locations(id), -- not null
   project uuid references sc.projects(id), -- not null
   
@@ -799,7 +799,7 @@ create table sc.project_locations (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id),
 
-	unique (project, location, change_to_plan)
+	unique (project, location, change_set)
 );
 
 
@@ -898,7 +898,7 @@ create type common.product_methodology_step as enum (
 create table sc.products (
   id uuid primary key default common.uuid_generate_v4(),
 
-  change_to_plan uuid references sc.change_to_plans(id), -- not null
+  change_set uuid references sc.change_sets(id), -- not null
   engagement uuid references sc.language_engagements(id),
   mediums common.product_mediums[],
   purposes common.product_purposes[], -- todo may need for historical data, delete
@@ -925,7 +925,7 @@ create table sc.products (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id),
 
-  unique (id, change_to_plan)
+  unique (id, change_set)
 );
 
 -- direct scripture
@@ -948,7 +948,7 @@ create table sc.product_scripture_references (
   id uuid primary key default common.uuid_generate_v4(),
   product uuid references sc.products(id), -- not null
   scripture_reference uuid references common.scripture_references(id), -- not null
-  change_to_plan uuid references sc.change_to_plans(id), -- not null
+  change_set uuid references sc.change_sets(id), -- not null
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -1032,14 +1032,14 @@ create type common.internship_position as enum (
 	project uuid references sc.projects(id), -- not null
   status common.engagement_status, not null
   ceremony id not null
-  complete_date timestamp,
-  disbursement_complete_date timestamp,
-  end_date timestamp,
-  end_date_override timestamp,
-  start_date timestamp,
-  start_date_override timestamp,
+  complete_date date,
+  disbursement_complete_date date,
+  end_date date,
+  end_date_override date,
+  start_date date,
+  start_date_override date,
   sensitivity derived from sc.projects
-  initial_end_date timestamp,
+  initial_end_date date,
   last_suspended_at timestamp,
   last_reactivated_at timestamp,
   status_modified_at timestamp,
@@ -1078,8 +1078,8 @@ create table sc.language_engagements (
   id uuid primary key default common.uuid_generate_v4(),
 
 	language uuid references sc.languages(id), -- not null
-	change_to_plan uuid references sc.change_to_plans(id), -- not null
-  communications_complete_date timestamp,
+	change_set uuid references sc.change_sets(id), -- not null
+  communications_complete_date date,
   is_open_to_investor_visit bool,
   is_first_scripture bool,
   is_luke_partnership bool,
@@ -1095,13 +1095,13 @@ create table sc.language_engagements (
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id),
 
-	unique (project, language, change_to_plan)
+	unique (project, language, change_set)
 );
 
 create table sc.internship_engagements (
   id uuid primary key default common.uuid_generate_v4(),
 
-	change_to_plan uuid references sc.change_to_plans(id), -- not null
+	change_set uuid references sc.change_sets(id), -- not null
   country_of_origin uuid references common.locations(id),
   intern uuid references admin.people(id), -- not null
   mentor uuid references admin.people(id),
@@ -1136,8 +1136,8 @@ create table sc.ceremonies (
   engagement uuid,
   -- type
   ethnologue uuid references sil.table_of_languages(id),
-  actual_date timestamp,
-  estimated_date timestamp,
+  actual_date date,
+  estimated_date date,
   is_planned bool,
   type common.ceremony_type,
 
@@ -1218,7 +1218,7 @@ create type sc.global_partner_transition_options as enum(
 
    organization uuid unique not null references sc.organizations(id),
    transition_type sc.global_partner_transition_options not null,
-   effective_date timestamp,
+   effective_date date,
 
    created_at timestamp not null default CURRENT_TIMESTAMP,
    created_by uuid not null references admin.people(id),
@@ -1238,8 +1238,8 @@ create table sc.global_partner_engagements (
 
   organization uuid not null references common.organizations(id),
   type common.involvement_options not null,
-  mou_start timestamp,
-  mou_end timestamp,
+  mou_start date,
+  mou_end date,
   sc_roles sc.global_partner_roles[],
   partner_roles sc.global_partner_roles[],
 

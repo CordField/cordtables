@@ -180,7 +180,9 @@ create table common.scripture_references (
 
 create table common.discussion_channels (
 	id uuid primary key default common.uuid_generate_v4(),
+
 	name varchar(32) not null,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -389,10 +391,11 @@ create type common.position_relationship_types as enum (
 create table common.org_chart_position_graph(
   id uuid primary key default common.uuid_generate_v4(),
 
-  -- todo add time tracking
   from_position uuid not null references common.org_chart_positions(id),
   to_position uuid not null references common.org_chart_positions(id),
   relationship_type common.position_relationship_types,
+  position_start date,
+  position_end date,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -485,7 +488,7 @@ create table common.files (
 create table common.file_versions (
   id uuid primary key default common.uuid_generate_v4(),
 
-  mime_type varchar(32), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
+  mime_type varchar(96), -- not null, todo: common.mime_type filled in, but neo4j just has a dumb 'ole string
   name varchar(255), -- not null,
   parent_files_id uuid references common.files(id), -- not null
   file_size int, -- bytes
@@ -513,6 +516,7 @@ create table common.tickets (
 	ticket_status common.ticket_status not null default 'Open',
 	parent uuid,
 	content text not null,
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -711,8 +715,8 @@ create table common.people_to_org_relationships (
 	org uuid not null references common.organizations(id),
 	person uuid unique not null references admin.people(id),
 	relationship_type common.people_to_org_relationship_type,
-  begin_at timestamp,
-  end_at timestamp,
+  begin_at date,
+  end_at date,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
