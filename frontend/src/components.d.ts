@@ -333,6 +333,12 @@ export namespace Components {
     }
     interface SilTableOfLanguagesInCountry {
     }
+    interface SiteText {
+    }
+    interface SiteTextStrings {
+    }
+    interface SiteTextTranslations {
+    }
     interface StageGraph {
     }
     interface StageNotifications {
@@ -1171,6 +1177,24 @@ declare global {
         prototype: HTMLSilTableOfLanguagesInCountryElement;
         new (): HTMLSilTableOfLanguagesInCountryElement;
     };
+    interface HTMLSiteTextElement extends Components.SiteText, HTMLStencilElement {
+    }
+    var HTMLSiteTextElement: {
+        prototype: HTMLSiteTextElement;
+        new (): HTMLSiteTextElement;
+    };
+    interface HTMLSiteTextStringsElement extends Components.SiteTextStrings, HTMLStencilElement {
+    }
+    var HTMLSiteTextStringsElement: {
+        prototype: HTMLSiteTextStringsElement;
+        new (): HTMLSiteTextStringsElement;
+    };
+    interface HTMLSiteTextTranslationsElement extends Components.SiteTextTranslations, HTMLStencilElement {
+    }
+    var HTMLSiteTextTranslationsElement: {
+        prototype: HTMLSiteTextTranslationsElement;
+        new (): HTMLSiteTextTranslationsElement;
+    };
     interface HTMLStageGraphElement extends Components.StageGraph, HTMLStencilElement {
     }
     var HTMLStageGraphElement: {
@@ -1406,6 +1430,9 @@ declare global {
         "sil-table-of-countries": HTMLSilTableOfCountriesElement;
         "sil-table-of-languages": HTMLSilTableOfLanguagesElement;
         "sil-table-of-languages-in-country": HTMLSilTableOfLanguagesInCountryElement;
+        "site-text": HTMLSiteTextElement;
+        "site-text-strings": HTMLSiteTextStringsElement;
+        "site-text-translations": HTMLSiteTextTranslationsElement;
         "stage-graph": HTMLStageGraphElement;
         "stage-notifications": HTMLStageNotificationsElement;
         "stage-role-column-grants": HTMLStageRoleColumnGrantsElement;
@@ -1761,6 +1788,12 @@ declare namespace LocalJSX {
     }
     interface SilTableOfLanguagesInCountry {
     }
+    interface SiteText {
+    }
+    interface SiteTextStrings {
+    }
+    interface SiteTextTranslations {
+    }
     interface StageGraph {
     }
     interface StageNotifications {
@@ -1941,6 +1974,9 @@ declare namespace LocalJSX {
         "sil-table-of-countries": SilTableOfCountries;
         "sil-table-of-languages": SilTableOfLanguages;
         "sil-table-of-languages-in-country": SilTableOfLanguagesInCountry;
+        "site-text": SiteText;
+        "site-text-strings": SiteTextStrings;
+        "site-text-translations": SiteTextTranslations;
         "stage-graph": StageGraph;
         "stage-notifications": StageNotifications;
         "stage-role-column-grants": StageRoleColumnGrants;
@@ -2096,6 +2132,9 @@ declare module "@stencil/core" {
             "sil-table-of-countries": LocalJSX.SilTableOfCountries & JSXBase.HTMLAttributes<HTMLSilTableOfCountriesElement>;
             "sil-table-of-languages": LocalJSX.SilTableOfLanguages & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesElement>;
             "sil-table-of-languages-in-country": LocalJSX.SilTableOfLanguagesInCountry & JSXBase.HTMLAttributes<HTMLSilTableOfLanguagesInCountryElement>;
+            "site-text": LocalJSX.SiteText & JSXBase.HTMLAttributes<HTMLSiteTextElement>;
+            "site-text-strings": LocalJSX.SiteTextStrings & JSXBase.HTMLAttributes<HTMLSiteTextStringsElement>;
+            "site-text-translations": LocalJSX.SiteTextTranslations & JSXBase.HTMLAttributes<HTMLSiteTextTranslationsElement>;
             "stage-graph": LocalJSX.StageGraph & JSXBase.HTMLAttributes<HTMLStageGraphElement>;
             "stage-notifications": LocalJSX.StageNotifications & JSXBase.HTMLAttributes<HTMLStageNotificationsElement>;
             "stage-role-column-grants": LocalJSX.StageRoleColumnGrants & JSXBase.HTMLAttributes<HTMLStageRoleColumnGrantsElement>;

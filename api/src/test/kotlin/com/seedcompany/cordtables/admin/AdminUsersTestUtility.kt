@@ -36,7 +36,6 @@ class AdminUsersTestUtility(
   }
 
   fun login(port: String, email: String, password: String): LoginReturn {
-    println("email: $email, password: $password")
     val loginResponse = rest.postForEntity(
       "http://localhost:$port/user/login",
       LoginRequest(email = email, password = password),

@@ -84,6 +84,8 @@ export class AdminPeoples {
   newTitle: string;
   // newStatus: string;
 
+
+
   handleUpdate = async (id: string, columnName: string, value: string): Promise<boolean> => {
     const updateResponse = await fetchAs<AdminPeopleUpdateRequest, AdminPeopleUpdateResponse>('admin/people/update-read', {
       token: globals.globalStore.state.token,
@@ -185,6 +187,28 @@ export class AdminPeoples {
   handleInsert = async (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
+
+    // if(this.newAbout == null){
+    //   alert("About text is required");
+    //   return false;
+    // }
+    // if(this.newPhone == null){
+    //   alert("Phone number is required");
+    //   return false;
+    // }
+    // if(this.newPicture == null){
+    //   alert("Phone number is required");
+    //   return false;
+    // }
+    // if(this.newPrivate_first_name == null){
+    //   alert("Private First Name  is required");
+    //   return false;
+    // }
+    // if(this.newPrivate_last_name == null){
+    //   alert("Private Last Name  is required");
+    //   return false;
+    // }
+
 
     const createResponse = await fetchAs<CreatePeopleExRequest, CreatePeopleExResponse>('admin/people/create-read', {
       token: globals.globalStore.state.token,
@@ -391,7 +415,7 @@ export class AdminPeoples {
             'sensitivity_clearance',
             'timezone',
             'title',
-            //                    "status",
+            // "status",
             'created_at',
             'created_by',
             'modified_at',
@@ -407,142 +431,146 @@ export class AdminPeoples {
          and then expect the user to use the update functionality to do the rest*/}
 
         {globals.globalStore.state.editMode === true && (
-          <form class="form-thing">
-            <div id="about-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="about">About</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="about" name="about" onInput={event => this.aboutChange(event)} />
-              </span>
-            </div>
+          <div class="create-form">
+            <form class="form-thing">
+              <div id="about-holder" class="form-input-item form-thing" part="testelement">
+                <span class="form-thing">
+                  <label htmlFor="about">About</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="about" name="about" required onInput={event => this.aboutChange(event)} />
+                </span>
+              </div>
 
-            <div id="phone-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="phone">Phone</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="phone" name="phone" onInput={event => this.phoneChange(event)} />
-              </span>
-            </div>
+              <div id="phone-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="phone">Phone</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="phone" name="phone" onInput={event => this.phoneChange(event)} />
+                </span>
+              </div>
 
-            <div id="picture-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="picture">Picture</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="picture" name="picture" onInput={event => this.pictureChange(event)} />
-              </span>
-            </div>
+              <div id="picture-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="picture">Picture</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="picture" name="picture" onInput={event => this.pictureChange(event)} />
+                </span>
+              </div>
 
-            <div id="private_first_name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="private_first_name">Private First Name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="private_first_name" name="private_first_name" onInput={event => this.private_first_nameChange(event)} />
-              </span>
-            </div>
+              <div id="private_first_name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="private_first_name">Private First Name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="private_first_name" name="private_first_name" onInput={event => this.private_first_nameChange(event)} />
+                </span>
+              </div>
 
-            <div id="private_last_name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="private_last_name">Private Last Name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="private_last_name" name="private_last_name" onInput={event => this.private_last_nameChange(event)} />
-              </span>
-            </div>
+              <div id="private_last_name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="private_last_name">Private Last Name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="private_last_name" name="private_last_name" onInput={event => this.private_last_nameChange(event)} />
+                </span>
+              </div>
 
-            <div id="public_first_name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="public_first_name">public_first_name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="public_first_name" name="public_first_name" onInput={event => this.public_first_nameChange(event)} />
-              </span>
-            </div>
+              <div id="public_first_name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="public_first_name">public_first_name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="public_first_name" name="public_first_name" onInput={event => this.public_first_nameChange(event)} />
+                </span>
+              </div>
 
-            <div id="public_last_name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="public_last_name">Public Last Name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="public_last_name" name="public_last_name" onInput={event => this.public_last_nameChange(event)} />
-              </span>
-            </div>
+              <div id="public_last_name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="public_last_name">Public Last Name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="public_last_name" name="public_last_name" onInput={event => this.public_last_nameChange(event)} />
+                </span>
+              </div>
 
-            <div id="primary_location-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="primary_location">Primary Location</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="primary_location" name="primary_location" onInput={event => this.primary_locationChange(event)} />
-              </span>
-            </div>
+              <div id="primary_location-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="primary_location">Primary Location</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="primary_location" name="primary_location" onInput={event => this.primary_locationChange(event)} />
+                </span>
+              </div>
 
-            <div id="private_full_name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="private_full_name">Private Full Name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="private_full_name" name="private_full_name" onInput={event => this.private_full_nameChange(event)} />
-              </span>
-            </div>
+              <div id="private_full_name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="private_full_name">Private Full Name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="private_full_name" name="private_full_name" onInput={event => this.private_full_nameChange(event)} />
+                </span>
+              </div>
 
-            <div id="public_full_name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="public_full_name">Public Full Name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="public_full_name" name="public_full_name" onInput={event => this.public_full_nameChange(event)} />
-              </span>
-            </div>
+              <div id="public_full_name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="public_full_name">Public Full Name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="public_full_name" name="public_full_name" onInput={event => this.public_full_nameChange(event)} />
+                </span>
+              </div>
 
-            <div id="sensitivity_clearance-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="sensitivity_clearance">Sensitivity Clearance</label>
-              </span>
-              <span class="form-thing">
-                <select id="sensitivity_clearance" name="sensitivity_clearance" onInput={event => this.sensitivity_clearanceChange(event)}>
-                  <option value="">Select Sensitivity Clearance</option>
-                  <option value="Low" selected={this.newSensitivity_clearance === 'Low'}>Low</option>
-                  <option value="Medium" selected={this.newSensitivity_clearance === 'Medium'}>Medium</option>
-                  <option value="High" selected={this.newSensitivity_clearance === 'High'}>High</option>
-                </select>
-              </span>
-            </div>
+              <div id="sensitivity_clearance-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="sensitivity_clearance">Sensitivity Clearance</label>
+                </span>
+                <span class="form-thing">
+                  <select id="sensitivity_clearance" name="sensitivity_clearance" onInput={event => this.sensitivity_clearanceChange(event)}>
+                    <option value="">Select Sensitivity Clearance</option>
+                    <option value="Low" selected={this.newSensitivity_clearance === 'Low'}>Low</option>
+                    <option value="Medium" selected={this.newSensitivity_clearance === 'Medium'}>Medium</option>
+                    <option value="High" selected={this.newSensitivity_clearance === 'High'}>High</option>
+                  </select>
+                </span>
+              </div>
 
-            <div id="timezone-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="timezone">Time Zone</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="timezone" name="timezone" onInput={event => this.timezoneChange(event)} />
-              </span>
-            </div>
+              <div id="timezone-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="timezone">Time Zone</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="timezone" name="timezone" onInput={event => this.timezoneChange(event)} />
+                </span>
+              </div>
 
-            <div id="title-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="title">title</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="title" name="title" onInput={event => this.titleChange(event)} />
-              </span>
-            </div>
+              <div id="title-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="title">title</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="title" name="title" onInput={event => this.titleChange(event)} />
+                </span>
+              </div>
 
-            {/* <div id="status-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="status">status</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="status" name="status" onInput={event => this.statusChange(event)} />
-              </span>
-            </div> */}
-
-            <span class="form-thing">
-              <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
-            </span>
-          </form>
+              {/* <div id="status-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="status">status</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="status" name="status" onInput={event => this.statusChange(event)} />
+                </span>
+              </div> */}
+              <div class="form-submit-button">
+                <span class="form-thing">
+                  <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
+                </span>
+              </div>
+              
+            </form>
+          </div>
         )}
       </Host>
     );

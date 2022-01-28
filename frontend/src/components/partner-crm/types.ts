@@ -5,9 +5,9 @@ class MultiSelectData{
 class PartnerEngagement{
     id?: string = null;
     organization?: string | undefined;
-    type?: object[] | undefined;
-    mou_start?: string | undefined;
-    mou_end?: string | undefined;
+    type?: object[] | undefined = null;
+    mou_start?: string | undefined = null;
+    mou_end?: string | undefined = null;
     sc_roles?: MultiSelectData[] = null;
     partner_roles?: MultiSelectData[] = null;
     created_at?: string | undefined;

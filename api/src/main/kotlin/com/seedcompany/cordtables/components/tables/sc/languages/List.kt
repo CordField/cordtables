@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
+import javax.sql.rowset.serial.SerialArray
 
 
 data class ScLanguagesListRequest(
@@ -2060,7 +2061,8 @@ order by id
                                 var display_name_pronunciation: String? = jdbcResult.getString("display_name_pronunciation")
                                 if (jdbcResult.wasNull()) display_name_pronunciation = null
 
-                                var tags: String? = jdbcResult.getString("tags")
+                                // var tags: String? = jdbcResult.getString("tags")
+                                var tags: Array<out Any>? = (jdbcResult.getObject("tags") as? SerialArray)?.array as Array<out Any>?
                                 if (jdbcResult.wasNull()) tags = null
 
                                 var preset_inventory: Boolean? = jdbcResult.getBoolean("preset_inventory")

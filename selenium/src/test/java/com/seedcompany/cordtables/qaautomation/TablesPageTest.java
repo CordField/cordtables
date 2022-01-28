@@ -66,4 +66,29 @@ public class TablesPageTest extends BaseTestSuite {
 
 	}
 
+	/**
+	 * Test case to verify if user is admin and logging into system, he is able to
+	 * view the table options.
+	 * 
+	 */
+	@Test
+
+	public void up_prayer_requests_loading_success() {
+		HomePage homepage = PageFactory.initElements(driver, HomePage.class);
+		homepage.login(homepage.openMenu());
+		LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
+		loginPage.loadApp();
+		loginPage.submit(loginPage.fillLoginDetails(testConfig.getAppConfigs().getUsername(),
+				testConfig.getAppConfigs().getPassword()));
+		SeleniumUtils.wait(2);
+		MainPage mainPage = PageFactory.initElements(driver, MainPage.class);
+		mainPage.loadApp();
+		SearchContext mainMenu = SeleniumUtils.expand_shadow_element(
+				mainPage.getRootApp().findElement(By.cssSelector("custom-accordion.hydrated")));
+		assertNotNull(mainMenu);
+		assertNotNull(mainMenu.findElement(By.cssSelector(".accordion")));
+		
+		mainPage.selectTable(TablesOption.UP_PRAYER_REQUESTS);
+	}
+
 }

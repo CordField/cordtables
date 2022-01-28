@@ -734,35 +734,41 @@ export class ScLanguages {
         <cf-pagination current-page={this.currentPage} total-rows={this.languagesResponse.size} results-per-page="5" page-url="languages"></cf-pagination>
 
         {globals.globalStore.state.editMode === true && (
-          <form class="form-thing">
-            <div id="language-name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="language-name">New Language Name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="language-name" name="language-name" onInput={event => this.languageNameChange(event)} />
-              </span>
-            </div>
-            <div id="display-name-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="display-name">Display Name</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />
-              </span>
-            </div>
-            <div id="ethnologue-holder" class="form-input-item form-thing">
-              <span class="form-thing">
-                <label htmlFor="ethnologue">Ethnologue</label>
-              </span>
-              <span class="form-thing">
-                <input type="text" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
-              </span>
-            </div>
-            <span class="form-thing">
-              <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
-            </span>
-          </form>
+          <div class="create-form">
+            <form class="form-thing">
+              <div id="language-name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="language-name">New Language Name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="language-name" name="language-name" onInput={event => this.languageNameChange(event)} />
+                </span>
+              </div>
+              <div id="display-name-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="display-name">Display Name</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="display-name" name="display-name" onInput={event => this.displayNameChange(event)} />
+                </span>
+              </div>
+              <div id="ethnologue-holder" class="form-input-item form-thing">
+                <span class="form-thing">
+                  <label htmlFor="ethnologue">Ethnologue</label>
+                </span>
+                <span class="form-thing">
+                  <input type="text" id="ethnologue" name="ethnologue" onInput={event => this.ethnologueChange(event)} />
+                </span>
+              </div>
+
+              <div class="form-submit-button">
+                <span class="form-thing">
+                  <input id="create-button" type="submit" value="Create" onClick={this.handleInsert} />
+                </span>
+              </div>
+              
+            </form>
+          </div>
         )}
       </Host>
     );

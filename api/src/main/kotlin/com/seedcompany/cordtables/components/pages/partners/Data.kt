@@ -7,7 +7,7 @@ import com.seedcompany.cordtables.components.tables.sil.country_codes.countryCod
 data class Partner(
   val id: String? = null,
   val active: Boolean? = null,
-  val financial_reporting_types: Array<out Any> = arrayOf(),
+  val financial_reporting_types: Array<out Any>? = arrayOf(),
   val is_innovations_client: Boolean? = null,
   val pmc_entity_code: String? = null,
   val point_of_contact: String? = null,

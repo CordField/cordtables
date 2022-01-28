@@ -247,7 +247,7 @@ class SiteTextService(
     )
   }
 
-  fun createSiteTextLanguageRow(language: Int, token: String) {
+  fun createSiteTextLanguageRow(language: String, token: String) {
     try {
 
       val paramSource = MapSqlParameterSource()
@@ -286,7 +286,7 @@ class SiteTextService(
     }
   }
 
-  fun loadSiteTextTranslations(fileName: String, language: Int, token: String) {
+  fun loadSiteTextTranslations(fileName: String, language: String, token: String) {
     try {
 
       val readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/translations/${fileName}").inputStream))
@@ -305,7 +305,7 @@ class SiteTextService(
         val translation = splitArray[1]
 
         val stringParamSource = MapSqlParameterSource()
-        var siteTextId: Int
+        var siteTextId: String
 
         stringParamSource.addValue("english", english)
         val findSiteTextStringQuery = """
@@ -316,7 +316,7 @@ class SiteTextService(
 
         val result = jdbcTemplate.queryForRowSet(findSiteTextStringQuery, stringParamSource)
         if(result.next()) {
-          siteTextId = result.getInt(1)
+          siteTextId = result.getString(1)!!
           translations.add(SiteTextTranslationInput(
             language = language,
             site_text = siteTextId,
@@ -373,7 +373,7 @@ class SiteTextService(
         return@forEach
       }
 
-      var commonLanguageId: Int
+      var commonLanguageId: String
 
       try {
 
@@ -393,7 +393,7 @@ class SiteTextService(
 
         val result = jdbcTemplate.queryForRowSet(query, paramSource)
         if(result.next()) {
-          commonLanguageId = result.getInt(1)
+          commonLanguageId = result.getString(1)!!
         }
         else return@forEach
       } catch(e: Exception) {
