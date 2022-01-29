@@ -11,7 +11,6 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.seedcompany.cordtables.model.TablesOption;
@@ -78,26 +77,18 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--2mk7_we-s";
-		formDetails.targetLanguageId = "--2mk7_we-s";
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Request";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
 
@@ -113,26 +104,18 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--2mk7_we-s";
-		formDetails.targetLanguageId = "--2mk7_we-s";
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Request";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
 
@@ -148,26 +131,18 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--2mk7_we-s";
-		formDetails.targetLanguageId = "--2mk7_we-s";
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Request";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 	}
 
 	/**
@@ -182,26 +157,18 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--2mk7_we-s";
-		formDetails.targetLanguageId = "--2mk7_we-s";
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Request";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 	}
 
 	/**
@@ -216,30 +183,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Request";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
-	
-	
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -252,29 +210,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Request";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
-	
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -287,31 +237,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Request";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
-	
-	
-	
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -324,28 +264,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Update";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -358,28 +291,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Update";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -392,29 +318,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Update";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
-	
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -427,28 +345,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Update";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -461,28 +372,28 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.parent ="";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Update";
-		List<String> prayerIds = prayerPage.getExistingRequests();
+
 		prayerPage.fillUpPrayerRequestForm(formDetails);
 		SeleniumUtils.wait(1);
 		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+
+		List<String> prayerIds = prayerPage.getExistingRequests();
+		formDetails.parent = prayerIds.get(0);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -495,28 +406,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Update";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -529,28 +433,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Celebration";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -563,29 +460,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Celebration";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
-	}	
-	
+	}
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -598,29 +487,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Celebration";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
-	
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -633,28 +514,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Low";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Celebration";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
 	}
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -667,28 +541,21 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "Medium";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Celebration";
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
-		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		validatePrayerRequestCreation(formDetails, true);
 
-	}	
+	}
+
 	/**
 	 * This test case is used to verify that user is able to create the up prayer
 	 * request successfully if entered minimal required values and with sensitivity
@@ -698,33 +565,260 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedTrueAndPrayerTypeCelebration() {
-		UpPrayerTablePage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
 		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--9_aClXkMy";
-		formDetails.targetLanguageId = "--9_aClXkMy";
+		formDetails.requestLanguageId = "--clHWf4XLh";
+		formDetails.targetLanguageId = "--clHWf4XLh";
 		formDetails.sensitivity = "High";
 		formDetails.organizationName = "Seed company";
 		formDetails.parent = "";
-		formDetails.translator = "X4lvY3Crdw6";
+		formDetails.translator = "ja4HZGxGtz6";
 		formDetails.location = "USA";
 		formDetails.title = "SEED";
 		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Celebration";
+		validatePrayerRequestCreation(formDetails, true);
+
+	}
+
+	/**
+	 * This test case is use to validate the prayer request update scenario where
+	 * 'PARENT ID' should be Up.PrayerRequest id, sensitivity as 'LOW' and Review
+	 * set as 'FALSE'
+	 */
+	@Test
+
+	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityLow_ReviewFalse() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "High";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "true";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, false);
+
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity = "Low";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "false";
+		validatePrayerRequestUpdate(formDetails);
+
+	}
+
+	/**
+	 * This test case is use to validate the prayer request update scenario where
+	 * 'PARENT ID' should be Up.PrayerRequest id, sensitivity as 'LOW' and Review
+	 * set as 'TRUE'
+	 */
+	@Test
+
+	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityLow_ReviewTrue() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "High";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "false";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, false);
+
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity = "Low";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "true";
+		validatePrayerRequestUpdate(formDetails);
+	}
+
+	/**
+	 * This test case is use to validate the prayer request update scenario where
+	 * 'PARENT ID' should be Up.PrayerRequest id, sensitivity as 'MEDIUM' and Review
+	 * set as 'FALSE'
+	 */
+	@Test
+
+	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityMedium_ReviewFalse() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "High";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "true";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, false);
+
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity = "Medium";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "false";
+		validatePrayerRequestUpdate(formDetails);
+	}
+
+	/**
+	 * This test case is use to validate the prayer request update scenario where
+	 * 'PARENT ID' should be Up.PrayerRequest id, sensitivity as 'MEDIUM' and Review
+	 * set as 'TRUE'
+	 */
+
+	@Test
+
+	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityMedium_ReviewTrue() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "High";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "false";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, false);
+
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity = "Medium";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "true";
+		validatePrayerRequestUpdate(formDetails);
+	}
+
+	/**
+	 * This test case is use to validate the prayer request update scenario where
+	 * 'PARENT ID' should be Up.PrayerRequest id, sensitivity as 'HIGH' and Review
+	 * set as 'FALSE'
+	 */
+
+	@Test
+
+	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityHigh_ReviewFalse() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "Low";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "true";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, true);
+
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity="High";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "false";
+		validatePrayerRequestUpdate(formDetails);
+	}
+
+	/**
+	 * This test case is use to validate the prayer request update scenario where
+	 * 'PARENT ID' should be Up.PrayerRequest id, sensitivity as 'HIGH' and Review
+	 * set as 'TRUE'
+	 */
+	@Test
+
+	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityHigh_ReviewTrue() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "--4v7lU6GDk";
+		formDetails.targetLanguageId = "--4v7lU6GDk";
+		formDetails.sensitivity = "Medium";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "ja4HZGxGtz6";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "false";
+		formDetails.prayerType = "Request";
+		// create
+		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, false);
+
+		// create update request
+		formDetails.parent = prayerData.prayerId;
+		formDetails.sensitivity = "High";
+		formDetails.prayerType = "Update";
+		formDetails.reviewed = "true";
+		validatePrayerRequestUpdate(formDetails);
+	}
+	/**
+	 * Method to validate the prayer request creation scenario.
+	 * 
+	 * @param formDetails
+	 */
+	private UpPrayerRequestForm validatePrayerRequestCreation(UpPrayerRequestForm formDetails, boolean delete) {
+		UpPrayerTablePage prayerPage = loadUpPrayerPage();
+		prayerPage.enableEditMode();
 		List<String> prayerIds = prayerPage.getExistingRequests();
 		prayerPage.fillUpPrayerRequestForm(formDetails);
 		SeleniumUtils.wait(1);
 		prayerPage.loadApp();
-		String newPrayerId = isRequestCreated(prayerIds, prayerPage);
-		System.out.println("newPrayerId = " + newPrayerId);
+		List<String> newPrayerId = isRequestCreated(prayerIds, prayerPage);
 		assertNotNull(newPrayerId);
-		prayerPage.loadApp();
-		prayerPage.deleteRecord(newPrayerId);
+		UpPrayerRequestForm prayerData = getRequestData(prayerPage.findPrayerRequest(newPrayerId.get(0)));
 
-	}	
-	
-	private String isRequestCreated(List<String> oldPrayerIds, UpPrayerTablePage prayerPage) {
+		assertNotNull(prayerData);
+		prayerPage.loadApp();
+		if (delete) {
+			prayerPage.deleteRecord(newPrayerId.get(0));
+		}
+		return prayerData;
+
+	}
+
+	/**
+	 * Method to validate the prayer request Update scenario.
+	 * 
+	 * @param formDetails
+	 */
+	private UpPrayerRequestForm validatePrayerRequestUpdate(UpPrayerRequestForm formDetails) {
+		UpPrayerTablePage prayerPage = loadUpPrayerPage();
+		prayerPage.enableEditMode();
+		List<String> prayerIds = prayerPage.getExistingRequests();
+		prayerPage.fillUpPrayerRequestForm(formDetails);
+		SeleniumUtils.wait(1);
+		prayerPage.loadApp();
+		List<String> newPrayerId = isRequestCreated(prayerIds, prayerPage);
+		assertNotNull(newPrayerId);
+
+		UpPrayerRequestForm updatedData = getRequestData(prayerPage.findPrayerRequest(newPrayerId.get(0)));
+		assertNotNull(updatedData);
+		// assertEquals(updatedData.parent, formDetails.parent);
+		prayerPage.deleteRecord(updatedData.parent);
+		prayerPage.deleteRecord(updatedData.prayerId);
+		return formDetails;
+
+	}
+
+	private List<String> isRequestCreated(List<String> oldPrayerIds, UpPrayerTablePage prayerPage) {
 
 		List<String> newPrayerIds = prayerPage.getExistingRequests();
 		assertNotNull(newPrayerIds);
@@ -732,6 +826,25 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		assertNotNull(newPrayerIds);
 		assertTrue(newPrayerIds.size() == 1);
 
-		return newPrayerIds.get(0);
+		return newPrayerIds;
 	}
+
+	private UpPrayerRequestForm getRequestData(List<String> data) {
+		UpPrayerRequestForm requestData = new UpPrayerRequestForm();
+		// assertEquals(data.size(), 12);
+		requestData.prayerId = data.get(0);
+		requestData.requestLanguageId = data.get(1);
+		requestData.targetLanguageId = data.get(2);
+		requestData.sensitivity = data.get(3);
+		requestData.organizationName = data.get(4);
+		requestData.parent = data.get(5);
+		requestData.translator = data.get(6);
+		requestData.location = data.get(7);
+		requestData.title = data.get(8);
+		requestData.content = data.get(9);
+		requestData.reviewed = data.get(10);
+		requestData.prayerType = data.get(11);
+		return requestData;
+	}
+
 }

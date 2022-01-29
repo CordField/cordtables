@@ -244,8 +244,6 @@ export namespace Components {
     }
     interface ScCeremonies {
     }
-    interface ScChangeToPlan {
-    }
     interface ScChangeToPlans {
     }
     interface ScEthnologue {
@@ -913,12 +911,6 @@ declare global {
         prototype: HTMLScCeremoniesElement;
         new (): HTMLScCeremoniesElement;
     };
-    interface HTMLScChangeToPlanElement extends Components.ScChangeToPlan, HTMLStencilElement {
-    }
-    var HTMLScChangeToPlanElement: {
-        prototype: HTMLScChangeToPlanElement;
-        new (): HTMLScChangeToPlanElement;
-    };
     interface HTMLScChangeToPlansElement extends Components.ScChangeToPlans, HTMLStencilElement {
     }
     var HTMLScChangeToPlansElement: {
@@ -1386,7 +1378,6 @@ declare global {
         "sc-budget-records-partnerships": HTMLScBudgetRecordsPartnershipsElement;
         "sc-budgets": HTMLScBudgetsElement;
         "sc-ceremonies": HTMLScCeremoniesElement;
-        "sc-change-to-plan": HTMLScChangeToPlanElement;
         "sc-change-to-plans": HTMLScChangeToPlansElement;
         "sc-ethnologue": HTMLScEthnologueElement;
         "sc-field-regions-table": HTMLScFieldRegionsTableElement;
@@ -1697,8 +1688,6 @@ declare namespace LocalJSX {
     }
     interface ScCeremonies {
     }
-    interface ScChangeToPlan {
-    }
     interface ScChangeToPlans {
     }
     interface ScEthnologue {
@@ -1930,7 +1919,6 @@ declare namespace LocalJSX {
         "sc-budget-records-partnerships": ScBudgetRecordsPartnerships;
         "sc-budgets": ScBudgets;
         "sc-ceremonies": ScCeremonies;
-        "sc-change-to-plan": ScChangeToPlan;
         "sc-change-to-plans": ScChangeToPlans;
         "sc-ethnologue": ScEthnologue;
         "sc-field-regions-table": ScFieldRegionsTable;
@@ -2088,7 +2076,6 @@ declare module "@stencil/core" {
             "sc-budget-records-partnerships": LocalJSX.ScBudgetRecordsPartnerships & JSXBase.HTMLAttributes<HTMLScBudgetRecordsPartnershipsElement>;
             "sc-budgets": LocalJSX.ScBudgets & JSXBase.HTMLAttributes<HTMLScBudgetsElement>;
             "sc-ceremonies": LocalJSX.ScCeremonies & JSXBase.HTMLAttributes<HTMLScCeremoniesElement>;
-            "sc-change-to-plan": LocalJSX.ScChangeToPlan & JSXBase.HTMLAttributes<HTMLScChangeToPlanElement>;
             "sc-change-to-plans": LocalJSX.ScChangeToPlans & JSXBase.HTMLAttributes<HTMLScChangeToPlansElement>;
             "sc-ethnologue": LocalJSX.ScEthnologue & JSXBase.HTMLAttributes<HTMLScEthnologueElement>;
             "sc-field-regions-table": LocalJSX.ScFieldRegionsTable & JSXBase.HTMLAttributes<HTMLScFieldRegionsTableElement>;

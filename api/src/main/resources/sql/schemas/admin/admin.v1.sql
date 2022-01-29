@@ -258,6 +258,22 @@ create table admin.group_memberships(
   unique (group_id, person)
 );
 
+create table admin.organization_administrators(
+  id varchar(32) primary key default nanoid(),
+
+  group_id varchar(32) not null references admin.groups(id),
+  person varchar(32) not null references admin.people(id),
+
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by varchar(32) not null references admin.people(id),
+	modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
+
+  unique (group_id, person)
+);
+
 -- PEER to PEER -------------------------------------------------------------
 
 create table admin.peers (
@@ -350,6 +366,24 @@ create table admin.role_memberships (
   owning_group varchar(32) not null references admin.groups(id),
 
 	unique(role, person)
+);
+
+create table admin.role_all_data_column_grants(
+	id varchar(32) primary key default nanoid(),
+
+	role varchar(32) not null references admin.roles(id),
+	table_name admin.table_name not null,
+	column_name varchar(64) not null,
+	access_level admin.access_level not null,
+
+	created_at timestamp not null default CURRENT_TIMESTAMP,
+	created_by varchar(32) not null references admin.people(id),
+	modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by varchar(32) not null references admin.people(id),
+  owning_person varchar(32) not null references admin.people(id),
+  owning_group varchar(32) not null references admin.groups(id),
+
+	unique (role, table_name, column_name)
 );
 
 -- USERS ---------------------------------------------------------------------
