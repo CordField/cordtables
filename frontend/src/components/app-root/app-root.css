@@ -61,7 +61,7 @@ h1 {
 }
 
 #nav-menu {
-  width: 50%;
+  width: min(500px, 100%);
   display: flex;
   align-items: center;
   margin: 10px;
