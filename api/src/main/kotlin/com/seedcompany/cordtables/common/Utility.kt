@@ -231,7 +231,6 @@ class Utility(
                         inner join column_level_access as b
                         on a.dummy_column = b.dummy_column
                     )
-               
             """.trimIndent()
       val result = jdbcTemplate.queryForRowSet(statement, paramSource)
       println("result $result")
