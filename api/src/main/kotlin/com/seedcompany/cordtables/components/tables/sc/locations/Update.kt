@@ -15,7 +15,9 @@ import javax.sql.DataSource
 
 data class ScLocationsUpdateRequest(
     val token: String?,
-    val location: ScLocationInput? = null,
+    val id: String? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
 data class ScLocationsUpdateResponse(
@@ -40,92 +42,77 @@ class Update(
     fun updateHandler(@RequestBody req: ScLocationsUpdateRequest): ScLocationsUpdateResponse {
 
         if (req.token == null) return ScLocationsUpdateResponse(ErrorType.TokenNotFound)
-        if (req.location == null) return ScLocationsUpdateResponse(ErrorType.MissingId)
-        if (req.location.id == null) return ScLocationsUpdateResponse(ErrorType.MissingId)
+        if (req.column == null) return ScLocationsUpdateResponse(ErrorType.InputMissingColumn)
+        if (req.id == null) return ScLocationsUpdateResponse(ErrorType.MissingId)
 
-        if (req.location.type != null && !enumContains<LocationType>(req.location.type)) {
-            return ScLocationsUpdateResponse(
-                error = ErrorType.ValueDoesNotMap
+        when (req.column) {
+          "name" -> {
+            util.updateField(
+              token = req.token,
+              table = "sc.locations",
+              column = "name",
+              id = req.id,
+              value = req.value
             )
+          }
+          "funding_account" -> {
+            util.updateField(
+              token = req.token,
+              table = "sc.locations",
+              column = "funding_account",
+              id = req.id,
+              value = req.value
+            )
+          }
+          "default_region" -> {
+            util.updateField(
+              token = req.token,
+              table = "sc.locations",
+              column = "default_region",
+              id = req.id,
+              value = req.value
+            )
+          }
+          "iso_alpha_3" -> {
+            util.updateField(
+              token = req.token,
+              table = "sc.locations",
+              column = "iso_alpha_3",
+              id = req.id,
+              value = req.value
+            )
+          }
+          "type" -> {
+            util.updateField(
+              token = req.token,
+              table = "sc.locations",
+              column = "type",
+              id = req.id,
+              value = req.value,
+              cast = "::common.location_type"
+            )
+          }
+          "owning_person" -> {
+            util.updateField(
+              token = req.token,
+              table = "sc.locations",
+              column = "owning_person",
+              id = req.id,
+              value = req.value
+            )
+          }
+          "owning_group" -> {
+            util.updateField(
+              token = req.token,
+              table = "common.locations",
+              column = "owning_group",
+              id = req.id,
+              value = req.value
+            )
+          }
         }
 
-//        val updateResponse = commonUpdate.updateHandler(
-//            CommonLocationsUpdateRequest(
-//                token = req.token,
-//                location = CommonLocationInput(
-//                    id = req.location.id,
-//                    name = req.location.name,
-//                    type = req.location.type,
-//                    owning_person = req.location.owning_person,
-//                    owning_group = req.location.owning_group,
-//                ),
-//            )
-//        )
-//
-//        if (updateResponse.error != ErrorType.NoError) {
-//            return ScLocationsUpdateResponse(updateResponse.error)
-//        }
-
-
-
-        if (req.location.name != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "name",
-            id = req.location.id!!,
-            value = req.location.name,
-        )
-
-        if (req.location.funding_account != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "funding_account",
-            id = req.location.id!!,
-            value = req.location.funding_account
-        )
-
-        if (req.location.default_region != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "default_region",
-            id = req.location.id!!,
-            value = req.location.default_region
-        )
-
-        if (req.location.iso_alpha_3 != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "iso_alpha_3",
-            id = req.location.id!!,
-            value = req.location.iso_alpha_3,
-        )
-
-        if (req.location.type != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "type",
-            id = req.location.id!!,
-            value = req.location.type,
-            cast = "::common.location_type"
-        )
-
-        if (req.location.owning_person != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "owning_person",
-            id = req.location.id!!,
-            value = req.location.owning_person,
-        )
-
-        if (req.location.owning_group != null) util.updateField(
-            token = req.token,
-            table = "sc.locations",
-            column = "owning_group",
-            id = req.location.id!!,
-            value = req.location.owning_group
-        )
-
-        return ScLocationsUpdateResponse(ErrorType.NoError)
+      return ScLocationsUpdateResponse(ErrorType.NoError)
     }
 
 }

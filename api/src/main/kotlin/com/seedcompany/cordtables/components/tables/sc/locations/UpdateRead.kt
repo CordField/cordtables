@@ -12,7 +12,9 @@ import javax.sql.DataSource
 
 data class ScLocationsUpdateReadRequest(
     val token: String?,
-    val location: ScLocationInput? = null,
+    val id: String? = null,
+    val column: String? = null,
+    val value: Any? = null,
 )
 
 data class ScLocationsUpdateReadResponse(
@@ -42,7 +44,9 @@ class UpdateRead(
         val updateResponse = update.updateHandler(
             ScLocationsUpdateRequest(
                 token = req.token,
-                location = req.location,
+                column = req.column,
+                id = req.id,
+                value = req.value
             )
         )
 
@@ -53,7 +57,7 @@ class UpdateRead(
         val readResponse = read.readHandler(
             ScLocationsReadRequest(
                 token = req.token,
-                id = req.location!!.id
+                id = req.id
             )
         )
 
