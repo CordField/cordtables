@@ -88,76 +88,76 @@ class List(
                 when 'id' in 
                     (select column_name from column_level_access) 
                 then id 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then id 
                 else null 
             end as id,
             case 
                 when 'name' in (select column_name from column_level_access) 
                 then  name
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then  name
                 else null 
             end as name,
             case 
                 when 'sensitivity' in (select column_name from column_level_access) 
                 then sensitivity 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then sensitivity
                 else null 
             end as sensitivity,
             case 
                 when 'primary_location' in (select column_name from column_level_access) 
                 then primary_location 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then primary_location
                 else null 
             end as primary_location,
             case
             when 'created_at' in (select column_name from column_level_access) 
                 then created_at 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then created_at
                 else null 
             end as created_at,
             case 
                 when 'created_by' in (select column_name from column_level_access) 
                 then created_by 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then created_by
                 else null 
             end as created_by,
             case 
                 when 'modified_at' in (select column_name from column_level_access) 
                 then modified_at 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then modified_at
                 else null 
             end as modified_at,
             case 
                 when 'modified_by' in (select column_name from column_level_access) 
                 then modified_by 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then modified_by
                 else null 
             end as modified_by,
             case 
                 when 'owning_person' in (select column_name from column_level_access) 
                 then owning_person 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then owning_person
                 else null 
             end as owning_person,
             case 
                 when 'owning_group' in (select column_name from column_level_access) 
                 then owning_group 
-                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid)) 
+                when (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}')) 
                 then owning_group
                 else null 
             end as owning_group
             from common.organizations
             where id in (select row from row_level_access) or 
-                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole}'::uuid));
+                (select exists( select id from admin.role_memberships where person = (select person from admin.tokens where token = :token) and role = '${util.adminRole()}'));
         """.trimIndent()
 
         val jdbcResult = jdbcTemplate.queryForRowSet(listSQL, paramSource)
@@ -195,18 +195,18 @@ class List(
             if (jdbcResult.wasNull()) owningGroup = null
 
             items.add(
-                    CommonOrganizations(
-                            id = id,
-                            name = name,
-                            sensitivity = sensitivity,
-                            primary_location = primaryLocation,
-                            created_at = createdAt,
-                            created_by = createdBy,
-                            modified_at = modifiedAt,
-                            modified_by = modifiedBy,
-                            owning_person = owningPerson,
-                            owning_group = owningGroup,
-                    )
+                CommonOrganizations(
+                    id = id,
+                    name = name,
+                    sensitivity = sensitivity,
+                    primary_location = primaryLocation,
+                    created_at = createdAt,
+                    created_by = createdBy,
+                    modified_at = modifiedAt,
+                    modified_by = modifiedBy,
+                    owning_person = owningPerson,
+                    owning_group = owningGroup,
+                )
             )
         }
 

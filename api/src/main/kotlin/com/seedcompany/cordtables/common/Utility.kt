@@ -27,10 +27,6 @@ class Utility(
 
   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
   val encoder = Argon2PasswordEncoder(16, 32, 1, 4096, 3)
-  val adminGroupId: String? = this.adminGroupId()
-  val adminRole: String? = this.adminRole()
-  val publicGroupId: String? = this.publicGroupId()
-  val personId: String? = this.personId()
 
   //language=SQL
   val getUserIdFromSessionIdQuery = """
@@ -359,7 +355,7 @@ class Utility(
                               where token = ?
                             ),
                         modified_at = CURRENT_TIMESTAMP
-                    where id = ?::uuid;
+                    where id = ?;
                 """.trimIndent(),
         value,
         token,

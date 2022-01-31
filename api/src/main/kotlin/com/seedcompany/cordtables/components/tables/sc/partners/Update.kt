@@ -46,8 +46,7 @@ class Update(
                     table = "sc.partners",
                     column = "organization",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "active" -> {
@@ -67,7 +66,7 @@ class Update(
                     column = "financial_reporting_types",
                     id = req.id,
                     value = req.value,
-                    cast = "::sc.financial_reporting_types"
+                    cast = "::sc.financial_reporting_types[]"
                 )
             }
             "is_innovations_client" -> {
@@ -95,8 +94,7 @@ class Update(
                     table = "sc.partners",
                     column = "point_of_contact",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "types" -> {
@@ -110,14 +108,34 @@ class Update(
                 )
             }
 
+            "address" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.partners",
+                    column = "address",
+                    id = req.id,
+                    value = req.value,
+                )
+            }
+
+            "sensitivity" -> {
+                util.updateField(
+                    token = req.token,
+                    table = "sc.partners",
+                    column = "sensitivity",
+                    id = req.id,
+                    value = req.value,
+                    cast = "::common.sensitivity"
+                )
+            }
+
             "owning_person" -> {
                 util.updateField(
                     token = req.token,
                     table = "sc.partners",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -126,8 +144,7 @@ class Update(
                     table = "sc.partners",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

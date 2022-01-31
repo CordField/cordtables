@@ -54,20 +54,20 @@ class Create(
              mou_start, mou_end, owning_organization, periodic_reports_directory, posts_directory, primary_location, root_directory, status, status_changed_at, step, created_by, modified_by, owning_person, owning_group)
                 values(
                     ?,
-                    ?::uuid,
+                    ?,
                     ?::boolean,
                     ?,
                     ?::timestamp,
-                    ?::uuid,
+                    ?,
                     ?::timestamp,
-                    ?::uuid,
+                    ?,
                     ?::timestamp,
                     ?::timestamp,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
                     ?::sc.project_status,
                     ?::timestamp,
                     ?::sc.project_step,
@@ -86,7 +86,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -112,7 +112,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
 //        req.language.id = id

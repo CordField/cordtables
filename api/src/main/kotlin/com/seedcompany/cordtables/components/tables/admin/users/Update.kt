@@ -42,16 +42,6 @@ class Update(
         if (req.id == null) return AdminUsersUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-            "person" -> {
-                util.updateField(
-                    token = req.token,
-                    table = "admin.users",
-                    column = "person",
-                    id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
-                )
-            }
             "email" -> {
                 if (req.value == null || !util.isEmailValid(req.value as String?)) return AdminUsersUpdateResponse(ErrorType.InvalidEmail)
                 util.updateField(
@@ -80,8 +70,7 @@ class Update(
                     table = "admin.users",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -90,8 +79,7 @@ class Update(
                     table = "admin.users",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

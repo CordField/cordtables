@@ -1,0 +1,41 @@
+/* #about-holder{
+    background-color: red;
+    font-size: 20px;
+} */
+
+.create-form{
+    width: 500px;
+    margin: 15px;
+    border: 1px solid silver;
+    padding: 15px;
+}
+.create-form .form-input-item{
+    margin: 10px 0px;
+}
+.create-form .form-input-item span.form-thing{
+    display: inline-block;
+    font-size: 14px;
+}
+.create-form .form-input-item span.form-thing:nth-child(1){
+    width: 30%;
+}
+.create-form .form-input-item span.form-thing:nth-child(2){
+    width: 65%;
+}
+.create-form .form-input-item input[type="text"], .create-form .form-input-item select{
+    width: -webkit-fill-available;
+    font-size: 14px;
+    padding: 5px;
+}
+.create-form .form-submit-button{
+    text-align: center;
+    margin-top: 15px;
+}
+.create-form input#create-button{
+    width: 200px;
+    background-color: green;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    border: 1px solid green;
+}

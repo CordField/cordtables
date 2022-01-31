@@ -1,0 +1,68 @@
+package com.seedcompany.cordtables.components.tables.sc.periodic_reports
+
+import com.seedcompany.cordtables.common.ErrorType
+import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.components.tables.sc.periodic_reports.*
+import com.seedcompany.cordtables.components.tables.sc.periodic_reports.ScPeriodicReportsCreateRequest
+import com.seedcompany.cordtables.components.tables.sc.periodic_reports.Create
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseBody
+import javax.sql.DataSource
+
+data class ScPeriodicReportsCreateReadRequest(
+    val token: String? = null,
+    val periodicReport: periodicReportInput,
+)
+
+data class ScPeriodicReportsCreateReadResponse(
+    val error: ErrorType,
+    val periodicReport: periodicReport? = null,
+)
+
+@CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
+@Controller("ScPeriodicReportsCreateRead")
+class CreateRead(
+    @Autowired
+    val util: Utility,
+
+    @Autowired
+    val ds: DataSource,
+
+    @Autowired
+    val create: Create,
+
+    @Autowired
+    val read: Read,
+) {
+    @PostMapping("sc/periodic-reports/create-read")
+    @ResponseBody
+    fun createReadHandler(@RequestBody req: ScPeriodicReportsCreateReadRequest): ScPeriodicReportsCreateReadResponse {
+
+      if (req.token == null) return ScPeriodicReportsCreateReadResponse(ErrorType.InputMissingToken)
+      if (!util.isAdmin(req.token)) return ScPeriodicReportsCreateReadResponse(ErrorType.AdminOnly)
+
+        val createResponse = create.createHandler(
+            ScPeriodicReportsCreateRequest(
+                token = req.token,
+                periodicReport = req.periodicReport
+            )
+        )
+
+        if (createResponse.error != ErrorType.NoError) {
+            return ScPeriodicReportsCreateReadResponse(error = createResponse.error)
+        }
+
+        val readResponse = read.readHandler(
+            ScPeriodicReportsReadRequest(
+                token = req.token,
+                id = createResponse!!.id
+            )
+        )
+
+        return ScPeriodicReportsCreateReadResponse(error = readResponse.error, periodicReport = readResponse.periodicReport)
+    }
+}

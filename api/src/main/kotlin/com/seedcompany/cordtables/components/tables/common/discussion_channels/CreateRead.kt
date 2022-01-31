@@ -12,7 +12,7 @@ import javax.sql.DataSource
 
 data class CommonDiscussionChannelsCreateReadRequest(
     val token: String? = null,
-    val discussion_channel: DiscussionChannelInput,
+    val discussionChannel: DiscussionChannelInput,
 )
 
 data class CommonDiscussionChannelsCreateReadResponse(
@@ -41,7 +41,7 @@ class CreateRead(
         val createResponse = create.createHandler(
             CommonDiscussionChannelsCreateRequest(
                 token = req.token,
-                discussion_channel = req.discussion_channel
+                discussionChannel = req.discussionChannel
             )
         )
 
@@ -57,6 +57,6 @@ class CreateRead(
             )
         )
 
-        return CommonDiscussionChannelsCreateReadResponse(error = readResponse.error, discussion_channel = readResponse.discussion_channel)
+        return CommonDiscussionChannelsCreateReadResponse(error = readResponse.error, discussion_channel = readResponse.discussionChannel)
     }
 }

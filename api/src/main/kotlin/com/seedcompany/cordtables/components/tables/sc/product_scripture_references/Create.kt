@@ -53,9 +53,9 @@ class Create(
             """
             insert into sc.product_scripture_references(product, scripture_reference, change_to_plan, active,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
+                    ?,
                     ?,
                     (
                       select person 
@@ -72,7 +72,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -84,7 +84,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
 //        req.language.id = id

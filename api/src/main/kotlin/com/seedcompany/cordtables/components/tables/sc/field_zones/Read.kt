@@ -1,12 +1,9 @@
 package com.seedcompany.cordtables.components.tables.sc.field_zones
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sc.field_zones.fieldZone
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -59,7 +56,6 @@ class Read(
                 getList = false,
                 columns = arrayOf(
                     "id",
-//                    "neo4j_id",
                     "director",
                     "name",
                     "created_at",

@@ -56,8 +56,7 @@ class Update(
                     table = "sc.project_locations",
                     column = "change_to_plan",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "location" -> {
@@ -66,8 +65,7 @@ class Update(
                     table = "sc.project_locations",
                     column = "location",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "project" -> {
@@ -76,8 +74,7 @@ class Update(
                     table = "sc.project_locations",
                     column = "project",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_person" -> {
@@ -86,8 +83,7 @@ class Update(
                     table = "sc.project_locations",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -96,8 +92,7 @@ class Update(
                     table = "sc.project_locations",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

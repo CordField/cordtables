@@ -61,7 +61,8 @@ class Read(
                     "active",
                     "amount",
                     "fiscal_year",
-                    "partnership",
+                    "organization",
+                    "sensitivity",
                     "created_at",
                     "created_by",
                     "modified_at",
@@ -94,8 +95,11 @@ class Read(
                 var fiscal_year: Int? = jdbcResult.getInt("fiscal_year")
                 if (jdbcResult.wasNull()) fiscal_year = null
 
-                var partnership: String? = jdbcResult.getString("partnership")
-                if (jdbcResult.wasNull()) partnership = null
+                var organization: String? = jdbcResult.getString("organization")
+                if (jdbcResult.wasNull()) organization = null
+
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
 
                 var created_at: String? = jdbcResult.getString("created_at")
                 if (jdbcResult.wasNull()) created_at = null
@@ -123,7 +127,8 @@ class Read(
                         active = active,
                         amount = amount,
                         fiscal_year = fiscal_year,
-                        partnership = partnership,
+                        organization = organization,
+                        sensitivity = sensitivity,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,

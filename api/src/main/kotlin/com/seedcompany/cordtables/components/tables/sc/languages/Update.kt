@@ -122,16 +122,18 @@ class Update(
             )
         }
 
+        println(req.column)
+
         when (req.column) {
-            "neo4j_id" -> {
-                util.updateField(
-                        token = req.token,
-                        table = "sc.languages",
-                        column = "neo4j_id",
-                        id = req.id,
-                        value = req.value,
-                )
-            }
+//            "neo4j_id" -> {
+//                util.updateField(
+//                        token = req.token,
+//                        table = "sc.languages",
+//                        column = "neo4j_id",
+//                        id = req.id,
+//                        value = req.value,
+//                )
+//            }
 
             "ethnologue" -> {
                 util.updateField(
@@ -140,7 +142,6 @@ class Update(
                         column = "ethnologue",
                         id = req.id,
                         value = req.value,
-                        cast = "::uuid"
                 )
             }
 
@@ -182,6 +183,7 @@ class Update(
                         column = "tags",
                         id = req.id,
                         value = req.value,
+                        cast = "::text[]"
                 )
             }
 
@@ -286,6 +288,7 @@ class Update(
                         column = "sponsor_estimated_end_date",
                         id = req.id,
                         value = req.value,
+                        cast = "::timestamp"
                 )
             }
 
@@ -459,7 +462,7 @@ class Update(
                         column = "multiple_languages_leverage_joint_training_level",
                         id = req.id,
                         value = req.value,
-                        cast = "::sc.multiple_languages_leverage_joint_training_level",
+                        cast = "::sc.multiple_languages_leverage_joint_training_scale",
                 )
 
 

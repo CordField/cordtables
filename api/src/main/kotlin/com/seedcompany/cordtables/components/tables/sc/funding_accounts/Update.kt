@@ -40,15 +40,6 @@ class Update(
         if (req.id == null) return ScFundingAccountsUpdateResponse(ErrorType.MissingId)
 
         when (req.column) {
-//            "neo4j_id" -> {
-//                util.updateField(
-//                    token = req.token,
-//                    table = "sc.funding_accounts",
-//                    column = "neo4j_id",
-//                    id = req.id,
-//                    value = req.value,
-//                )
-//            }
             "account_number" -> {
                 util.updateField(
                     token = req.token,

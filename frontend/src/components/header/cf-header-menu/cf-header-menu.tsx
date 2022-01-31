@@ -58,12 +58,6 @@ export class CfHeaderMenu {
           </button>
 
           {globals.globalStore.state.isLoggedIn && (
-            <button class="menu-item" onClick={this.clickedPrayerRequests}>
-              Prayer Requests
-            </button>
-          )}
-
-          {globals.globalStore.state.isLoggedIn && (
             <button class="menu-item" onClick={this.clickedProfile}>
               Profile page
             </button>

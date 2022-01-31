@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import java.sql.SQLException
 import javax.sql.DataSource
+import javax.sql.rowset.serial.SerialArray
+
 
 data class ScLanguagesReadRequest(
         val token: String?,
@@ -142,7 +144,7 @@ class Read(
                                                     select person
                                                             from   admin.tokens
                                                             where  token = :token)
-                                                    and    role = '${util.adminRole}'::uuid)) then common.ST_AsLatLonText(coordinates::text)
+                                                    and    role = '${util.adminRole()}')) then common.ST_AsLatLonText(coordinates::text)
                         when owning_person =
                         (
                                 select person
@@ -170,7 +172,7 @@ class Read(
                                             select person
                                                     from   admin.tokens
                                                     where  token = :token)
-                                            and    role = '${util.adminRole}'::uuid)) then common.ST_AsGeoJSON(coordinates)
+                                            and    role = '${util.adminRole()}')) then common.ST_AsGeoJSON(coordinates)
                 when owning_person =
                 (
                         select person
@@ -181,7 +183,7 @@ class Read(
                         select column_name
                                 from   public_column_level_access) then common.ST_AsGeoJSON(coordinates)
                 else null
-        end as coordinates_json""".trimIndent()
+        end as coordinates_json """.trimIndent()
                 )
         ).query
 
@@ -205,7 +207,8 @@ class Read(
                 var display_name_pronunciation: String? = jdbcResult.getString("display_name_pronunciation")
                 if (jdbcResult.wasNull()) display_name_pronunciation = null
 
-                var tags: String? = jdbcResult.getString("tags")
+
+                var tags: Array<out Any>? = (jdbcResult.getObject("tags") as? SerialArray)?.array as Array<out Any>?
                 if (jdbcResult.wasNull()) tags = null
 
                 var preset_inventory: Boolean? = jdbcResult.getBoolean("preset_inventory")
@@ -417,6 +420,9 @@ class Read(
                 var coordinates_json: String? = jdbcResult.getString("coordinates_json")
                 if(jdbcResult.wasNull()) coordinates_json = null
 
+                var location_long: String? = jdbcResult.getString("location_long")
+                if (jdbcResult.wasNull()) location_long = null
+
                 val language =
                         Language(
                                 id = id,
@@ -436,7 +442,7 @@ class Read(
                                 sensitivity = if (sensitivity == null) null else CommonSensitivity.valueOf(sensitivity),
                                 sign_language_code = sign_language_code,
                                 sponsor_estimated_end_date = sponsor_estimated_end_date,
-
+                                location_long = location_long,
                                 prioritization = prioritization,
                                 progress_bible = progress_bible,
                                 island = island,

@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.sql.DataSource
 
 enum class FakeDataControlRequestType {
-  LoadCommonOrgData,
+  LoadCommonFakeData,
+  LoadScFakeData
 }
 
 data class FakeDataControlRequest(
@@ -46,8 +47,12 @@ class FakeDataControl(
     if (!util.isAdmin(req.token)) return GenericResponse(error = ErrorType.AdminOnly)
 
     when (req.type){
-      FakeDataControlRequestType.LoadCommonOrgData -> {
+      FakeDataControlRequestType.LoadCommonFakeData -> {
         vc.loadCommonFakeData()
+      }
+
+      FakeDataControlRequestType.LoadScFakeData -> {
+        vc.loadScFakeData()
       }
     }
 

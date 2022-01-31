@@ -1,3 +1,5 @@
+// import { AnyLayer } from 'mapbox-gl';
+
 export enum ErrorType {
   NoError = 'NoError',
   UnknownError = 'UnknownError',
@@ -11,7 +13,7 @@ export enum ErrorType {
 }
 
 export enum AppState {
-  Init = 'Init', 
+  Init = 'Init',
   Loaded = 'Loaded',
   TranslationLoaded = 'TranslationLoaded',
 }
@@ -135,21 +137,47 @@ export interface AdminUser {
 export type SiteTextLanguage = {
   language: string;
   language_name: string;
-}
+};
 
 export type SiteTextString = {
-  id: string,
-  english: string,
-  comment: string
+  id: string;
+  english: string;
+  comment: string;
+  created_at?: string | undefined;
+  created_by?: string | undefined;
+  modified_at?: string | undefined;
+  modified_by?: string | undefined;
+  owning_person?: string | undefined;
+  owning_group?: string | undefined;
 }
 
 export type SiteTextTranslation = {
-  id: string,
-  site_text: string,
-  translation: string
-}
+  id: string;
+  site_text: string;
+  translation: string;
+  language?: string | undefined;
+  created_at?: string | undefined;
+  created_by?: string | undefined;
+  modified_at?: string | undefined;
+  modified_by?: string | undefined;
+  owning_person?: string | undefined;
+  owning_group?: string | undefined;
+};
 
 export type SiteTextTranslationList = {
-  language: string,
-  translations: Array<SiteTextTranslation>
-}
+  language: string;
+  translations: Array<SiteTextTranslation>;
+};
+
+export type AutocompleteRequest = {
+  searchColumnName: string;
+  token: string;
+  resultColumnName: string;
+  searchKeyword: string;
+  tableName: string;
+};
+
+export type AutocompleteResponse = {
+  error: ErrorType;
+  data: any;
+};

@@ -39,15 +39,12 @@ class Update(
         if (req.token == null) return CommonWorkEstimateUpdateResponse(ErrorType.TokenNotFound)
         if (req.id == null) return CommonWorkEstimateUpdateResponse(ErrorType.MissingId)
 
-        println(req)
-
              util.updateField(
                     token = req.token,
                     table = "common.work_estimates",
                     column = "ticket",
                     id = req.id,
                     value = req.ticket,
-                    cast = "::uuid"
                 )
 
                 util.updateField(

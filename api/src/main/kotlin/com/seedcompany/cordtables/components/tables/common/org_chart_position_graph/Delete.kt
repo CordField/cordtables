@@ -47,7 +47,7 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from common.org_chart_position_graph where id = ?::uuid returning id"
+                    "delete from common.org_chart_position_graph where id = ? returning id"
                 )
                 deleteStatement.setString(1, req.id)
 

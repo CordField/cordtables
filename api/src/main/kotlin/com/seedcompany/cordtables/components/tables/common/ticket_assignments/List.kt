@@ -1,7 +1,5 @@
 package com.seedcompany.cordtables.components.tables.common.ticket_assignments
 
-import com.seedcompany.cordtables.components.tables.common.ticket_assignments.CommonTicketAssignments
-
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility

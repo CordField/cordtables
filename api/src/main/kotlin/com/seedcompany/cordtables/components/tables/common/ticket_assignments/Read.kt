@@ -1,10 +1,5 @@
 package com.seedcompany.cordtables.components.tables.common.ticket_assignments
 
-import com.seedcompany.cordtables.components.tables.common.ticket_assignments.CommonTicketAssignments
-
-import com.seedcompany.cordtables.components.tables.common.tickets.CommonTickets
-
-import com.seedcompany.cordtables.common.CommonTicketStatus
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
@@ -22,12 +17,13 @@ import javax.sql.DataSource
 
 data class CommonTicketAssignmentReadRequest(
         val token: String?,
+        val ticket: String?,
         val id: String? = null,
 )
 
 data class CommonTicketAssignmentReadResponse(
         val error: ErrorType,
-        val ticket_assignment: CommonTicketAssignments? = null,
+        val ticket_assignment: MutableList<CommonTicketAssignments>? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -47,31 +43,13 @@ class Read(
     @PostMapping("common/ticket-assignments/read")
     @ResponseBody
     fun readHandler(@RequestBody req: CommonTicketAssignmentReadRequest): CommonTicketAssignmentReadResponse {
-
+        var data: MutableList<CommonTicketAssignments> = mutableListOf()
         if (req.token == null) return CommonTicketAssignmentReadResponse(ErrorType.TokenNotFound)
-        if (req.id == null) return CommonTicketAssignmentReadResponse(ErrorType.MissingId)
 
         val paramSource = MapSqlParameterSource()
         paramSource.addValue("token", req.token)
-        paramSource.addValue("id", req.id)
 
-        val query = secureList.getSecureListQueryHandler(
-                GetSecureListQueryRequest(
-                        tableName = "common.ticket_assignments",
-                        getList = false,
-                        columns = arrayOf(
-                                "id",
-                                "ticket",
-                                "person",
-                                "created_at",
-                                "created_by",
-                                "modified_at",
-                                "modified_by",
-                                "owning_person",
-                                "owning_group",
-                        ),
-                )
-        ).query
+        val query = "select id, ticket, person from common.ticket_assignments where ticket = '${req.ticket}'"
 
         try {
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
@@ -86,38 +64,15 @@ class Read(
                 var personId: String? = jdbcResult.getString("person")
                 if (jdbcResult.wasNull()) personId = null
 
-                var createdAt: String? = jdbcResult.getString("created_at")
-                if (jdbcResult.wasNull()) createdAt = null
 
-                var createdBy: String? = jdbcResult.getString("created_by")
-                if (jdbcResult.wasNull()) createdBy = null
-
-                var modifiedAt: String? = jdbcResult.getString("modified_at")
-                if (jdbcResult.wasNull()) modifiedAt = null
-
-                var modifiedBy: String? = jdbcResult.getString("modified_by")
-                if (jdbcResult.wasNull()) modifiedBy = null
-
-                var owningPerson: String? = jdbcResult.getString("owning_person")
-                if (jdbcResult.wasNull()) owningPerson = null
-
-                var owningGroup: String? = jdbcResult.getString("owning_group")
-                if (jdbcResult.wasNull()) owningGroup = null
-
-                val ticket =
+                data.add(
                         CommonTicketAssignments(
                                 id = id,
                                 ticket = ticketId,
                                 person = personId,
-                                created_at = createdAt,
-                                created_by = createdBy,
-                                modified_at = modifiedAt,
-                                modified_by = modifiedBy,
-                                owning_person = owningPerson,
-                                owning_group = owningGroup
                         )
+                )
 
-                return CommonTicketAssignmentReadResponse(ErrorType.NoError, ticket_assignment = ticket)
 
             }
         } catch (e: SQLException) {
@@ -125,6 +80,6 @@ class Read(
             return CommonTicketAssignmentReadResponse(ErrorType.SQLReadError)
         }
 
-        return CommonTicketAssignmentReadResponse(error = ErrorType.UnknownError)
+        return CommonTicketAssignmentReadResponse(ErrorType.NoError, data)
     }
 }

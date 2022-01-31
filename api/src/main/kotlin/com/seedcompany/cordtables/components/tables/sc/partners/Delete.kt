@@ -47,7 +47,7 @@ class Delete(
             try {
 
                 val deleteStatement = conn.prepareCall(
-                    "delete from sc.partners where id = ?::uuid returning id"
+                    "delete from sc.partners where id = ? returning id"
                 )
                 deleteStatement.setString(1, req.id)
                 val deleteStatementResult = deleteStatement.executeQuery()

@@ -53,8 +53,8 @@ class Create(
             """
             insert into sc.project_memberships(group_id, person,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -70,7 +70,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -80,10 +80,8 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
-
-//        req.language.id = id
 
         return ScProjectMembershipsCreateResponse(error = ErrorType.NoError, id = id)
     }

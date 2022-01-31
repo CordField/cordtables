@@ -13,13 +13,14 @@ import javax.sql.DataSource
 data class CommonTicketAssignmentUpdateReadRequest(
         val token: String?,
         val id: String? = null,
-        val column: String? = null,
         val value: Any? = null,
+        val ticket: String? = null,
+        val person: String? = null,
 )
 
 data class CommonTicketAssignmentUpdateReadResponse(
-        val error: ErrorType,
-        val ticket_assignment: CommonTicketAssignments? = null,
+  val error: ErrorType,
+  val ticket_assignment: MutableList<CommonTicketAssignments>? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
@@ -44,9 +45,10 @@ class UpdateRead(
         val updateResponse = update.updateHandler(
                 CommonTicketAssignmentUpdateRequest(
                         token = req.token,
-                        column = req.column,
                         id = req.id,
                         value = req.value,
+                        ticket = req.ticket,
+                        person = req.person
                 )
         )
 
@@ -57,6 +59,7 @@ class UpdateRead(
         val readResponse = read.readHandler(
                 CommonTicketAssignmentReadRequest(
                         token = req.token,
+                        ticket = req.ticket,
                         id = req.id!!
                 )
         )

@@ -55,7 +55,7 @@ class Create(
                 values(
                     ?::admin.table_name,
                     ?,
-                    ?::uuid,
+                    ?,
                     ?,
                     (
                       select person 
@@ -72,7 +72,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -84,7 +84,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
 //        req.language.id = id

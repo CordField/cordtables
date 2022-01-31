@@ -46,8 +46,7 @@ class Update(
                     table = "common.stage_role_column_grants",
                     column = "stage",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "role" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "common.stage_role_column_grants",
                     column = "role",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "table_name" -> {
@@ -97,8 +95,7 @@ class Update(
                     table = "common.stage_role_column_grants",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -107,8 +104,7 @@ class Update(
                     table = "common.stage_role_column_grants",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

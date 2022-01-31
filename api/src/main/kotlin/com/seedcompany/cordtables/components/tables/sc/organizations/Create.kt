@@ -53,9 +53,9 @@ class Create(
             """
             insert into sc.organizations(id, sensitivity, root_directory, address,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::common.sensitivity,
-                    ?::uuid,
+                    ?,
                     ?,
                     (
                       select person 
@@ -72,7 +72,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -84,10 +84,8 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
-
-//        req.language.id = id
 
         return ScOrganizationsCreateResponse(error = ErrorType.NoError, id = id)
     }

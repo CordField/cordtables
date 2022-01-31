@@ -52,11 +52,11 @@ class Create(
             """
             insert into sc.partnerships(project, partner, change_to_plan, active, agreement, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
-                    ?::uuid,
                     ?,
-                    ?::uuid,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
                     (
                       select person 
                       from admin.tokens 
@@ -72,7 +72,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -85,7 +85,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
 //        req.language.id = id

@@ -53,7 +53,7 @@ class Create(
                     error = ErrorType.ValueDoesNotMap
             )
         }
-    println(req.token)
+    println(req)
     // create row with required fields, use id to update cells afterwards one by one
     val id = jdbcTemplate.queryForObject(
             """
@@ -61,7 +61,7 @@ class Create(
                 values(
                     ?,
                     ?::common.ticket_status,
-                    ?::uuid,
+                    ?,
                     ?,
                     (
                       select person 
@@ -78,7 +78,7 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
@@ -90,7 +90,7 @@ class Create(
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
     )
 
     return CommonTicketsCreateResponse(error = ErrorType.NoError, id = id)

@@ -42,20 +42,21 @@ class Create(
     fun createHandler(@RequestBody req: ScPartnersCreateRequest): ScPartnersCreateResponse {
 
         // if (req.partner.name == null) return ScPartnersCreateResponse(error = ErrorType.InputMissingToken, null)
-
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.partners(organization, active, financial_reporting_types,  is_innovations_client, pmc_entity_code, point_of_contact,
-             types, created_by, modified_by, owning_person, owning_group)
+            insert into sc.partners(id, active, financial_reporting_types,  is_innovations_client, pmc_entity_code, point_of_contact,
+             types, address, sensitivity, created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
+                    ?,
                     ?::boolean,
                     ARRAY[?]::sc.financial_reporting_types[],
                     ?,
                     ?,
-                    ?::uuid,
+                    ?,
                     ARRAY[?]::sc.partner_types[],
+                    ?,
+                    ?::common.sensitivity,
                     (
                       select person 
                       from admin.tokens 
@@ -71,25 +72,25 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
             String::class.java,
-            req.partner.organization,
+            req.partner.id,
             req.partner.active,
             req.partner.financial_reporting_types,
             req.partner.is_innovations_client,
             req.partner.pmc_entity_code,
             req.partner.point_of_contact,
             req.partner.types,
+            req.partner.address,
+            req.partner.sensitivity,
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
-
-//        req.language.id = id
 
         return ScPartnersCreateResponse(error = ErrorType.NoError, id = id)
     }

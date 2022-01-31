@@ -16,13 +16,17 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.GeckoDriverService;
-import org.openqa.selenium.remote.BrowserType;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.collect.ImmutableMap;
 import com.seedcompany.cordtables.model.BrowserDriverConfig;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 /**
  * This class contains the utility methods that can be used to interact with
@@ -51,7 +55,12 @@ public class SeleniumUtils {
 			switch (browserConfig.getType()) {
 			case "CHROME":
 
-				System.setProperty("webdriver.chrome.driver", browserConfig.getDriverPath());
+				// System.setProperty("webdriver.chrome.driver", browserConfig.getDriverPath());
+
+				String isHeadless = System.getProperty("test.execution.background.disabled");
+				if (isHeadless != null && !isHeadless.isEmpty()) {
+					browserConfig.setHeadless(!Boolean.valueOf(isHeadless));
+				}
 				final ChromeOptions chromeOptions = new ChromeOptions();
 				chromeOptions.addArguments("--no-sandbox");
 				chromeOptions.addArguments("enable-automation");
@@ -66,7 +75,10 @@ public class SeleniumUtils {
 				chromeOptions.setCapability("chrome.verbose", browserConfig.isVerbose());
 				chromeOptions.addArguments("--disable-web-security");
 				chromeOptions.addArguments("--allow-running-insecure-content");
+				if(browserConfig.isDevMode())
+				chromeOptions.addArguments("--auto-open-devtools-for-tabs");
 				// chromeOptions.setExperimentalOption("w3c", false);
+				WebDriverManager.getInstance(DriverManagerType.CHROME).setup();
 				driver = new ChromeDriver(chromeOptions);
 				break;
 
@@ -76,7 +88,7 @@ public class SeleniumUtils {
 
 					// System.setProperty("webdriver.gecko.driver","C:\\temp\\geckodriver.exe");
 
-					System.setProperty("webdriver.gecko.driver",browserConfig.getDriverPath()+"\\geckodriver.exe");
+					System.setProperty("webdriver.gecko.driver", browserConfig.getDriverPath() + "\\geckodriver.exe");
 
 					File pathBinary = new File("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
 					if (!pathBinary.exists()) {
@@ -111,7 +123,7 @@ public class SeleniumUtils {
 					bChromeOptions.addArguments("--disable-gpu");
 					bChromeOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 					bChromeOptions.setCapability("chrome.verbose", true);
-					
+
 					bChromeOptions.setCapability("chromeOptions", ImmutableMap.of("w3c", false));
 					// disable logging
 					// disable the web security
@@ -230,4 +242,26 @@ public class SeleniumUtils {
 		return null;
 	}
 
+	public static void scrollToElement(WebElement target, WebDriver driver) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].scrollIntoView();", target);
+	}
+
+	public static void scrollDown(WebDriver driver) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+	}
+
+	public static void scrollHorizontally(WebElement target, WebDriver driver) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].scrollIntoView();", target);
+	}
+
+	public static void log(WebDriver driver) {
+		LogEntries les = driver.manage().logs().get(LogType.PERFORMANCE);
+		System.out.println("**********Performance Logs*****************");
+		for (LogEntry le : les) {
+			System.out.println(le.getMessage());
+		}
+	}
 }

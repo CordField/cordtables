@@ -51,7 +51,7 @@ class Update(
     try {
       id = jdbcTemplate.queryForObject(
         """
-          select id from common.site_text_translations where language = ?::uuid and site_text = ?::uuid;
+          select id from common.site_text_translations where language = ? and site_text = ?;
       """.trimIndent(),
         String::class.java,
         req.site_text_translation.language,

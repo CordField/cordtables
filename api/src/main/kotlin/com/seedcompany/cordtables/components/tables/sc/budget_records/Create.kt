@@ -44,14 +44,18 @@ class Create(
 
         if (req.token == null) return ScBudgetRecordsCreateResponse(error = ErrorType.InputMissingToken, null)
 
-
         // create row with required fields, use id to update cells afterwards one by one
         val id = jdbcTemplate.queryForObject(
             """
-            insert into sc.budget_records(budget, change_to_plan, created_by, modified_by, owning_person, owning_group)
+            insert into sc.budget_records(budget, change_to_plan, active, amount, fiscal_year, organization, sensitivity,  created_by, modified_by, owning_person, owning_group)
                 values(
-                    ?::uuid,
-                    ?::uuid,
+                    ?,
+                    ?,
+                    ?::boolean,
+                    ?::decimal,
+                    ?::integer,
+                    ?,
+                    ?::common.sensitivity,
                     (
                       select person 
                       from admin.tokens 
@@ -67,20 +71,24 @@ class Create(
                       from admin.tokens 
                       where token = ?
                     ),
-                    ?::uuid
+                    ?
                 )
             returning id;
         """.trimIndent(),
             String::class.java,
             req.budget_record.budget,
             req.budget_record.change_to_plan,
+            req.budget_record.active,
+            req.budget_record.amount,
+            req.budget_record.fiscal_year,
+            req.budget_record.organization,
+            req.budget_record.sensitivity,
             req.token,
             req.token,
             req.token,
-            util.adminGroupId
+            util.adminGroupId()
         )
 
-//        req.budget_record.id = id
 
         return ScBudgetRecordsCreateResponse(error = ErrorType.NoError, id = id)
     }

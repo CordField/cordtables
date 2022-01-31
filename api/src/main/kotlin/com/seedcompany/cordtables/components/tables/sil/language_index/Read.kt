@@ -1,12 +1,9 @@
 package com.seedcompany.cordtables.components.tables.sil.language_index
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sil.language_index.languageIndex
-import com.seedcompany.cordtables.components.tables.sc.locations.ScLocation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -24,8 +21,8 @@ data class SilLanguageIndexReadRequest(
 )
 
 data class SilLanguageIndexReadResponse(
-    val error: ErrorType,
-    val languageIndex: languageIndex? = null,
+  val error: ErrorType,
+  val languageIndex: LanguageIndex? = null,
 )
 
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com"])
@@ -111,7 +108,7 @@ class Read(
                 if (jdbcResult.wasNull()) owning_group = null
 
                 val languageIndex =
-                    languageIndex(
+                    LanguageIndex(
                         id = id,
                         lang = lang,
                         country = country,

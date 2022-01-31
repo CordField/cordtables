@@ -46,8 +46,7 @@ class Update(
                     table = "up.prayer_notifications",
                     column = "request",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "person" -> {
@@ -56,8 +55,7 @@ class Update(
                     table = "up.prayer_notifications",
                     column = "person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_person" -> {
@@ -66,8 +64,7 @@ class Update(
                     table = "up.prayer_notifications",
                     column = "owning_person",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
             "owning_group" -> {
@@ -76,8 +73,7 @@ class Update(
                     table = "up.prayer_notifications",
                     column = "owning_group",
                     id = req.id,
-                    value = req.value,
-                    cast = "::uuid"
+                    value = req.value
                 )
             }
         }

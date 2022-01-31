@@ -1,11 +1,9 @@
 package com.seedcompany.cordtables.components.tables.sc.partners
 
-import com.seedcompany.cordtables.common.LocationType
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import com.seedcompany.cordtables.components.admin.GetSecureListQueryRequest
-import com.seedcompany.cordtables.components.tables.sc.partners.partner
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -58,13 +56,15 @@ class List(
                 columns = arrayOf(
                     "id",
 
-                    "organization",
+//                    "organization",
                     "active",
                     "financial_reporting_types",
                     "is_innovations_client",
                     "pmc_entity_code",
                     "point_of_contact",
                     "types",
+                    "address",
+                    "sensitivity",
 
                     "created_at",
                     "created_by",
@@ -76,9 +76,6 @@ class List(
             )
         ).query
 
-
-
-
         try {
             val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
             while (jdbcResult.next()) {
@@ -86,9 +83,8 @@ class List(
                 var id: String? = jdbcResult.getString("id")
                 if (jdbcResult.wasNull()) id = null
 
-
-                var organization: String? = jdbcResult.getString("organization")
-                if (jdbcResult.wasNull()) organization = null
+//                var organization: String? = jdbcResult.getString("organization")
+//                if (jdbcResult.wasNull()) organization = null
 
                 var active: Boolean? = jdbcResult.getBoolean("active")
                 if (jdbcResult.wasNull()) active = null
@@ -108,10 +104,11 @@ class List(
                 var types: String? = jdbcResult.getString("types")
                 if (jdbcResult.wasNull()) types = null
 
+                var address: String? = jdbcResult.getString("address")
+                if (jdbcResult.wasNull()) address = null
 
-
-
-
+                var sensitivity: String? = jdbcResult.getString("sensitivity")
+                if (jdbcResult.wasNull()) sensitivity = null
 
                 var created_by: String? = jdbcResult.getString("created_by")
                 if (jdbcResult.wasNull()) created_by = null
@@ -134,15 +131,15 @@ class List(
                 data.add(
                     partner(
                         id = id,
-
-                        organization = organization,
+//                        organization = organization,
                         active = active,
                         financial_reporting_types = financial_reporting_types,
                         is_innovations_client = is_innovations_client,
                         pmc_entity_code = pmc_entity_code,
                         point_of_contact = point_of_contact,
                         types = types,
-
+                        address = address,
+                        sensitivity = sensitivity,
                         created_at = created_at,
                         created_by = created_by,
                         modified_at = modified_at,
