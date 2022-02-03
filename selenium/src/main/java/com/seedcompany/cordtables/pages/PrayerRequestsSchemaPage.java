@@ -10,15 +10,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import com.seedcompany.cordtables.model.TablesOption;
-import com.seedcompany.cordtables.model.UpPrayerRequestForm;
+import com.seedcompany.cordtables.model.UpPrayerRequest;
 import com.seedcompany.cordtables.utils.SeleniumUtils;
 import com.seedcompany.cordtables.utils.TableDataExtractor;
 
-public class UpPrayerTablePage extends Page {
+public class PrayerRequestsSchemaPage extends Page {
 
 	TableDataExtractor extractor = null;
 
-	public UpPrayerTablePage(WebDriver driver) {
+	public PrayerRequestsSchemaPage(WebDriver driver) {
 		super(driver);
 	}
 
@@ -57,7 +57,7 @@ public class UpPrayerTablePage extends Page {
 	 * 
 	 */
 
-	public WebElement fillUpPrayerRequestForm(UpPrayerRequestForm formDetails) {
+	public WebElement fillUpPrayerRequestForm(UpPrayerRequest formDetails) {
 
 		SeleniumUtils.scrollDown(driver);
 		SeleniumUtils.wait(2);
