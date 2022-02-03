@@ -61,6 +61,29 @@ class ColumnPerms(@Autowired
         and rcg.table_name = ?::admin.table_name 
         and t.token = ?
       """.replace('\n', ' '))
+//      val statement2 = conn.prepareCall("""
+//        select group_id, person
+//        from admin.organization_administrators
+//        where
+//      """.replace('\n', ' '))
+      statement.setString(1,req.column)
+      statement.setString(2,req.table)
+      statement.setString(3,req.token)
+
+      val statement1 = conn.prepareCall("""
+        select access_level 
+        from admin.role_all_data_column_grants radcg  
+        inner join admin.roles r 
+        on r.id = rcg.role  
+        inner join admin.role_memberships rm 
+        on r.id = rm.role 
+        inner join admin.tokens t 
+        on rm.person = t.person 
+        where rcg.column_name = ? 
+        and rcg.table_name = ?::admin.table_name 
+        and t.token = ?
+      """.replace('\n', ' '))
+
       statement.setString(1,req.column)
       statement.setString(2,req.table)
       statement.setString(3,req.token)
@@ -81,6 +104,17 @@ class ColumnPerms(@Autowired
             break;
           }
         }
+        val jdbcResult1 = statement1.executeQuery()
+        while(jdbcResult1.next()){
+          var accessLevel:String? = jdbcResult.getString("access_level")
+          if(jdbcResult.wasNull()) accessLevel = null
+          if(perm === "Write"){
+            break;
+          }
+          else if(perm === "Read" && accessLevel !== null){
+            perm = accessLevel
+          }
+        }
         return ColumnPermsResponse(ErrorType.NoError, perm)
       }
       catch(e:SQLException){
@@ -88,7 +122,5 @@ class ColumnPerms(@Autowired
         return ColumnPermsResponse(ErrorType.SQLReadError, null)
       }
     }
-
-
   }
 }
