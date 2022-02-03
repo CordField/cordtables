@@ -21,7 +21,7 @@ public class MainPage extends Page {
 	public MainPage(WebDriver webDriver) {
 		super(webDriver);
 	}
-	
+
 	/**
 	 * This method Represent the mainpage should loaded
 	 */
@@ -32,7 +32,7 @@ public class MainPage extends Page {
 	}
 
 	/**
-	 * This method is use to expand the Menu button 
+	 * This method is use to expand the Menu button
 	 */
 	public void expandMenuOptions() {
 		SearchContext mainMenu = SeleniumUtils
@@ -51,42 +51,65 @@ public class MainPage extends Page {
 		tablesMenu.findElement(By.cssSelector(".accordion")).click();
 
 	}
+
 	/**
 	 * This method is use to expand the table button under Menu
 	 */
-	public void expandTablesMenu() {
-		WebElement mainMenu = this.rootApp.findElement(By.tagName("custom-accordion"));
-		SearchContext tablesMenu = SeleniumUtils
-				.expand_shadow_element(mainMenu.findElements(By.tagName("custom-accordion")).get(1));
-		tablesMenu.findElement(By.cssSelector(".accordion")).click();
-
-	}
-	/**
-	 * This method is use to select the table option under Menu
-	 */
-	public void selectTable(TablesOption option) {
-		SeleniumUtils.wait(3);
-		this.loadApp();
+	public WebElement expandSchemaMenu() {
 		SearchContext mainMenu = SeleniumUtils
 				.expand_shadow_element(this.rootApp.findElement(By.cssSelector("custom-accordion.hydrated")));
 		mainMenu.findElement(By.cssSelector(".accordion")).click();
-		WebElement tableMenuEle = this.rootApp
-				.findElement(By.cssSelector("#full-width > custom-accordion > custom-accordion:nth-child(2)"));
-		SearchContext tableMenu = SeleniumUtils.expand_shadow_element(tableMenuEle);
-		tableMenu.findElement(By.cssSelector(".accordion")).click();
+		System.out.println("Main menu expand ---" + mainMenu);
+		WebElement schemaMenuEle = this.rootApp.findElement(By.cssSelector("custom-accordion.hydrated"))
+				.findElements(By.cssSelector("custom-accordion.hydrated")).get(1);
+		System.out.println("expand schema menu" + schemaMenuEle);
+		SearchContext schemaMenu = SeleniumUtils.expand_shadow_element(schemaMenuEle);
+		schemaMenu.findElement(By.cssSelector(".accordion")).click();
+		return schemaMenuEle;
+	}
 
-		List<WebElement> items = tableMenuEle.findElement(By.tagName("ion-list")).findElements(By.tagName("ion-item"));
-		for (WebElement item : items) {
-			try {
-				WebElement label = item.findElement(By.tagName("ion-label"));
-				if (label.getText().equalsIgnoreCase(option.getName())) {
-					System.out.println("label.getText()" + label.getText());
-					label.click();
+	/**
+	 * This method is use to select the table option under Menu
+	 */
+	public boolean selectSchema(TablesOption option) {
+		SeleniumUtils.wait(3);
+		this.loadApp();
+		WebElement schemaMenu = this.expandSchemaMenu();
+		List<WebElement> schemas = schemaMenu.findElement(By.tagName("ion-list"))
+				.findElements(By.cssSelector("custom-accordion.hydrated"));
+		try {
+			for (WebElement schema : schemas) {
+				SearchContext subSchemaContext = SeleniumUtils.expand_shadow_element(schema);
+				WebElement schemaName = subSchemaContext.findElement(By.cssSelector(".accordion > span:nth-child(1)"));
+
+				SeleniumUtils.scrollDown(driver);
+				if (schemaName.getText().equalsIgnoreCase(option.getParentSchema())) {
+					SeleniumUtils.scrollToElement(schemaName, driver);
+					SeleniumUtils.wait(1);
+					schemaName.click();
+
+					List<WebElement> items = schema.findElement(By.tagName("ion-list"))
+							.findElements(By.tagName("ion-item"));
+					for (WebElement item : items) {
+
+						WebElement label = item.findElement(By.tagName("ion-label"));
+						if (label.getText().equalsIgnoreCase(option.getName())) {
+							SeleniumUtils.scrollToElement(label, driver);
+							label.click();
+							break;
+						}
+
+					}
+					break;
 				}
-			} catch (Exception e) {
-				// TODO: handle exception
 			}
+			return true;
+		} catch (Exception e) {
+			System.err.println("Failed to process the request and find the requested table.");
+			e.printStackTrace();
+			return false;
 		}
+
 	}
 
 }
