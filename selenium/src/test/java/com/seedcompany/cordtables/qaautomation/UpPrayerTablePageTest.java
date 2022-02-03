@@ -48,7 +48,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 				.expand_shadow_element(mainPage.getRootApp().findElement(By.cssSelector("custom-accordion.hydrated")));
 		assertNotNull(mainMenu);
 		assertNotNull(mainMenu.findElement(By.cssSelector(".accordion")));
-		mainPage.selectTable(TablesOption.UP_PRAYER_REQUESTS);
+		assertTrue(mainPage.selectSchema(TablesOption.UP_PRAYER_REQUESTS));
 	}
 
 	@AfterMethod
@@ -76,19 +76,9 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_default() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
-		formDetails.reviewed = "false";
-		formDetails.prayerType = "Request";
-		validatePrayerRequestCreation(formDetails, true);
+		validatePrayerRequestCreation(formDetails, false);
 
 	}
 
@@ -103,18 +93,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedFalseAndPrayerTyprRequest() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
-		formDetails.reviewed = "false";
-		formDetails.prayerType = "Request";
 		validatePrayerRequestCreation(formDetails, true);
 
 	}
@@ -130,18 +110,9 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedFalseAndPrayerTyprRequest() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Medium";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
-		formDetails.prayerType = "Request";
 		validatePrayerRequestCreation(formDetails, true);
 	}
 
@@ -156,18 +127,9 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedFalseAndPrayerTypeRequest() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
-		formDetails.prayerType = "Request";
 		validatePrayerRequestCreation(formDetails, true);
 	}
 
@@ -182,18 +144,9 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedTrueAndPrayerTypeRequest() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
-		formDetails.prayerType = "Request";
 		validatePrayerRequestCreation(formDetails, true);
 
 	}
@@ -209,18 +162,9 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedTrueAndPrayerTypeRequest() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Medium";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
-		formDetails.prayerType = "Request";
 		validatePrayerRequestCreation(formDetails, true);
 
 	}
@@ -236,18 +180,9 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedTrueAndPrayerTypeRequest() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
-		formDetails.prayerType = "Request";
 		validatePrayerRequestCreation(formDetails, true);
 
 	}
@@ -263,159 +198,9 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedFalseAndPrayerTypeUpdate() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
-		formDetails.prayerType = "Update";
-		validatePrayerRequestCreation(formDetails, true);
-
-	}
-
-	/**
-	 * This test case is used to verify that user is able to create the up prayer
-	 * request successfully if entered minimal required values and with sensitivity
-	 * set to 'MEDIUM' and with reviewed set to 'FALSE',PrayerType-'UPDATE'
-	 * 
-	 */
-	@Test
-
-	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedFalseAndPrayerTypeUpdate() {
-		UpPrayerTablePage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
-		formDetails.sensitivity = "Medium";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
-		formDetails.reviewed = "false";
-		formDetails.prayerType = "Update";
-		validatePrayerRequestCreation(formDetails, true);
-
-	}
-
-	/**
-	 * This test case is used to verify that user is able to create the up prayer
-	 * request successfully if entered minimal required values and with sensitivity
-	 * set to 'HIGH' and with reviewed set to 'FALSE',PrayerType-'UPDATE'
-	 * 
-	 */
-	@Test
-
-	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedFalseAndPrayerTypeUpdate() {
-		UpPrayerTablePage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
-		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
-		formDetails.reviewed = "false";
-		formDetails.prayerType = "Update";
-		validatePrayerRequestCreation(formDetails, true);
-
-	}
-
-	/**
-	 * This test case is used to verify that user is able to create the up prayer
-	 * request successfully if entered minimal required values and with sensitivity
-	 * set to 'LOW' and with reviewed set to 'TRUE',PrayerType-'UPDATE'
-	 * 
-	 */
-	@Test
-
-	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedTrueAndPrayerTypeUpdate() {
-		UpPrayerTablePage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
-		formDetails.sensitivity = "Low";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
-		formDetails.reviewed = "true";
-		formDetails.prayerType = "Update";
-		validatePrayerRequestCreation(formDetails, true);
-
-	}
-
-	/**
-	 * This test case is used to verify that user is able to create the up prayer
-	 * request successfully if entered minimal required values and with sensitivity
-	 * set to 'MEDIUM' and with reviewed set to 'TRUE',PrayerType-'UPDATE'
-	 * 
-	 */
-	@Test
-
-	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedTrueAndPrayerTypeUpdate() {
-		UpPrayerTablePage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
-		formDetails.sensitivity = "Medium";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent ="";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
-		formDetails.reviewed = "true";
-		formDetails.prayerType = "Update";
-
-		prayerPage.fillUpPrayerRequestForm(formDetails);
-		SeleniumUtils.wait(1);
-		prayerPage.loadApp();
-
-		List<String> prayerIds = prayerPage.getExistingRequests();
-		formDetails.parent = prayerIds.get(0);
-		validatePrayerRequestCreation(formDetails, true);
-
-	}
-
-	/**
-	 * This test case is used to verify that user is able to create the up prayer
-	 * request successfully if entered minimal required values and with sensitivity
-	 * set to 'HIGH' and with reviewed set to 'TRUE',PrayerType-'UPDATE'
-	 * 
-	 */
-	@Test
-
-	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedTrueAndPrayerTypeUpdate() {
-		UpPrayerTablePage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
-		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
-		formDetails.reviewed = "true";
 		formDetails.prayerType = "Update";
 		validatePrayerRequestCreation(formDetails, true);
 
@@ -432,16 +217,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedFalseAndPrayerTypeCelebration() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Celebration";
 		validatePrayerRequestCreation(formDetails, true);
@@ -459,16 +236,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedFalseAndPrayerTypeCelebration() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Medium";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Celebration";
 		validatePrayerRequestCreation(formDetails, true);
@@ -486,16 +255,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedFalseAndPrayerTypeCelebration() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Celebration";
 		validatePrayerRequestCreation(formDetails, true);
@@ -513,16 +274,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedTrueAndPrayerTypeCelebration() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Celebration";
 		validatePrayerRequestCreation(formDetails, true);
@@ -540,16 +293,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedTrueAndPrayerTypeCelebration() {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
 		prayerPage.enableEditMode();
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Medium";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Celebration";
 		validatePrayerRequestCreation(formDetails, true);
@@ -565,16 +310,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedTrueAndPrayerTypeCelebration() {
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--clHWf4XLh";
-		formDetails.targetLanguageId = "--clHWf4XLh";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Celebration";
 		validatePrayerRequestCreation(formDetails, true);
@@ -589,16 +326,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityLow_ReviewFalse() {
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Request";
 		// create
@@ -621,16 +350,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityLow_ReviewTrue() {
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Request";
 		// create
@@ -652,16 +373,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityMedium_ReviewFalse() {
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Request";
 		// create
@@ -684,16 +397,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityMedium_ReviewTrue() {
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Request";
 		// create
@@ -716,16 +421,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityHigh_ReviewFalse() {
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "true";
 		formDetails.prayerType = "Request";
 		// create
@@ -733,7 +430,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 		// create update request
 		formDetails.parent = prayerData.prayerId;
-		formDetails.sensitivity="High";
+		formDetails.sensitivity = "High";
 		formDetails.prayerType = "Update";
 		formDetails.reviewed = "false";
 		validatePrayerRequestUpdate(formDetails);
@@ -747,19 +444,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	@Test
 
 	private void upPrayerRequest_update_success_whenParentIsUpPrayerRequestId_SensitivityHigh_ReviewTrue() {
-		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
-		formDetails.requestLanguageId = "--4v7lU6GDk";
-		formDetails.targetLanguageId = "--4v7lU6GDk";
+		UpPrayerRequestForm formDetails = defaultTestData();
 		formDetails.sensitivity = "Medium";
-		formDetails.organizationName = "Seed company";
-		formDetails.parent = "";
-		formDetails.translator = "ja4HZGxGtz6";
-		formDetails.location = "USA";
-		formDetails.title = "SEED";
-		formDetails.content = "Up prayer request details";
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Request";
 		// create
+		System.out.println("Executing the test case for request: \n" + formDetails);
 		UpPrayerRequestForm prayerData = validatePrayerRequestCreation(formDetails, false);
 
 		// create update request
@@ -769,6 +459,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		formDetails.reviewed = "true";
 		validatePrayerRequestUpdate(formDetails);
 	}
+
 	/**
 	 * Method to validate the prayer request creation scenario.
 	 * 
@@ -776,6 +467,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	 */
 	private UpPrayerRequestForm validatePrayerRequestCreation(UpPrayerRequestForm formDetails, boolean delete) {
 		UpPrayerTablePage prayerPage = loadUpPrayerPage();
+		SeleniumUtils.wait(1);
 		prayerPage.enableEditMode();
 		List<String> prayerIds = prayerPage.getExistingRequests();
 		prayerPage.fillUpPrayerRequestForm(formDetails);
@@ -847,4 +539,19 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		return requestData;
 	}
 
+	private UpPrayerRequestForm defaultTestData() {
+		UpPrayerRequestForm formDetails = new UpPrayerRequestForm();
+		formDetails.requestLanguageId = "-09jindI0y7";
+		formDetails.targetLanguageId = "-09jindI0y7";
+		formDetails.sensitivity = "Medium";
+		formDetails.organizationName = "Seed company";
+		formDetails.parent = "";
+		formDetails.translator = "Aa_JAxJUIr3";
+		formDetails.location = "USA";
+		formDetails.title = "SEED";
+		formDetails.content = "Up prayer request details";
+		formDetails.reviewed = "false";
+		formDetails.prayerType = "Request";
+		return formDetails;
+	}
 }

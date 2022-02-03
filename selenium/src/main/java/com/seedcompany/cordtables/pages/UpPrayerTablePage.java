@@ -28,8 +28,11 @@ public class UpPrayerTablePage extends Page {
 
 	public void enableEditMode() {
 
-		WebElement editModeOption = this.rootApp.findElement(By.cssSelector("#container > div.edit-button > button"));
-		if (editModeOption.getText().contains("false")) {
+		WebElement editModeOption = this.rootApp
+				.findElement(By.cssSelector("#container > div.edit-button > div > ion-toggle"));
+		boolean state = editModeOption.getAttribute("class").contains("toggle-checked");
+		System.out.println("Is Page is editable ? " + (state ? "Yes" : "No"));
+		if (!state) {
 			editModeOption.click();
 		}
 	}
@@ -40,8 +43,11 @@ public class UpPrayerTablePage extends Page {
 
 	public void disableEditMode() {
 
-		WebElement editModeOption = this.rootApp.findElement(By.cssSelector("#container > div.edit-button > button"));
-		if (editModeOption.getText().contains("true")) {
+		WebElement editModeOption = this.rootApp
+				.findElement(By.cssSelector("#container > div.edit-button > div > ion-toggle"));
+		boolean state = editModeOption.getAttribute("class").contains("toggle-checked");
+		System.out.println("Is Page is editable ? " + (state ? "Yes" : "No"));
+		if (state) {
 			editModeOption.click();
 		}
 	}
@@ -89,7 +95,6 @@ public class UpPrayerTablePage extends Page {
 		WebElement sensitivitySelector = form.findElement(By.cssSelector("#sensitivity"));
 		Select s = new Select(sensitivitySelector);
 		s.selectByValue(value);
-		System.out.println(s.getFirstSelectedOption().getText());
 	}
 
 	/**

@@ -16,6 +16,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.GeckoDriverService;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
@@ -75,8 +76,8 @@ public class SeleniumUtils {
 				chromeOptions.setCapability("chrome.verbose", browserConfig.isVerbose());
 				chromeOptions.addArguments("--disable-web-security");
 				chromeOptions.addArguments("--allow-running-insecure-content");
-				if(browserConfig.isDevMode())
-				chromeOptions.addArguments("--auto-open-devtools-for-tabs");
+				if (browserConfig.isDevMode())
+					chromeOptions.addArguments("--auto-open-devtools-for-tabs");
 				// chromeOptions.setExperimentalOption("w3c", false);
 				WebDriverManager.getInstance(DriverManagerType.CHROME).setup();
 				driver = new ChromeDriver(chromeOptions);
@@ -245,6 +246,20 @@ public class SeleniumUtils {
 	public static void scrollToElement(WebElement target, WebDriver driver) {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("arguments[0].scrollIntoView();", target);
+	}
+
+	public static void moveToElement(WebElement target, WebDriver driver) {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(target);
+		actions.perform();
+	}
+
+	public static void clickElement(WebElement target, WebDriver driver) {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(target);
+		System.out.println("moved to element to perform action.");
+		System.out.println("target = "+target.isDisplayed()+" ::: "+target.isSelected());
+		actions.click(target);
 	}
 
 	public static void scrollDown(WebDriver driver) {
