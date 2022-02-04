@@ -53,7 +53,6 @@ class RowPerms(@Autowired
   @ResponseBody
   fun handler(@RequestBody req: RowPermsRequest): RowPermsResponse {
     if (req.token == null) return RowPermsResponse(ErrorType.InputMissingToken)
-    if (!util.isAdmin(req.token)) return RowPermsResponse(ErrorType.AdminOnly)
     if (req.id == null) return RowPermsResponse(ErrorType.MissingId)
 
 
@@ -67,6 +66,7 @@ class RowPerms(@Autowired
     this.ds.connection.use { conn ->
       val tableName = req.table.split('.')[1]
       val schemaName = req.table.split('.')[0]
+      println("$tableName  $schemaName")
       val statement1 = conn.prepareCall("""
         select column_name from 
         information_schema.columns 
@@ -74,8 +74,8 @@ class RowPerms(@Autowired
         and table_schema = ?
       """.replace('\n', ' '))
 
-      statement1.setString(0, tableName)
-      statement1.setString(1, schemaName)
+      statement1.setString(1, tableName)
+      statement1.setString(2, schemaName)
 
       // now call the column perms for each column and call row id
 
@@ -86,9 +86,14 @@ class RowPerms(@Autowired
         val jdbcResult = statement1.executeQuery()
         while (jdbcResult.next()) {
           var columnName: String = jdbcResult.getString("column_name")
+          println(columnName)
+          if (util.isAdmin(req.token)) {
+            data.add(RowPermsData(columnName = columnName, perm = "Write"))
+            continue;
+          }
           val columnPerm = columnPerms.handler(ColumnPermsRequest(token = req.token, table = req.table, column = columnName))
 
-          if(columnPerm.rowAccessRequired) {
+          if (columnPerm.rowAccessRequired) {
 
             val statement2 = conn.prepareCall("""
               select exists(select id 
@@ -108,17 +113,16 @@ class RowPerms(@Autowired
             statement2.setString(2, req.table)
             statement2.setString(3, req.token)
             val result = statement2.executeQuery()
-            if(result.next()) {
-             data.add(RowPermsData(columnName = columnName, perm = columnPerm.perm))
-            }else{
-              data.add(RowPermsData(columnName=columnName, perm = null))
+            if (result.next()) {
+              data.add(RowPermsData(columnName = columnName, perm = columnPerm.perm))
+            } else {
+              data.add(RowPermsData(columnName = columnName, perm = null))
             }
-          }
-          else{
-             data.add(RowPermsData(columnName = columnName, perm = columnPerm.perm))
+          } else {
+            data.add(RowPermsData(columnName = columnName, perm = columnPerm.perm))
           }
         }
-
+        return RowPermsResponse(ErrorType.NoError, perms= data)
       } catch (e: SQLException) {
         println("error while listing ${e.message}")
         return RowPermsResponse(ErrorType.SQLReadError, null)
