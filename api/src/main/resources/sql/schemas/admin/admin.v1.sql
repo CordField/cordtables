@@ -370,7 +370,7 @@ create table admin.role_memberships (
 
 create table admin.role_all_data_column_grants(
 	id varchar(32) primary key default nanoid(),
-
+  
 	role varchar(32) not null references admin.roles(id),
 	table_name admin.table_name not null,
 	column_name varchar(64) not null,
