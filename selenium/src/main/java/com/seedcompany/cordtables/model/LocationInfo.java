@@ -12,11 +12,12 @@ public class LocationInfo {
 	public String sensitivity;
 	public String type;
 	public String isoAlpha3;
+	public String id;
 
 	@Override
 	public String toString() {
-		return "CommonLocationsForm [name=" + name + ", sensitivity=" + sensitivity + ", type=" + type
-				+ ", isoAlpha3 = " + isoAlpha3 + "]";
+		return "LocationInfo [name=" + name + ", sensitivity=" + sensitivity + ", type=" + type + ", isoAlpha3="
+				+ isoAlpha3 + ", id=" + id + "]";
 	}
 
 }

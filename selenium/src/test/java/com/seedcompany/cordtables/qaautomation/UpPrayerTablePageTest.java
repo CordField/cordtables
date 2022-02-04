@@ -75,7 +75,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_default() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
 		validatePrayerRequestCreation(formDetails, false);
@@ -92,7 +92,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedFalseAndPrayerTyprRequest() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
 		validatePrayerRequestCreation(formDetails, true);
@@ -109,7 +109,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedFalseAndPrayerTyprRequest() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Medium";
 		formDetails.reviewed = "false";
@@ -126,7 +126,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedFalseAndPrayerTypeRequest() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
 		formDetails.reviewed = "false";
@@ -143,7 +143,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedTrueAndPrayerTypeRequest() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
 		formDetails.reviewed = "true";
@@ -161,7 +161,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedTrueAndPrayerTypeRequest() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Medium";
 		formDetails.reviewed = "true";
@@ -179,7 +179,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedTrueAndPrayerTypeRequest() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
 		formDetails.reviewed = "true";
@@ -197,7 +197,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedFalseAndPrayerTypeUpdate() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
 		formDetails.reviewed = "false";
@@ -216,7 +216,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedFalseAndPrayerTypeCelebration() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
 		formDetails.reviewed = "false";
@@ -235,7 +235,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedFalseAndPrayerTypeCelebration() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Medium";
 		formDetails.reviewed = "false";
@@ -254,7 +254,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityHighAndReviewedFalseAndPrayerTypeCelebration() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "High";
 		formDetails.reviewed = "false";
@@ -273,7 +273,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityLowAndReviewedTrueAndPrayerTypeCelebration() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Low";
 		formDetails.reviewed = "true";
@@ -292,7 +292,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 	public void upPrayerRequest_create_success_whenSensitivityMediumAndReviewedTrueAndPrayerTypeCelebration() {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		UpPrayerRequest formDetails = defaultTestData();
 		formDetails.sensitivity = "Medium";
 		formDetails.reviewed = "true";
@@ -468,7 +468,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	private UpPrayerRequest validatePrayerRequestCreation(UpPrayerRequest formDetails, boolean delete) {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
 		SeleniumUtils.wait(1);
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		List<String> prayerIds = prayerPage.getExistingRequests();
 		prayerPage.fillUpPrayerRequestForm(formDetails);
 		SeleniumUtils.wait(1);
@@ -493,7 +493,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	 */
 	private UpPrayerRequest validatePrayerRequestUpdate(UpPrayerRequest formDetails) {
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
-		prayerPage.enableEditMode();
+		prayerPage.menuUtils.enableEditMode();
 		List<String> prayerIds = prayerPage.getExistingRequests();
 		prayerPage.fillUpPrayerRequestForm(formDetails);
 		SeleniumUtils.wait(1);
