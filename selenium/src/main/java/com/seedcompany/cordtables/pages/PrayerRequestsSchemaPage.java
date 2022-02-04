@@ -10,48 +10,24 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import com.seedcompany.cordtables.model.TablesOption;
-import com.seedcompany.cordtables.model.UpPrayerRequestForm;
+import com.seedcompany.cordtables.model.UpPrayerRequest;
 import com.seedcompany.cordtables.utils.SeleniumUtils;
 import com.seedcompany.cordtables.utils.TableDataExtractor;
 
-public class UpPrayerTablePage extends Page {
+public class PrayerRequestsSchemaPage extends Page {
 
 	TableDataExtractor extractor = null;
 
-	public UpPrayerTablePage(WebDriver driver) {
+	public PrayerRequestsSchemaPage(WebDriver driver) {
 		super(driver);
 	}
-
-	/**
-	 * this method is used for clicking the edit mode button mode as true
-	 */
-
-	public void enableEditMode() {
-
-		WebElement editModeOption = this.rootApp.findElement(By.cssSelector("#container > div.edit-button > button"));
-		if (editModeOption.getText().contains("false")) {
-			editModeOption.click();
-		}
-	}
-
-	/**
-	 * this method is used for clicking the edit mode button mode as true
-	 */
-
-	public void disableEditMode() {
-
-		WebElement editModeOption = this.rootApp.findElement(By.cssSelector("#container > div.edit-button > button"));
-		if (editModeOption.getText().contains("true")) {
-			editModeOption.click();
-		}
-	}
-
+	
 	/**
 	 * this method is used to fill the UpPrayer request form
 	 * 
 	 */
 
-	public WebElement fillUpPrayerRequestForm(UpPrayerRequestForm formDetails) {
+	public WebElement fillUpPrayerRequestForm(UpPrayerRequest formDetails) {
 
 		SeleniumUtils.scrollDown(driver);
 		SeleniumUtils.wait(2);
@@ -89,7 +65,6 @@ public class UpPrayerTablePage extends Page {
 		WebElement sensitivitySelector = form.findElement(By.cssSelector("#sensitivity"));
 		Select s = new Select(sensitivitySelector);
 		s.selectByValue(value);
-		System.out.println(s.getFirstSelectedOption().getText());
 	}
 
 	/**
@@ -119,7 +94,7 @@ public class UpPrayerTablePage extends Page {
 	public void deleteRecord(String prayerId) {
 
 		try {
-			this.enableEditMode();
+			this.menuUtils.enableEditMode();
 			this.extractor = new TableDataExtractor(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
 					this.driver);
 			List<List<WebElement>> records = extractor.readTable(TablesOption.UP_PRAYER_REQUESTS);
@@ -143,7 +118,7 @@ public class UpPrayerTablePage extends Page {
 	public List<String> findPrayerRequest(String prayerId) {
 		List<String> data = null;
 		try {
-			this.enableEditMode();
+			this.menuUtils.enableEditMode();
 			this.extractor = new TableDataExtractor(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
 					this.driver);
 			List<List<WebElement>> records = extractor.readTable(TablesOption.UP_PRAYER_REQUESTS);

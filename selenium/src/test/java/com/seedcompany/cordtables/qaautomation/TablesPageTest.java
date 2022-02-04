@@ -62,7 +62,7 @@ public class TablesPageTest extends BaseTestSuite {
 		assertNotNull(mainMenu);
 		assertNotNull(mainMenu.findElement(By.cssSelector(".accordion")));
 		
-		mainPage.selectTable(TablesOption.ADMIN_GROUP_MEMBERSHIPS);
+		mainPage.selectSchema(TablesOption.ADMIN_PEOPLE);
 
 	}
 
@@ -88,7 +88,7 @@ public class TablesPageTest extends BaseTestSuite {
 		assertNotNull(mainMenu);
 		assertNotNull(mainMenu.findElement(By.cssSelector(".accordion")));
 		
-		mainPage.selectTable(TablesOption.UP_PRAYER_REQUESTS);
+		mainPage.selectSchema(TablesOption.UP_PRAYER_REQUESTS);
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.seedcompany.cordtables.model;
 
-public class UpPrayerRequestForm {
+public class UpPrayerRequest {
 
 	public String requestLanguageId;
 	public String targetLanguageId;

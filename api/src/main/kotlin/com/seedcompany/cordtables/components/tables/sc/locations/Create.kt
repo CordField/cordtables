@@ -130,19 +130,6 @@ class Create(
             util.adminGroupId()
         )
 
-        req.location.id = id
-
-        val updateResponse = update.updateHandler(
-            ScLocationsUpdateRequest(
-                token = req.token,
-                location = req.location,
-            )
-        )
-
-        if (updateResponse.error != ErrorType.NoError) {
-            return ScLocationsCreateResponse(updateResponse.error)
-        }
-
         return ScLocationsCreateResponse(error = ErrorType.NoError, id = id)
     }
 

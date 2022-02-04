@@ -5,6 +5,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.seedcompany.cordtables.utils.MenuUtils;
 import com.seedcompany.cordtables.utils.SeleniumUtils;
 
 /**
@@ -16,12 +17,20 @@ public abstract class Page {
 
 	protected SearchContext rootApp;
 
+	public MenuUtils menuUtils;
+
 	public SearchContext getRootApp() {
 		return rootApp;
 	}
 
 	public void setRootApp(SearchContext rootApp) {
 		this.rootApp = rootApp;
+		if (menuUtils != null) {
+			this.menuUtils.rootApp = rootApp;
+		} else {
+			this.menuUtils = new MenuUtils(this.rootApp);
+		}
+
 	}
 
 	/*
