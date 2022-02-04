@@ -4,18 +4,12 @@ create schema sc;
 
 -- POSTS ----------------------------------------------------------
 
-create table sc.posts_directory ( -- does not need to be secure
-  id uuid primary key default common.uuid_generate_v4(),
-  created_at timestamp not null default CURRENT_TIMESTAMP
-);
-
 create type sc.post_shareability as enum (
   'Project Team',
   'Internal',
   'Ask to Share Externally',
   'External'
 );
-
 
 create type sc.post_type as enum (
   'Note',
@@ -28,7 +22,7 @@ create table sc.posts (
 
   parent uuid,
   parent_type admin.table_name,
-  directory uuid references sc.posts_directory(id), -- not null
+  directory uuid references common.directories(id), -- not null
   type sc.post_type, --not null,
   shareability sc.post_shareability, --not null,
   body text, --not null,
@@ -90,7 +84,6 @@ create table sc.field_regions (
   owning_group uuid not null references admin.groups(id)
 );
 
--- extension table from common
 create table sc.locations (
 	id uuid unique not null references common.locations(id),
 
@@ -107,20 +100,12 @@ create table sc.locations (
   owning_group uuid not null references admin.groups(id)
 );
 
--- todo may need to create field location table
+create table sc.field_region_locations (
+	id uuid unique not null references common.locations(id),
 
--- ORGANIZATION TABLES
+	field_region_sc_field_regions_id uuid references sc.field_regions(id),
+	location_common_locations_id uuid references common.locations(id),
 
--- extension table from commmon
--- todo combine table with partners
-create table sc.organizations (
-	id uuid primary key references common.organizations(id),
-
-  -- todo move to common table
-	address varchar(255),
-	sensitivity common.sensitivity,
-	root_directory uuid references common.directories(id),
-	
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -129,21 +114,21 @@ create table sc.organizations (
   owning_group uuid not null references admin.groups(id)
 );
 
-create table sc.organization_locations(
-  id uuid primary key default common.uuid_generate_v4(),
+create table sc.field_zone_locations (
+	id uuid unique not null references common.locations(id),
 
-	organization uuid not null references sc.organizations(id),
-	location uuid not null references sc.locations(id),
-	
+	field_zone_sc_field_zones_id uuid references sc.field_zones(id),
+	location_common_locations_id uuid references common.locations(id),
+
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
-
-	unique (organization, location)
+  owning_group uuid not null references admin.groups(id)
 );
+
+-- ORGANIZATION TABLES
 
 create type sc.periodic_report_type as enum (
   'Financial',
@@ -405,23 +390,6 @@ create table sc.language_goal_definitions (
   owning_group uuid not null references admin.groups(id)
 );
 
-create table sc.language_locations (
-  id uuid primary key default common.uuid_generate_v4(),
-
-	language uuid not null references sc.languages(id),
-	location uuid not null references sc.locations(id),
-	-- todo
-  
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
-  modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by uuid not null references admin.people(id),
-  owning_person uuid not null references admin.people(id),
-  owning_group uuid not null references admin.groups(id),
-
-	unique (language, location)
-);
-
 create table sc.language_goals (
   id uuid primary key default common.uuid_generate_v4(),
 
@@ -438,7 +406,6 @@ create table sc.language_goals (
 
 	unique (language, goal)
 );
-
 
 -- USER TABLES --------------------------------------------------------------
 
@@ -566,11 +533,6 @@ create table sc.change_sets (
   owning_group uuid not null references admin.groups(id)
 );
 
-create table sc.periodic_reports_directory ( -- todo is this still needed? should be common.directory?  -- security not needed
-  id uuid primary key default common.uuid_generate_v4(),
-  created_at timestamp not null default CURRENT_TIMESTAMP
-);
-
 create type sc.periodic_report_parent_type as enum (
 		'a',
 		'b',
@@ -582,7 +544,7 @@ create table sc.periodic_reports (
 
   parent uuid,
   type sc.periodic_report_parent_type,
-  directory uuid references sc.periodic_reports_directory(id), -- todo should this be common.directory?
+  directory_common_directories_id uuid references common.directories(id),
   end_at date,
   report_file uuid references common.files(id),
   start_at date,
@@ -684,11 +646,21 @@ create table sc.project_members (
   unique (project, person, group_id, role)
 );
 
+create type sc.pinned_types as enum (
+		'LanguageProject',
+		'InternshipProject',
+		'TranslationEngagement',
+		'InternshipEngagement',
+		'Language',
+		'Partner',
+		'Product'
+);
+
 create table sc.pinned (
   id uuid primary key default common.uuid_generate_v4(),
 	person uuid unique references sc.people(id), -- not null
 	pinned uuid, -- not null
-	-- todo type column
+	type sc.pinned_types, -- not null
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -710,7 +682,6 @@ create table sc.partnerships (
   project uuid references sc.projects(id), -- not null
   partner uuid references sc.organizations(id), -- not null
   change_set uuid references sc.change_sets(id), -- not null
-  active bool, -- todo does still exist?
   agreement_status sc.partnership_agreement_status,
   mou uuid references common.files(id),
   agreement uuid references common.files(id),
@@ -787,7 +758,6 @@ create table sc.budget_records (
 create table sc.project_locations (
   id uuid primary key default common.uuid_generate_v4(),
 
-  active bool,
   change_set uuid references sc.change_sets(id), -- not null
   location uuid references sc.locations(id), -- not null
   project uuid references sc.projects(id), -- not null
@@ -802,11 +772,9 @@ create table sc.project_locations (
 	unique (project, location, change_set)
 );
 
-
-
 -- PRODUCTS
 
-create type common.product_mediums as enum (
+create type common.product_mediums_enum as enum (
   'Print',
   'Web',
   'EBook',
@@ -816,7 +784,6 @@ create type common.product_mediums as enum (
   'Video',
   'Other'
 );
-
 
 create type common.product_methodologies as enum (
   'AdobeAudition',
@@ -841,7 +808,6 @@ create type common.product_approach as enum (
   'Visual',
   'Written'
 );
-
 
 create type common.product_purposes as enum (
   'EvangelismChurchPlanting',
@@ -876,7 +842,7 @@ create type common.progress_measurement as enum (
   'Boolean'
 );
 
-create type common.product_methodology_step as enum (
+create type common.product_steps_enum as enum (
     'ExegesisAndFirstDraft',
     'TeamCheck',
     'CommunityTesting',
@@ -892,31 +858,35 @@ create type common.product_methodology_step as enum (
     'Completed'
 );
 
--- 3 types of products
--- direct scripture, derivative, other
+create type sc.producible_types as enum (
+  'Film',
+  'Story',
+  'EthnoArt'
+);
 
 create table sc.products (
   id uuid primary key default common.uuid_generate_v4(),
 
   change_set uuid references sc.change_sets(id), -- not null
   engagement uuid references sc.language_engagements(id),
-  mediums common.product_mediums[],
+  mediums common.product_mediums_enum[],
   purposes common.product_purposes[], -- todo may need for historical data, delete
   methodology common.product_methodologies,
   sensitivity common.sensitivity,
-  steps common.product_methodology_step[], -- rename type to product_steps
+  steps common.product_steps_enum[],
   describe_completion text,
   progress_step_measurement common.progress_measurement,
   progress_target decimal,
   placeholder_description text,
+  
+  -- todo, are these needed now that we have the 3 products tables?
   -- pnp_index int,
   -- total verses,
   -- total verse equivalents -- derived from scripture references
-
---  name varchar(64), -- not null
---  active bool,
---  type sc.product_type,
---  description text,
+  -- name varchar(64), -- not null
+  -- active bool,
+  -- type sc.product_type,
+  -- description text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -928,21 +898,57 @@ create table sc.products (
   unique (id, change_set)
 );
 
--- direct scripture
--- optional unspec scripture (object -> book name total verses)
+create table sc.direct_scripture_products (
+  id uuid references sc.products(id),
 
--- derivative
--- composite bool,
--- produces sc.producable one of film, story, ethno art not null
--- producable type not null
--- scripture ref override
+  scripture_references_common_scripture_references_id uuid[],
+  total_verses int,
 
--- other
--- title non-null
--- description
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
 
--- producable - story
---
+  unique (id, change_set)
+);
+
+create table sc.derivative_products (
+  id uuid references sc.products(id),
+
+  composite bool,
+  producible uuid, -- not null
+  type sc.producible_types, -- not null,
+  scripture_reference_override_common_scripture_references_id uuid references common.scripture_references(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
+
+  unique (id, change_set)
+);
+
+create table sc.other_products (
+  id uuid references sc.products(id),
+
+  title varchar(128),
+  description text,
+  scripture_references_common_scripture_references_id uuid[],
+  total_verses int,
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
+
+  unique (id, change_set)
+);
 
 create table sc.product_scripture_references (
   id uuid primary key default common.uuid_generate_v4(),
@@ -978,7 +984,7 @@ create table sc.step_progress (
   id uuid primary key default common.uuid_generate_v4(),
 
   product_progress uuid references sc.product_progress(id),
-  step common.product_methodology_step,
+  step common.product_steps_enum,
   completed decimal,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
@@ -989,15 +995,27 @@ create table sc.step_progress (
   owning_group uuid not null references admin.groups(id)
 );
 
--- enum report period
--- fiscal year to date
--- report period
--- cumulative
+create type sc.report_period_enum as enum (
+  'Monthly',
+  'Quarterly',
+  'FiscalYearToDate',
+  'Cumulative'
+);
 
--- progress summary table
--- actual decimal
--- planned decimal
--- report_period enum
+create table sc.progress_summary (
+  id uuid primary key default common.uuid_generate_v4(),
+
+  actual decimal,
+  planned decimal,
+  report_period sc.report_period_enum, -- not null
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
+);
 
 -- INTERNSHIP ENGAGEMENTS
 
@@ -1028,8 +1046,16 @@ create type common.internship_position as enum (
   'OtherPartnershipCapacity'
 );
 
--- engagements
+create type sc.engagement_types_enum as enum (
+  'Language',
+  'Internship'
+);
+
+create table sc.engagements (
+  id uuid primary key default common.uuid_generate_v4(),
+
 	project uuid references sc.projects(id), -- not null
+	engagement_type sc.engagement_types_enum, -- not null
   status common.engagement_status, not null
   ceremony id not null
   complete_date date,
@@ -1044,8 +1070,15 @@ create type common.internship_position as enum (
   last_reactivated_at timestamp,
   status_modified_at timestamp,
 
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
 
--- LANGUAGE ENGAGEMENTS
+	unique (project, language, change_set)
+);
 
 create type common.engagement_status as enum (
 		'InDevelopment',
@@ -1075,7 +1108,7 @@ create type common.project_engagement_tag as enum (
 );
 
 create table sc.language_engagements (
-  id uuid primary key default common.uuid_generate_v4(),
+  id uuid primary key references sc.engagements(id),
 
 	language uuid references sc.languages(id), -- not null
 	change_set uuid references sc.change_sets(id), -- not null
@@ -1099,7 +1132,7 @@ create table sc.language_engagements (
 );
 
 create table sc.internship_engagements (
-  id uuid primary key default common.uuid_generate_v4(),
+  id uuid primary key references sc.engagements(id),
 
 	change_set uuid references sc.change_sets(id), -- not null
   country_of_origin uuid references common.locations(id),
@@ -1117,11 +1150,20 @@ create table sc.internship_engagements (
   owning_group uuid not null references admin.groups(id)
 );
 
-table partnership producing mediums
-engagement id
-partnership id
-product medium enum
+create table sc.partnership_producing_mediums (
+  id uuid primary key references sc.engagements(id),
 
+  engagement_sc_engagements_id uuid references sc.engagements(id), -- not null
+  partnership_sc_partnerships_id uuid references sc.partnerships(id), -- not null
+  product_medium sc.product_mediums_enum, -- not null
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id)
+);
 
 -- CEREMONIES
 
@@ -1133,8 +1175,8 @@ create type common.ceremony_type as enum (
 create table sc.ceremonies (
   id uuid primary key default common.uuid_generate_v4(),
 
-  engagement uuid,
-  -- type
+  engagement uuid, -- not null
+  engagement_type sc.engagement_types_enum, -- not null
   ethnologue uuid references sil.table_of_languages(id),
   actual_date date,
   estimated_date date,

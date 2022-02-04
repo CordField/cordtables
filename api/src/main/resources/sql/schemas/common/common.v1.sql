@@ -161,13 +161,6 @@ create table common.scripture_references (
   start int, -- absolute verse
   end int,
 
---  book_start common.book_name,
---  book_end common.book_name,
---  chapter_start int,
---  chapter_end int,
---  verse_start int,
---  verse_end int,
-
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
@@ -314,6 +307,21 @@ ALTER TABLE admin.people ADD CONSTRAINT common_people_primary_location_fk foreig
 ALTER TABLE common.locations ADD CONSTRAINT common_locations_created_by_fk foreign key (created_by) references admin.people(id);
 ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk foreign key (modified_by) references admin.people(id);
 
+create table common.language_locations (
+  id uuid primary key default common.uuid_generate_v4(),
+
+	language_common_languages_id uuid not null references common.languages(id),
+	location_common_locations_id uuid not null references common.locations(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
+
+	unique (language, location)
+);
 -- Education
 
 create table common.education_entries (
@@ -358,6 +366,11 @@ create table common.organizations (
 	name varchar(255) unique, -- not null
 	sensitivity common.sensitivity default 'High',
 	primary_location uuid references common.locations(id),
+  street_address varchar(255),
+  city varchar(255),
+  state varchar(32),
+  nation varchar(32),
+  root_directory uuid references common.directories(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
   created_by uuid not null references admin.people(id),
@@ -365,6 +378,22 @@ create table common.organizations (
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
   owning_group uuid not null references admin.groups(id)
+);
+
+create table common.organization_locations(
+  id uuid primary key default common.uuid_generate_v4(),
+
+	organization_common_organizations_id uuid not null references sc.organizations(id),
+	location_common_locations_id uuid not null references sc.locations(id),
+
+  created_at timestamp not null default CURRENT_TIMESTAMP,
+  created_by uuid not null references admin.people(id),
+  modified_at timestamp not null default CURRENT_TIMESTAMP,
+  modified_by uuid not null references admin.people(id),
+  owning_person uuid not null references admin.people(id),
+  owning_group uuid not null references admin.groups(id),
+
+	unique (organization_common_organizations_id, location_common_locations_id)
 );
 
 create table common.org_chart_positions(
