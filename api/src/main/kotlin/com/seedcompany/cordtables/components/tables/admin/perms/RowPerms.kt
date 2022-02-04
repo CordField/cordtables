@@ -21,11 +21,13 @@ data class RowPermsData(
   val columnName: String,
   val perm: String?
 )
+
 data class RowPermsRequest(
   val token: String,
   val id: String,
-  val table:String,
+  val table: String,
 )
+
 data class RowPermsResponse(
   val error: ErrorType,
   val perms: MutableList<RowPermsData>? = null
@@ -40,12 +42,16 @@ class RowPerms(@Autowired
                val ds: DataSource,
 
                @Autowired
-               val secureList: GetSecureListQuery) {
+               val secureList: GetSecureListQuery,
+
+               @Autowired
+               val columnPerms: ColumnPerms
+) {
   var jdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
   @PostMapping("admin/perms/row")
   @ResponseBody
-  fun handler(@RequestBody req: RowPermsRequest): RowPermsResponse{
+  fun handler(@RequestBody req: RowPermsRequest): RowPermsResponse {
     if (req.token == null) return RowPermsResponse(ErrorType.InputMissingToken)
     if (!util.isAdmin(req.token)) return RowPermsResponse(ErrorType.AdminOnly)
     if (req.id == null) return RowPermsResponse(ErrorType.MissingId)
@@ -58,48 +64,62 @@ class RowPerms(@Autowired
 //    paramSource.addValue("table", req.table)
 //    paramSource.addValue("column", req.column)
     //language=SQL
-    this.ds.connection.use{ conn ->
-      val statement = conn.prepareCall("""
-        select access_level 
-        from admin.role_column_grants rcg 
-        inner join admin.roles r 
-        on r.id = rcg.role  
-        inner join admin.role_memberships rm 
-        on r.id = rm.role 
-        inner join admin.tokens t 
-        on rm.person = t.person 
-        where rcg.column_name = ? 
-        and rcg.table_name = ?::admin.table_name 
-        and t.token = ?
+    this.ds.connection.use { conn ->
+      val tableName = req.table.split('.')[1]
+      val schemaName = req.table.split('.')[0]
+      val statement1 = conn.prepareCall("""
+        select column_name from 
+        information_schema.columns 
+        where table_name = ? 
+        and table_schema = ?
       """.replace('\n', ' '))
-//      val statement2 = conn.prepareCall("""
-//        select group_id, person
-//        from admin.organization_administrators
-//        where
-//      """.replace('\n', ' '))
-      statement.setString(1,req.id)
-      statement.setString(2,req.table)
-      statement.setString(3,req.token)
-      try {
-//        val jdbcResult = jdbcTemplate.queryForRowSet(query, paramSource)
 
-//        val jdbcResult = statement.executeQuery()
-//        var perm:String? = null
-//        while(jdbcResult.next()) {
-//          var accessLevel:String? = jdbcResult.getString("access_level")
-//          if(jdbcResult.wasNull()) accessLevel = null
-//          if(perm === null && accessLevel !== null){
-//            perm = accessLevel
-//          }
-//          println(perm)
-//          if(accessLevel === "Write"){
-//            perm = accessLevel
-//            break;
-//          }
-//        }
-//        return RowPermsResponse(ErrorType.NoError, perm)
-      }
-      catch(e: SQLException){
+      statement1.setString(0, tableName)
+      statement1.setString(1, schemaName)
+
+      // now call the column perms for each column and call row id
+
+
+      try {
+        var data: MutableList<RowPermsData> = mutableListOf();
+
+        val jdbcResult = statement1.executeQuery()
+        while (jdbcResult.next()) {
+          var columnName: String = jdbcResult.getString("column_name")
+          val columnPerm = columnPerms.handler(ColumnPermsRequest(token = req.token, table = req.table, column = columnName))
+
+          if(columnPerm.rowAccessRequired) {
+
+            val statement2 = conn.prepareCall("""
+              select exists(select id 
+              from admin.group_row_access gra 
+              inner join admin.groups g 
+              on g.id = gra.group_id  
+              inner join admin.group_memberships gm 
+              on g.id = gm.group_id 
+              inner join admin.tokens t 
+              on gm.person = t.person 
+              where gra.row = ? 
+              and gra.table_name = ?::admin.table_name 
+              and t.token = ?)
+              """.replace('\n', ' '))
+
+            statement2.setString(1, req.id)
+            statement2.setString(2, req.table)
+            statement2.setString(3, req.token)
+            val result = statement2.executeQuery()
+            if(result.next()) {
+             data.add(RowPermsData(columnName = columnName, perm = columnPerm.perm))
+            }else{
+              data.add(RowPermsData(columnName=columnName, perm = null))
+            }
+          }
+          else{
+             data.add(RowPermsData(columnName = columnName, perm = columnPerm.perm))
+          }
+        }
+
+      } catch (e: SQLException) {
         println("error while listing ${e.message}")
         return RowPermsResponse(ErrorType.SQLReadError, null)
       }

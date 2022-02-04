@@ -22,7 +22,8 @@ data class ColumnPermsRequest(
 
 data class ColumnPermsResponse(
   val error: ErrorType,
-  val perm: String?
+  val perm: String?,
+  val rowAccessRequired: Boolean = true,
 )
 @CrossOrigin(origins = ["http://localhost:3333", "https://dev.cordtables.com", "https://cordtables.com", "*"])
 @Controller("AdminColumnPerms")
@@ -92,6 +93,7 @@ class ColumnPerms(@Autowired
 
         val jdbcResult = statement.executeQuery()
         var perm:String? = null
+        var rowAccessRequired = true
         while(jdbcResult.next()) {
           var accessLevel:String? = jdbcResult.getString("access_level")
           if(jdbcResult.wasNull()) accessLevel = null
@@ -109,13 +111,15 @@ class ColumnPerms(@Autowired
           var accessLevel:String? = jdbcResult.getString("access_level")
           if(jdbcResult.wasNull()) accessLevel = null
           if(perm === "Write"){
+            rowAccessRequired = false;
             break;
           }
           else if(perm === "Read" && accessLevel !== null){
+            rowAccessRequired = false;
             perm = accessLevel
           }
         }
-        return ColumnPermsResponse(ErrorType.NoError, perm)
+        return ColumnPermsResponse(ErrorType.NoError, perm, rowAccessRequired)
       }
       catch(e:SQLException){
         println("error while listing ${e.message}")
