@@ -1,13 +1,10 @@
-package com.seedcompany.cordtables.components.tables.admin.perms
+package com.seedcompany.cordtables.components.admin.perms
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
-import com.seedcompany.cordtables.components.tables.admin.people.AdminPeopleReadRequest
-import com.seedcompany.cordtables.components.tables.admin.people.AdminPeopleReadResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
