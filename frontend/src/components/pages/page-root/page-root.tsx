@@ -26,6 +26,8 @@ export class PageRoot {
         {this.match.params.page === 'prayer-request-edit' && <prayer-request-edit-page requestId={this.match.params.requestId}></prayer-request-edit-page>}
 
         {this.match.params.page === 'partner-crm' && <partner-crm></partner-crm>}
+
+        {this.match.params.page === 'translator' && <translator-page></translator-page>}
       </Host>
     );
   }

@@ -367,6 +367,8 @@ export namespace Components {
     interface TicketsTable {
         "onlyShowCreate": boolean;
     }
+    interface TranslatorPage {
+    }
     interface UpPrayerNotifications {
     }
     interface UpPrayerRequests {
@@ -1253,6 +1255,12 @@ declare global {
         prototype: HTMLTicketsTableElement;
         new (): HTMLTicketsTableElement;
     };
+    interface HTMLTranslatorPageElement extends Components.TranslatorPage, HTMLStencilElement {
+    }
+    var HTMLTranslatorPageElement: {
+        prototype: HTMLTranslatorPageElement;
+        new (): HTMLTranslatorPageElement;
+    };
     interface HTMLUpPrayerNotificationsElement extends Components.UpPrayerNotifications, HTMLStencilElement {
     }
     var HTMLUpPrayerNotificationsElement: {
@@ -1435,6 +1443,7 @@ declare global {
         "ticket-modal": HTMLTicketModalElement;
         "tickets-page": HTMLTicketsPageElement;
         "tickets-table": HTMLTicketsTableElement;
+        "translator-page": HTMLTranslatorPageElement;
         "up-prayer-notifications": HTMLUpPrayerNotificationsElement;
         "up-prayer-requests": HTMLUpPrayerRequestsElement;
         "users-table": HTMLUsersTableElement;
@@ -1816,6 +1825,8 @@ declare namespace LocalJSX {
     interface TicketsTable {
         "onlyShowCreate"?: boolean;
     }
+    interface TranslatorPage {
+    }
     interface UpPrayerNotifications {
     }
     interface UpPrayerRequests {
@@ -1976,6 +1987,7 @@ declare namespace LocalJSX {
         "ticket-modal": TicketModal;
         "tickets-page": TicketsPage;
         "tickets-table": TicketsTable;
+        "translator-page": TranslatorPage;
         "up-prayer-notifications": UpPrayerNotifications;
         "up-prayer-requests": UpPrayerRequests;
         "users-table": UsersTable;
@@ -2133,6 +2145,7 @@ declare module "@stencil/core" {
             "ticket-modal": LocalJSX.TicketModal & JSXBase.HTMLAttributes<HTMLTicketModalElement>;
             "tickets-page": LocalJSX.TicketsPage & JSXBase.HTMLAttributes<HTMLTicketsPageElement>;
             "tickets-table": LocalJSX.TicketsTable & JSXBase.HTMLAttributes<HTMLTicketsTableElement>;
+            "translator-page": LocalJSX.TranslatorPage & JSXBase.HTMLAttributes<HTMLTranslatorPageElement>;
             "up-prayer-notifications": LocalJSX.UpPrayerNotifications & JSXBase.HTMLAttributes<HTMLUpPrayerNotificationsElement>;
             "up-prayer-requests": LocalJSX.UpPrayerRequests & JSXBase.HTMLAttributes<HTMLUpPrayerRequestsElement>;
             "users-table": LocalJSX.UsersTable & JSXBase.HTMLAttributes<HTMLUsersTableElement>;
