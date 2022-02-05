@@ -1,0 +1,57 @@
+:host {
+  display: block;
+}
+
+.main-wrap {
+  padding: 10px;
+}
+
+.form-wrap {
+
+}
+
+.form-wrap p {
+  font-size: 16px;
+  margin: 0
+}
+
+.form {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  font-size: 14px;
+}
+
+.form label {
+  margin-right: 16px;
+}
+
+
+
+#table-wrap {
+  max-height: 500px;
+  overflow: auto;
+}
+
+table {
+  /* border: 2px solid black; */
+}
+
+th,
+td {
+  padding: 5px 10px 5px 10px;
+  /* border: 1px solid gray; */
+}
+
+tr:nth-child(odd) {
+  background-color: #7abbf1;
+}
+
+tr:first-child {
+  background-color: #1872ef;
+}
+
+th {
+  color: white;
+  font-weight: normal;
+}
