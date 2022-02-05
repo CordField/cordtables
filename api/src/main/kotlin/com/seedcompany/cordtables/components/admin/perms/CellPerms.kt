@@ -1,9 +1,10 @@
-package com.seedcompany.cordtables.components.tables.admin.perms
+package com.seedcompany.cordtables.components.admin.perms
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
 import com.seedcompany.cordtables.components.admin.GetSecureListQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
@@ -33,11 +34,27 @@ class CellPerms(
   val ds: DataSource,
 
   @Autowired
-  val secureList: GetSecureListQuery
+  val secureList: GetSecureListQuery,
+
+  @Autowired
+  val rowPerms: RowPerms
 ) {
   @PostMapping("admin/perms/cell")
   @ResponseBody
   fun handler(@RequestBody req: CellPermsRequest): CellPermsResponse{
-    return CellPermsResponse(ErrorType.NoError, null)
+    if(req.token === null) return CellPermsResponse(ErrorType.TokenNotFound,null)
+    val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+    val columnPermsForRowId = rowPerms.handler(RowPermsRequest(token = req.token, id = req.rowId, table = req.tableName))
+    val columnPermArray = columnPermsForRowId.perms?.filter{it->it.columnName==req.columnName}
+    println(columnPermArray)
+    println(columnPermsForRowId.perms)
+    if(columnPermArray=== null || columnPermArray.isEmpty()) {
+    return CellPermsResponse(ErrorType.IncorrectColumnName, null)
+    }
+    else{
+      val columnPerm = columnPermArray.get(0).perm
+      return CellPermsResponse(ErrorType.NoError, columnPerm)
+    }
+//      .get(0)?.perm
   }
 }
