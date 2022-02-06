@@ -28,6 +28,8 @@ export class PageRoot {
         {this.match.params.page === 'partner-crm' && <partner-crm></partner-crm>}
 
         {this.match.params.page === 'translator' && <translator-page></translator-page>}
+        {this.match.params.page === 'site-text' && <site-text></site-text>}
+
       </Host>
     );
   }
