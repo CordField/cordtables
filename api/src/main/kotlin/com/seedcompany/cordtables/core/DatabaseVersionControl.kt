@@ -2,9 +2,16 @@ package com.seedcompany.cordtables.core
 
 import com.seedcompany.cordtables.common.ErrorType
 import com.seedcompany.cordtables.common.Utility
+import com.seedcompany.cordtables.services.LanguageIndexKey
+import com.seedcompany.cordtables.services.SiteTextTranslationCSVInput
+import com.seedcompany.cordtables.services.SiteTextTranslationInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ClassPathResource
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.core.namedparam.SqlParameterSource
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.jdbc.core.queryForObject
 import org.springframework.stereotype.Component
 import org.springframework.util.FileCopyUtils
@@ -30,6 +37,7 @@ class DatabaseVersionControl(
   val util: Utility,
 ) {
   val jdbcTemplate: JdbcTemplate = JdbcTemplate(ds)
+  var namedJdbcTemplate: NamedParameterJdbcTemplate = NamedParameterJdbcTemplate(ds)
 
   fun initDatabase() {
     if (!isDbInit()) {
@@ -221,8 +229,11 @@ class DatabaseVersionControl(
 
     // load site text
     jdbcTemplate.execute("call sil.sil_migrate_language_index('eng', 'US', 'L', 'English');") // for english site text to use
-    runSqlFile("sql/data/site-text-strings.data.sql") // todo refactor to csv
-    runSqlFile("sql/data/english.site-text.eng.us.l.sql") // todo refactor to csv
+//    runSqlFile("sql/data/site-text-strings.data.sql") // todo refactor to csv
+//    runSqlFile("sql/data/english.site-text.eng.us.l.sql") // todo refactor to csv
+
+    this.loadSiteTextStrings()
+    this.loadTranslations()
 
     // update version control table
     jdbcTemplate.execute(
@@ -232,6 +243,165 @@ class DatabaseVersionControl(
             """.trimIndent()
     )
 
+  }
+
+  private fun loadSiteTextStrings() {
+    // ====================  site_text_strings.csv load ===========================
+
+    val readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/site-text-strings.data.csv").inputStream))
+
+    var count = 0
+    var text = readBuffer.readLines()
+
+    this.ds.connection.use { conn ->
+      try {
+
+        val insertSQL = """insert into common.site_text_strings(english, comment, created_by, modified_by, owning_person, owning_group) 
+          values (
+            ?,
+            ?,
+            ( select id 
+              from admin.people 
+              limit 1)
+            ,
+            ( select id 
+              from admin.people
+              limit 1
+            ), 
+            ( select id 
+              from admin.people 
+              limit 1
+            ), 
+            ( select id 
+              from admin.groups 
+              limit 1
+            )
+           )""".trimIndent()
+        val insertStmt: PreparedStatement = conn.prepareStatement(insertSQL)
+
+        for (line in text) {
+          val splitArray = line.split(",")
+          count++
+          if (count == 1) continue
+
+          val english = splitArray[0]
+          val comment = splitArray[1]
+          insertStmt.setString(1, english)
+          insertStmt.setString(2, comment)
+
+          insertStmt.addBatch()
+        }
+        insertStmt.executeBatch()
+
+        println("site_text_strings.csv load success")
+      } catch (ex: Exception) {
+        println(ex)
+
+        println("site_text_strings.csv load filed")
+      }
+    }
+  }
+
+  fun loadSiteTextTranslations(fileName: String, language: String) {
+    try {
+
+      val readBuffer = BufferedReader(InputStreamReader(ClassPathResource("data/translations/${fileName}").inputStream))
+
+      var count = 0
+      var text = readBuffer.readLines()
+
+      val translations = mutableListOf<SiteTextTranslationCSVInput>()
+
+      for (line in text) {
+        val splitArray = line.split(",")
+        count++
+        if (count == 1) continue
+
+        val english = splitArray[0]
+        val translation = splitArray[1]
+
+        val stringParamSource = MapSqlParameterSource()
+        var siteTextId: String
+
+        stringParamSource.addValue("english", english)
+        val findSiteTextStringQuery = """
+          select stt.id
+          from common.site_text_strings stt
+          where stt.english = :english
+        """.trimIndent()
+
+        val result = namedJdbcTemplate.queryForRowSet(findSiteTextStringQuery, stringParamSource)
+        if(result.next()) {
+          siteTextId = result.getString(1)!!
+          translations.add(SiteTextTranslationCSVInput(
+            language = language,
+            site_text = siteTextId,
+            translation = translation
+          ))
+        }
+      }
+
+      val batch: Array<SqlParameterSource> = SqlParameterSourceUtils.createBatch(translations)
+
+      val query = """
+        insert into common.site_text_translations(
+          language, site_text, translation, created_by, modified_by, owning_person, owning_group
+        )
+        values (
+          :language,
+          :site_text,
+          :translation,
+          (select id from admin.people limit 1), 
+          (select id from admin.people limit 1), 
+          (select id from admin.people limit 1), 
+          (select id from admin.groups limit 1)
+         )""".trimIndent()
+
+      namedJdbcTemplate.batchUpdate(query, batch)
+      println("site_text_translations load success!")
+    } catch(e: Exception) {
+      println(e)
+      println("site_text_translations load fail!")
+    }
+
+  }
+
+  fun loadTranslations() {
+    val file = ClassPathResource("/data/translations").file
+    file.list().forEach {
+      val splits = it.split(".")
+      if(splits.size < 6) return@forEach
+//      // check file extension
+      if(splits[5] == "csv") {
+        var commonLanguageId: String
+
+        try {
+
+          val paramSource = MapSqlParameterSource()
+
+          val query = """
+              select
+                  li.id as language
+              from sil.language_index li
+              where lang = :lang and country = :country and name_type = :name_type::sil.language_name_type
+              limit 1
+          """.trimIndent()
+
+          paramSource.addValue("lang", splits[2])
+          paramSource.addValue("country", splits[3])
+          paramSource.addValue("name_type", splits[4])
+
+          val result = namedJdbcTemplate.queryForRowSet(query, paramSource)
+          if (result.next()) {
+            commonLanguageId = result.getString(1)!!
+          } else return@forEach
+        } catch (e: Exception) {
+          println(e)
+          return@forEach
+        }
+        loadSiteTextTranslations(it, commonLanguageId)
+      }
+    }
   }
 
   private fun loadCountryCodes(adminPeopleId: String, adminGroupId: String) {

@@ -15,6 +15,7 @@ import javax.sql.DataSource
 
 data class SilLanguageIndexSearchEthRequest(
   val lang: String,
+  val country: String?,
 )
 
 data class SilLanguageIndexSearchEthResponse(
@@ -41,11 +42,12 @@ class SearchEth(
 
     val paramSource = MapSqlParameterSource()
     paramSource.addValue("lang", req.lang)
+    if(req.country !== null) paramSource.addValue("country", req.country)
 
     val query = """
       select id
       from sil.language_index
-      where lang = :lang
+      where lang = :lang ${if(req.country == null) "" else "and country = :country"}
       and name_type = 'L'
       limit 1
     """.trimIndent()

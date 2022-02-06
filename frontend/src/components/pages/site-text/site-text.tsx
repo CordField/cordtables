@@ -1,10 +1,10 @@
 import { Component, State, Host, h } from '@stencil/core';
-import { ColumnDescription } from '../../../../common/table-abstractions/types';
-import { ErrorType, GenericResponse, SiteTextLanguage, SiteTextString, SiteTextTranslation } from '../../../../common/types';
-import { globals } from '../../../../core/global.store';
-import { t } from '../../../../core/site-text.service';
-import { capitalize, capitalizePhrase } from '../../../../common/utility';
-import { fetchAs } from '../../../../common/utility';
+import { ColumnDescription } from '../../../common/table-abstractions/types';
+import { ErrorType, GenericResponse, SiteTextLanguage, SiteTextString, SiteTextTranslation } from '../../../common/types';
+import { globals } from '../../../core/global.store';
+import { t } from '../../../core/site-text.service';
+import { capitalize, capitalizePhrase } from '../../../common/utility';
+import { fetchAs } from '../../../common/utility';
 import * as ion from '@ionic/core';
 
 type SiteTextStringUpdateInput = {
@@ -335,41 +335,45 @@ export class SiteText {
   };
 
   addSiteTextLanguage = (language: LanguageIndex) => {
-    return async (): Promise<boolean> => {
-      const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common/site-text-languages/create', {
-        token: globals.globalStore.state.token,
-        language: language.id,
-      });
+    return () => {
+      
+    }
+    // return async (): Promise<boolean> => {
+    //   const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common/site-text-languages/create', {
+    //     token: globals.globalStore.state.token,
+    //     language: language.id,
+    //   });
 
-      if (response.error == ErrorType.NoError) {
-        const newSiteTextLanguages = [...globals.globalStore.state.siteTextLanguages, { language: language.id, language_name: language.name }];
-        globals.globalStore.set('siteTextLanguages', newSiteTextLanguages);
-        this.columnData = this.makeColumns();
-        this.rowData = this.makeRows();
-        return true;
-      } else {
-        return false;
-      }
-    };
+    //   if (response.error == ErrorType.NoError) {
+    //     const newSiteTextLanguages = [...globals.globalStore.state.siteTextLanguages, { language: language.id, language_name: language.name }];
+    //     globals.globalStore.set('siteTextLanguages', newSiteTextLanguages);
+    //     this.columnData = this.makeColumns();
+    //     this.rowData = this.makeRows();
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // };
   };
 
   removeSiteTextLanguage = id => {
-    return async (): Promise<boolean> => {
-      const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common/site-text-languages/delete', {
-        token: globals.globalStore.state.token,
-        language: id,
-      });
+    return () => {}
+    // return async (): Promise<boolean> => {
+    //   const response = await fetchAs<SiteTextLanguageCreateRequest, GenericResponse>('common/site-text-languages/delete', {
+    //     token: globals.globalStore.state.token,
+    //     language: id,
+    //   });
 
-      if (response.error == ErrorType.NoError) {
-        const newSiteTextLanguages = globals.globalStore.state.siteTextLanguages.filter(s => s.language !== id);
-        globals.globalStore.set('siteTextLanguages', newSiteTextLanguages);
-        this.columnData = this.makeColumns();
-        this.rowData = this.makeRows();
-        return true;
-      } else {
-        return false;
-      }
-    };
+    //   if (response.error == ErrorType.NoError) {
+    //     const newSiteTextLanguages = globals.globalStore.state.siteTextLanguages.filter(s => s.language !== id);
+    //     globals.globalStore.set('siteTextLanguages', newSiteTextLanguages);
+    //     this.columnData = this.makeColumns();
+    //     this.rowData = this.makeRows();
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // };
   };
 
   render() {

@@ -73,9 +73,10 @@ class SiteTextService(
     val paramSource = MapSqlParameterSource()
 
     val query = """
-            select stl.language, li.name
-            from common.site_text_languages stl
-            inner join sil.language_index li on li.id = stl.language
+            select stt.language, li.name
+            from common.site_text_translations stt
+            inner join sil.language_index li on li.id = stt.language
+            group by stt.language, li.name
         """.replace('\n', ' ')
 
     try {
@@ -247,45 +248,6 @@ class SiteTextService(
     )
   }
 
-  fun createSiteTextLanguageRow(language: String, token: String) {
-    try {
-
-      val paramSource = MapSqlParameterSource()
-
-      val query = """
-        insert into common.site_text_languages(
-          language, created_by, modified_by, owning_person, owning_group
-        ) 
-        values (
-          :language, 
-          (
-            select person 
-            from admin.tokens 
-            where token = :token
-          ),
-          (
-            select person 
-            from admin.tokens 
-            where token = :token
-          ),
-          (
-            select person 
-            from admin.tokens 
-            where token = :token
-          ),
-          1)""".trimIndent()
-
-      paramSource.addValue("language", language)
-      paramSource.addValue("token", token)
-
-      jdbcTemplate.update(query, paramSource)
-      println("site_text_languages row create success!")
-    } catch(e: Exception) {
-      println(e)
-      println("site_text_languages row create fail!")
-    }
-  }
-
   fun loadSiteTextTranslations(fileName: String, language: String, token: String) {
     try {
 
@@ -401,7 +363,6 @@ class SiteTextService(
         return@forEach
       }
 
-      createSiteTextLanguageRow(commonLanguageId, token)
       loadSiteTextTranslations(it, commonLanguageId, token)
     }
   }

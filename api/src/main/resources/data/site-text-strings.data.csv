@@ -1,0 +1,15 @@
+ENGLISH,COMMENT
+tables-title,site title - Tables
+true,boolean true
+edit-mode,toggles edit and create forms on tables
+false,boolean false
+menu,shows drop down menu for site navigation
+login,button to show the login form to the website
+register,button to show the user account creation form
+submit,send form data to the server
+cancel,button to exit out of a form
+pages,navigation menu to hold the site pages for orgs
+tables-menu,navigation menu for all of the tables
+logout,log out of the user account
+profile-page,navigate to the user profile page
+cord-title,site title - Cord
