@@ -76,7 +76,7 @@ class SiteTextService(
             select stt.language, li.name
             from common.site_text_translations stt
             inner join sil.language_index li on li.id = stt.language
-            group by stl.language, li.name
+            group by stt.language, li.name
         """.replace('\n', ' ')
 
     try {
