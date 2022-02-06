@@ -13,3 +13,9 @@ data class SiteTextTranslationInput (
   val translation: String,
   val token: String,
 )
+
+data class SiteTextTranslationCSVInput (
+  val language: String,
+  val site_text: String,
+  val translation: String,
+)
