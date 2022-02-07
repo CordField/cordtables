@@ -30,9 +30,13 @@ create type sc.post_type as enum (
 );
 
 create type sc.post_parent_type_enum as enum (
-  'Note',
-  'Story',
-  'Prayer'
+  'TranslationProject',
+  'InternshipProject',
+  'LanguageEngagement',
+  'InternshipEngagement',
+  'Partner',
+  'Language',
+  'User'
 );
 
 create table sc.posts (
