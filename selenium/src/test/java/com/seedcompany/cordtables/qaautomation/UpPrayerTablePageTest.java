@@ -4,13 +4,15 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.support.PageFactory;
-import org.testng.annotations.AfterMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.seedcompany.cordtables.model.TablesOption;
@@ -31,7 +33,8 @@ import com.seedcompany.cordtables.utils.SeleniumUtils;
  */
 public class UpPrayerTablePageTest extends BaseTestSuite {
 
-	Logger logger = Logger.getLogger(TablesPageTest.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(UpPrayerTablePageTest.class);
+	private boolean cleanupRecords = true;
 
 	@BeforeClass
 	public void initPageObject() {
@@ -42,6 +45,11 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		loginPage.submit(loginPage.fillLoginDetails(testConfig.getAppConfigs().getUsername(),
 				testConfig.getAppConfigs().getPassword()));
 		SeleniumUtils.wait(1);
+
+	}
+
+	@BeforeMethod
+	public void initTest() {
 		MainPage mainPage = PageFactory.initElements(driver, MainPage.class);
 		mainPage.loadApp();
 		SearchContext mainMenu = SeleniumUtils
@@ -50,8 +58,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		assertNotNull(mainMenu.findElement(By.cssSelector(".accordion")));
 		assertTrue(mainPage.selectSchema(TablesOption.UP_PRAYER_REQUESTS));
 	}
-
-	@AfterMethod
+	
+	@AfterClass
 	public void cleanupTest() {
 		HomePage homePage = PageFactory.initElements(driver, HomePage.class);
 		homePage.logout();
@@ -449,7 +457,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		formDetails.reviewed = "false";
 		formDetails.prayerType = "Request";
 		// create
-		System.out.println("Executing the test case for request: \n" + formDetails);
+		logger.debug("Executing the test case for request: \n" + formDetails);
 		UpPrayerRequest prayerData = validatePrayerRequestCreation(formDetails, false);
 
 		// create update request
@@ -479,7 +487,8 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 
 		assertNotNull(prayerData);
 		prayerPage.loadApp();
-		if (delete) {
+		if (delete && cleanupRecords) {
+			this.initTest();
 			prayerPage.deleteRecord(newPrayerId.get(0));
 		}
 		return prayerData;
@@ -492,6 +501,7 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 	 * @param formDetails
 	 */
 	private UpPrayerRequest validatePrayerRequestUpdate(UpPrayerRequest formDetails) {
+		this.initTest();
 		PrayerRequestsSchemaPage prayerPage = loadUpPrayerPage();
 		prayerPage.menuUtils.enableEditMode();
 		List<String> prayerIds = prayerPage.getExistingRequests();
@@ -504,8 +514,12 @@ public class UpPrayerTablePageTest extends BaseTestSuite {
 		UpPrayerRequest updatedData = getRequestData(prayerPage.findPrayerRequest(newPrayerId.get(0)));
 		assertNotNull(updatedData);
 		// assertEquals(updatedData.parent, formDetails.parent);
-		prayerPage.deleteRecord(updatedData.parent);
-		prayerPage.deleteRecord(updatedData.prayerId);
+
+		if (cleanupRecords) {
+			this.initTest();
+			prayerPage.deleteRecord(updatedData.parent);
+			prayerPage.deleteRecord(updatedData.prayerId);
+		}
 		return formDetails;
 
 	}

@@ -4,11 +4,12 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 import java.util.Random;
-import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.support.PageFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -28,7 +29,7 @@ import com.seedcompany.cordtables.utils.SeleniumUtils;
 public class RegistrationTest extends BaseTestSuite {
 
 	private RegistrationPage registrationPage;
-	Logger logger = Logger.getLogger(RegistrationTest.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(RegistrationTest.class);
 
 	@BeforeMethod
 	public void initPageObjects() {
@@ -57,7 +58,6 @@ public class RegistrationTest extends BaseTestSuite {
 
 		Random randomGenerator = new Random();
 		String testUser = this.testConfig.getAppConfigs().getNewUser() + randomGenerator.nextInt() + "@test.com";
-		System.out.println("testUser::"+testUser);
 		this.lauchRegistration(testUser);
 		SeleniumUtils.wait(10);
 		MainPage mainPage = PageFactory.initElements(driver, MainPage.class);

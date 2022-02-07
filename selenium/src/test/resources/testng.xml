@@ -4,9 +4,16 @@
 
 	<test name="basic">
 		<classes>
-			<class name="com.seedcompany.cordtables.qaautomation.RegistrationTest" />
-			<class name="com.seedcompany.cordtables.qaautomation.LoginPageTest" />
-			<class name="com.seedcompany.cordtables.qaautomation.UpPrayerTablePageTest" />
+			<class
+				name="com.seedcompany.cordtables.qaautomation.RegistrationTest" />
+			<class
+				name="com.seedcompany.cordtables.qaautomation.LoginPageTest" />
+			<class
+				name="com.seedcompany.cordtables.qaautomation.UpPrayerTablePageTest" />
+			<class
+				name="com.seedcompany.cordtables.qaautomation.TablesPageTest" />
+			<class
+				name="com.seedcompany.cordtables.qaautomation.AdminPeopleSchemaPageTest" />
 		</classes>
 	</test>
 

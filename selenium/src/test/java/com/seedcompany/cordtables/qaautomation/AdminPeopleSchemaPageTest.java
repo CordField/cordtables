@@ -174,7 +174,7 @@ public class AdminPeopleSchemaPageTest extends BaseTestSuite {
 			locationInfo.id = locationIds.get(0);
 
 		}
-		System.out.println("locationInfo:: " + locationInfo);
+		logger.debug("locationInfo:: " + locationInfo);
 		return locationInfo;
 
 	}
@@ -186,8 +186,6 @@ public class AdminPeopleSchemaPageTest extends BaseTestSuite {
 	 */
 	@Test
 	public void adminPeople_fill_form_success_default() {
-		PeopleSchemaPage peoplePage = loadAdminPeoplePage();
-		SeleniumUtils.wait(2);
 		People formDetails = defaultTestData();
 		formDetails.sensitivityclearance = "Low";
 		LocationInfo locationInfo = getLocationInfo();

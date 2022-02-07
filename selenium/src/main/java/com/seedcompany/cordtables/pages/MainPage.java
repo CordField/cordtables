@@ -6,6 +6,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.seedcompany.cordtables.model.TablesOption;
 import com.seedcompany.cordtables.utils.SeleniumUtils;
@@ -17,6 +19,8 @@ import com.seedcompany.cordtables.utils.SeleniumUtils;
  *
  */
 public class MainPage extends Page {
+
+	private static Logger logger = LoggerFactory.getLogger(MainPage.class);
 
 	public MainPage(WebDriver webDriver) {
 		super(webDriver);
@@ -58,11 +62,13 @@ public class MainPage extends Page {
 	public WebElement expandSchemaMenu() {
 		SearchContext mainMenu = SeleniumUtils
 				.expand_shadow_element(this.rootApp.findElement(By.cssSelector("custom-accordion.hydrated")));
-		mainMenu.findElement(By.cssSelector(".accordion")).click();
-		System.out.println("Main menu expand ---" + mainMenu);
+		WebElement expandIcon = mainMenu.findElement(By.cssSelector(".accordion"));
+		SeleniumUtils.moveToElement(expandIcon, driver);
+		expandIcon.click();
+		logger.debug("Main menu expand ---" + mainMenu);
 		WebElement schemaMenuEle = this.rootApp.findElement(By.cssSelector("custom-accordion.hydrated"))
 				.findElements(By.cssSelector("custom-accordion.hydrated")).get(1);
-		System.out.println("expand schema menu" + schemaMenuEle);
+		logger.debug("expand schema menu" + schemaMenuEle);
 		SearchContext schemaMenu = SeleniumUtils.expand_shadow_element(schemaMenuEle);
 		schemaMenu.findElement(By.cssSelector(".accordion")).click();
 		return schemaMenuEle;
@@ -105,8 +111,7 @@ public class MainPage extends Page {
 			}
 			return true;
 		} catch (Exception e) {
-			System.err.println("Failed to process the request and find the requested table.");
-			e.printStackTrace();
+			logger.error("Failed to process the request and find the requested table due to", e);
 			return false;
 		}
 

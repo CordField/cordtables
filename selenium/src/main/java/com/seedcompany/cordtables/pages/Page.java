@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.seedcompany.cordtables.utils.MenuUtils;
 import com.seedcompany.cordtables.utils.SeleniumUtils;
@@ -12,6 +14,8 @@ import com.seedcompany.cordtables.utils.SeleniumUtils;
  * Abstract class representation of a Page in the UI. Page object pattern
  */
 public abstract class Page {
+
+	private static Logger logger = LoggerFactory.getLogger(Page.class);
 
 	protected WebDriver driver;
 

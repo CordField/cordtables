@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.seedcompany.cordtables.utils.SeleniumUtils;
 
@@ -14,6 +16,8 @@ import com.seedcompany.cordtables.utils.SeleniumUtils;
  * Represents the home page.
  */
 public class HomePage extends Page {
+
+	private static Logger logger = LoggerFactory.getLogger(HomePage.class);
 
 	@FindBy(how = How.TAG_NAME, using = "h1")
 	@CacheLookup
