@@ -1,7 +1,6 @@
 package com.seedcompany.cordtables.utils;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -22,6 +21,8 @@ import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
 import com.seedcompany.cordtables.model.BrowserDriverConfig;
@@ -38,7 +39,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
  */
 public class SeleniumUtils {
 
-	private static final Logger logger = Logger.getLogger(SeleniumUtils.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(SeleniumUtils.class);
 	private static final String Firefox = null;
 
 	/**
@@ -51,12 +52,10 @@ public class SeleniumUtils {
 	public static WebDriver getDriver(BrowserDriverConfig browserConfig) {
 
 		WebDriver driver = null;
-		System.out.println("browserConfig.getType()::" + browserConfig.getType());
+		logger.debug("browserConfig.getType()::" + browserConfig.getType());
 		try {
 			switch (browserConfig.getType()) {
 			case "CHROME":
-
-				// System.setProperty("webdriver.chrome.driver", browserConfig.getDriverPath());
 
 				String isHeadless = System.getProperty("test.execution.background.disabled");
 				if (isHeadless != null && !isHeadless.isEmpty()) {
@@ -76,9 +75,16 @@ public class SeleniumUtils {
 				chromeOptions.setCapability("chrome.verbose", browserConfig.isVerbose());
 				chromeOptions.addArguments("--disable-web-security");
 				chromeOptions.addArguments("--allow-running-insecure-content");
-				if (browserConfig.isDevMode())
+				if (browserConfig.isDevMode()) {
 					chromeOptions.addArguments("--auto-open-devtools-for-tabs");
-				// chromeOptions.setExperimentalOption("w3c", false);
+				} else {
+					chromeOptions.addArguments("--disable-crash-reporter");
+					chromeOptions.addArguments("--disable-in-process-stack-traces");
+					chromeOptions.addArguments("--disable-logging");
+					chromeOptions.addArguments("--disable-dev-shm-usage");
+					chromeOptions.addArguments("--log-level=3");
+					chromeOptions.addArguments("--output=/dev/null");
+				}
 				WebDriverManager.getInstance(DriverManagerType.CHROME).setup();
 				driver = new ChromeDriver(chromeOptions);
 				break;
@@ -110,7 +116,7 @@ public class SeleniumUtils {
 				}
 			default:
 
-				System.out.println("preparing for default configurations.");
+				logger.debug("preparing for default configurations.");
 				if (driver == null) {
 					// default is chrome.
 					System.setProperty("webdriver.chrome.driver", "C:\\tools\\driver\\chromedriver.exe");
@@ -257,8 +263,8 @@ public class SeleniumUtils {
 	public static void clickElement(WebElement target, WebDriver driver) {
 		Actions actions = new Actions(driver);
 		actions.moveToElement(target);
-		System.out.println("moved to element to perform action.");
-		System.out.println("target = "+target.isDisplayed()+" ::: "+target.isSelected());
+		logger.debug("moved to element to perform action.");
+		logger.debug("target = " + target.isDisplayed() + " ::: " + target.isSelected());
 		actions.click(target);
 	}
 
@@ -274,9 +280,9 @@ public class SeleniumUtils {
 
 	public static void log(WebDriver driver) {
 		LogEntries les = driver.manage().logs().get(LogType.PERFORMANCE);
-		System.out.println("**********Performance Logs*****************");
+		logger.debug("**********Performance Logs*****************");
 		for (LogEntry le : les) {
-			System.out.println(le.getMessage());
+			logger.debug(le.getMessage());
 		}
 	}
 }

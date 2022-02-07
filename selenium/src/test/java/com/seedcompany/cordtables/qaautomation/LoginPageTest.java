@@ -2,11 +2,11 @@ package com.seedcompany.cordtables.qaautomation;
 
 import static org.testng.Assert.assertNotNull;
 
-import java.util.logging.Logger;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.support.PageFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -26,11 +26,10 @@ import com.seedcompany.cordtables.utils.SeleniumUtils;
 
 public class LoginPageTest extends BaseTestSuite {
 
-	Logger logger = Logger.getLogger(LoginPageTest.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(LoginPageTest.class);
 
 	@BeforeMethod
 	public void initPageObject() {
-
 
 	}
 
@@ -57,8 +56,8 @@ public class LoginPageTest extends BaseTestSuite {
 		SeleniumUtils.wait(2);
 		MainPage mainPage = PageFactory.initElements(driver, MainPage.class);
 		mainPage.loadApp();
-		SearchContext mainMenu = SeleniumUtils.expand_shadow_element(
-				mainPage.getRootApp().findElement(By.cssSelector("custom-accordion.hydrated")));
+		SearchContext mainMenu = SeleniumUtils
+				.expand_shadow_element(mainPage.getRootApp().findElement(By.cssSelector("custom-accordion.hydrated")));
 		assertNotNull(mainMenu);
 		assertNotNull(mainMenu.findElement(By.cssSelector(".accordion")));
 

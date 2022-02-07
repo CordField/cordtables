@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class is used as utility to load the configuration files from classpath.
  * 
@@ -13,6 +16,8 @@ import java.util.Properties;
  */
 public class ConfigurationUtils {
 
+	private static Logger logger = LoggerFactory.getLogger(ConfigurationUtils.class);
+	
 	/**
 	 * Method to load the test configurations.
 	 * 

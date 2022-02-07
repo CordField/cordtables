@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.seedcompany.cordtables.utils.SeleniumUtils;
 
@@ -18,6 +20,7 @@ import com.seedcompany.cordtables.utils.SeleniumUtils;
  */
 public class RegistrationPage extends Page {
 
+	private static Logger logger = LoggerFactory.getLogger(RegistrationPage.class);
 	@FindBy(how = How.XPATH, using = "//*[@id=\"root-wrap-inner\"]/main/stencil-router/stencil-route-switch/stencil-route[3]/cf-register")
 	@CacheLookup
 	public WebElement pageContainer;
@@ -44,8 +47,8 @@ public class RegistrationPage extends Page {
 	 * @return
 	 */
 	public boolean isRegistrationPageLoaded() {
-		SearchContext registrationApp = SeleniumUtils.expand_shadow_element(
-				this.rootApp.findElement(By.tagName("cf-register")));
+		SearchContext registrationApp = SeleniumUtils
+				.expand_shadow_element(this.rootApp.findElement(By.tagName("cf-register")));
 		WebElement registrationForm = registrationApp.findElement(By.cssSelector("form"));
 		return (registrationForm != null);
 	}
@@ -57,8 +60,8 @@ public class RegistrationPage extends Page {
 	 * @param password
 	 */
 	public void fillRegistrationForm(String email, String password) {
-		SearchContext registrationApp = SeleniumUtils.expand_shadow_element(
-				this.rootApp.findElement(By.cssSelector("cf-register.hydrated")));
+		SearchContext registrationApp = SeleniumUtils
+				.expand_shadow_element(this.rootApp.findElement(By.cssSelector("cf-register.hydrated")));
 		WebElement registrationForm = registrationApp.findElement(By.cssSelector("form"));
 		registrationForm.findElement(By.cssSelector("#email")).sendKeys(email);
 		registrationForm.findElement(By.cssSelector("#password")).sendKeys(password);
@@ -71,7 +74,7 @@ public class RegistrationPage extends Page {
 	 * @param registrationForm
 	 */
 	public void submitRegistrationForm(WebElement registrationForm) {
-		System.out.println(registrationForm.findElement(By.cssSelector("#register-button")).getText());
+		logger.debug(registrationForm.findElement(By.cssSelector("#register-button")).getText());
 		registrationForm.findElement(By.cssSelector("#register-button")).click();
 	}
 

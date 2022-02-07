@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.seedcompany.cordtables.utils.SeleniumUtils;
 
@@ -15,6 +17,8 @@ import com.seedcompany.cordtables.utils.SeleniumUtils;
 
 public class LoginPage extends Page {
 
+	private static Logger logger = LoggerFactory.getLogger(LoginPage.class);
+
 	public LoginPage(WebDriver driver) {
 		super(driver);
 	}
@@ -25,8 +29,8 @@ public class LoginPage extends Page {
 	 * @return
 	 */
 	public boolean isLoginPageloaded() {
-		SearchContext loginapp = SeleniumUtils.expand_shadow_element(
-				this.rootApp.findElement(By.cssSelector("cf-login.hydrated")));
+		SearchContext loginapp = SeleniumUtils
+				.expand_shadow_element(this.rootApp.findElement(By.cssSelector("cf-login.hydrated")));
 		WebElement loginForm = loginapp.findElement(By.cssSelector("form:nth-child(4)"));
 		return (loginForm != null);
 	}
@@ -39,8 +43,8 @@ public class LoginPage extends Page {
 	 */
 
 	public WebElement fillLoginDetails(String email, String password) {
-		SearchContext loginApp = SeleniumUtils.expand_shadow_element(
-				this.rootApp.findElement(By.cssSelector("cf-login.hydrated")));
+		SearchContext loginApp = SeleniumUtils
+				.expand_shadow_element(this.rootApp.findElement(By.cssSelector("cf-login.hydrated")));
 		WebElement loginForm = loginApp.findElement(By.cssSelector("form"));
 		loginForm.findElement(By.cssSelector("#email")).sendKeys(email);
 		loginForm.findElement(By.cssSelector("#password")).sendKeys(password);

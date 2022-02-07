@@ -14,6 +14,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is used as a test data provider and can be used to load the test
@@ -23,6 +25,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  *
  */
 public class TestDataProvider {
+
+	private static Logger logger = LoggerFactory.getLogger(TestDataProvider.class);
 
 	/**
 	 * This method can be used to load the test data from the test data sheet.

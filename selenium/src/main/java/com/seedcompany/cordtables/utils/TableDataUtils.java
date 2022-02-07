@@ -2,12 +2,14 @@ package com.seedcompany.cordtables.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.seedcompany.cordtables.model.TablesOption;
 
@@ -17,17 +19,22 @@ import com.seedcompany.cordtables.model.TablesOption;
  * @author swati
  *
  */
-public class TableDataExtractor {
+public class TableDataUtils {
 
+	private static Logger logger = LoggerFactory.getLogger(TableDataUtils.class);
+	
 	private WebElement container;
 
 	private WebDriver driver;
 
-	public TableDataExtractor(WebElement container, WebDriver driver) {
+	public TableDataUtils(WebElement container, WebDriver driver) {
 		this.driver = driver;
 		this.container = container;
 	}
 
+	/**
+	 * @return
+	 */
 	private SearchContext tableRoot() {
 
 		SearchContext tableRoot = SeleniumUtils
@@ -36,17 +43,26 @@ public class TableDataExtractor {
 
 	}
 
+	/**
+	 * @param option
+	 * @return
+	 */
 	public SearchContext table(TablesOption option) {
 
 		SearchContext dataComponent = SeleniumUtils
 				.expand_shadow_element(this.tableRoot().findElement(By.cssSelector(option.getTag())));
 
-		SearchContext table = SeleniumUtils.expand_shadow_element(dataComponent.findElement(By.cssSelector("cf-table")));
+		SearchContext table = SeleniumUtils
+				.expand_shadow_element(dataComponent.findElement(By.cssSelector("cf-table")));
 
 		return table;
 
 	}
 
+	/**
+	 * @param table
+	 * @return
+	 */
 	public List<WebElement> header(WebElement table) {
 
 		SearchContext headerRow = SeleniumUtils.expand_shadow_element(table.findElement(By.cssSelector("cf-row")));
@@ -55,6 +71,10 @@ public class TableDataExtractor {
 
 	}
 
+	/**
+	 * @param table
+	 * @return
+	 */
 	public List<WebElement> rows(SearchContext table) {
 
 		SearchContext body = SeleniumUtils.expand_shadow_element(table.findElement(By.cssSelector("cf-table-body")));
@@ -63,6 +83,10 @@ public class TableDataExtractor {
 
 	}
 
+	/**
+	 * @param row
+	 * @return
+	 */
 	public List<WebElement> columns(WebElement row) {
 
 		SearchContext datarow = SeleniumUtils.expand_shadow_element(row);
@@ -71,6 +95,10 @@ public class TableDataExtractor {
 
 	}
 
+	/**
+	 * @param column
+	 * @return
+	 */
 	public String columnData(WebElement column) {
 
 		SearchContext dataCol = SeleniumUtils.expand_shadow_element(column);
@@ -78,6 +106,10 @@ public class TableDataExtractor {
 
 	}
 
+	/**
+	 * @param option
+	 * @return
+	 */
 	public List<List<String>> extractData(TablesOption option) {
 
 		List<List<String>> result = new ArrayList<List<String>>();
@@ -88,7 +120,6 @@ public class TableDataExtractor {
 			List<WebElement> data = this.columns(record);
 			rowData = new ArrayList<>();
 			for (WebElement col : data) {
-				// System.out.println("Data::" + this.columnData(col));
 				rowData.add(this.columnData(col));
 			}
 			result.add(rowData);
@@ -97,6 +128,10 @@ public class TableDataExtractor {
 		return result;
 	}
 
+	/**
+	 * @param option
+	 * @return
+	 */
 	public List<List<WebElement>> readTable(TablesOption option) {
 
 		List<List<WebElement>> result = new ArrayList<>();
@@ -107,13 +142,71 @@ public class TableDataExtractor {
 			List<WebElement> data = this.columns(record);
 			rowData = new ArrayList<>();
 			for (WebElement col : data) {
-				// System.out.println("Data::" + this.columnData(col));
 				rowData.add(col);
 			}
 			result.add(rowData);
 		}
 
 		return result;
+	}
+
+	/**
+	 * This method is use to delete the row from up prayer request form table.
+	 */
+	public void deleteRecord(String id) {
+
+		try {
+
+			List<List<WebElement>> records = this.readTable(TablesOption.ADMIN_PEOPLE);
+			records.forEach(r -> {
+				WebElement idCol = r.get(0);
+				if (id.equalsIgnoreCase(this.columnData(idCol))) {
+
+					SearchContext dataCol = SeleniumUtils.expand_shadow_element(idCol);
+					dataCol.findElement(By.className("delete-span")).click();
+					dataCol.findElement(By.className("save-icon")).click();
+
+				}
+
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * @param peopleId
+	 * @param option
+	 * @return
+	 */
+	public List<String> findRecord(String id, TablesOption option) {
+		List<String> data = null;
+		try {
+			List<List<WebElement>> records = this.readTable(option);
+			for (List<WebElement> r : records) {
+				WebElement idCol = r.get(0);
+				if (id.equalsIgnoreCase(this.columnData(idCol))) {
+
+					data = r.stream().map(c -> this.columnData(c)).collect(Collectors.toList());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+
+	/**
+	 * @param option
+	 * @return
+	 */
+	public List<String> findFirstRecord(TablesOption option) {
+		SeleniumUtils.scrollToElement(this.container, driver);
+		List<List<String>> records = this.extractData(option);
+		return records.stream().map(r -> {
+			return r.get(0);
+		}).collect(Collectors.toList());
 	}
 
 }

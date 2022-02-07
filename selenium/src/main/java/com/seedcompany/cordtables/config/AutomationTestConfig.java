@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.seedcompany.cordtables.model.AppConfig;
 import com.seedcompany.cordtables.model.BrowserDriverConfig;
@@ -21,6 +24,8 @@ import com.seedcompany.cordtables.utils.ConfigurationUtils;
  * 
  */
 public class AutomationTestConfig {
+
+	private static Logger logger = LoggerFactory.getLogger(AutomationTestConfig.class);
 
 	public AppConfig getAppConfigs() {
 		return appConfigs;
@@ -45,17 +50,38 @@ public class AutomationTestConfig {
 	private AutomationTestConfig() {
 		Properties configs = ConfigurationUtils.loadProperties("application.properties");
 		this.appConfigs = new AppConfig();
-		appConfigs.setUrl(configs.getProperty("site.url"));
-		appConfigs.setUsername(configs.getProperty("site.user.name"));
-		appConfigs.setPassword(configs.getProperty("site.user.password"));
+		String siteUrl = System.getProperty("site.url");
+		if (StringUtils.isNotBlank(siteUrl)) {
+			appConfigs.setUrl(siteUrl);
+		}else {
+			appConfigs.setUrl(configs.getProperty("site.url"));
+		}
+		
+		String username = System.getProperty("site.user.name");
+		if (StringUtils.isNotBlank(username)) {
+			appConfigs.setUsername(username);
+		}else {
+			appConfigs.setUsername(configs.getProperty("site.user.name"));
+		}
+
+		
+		String password = System.getProperty("site.user.password");
+		if (StringUtils.isNotBlank(password)) {
+			appConfigs.setPassword(password);
+		}else {
+			appConfigs.setPassword(configs.getProperty("site.user.password"));
+		}
+
 		appConfigs.setNewUser(configs.getProperty("site.user.registration.name"));
 		appConfigs.setNewUserPassword(configs.getProperty("site.user.registration.password"));
 		this.browserConfigs = new BrowserDriverConfig();
 		this.browserConfigs.setType(configs.getProperty("browser.config.driver.type", BrowserType.CHROME));
 		this.browserConfigs.setDriverPath(configs.getProperty("browser.config.driver.path"));
-		this.browserConfigs.setHeadless(!Boolean.valueOf(configs.getProperty("test.execution.background.disabled", "false")));
+		this.browserConfigs
+				.setHeadless(!Boolean.valueOf(configs.getProperty("test.execution.background.disabled", "false")));
 		this.browserConfigs.setVerbose(Boolean.valueOf(configs.getProperty("browser.config.debug.enabled", "false")));
 		this.browserConfigs.setDevMode(Boolean.valueOf(configs.getProperty("browser.config.devMode.enabled", "false")));
+		logger.debug("setup the application environment configurations successfully.");
 	}
 
 	public Capabilities getCapabilities(Properties properties) throws IOException {

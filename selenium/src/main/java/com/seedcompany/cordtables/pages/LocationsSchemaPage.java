@@ -8,20 +8,24 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.seedcompany.cordtables.model.LocationInfo;
 import com.seedcompany.cordtables.model.TablesOption;
 import com.seedcompany.cordtables.utils.SeleniumUtils;
-import com.seedcompany.cordtables.utils.TableDataExtractor;
+import com.seedcompany.cordtables.utils.TableDataUtils;
 
 public class LocationsSchemaPage extends Page {
+
+	private static Logger logger = LoggerFactory.getLogger(LocationsSchemaPage.class);
 
 	public LocationsSchemaPage(WebDriver driver) {
 		super(driver);
 		// TODO Auto-generated constructor stub
 	}
 
-	TableDataExtractor extractor = null;
+	TableDataUtils extractor = null;
 
 	/**
 	 * this method is used to fill the Common location page
@@ -34,8 +38,8 @@ public class LocationsSchemaPage extends Page {
 		this.loadApp();
 		SearchContext tableRoot = SeleniumUtils
 				.expand_shadow_element(this.rootApp.findElement(By.cssSelector("table-root.hydrated")));
-		SearchContext fillingform = SeleniumUtils.expand_shadow_element(tableRoot
-				.findElement(By.cssSelector("common-locations")));
+		SearchContext fillingform = SeleniumUtils
+				.expand_shadow_element(tableRoot.findElement(By.cssSelector("common-locations")));
 		WebElement form = fillingform.findElement(By.cssSelector("form.form-thing"));
 
 		form.findElement(By.cssSelector("#name")).sendKeys(formDetails.name);
@@ -57,7 +61,7 @@ public class LocationsSchemaPage extends Page {
 		WebElement sensitivitySelector = form.findElement(By.cssSelector("#sensitivity"));
 		Select s = new Select(sensitivitySelector);
 		s.selectByValue(value);
-		System.out.println(s.getFirstSelectedOption().getText());
+		logger.debug("Selected value = {}", s.getFirstSelectedOption().getText());
 	}
 
 	/**
@@ -68,7 +72,7 @@ public class LocationsSchemaPage extends Page {
 		WebElement typeSelector = form.findElement(By.cssSelector("#type"));
 		Select s = new Select(typeSelector);
 		s.selectByValue(value);
-		System.out.println(s.getFirstSelectedOption().getText());
+		logger.debug("Selected value = {}", s.getFirstSelectedOption().getText());
 	}
 
 	/**
@@ -78,7 +82,7 @@ public class LocationsSchemaPage extends Page {
 
 		try {
 			this.menuUtils.enableEditMode();
-			this.extractor = new TableDataExtractor(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
+			this.extractor = new TableDataUtils(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
 					this.driver);
 			List<List<WebElement>> records = extractor.readTable(TablesOption.COMMON_LOCATIONS);
 			records.forEach(r -> {
@@ -102,7 +106,7 @@ public class LocationsSchemaPage extends Page {
 		List<String> data = null;
 		try {
 			this.menuUtils.enableEditMode();
-			this.extractor = new TableDataExtractor(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
+			this.extractor = new TableDataUtils(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
 					this.driver);
 			List<List<WebElement>> records = extractor.readTable(TablesOption.COMMON_LOCATIONS);
 			for (List<WebElement> r : records) {
@@ -120,7 +124,7 @@ public class LocationsSchemaPage extends Page {
 
 	public List<String> getExistingLocations() {
 		WebElement tableContainer = this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main"));
-		this.extractor = new TableDataExtractor(tableContainer, this.driver);
+		this.extractor = new TableDataUtils(tableContainer, this.driver);
 		SeleniumUtils.scrollToElement(tableContainer, driver);
 		List<List<String>> records = extractor.extractData(TablesOption.COMMON_LOCATIONS);
 		return records.stream().map(r -> {

@@ -8,20 +8,23 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.seedcompany.cordtables.model.TablesOption;
 import com.seedcompany.cordtables.model.UpPrayerRequest;
 import com.seedcompany.cordtables.utils.SeleniumUtils;
-import com.seedcompany.cordtables.utils.TableDataExtractor;
+import com.seedcompany.cordtables.utils.TableDataUtils;
 
 public class PrayerRequestsSchemaPage extends Page {
 
-	TableDataExtractor extractor = null;
+	private static Logger logger = LoggerFactory.getLogger(PrayerRequestsSchemaPage.class);
+	TableDataUtils extractor = null;
 
 	public PrayerRequestsSchemaPage(WebDriver driver) {
 		super(driver);
 	}
-	
+
 	/**
 	 * this method is used to fill the UpPrayer request form
 	 * 
@@ -32,10 +35,11 @@ public class PrayerRequestsSchemaPage extends Page {
 		SeleniumUtils.scrollDown(driver);
 		SeleniumUtils.wait(2);
 		this.loadApp();
+		
 		SearchContext tableRoot = SeleniumUtils
 				.expand_shadow_element(this.rootApp.findElement(By.cssSelector("table-root.hydrated")));
-		SearchContext fillingform = SeleniumUtils.expand_shadow_element(tableRoot
-				.findElement(By.cssSelector("stencil-router > stencil-route:nth-child(36) > up-prayer-requests")));
+		SearchContext fillingform = SeleniumUtils
+				.expand_shadow_element(tableRoot.findElement(By.cssSelector("up-prayer-requests")));
 		WebElement form = fillingform.findElement(By.cssSelector("form.form-thing"));
 
 		form.findElement(By.cssSelector("#request_language_id")).sendKeys(formDetails.requestLanguageId);
@@ -95,7 +99,7 @@ public class PrayerRequestsSchemaPage extends Page {
 
 		try {
 			this.menuUtils.enableEditMode();
-			this.extractor = new TableDataExtractor(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
+			this.extractor = new TableDataUtils(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
 					this.driver);
 			List<List<WebElement>> records = extractor.readTable(TablesOption.UP_PRAYER_REQUESTS);
 			records.forEach(r -> {
@@ -119,7 +123,7 @@ public class PrayerRequestsSchemaPage extends Page {
 		List<String> data = null;
 		try {
 			this.menuUtils.enableEditMode();
-			this.extractor = new TableDataExtractor(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
+			this.extractor = new TableDataUtils(this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main")),
 					this.driver);
 			List<List<WebElement>> records = extractor.readTable(TablesOption.UP_PRAYER_REQUESTS);
 			for (List<WebElement> r : records) {
@@ -137,7 +141,7 @@ public class PrayerRequestsSchemaPage extends Page {
 
 	public List<String> getExistingRequests() {
 		WebElement tableContainer = this.rootApp.findElement(By.cssSelector("#root-wrap-inner > main"));
-		this.extractor = new TableDataExtractor(tableContainer, this.driver);
+		this.extractor = new TableDataUtils(tableContainer, this.driver);
 		SeleniumUtils.scrollToElement(tableContainer, driver);
 		List<List<String>> records = extractor.extractData(TablesOption.UP_PRAYER_REQUESTS);
 		return records.stream().map(r -> {
