@@ -25,9 +25,16 @@ CORDTables QA Automation covers currently automation testing of following module
 |site.user.registration.password|initial of username to be used for testing registration process|password|
 |browser.config.driver.type|Browser type to be used for testing. Currently it is configured and setup only for the Google chrome browser|CHROME|
 |browser.config.debug.enabled|Enable the additional browser logs for debugging. Default set to false. |false|
-|test.execution.background.disabled|Used to run the automation test suites in visible mode in case we want to see the execution of those on browser. Default set to true to run it in background on headless chrome browser. |false|
+|test.execution.background.disabled|Used to run the automation test suites in visible mode in case we want to see the execution of those on browser. Default set to false to run it in background on headless chrome browser. |false|
 
 ### Execution instructions
 * ##### Executing automation testsuite from source code
     * clone the sourcecode from the git repository: 
     ```git clone <<corttable repository URL>>```
+    * navigate to the automation testing module: 
+    ```cd cortables/selenium```
+    * Execute below command if running from local with all configurations predefined into application.properties file: 
+    ```mvn clean test```
+    * Execute below command if running from terminal or pipeline with configurations defined inline at runtime
+    ```mvn clean test -Dsite.url=<site url> -Dsite.user.name=<username> -Dsite.user.password=<password>```    
+    
