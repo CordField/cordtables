@@ -23,9 +23,23 @@ create type sc.post_type as enum (
   'Prayer'
 );
 
+create type sc.post_type as enum (
+  'Note',
+  'Story',
+  'Prayer'
+);
+
+create type sc.post_parent_type_enum as enum (
+  'Note',
+  'Story',
+  'Prayer'
+);
+
 create table sc.posts (
   id varchar(32) primary key default common.nanoid(),
 
+  parent_id varchar(32) not null,
+  post_parent_type sc.post_parent_type_enum not null,
   directory varchar(32) references sc.posts_directory(id), -- not null
   type sc.post_type, --not null,
   shareability sc.post_shareability, --not null,
