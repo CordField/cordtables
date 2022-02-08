@@ -173,7 +173,7 @@ class FakeDataCreatorControl (
 
         count++
         if (count == 1) continue
-        commonScriptureReferencesQuery += "('${bookStart}', '${bookEnd}', '${chapterStart}' , '${chapterEnd}', '${verseStart}', '${verseEnd}',  '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminGroupId}'::uuid), "
+        commonScriptureReferencesQuery += "('${bookStart}', '${bookEnd}', '${chapterStart}' , '${chapterEnd}', '${verseStart}', '${verseEnd}',  '${adminPeopleId}', '${adminPeopleId}', '${adminPeopleId}', '${adminGroupId}'), "
       }
       commonScriptureReferencesQuery = commonScriptureReferencesQuery.dropLast(2) + ";"
 
@@ -220,7 +220,7 @@ class FakeDataCreatorControl (
 
         count++
         if (count == 1) continue
-        commonFieldZonesNamesQuery += "('${name}', '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminPeopleId}'::uuid, '${adminGroupId}'::uuid), "
+        commonFieldZonesNamesQuery += "('${name}', '${adminPeopleId}', '${adminPeopleId}', '${adminPeopleId}', '${adminPeopleId}', '${adminGroupId}'), "
       }
       commonFieldZonesNamesQuery = commonFieldZonesNamesQuery.dropLast(2) + ";"
 
