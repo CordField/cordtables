@@ -7,6 +7,9 @@ spring:
   mvc:
     async:
       request-timeout: -1
+  data:
+    rest:
+      defaultMediaType: application/json
   datasource:
     url: jdbc:postgresql://${DB_DOMAIN}:5432/ct2
     jdbcUrl: jdbc:postgresql://${DB_DOMAIN}:5432/ct2

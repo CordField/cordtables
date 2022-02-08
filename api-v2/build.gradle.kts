@@ -32,9 +32,10 @@ dependencies {
 	implementation("org.bouncycastle:bcprov-jdk15on:1.69")
 	implementation("org.springframework.security:spring-security-crypto:5.5.2")
 
-	implementation("org.springdoc:springdoc-openapi-ui:1.5.12")
-	implementation("org.springdoc:springdoc-openapi-kotlin:1.5.12")
-	implementation("org.springdoc:springdoc-openapi-javadoc:1.5.12")
+	implementation("org.springdoc:springdoc-openapi-data-rest:1.6.5")
+	implementation("org.springdoc:springdoc-openapi-ui:1.6.5")
+	implementation("org.springdoc:springdoc-openapi-kotlin:1.6.5")
+	implementation("org.springdoc:springdoc-openapi-javadoc:1.6.5")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
