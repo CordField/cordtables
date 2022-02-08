@@ -65,6 +65,7 @@ dependencies {
 	testImplementation("org.seleniumhq.selenium:selenium-support:3.141.59")
 	testImplementation("org.seleniumhq.selenium:selenium-remote-driver:3.141.59")
 	testImplementation("org.seleniumhq.selenium:selenium-chrome-driver:3.141.59")
+  testImplementation("io.github.bonigarcia:webdrivermanager:5.0.3")
 }
 
 dependencyManagement {
