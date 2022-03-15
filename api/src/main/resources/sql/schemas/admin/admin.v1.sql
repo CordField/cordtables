@@ -156,26 +156,26 @@ create table admin.people (
   id uuid primary key default common.uuid_generate_v4(),
 
   about text,
-  picture varchar(32) references common.files,
+  picture_common_files_id varchar(32) references common.files(id),
   private_first_name varchar(32),
   private_last_name varchar(32),
   public_first_name varchar(32),
   public_last_name varchar(32),
-  primary_location_locations_id uuid references common.locations(id),
+  primary_location_common_locations_id uuid references common.locations(id),
   sensitivity_clearance common.sensitivity default 'Low',
   timezone varchar(64),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by_people_id uuid, -- not null doesn't work here, on startup
+  created_by_admin_people_id uuid, -- not null doesn't work here, on startup
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid, -- not null doesn't work here, on startup
-  owning_person_people_id uuid, -- not null doesn't work here, on startup
-  owning_group_groups_id uuid -- not null doesn't work here, on startup
+  modified_by_admin_people_id uuid, -- not null doesn't work here, on startup
+  owning_person_admin_people_id uuid, -- not null doesn't work here, on startup
+  owning_group_admin_groups_id uuid -- not null doesn't work here, on startup
 );
 
-alter table admin.people add constraint admin_people_created_by_people_id_fk foreign key (created_by_people_id) references admin.people(id);
-alter table admin.people add constraint admin_people_modified_by_people_id_fk foreign key (modified_by_people_id) references admin.people(id);
-alter table admin.people add constraint admin_people_owning_person_people_id_fk foreign key (owning_person_people_id) references admin.people(id);
+alter table admin.people add constraint admin_people_created_by_people_id_fk foreign key (created_by_admin_people_id) references admin.people(id);
+alter table admin.people add constraint admin_people_modified_by_people_id_fk foreign key (modified_by_admin_people_id) references admin.people(id);
+alter table admin.people add constraint admin_people_owning_person_people_id_fk foreign key (owning_person_admin_people_id) references admin.people(id);
 
 
 -- GROUPS --------------------------------------------------------------------
@@ -187,32 +187,32 @@ create table admin.groups(
   parent_group_row_access_groups_id uuid references admin.groups(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by_people_id uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid references admin.groups(id), -- not null doesn't work here, on startup
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid references admin.groups(id), -- not null doesn't work here, on startup
 
-  unique (name, owning_group_groups_id)
+  unique (name, owning_group_admin_groups_id)
 );
 
-alter table admin.people add constraint admin_people_owning_group_groups_id_fk foreign key (owning_group_groups_id) references admin.groups(id);
+alter table admin.people add constraint admin_people_owning_group_groups_id_fk foreign key (owning_group_admin_groups_id) references admin.groups(id);
 
 create table admin.group_row_access(
   id uuid primary key default common.uuid_generate_v4(),
 
-  groups_id uuid not null references admin.groups(id),
+  admin_groups_id uuid not null references admin.groups(id),
   table_name admin.table_name not null,
   row_id uuid not null,
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by_people_id uuid not null references admin.people(id),
+	created_by_admin_people_id uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid not null references admin.groups(id),
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid not null references admin.groups(id),
 
-  unique (groups_id, table_name, row_id)
+  unique (admin_groups_id, table_name, row_id)
 );
 
 create table admin.group_memberships(
@@ -222,11 +222,11 @@ create table admin.group_memberships(
   person uuid not null references admin.people(id),
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by_people_id uuid not null references admin.people(id),
+	created_by_admin_people_id uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid not null references admin.groups(id),
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid not null references admin.groups(id),
 
   unique (group_id, person)
 );
@@ -245,11 +245,11 @@ create table admin.peers (
   session_token varchar(64) unique,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by_people_id uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid not null references admin.groups(id)
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid not null references admin.groups(id)
 );
 
 -- ROLES --------------------------------------------------------------------
@@ -260,13 +260,13 @@ create table admin.roles (
 	name varchar(255) not null,
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by_people_id uuid not null references admin.people(id),
+	created_by_admin_people_id uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid not null references admin.groups(id),
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid not null references admin.groups(id),
 
-	unique (name, owning_group_groups_id)
+	unique (name, owning_group_admin_groups_id)
 );
 
 create table admin.role_column_grants(
@@ -278,11 +278,11 @@ create table admin.role_column_grants(
 	access_level admin.access_level not null,
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by_people_id uuid not null references admin.people(id),
+	created_by_admin_people_id uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid not null references admin.groups(id),
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid not null references admin.groups(id),
 
 	unique (role, table_name, column_name)
 );
@@ -300,11 +300,11 @@ create table admin.role_table_permissions(
   table_permission admin.table_permission_grant_type not null,
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by_people_id uuid not null references admin.people(id),
+	created_by_admin_people_id uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid not null references admin.groups(id),
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid not null references admin.groups(id),
 
   unique (role, table_name, table_permission)
 );
@@ -316,11 +316,11 @@ create table admin.role_memberships (
 	person uuid unique not null references admin.people(id),
   
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by_people_id uuid not null references admin.people(id),
+	created_by_admin_people_id uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid not null references admin.groups(id),
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid not null references admin.groups(id),
 
 	unique(role, person)
 );
@@ -334,11 +334,11 @@ create table admin.user_email_accounts(
   password varchar(255),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by_people_id uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid not null references admin.groups(id)
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid not null references admin.groups(id)
 );
 
 create table admin.user_phone_accounts(
@@ -348,11 +348,11 @@ create table admin.user_phone_accounts(
   password varchar(255),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by_people_id uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
-  modified_by_people_id uuid not null references admin.people(id),
-  owning_person_people_id uuid not null references admin.people(id),
-  owning_group_groups_id uuid not null references admin.groups(id)
+  modified_by_admin_people_id uuid not null references admin.people(id),
+  owning_person_admin_people_id uuid not null references admin.people(id),
+  owning_group_admin_groups_id uuid not null references admin.groups(id)
 );
 
 -- AUTHENTICATION ------------------------------------------------------------

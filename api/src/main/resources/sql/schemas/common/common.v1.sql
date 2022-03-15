@@ -32,7 +32,7 @@ create table common.languages(
   id uuid primary key default common.uuid_generate_v4(),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -46,7 +46,7 @@ create table common.site_text_strings(
   comment text,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -61,7 +61,7 @@ create table common.site_text_translations(
   translation varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -76,7 +76,7 @@ create table common.site_text_languages(
   language uuid not null references common.languages(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -162,7 +162,7 @@ create table common.scripture_references (
   end int,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -177,7 +177,7 @@ create table common.discussion_channels (
 	name varchar(32) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -193,7 +193,7 @@ create table common.cell_channels (
   row uuid not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -209,7 +209,7 @@ create table common.threads (
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -221,7 +221,7 @@ create table common.posts (
 	thread uuid not null references common.threads(id) on delete cascade,
 	content text not null,
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -236,7 +236,7 @@ create table common.blogs (
 	title varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -252,7 +252,7 @@ create table common.blog_posts (
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -270,7 +270,7 @@ create table common.notes (
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -296,7 +296,7 @@ create table common.locations (
 	type common.location_type, -- not null,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by uuid not null references admin.people(id),
+	created_by_admin_people_id uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -304,7 +304,7 @@ create table common.locations (
 );
 
 ALTER TABLE admin.people ADD CONSTRAINT common_people_primary_location_fk foreign key (primary_location) references common.locations(id);
-ALTER TABLE common.locations ADD CONSTRAINT common_locations_created_by_fk foreign key (created_by) references admin.people(id);
+ALTER TABLE common.locations ADD CONSTRAINT common_locations_created_by_fk foreign key (created_by_admin_people_id) references admin.people(id);
 ALTER TABLE common.locations ADD CONSTRAINT common_locations_modified_by_fk foreign key (modified_by) references admin.people(id);
 
 create table common.language_locations (
@@ -314,7 +314,7 @@ create table common.language_locations (
 	location_common_locations_id uuid not null references common.locations(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -332,7 +332,7 @@ create table common.education_entries (
   major varchar(64),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -349,7 +349,7 @@ create table common.education_by_person (
   graduation_year int,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -373,7 +373,7 @@ create table common.organizations (
   root_directory uuid references common.directories(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -387,7 +387,7 @@ create table common.organization_locations(
 	location_common_locations_id uuid not null references sc.locations(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -403,7 +403,7 @@ create table common.org_chart_positions(
   name varchar(64) not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -427,7 +427,7 @@ create table common.org_chart_position_graph(
   position_end date,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -449,7 +449,7 @@ create table common.coalitions(
   name varchar(64) unique not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -465,7 +465,7 @@ create table common.coalition_memberships(
   organization uuid not null references common.organizations(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -491,7 +491,7 @@ create table common.directories (
 	-- add derived data from sub-directories/files
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -507,7 +507,7 @@ create table common.files (
   -- todo, derived data
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -523,7 +523,7 @@ create table common.file_versions (
   file_size int, -- bytes
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -547,7 +547,7 @@ create table common.tickets (
 	content text not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -563,7 +563,7 @@ create table common.ticket_graph (
 	to_ticket uuid not null references common.tickets(id),
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -577,7 +577,7 @@ create table common.ticket_assignments (
 	person uuid unique not null references admin.people(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -597,7 +597,7 @@ create table common.work_records(
 	comment text,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -616,7 +616,7 @@ create table common.work_estimates(
 	comment text,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -636,7 +636,7 @@ create table common.ticket_feedback(
 	feedback common.ticket_feedback_options not null,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -651,7 +651,7 @@ create table common.workflows(
 	title varchar(128) not null unique,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -664,7 +664,7 @@ create table common.stages(
 	title varchar(128) not null unique,
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -678,7 +678,7 @@ create table common.stage_graph(
 	to_stage uuid not null references common.stages(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -697,7 +697,7 @@ create table common.stage_role_column_grants(
 	access_level admin.access_level not null,
 
 	created_at timestamp not null default CURRENT_TIMESTAMP,
-	created_by uuid not null references admin.people(id),
+	created_by_admin_people_id uuid not null references admin.people(id),
 	modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -715,7 +715,7 @@ create table common.stage_notifications(
 	person uuid unique references admin.people(id),
   
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -748,7 +748,7 @@ create table common.people_to_org_relationships (
   end_at date,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
@@ -769,7 +769,7 @@ create table common.people_graph (
   rel_type common.people_to_people_relationship_types not null,
 
   created_at timestamp not null default CURRENT_TIMESTAMP,
-  created_by uuid not null references admin.people(id),
+  created_by_admin_people_id uuid not null references admin.people(id),
   modified_at timestamp not null default CURRENT_TIMESTAMP,
   modified_by uuid not null references admin.people(id),
   owning_person uuid not null references admin.people(id),
