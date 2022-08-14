@@ -7,3 +7,4 @@ infra/local-peer/*.jar
 .idea/*
 todo
 api/src/main/resources/local
+.DS_Store
